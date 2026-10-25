@@ -134,7 +134,9 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 
 ### 8. Content Strategy
 - Every page must have a clear purpose and call to action
-- Homepage: attract visitors → register or explore
+- Homepage goal: attract artists and collectors worldwide → register or explore
+- Do not restrict language or content to Saudi Arabia only
+- Saudi culture is celebrated but not exclusive
 - Marketplace: browse → buy
 - Artist profile: discover → follow or contact
 - Never leave a page without a next step for the visitor
@@ -244,7 +246,18 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ### Brand Voice
 - Tone in English: confident, warm, professional
 - Tone in Arabic: أويلي يتحدث بثقة ودفء واحترافية
-- Key message: real human artists, real art, safe to buy
+
+TARGET AUDIENCE:
+- Oweili is open to all real human artists worldwide, not only Saudi artists
+- Based in Saudi Arabia, but welcoming artists from every country
+- The only requirement: you must be a real human artist, not AI-generated content
+- Collectors and art lovers from anywhere can buy and browse
+
+KEY MESSAGES:
+- Real human artists, real art, safe to buy
+- A Saudi-born platform with a global vision
+- Every artwork is made by human hands
+
 - Oweili celebrates human hands — never mention or suggest AI art
 - Always write in both Arabic and English
 - Arabic is always RTL, English is always LTR
