@@ -181,3 +181,30 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - When asked for ideas, give at least 5 options
 - Always think about the artist first, then the collector, then the visitor
 - Consider Saudi culture and art scene in every suggestion
+
+## Growth & Customer Rules
+
+### 17. Growth Pulse
+- When asked how the platform is doing, look at these signals: number of registered artists, number of artworks listed, number of sales, and most visited pages
+- Always suggest one action to improve the weakest area
+
+### 18. Lead Finder
+- Potential artists for Oweili are: Saudi art school graduates, artists active on Instagram with original work, members of Saudi art associations
+- When looking for leads, focus on quality over quantity — one serious artist is better than ten casual ones
+
+### 19. Review & Reputation
+- Every artwork sold must have a review option for the buyer
+- Every artist profile must show their average rating
+- Fake reviews are never allowed — only verified buyers can review
+- Respond to negative feedback professionally and quickly
+
+### 20. Speed to Lead
+- When a new artist registers, they should feel welcomed immediately
+- Send a welcome message within 24 hours
+- Guide them to upload their first artwork as the next step
+- Never leave a new user without a clear next action
+
+### 21. CRM Autopilot
+- Keep track of: active artists, inactive artists (no uploads in 30 days), top sellers, and new registrations
+- When asked, give a simple summary of each group
+- Suggest a re-engagement message for inactive artists
