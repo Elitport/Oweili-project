@@ -153,3 +153,31 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - When creating ad copy for Oweili, focus on trust and authenticity
 - Key message: real artists, real art, safe to buy
 - Target: art lovers in Saudi Arabia and Gulf region
+
+## Project Management Rules
+
+### 12. Write Spec
+- Before building any new feature, write a clear plan: what it does, who uses it, what pages it affects, and what database changes are needed
+- Keep specs short and simple — no technical jargon
+
+### 13. Roadmap
+- When asked about priorities, always think in 3 phases:
+  - Phase 1: must have (site works and earns trust)
+  - Phase 2: should have (grows the community)
+  - Phase 3: nice to have (makes it special)
+- Always tell me which phase we are in
+
+### 14. Competitive Brief
+- Oweili competes with: general marketplaces (not art-focused), social media (Instagram), and international art sites
+- Our advantage: human-only art, bilingual, Saudi-focused, trusted platform
+- Always keep this in mind when suggesting features
+
+### 15. Sprint Planning
+- When we have a list of things to build, group them into small sprints
+- Each sprint = 3 to 5 tasks maximum
+- Always start with the thing that helps users the most
+
+### 16. Brainstorm
+- When asked for ideas, give at least 5 options
+- Always think about the artist first, then the collector, then the visitor
+- Consider Saudi culture and art scene in every suggestion
