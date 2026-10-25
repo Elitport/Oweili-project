@@ -1,0 +1,162 @@
+/* =====================================================================
+ *  oweili.css — shared styles for every Oweili page
+ *  Brand colors live here as variables; pages should use var(--color-*)
+ *  instead of writing hex codes by hand.
+ * ===================================================================== */
+
+/* ── BRAND COLORS ── */
+:root {
+  --color-primary: #ff0055;
+  --color-accent: #0066ff;
+  --color-dark: #111111;
+  --color-body: rgba(0,0,0,0.65);
+  --color-light: rgba(0,0,0,0.45);
+  --color-bg: #ffffff;
+  --color-card: rgba(255,255,255,0.6);
+  --color-border: rgba(0,0,0,0.07);
+}
+
+/* ── TYPOGRAPHY ── */
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--color-body);
+  background: var(--color-bg);
+}
+h1 { font-size: clamp(28px, 4vw, 48px); font-weight: 300; color: var(--color-dark); }
+h2 { font-size: clamp(20px, 2.5vw, 32px); font-weight: 600; color: var(--color-dark); }
+h3 { font-size: 16px; font-weight: 700; color: var(--color-dark); }
+p  { font-size: 14px; line-height: 1.8; }
+small, .text-sm { font-size: 12px; }
+.text-xs { font-size: 12px; } /* 12px is the site-wide minimum (CLAUDE.md rule 5) */
+
+/* ── NAVBAR ── */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 56px;
+  background: rgba(255,255,255,0.6);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border);
+}
+/* No RTL override needed: with dir="rtl" the flex row already starts on
+   the right, so the logo sits on the right automatically. */
+
+/* ── BUTTONS ── */
+.btn-primary {
+  padding: 12px 28px; border-radius: 999px;
+  background: var(--color-dark); color: #fff;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; border: none; cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-primary:hover { background: #333; transform: translateY(-2px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  padding: 12px 28px; border-radius: 999px;
+  background: rgba(255,255,255,0.6); color: var(--color-dark);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; border: 1px solid var(--color-border);
+  cursor: pointer; transition: all 0.25s;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.9); transform: translateY(-2px); }
+.btn-secondary:active { transform: translateY(0); }
+
+.btn-accent {
+  padding: 6px 16px; border-radius: 999px;
+  background: rgba(0,100,255,0.1); color: var(--color-accent);
+  font-size: 12px; font-weight: 600;
+  border: 1px solid rgba(0,100,255,0.2); cursor: pointer;
+  transition: all 0.22s;
+}
+.btn-accent:hover { background: rgba(0,100,255,0.18); }
+.btn-accent:active { background: rgba(0,100,255,0.24); }
+
+/* Visible keyboard focus for every button and link (CLAUDE.md rules 5 and 26) */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-accent:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── CARDS ── */
+.card {
+  border-radius: 16px; background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  transition: transform 0.3s, box-shadow 0.3s;
+  overflow: hidden;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+
+/* ── GLASS EFFECT ── */
+.glass {
+  background: rgba(255,255,255,0.5);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+}
+
+/* ── GRID LAYOUTS ── */
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+
+/* ── PAGE WRAPPER ── */
+.page {
+  max-width: 1280px; margin: 0 auto;
+  padding: 88px 32px 48px;
+}
+
+/* ── TAGS & BADGES ── */
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tag-blue { background: rgba(0,100,255,0.08); color: var(--color-accent); border: 1px solid rgba(0,100,255,0.15); }
+/* Pink is only allowed on large/bold text, so the red tag uses dark text
+   on a pink tint (CLAUDE.md rule 2). */
+.tag-red  { background: rgba(255,0,85,0.08);  color: var(--color-dark); border: 1px solid rgba(255,0,85,0.25); }
+.tag-dark { background: rgba(0,0,0,0.06); color: var(--color-dark); border: 1px solid var(--color-border); }
+
+/* ── ANIMATIONS ── */
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.4; transform:scale(0.8); }
+}
+.animate-rise { animation: riseUp 0.9s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* Respect visitors who turn off motion in their phone/computer settings */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 768px)  {
+  .grid-4, .grid-3 { grid-template-columns: repeat(2,1fr); }
+  .page { padding: 80px 20px 32px; }
+}
+@media (max-width: 560px)  {
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .page { padding: 72px 16px 24px; }
+  .topnav { padding: 0 16px; }
+}
+
+/* ── RTL SUPPORT ── */
+[dir="rtl"] { text-align: right; }
+[dir="rtl"] .grid-4,
+[dir="rtl"] .grid-3,
+[dir="rtl"] .grid-2 { direction: rtl; }
