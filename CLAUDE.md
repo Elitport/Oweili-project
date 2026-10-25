@@ -228,3 +228,52 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - When building any page or component, make it visually complete
 - No placeholder text, no empty sections, no "coming soon" without a reason
 - Every page must look ready to show to a real user or investor
+
+## Branding Rules
+
+### Identity
+- Platform name: Oweili (أويلي) — never use "Resha Art" (old name)
+- Logo: the four-quarter circle mark in #ff0055 red + "OWEILI" in bold uppercase
+- Primary color: #ff0055 (red) — buttons and large highlights only
+- Accent color: #0066ff (blue) — links and secondary actions
+- Background: white #ffffff with frosted glass cards
+- Arabic font: system Arabic font, clean and readable
+- English font: Helvetica Neue
+
+### Brand Voice
+- Tone in English: confident, warm, professional
+- Tone in Arabic: أويلي يتحدث بثقة ودفء واحترافية
+- Key message: real human artists, real art, safe to buy
+- Oweili celebrates human hands — never mention or suggest AI art
+- Always write in both Arabic and English
+- Arabic is always RTL, English is always LTR
+
+### Brand Guidelines (what to do and what NOT to do)
+DO:
+- Use the exact brand colors only
+- Keep the logo clean with enough white space around it
+- Use warm, human storytelling in all content
+- Highlight that every artist is a real verified human
+
+DO NOT:
+- Use random colors outside the brand palette
+- Stretch or change the logo shape
+- Use AI-generated art to represent the platform
+- Use "Resha Art" anywhere on the site or in content
+- Use pink for small text (accessibility rule)
+
+### Consistency Guard
+- Before any page goes live, check it against these brand rules
+- Flag anything that uses wrong colors, wrong tone, or mentions AI art
+- Flag any page that still says "Resha Art"
+- Every new page must have both Arabic and English content before launch
+
+### Brand Assets
+- Logo file: stored in /assets/logo/ folder
+- Brand colors are defined in the CSS as variables
+- Any new template or design must follow this guide
+- No copyrighted fonts or images — free or owned assets only
+
+### Golden Rule
+- No logo, color, font or identity change without owner approval
+- Branding prepares the change, owner approves, then Claude Code builds it
