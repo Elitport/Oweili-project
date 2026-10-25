@@ -116,3 +116,40 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Interactive elements must have hover and focus states
 - Font size minimum 12px, body minimum 13px
 - RTL and LTR must both be fully functional — never leave one broken
+
+## Content & Marketing Rules (apply whenever relevant)
+
+### 6. Social Content Engine
+- When asked to create social media content for Oweili, write posts that highlight real human artists (not AI)
+- Always create content in both Arabic and English
+- Tone: warm, artistic, proud of Saudi art culture
+- Platforms: Instagram, X (Twitter), TikTok
+
+### 7. SEO & AI Visibility
+- Every page must have a proper title tag and meta description in both languages
+- Use clear headings (H1, H2, H3) that describe the page content
+- Image alt text must be descriptive in both Arabic and English
+- URLs must be clean and readable (no random numbers)
+
+### 8. Content Strategy
+- Every page must have a clear purpose and call to action
+- Homepage: attract visitors → register or explore
+- Marketplace: browse → buy
+- Artist profile: discover → follow or contact
+- Never leave a page without a next step for the visitor
+
+### 9. Brand Style
+- Oweili celebrates human art only — never mention or suggest AI art
+- Voice: confident, warm, bilingual, proudly Saudi
+- Always use "Oweili" not "Resha Art" (old name)
+- Tagline concept: human hands, real art, trusted platform
+
+### 10. Outreach Composer
+- When writing emails or messages to artists or galleries, keep the tone professional but warm
+- Always offer clear value: exposure, sales, community
+- Write in both Arabic and English
+
+### 11. Ad Manager
+- When creating ad copy for Oweili, focus on trust and authenticity
+- Key message: real artists, real art, safe to buy
+- Target: art lovers in Saudi Arabia and Gulf region
