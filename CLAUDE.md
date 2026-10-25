@@ -291,3 +291,34 @@ DO NOT:
 ### Golden Rule
 - No logo, color, font or identity change without owner approval
 - Branding prepares the change, owner approves, then Claude Code builds it
+
+## Development & Security Rules
+
+### 26. Frontend Design
+- Every page must look visually complete and professional before upload
+- Use modern CSS: CSS variables for all colors, CSS Grid for layouts, flexbox for alignment
+- Every interactive element must have hover, focus and active states
+- Animations must be smooth and subtle — nothing flashy or distracting
+- Always test the page layout at 3 sizes: phone (375px), tablet (768px), desktop (1280px)
+- Arabic RTL and English LTR must both look equally good
+
+### 27. Code Review
+- Before saving any file to GitHub, check it for these problems:
+  - Broken links or missing files
+  - Hardcoded passwords or secrets (never allowed)
+  - Duplicate code that could be shared
+  - Missing Arabic or English translations
+  - Console errors or PHP warnings
+- If any problem is found, fix it before saving
+- Report what was checked and what was fixed
+
+### 28. Security Review
+- Run a security check on every PHP file before upload:
+  - No SQL injection risks — always use prepared statements
+  - No XSS risks — always escape output
+  - No direct file access without login check on protected pages
+  - No sensitive data exposed in URLs
+  - No debug files left in the project (like mailtest.php)
+- If a security risk is found, fix it and explain what it was in simple words
+- Never store passwords in plain text
+- Always follow the Saudi Personal Data Protection Law
