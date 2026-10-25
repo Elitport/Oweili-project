@@ -92,6 +92,9 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Text: #111111 for headings, rgba(0,0,0,0.65) for body
 - Never add random colors — stick to this palette
 - Ensure contrast ratio is always readable
+- Pink #ff0055 is for buttons and large highlights only (large text = 18px+, or 14px+ bold) — never for small text, since it fails WCAG AA at small sizes
+- Button labels on pink must be bold and at least 14px
+- Small text links use blue #0066ff or dark grey #111111 — never pink
 
 ### 3. Better Typography
 - Font: Helvetica Neue for English, system Arabic font for Arabic
