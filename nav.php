@@ -40,7 +40,7 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
 @media (prefers-reduced-motion:reduce){.mnav-panel{transition:none;}}
 </style>
 <nav class="topnav" id="topnav">
-  <a class="nav-logo" href="index.html">
+  <a class="nav-logo" href="index.php">
     <span style="display:inline-block;background:linear-gradient(135deg,#ff0055,#0066ff,#aa00ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-weight:800;font-size:15px;letter-spacing:0.14em;">OWEILI</span>
     <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="navLogoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff0055"/><stop offset="50%" stop-color="#0066ff"/><stop offset="100%" stop-color="#aa00ff"/></linearGradient></defs><path fill="url(#navLogoGrad)" d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z"/></svg>
   </a>

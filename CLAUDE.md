@@ -15,7 +15,7 @@
 - Admin — full control via admin.php
 
 ## Pages Built
-- index.html — Homepage
+- index.php — Homepage
 - nav.php — Shared navbar (used across all pages)
 - explore.php — Art styles gallery
 - marketplace.php — Browse and buy artworks (bilingual)
@@ -37,7 +37,8 @@
 - assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
 - assets/logo/ — home for the official logo files (not added yet)
 - Mobile menu (in nav.php) — on screens 1024px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
-- index.html and marketplace.php still have their own menu copy, so they do not have the mobile menu yet
+- Every page that shows the main menu now uses nav.php, including index.php and marketplace.php
+- index.html — tiny forwarding file only: sends old links and bookmarks to index.php. Do not put content in it
 
 ## Database
 - DB name: u405344949_reshaart
@@ -73,6 +74,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 
 ## Known Issues
 - Language switch does not fully apply RTL to navbar in some pages
+  - Likely cause: almost every page has a CSS line `[dir="rtl"] .nav-center{flex-direction:row-reverse;}` that flips the Arabic menu order back to left-to-right
 - Manual deployment means live site may be out of sync with repo
 
 ## Work Rules
