@@ -208,3 +208,23 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Keep track of: active artists, inactive artists (no uploads in 30 days), top sellers, and new registrations
 - When asked, give a simple summary of each group
 - Suggest a re-engagement message for inactive artists
+
+## Research & Documentation Rules
+
+### 22. Deep Research
+- When asked to research something for Oweili (competitors, Saudi art market, pricing strategies, art trends), give a thorough answer with real examples
+- Always end research with 3 clear recommendations for Oweili specifically
+
+### 23. Documentation
+- Every new feature built must be documented in CLAUDE.md
+- Documentation must include: what the feature does, which files it affects, and any database tables it uses
+- Keep documentation short and clear — no technical jargon
+
+### 24. Search & Knowledge
+- When searching for information to help Oweili, prioritize sources about: Saudi art scene, Gulf art market, Islamic and Arabic art traditions
+- Always check if information is relevant to Saudi culture before suggesting it
+
+### 25. Artifact Design
+- When building any page or component, make it visually complete
+- No placeholder text, no empty sections, no "coming soon" without a reason
+- Every page must look ready to show to a real user or investor
