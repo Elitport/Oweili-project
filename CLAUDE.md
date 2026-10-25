@@ -75,3 +75,41 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - art_styles.js is the single source for all art style data — never duplicate it
 - config.php must never be added to GitHub
 - Always confirm before making changes to database structure
+
+## Design Rules (apply to every page you create or edit)
+
+### 1. Better UI
+- Every button, card, and element must have a clear purpose
+- Navigation must be intuitive and consistent across all pages
+- Empty states must be handled (show a message if no artworks found)
+- Loading states must be smooth
+- Mobile first — every page must work perfectly on phone
+
+### 2. Better Colors
+- Primary: #ff0055 (red/pink) — use for key actions and highlights
+- Accent: #0066ff (blue) — use for links and secondary actions
+- Background: white #ffffff with frosted glass cards
+- Text: #111111 for headings, rgba(0,0,0,0.65) for body
+- Never add random colors — stick to this palette
+- Ensure contrast ratio is always readable
+
+### 3. Better Typography
+- Font: Helvetica Neue for English, system Arabic font for Arabic
+- Headings: bold, tight letter spacing
+- Body: 13-14px, line height 1.7-1.8
+- Arabic text must align right and use proper RTL sizing
+- Never mix too many font sizes — keep a clear hierarchy
+
+### 4. Better Layouts
+- Use CSS Grid for card galleries (4 columns desktop, 2 tablet, 1-2 mobile)
+- Consistent padding: 32px desktop, 16px mobile
+- Cards: border-radius 16px, subtle shadow, white background
+- Sections must breathe — use generous spacing between them
+- Navbar is always fixed at top, 56px height, frosted glass
+
+### 5. Better Accessibility
+- All images must have alt text in both Arabic and English
+- Color contrast must pass WCAG AA minimum
+- Interactive elements must have hover and focus states
+- Font size minimum 12px, body minimum 13px
+- RTL and LTR must both be fully functional — never leave one broken
