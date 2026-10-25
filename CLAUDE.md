@@ -74,6 +74,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Never break existing design or language system
 - When editing any file, keep the existing navbar and style intact
 - art_styles.js is the single source for all art style data — never duplicate it
+- art_styles.js does not exist yet — creating it is a priority in the next sprint. Until then, do not duplicate art style data in new pages.
 - config.php must never be added to GitHub
 - Always confirm before making changes to database structure
 
@@ -143,7 +144,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 
 ### 9. Brand Style
 - Oweili celebrates human art only — never mention or suggest AI art
-- Voice: confident, warm, bilingual, proudly Saudi
+- Voice: confident, warm, bilingual, open to the world — proudly Saudi-born
 - Always use "Oweili" not "Resha Art" (old name)
 - Tagline concept: human hands, real art, trusted platform
 
@@ -155,7 +156,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ### 11. Ad Manager
 - When creating ad copy for Oweili, focus on trust and authenticity
 - Key message: real artists, real art, safe to buy
-- Target: art lovers in Saudi Arabia and Gulf region
+- Target: art lovers worldwide, with a celebration of Saudi and Arab art culture
 
 ## Project Management Rules
 
@@ -172,7 +173,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 
 ### 14. Competitive Brief
 - Oweili competes with: general marketplaces (not art-focused), social media (Instagram), and international art sites
-- Our advantage: human-only art, bilingual, Saudi-focused, trusted platform
+- Our advantage: human-only art, bilingual, Saudi-born with a global vision, trusted platform
 - Always keep this in mind when suggesting features
 
 ### 15. Sprint Planning
@@ -183,7 +184,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ### 16. Brainstorm
 - When asked for ideas, give at least 5 options
 - Always think about the artist first, then the collector, then the visitor
-- Consider Saudi culture and art scene in every suggestion
+- Think about artists and collectors worldwide in every suggestion, and celebrate Saudi and Arab art culture where it fits
 
 ## Growth & Customer Rules
 
@@ -192,7 +193,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Always suggest one action to improve the weakest area
 
 ### 18. Lead Finder
-- Potential artists for Oweili are: Saudi art school graduates, artists active on Instagram with original work, members of Saudi art associations
+- Potential artists for Oweili are real human artists worldwide: art school graduates, artists active on Instagram with original work, and members of art associations — including Saudi and Arab art schools and associations
 - When looking for leads, focus on quality over quantity — one serious artist is better than ten casual ones
 
 ### 19. Review & Reputation
@@ -224,12 +225,15 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Keep documentation short and clear — no technical jargon
 
 ### 24. Search & Knowledge
-- When searching for information to help Oweili, prioritize sources about: Saudi art scene, Gulf art market, Islamic and Arabic art traditions
-- Always check if information is relevant to Saudi culture before suggesting it
+- When searching for information to help Oweili, look at the global art market, and give special attention to the Saudi art scene, Gulf art market, and Islamic and Arabic art traditions
+- Always check that information fits a worldwide audience and respects Saudi culture before suggesting it
 
 ### 25. Artifact Design
 - When building any page or component, make it visually complete
-- No placeholder text, no empty sections, no "coming soon" without a reason
+- Every page must look complete and professional
+- Coming Soon is only allowed when a real feature is planned and has a notify me button
+- Never use Coming Soon as a filler for missing content
+- No placeholder text and no empty sections
 - Every page must look ready to show to a real user or investor
 
 ## Branding Rules
