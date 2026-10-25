@@ -33,6 +33,12 @@
 - admin.php — Main admin panel
 - art_styles.js — Shared data file for all art styles (single source of truth)
 
+## Shared Files
+- assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
+- assets/logo/ — home for the official logo files (not added yet)
+- Mobile menu (in nav.php) — on screens 1024px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
+- index.html and marketplace.php still have their own menu copy, so they do not have the mobile menu yet
+
 ## Database
 - DB name: u405344949_reshaart
 - Tables: users (artists, collectors and admins), messages, art_styles, plus migration tables from SQL files

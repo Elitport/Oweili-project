@@ -14,6 +14,31 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
    of the wrong direction before the page's own script runs. */
 (function(){try{var l=localStorage.getItem('lang');if(l==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}}catch(e){}})();
 </script>
+<link rel="stylesheet" href="/assets/css/oweili.css">
+<style>
+/* ── Mobile menu (phones and tablets, where the desktop links are hidden) ── */
+.mnav-btn{display:none;align-items:center;justify-content:center;width:40px;height:40px;margin-inline-start:6px;padding:0;border:1px solid var(--color-border,rgba(0,0,0,0.07));border-radius:12px;background:rgba(255,255,255,0.7);color:var(--color-dark,#111111);cursor:pointer;flex-shrink:0;transition:background 0.2s;}
+.mnav-btn:hover{background:rgba(0,0,0,0.06);}
+.mnav-btn:active{background:rgba(0,0,0,0.1);}
+.mnav-btn:focus-visible,.mnav-link:focus-visible{outline:2px solid var(--color-accent,#0066ff);outline-offset:2px;}
+.mnav-btn svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none;}
+.mnav-btn .mnav-x{display:none;}
+.mnav-btn[aria-expanded="true"] .mnav-bars{display:none;}
+.mnav-btn[aria-expanded="true"] .mnav-x{display:block;}
+.mnav-panel{position:absolute;top:100%;left:0;right:0;max-height:calc(100vh - 56px);overflow-y:auto;padding:8px 16px 16px;background:rgba(255,255,255,0.97);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--color-border,rgba(0,0,0,0.07));box-shadow:0 16px 40px rgba(0,0,0,0.08);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity 0.25s ease,transform 0.25s ease,visibility 0.25s;}
+.mnav-panel.open{opacity:1;visibility:visible;transform:translateY(0);}
+.mnav-link{display:flex;align-items:center;min-height:48px;padding:0 12px;border-radius:12px;font-size:15px;font-weight:600;color:var(--color-dark,#111111);text-decoration:none;transition:background 0.15s,color 0.15s;}
+.mnav-link:hover{background:rgba(0,102,255,0.07);color:var(--color-accent,#0066ff);}
+.mnav-link:active{background:rgba(0,102,255,0.12);}
+.mnav-sub{padding-inline-start:28px;font-weight:500;color:var(--color-body,rgba(0,0,0,0.65));}
+[dir="rtl"] .mnav-panel{text-align:right;}
+.mnav-acct{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--color-border,rgba(0,0,0,0.07));}
+@media (max-width:1024px){.mnav-btn{display:inline-flex;}.topnav .nav-right{margin-inline-start:auto;}}
+/* Small phones: the account buttons move from the top bar into the menu so the bar never overflows */
+@media (max-width:560px){.topnav .nav-right .nav-btn{display:none;}.mnav-acct{display:block;}}
+@media (min-width:1025px){.mnav-panel{display:none;}}
+@media (prefers-reduced-motion:reduce){.mnav-panel{transition:none;}}
+</style>
 <nav class="topnav" id="topnav">
   <a class="nav-logo" href="index.html">
     <span style="display:inline-block;background:linear-gradient(135deg,#ff0055,#0066ff,#aa00ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-weight:800;font-size:15px;letter-spacing:0.14em;">OWEILI</span>
@@ -68,6 +93,32 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
     <?php endif; ?>
     <button class="lang-btn" onclick="tgl()" id="lb">العربية</button>
   </div>
+  <button type="button" class="mnav-btn" id="mnav-btn" aria-expanded="false" aria-controls="mnav-panel" aria-label="Open menu" data-label-en="Open menu" data-label-ar="فتح القائمة" data-close-en="Close menu" data-close-ar="إغلاق القائمة">
+    <svg class="mnav-bars" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    <svg class="mnav-x" viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+  <div class="mnav-panel" id="mnav-panel">
+    <a class="mnav-link" href="studio.php"><span class="nav-i18n" data-en="The Studio" data-ar="الاستوديو">The Studio</span></a>
+    <a class="mnav-link" href="community.php"><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
+    <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"><span class="nav-i18n" data-en="Marketplace" data-ar="السوق">Marketplace</span></a>
+    <a class="mnav-link" href="explore.php"><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
+    <a class="mnav-link" href="events.php"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
+    <a class="mnav-link mnav-sub" href="events.php"><span class="nav-i18n" data-en="Art Events" data-ar="أحداث فنية">Art Events</span></a>
+    <a class="mnav-link mnav-sub" href="training.php"><span class="nav-i18n" data-en="Training Institutes" data-ar="معاهد تدريب">Training Institutes</span></a>
+    <a class="mnav-link" href="support.php"><span class="nav-i18n" data-en="Support" data-ar="الدعم">Support</span></a>
+    <div class="mnav-acct">
+    <?php if ($navUser): ?>
+      <?php if ($navIsAdmin): ?>
+      <a class="mnav-link" href="admin.php"><span class="nav-i18n" data-en="Admin" data-ar="الإدارة">Admin</span></a>
+      <?php endif; ?>
+      <a class="mnav-link" href="<?= e(dashboardUrl($navUser['role'] ?? '')) ?>"><span class="nav-i18n" data-en="My Account" data-ar="حسابي">My Account</span></a>
+      <a class="mnav-link" href="logout.php"><span class="nav-i18n" data-en="Sign Out" data-ar="تسجيل الخروج">Sign Out</span></a>
+    <?php else: ?>
+      <a class="mnav-link" href="login.php"><span class="nav-i18n" data-en="Sign In" data-ar="تسجيل الدخول">Sign In</span></a>
+      <a class="mnav-link" href="register.php"><span class="nav-i18n" data-en="Join Free" data-ar="انضم مجاناً">Join Free</span></a>
+    <?php endif; ?>
+    </div>
+  </div>
 </nav>
 <script>
 /* =====================================================================
@@ -120,5 +171,38 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
   } else {
     applySaved();
   }
+})();
+/* ── Mobile menu: open/close, close on link tap, outside tap or Escape ── */
+(function(){
+  var btn = document.getElementById('mnav-btn');
+  var panel = document.getElementById('mnav-panel');
+  if (!btn || !panel) return;
+  function isAr(){ return document.documentElement.getAttribute('dir') === 'rtl'; }
+  function setLabel(open){
+    var k = (open ? 'close' : 'label') + (isAr() ? 'Ar' : 'En');
+    btn.setAttribute('aria-label', btn.dataset[k]);
+  }
+  function setOpen(open){
+    panel.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    setLabel(open);
+  }
+  btn.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    setOpen(!panel.classList.contains('open'));
+  });
+  panel.addEventListener('click', function(ev){
+    if (ev.target.closest('a')) setOpen(false);
+  });
+  document.addEventListener('click', function(ev){
+    if (panel.classList.contains('open') && !panel.contains(ev.target)) setOpen(false);
+  });
+  document.addEventListener('keydown', function(ev){
+    if (ev.key === 'Escape' && panel.classList.contains('open')) { setOpen(false); btn.focus(); }
+  });
+  // Keep the button label in the current language when the page switches EN/AR.
+  new MutationObserver(function(){ setLabel(panel.classList.contains('open')); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+  setLabel(false);
 })();
 </script>

@@ -73,6 +73,7 @@ foreach ($artworks as $aw) {
     else if(saved==='ar'){ params.set('lang','ar'); location.replace(location.pathname+'?'+params.toString()); }
   })();
   </script>
+  <link rel="stylesheet" href="/assets/css/oweili.css">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     body, html { width:100%; min-height:100vh; background:#fff; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; overflow-x:hidden; }
