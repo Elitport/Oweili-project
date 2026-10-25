@@ -35,7 +35,8 @@
 
 ## Database
 - DB name: u405344949_reshaart
-- Tables: artists, messages, reports, art_styles, plus migration tables from SQL files
+- Tables: users (artists, collectors and admins), messages, art_styles, plus migration tables from SQL files
+- The live database may use u405344949_contact — confirm in phpMyAdmin before any database change
 - config.php is NOT in GitHub (contains DB and SMTP secrets — lives on server only)
 
 ## SQL Migration Files

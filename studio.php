@@ -223,10 +223,10 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
         </div>
       </div>
       <div class="featured-side">
-        <div class="side-card" onclick="location.href='register.php'">
-          <div class="side-card-icon">🖌️</div>
-          <h4 id="t-sc1">Live Painting Sessions</h4>
-          <p id="t-sc1d">Join live streamed painting sessions every Friday with real-time feedback from instructors.</p>
+        <div class="side-card" onclick="location.href='explore.php'">
+          <div class="side-card-icon">🎨</div>
+          <h4 id="t-sc1">Explore 12 Art Styles</h4>
+          <p id="t-sc1d">Discover 12 real art styles — from watercolor and oil to charcoal and mixed media — and choose the one you want to practice.</p>
         </div>
         <div class="side-card" onclick="location.href='register.php'">
           <div class="side-card-icon">📚</div>
@@ -248,9 +248,9 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
     <div class="roadmap-grid">
       <div class="roadmap-item">
         <div class="roadmap-num">01</div>
-        <h4 id="t-r1">AI Color Palette</h4>
-        <p id="t-r1d">Generate nature-inspired palettes from any image using AI.</p>
-        <span class="roadmap-status status-live" id="t-rs1">Live</span>
+        <h4 id="t-r1">Color Theory Guides</h4>
+        <p id="t-r1d">Learn to build harmonious color palettes by hand, with step-by-step exercises for every medium.</p>
+        <span class="roadmap-status status-planned" id="t-rs1">Planned</span>
       </div>
       <div class="roadmap-item">
         <div class="roadmap-num">02</div>
@@ -289,10 +289,10 @@ const T={
     tag5:'Pastel',ws5:'Nature Texture Library',ws5d:'Access hundreds of high-resolution nature textures — bark, stone, water, and foliage — for your artwork.',lv5:'Free Resource',join5:'Access →',
     tag6:'Mixed Media',ws6:'Mixed Media Experiments',ws6d:'Combine collage, paint, and photography to create layered works that blur the line between art and nature.',lv6:'Advanced',join6:'Explore →',
     featH:"Masters of Oil: A 4-Week Journey",featP:'Dive deep into classical oil painting techniques over four structured weeks. Learn from master works, practice composition, color theory, and develop your personal style guided by expert instructors.',featBtn:'Enroll Now',
-    sc1:'Live Painting Sessions',sc1d:'Join live streamed painting sessions every Friday with real-time feedback from instructors.',
+    sc1:'Explore 12 Art Styles',sc1d:'Discover 12 real art styles — from watercolor and oil to charcoal and mixed media — and choose the one you want to practice.',
     sc2:'Technique Library',sc2d:'Over 200 step-by-step technique guides covering every medium and style.',
     sc3:'Monthly Art Challenges',sc3d:'Compete and showcase your work in themed monthly challenges with community voting.',
-    r1:'AI Color Palette',r1d:'Generate nature-inspired palettes from any image using AI.',rs1:'Live',
+    r1:'Color Theory Guides',r1d:'Learn to build harmonious color palettes by hand, with step-by-step exercises for every medium.',rs1:'Planned',
     r2:'Brush Simulator',r2d:'Realistic digital brushes that mimic watercolor, oil, and charcoal.',rs2:'Coming Soon',
     r3:'Texture Scanner',r3d:'Scan real-world textures with your phone and use them in artwork.',rs3:'Planned',
     r4:'Art Portfolio',r4d:'A personal gallery page for every artist to showcase their journey.',rs4:'Planned'},
@@ -308,10 +308,10 @@ const T={
     tag5:'باستيل',ws5:'مكتبة خامات الطبيعة',ws5d:'الوصول إلى مئات من خامات الطبيعة عالية الدقة — لحاء ، حجر ، ماء ، وأوراق — لاستخدامها في أعمالك الفنية.',lv5:'مورد مجاني',join5:'الوصول →',
     tag6:'وسائط مختلطة',ws6:'تجارب الوسائط المختلطة',ws6d:'ادمج الكولاج والطلاء والتصوير الفوتوغرافي لإنشاء أعمال ذات طبقات تمزج بين الفن والطبيعة.',lv6:'متقدم',join6:'استكشف →',
     featH:'أساتذة الزيت: رحلة أربعة أسابيع',featP:'انغمس في تقنيات الرسم الزيتي الكلاسيكية على مدى أربعة أسابيع منظمة. تعلّم من الأعمال الرائعة وتدرّب على التكوين ونظرية الألوان وطوّر أسلوبك الشخصي.',featBtn:'سجّل الآن',
-    sc1:'جلسات الرسم المباشر',sc1d:'انضم إلى جلسات رسم مباشرة كل جمعة مع ملاحظات فورية من المدربين.',
+    sc1:'استكشف 12 أسلوباً فنياً',sc1d:'اكتشف 12 أسلوباً فنياً حقيقياً — من الألوان المائية والزيت إلى الفحم والوسائط المختلطة — واختر الأسلوب الذي تريد ممارسته.',
     sc2:'مكتبة التقنيات',sc2d:'أكثر من 200 دليل تقني خطوة بخطوة يغطي كل وسيط وأسلوب.',
     sc3:'تحديات الفن الشهرية',sc3d:'تنافس واعرض أعمالك في تحديات شهرية ذات طابع مع تصويت المجتمع.',
-    r1:'لوحة الألوان بالذكاء الاصطناعي',r1d:'أنشئ لوحات ألوان مستوحاة من الطبيعة من أي صورة باستخدام الذكاء الاصطناعي.',rs1:'متاح',
+    r1:'أدلة نظرية الألوان',r1d:'تعلّم بناء لوحات ألوان متناسقة بيدك، مع تمارين خطوة بخطوة لكل وسيط.',rs1:'مخطط',
     r2:'محاكي الفرشاة',r2d:'فرش رقمية واقعية تحاكي الألوان المائية والزيت والفحم.',rs2:'قريباً',
     r3:'ماسح الخامات',r3d:'امسح خامات العالم الحقيقي بهاتفك واستخدمها في الأعمال الفنية.',rs3:'مخطط',
     r4:'ملف الفنان',r4d:'صفحة معرض شخصية لكل فنان لعرض رحلته الإبداعية.',rs4:'مخطط'}
