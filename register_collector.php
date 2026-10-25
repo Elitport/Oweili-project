@@ -82,7 +82,6 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .bg-video.on{opacity:0.95;}
 .overlay{position:fixed;inset:0;z-index:3;pointer-events:none;background:linear-gradient(160deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,0.35) 100%);}
 .topnav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:56px;background:rgba(255,255,255,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.05);}
-[dir="rtl"] .nav-center{flex-direction:row-reverse;}
 [dir="rtl"] .dropdown{left:auto;right:0;text-align:right;}
 .nav-logo{display:flex;align-items:center;gap:6px;text-decoration:none;color:#111111;flex-shrink:0;}
 .nav-logo svg{color:#ff0055;}

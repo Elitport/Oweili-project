@@ -73,8 +73,8 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Marketplace → marketplace.php
 
 ## Known Issues
-- Language switch does not fully apply RTL to navbar in some pages
-  - Likely cause: almost every page has a CSS line `[dir="rtl"] .nav-center{flex-direction:row-reverse;}` that flips the Arabic menu order back to left-to-right
+- Fixed: the Arabic menu order. A CSS line on 18 pages flipped the menu back to left-to-right; it was removed. Never add `flex-direction:row-reverse` to the menu for Arabic — dir="rtl" already puts items in the right order
+- Some page sections (buttons, stats rows, filters) still use `[dir="rtl"] ... row-reverse` and may show in the wrong order in Arabic — check each when converting a page
 - Manual deployment means live site may be out of sync with repo
 
 ## Work Rules
