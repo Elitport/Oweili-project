@@ -95,7 +95,7 @@
 - register.php / register_artist.php / register_collector.php — Sign up flows
 - login.php / logout.php / verify.php / forgot.php — Auth
 - edit_profile.php / edit_artwork.php — Self-service editing
-- artist_dashboard.php — Artist control panel ("Start New Artwork" button + drafts in progress)
+- artist_dashboard.php — Artist control panel ("Start New Artwork" button + drafts in progress); with ?id=N it is the artist's public profile, open to everyone
 - upload_artwork.php — 3-stage proof-of-process upload (see Features below)
 - artwork_lib.php — shared helpers for the upload: color list, art type pictures, photo checks and saving
 - collector_dashboard.php — Collector control panel
@@ -122,6 +122,11 @@
 - Phone: the photos are one row you swipe sideways; tablet and desktop: side by side. Arabic runs right to left
 - Only approved artworks on the current page are loaded — unapproved or draft photos are never sent to visitors
 - Files: marketplace.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
+
+### Creation Journey on artist profiles — built, needs database_update.sql
+- What it does: on an artist's public profile (artist_dashboard.php?id=N), every artwork that has the 25% and 100% photos shows the "✓ Verified Human Artist" badge, a strip of small stage photos (25% / 50% / 100%), and a "See the creation journey" / «شاهد رحلة الإبداع» link that opens the full journey with dates, colors and art type. Old artworks without stages show as before
+- Anyone can now open a public profile, even without logging in (the marketplace links to it). Visitors only see artist accounts that are not banned, and only approved artworks. Earnings, drafts, edit and delete stay owner-only; your own dashboard (no ?id) still needs login
+- Files: artist_dashboard.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
 ### Proof of Process (admin review) — built, needs database_update.sql
 - What it does: every pending artwork in admin.php and subadmin_dashboard.php shows "Proof of Process" / «دليل المراحل»: each stage photo (click to open full size) with date and time, the time gap from the previous stage (e.g. "3 days after stage 25%"), "Artist skipped middle stage" when 50% is missing, colors, art type, and the review note

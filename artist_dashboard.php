@@ -4,13 +4,15 @@ require_once __DIR__ . '/artwork_lib.php';
 
 /* ---------------------------------------------------------------------
  *  Check 1 — Session check.
- *  Not logged in -> login.php. Logged in -> we have $_SESSION['user_id'].
+ *  A public profile (?id=N) can be viewed by anyone, logged in or not.
+ *  Your own dashboard (no id) needs you to be logged in.
  * ------------------------------------------------------------------- */
-if (!isLoggedIn()) {
+$hasId = isset($_GET['id']) && (int) $_GET['id'] > 0;
+if (!isLoggedIn() && !$hasId) {
     header('Location: login.php');
     exit;
 }
-$viewerId = (int) $_SESSION['user_id'];
+$viewerId = isLoggedIn() ? (int) $_SESSION['user_id'] : 0;
 
 /* Artwork types (shared list) */
 $ART_TYPES = require __DIR__ . '/art_types.php';
@@ -19,7 +21,7 @@ $ART_TYPES = require __DIR__ . '/art_types.php';
  *  - ?id=N  -> that user's profile
  *  - no id  -> the logged-in user's own profile
  */
-$profileId = (isset($_GET['id']) && (int) $_GET['id'] > 0) ? (int) $_GET['id'] : $viewerId;
+$profileId = $hasId ? (int) $_GET['id'] : $viewerId;
 $isOwner   = $viewerId === $profileId;
 
 /* This is the artist dashboard. Any non-artist landing on their OWN dashboard
@@ -68,6 +70,10 @@ $stmt = getDB()->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
 $stmt->execute([':id' => $profileId]);
 $artist = $stmt->fetch();
 
+/* Visitors can only see real, active artist profiles (not collectors, admins or banned accounts). */
+if ($artist && !$isOwner && (($artist['role'] ?? '') !== 'artist' || !empty($artist['is_banned']))) {
+    $artist = null;
+}
 if (!$artist) {
     // If the logged-in user's own record is missing, the session is stale -> login.
     if ($profileId === $viewerId) {
@@ -100,6 +106,10 @@ if ($artist && $isOwner && owStagesReady()) {
     $drafts = $stmt->fetchAll();
     $draftStages = owGetStagesFor(array_column($drafts, 'id'));
 }
+
+/* Creation Journey for each artwork shown (stage photos + colors) */
+$artStages = owGetStagesFor(array_column($artworks, 'id'));
+$artColors = owGetColorsFor(array_column($artworks, 'id'));
 
 $memberSince = $artist && !empty($artist['created_at']) ? date('Y', strtotime($artist['created_at'])) : 'N/A';
 $totalCount  = count($artworks);
@@ -241,6 +251,23 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .draft .art-actions{margin-top:0;flex-shrink:0;}
 .draft .mini-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;font-size:12px;text-decoration:none;}
 .b-review{background:rgba(0,0,0,0.7);color:#fff;}
+/* Creation Journey on artwork cards */
+.art-verified{align-self:flex-start;margin-top:6px;}
+.stage-strip{display:flex;gap:6px;margin-top:8px;}
+.stage-strip span{position:relative;flex:1;height:56px;border-radius:8px;overflow:hidden;background:#f4f5f7;}
+.stage-strip img{width:100%;height:100%;object-fit:cover;display:block;}
+.stage-strip b{position:absolute;bottom:3px;inset-inline-start:3px;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,0.6);padding:1px 6px;border-radius:999px;}
+.journey-toggle{margin-top:8px;}
+.journey-toggle summary{cursor:pointer;font-size:13px;font-weight:700;color:#0066ff;padding:6px 0;list-style:none;}
+.journey-toggle summary::-webkit-details-marker{display:none;}
+.journey-toggle summary::after{content:' +';}
+.journey-toggle[open] summary::after{content:' −';}
+.journey-toggle summary:hover{text-decoration:underline;}
+.journey-toggle summary:focus-visible{outline:2px solid #0066ff;outline-offset:2px;border-radius:4px;}
+.journey-toggle .pj{margin-top:6px;}
+.art-card .pj-row{overflow-x:auto;}
+.art-card .pj-step{flex:0 0 78%;}
+.art-card .pj-step img{height:140px;}
 @media(max-width:560px){.draft{flex-wrap:wrap;}.draft .art-actions{width:100%;}}
 
 /* FINANCIAL REPORT */
@@ -262,6 +289,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 @keyframes riseUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 @media(max-width:768px){.topnav{padding:10px 14px;}.nav-logo span{display:none;}.profile-head{flex-direction:column;text-align:center;}[dir="rtl"] .profile-head{flex-direction:column;}.head-actions{align-items:center;}.upload-card .grid2{grid-template-columns:1fr;}.stats-row{justify-content:center;}}
 </style>
+<link rel="stylesheet" href="/assets/css/proof.css">
 </head>
 <body>
 <div class="bg-wrap"><video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video></div>
@@ -369,7 +397,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
       ?>
       <div class="gc art-card">
         <div class="art-img-wrap">
-          <img class="art-img" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en']) ?>">
+          <img class="art-img" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : '')) ?>">
           <?php if ($isOwner && (int) $aw['is_approved'] === 0): ?>
           <span class="badge b-review" data-status="review">In review</span>
           <?php else: ?>
@@ -379,6 +407,19 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
         <div class="art-body">
           <div class="art-title"><?= e($aw['title_en']) ?></div>
           <div class="art-title-ar" dir="rtl"><?= e($aw['title_ar']) ?></div>
+          <?php $stg = $artStages[(int) $aw['id']] ?? [];
+          if (owHasJourney($stg)): ?>
+          <span class="verified-badge art-verified"><?= owBi('✓ Verified Human Artist', '✓ فنان بشري موثّق') ?></span>
+          <div class="stage-strip" aria-hidden="true">
+            <?php foreach (OW_STAGES as $n): if (!isset($stg[$n]) || !owSafeStagePath((string) $stg[$n]['photo_path'])) continue; ?>
+              <span><img loading="lazy" src="<?= e($stg[$n]['photo_path']) ?>" alt=""><b><?= $n ?>%</b></span>
+            <?php endforeach; ?>
+          </div>
+          <details class="journey-toggle">
+            <summary><?= owBi('See the creation journey', 'شاهد رحلة الإبداع') ?></summary>
+            <?= owJourneyHtml($stg, $artColors[(int) $aw['id']] ?? [], (string) $aw['type'], $ART_TYPES) ?>
+          </details>
+          <?php endif; ?>
           <div class="art-price"><?= number_format((float) $aw['price']) ?> <span class="sar">SAR</span></div>
           <?php if ($isOwner): ?>
           <div class="art-actions">

@@ -1,6 +1,7 @@
 /* =====================================================================
  *  proof.css — Creation Journey (marketplace) and Proof of Process
- *  (admin review). Used by marketplace.php, admin.php, subadmin_dashboard.php
+ *  (admin review). Used by marketplace.php, artist_dashboard.php,
+ *  admin.php and subadmin_dashboard.php
  *  Text is printed in both languages; only the one matching the page
  *  direction is shown, so each page's own language switch keeps working.
  * ===================================================================== */
