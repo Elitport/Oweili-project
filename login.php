@@ -46,7 +46,7 @@ $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-sans);overflow-x:hidden;}
+html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
 /* ── AUTH CARD ── */
 .pw-wrap{position:relative;}
 .pw-toggle{position:absolute;top:50%;transform:translateY(-50%);right:10px;background:none;border:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.04em;padding:4px;}

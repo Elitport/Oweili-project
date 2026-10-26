@@ -31,7 +31,7 @@ function navAct(string $section, string $page = '', string $type = ''): string {
 /* The Oweili mark: a circle made of four quarters, in brand pink */
 if (!function_exists('owLogoMark')) {
     function owLogoMark(int $size = 24): void {
-        echo '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="#ff0055">'
+        echo '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g style="fill:var(--color-primary)">'
            . '<path d="M11 1A10 10 0 0 0 1 11h10z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z"/>'
            . '<path d="M1 13a10 10 0 0 0 10 10V13z"/><path d="M13 13v10a10 10 0 0 0 10-10z"/></g></svg>';
     }

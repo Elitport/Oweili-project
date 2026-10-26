@@ -60,24 +60,24 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.06);">
         <!-- Header -->
-        <tr><td style="background:#111111;padding:34px 32px;text-align:center;">
+        <tr><td style="background:#23314A;padding:34px 32px;text-align:center;">
           <div style="font-size:22px;font-weight:700;letter-spacing:0.14em;color:#ffffff;text-transform:uppercase;">OWEILI</div>
-          <div style="height:3px;width:56px;margin:14px auto 0;background:linear-gradient(90deg,#ff0055,#0066ff,#0066ff);border-radius:3px;"></div>
+          <div style="height:3px;width:56px;margin:14px auto 0;background:linear-gradient(90deg,#DB8084,#8FA1B1,#23314A);border-radius:3px;"></div>
         </td></tr>
 
         <!-- English -->
         <tr><td style="padding:32px 32px 8px;text-align:left;" dir="ltr">
-          <h1 style="margin:0 0 12px;font-size:22px;color:#111111;">Welcome, {$en}! 🎨</h1>
-          <p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:#444;">
+          <h1 style="margin:0 0 12px;font-size:22px;color:#23314A;">Welcome, {$en}! 🎨</h1>
+          <p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:#4A5568;">
             Your account is verified and you're now part of the <strong>Oweili</strong> art community —
             a bilingual home for Saudi artists, collectors, and art lovers.
           </p>
-          <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#444;">
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#4A5568;">
             Explore original artworks, connect with fellow artists, and share your own work with the world.
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-            <td style="padding-right:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#111111;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Go to your dashboard</a></td>
-            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#ff0055;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Browse the gallery</a></td>
+            <td style="padding-right:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#23314A;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Go to your dashboard</a></td>
+            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#DB8084;color:#23314A;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Browse the gallery</a></td>
           </tr></table>
         </td></tr>
 
@@ -85,23 +85,23 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
 
         <!-- Arabic -->
         <tr><td style="padding:8px 32px 32px;text-align:right;" dir="rtl">
-          <h1 style="margin:0 0 12px;font-size:22px;color:#111111;">مرحباً، {$ar}! 🎨</h1>
-          <p style="margin:0 0 14px;font-size:15px;line-height:1.9;color:#444;">
+          <h1 style="margin:0 0 12px;font-size:22px;color:#23314A;">مرحباً، {$ar}! 🎨</h1>
+          <p style="margin:0 0 14px;font-size:15px;line-height:1.9;color:#4A5568;">
             تم تفعيل حسابك، وأنت الآن جزء من مجتمع <strong>أويلي</strong> الفني —
             منصة ثنائية اللغة تجمع الفنانين السعوديين والمقتنين ومحبي الفن.
           </p>
-          <p style="margin:0 0 20px;font-size:15px;line-height:1.9;color:#444;">
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.9;color:#4A5568;">
             استكشف الأعمال الفنية الأصلية، وتواصل مع فنانين آخرين، وشارك أعمالك مع العالم.
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0" align="right"><tr>
-            <td style="padding-left:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#111111;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">لوحة التحكم</a></td>
-            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#ff0055;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">تصفّح المعرض</a></td>
+            <td style="padding-left:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#23314A;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">لوحة التحكم</a></td>
+            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#DB8084;color:#23314A;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">تصفّح المعرض</a></td>
           </tr></table>
         </td></tr>
 
         <!-- Footer -->
         <tr><td style="background:#fafafa;padding:20px 32px;text-align:center;">
-          <p style="margin:0;font-size:12px;color:#999;">© Oweili · oweili.com — Saudi-born bilingual art gallery</p>
+          <p style="margin:0;font-size:12px;color:#6B7A8A;">© Oweili · oweili.com — Saudi-born bilingual art gallery</p>
         </td></tr>
       </table>
     </td></tr>
@@ -120,10 +120,10 @@ HTML;
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-sans);overflow-x:hidden;}
+html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
 .v-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:34px;}
-.v-icon.ok{background:rgba(0,102,255,0.12);border:1px solid rgba(0,102,255,0.3);}
-.v-icon.bad{background:rgba(255,0,85,0.1);border:1px solid rgba(255,0,85,0.25);}
+.v-icon.ok{background:rgba(var(--rgb-accent),0.12);border:1px solid rgba(var(--rgb-accent),0.3);}
+.v-icon.bad{background:rgba(var(--rgb-primary),0.1);border:1px solid rgba(var(--rgb-primary),0.25);}
 .redir-note{margin-top:16px;font-size:12px;color:var(--color-body);}
 @keyframes riseUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 </style>

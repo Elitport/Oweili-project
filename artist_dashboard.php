@@ -157,7 +157,7 @@ $web = $artist['website']   ?? '';
 .section-title:first-child{margin-top:0;}
 /* PROFILE HEADER */
 .profile-head{display:flex;gap:var(--space-lg);align-items:center;padding:var(--space-lg);}
-.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid #fff;box-shadow:var(--shadow-card);background:var(--color-artist);display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;font-weight:700;}
+.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid var(--color-bg);box-shadow:var(--shadow-card);background:var(--color-artist);display:flex;align-items:center;justify-content:center;color:var(--color-on-primary);font-size:42px;font-weight:700;}
 .profile-info{flex:1;min-width:0;}
 .profile-info h1{font-size:var(--fs-section);margin:0 0 4px;}
 .profile-info .name-ar{font-size:var(--fs-subtitle);color:var(--color-body);margin-bottom:var(--space-xs);}
@@ -170,11 +170,11 @@ $web = $artist['website']   ?? '';
 [dir="rtl"] .head-actions{align-items:flex-start;}
 .socials{display:flex;gap:var(--space-xs);}
 .socials a{width:40px;height:40px;border-radius:var(--radius-btn);display:flex;align-items:center;justify-content:center;border:1px solid var(--color-border-strong);color:var(--color-dark);transition:background var(--ease),color var(--ease);}
-.socials a:hover{background:var(--color-dark);color:#fff;}
+.socials a:hover{background:var(--color-dark);color:var(--color-on-dark);}
 .socials svg{width:16px;height:16px;fill:currentColor;}
 /* ARTWORKS — 4 columns desktop, 2 tablet, 1 phone */
 .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);}
-.aw-review{background:var(--color-dark);color:#fff;border-color:var(--color-dark);}
+.aw-review{background:var(--color-dark);color:var(--color-on-dark);border-color:var(--color-dark);}
 .art-actions{display:flex;gap:var(--space-xs);margin-top:var(--space-sm);}
 .art-actions > *{flex:1;}
 .art-actions form{margin:0;display:flex;}

@@ -51,14 +51,14 @@ $memberSince = !empty($me['created_at']) ? date('Y', strtotime($me['created_at']
 .section-title{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin:var(--space-xl) 0 var(--space-sm);}
 .section-title:first-of-type{margin-top:0;}
 .profile-head{display:flex;gap:var(--space-lg);align-items:center;padding:var(--space-lg);}
-.avatar{width:110px;height:110px;border-radius:50%;flex-shrink:0;border:3px solid #fff;box-shadow:var(--shadow-card);background-color:var(--color-collector);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:700;}
+.avatar{width:110px;height:110px;border-radius:50%;flex-shrink:0;border:3px solid var(--color-bg);box-shadow:var(--shadow-card);background-color:var(--color-collector);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:var(--color-on-accent);font-size:40px;font-weight:700;}
 .profile-info{flex:1;min-width:0;}
 .profile-info h1{font-size:var(--fs-section);margin:0 0 4px;}
 .profile-info .name-ar{font-size:var(--fs-subtitle);color:var(--color-body);margin-bottom:var(--space-xs);}
 .profile-info .meta{font-size:15px;color:var(--color-body);display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:6px;}
 .head-actions{flex-shrink:0;}
 .stats-row{grid-template-columns:repeat(3,1fr);margin-top:var(--space-md);}
-.pur-thumb{width:56px;height:56px;border-radius:var(--radius-input);object-fit:contain;background:#fff;border:1px solid var(--color-border);}
+.pur-thumb{width:56px;height:56px;border-radius:var(--radius-input);object-fit:contain;background:var(--color-frame);border:1px solid var(--color-border);}
 .pur-art{display:flex;align-items:center;gap:var(--space-sm);}
 .pur-price{font-weight:700;white-space:nowrap;}
 .title-ar{font-size:var(--fs-caption);color:var(--color-body);}

@@ -101,15 +101,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 <style>
 /* Edit artwork — layout only; card, fields, buttons and messages come from oweili.css */
 .page{position:relative;z-index:10;width:100%;max-width:760px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl);}
-.gc{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:var(--space-lg);}
+.gc{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:var(--space-lg);}
 .gc h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
 .sub{margin-bottom:var(--space-md);}
-.cur-img{width:100%;aspect-ratio:4/3;max-height:320px;object-fit:contain;background:#fff;border:1px solid var(--color-border);border-radius:12px;margin-bottom:var(--space-md);}
+.cur-img{width:100%;aspect-ratio:4/3;max-height:320px;object-fit:contain;background:var(--color-frame);border:1px solid var(--color-border);border-radius:12px;margin-bottom:var(--space-md);}
 .row{display:flex;flex-wrap:wrap;gap:var(--space-sm);align-items:center;margin-top:var(--space-xs);}
 @media(max-width:768px){.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}.gc{padding:var(--space-md);}}
 </style>
 <style>
-.lock-note{font-size:15px;line-height:1.6;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(0,102,255,0.2);border-radius:var(--radius-input);padding:12px 16px;}
+.lock-note{font-size:15px;line-height:1.6;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.2);border-radius:var(--radius-input);padding:12px 16px;}
 .lock-note::before{content:'🔒 ';}
 </style>
 </head>

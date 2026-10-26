@@ -88,15 +88,15 @@ foreach ($artworks as $aw) {
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
     .page-header{margin-bottom:var(--space-md);}
     .page-header h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
-    .page-header h1 em{font-style:normal;color:var(--color-primary);}
+    .page-header h1 em{font-style:normal;color:var(--color-highlight);}
     .page-header p{font-size:var(--fs-body);max-width:600px;margin:0;}
     .search-box{max-width:420px;margin-bottom:var(--space-sm);}
     .filter-group{display:flex;flex-wrap:wrap;gap:var(--space-xs);margin-bottom:var(--space-sm);align-items:center;}
     .filter-label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-inline-end:4px;}
     /* filters are chips (on/off choices), so they stay rounded; real buttons use .btn */
-    .filter-btn{min-height:36px;padding:0 14px;border-radius:var(--radius-pill);font-family:inherit;font-size:var(--fs-label);font-weight:600;cursor:pointer;border:1px solid var(--color-border-strong);background:#fff;color:var(--color-dark);transition:background var(--ease),border-color var(--ease);}
+    .filter-btn{min-height:36px;padding:0 14px;border-radius:var(--radius-pill);font-family:inherit;font-size:var(--fs-label);font-weight:600;cursor:pointer;border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);transition:background var(--ease),border-color var(--ease);}
     .filter-btn:hover{background:var(--color-hover-light);}
-    .filter-btn.active{background:var(--color-dark);color:#fff;border-color:var(--color-dark);}
+    .filter-btn.active{background:var(--color-dark);color:var(--color-on-dark);border-color:var(--color-dark);}
     .filter-btn:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
     .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);margin-top:var(--space-md);}
     .aw-card.hidden{display:none;}
@@ -104,7 +104,7 @@ foreach ($artworks as $aw) {
     .aw-alt{font-size:var(--fs-caption);color:var(--color-body);}
     .aw-body .btn{margin-top:var(--space-sm);}
     .empty-state{display:none;margin-top:var(--space-md);}
-    .human-banner{display:flex;align-items:center;justify-content:center;gap:var(--space-xs);text-align:center;margin:0 0 var(--space-md);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-card);font-size:var(--fs-body);font-weight:600;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(0,100,255,0.15);}
+    .human-banner{display:flex;align-items:center;justify-content:center;gap:var(--space-xs);text-align:center;margin:0 0 var(--space-md);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-card);font-size:var(--fs-body);font-weight:600;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.15);}
     .human-banner .hb-icon{font-size:18px;flex-shrink:0;}
     .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);margin-top:var(--space-sm);}
     .gallery-empty .ge-emoji{font-size:44px;margin-bottom:var(--space-sm);}
@@ -113,11 +113,11 @@ foreach ($artworks as $aw) {
     .pagination{display:flex;justify-content:center;align-items:center;gap:var(--space-sm);margin-top:var(--space-xl);}
     .page-info{font-size:var(--fs-label);color:var(--color-body);font-weight:600;}
     /* details window */
-    .modal-bg{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:var(--space-sm);}
+    .modal-bg{position:fixed;inset:0;z-index:2000;background:rgba(var(--rgb-shadow),0.5);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:var(--space-sm);}
     .modal-bg.open{display:flex;}
-    .modal{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-card);max-width:600px;width:100%;box-shadow:0 30px 70px rgba(0,0,0,0.25);max-height:90vh;overflow-y:auto;}
+    .modal{background:var(--color-menu);border:1px solid var(--color-border);border-radius:var(--radius-card);max-width:600px;width:100%;box-shadow:0 30px 70px rgba(var(--rgb-shadow),0.25);max-height:90vh;overflow-y:auto;}
     .modal-body{padding:var(--space-md);}
-    .modal-img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#fff;border:1px solid var(--color-border);border-radius:12px;margin-bottom:var(--space-sm);display:block;}
+    .modal-img{width:100%;aspect-ratio:4/3;object-fit:contain;background:var(--color-frame);border:1px solid var(--color-border);border-radius:12px;margin-bottom:var(--space-sm);display:block;}
     .modal-body h2{font-size:var(--fs-card);margin:0 0 4px;}
     .modal-body .m-title-ar{font-size:var(--fs-body);color:var(--color-body);margin-bottom:var(--space-xs);}
     .modal-body .m-artist{font-size:var(--fs-caption);font-weight:600;margin-bottom:var(--space-sm);display:inline-block;}

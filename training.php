@@ -79,15 +79,15 @@ $cityLabel = function (array $i): array {
 .i-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);align-items:start;}
 .i-card{display:flex;flex-direction:column;gap:var(--space-sm);}
 .i-top{display:flex;gap:var(--space-sm);align-items:center;}
-.i-logo{width:64px;height:64px;flex-shrink:0;border-radius:var(--radius-card);overflow:hidden;background:#fff;border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;}
+.i-logo{width:64px;height:64px;flex-shrink:0;border-radius:var(--radius-card);overflow:hidden;background:var(--color-surface);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;}
 .i-logo img{width:100%;height:100%;object-fit:contain;}
 .i-logo svg{width:30px;height:30px;stroke:var(--color-institute);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-.i-logo.none{background:rgba(124,58,237,0.07);border-color:rgba(124,58,237,0.18);}
+.i-logo.none{background:rgba(var(--rgb-neutral),0.07);border-color:rgba(var(--rgb-neutral),0.18);}
 .i-name{font-size:var(--fs-subtitle);line-height:1.35;margin:0;}
 .i-city{display:flex;align-items:center;gap:4px;font-size:var(--fs-caption);color:var(--color-body);margin-top:2px;}
 .i-city svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
 .i-desc{margin:0;}
-.i-count{align-self:flex-start;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-accent-dark);background:rgba(0,102,255,0.08);border:1px solid rgba(0,102,255,0.2);}
+.i-count{align-self:flex-start;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-accent-dark);background:rgba(var(--rgb-accent),0.08);border:1px solid rgba(var(--rgb-accent),0.2);}
 details.i-courses{border-top:1px solid var(--color-border);padding-top:var(--space-sm);}
 details.i-courses > summary{list-style:none;user-select:none;}
 details.i-courses > summary::-webkit-details-marker{display:none;}
@@ -97,8 +97,8 @@ details.i-courses[open] > summary svg{transform:rotate(180deg);}
 details[open] .when-open{display:inline;}
 details[open] .when-closed{display:none;}
 .c-list{display:flex;flex-direction:column;gap:var(--space-xs);margin-top:var(--space-sm);}
-.c-item{padding:var(--space-sm);border-radius:12px;background:#fff;border:1px solid var(--color-border);}
-.c-item:nth-child(even){background:#fcfcfc;}
+.c-item{padding:var(--space-sm);border-radius:12px;background:var(--color-surface);border:1px solid var(--color-border);}
+.c-item:nth-child(even){background:var(--color-surface-2);}
 .c-title{font-size:var(--fs-body);font-weight:700;color:var(--color-dark);line-height:1.4;}
 .c-meta{display:flex;flex-wrap:wrap;gap:4px var(--space-sm);margin:6px 0 var(--space-sm);font-size:var(--fs-caption);color:var(--color-body);}
 .c-meta b{color:var(--color-dark);}

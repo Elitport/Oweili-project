@@ -89,7 +89,7 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
 .avatar-row{display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-md);}
 .avatar-row > div:last-child{flex:1;min-width:0;}
 .avatar-row input[type=file]{width:100%;}
-.avatar-prev{width:84px;height:84px;border-radius:50%;background-size:cover;background-position:center;background-color:var(--color-artist);display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:700;flex-shrink:0;}
+.avatar-prev{width:84px;height:84px;border-radius:50%;background-size:cover;background-position:center;background-color:var(--color-artist);display:flex;align-items:center;justify-content:center;color:var(--color-on-primary);font-size:30px;font-weight:700;flex-shrink:0;}
 .actions{display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-top:var(--space-xs);}
 @media(max-width:768px){.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
 </style>

@@ -77,10 +77,10 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 .top-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;}
 .stat-grid{grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-lg);}
 .sec-head h2{font-size:var(--fs-subtitle);display:flex;align-items:center;gap:var(--space-xs);margin:0 0 var(--space-sm);}
-.count{background:var(--color-dark);color:#fff;font-size:var(--fs-min);font-weight:700;padding:2px 9px;border-radius:var(--radius-pill);}
+.count{background:var(--color-dark);color:var(--color-on-dark);font-size:var(--fs-min);font-weight:700;padding:2px 9px;border-radius:var(--radius-pill);}
 .art-list{display:flex;flex-direction:column;gap:var(--space-sm);}
-.art-item{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm);padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--radius-card);background:#fff;}
-.art-thumb{width:72px;height:72px;border-radius:var(--radius-input);background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#fff;border:1px solid var(--color-border);flex-shrink:0;}
+.art-item{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm);padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--radius-card);background:var(--color-surface);}
+.art-thumb{width:72px;height:72px;border-radius:var(--radius-input);background-size:contain;background-repeat:no-repeat;background-position:center;background-color:var(--color-surface);border:1px solid var(--color-border);flex-shrink:0;}
 .art-meta{flex:1;min-width:0;}
 .art-proof{flex-basis:100%;min-width:0;}
 .art-proof .pj{margin-top:4px;}

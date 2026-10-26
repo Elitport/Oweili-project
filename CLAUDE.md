@@ -143,7 +143,7 @@
 
 
 ### Homepage (index.php) — one screen
-- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "Real artists · Real art · Verified by proof"; headline "Where Human Hands Create Art" / «حيث تصنع اليد البشرية الفن» in one dark color (56px desktop, 36px phone, weight 300); subtitle "Every piece here was made by real hands. And you can see how." / «كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.» (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
+- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "✦ A Real Touch" / «✦ لمسة حقيقية»; headline "Everything here started with human hands" / «كل ما تراه هنا، بدأ بيدٍ حقيقية» in one dark color (56px desktop, 36px phone, weight 300); subtitle "Every piece here was made by real hands. And you can see how." / «كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.» (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
 - The badge, headline, subtitle and buttons fade in gently (CSS only; turned off for visitors who reduce motion)
 - Removed on purpose (owner's request): "Art You Can Trust" steps, "Latest Verified Artworks", the Join cards and the Discover cards
 - Files: index.php, assets/css/oweili.css, nav.css. Tables: none
@@ -188,6 +188,13 @@
 - The FAQ answer about cost is now honest: joining is free, and Oweili keeps 15% (before VAT) only when a work sells
 - Fixed on the way: one Studio block ("Workshops with Saudi Art Institutes") never switched to Arabic; it does now
 - When adding new text, keep this voice. Tables: none
+
+### Rebrand: new colors + dark mode — rebrand branch (waiting for owner approval)
+- What it does: new palette — warm pink #DB8084 (hover #C96A6E), deep navy #23314A (hover #1A2538), soft grey-blue #8FA1B1, body text #4A5568. Role colors: artist pink, collector navy, institute grey-blue, sub-admin #5B8A6E, admin navy
+- Dark mode turns on by itself when the visitor's phone or computer is set to dark: background #0F1520, frosted navy glass cards, headings #F0F4F8, body #CBD5E0, links grey-blue #8FA1B1, menu #0F1520 with blur, and a navy shade rgba(15,21,32,0.6) over the background video
+- No page has its own colors any more: every color comes from oweili.css variables (plus helpers like --rgb-primary, --color-surface, --color-on-primary), so light and dark mode work on every page. Kept on purpose: real paint swatches in the upload, black behind admin videos, and the welcome email in verify.php (email apps cannot read CSS variables, so it uses the new colors typed in)
+- Homepage: new headline and badge (see Homepage)
+- Files: assets/css/oweili.css, nav.css, proof.css, discover.css, nav.php and footer.php (logo color), artwork_lib.php (art type drawings follow the text color), verify.php, and every page's style block. Tables: none
 
 ### Design system (one theme) — design-system branch
 - What it does: one look for every page and dashboard, defined once in assets/css/oweili.css and used everywhere
@@ -235,8 +242,9 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ## Design System
 - Style: Luxury white minimal
 - Background: Video (bg.mp4) with white overlay
-- Primary color: #ff0055
-- Accent color: #0066ff
+- Primary color: #DB8084 (warm pink) — rebrand branch, waiting for owner approval
+- Accent color: #23314A (deep navy)
+- Dark mode: follows the visitor's phone or computer setting (see "Rebrand" under Features)
 - Font: DM Sans (English) + Tajawal (Arabic), from Google Fonts — loaded once in oweili.css (see rule 30)
 - Cards: border-radius 16px, white, 1px border, soft shadow, 24px padding
 - Buttons: 8px corners (not pill), 48px tall, bold 14px uppercase. Chips, tags and badges stay rounded
@@ -283,14 +291,15 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Mobile first — every page must work perfectly on phone
 
 ### 2. Better Colors
-- Primary: #ff0055 (red/pink) — use for key actions and highlights
-- Accent: #0066ff (blue) — use for links and secondary actions
+- Primary: #DB8084 (warm pink) — use for key actions and highlights
+- Accent: #23314A (deep navy) — use for links and secondary actions
 - Background: white #ffffff with frosted glass cards
-- Text: #111111 for headings, rgba(0,0,0,0.65) for body
-- Hover on pink buttons: --color-primary-dark #e0004b. Small blue text on light blue backgrounds: --color-accent-dark #0047ab
+- Text: #23314A for headings, #4A5568 for body, #8FA1B1 for captions on large text
+- Hover on pink buttons: --color-primary-dark #C96A6E. Navy hover: --color-accent-dark #1A2538
+- Text on pink buttons is navy (--color-on-primary), because white on the new pink is too faint to read
 - Never add random colors — stick to this palette
 - Ensure contrast ratio is always readable
-- Pink #ff0055 is for buttons and large highlights only (large text = 18px+, or 14px+ bold) — never for small text, since it fails WCAG AA at small sizes
+- Pink #DB8084 is for buttons, borders and marks only; pink words in big headings use --color-highlight (#C96A6E on light). Never small pink text (large text = 18px+, or 14px+ bold) — never for small text, since it fails WCAG AA at small sizes
 - Button labels on pink must be bold and at least 14px
 - Small text links use blue #0066ff or dark grey #111111 — never pink
 
@@ -436,9 +445,9 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 
 ### Identity
 - Platform name: Oweili (أويلي) — never use "Resha Art" (old name)
-- Logo: the four-quarter circle mark in #ff0055 red + "OWEILI" in bold uppercase
-- Primary color: #ff0055 (red) — buttons and large highlights only
-- Accent color: #0066ff (blue) — links and secondary actions
+- Logo: the four-quarter circle mark in the primary pink (#DB8084) + "OWEILI" in bold uppercase
+- Primary color: #DB8084 (warm pink) — buttons and large highlights only
+- Accent color: #23314A (deep navy) — links and secondary actions
 - Background: white #ffffff with frosted glass cards
 - Arabic font: Tajawal (Google Fonts)
 - English font: DM Sans (Google Fonts)

@@ -14,9 +14,9 @@ require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languag
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oweili · Where Human Hands Create Art</title>
+<title>Oweili · Everything here started with human hands</title>
 <meta name="description" content="Every piece here was made by real hands. And you can see how. كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.">
-<meta property="og:title" content="Oweili · Where Human Hands Create Art · حيث تصنع اليد البشرية الفن">
+<meta property="og:title" content="Oweili · Everything here started with human hands · كل ما تراه هنا، بدأ بيدٍ حقيقية">
 <meta property="og:description" content="Every piece here was made by real hands. And you can see how.">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
@@ -31,7 +31,7 @@ body { overflow-x: hidden; }
 .hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
 .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; }
 .hero-bg video.on { opacity: 1; }
-.hero-shade { position: absolute; inset: 0; background: rgba(0,0,0,0.15); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
+.hero-shade { position: absolute; inset: 0; background: var(--hero-shade); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
 .hero-bg video.on + .hero-shade { opacity: 1; }
 
 .hero {
@@ -46,12 +46,11 @@ body { overflow-x: hidden; }
 .hero-badge {
   display: inline-flex; align-items: center; gap: var(--space-xs);
   padding: 6px 14px; margin-bottom: var(--space-lg);
-  border: 1px solid rgba(17,17,17,0.18); border-radius: var(--radius-pill);
-  background: rgba(255,255,255,0.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--rgb-ink),0.18); border-radius: var(--radius-pill);
+  background: rgba(var(--rgb-surface),0.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   font-size: var(--fs-min); font-weight: 500; letter-spacing: 0.04em; color: var(--color-dark);
 }
 [dir="rtl"] .hero-badge { letter-spacing: 0; font-size: 13px; }
-.hero-badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); }
 
 .hero h1 {
   font-size: 56px; font-weight: 300; letter-spacing: -0.02em; line-height: 1.1;
@@ -96,8 +95,8 @@ body { overflow-x: hidden; }
 
 <main class="hero">
   <div class="hero-inner">
-    <span class="hero-badge fade fade-1"><i aria-hidden="true"></i><?= owBi('Real artists · Real art · Verified by proof', 'فنانون حقيقيون · فن حقيقي · موثّق بالدليل') ?></span>
-    <h1 class="fade fade-2"><?= owBi('Where Human Hands Create Art', 'حيث تصنع اليد البشرية الفن') ?></h1>
+    <span class="hero-badge fade fade-1"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
+    <h1 class="fade fade-2"><?= owBi('Everything here started with human hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
     <p class="hero-sub fade fade-3"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
     <div class="hero-btns fade fade-4">
       <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
@@ -113,10 +112,10 @@ function tgl(){
   var h = document.documentElement, ar = h.getAttribute('dir') !== 'rtl';
   h.setAttribute('dir', ar ? 'rtl' : 'ltr');
   h.setAttribute('lang', ar ? 'ar' : 'en');
-  document.title = ar ? 'أويلي · حيث تصنع اليد البشرية الفن' : 'Oweili · Where Human Hands Create Art';
+  document.title = ar ? 'أويلي · كل ما تراه هنا، بدأ بيدٍ حقيقية' : 'Oweili · Everything here started with human hands';
   try { localStorage.setItem('lang', ar ? 'ar' : 'en'); } catch (e) {}
 }
-if (document.documentElement.getAttribute('dir') === 'rtl') { document.title = 'أويلي · حيث تصنع اليد البشرية الفن'; }
+if (document.documentElement.getAttribute('dir') === 'rtl') { document.title = 'أويلي · كل ما تراه هنا، بدأ بيدٍ حقيقية'; }
 
 /* The video (and its shade) fade in once it can play */
 (function(){

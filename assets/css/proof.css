@@ -21,7 +21,7 @@
 .pj-warn {
   display: block; margin-top: 4px; padding: 4px 8px; border-radius: var(--radius-input);
   font-size: var(--fs-min); line-height: 1.4; font-weight: 700; color: var(--color-dark);
-  background: var(--color-tint-pink); border: 1px solid rgba(255,0,85,0.3);
+  background: var(--color-tint-pink); border: 1px solid rgba(var(--rgb-primary),0.3);
 }
 .stages-journey .stage-line, .stages-proof .stage-line { margin-top: calc(var(--stage-size) / 2); }
 
@@ -32,12 +32,12 @@
 .pj-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .pj-chip {
   display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: var(--radius-pill);
-  border: 1px solid var(--color-border-strong); font-size: var(--fs-label); font-weight: 600; color: var(--color-dark); background: #fff;
+  border: 1px solid var(--color-border-strong); font-size: var(--fs-label); font-weight: 600; color: var(--color-dark); background: var(--color-surface);
 }
-.pj-chip i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
+.pj-chip i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(var(--rgb-ink),0.2); }
 .pj-note {
   margin: var(--space-sm) 0 0; padding: 12px 16px; border-radius: var(--radius-input);
-  background: var(--color-tint-blue); border: 1px solid rgba(0,102,255,0.18);
+  background: var(--color-tint-blue); border: 1px solid rgba(var(--rgb-accent),0.18);
   font-size: 15px; line-height: 1.6; color: var(--color-dark);
 }
 
