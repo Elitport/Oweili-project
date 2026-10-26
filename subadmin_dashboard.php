@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/artwork_lib.php';
 
 /* =====================================================================
  *  Oweili · subadmin_dashboard.php
@@ -26,11 +27,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
     $awId   = (int) ($_POST['artwork_id'] ?? 0);
     if ($awId > 0 && ($action === 'approve_art' || $action === 'reject_art')) {
         if ($action === 'approve_art') {
-            getDB()->prepare('UPDATE artworks SET is_approved = 1 WHERE id = :id')->execute([':id' => $awId]);
+            getDB()->prepare('UPDATE artworks SET is_approved = 1 WHERE id = :id' . owNotDraftSql())->execute([':id' => $awId]);
         } else {
             $row = getDB()->prepare('SELECT image_url FROM artworks WHERE id = :id');
             $row->execute([':id' => $awId]);
             $img = $row->fetchColumn();
+            owDeleteAllStageFiles($awId);
             getDB()->prepare('DELETE FROM artworks WHERE id = :id')->execute([':id' => $awId]);
             if ($img && strpos($img, 'uploads/') === 0) {
                 $path = __DIR__ . '/' . $img;
@@ -48,7 +50,7 @@ $pendingArt = getDB()->query(
             u.full_name_en AS artist_name
      FROM artworks a
      LEFT JOIN users u ON u.id = a.artist_id
-     WHERE a.is_approved = 0
+     WHERE a.is_approved = 0" . owNotDraftSql('a') . "
      ORDER BY a.created_at DESC"
 )->fetchAll();
 

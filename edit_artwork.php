@@ -12,6 +12,8 @@ $stmt = getDB()->prepare('SELECT * FROM artworks WHERE id = :id AND artist_id = 
 $stmt->execute([':id' => $artId, ':uid' => $viewerId]);
 $aw = $stmt->fetch();
 if (!$aw) { http_response_code(404); exit('Artwork not found or not yours.'); }
+/* Unfinished 3-stage drafts are completed in the upload flow, not here. */
+if (!empty($aw['is_draft'])) { header('Location: upload_artwork.php?id=' . (int) $aw['id']); exit; }
 
 $err = '';
 

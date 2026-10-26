@@ -22,6 +22,14 @@ ALTER TABLE `users`
   NOT NULL DEFAULT 'collector';
 
 -- ---------------------------------------------------------------------
+--  0b. Drafts: an artwork stays a private draft while the artist collects
+--      the 25% / 50% / 100% photos (often days apart). Existing artworks
+--      automatically get 0 (= not a draft), so nothing changes for them.
+-- ---------------------------------------------------------------------
+ALTER TABLE `artworks` ADD COLUMN IF NOT EXISTS `is_draft` TINYINT(1) NOT NULL DEFAULT 0;
+ALTER TABLE `artworks` ADD INDEX IF NOT EXISTS `idx_artworks_draft` (`artist_id`, `is_draft`);
+
+-- ---------------------------------------------------------------------
 --  1. ARTWORK STAGES — the 3 proof-of-process photos (25%, 50%, 100%)
 --     One photo per stage per artwork.
 -- ---------------------------------------------------------------------

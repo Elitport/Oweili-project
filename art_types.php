@@ -25,5 +25,8 @@ return [
     'sculpture'   => ['en' => 'Sculpture',       'ar' => 'نحت'],
     'calligraphy' => ['en' => 'Calligraphy',     'ar' => 'خط عربي'],
     'mosaic'      => ['en' => 'Mosaic',          'ar' => 'فسيفساء'],
+    'mixed_media'       => ['en' => 'Mixed Media',       'ar' => 'وسائط مختلطة'],
+    'digital_art'       => ['en' => 'Digital Art',       'ar' => 'فن رقمي'],
+    'islamic_geometric' => ['en' => 'Islamic Geometric', 'ar' => 'فن هندسي إسلامي'],
     'other'       => ['en' => 'Other',           'ar' => 'أخرى'],
 ];

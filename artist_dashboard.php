@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/artwork_lib.php';
 
 /* ---------------------------------------------------------------------
  *  Check 1 — Session check.
@@ -30,8 +31,6 @@ if ($isOwner && $viewer && ($viewer['role'] ?? '') !== 'artist') {
     exit;
 }
 
-$uploadError = '';   // shown to owner on a failed upload
-
 /* ---------------------------------------------------------------------
  *  POST handlers (owner-only, CSRF-protected). PRG pattern.
  * ------------------------------------------------------------------- */
@@ -48,6 +47,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $stmt->execute([':id' => $artId, ':uid' => $viewerId]);
         $row = $stmt->fetch();
         if ($row) {
+            owDeleteAllStageFiles($artId);
             getDB()->prepare('DELETE FROM artworks WHERE id = :id AND artist_id = :uid')
                 ->execute([':id' => $artId, ':uid' => $viewerId]);
             // best-effort remove the file
@@ -58,54 +58,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         }
         header('Location: artist_dashboard.php?id=' . $viewerId);
         exit;
-    }
-
-    /* ---- Upload a new artwork (owner only) ---- */
-    if ($action === 'upload' && $isOwner) {
-        $tEn   = sanitize($_POST['title_en'] ?? '');
-        $tAr   = sanitize($_POST['title_ar'] ?? '');
-        $dEn   = sanitize($_POST['desc_en'] ?? '');
-        $dAr   = sanitize($_POST['desc_ar'] ?? '');
-        $price = $_POST['price'] ?? '';
-        $type  = array_key_exists($_POST['type'] ?? '', $ART_TYPES) ? $_POST['type'] : '';
-
-        if ($tEn === '' || $tAr === '' || $dEn === '' || $dAr === '' || $type === '' || !is_numeric($price)) {
-            $uploadError = 'required';
-        } elseif (empty($_FILES['image']['name'])) {
-            $uploadError = 'image';
-        } else {
-            $check = validateUpload($_FILES['image']);
-            if (!$check['ok']) {
-                $uploadError = 'image';
-            } else {
-                $dir = __DIR__ . '/uploads/artworks/';
-                if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
-                $fname = safeUploadName($check['ext']);
-                $dest  = $dir . $fname;
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
-                    $rel = 'uploads/artworks/' . $fname;
-                    $ins = getDB()->prepare(
-                        'INSERT INTO artworks
-                           (artist_id, title_en, title_ar, description_en, description_ar,
-                            price, type, status, image_url, is_approved)
-                         VALUES
-                           (:aid, :ten, :tar, :den, :dar, :price, :type, "available", :img, 0)'
-                    );
-                    $ins->execute([
-                        ':aid'   => $viewerId,
-                        ':ten'   => $tEn, ':tar' => $tAr,
-                        ':den'   => $dEn, ':dar' => $dAr,
-                        ':price' => (float) $price,
-                        ':type'  => $type,
-                        ':img'   => $rel,
-                    ]);
-                    header('Location: artist_dashboard.php?id=' . $viewerId);
-                    exit;
-                } else {
-                    $uploadError = 'image';
-                }
-            }
-        }
     }
 }
 
@@ -129,12 +81,24 @@ if (!$artist) {
 $artworks = [];
 $soldCount = 0;
 if ($artist) {
-    $stmt = getDB()->prepare('SELECT * FROM artworks WHERE artist_id = :id ORDER BY created_at DESC');
+    // Unfinished drafts are listed separately (owner only); visitors only see approved work.
+    $stmt = getDB()->prepare('SELECT * FROM artworks WHERE artist_id = :id' . owNotDraftSql()
+        . ($isOwner ? '' : ' AND is_approved = 1') . ' ORDER BY created_at DESC');
     $stmt->execute([':id' => $profileId]);
     $artworks = $stmt->fetchAll();
     foreach ($artworks as $a) {
         if ($a['status'] === 'sold') $soldCount++;
     }
+}
+
+/* Drafts in progress (3-stage upload not yet submitted) — owner only */
+$drafts = [];
+$draftStages = [];
+if ($artist && $isOwner && owStagesReady()) {
+    $stmt = getDB()->prepare('SELECT id, title_en, title_ar, created_at FROM artworks WHERE artist_id = :id AND is_draft = 1 ORDER BY created_at DESC');
+    $stmt->execute([':id' => $profileId]);
+    $drafts = $stmt->fetchAll();
+    $draftStages = owGetStagesFor(array_column($drafts, 'id'));
 }
 
 $memberSince = $artist && !empty($artist['created_at']) ? date('Y', strtotime($artist['created_at'])) : 'N/A';
@@ -259,20 +223,25 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .mini-btn.danger:hover{background:#ff0055;border-color:#ff0055;color:#fff;}
 .empty-msg{padding:40px;text-align:center;font-size:14px;color:rgba(0,0,0,0.5);}
 
-/* UPLOAD FORM */
-.upload-card{padding:28px;}
-.upload-card .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.field{margin-bottom:14px;}
-.field label{display:block;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.55);margin-bottom:6px;}
-.field input,.field textarea,.field select{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.12);background:rgba(255,255,255,0.7);font-size:14px;color:#111111;font-family:inherit;transition:border 0.2s,box-shadow 0.2s;}
-.field textarea{resize:vertical;min-height:70px;}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#0066ff;box-shadow:0 0 0 3px rgba(0,100,255,0.12);}
-.btn-submit{padding:13px 30px;border-radius:999px;background:#111111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.25s;}
-.btn-submit:hover{background:#ff0055;transform:translateY(-2px);}
-.err-box{background:rgba(255,0,85,0.08);border:1px solid rgba(255,0,85,0.25);color:#ff0055;font-size:13px;font-weight:600;padding:11px 14px;border-radius:12px;margin-bottom:16px;}
-[dir="rtl"] .upload-card{text-align:right;}
-
-.ai-hint{font-size:10px;font-weight:600;color:#0066ff;letter-spacing:0;text-transform:none;margin-inline-start:6px;}
+/* NEW ARTWORK + DRAFTS */
+.start-card{padding:28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;}
+.start-card p{font-size:14px;line-height:1.7;color:rgba(0,0,0,0.65);max-width:520px;}
+.btn-start{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:14px 28px;border-radius:999px;background:#ff0055;color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s;}
+.btn-start:hover{background:#e0004b;transform:translateY(-2px);}
+.btn-start:active{transform:translateY(0);}
+.btn-start:focus-visible,.mini-btn:focus-visible{outline:2px solid #0066ff;outline-offset:2px;}
+.draft-list{display:grid;gap:12px;margin-top:14px;}
+.draft{display:flex;align-items:center;gap:14px;padding:14px;}
+.draft-thumb{width:64px;height:64px;border-radius:12px;object-fit:cover;background:#f4f5f7;flex-shrink:0;}
+.draft-info{flex:1;min-width:0;}
+.draft-title{font-size:14px;font-weight:700;color:#111111;}
+.draft-stages{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.draft-stages span{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.12);color:rgba(0,0,0,0.55);}
+.draft-stages span.ok{background:rgba(0,102,255,0.1);border-color:rgba(0,102,255,0.25);color:#0047ab;}
+.draft .art-actions{margin-top:0;flex-shrink:0;}
+.draft .mini-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;font-size:12px;text-decoration:none;}
+.b-review{background:rgba(0,0,0,0.7);color:#fff;}
+@media(max-width:560px){.draft{flex-wrap:wrap;}.draft .art-actions{width:100%;}}
 
 /* FINANCIAL REPORT */
 .fin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
@@ -401,7 +370,11 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
       <div class="gc art-card">
         <div class="art-img-wrap">
           <img class="art-img" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en']) ?>">
+          <?php if ($isOwner && (int) $aw['is_approved'] === 0): ?>
+          <span class="badge b-review" data-status="review">In review</span>
+          <?php else: ?>
           <span class="badge <?= $badgeClass ?>" data-status="<?= e($st) ?>"><?= e(ucfirst($st)) ?></span>
+          <?php endif; ?>
         </div>
         <div class="art-body">
           <div class="art-title"><?= e($aw['title_en']) ?></div>
@@ -425,41 +398,48 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
     </div>
   <?php endif; ?>
 
-  <!-- SECTION 3: UPLOAD (owner only) -->
+  <!-- SECTION 3: NEW ARTWORK + DRAFTS (owner only) -->
   <?php if ($isOwner): ?>
-  <p class="section-title" id="t-upload-title">Upload Artwork</p>
-  <div class="gc upload-card">
-    <?php if ($uploadError): ?>
-      <div class="err-box" id="err"
-           data-en="<?= $uploadError === 'image' ? 'A valid image (JPG/PNG/WEBP, max 5MB) is required.' : 'All fields are required and the price must be a number.' ?>"
-           data-ar="<?= $uploadError === 'image' ? 'مطلوب صورة صالحة (JPG/PNG/WEBP، بحد أقصى 5 ميغابايت).' : 'جميع الحقول مطلوبة ويجب أن يكون السعر رقماً.' ?>"><?= $uploadError === 'image' ? 'A valid image (JPG/PNG/WEBP, max 5MB) is required.' : 'All fields are required and the price must be a number.' ?></div>
-    <?php endif; ?>
-    <form method="post" action="artist_dashboard.php?id=<?= (int) $profileId ?>" enctype="multipart/form-data">
-      <?= csrfField() ?>
-      <input type="hidden" name="action" value="upload">
-      <div class="grid2">
-        <div class="field"><label id="t-f-ten">Title in English</label><input type="text" id="f-title-en" name="title_en" required onblur="autoTranslate('f-title-en','f-title-ar',this)"></div>
-        <div class="field"><label id="t-f-tar">Title in Arabic <span class="ai-hint" id="hint-title"></span></label><input type="text" id="f-title-ar" name="title_ar" dir="rtl" required></div>
-      </div>
-      <div class="grid2">
-        <div class="field"><label id="t-f-den">Description in English</label><textarea id="f-desc-en" name="desc_en" required onblur="autoTranslate('f-desc-en','f-desc-ar',this)"></textarea></div>
-        <div class="field"><label id="t-f-dar">Description in Arabic <span class="ai-hint" id="hint-desc"></span></label><textarea id="f-desc-ar" name="desc_ar" dir="rtl" required></textarea></div>
-      </div>
-      <div class="grid2">
-        <div class="field"><label id="t-f-price">Price in SAR</label><input type="number" name="price" min="0" step="0.01" required></div>
-        <div class="field"><label id="t-f-type">Type</label>
-          <select name="type" class="type-select" required>
-            <?php foreach ($ART_TYPES as $slug => $lbl): ?>
-              <option value="<?= e($slug) ?>" data-en="<?= e($lbl['en']) ?>" data-ar="<?= e($lbl['ar']) ?>"><?= e($ar ? $lbl['ar'] : $lbl['en']) ?></option>
-            <?php endforeach; ?>
-          </select>
+  <p class="section-title" id="t-upload-title">New Artwork</p>
+  <div class="gc start-card">
+    <p id="t-start-desc">Show the real journey of your work: photograph it at 25%, 50% and 100%. Your progress is saved after every step.</p>
+    <a class="btn-start" href="upload_artwork.php" id="t-start">Start New Artwork</a>
+  </div>
+  <?php if ($drafts): ?>
+  <p class="section-title" id="t-drafts-title">Drafts in progress</p>
+  <div class="draft-list">
+    <?php foreach ($drafts as $d):
+      $ds = $draftStages[(int) $d['id']] ?? [];
+      $thumb = $ds[100]['photo_path'] ?? ($ds[50]['photo_path'] ?? ($ds[25]['photo_path'] ?? ''));
+    ?>
+    <div class="gc draft">
+      <?php if ($thumb): ?>
+        <img class="draft-thumb" src="<?= e($thumb) ?>" alt="<?= e($d['title_en'] . ' · ' . $d['title_ar']) ?>">
+      <?php else: ?>
+        <div class="draft-thumb" aria-hidden="true"></div>
+      <?php endif; ?>
+      <div class="draft-info">
+        <div class="draft-title"><?= e($d['title_en']) ?> · <span dir="rtl"><?= e($d['title_ar']) ?></span></div>
+        <div class="draft-stages">
+          <?php foreach (OW_STAGES as $stg): ?>
+            <span class="<?= isset($ds[$stg]) ? 'ok' : '' ?>"><?= $stg ?>%<?= isset($ds[$stg]) ? ' ✓' : '' ?></span>
+          <?php endforeach; ?>
         </div>
       </div>
-      <div class="field"><label id="t-f-img">Upload Image (JPG/PNG/WEBP, max 5MB)</label>
-        <input type="file" name="image" accept="image/jpeg,image/png,image/webp" required></div>
-      <button type="submit" class="btn-submit" id="t-f-submit">Upload Artwork</button>
-    </form>
+      <div class="art-actions">
+        <a class="mini-btn" href="upload_artwork.php?id=<?= (int) $d['id'] ?>" data-t="continue">Continue</a>
+        <form method="post" action="artist_dashboard.php?id=<?= (int) $profileId ?>" style="margin:0;"
+              onsubmit="return confirm(document.documentElement.dir === 'rtl' ? 'حذف هذه المسودة؟' : 'Delete this draft?');">
+          <?= csrfField() ?>
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="artwork_id" value="<?= (int) $d['id'] ?>">
+          <button type="submit" class="mini-btn danger" data-t="delete">Delete</button>
+        </form>
+      </div>
+    </div>
+    <?php endforeach; ?>
   </div>
+  <?php endif; ?>
   <?php endif; ?>
 
 <?php endif; ?>
@@ -468,50 +448,13 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 <script>
 const IS_OWNER = <?= $isOwner ? 'true' : 'false' ?>;
 
-/* ---- Auto-translate English -> Arabic via the free Google Translate endpoint ----
- * Client-side fetch, no API key, no cost. Endpoint returns a nested JSON array;
- * the translated segments are at data[0][*][0]. */
-function autoTranslate(srcId, dstId, srcEl){
-  const src = document.getElementById(srcId);
-  const dst = document.getElementById(dstId);
-  if(!src || !dst) return;
-  const text = src.value.trim();
-  if(!text) return;
-  if(dst.value.trim() && dst.dataset.auto !== '1') return;   // don't overwrite manual edits
-  const hint = document.getElementById(srcId.indexOf('title')>-1 ? 'hint-title' : 'hint-desc');
-  if(hint) hint.textContent = (L==='ar'?'... جارٍ الترجمة':'translating…');
-
-  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q='
-            + encodeURIComponent(text);
-  fetch(url)
-    .then(r=>r.json())
-    .then(data=>{
-      // data[0] is an array of [translatedChunk, originalChunk, ...]; join the chunks.
-      let ar = '';
-      if(Array.isArray(data) && Array.isArray(data[0])){
-        ar = data[0].map(seg => (seg && seg[0]) ? seg[0] : '').join('');
-      }
-      ar = ar.trim();
-      if(ar){ dst.value = ar; dst.dataset.auto = '1';
-        if(hint) hint.textContent = (L==='ar'?'✓ مُترجم تلقائياً':'✓ auto-translated'); }
-      else { if(hint) hint.textContent = (L==='ar'?'تعذّرت الترجمة':'translation unavailable'); }
-    })
-    .catch(()=>{ if(hint) hint.textContent = (L==='ar'?'خطأ في الشبكة':'network error'); });
-}
-// Clear the "auto" flag if the artist edits the Arabic field by hand.
-['f-title-ar','f-desc-ar'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el) el.addEventListener('input', ()=>{ el.dataset.auto = '0'; });
-});
 const T={
   en:{dir:'ltr',lb:'العربية',
-    profileTitle:'Artist Profile',worksTitle:'Artworks',uploadTitle:'Upload Artwork',
+    profileTitle:'Artist Profile',worksTitle:'Artworks',uploadTitle:'New Artwork',start:'Start New Artwork',startDesc:'Show the real journey of your work: photograph it at 25%, 50% and 100%. Your progress is saved after every step.',draftsTitle:'Drafts in progress',cardContinue:'Continue',review:'In review',
     statTotal:'Total Artworks',statSold:'Artworks Sold',statSince:'Member Since',
     finTitle:'Financial Report',finTotal:'Total Artworks',finSold:'Artworks Sold',finYear:'Earnings This Year (SAR)',finAll:'Earnings All Time (SAR)',
     finEmpty:'No sales yet. Your sold artworks will appear here.',finHArt:'Artwork',finHDate:'Sale Date',finHPrice:'Price',saved:'Profile updated successfully.',
     edit:'Edit Profile',empty:'No artworks yet. Start by uploading your first piece.',
-    fTen:'Title in English',fTar:'Title in Arabic',fDen:'Description in English',fDar:'Description in Arabic',
-    fPrice:'Price in SAR',fType:'Type',fImg:'Upload Image (JPG/PNG/WEBP, max 5MB)',fSubmit:'Upload Artwork',
     abstract:'Abstract',landscape:'Landscape',portrait:'Portrait',other:'Other',
     cardEdit:'Edit',cardDelete:'Delete',
     available:'Available',sold:'Sold',auction:'Auction',sar:'SAR',
@@ -520,13 +463,11 @@ const T={
       c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',
-    profileTitle:'الملف الشخصي للفنان',worksTitle:'الأعمال الفنية',uploadTitle:'رفع عمل فني',
+    profileTitle:'الملف الشخصي للفنان',worksTitle:'الأعمال الفنية',uploadTitle:'عمل فني جديد',start:'ابدأ عملاً فنياً جديداً',startDesc:'اعرض الرحلة الحقيقية لعملك: صوّره عند 25% و50% و100%. يُحفظ تقدّمك بعد كل خطوة.',draftsTitle:'مسودات قيد العمل',cardContinue:'متابعة',review:'قيد المراجعة',
     statTotal:'إجمالي الأعمال',statSold:'الأعمال المباعة',statSince:'عضو منذ',
     finTitle:'التقرير المالي',finTotal:'إجمالي الأعمال',finSold:'الأعمال المباعة',finYear:'أرباح هذا العام (ر.س)',finAll:'إجمالي الأرباح (ر.س)',
     finEmpty:'لا توجد مبيعات بعد. ستظهر أعمالك المباعة هنا.',finHArt:'العمل الفني',finHDate:'تاريخ البيع',finHPrice:'السعر',saved:'تم تحديث الملف الشخصي بنجاح.',
     edit:'تعديل الملف الشخصي',empty:'لا توجد أعمال بعد. ابدأ برفع عملك الأول.',
-    fTen:'العنوان بالإنجليزية',fTar:'العنوان بالعربية',fDen:'الوصف بالإنجليزية',fDar:'الوصف بالعربية',
-    fPrice:'السعر بالريال',fType:'النوع',fImg:'رفع صورة (JPG/PNG/WEBP، بحد أقصى 5 ميغابايت)',fSubmit:'رفع عمل فني',
     abstract:'تجريدي',landscape:'طبيعي',portrait:'بورتريه',other:'أخرى',
     cardEdit:'تعديل',cardDelete:'حذف',
     available:'متاح',sold:'مباع',auction:'مزاد',sar:'ر.س',
@@ -550,14 +491,12 @@ function apply(l){
   setTxt('t-fin-year',t.finYear);setTxt('t-fin-all',t.finAll);setTxt('t-fin-empty',t.finEmpty);
   setTxt('t-fin-h-art',t.finHArt);setTxt('t-fin-h-date',t.finHDate);setTxt('t-fin-h-price',t.finHPrice);setTxt('t-saved',t.saved);
   setTxt('t-edit',t.edit);setTxt('t-empty',t.empty);
-  setTxt('t-f-ten',t.fTen);setTxt('t-f-tar',t.fTar);setTxt('t-f-den',t.fDen);setTxt('t-f-dar',t.fDar);
-  setTxt('t-f-price',t.fPrice);setTxt('t-f-type',t.fType);setTxt('t-f-img',t.fImg);setTxt('t-f-submit',t.fSubmit);
-  document.querySelectorAll('.type-select option').forEach(o=>{ o.textContent = (l==='ar' ? o.dataset.ar : o.dataset.en) || o.textContent; });
+  setTxt('t-start',t.start);setTxt('t-start-desc',t.startDesc);setTxt('t-drafts-title',t.draftsTitle);
+  document.querySelectorAll('[data-t="continue"]').forEach(el=>el.textContent=t.cardContinue);
   document.querySelectorAll('.badge').forEach(b=>{const s=b.dataset.status;if(t[s])b.textContent=t[s];});
   document.querySelectorAll('.sar').forEach(s=>s.textContent=t.sar);
   document.querySelectorAll('[data-t="edit"]').forEach(el=>el.textContent=t.cardEdit);
   document.querySelectorAll('[data-t="delete"]').forEach(el=>el.textContent=t.cardDelete);
-  const err=document.getElementById('err');if(err){const v=l==='ar'?err.dataset.ar:err.dataset.en;if(v)err.textContent=v;}
   const n=t.nav;
   setTxt('nav-studio-label',n.studio);setTxt('nav-community-label',n.community);
   setTxt('nav-marketplace-label',n.marketplace);setTxt('nav-explore-label',n.explore);setTxt('nav-support-label',n.support);

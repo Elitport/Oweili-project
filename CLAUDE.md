@@ -95,15 +95,32 @@
 - register.php / register_artist.php / register_collector.php — Sign up flows
 - login.php / logout.php / verify.php / forgot.php — Auth
 - edit_profile.php / edit_artwork.php — Self-service editing
-- artist_dashboard.php — Artist control panel
+- artist_dashboard.php — Artist control panel ("Start New Artwork" button + drafts in progress)
+- upload_artwork.php — 3-stage proof-of-process upload (see Features below)
+- artwork_lib.php — shared helpers for the upload: color list, art type pictures, photo checks and saving
 - collector_dashboard.php — Collector control panel
 - subadmin_dashboard.php — Sub-admin panel
 - admin.php — Main admin panel
 - art_styles.js — Shared data file for all art styles (single source of truth)
 
+## Features
+
+### 3-stage artwork upload (proof of process) — built, needs database_update.sql
+- What it does: artists start a new artwork from their dashboard and go through 5 steps: 1 titles (Arabic + English required), 2 photo at 25% (required), 3 photo at 50% (optional, can skip), 4 photo at 100% (required) + colors used + art type (guided cards with small drawn examples), 5 price in SAR + the 15% commission note, then "Submit for Review"
+- Every step is saved straight away, so the artist can come back days later. Unfinished work is a private draft (artworks.is_draft = 1): only the artist sees it (dashboard → "Drafts in progress" → Continue). Admins and sub-admins only see it after it is submitted
+- After submit: is_draft = 0, is_approved = 0 (waits for admin approval as before), image_url = the 100% photo, so the marketplace keeps working
+- Photos: taken with the phone camera (camera opens directly on phones; on computers a file picker opens instead). Max 10MB, JPG/PNG/WEBP only, checked on the server. Saved to uploads/artworks/stages/ with random names. Each photo is re-saved: the phone's rotation is applied and hidden data such as GPS location is removed (privacy). taken_at = the camera's own date if present, otherwise the upload time
+- Retaking a photo replaces the old one and deletes the old file. Deleting or rejecting an artwork also deletes its stage photos
+- Files: upload_artwork.php, artwork_lib.php, artist_dashboard.php, edit_artwork.php (drafts are sent back to the upload flow), admin.php + subadmin_dashboard.php (drafts hidden from the review list), art_types.php (added mixed_media, digital_art, islamic_geometric), assets/css/nav.css
+- Tables: artworks (new column is_draft), artwork_stages, artwork_colors — all created by database_update.sql. Until that file is run, the upload page shows a friendly "being set up" message and every other page keeps working
+- Hosting needs: PHP upload_max_filesize and post_max_size of at least 10M on Hostinger
+- Not built yet: showing the 3 stages to buyers in the marketplace, and showing them to admins in the review list
+
 ## Shared Files
 - .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, and hidden folders (.claude/, .agents/, .git/). Visitors get 403 Forbidden. Keep it when changing hosting settings
 - assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
+- assets/css/nav.css — styles for the shared menu (nav.php). New pages link it instead of copying the menu styles; older pages still have their own copy
+- oweili.css also gives opt-in pages (<body class="ow">) a box-sizing reset and removes the default page margin
 - assets/logo/ — home for the official logo files (not added yet)
 - Mobile menu (in nav.php) — on screens 1024px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
 - Every page that shows the main menu now uses nav.php, including index.php and marketplace.php
