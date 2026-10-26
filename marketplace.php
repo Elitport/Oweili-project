@@ -1,6 +1,7 @@
 <?php
 // marketplace.php — Oweili · Marketplace (live, database-driven)
 require_once 'config.php';
+require_once __DIR__ . '/artwork_lib.php';
 $ART_TYPES = require __DIR__ . '/art_types.php';
 
 $lang = isset($_GET['lang']) && $_GET['lang'] === 'ar' ? 'ar' : 'en';
@@ -14,8 +15,8 @@ $offset  = ($page - 1) * $perPage;
 /* ---- Count (for Prev/Next) — PDO prepared ---- */
 $countStmt = getDB()->prepare(
     "SELECT COUNT(*) FROM artworks
-     WHERE is_approved = 1 AND status IN ('available','auction')"
-);
+     WHERE is_approved = 1 AND status IN ('available','auction')" . owNotDraftSql() . "
+");
 $countStmt->execute();
 $total      = (int) $countStmt->fetchColumn();
 $totalPages = max(1, (int) ceil($total / $perPage));
@@ -28,7 +29,7 @@ $stmt = getDB()->prepare(
             u.full_name_en AS artist_en, u.full_name_ar AS artist_ar
      FROM artworks a
      JOIN users u ON u.id = a.artist_id
-     WHERE a.is_approved = 1 AND a.status IN ('available','auction')
+     WHERE a.is_approved = 1 AND a.status IN ('available','auction')" . owNotDraftSql('a') . "
      ORDER BY a.created_at DESC
      LIMIT :lim OFFSET :off"
 );
@@ -36,6 +37,11 @@ $stmt->bindValue(':lim', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $artworks = $stmt->fetchAll();
+
+/* Creation Journey: stage photos + colors, only for the approved artworks on this page */
+$pageIds  = array_map(fn($r) => (int) $r['id'], $artworks);
+$mpStages = owGetStagesFor($pageIds);
+$mpColors = owGetColorsFor($pageIds);
 
 /* Data for the details modal (escaped on output via JSON flags) */
 $modalData = [];
@@ -51,6 +57,7 @@ foreach ($artworks as $aw) {
         'price'     => (float) $aw['price'],
         'image'     => $aw['image_url'],
         'status'    => $aw['status'],
+        'journey'   => owHasJourney($mpStages[(int) $aw['id']] ?? []),
     ];
 }
 ?>
@@ -74,6 +81,7 @@ foreach ($artworks as $aw) {
   })();
   </script>
   <link rel="stylesheet" href="/assets/css/oweili.css">
+  <link rel="stylesheet" href="/assets/css/proof.css">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     body, html { width:100%; min-height:100vh; background:#fff; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; overflow-x:hidden; }
@@ -340,6 +348,7 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
       <button class="modal-close" onclick="closeModal()">&times;</button>
       <img id="m-img" src="" alt="" style="border-radius:14px;margin-bottom:16px;">
       <h2 id="m-title-en"></h2>
+      <span class="verified-badge" id="m-verified" hidden><?= owBi('✓ Verified Human Artist', '✓ فنان بشري موثّق') ?></span>
       <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
       <a class="m-artist" id="m-artist" href="#"></a>
       <div class="m-label" id="m-label-en-h"><?= $ar?'الوصف (إنجليزي)':'Description (English)' ?></div>
@@ -347,6 +356,12 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
       <div class="m-label" id="m-label-ar-h"><?= $ar?'الوصف (عربي)':'Description (Arabic)' ?></div>
       <p id="m-desc-ar" dir="rtl"></p>
       <div class="m-price" id="m-price"></div>
+      <?php foreach ($artworks as $aw):
+        $jid = (int) $aw['id'];
+        $jh  = owJourneyHtml($mpStages[$jid] ?? [], $mpColors[$jid] ?? [], (string) $aw['type'], $ART_TYPES);
+        if ($jh === '') continue; ?>
+      <div class="m-journey" data-id="<?= $jid ?>" hidden><?= $jh ?></div>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>
@@ -398,6 +413,7 @@ function openModal(id){
   const a = ARTWORKS[id];
   if(!a) return;
   document.getElementById('m-img').src = a.image;
+  document.getElementById('m-img').alt = a.title_en + ' · ' + a.title_ar;
   document.getElementById('m-title-en').textContent = a.title_en;
   document.getElementById('m-title-ar').textContent = a.title_ar;
   const artist = document.getElementById('m-artist');
@@ -407,6 +423,9 @@ function openModal(id){
   document.getElementById('m-desc-ar').textContent = esc(a.desc_ar);
   document.getElementById('m-price').textContent =
     Number(a.price).toLocaleString() + ' ' + (LANG==='ar' ? 'ر.س' : 'SAR');
+  // Creation Journey + trust badge (only for artworks with stage photos)
+  document.getElementById('m-verified').hidden = !a.journey;
+  document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });
   document.getElementById('modalBg').classList.add('open');
 }
 function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }

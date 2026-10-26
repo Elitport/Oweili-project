@@ -189,6 +189,11 @@ if ($isAdmin) {
          WHERE a.is_approved = 0" . owNotDraftSql('a') . "
          ORDER BY a.created_at DESC"
     )->fetchAll();
+/* Proof of Process for each pending artwork (stage photos + colors) */
+$ART_TYPES     = require __DIR__ . '/art_types.php';
+$pendingIds    = array_map(fn($r) => (int) $r['id'], $pendingArt);
+$pendingStages = owGetStagesFor($pendingIds);
+$pendingColors = owGetColorsFor($pendingIds);
 }
 
 /* Older schemas may lack last_active — detect once so queries don't fatal. */
@@ -326,9 +331,11 @@ th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
 .sec-head h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;}
 .count{background:#ff0055;color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;}
 .art-list{display:flex;flex-direction:column;gap:12px;}
-.art-item{display:flex;align-items:center;gap:16px;padding:12px;border:1px solid rgba(0,0,0,0.07);border-radius:14px;}
+.art-item{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:12px;border:1px solid rgba(0,0,0,0.07);border-radius:14px;}
 .art-thumb{width:64px;height:64px;border-radius:10px;background-size:cover;background-position:center;background-color:#eee;flex-shrink:0;}
 .art-meta{flex:1;min-width:0;}
+.art-proof{flex-basis:100%;min-width:0;}
+.art-proof .pj{margin-top:4px;}
 .art-meta strong{font-size:14px;}
 .art-info{font-size:12px;color:rgba(0,0,0,0.5);margin-top:3px;}
 .verify-cell{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:150px;}
@@ -395,6 +402,7 @@ th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
 .acard-foot{display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;margin-top:auto;}
 @media(max-width:640px){.grid2{grid-template-columns:1fr;}.style-item{flex-direction:column;}.acards{grid-template-columns:1fr;}}
 </style>
+<link rel="stylesheet" href="/assets/css/proof.css">
 </head>
 <body>
 <div class="wrap">
@@ -594,6 +602,7 @@ th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
             <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn sm green" name="action" value="approve_art">Approve</button></form>
             <form method="post" action="admin.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn sm red" name="action" value="reject_art">Reject</button></form>
           </div>
+          <div class="art-proof"><?= owProofPanelHtml($pendingStages[(int)$art['id']] ?? [], $pendingColors[(int)$art['id']] ?? [], (string)$art['type'], $ART_TYPES) ?></div>
         </div>
       <?php endforeach; ?>
       </div>

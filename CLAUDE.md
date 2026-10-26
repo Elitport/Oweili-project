@@ -114,13 +114,29 @@
 - Files: upload_artwork.php, artwork_lib.php, artist_dashboard.php, edit_artwork.php (drafts are sent back to the upload flow), admin.php + subadmin_dashboard.php (drafts hidden from the review list), art_types.php (added mixed_media, digital_art, islamic_geometric), assets/css/nav.css
 - Tables: artworks (new column is_draft), artwork_stages, artwork_colors — all created by database_update.sql. Until that file is run, the upload page shows a friendly "being set up" message and every other page keeps working
 - Hosting needs: PHP upload_max_filesize and post_max_size of at least 10M on Hostinger
-- Not built yet: showing the 3 stages to buyers in the marketplace, and showing them to admins in the review list
+
+### Creation Journey (marketplace) — built, needs database_update.sql
+- What it does: in the artwork details window, buyers see "Creation Journey — Proof of Human Art" / «رحلة الإبداع — دليل الفن البشري» with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
+- A small blue "✓ Verified Human Artist" / «✓ فنان بشري موثّق» badge sits under the title — only on artworks that have the 25% and 100% photos
+- Old artworks without stage photos show exactly as before (no journey, no badge)
+- Phone: the photos are one row you swipe sideways; tablet and desktop: side by side. Arabic runs right to left
+- Only approved artworks on the current page are loaded — unapproved or draft photos are never sent to visitors
+- Files: marketplace.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
+
+### Proof of Process (admin review) — built, needs database_update.sql
+- What it does: every pending artwork in admin.php and subadmin_dashboard.php shows "Proof of Process" / «دليل المراحل»: each stage photo (click to open full size) with date and time, the time gap from the previous stage (e.g. "3 days after stage 25%"), "Artist skipped middle stage" when 50% is missing, colors, art type, and the review note
+- Warnings to help the decision: "⚠ Less than an hour after the previous stage" and "⚠ Dated before stage X%"
+- Note for reviewers: the date comes from the camera's own clock when the photo has one, so it can be wrong if the phone's clock is wrong
+- Only admins (password gate) and sub-admins (logged in with that role) can open these pages
+- Files: admin.php, subadmin_dashboard.php, artwork_lib.php (owProofPanelHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
+
 
 ## Shared Files
 - .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, and hidden folders (.claude/, .agents/, .git/). Visitors get 403 Forbidden. Keep it when changing hosting settings
 - assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
 - assets/css/nav.css — styles for the shared menu (nav.php). New pages link it instead of copying the menu styles; older pages still have their own copy
 - oweili.css also gives opt-in pages (<body class="ow">) a box-sizing reset and removes the default page margin
+- assets/css/proof.css — styles for the Creation Journey and Proof of Process panels. Text is printed in both languages and the one matching the page direction is shown
 - assets/logo/ — home for the official logo files (not added yet)
 - Mobile menu (in nav.php) — on screens 1024px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
 - Every page that shows the main menu now uses nav.php, including index.php and marketplace.php

@@ -104,7 +104,7 @@ function owGetStagesFor(array $artworkIds): array {
     $ids = array_values(array_unique(array_filter(array_map('intval', $artworkIds))));
     if (!$ids || !owStagesReady()) return [];
     $in = implode(',', array_fill(0, count($ids), '?'));
-    $st = getDB()->prepare("SELECT artwork_id, stage, photo_path FROM artwork_stages WHERE artwork_id IN ($in) ORDER BY stage");
+    $st = getDB()->prepare("SELECT artwork_id, stage, photo_path, taken_at FROM artwork_stages WHERE artwork_id IN ($in) ORDER BY stage");
     $st->execute($ids);
     $out = [];
     foreach ($st->fetchAll() as $r) { $out[(int) $r['artwork_id']][(int) $r['stage']] = $r; }
@@ -205,3 +205,158 @@ function owStoreStagePhoto(array $file): array {
     @chmod($dest, 0644);
     return ['ok' => true, 'path' => OW_STAGE_DIR . $name, 'taken_at' => $takenAt];
 }
+
+/* =====================================================================
+ *  Showing the proof of process (marketplace + admin review)
+ *  Text is printed in both languages; assets/css/proof.css shows the one
+ *  that matches the page direction, so it follows each page's own switch.
+ * ===================================================================== */
+
+/* Colors used, for many artworks at once: [artwork_id => [rows]]. */
+function owGetColorsFor(array $artworkIds): array {
+    $ids = array_values(array_unique(array_filter(array_map('intval', $artworkIds))));
+    if (!$ids || !owStagesReady()) return [];
+    $in = implode(',', array_fill(0, count($ids), '?'));
+    $st = getDB()->prepare("SELECT artwork_id, color_name_en, color_name_ar, hex_code FROM artwork_colors WHERE artwork_id IN ($in) ORDER BY id");
+    $st->execute($ids);
+    $out = [];
+    foreach ($st->fetchAll() as $r) { $out[(int) $r['artwork_id']][] = $r; }
+    return $out;
+}
+
+/* One piece of text in both languages. */
+function owBi(string $en, string $ar, string $tag = 'span'): string {
+    return '<' . $tag . ' class="bi-en" lang="en">' . e($en) . '</' . $tag . '><' . $tag . ' class="bi-ar" lang="ar">' . e($ar) . '</' . $tag . '>';
+}
+
+/* A date (and optional time) in English and Arabic. */
+function owDateBi(?string $when, bool $withTime = false): array {
+    if (!$when || !($ts = strtotime($when))) return ['Date unknown', 'التاريخ غير معروف'];
+    $arMonths = [1 => 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+    $en = date('j M Y', $ts);
+    $ar = date('j', $ts) . ' ' . $arMonths[(int) date('n', $ts)] . ' ' . date('Y', $ts);
+    if ($withTime) {
+        $en .= ', ' . date('g:i A', $ts);
+        $ar .= '، ' . date('g:i', $ts) . ' ' . (date('A', $ts) === 'AM' ? 'ص' : 'م');
+    }
+    return [$en, $ar];
+}
+
+/* "3 days after stage 25%" in both languages, with correct Arabic counting words. */
+function owGapBi(int $seconds, int $fromStage): array {
+    $ar = function (int $n, array $w): string {   // [one, two, few (3–10), many (11+)]
+        if ($n === 1) return $w[0];
+        if ($n === 2) return $w[1];
+        return $n . ' ' . ($n <= 10 ? $w[2] : $w[3]);
+    };
+    if ($seconds >= 86400) {
+        $n = intdiv($seconds, 86400);
+        $en = $n . ' day' . ($n === 1 ? '' : 's');
+        $arT = $ar($n, ['يوم واحد', 'يومين', 'أيام', 'يوماً']);
+    } elseif ($seconds >= 3600) {
+        $n = intdiv($seconds, 3600);
+        $en = $n . ' hour' . ($n === 1 ? '' : 's');
+        $arT = $ar($n, ['ساعة واحدة', 'ساعتين', 'ساعات', 'ساعة']);
+    } else {
+        $n = max(1, intdiv($seconds, 60));
+        $en = $n . ' minute' . ($n === 1 ? '' : 's');
+        $arT = $ar($n, ['دقيقة واحدة', 'دقيقتين', 'دقائق', 'دقيقة']);
+    }
+    return [$en . ' after stage ' . $fromStage . '%', 'بعد ' . $arT . ' من مرحلة ' . $fromStage . '%'];
+}
+
+/* Stage labels shown to buyers. */
+function owStageLabel(int $stage): array {
+    return [25 => ['The Beginning', 'البداية'], 50 => ['Taking Shape', 'يأخذ شكله'], 100 => ['The Finished Piece', 'العمل المكتمل']][$stage];
+}
+
+/* Only paths this system created are shown. */
+function owSafeStagePath(string $p): bool {
+    return strpos($p, OW_STAGE_DIR) === 0 && strpos($p, '..') === false;
+}
+
+/* Does this artwork carry a full proof of process (25% and 100%)? */
+function owHasJourney(array $stages): bool {
+    return isset($stages[25], $stages[100]);
+}
+
+/* Colors + art type (shared by both views). */
+function owMetaHtml(string $type, array $colors, array $artTypes): string {
+    $h = '';
+    if ($type !== '' && isset($artTypes[$type])) {
+        $h .= '<div class="pj-meta"><span class="pj-meta-label">' . owBi('Art type', 'نوع الفن') . '</span> <span class="pj-type">'
+            . owBi($artTypes[$type]['en'], $artTypes[$type]['ar']) . '</span></div>';
+    }
+    if ($colors) {
+        $h .= '<div class="pj-meta"><span class="pj-meta-label">' . owBi('Colors used', 'الألوان المستخدمة') . '</span><span class="pj-chips">';
+        foreach ($colors as $c) {
+            $hex = preg_match('/^#[0-9A-Fa-f]{6}$/', (string) $c['hex_code']) ? $c['hex_code'] : '#cccccc';
+            $h .= '<span class="pj-chip"><i style="background:' . $hex . '"></i>' . owBi($c['color_name_en'], $c['color_name_ar']) . '</span>';
+        }
+        $h .= '</span></div>';
+    }
+    return $h;
+}
+
+/* Buyer view: "Creation Journey — Proof of Human Art". Empty string if no journey. */
+function owJourneyHtml(array $stages, array $colors, string $type, array $artTypes): string {
+    if (!owHasJourney($stages)) return '';
+    $h = '<section class="pj" aria-label="Creation Journey · رحلة الإبداع">'
+       . '<h3 class="pj-title">' . owBi('Creation Journey — Proof of Human Art', 'رحلة الإبداع — دليل الفن البشري') . '</h3>'
+       . '<div class="pj-row">';
+    foreach (OW_STAGES as $stg) {
+        if (!isset($stages[$stg]) || !owSafeStagePath((string) $stages[$stg]['photo_path'])) continue;
+        [$lEn, $lAr] = owStageLabel($stg);
+        [$dEn, $dAr] = owDateBi($stages[$stg]['taken_at']);
+        $h .= '<figure class="pj-step"><img loading="lazy" src="' . e($stages[$stg]['photo_path']) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '">'
+            . '<figcaption><b>' . $stg . '%</b> ' . owBi($lEn, $lAr) . '<span class="pj-date">' . owBi($dEn, $dAr) . '</span></figcaption></figure>';
+    }
+    return $h . '</div>' . owMetaHtml($type, $colors, $artTypes) . '</section>';
+}
+
+/* Admin / sub-admin view: "Proof of Process" with dates, gaps and warnings. */
+function owProofPanelHtml(array $stages, array $colors, string $type, array $artTypes): string {
+    $h = '<section class="pj pj-admin"><h3 class="pj-title">' . owBi('Proof of Process', 'دليل المراحل') . '</h3>';
+    if (!$stages) {
+        return $h . '<p class="pj-note">' . owBi('No stage photos — this artwork was uploaded before the 3-stage system.', 'لا توجد صور مراحل — رُفع هذا العمل قبل نظام المراحل الثلاث.') . '</p></section>';
+    }
+    $h .= '<div class="pj-row">';
+    $prevTs = null; $prevStage = null;
+    foreach (OW_STAGES as $stg) {
+        if (!isset($stages[$stg])) {
+            if ($stg === 50) {
+                $h .= '<div class="pj-step pj-missing"><b>50%</b>' . owBi('Artist skipped middle stage', 'تخطى الفنان المرحلة الوسطى') . '</div>';
+            } else {
+                $h .= '<div class="pj-step pj-missing"><b>' . $stg . '%</b>' . owBi('Photo missing', 'الصورة مفقودة') . '</div>';
+            }
+            continue;
+        }
+        $row = $stages[$stg];
+        $ts = $row['taken_at'] ? strtotime($row['taken_at']) : null;
+        [$dEn, $dAr] = owDateBi($row['taken_at'], true);
+        $h .= '<figure class="pj-step">';
+        if (owSafeStagePath((string) $row['photo_path'])) {
+            $h .= '<a href="' . e($row['photo_path']) . '" target="_blank" rel="noopener"><img loading="lazy" src="' . e($row['photo_path']) . '" alt="' . e('Stage ' . $stg . '% photo · صورة مرحلة ' . $stg . '%') . '"></a>';
+        }
+        $h .= '<figcaption><b>' . $stg . '%</b><span class="pj-date">' . owBi($dEn, $dAr) . '</span>';
+        if ($prevTs !== null && $ts !== null) {
+            $gap = $ts - $prevTs;
+            if ($gap < 0) {
+                $h .= '<span class="pj-warn">' . owBi('⚠ Dated before stage ' . $prevStage . '%', '⚠ تاريخها أقدم من مرحلة ' . $prevStage . '%') . '</span>';
+            } else {
+                [$gEn, $gAr] = owGapBi($gap, $prevStage);
+                $h .= '<span class="pj-gap">' . owBi($gEn, $gAr) . '</span>';
+                if ($gap < 3600) {
+                    $h .= '<span class="pj-warn">' . owBi('⚠ Less than an hour after the previous stage', '⚠ بعد أقل من ساعة من المرحلة السابقة') . '</span>';
+                }
+            }
+        }
+        $h .= '</figcaption></figure>';
+        if ($ts !== null) { $prevTs = $ts; $prevStage = $stg; }
+    }
+    $h .= '</div>' . owMetaHtml($type, $colors, $artTypes)
+        . '<p class="pj-note">' . owBi('Check that the photos show real progress. The dates should make sense for this type of artwork.', 'تحقق أن الصور تظهر تقدماً حقيقياً. يجب أن تكون التواريخ منطقية لهذا النوع من الفن.') . '</p>'
+        . '</section>';
+    return $h;
+}
+
