@@ -46,74 +46,25 @@ $memberSince = !empty($me['created_at']) ? date('Y', strtotime($me['created_at']
 <title>My Collection · Oweili</title>
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-sans);overflow-x:hidden;}
-.bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;}
-.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;z-index:2;}
-.bg-video.on{opacity:0.95;}
-.overlay{position:fixed;inset:0;z-index:3;pointer-events:none;background:linear-gradient(160deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,0.35) 100%);}
-/* ── TOP NAV (shared brand navbar) ── */
-.topnav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:56px;background:rgba(255,255,255,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.05);}
-[dir="rtl"] .dropdown{left:auto;right:0;text-align:right;}
-.nav-logo{display:flex;align-items:center;gap:6px;text-decoration:none;color:#111111;flex-shrink:0;}
-.nav-logo svg{color:#ff0055;}
-.nav-logo span{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
-.nav-center{display:flex;align-items:stretch;gap:0;height:100%;}
-.nav-item{position:relative;display:flex;align-items:center;}
-.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
-.nav-item > a:hover{color:#000;}
-.nav-item:hover > a{color:#0066ff;border-bottom-color:#0066ff;}
-.nav-item > a .chevron{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;}
-.nav-item:hover > a .chevron{transform:rotate(180deg);}
-.dropdown{position:absolute;top:100%;left:0;min-width:200px;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.07);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s,visibility 0.2s;pointer-events:none;}
-.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
-.dropdown a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12px;color:rgba(0,0,0,0.7);text-decoration:none;transition:background 0.15s,color 0.15s;}
-.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0066ff;}
-.dropdown a .d-icon{width:14px;height:14px;fill:currentColor;opacity:0.6;flex-shrink:0;}
-.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-.nav-btn{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
-.nav-btn:hover{background:rgba(0,0,0,0.08);color:#000;}
-.lang-btn{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
-.lang-btn:hover{background:#111111;color:#fff;}
-@media(max-width:1024px){.nav-center{display:none;}}
-
-.page{position:relative;z-index:10;width:100%;max-width:1100px;margin:0 auto;padding:90px 24px 56px;}
-.gc{background:rgba(255,255,255,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,0.07);border-radius:20px;}
-.section-title{font-size:12px;text-transform:uppercase;letter-spacing:0.16em;color:rgba(0,0,0,0.45);font-weight:700;margin:36px 0 16px;}
-.saved-box{background:rgba(0,102,255,0.1);border:1px solid rgba(0,102,255,0.3);color:#0066ff;font-size:13px;font-weight:600;padding:11px 14px;border-radius:12px;margin-top:16px;}
-
-/* PROFILE HEADER */
-.profile-head{padding:32px;display:flex;gap:28px;align-items:center;animation:riseUp 0.8s cubic-bezier(0.22,1,0.36,1) forwards;opacity:0;}
-[dir="rtl"] .profile-head{text-align:right;}
-.avatar{width:110px;height:110px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid rgba(255,255,255,0.8);box-shadow:0 8px 24px rgba(0,0,0,0.12);background-size:cover;background-position:center;background:linear-gradient(135deg,#0066ff,#0066ff,#ff0055);display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:700;}
+/* Collector dashboard — layout only; cards, buttons, stats and tables come from oweili.css (role color: collector blue) */
+.page{position:relative;z-index:10;}
+.section-title{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin:var(--space-xl) 0 var(--space-sm);}
+.section-title:first-of-type{margin-top:0;}
+.profile-head{display:flex;gap:var(--space-lg);align-items:center;padding:var(--space-lg);}
+.avatar{width:110px;height:110px;border-radius:50%;flex-shrink:0;border:3px solid #fff;box-shadow:var(--shadow-card);background-color:var(--color-collector);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:700;}
 .profile-info{flex:1;min-width:0;}
-.profile-info h1{font-size:26px;font-weight:700;color:#111;margin-bottom:2px;}
-.profile-info .name-ar{font-size:15px;color:rgba(0,0,0,0.55);margin-bottom:8px;}
-.profile-info .meta{font-size:13px;color:rgba(0,0,0,0.6);display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;}
-
+.profile-info h1{font-size:var(--fs-section);margin:0 0 4px;}
+.profile-info .name-ar{font-size:var(--fs-subtitle);color:var(--color-body);margin-bottom:var(--space-xs);}
+.profile-info .meta{font-size:15px;color:var(--color-body);display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:6px;}
 .head-actions{flex-shrink:0;}
-.btn-edit{padding:10px 20px;border-radius:999px;background:#111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;transition:all 0.25s;white-space:nowrap;}
-.btn-edit:hover{background:#ff0055;transform:translateY(-2px);}
-
-/* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.stat-card{padding:22px;text-align:center;}
-.stat-num{font-size:26px;font-weight:700;color:#111;margin-bottom:4px;}
-.stat-num.money{background:linear-gradient(90deg,#0066ff,#0066ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.stat-lbl{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);font-weight:600;}
-
-/* PURCHASES */
-.pur-wrap{padding:20px 24px;overflow-x:auto;}
-.pur-table{width:100%;border-collapse:collapse;font-size:13px;}
-.pur-table th,.pur-table td{text-align:left;padding:12px 10px;border-bottom:1px solid rgba(0,0,0,0.06);vertical-align:middle;}
-[dir="rtl"] .pur-table th,[dir="rtl"] .pur-table td{text-align:right;}
-.pur-table th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);}
-.pur-thumb{width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(0,0,0,0.1);}
-.pur-price{color:#0066ff;font-weight:700;white-space:nowrap;}
-.pur-empty{padding:34px;text-align:center;color:rgba(0,0,0,0.5);font-size:14px;}
-.title-ar{font-size:12px;color:rgba(0,0,0,0.5);}
-@keyframes riseUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
-@media(max-width:768px){.topnav{padding:10px 14px;}.nav-logo span{display:none;}.profile-head{flex-direction:column;text-align:center;}[dir="rtl"] .profile-head{flex-direction:column;}.stats-row{grid-template-columns:1fr;}}
+.stats-row{grid-template-columns:repeat(3,1fr);margin-top:var(--space-md);}
+.pur-thumb{width:56px;height:56px;border-radius:var(--radius-input);object-fit:contain;background:#fff;border:1px solid var(--color-border);}
+.pur-art{display:flex;align-items:center;gap:var(--space-sm);}
+.pur-price{font-weight:700;white-space:nowrap;}
+.title-ar{font-size:var(--fs-caption);color:var(--color-body);}
+.pur-empty{text-align:center;padding:var(--space-xl) var(--space-md);}
+.pur-empty p{margin:0 0 var(--space-sm);}
+@media(max-width:768px){.profile-head{flex-direction:column;text-align:center;padding:var(--space-md);}.stats-row{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -122,15 +73,15 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 
 <?php include __DIR__ . "/nav.php"; ?>
 
-<div class="page" id="pg">
+<div class="page dash role-collector dash-wrap" id="pg">
 
   <?php if (isset($_GET['saved'])): ?>
-    <div class="saved-box" id="t-saved">Profile updated successfully.</div>
+    <div class="ok-box" id="t-saved">Profile updated successfully.</div>
   <?php endif; ?>
 
   <!-- PROFILE -->
   <p class="section-title" id="t-profile-title">My Profile</p>
-  <div class="gc profile-head">
+  <div class="card profile-head">
     <?php if (!empty($me['profile_picture'])): ?>
       <div class="avatar" style="background-image:url('<?= e($me['profile_picture']) ?>');"></div>
     <?php else: ?>
@@ -146,24 +97,24 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       </div>
     </div>
     <div class="head-actions">
-      <a class="btn-edit" href="edit_profile.php" id="t-edit">Edit Profile</a>
+      <a class="btn btn-secondary" href="edit_profile.php" id="t-edit">Edit Profile</a>
     </div>
   </div>
 
   <!-- STATS -->
-  <div class="stats-row" style="margin-top:20px;">
-    <div class="gc stat-card"><div class="stat-num"><?= count($purchases) ?></div><div class="stat-lbl" id="t-stat-count">Artworks Purchased</div></div>
-    <div class="gc stat-card"><div class="stat-num money"><?= number_format($totalSpent) ?></div><div class="stat-lbl" id="t-stat-spent">Total Spent (SAR)</div></div>
-    <div class="gc stat-card"><div class="stat-num"><?= e($memberSince) ?></div><div class="stat-lbl" id="t-stat-since">Member Since</div></div>
+  <div class="stat-grid stats-row">
+    <div class="stat-card"><span class="stat-num"><?= count($purchases) ?></span><span class="stat-lbl" id="t-stat-count">Artworks Purchased</span></div>
+    <div class="stat-card"><span class="stat-num"><?= number_format($totalSpent) ?></span><span class="stat-lbl" id="t-stat-spent">Total Spent (SAR)</span></div>
+    <div class="stat-card"><span class="stat-num"><?= e($memberSince) ?></span><span class="stat-lbl" id="t-stat-since">Member Since</span></div>
   </div>
 
   <!-- PURCHASES -->
   <p class="section-title" id="t-pur-title">Purchase History</p>
-  <div class="gc pur-wrap">
+  <div class="table-wrap">
     <?php if (!$purchases): ?>
-      <div class="pur-empty" id="t-pur-empty">No purchases yet. Explore the marketplace to start your collection.</div>
+      <div class="pur-empty"><p id="t-pur-empty">No purchases yet. Explore the marketplace to start your collection.</p><a class="btn btn-primary" href="marketplace.php" id="t-pur-go">Explore Artworks</a></div>
     <?php else: ?>
-      <table class="pur-table">
+      <table class="table">
         <thead><tr>
           <th id="t-h-art">Artwork</th>
           <th id="t-h-artist">Artist</th>
@@ -173,13 +124,13 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
         <tbody>
         <?php foreach ($purchases as $p): ?>
           <tr>
-            <td style="display:flex;align-items:center;gap:12px;">
-              <?php if (!empty($p['image_url'])): ?><img class="pur-thumb" src="<?= e($p['image_url']) ?>" alt=""><?php endif; ?>
+            <td><div class="pur-art">
+              <?php if (!empty($p['image_url'])): ?><img class="pur-thumb" src="<?= e($p['image_url']) ?>" alt="<?= e(($p['title_en'] ?? '') . ' · ' . ($p['title_ar'] ?? '')) ?>"><?php endif; ?>
               <div>
                 <strong><?= e($p['title_en'] ?: ($p['title_ar'] ?: '—')) ?></strong>
                 <?php if (!empty($p['title_ar'])): ?><div class="title-ar" dir="rtl"><?= e($p['title_ar']) ?></div><?php endif; ?>
               </div>
-            </td>
+            </div></td>
             <td><?= e($p['artist_en'] ?: ($p['artist_ar'] ?: '—')) ?></td>
             <td><?= e($p['purchased_at'] ? date('Y-m-d', strtotime($p['purchased_at'])) : '—') ?></td>
             <td class="pur-price"><?= number_format((float)$p['price']) ?> <span class="sar">SAR</span></td>
@@ -196,7 +147,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 const T={
   en:{dir:'ltr',lb:'العربية',profileTitle:'My Profile',edit:'Edit Profile',saved:'Profile updated successfully.',
     statCount:'Artworks Purchased',statSpent:'Total Spent (SAR)',statSince:'Member Since',
-    purTitle:'Purchase History',purEmpty:'No purchases yet. Explore the marketplace to start your collection.',
+    purTitle:'Purchase History',purEmpty:'No purchases yet. Explore the marketplace to start your collection.',purGo:'Explore Artworks',
     hArt:'Artwork',hArtist:'Artist',hDate:'Date',hPrice:'Price',sar:'SAR',
     nav:{studio:'The Studio',community:'Community',marketplace:'Marketplace',explore:'Explore Art Styles',support:'Support',
       s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
@@ -204,7 +155,7 @@ const T={
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',profileTitle:'ملفي الشخصي',edit:'تعديل الملف الشخصي',saved:'تم تحديث الملف الشخصي بنجاح.',
     statCount:'الأعمال المقتناة',statSpent:'إجمالي الإنفاق (ر.س)',statSince:'عضو منذ',
-    purTitle:'سجل المشتريات',purEmpty:'لا توجد مشتريات بعد. استكشف السوق لبدء مجموعتك.',
+    purTitle:'سجل المشتريات',purEmpty:'لا توجد مشتريات بعد. استكشف السوق لبدء مجموعتك.',purGo:'استكشف الأعمال',
     hArt:'العمل الفني',hArtist:'الفنان',hDate:'التاريخ',hPrice:'السعر',sar:'ر.س',
     nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'السوق',explore:'استكشف أساليب الرسم',support:'الدعم',
       s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
@@ -222,7 +173,7 @@ function apply(l){
   document.getElementById('lb').textContent=t.lb;
   setTxt('t-profile-title',t.profileTitle);setTxt('t-edit',t.edit);setTxt('t-saved',t.saved);
   setTxt('t-stat-count',t.statCount);setTxt('t-stat-spent',t.statSpent);setTxt('t-stat-since',t.statSince);
-  setTxt('t-pur-title',t.purTitle);setTxt('t-pur-empty',t.purEmpty);
+  setTxt('t-pur-title',t.purTitle);setTxt('t-pur-empty',t.purEmpty);setTxt('t-pur-go',t.purGo);
   setTxt('t-h-art',t.hArt);setTxt('t-h-artist',t.hArtist);setTxt('t-h-date',t.hDate);setTxt('t-h-price',t.hPrice);
   document.querySelectorAll('.sar').forEach(s=>s.textContent=t.sar);
   const n=t.nav;
@@ -239,5 +190,6 @@ apply(L);
 const v=document.getElementById('vid');
 if(v){v.addEventListener('canplay',()=>v.classList.add('on'),{once:true});v.play().catch(()=>{});}
 </script>
+<?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

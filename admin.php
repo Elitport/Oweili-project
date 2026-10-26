@@ -307,159 +307,135 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 <title>Admin · Oweili</title>
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{min-height:100vh;background:#f4f5f7;font-family:var(--font-sans);color:#111111;padding:40px 20px;}
-.wrap{max-width:1000px;margin:0 auto;}
-h1{font-size:24px;font-weight:700;margin-bottom:4px;}
-.sub{font-size:13px;color:rgba(0,0,0,0.5);margin-bottom:24px;}
-.card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.05);padding:26px;}
-.login-card{max-width:380px;margin:8vh auto 0;}
-.login-card h1{margin-bottom:16px;}
-label{display:block;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.5);margin-bottom:6px;}
-input[type=password]{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.15);font-size:14px;font-family:inherit;}
-input:focus{outline:none;border-color:#0066ff;box-shadow:0 0 0 3px rgba(0,100,255,0.12);}
-.btn{padding:11px 22px;border-radius:999px;background:#111111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.22s;text-decoration:none;display:inline-block;}
-.btn:hover{background:#ff0055;}
-.btn.sm{padding:7px 14px;font-size:12px;}
-.btn.green{background:#0066ff;}.btn.green:hover{background:#0066ff;}
-.btn.red{background:#ff0055;}.btn.red:hover{background:#111111;}
-.btn.grey{background:rgba(0,0,0,0.08);color:#111111;}.btn.grey:hover{background:rgba(0,0,0,0.16);}
-.err{color:#111111;font-size:13px;font-weight:600;margin-bottom:12px;}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th,td{text-align:left;padding:12px 10px;border-bottom:1px solid rgba(0,0,0,0.06);vertical-align:middle;}
-th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);}
-.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;}
-.pill.on{background:rgba(0,102,255,0.14);color:#0066ff;}
-.pill.off{background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.5);}
-.pill.ban{background:rgba(255,0,85,0.12);color:#111111;}
-.acts{display:flex;gap:6px;flex-wrap:wrap;}
-.name-ar{font-size:12px;color:rgba(0,0,0,0.45);}
-.empty{padding:30px;text-align:center;color:rgba(0,0,0,0.4);}
-.sec-head{margin-bottom:16px;}
-.sec-head h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.count{background:#ff0055;color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;}
-.art-list{display:flex;flex-direction:column;gap:12px;}
-.art-item{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:12px;border:1px solid rgba(0,0,0,0.07);border-radius:14px;}
-.art-thumb{width:64px;height:64px;border-radius:10px;background-size:cover;background-position:center;background-color:#eee;flex-shrink:0;}
+/* Admin panel — staff layout only; buttons, tabs, tables, cards, forms and stat cards come from oweili.css (role color: admin dark) */
+.wrap{max-width:1100px;margin:0 auto;padding:var(--space-lg);}
+.sub{font-size:var(--fs-body);color:var(--color-body);margin:4px 0 var(--space-sm);}
+.login-card{max-width:400px;margin:8vh auto 0;}
+.login-card h1{font-size:var(--fs-card);margin-bottom:var(--space-sm);}
+.err{color:var(--color-primary-dark);font-size:var(--fs-label);font-weight:600;margin-bottom:var(--space-sm);}
+.top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:var(--space-sm);margin-bottom:var(--space-md);}
+.top h1{font-size:var(--fs-section);margin:0;}
+.top-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;}
+.stat-grid{margin-bottom:var(--space-lg);}
+.pill.on{background:rgba(0,102,255,0.1);color:var(--color-accent-dark);}
+.pill.off{background:rgba(0,0,0,0.06);color:var(--color-dark);}
+.pill.ban{background:var(--color-tint-pink);border:1px solid rgba(255,0,85,0.3);color:var(--color-dark);}
+.pill.role-artist{background:var(--color-tint-pink);color:var(--color-dark);}
+.pill.role-collector,.pill.role-admin{background:rgba(0,100,255,0.1);color:var(--color-accent-dark);}
+.acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;}
+.name-ar{font-size:var(--fs-caption);color:var(--color-body);}
+.empty{padding:var(--space-lg);text-align:center;color:var(--color-body);}
+.sec-head{margin-bottom:var(--space-sm);}
+.sec-head h2{font-size:var(--fs-subtitle);display:flex;align-items:center;gap:var(--space-xs);margin:0;}
+.count{background:var(--color-dark);color:#fff;font-size:var(--fs-min);font-weight:700;padding:2px 9px;border-radius:var(--radius-pill);}
+.tab .count{background:rgba(0,0,0,0.07);color:var(--color-dark);}
+.tab.active .count{background:rgba(255,255,255,0.22);color:#fff;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.art-list{display:flex;flex-direction:column;gap:var(--space-sm);}
+.art-item{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm);padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--radius-card);background:#fff;}
+.art-thumb{width:72px;height:72px;border-radius:var(--radius-input);background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#fff;border:1px solid var(--color-border);flex-shrink:0;}
 .art-meta{flex:1;min-width:0;}
 .art-proof{flex-basis:100%;min-width:0;}
 .art-proof .pj{margin-top:4px;}
-.art-meta strong{font-size:14px;}
-.art-info{font-size:12px;color:rgba(0,0,0,0.5);margin-top:3px;}
+.art-meta strong{font-size:var(--fs-body);color:var(--color-dark);}
+.art-info{font-size:var(--fs-caption);color:var(--color-body);margin-top:3px;}
 .verify-cell{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:150px;}
-.verify-photo{width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(0,0,0,0.1);}
-.verify-video{width:150px;max-width:100%;border-radius:10px;background:#000;}
-.video-link{font-size:12px;font-weight:600;color:#0066ff;text-decoration:none;}
-.video-link:hover{text-decoration:underline;}
-.no-media{font-size:12px;color:rgba(0,0,0,0.35);font-style:italic;}
-.pill.role-artist{background:rgba(255,0,85,0.1);color:#111111;}
-.pill.role-collector{background:rgba(0,100,255,0.1);color:#0066ff;}
-.pill.role-admin{background:rgba(0,102,255,0.1);color:#0066ff;}
-.status-pills{display:flex;gap:5px;flex-wrap:wrap;}
-.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
-.tab-btn{padding:10px 22px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:#fff;color:rgba(0,0,0,0.6);transition:all 0.2s;display:flex;align-items:center;gap:8px;}
-.tab-btn:hover{background:rgba(0,0,0,0.03);color:#111;}
-.tab-btn.active{background:#111111;color:#fff;border-color:#111111;}
-.tab-btn .count{background:rgba(255,255,255,0.25);}
-.tab-btn:not(.active) .count{background:#ff0055;color:#fff;}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-.lang-btn{padding:9px 16px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:#fff;color:rgba(0,0,0,0.7);transition:all 0.2s;}
-.lang-btn:hover{background:#111;color:#fff;}
-[dir="rtl"] body{direction:rtl;}
-[dir="rtl"] th,[dir="rtl"] td{text-align:right;}
-
 [dir="rtl"] .verify-cell{align-items:flex-end;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.field{margin-bottom:14px;}
-.field label{margin-bottom:6px;}
-.field input,.field textarea,.field select{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.15);font-size:14px;font-family:inherit;background:#fff;}
-.field textarea{resize:vertical;min-height:60px;}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#0066ff;box-shadow:0 0 0 3px rgba(0,100,255,0.12);}
-.style-item{display:flex;gap:16px;padding:14px;border:1px solid rgba(0,0,0,0.07);border-radius:14px;margin-bottom:12px;align-items:flex-start;}
-.style-thumb{width:80px;height:80px;border-radius:10px;background-size:cover;background-position:center;background-color:#eee;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;color:rgba(0,0,0,0.25);}
+.verify-photo{width:52px;height:52px;border-radius:var(--radius-input);object-fit:cover;border:1px solid var(--color-border);}
+.verify-video{width:150px;max-width:100%;border-radius:var(--radius-input);background:#000;}
+.video-link{font-size:var(--fs-label);font-weight:600;}
+.no-media{font-size:var(--fs-label);color:var(--color-body);font-style:italic;}
+.status-pills{display:flex;gap:5px;flex-wrap:wrap;}
+.style-item{display:flex;gap:var(--space-sm);padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--radius-card);margin-bottom:var(--space-sm);align-items:flex-start;}
+.style-thumb{width:80px;height:80px;border-radius:var(--radius-input);background-size:cover;background-position:center;background-color:#f4f5f7;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--color-light);}
 .style-body{flex:1;min-width:0;}
-.style-body h3{font-size:15px;font-weight:700;margin-bottom:2px;}
-.style-desc{font-size:12px;color:rgba(0,0,0,0.6);line-height:1.6;margin:4px 0 6px;}
-.tag-pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(0,100,255,0.1);color:#0066ff;}
-.edit-form{display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);}
+.style-body h3{font-size:var(--fs-body);margin:0 0 2px;}
+.style-desc{font-size:var(--fs-caption);color:var(--color-body);line-height:1.6;margin:4px 0 6px;}
+.tag-pill{display:inline-block;padding:3px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;background:rgba(0,100,255,0.1);color:var(--color-accent-dark);}
+.edit-form{display:none;margin-top:var(--space-sm);padding-top:var(--space-sm);border-top:1px solid var(--color-border);}
 .edit-form.open{display:block;}
-
-.online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ccc;margin-inline-end:5px;vertical-align:middle;}
-.online-dot.on{background:#0066ff;box-shadow:0 0 6px rgba(0,102,255,0.6);}
-.online-stat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#0066ff;background:rgba(0,102,255,0.1);border:1px solid rgba(0,102,255,0.25);padding:6px 14px;border-radius:999px;}
+.online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ccc;vertical-align:middle;}
+.online-dot.on{background:var(--color-subadmin);}
 .port-thumbs{display:flex;gap:4px;flex-wrap:wrap;max-width:150px;}
 .port-thumbs a{display:block;}
-.port-thumbs img{width:34px;height:34px;border-radius:6px;object-fit:cover;border:1px solid rgba(0,0,0,0.1);}
-.role-select{padding:6px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font-size:12px;font-family:inherit;background:#fff;}
+.port-thumbs img{width:34px;height:34px;border-radius:6px;object-fit:cover;border:1px solid var(--color-border);}
+.role-select{min-height:var(--btn-h-sm);padding:4px 8px;border-radius:var(--radius-input);border:1px solid var(--color-border-strong);font-size:var(--fs-label);background:#fff;}
 .role-form{display:flex;gap:4px;align-items:center;margin-top:4px;}
-.mini{font-size:12px;color:rgba(0,0,0,0.4);}
-/* Artist review cards */
-.acards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
-.acard{border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:12px;}
-.acard-head{display:flex;gap:12px;align-items:center;}
-.acard-photo{width:56px;height:56px;border-radius:50%;object-fit:cover;background-size:cover;background-position:center;background:linear-gradient(135deg,#ff0055,#0066ff,#0066ff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;flex-shrink:0;}
+.mini{font-size:var(--fs-label);color:var(--color-body);}
+.acards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--space-md);}
+.acard{border:1px solid var(--color-border);border-radius:var(--radius-card);padding:var(--space-md);background:#fff;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:var(--space-sm);}
+.acard-head{display:flex;gap:var(--space-sm);align-items:center;}
+.acard-photo{width:56px;height:56px;border-radius:50%;background-size:cover;background-position:center;background-color:var(--color-artist);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;flex-shrink:0;}
 .acard-id{flex:1;min-width:0;}
-.acard-id .nm{font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;}
-.acard-id .an{font-size:12px;color:rgba(0,0,0,0.5);}
+.acard-id .nm{font-size:var(--fs-body);font-weight:700;color:var(--color-dark);display:flex;align-items:center;gap:6px;}
+.acard-id .an{font-size:var(--fs-caption);color:var(--color-body);}
 .acard-badges{display:flex;gap:5px;flex-wrap:wrap;}
-.acard-info{font-size:12px;color:rgba(0,0,0,0.6);line-height:1.7;}
-.acard-info b{color:#111;font-weight:600;}
-.acard-media{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;}
-.acard-media video{width:100%;border-radius:10px;background:#000;}
-.acard-foot{display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;margin-top:auto;}
-@media(max-width:640px){.grid2{grid-template-columns:1fr;}.style-item{flex-direction:column;}.acards{grid-template-columns:1fr;}}
+.acard-info{font-size:var(--fs-caption);color:var(--color-body);line-height:1.7;}
+.acard-info b{color:var(--color-dark);font-weight:600;}
+.acard-media{display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:flex-start;}
+.acard-media video{width:100%;border-radius:var(--radius-input);background:#000;}
+.acard-foot{display:flex;flex-direction:column;gap:var(--space-xs);border-top:1px solid var(--color-border);padding-top:var(--space-sm);margin-top:auto;}
+.card + .card{margin-top:var(--space-md);}
+@media(max-width:768px){.wrap{padding:var(--space-sm);}}
+@media(max-width:640px){.style-item{flex-direction:column;}.acards{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/assets/css/proof.css">
 </head>
-<body>
+<body class="staff-page">
 <div class="wrap">
 <?php if (!$isAdmin): ?>
 
-  <div style="max-width:380px;margin:6vh auto 0;text-align:right;"><button class="lang-btn" id="lb" onclick="tglLang()">العربية</button></div>
-  <form class="card login-card" method="post" action="admin.php" style="margin-top:12px;">
+  <div style="max-width:380px;margin:6vh auto 0;text-align:right;"><button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button></div>
+  <form class="card login-card" method="post" action="admin.php">
     <h1>Admin Login</h1>
     <?php if ($loginError): ?><div class="err"><?= e($loginError) ?></div><?php endif; ?>
     <?= csrfField() ?>
-    <label for="admin_pass">Password</label>
-    <input type="password" id="admin_pass" name="admin_pass" required autofocus>
-    <div style="margin-top:16px;"><button class="btn" type="submit">Sign In</button></div>
+    <div class="field"><label for="admin_pass">Password</label>
+    <input type="password" id="admin_pass" name="admin_pass" required autofocus></div>
+    <button class="btn btn-primary btn-block" type="submit">Sign In</button>
   </form>
 
 <?php else: ?>
 
+  <div class="dash role-admin">
   <div class="top">
     <div>
       <h1>Admin Dashboard</h1>
       <div class="sub">Manage artists, collectors, and artwork approvals.</div>
-      <div class="online-stat"><span class="online-dot on"></span><?= $onlineCount ?>&nbsp;<span>Online Now</span></div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <button class="lang-btn" id="lb" onclick="tglLang()">العربية</button>
-      <a class="btn" href="admin_articles.php">Articles</a>
-      <a class="btn grey" href="admin.php?logout=1">Log out</a>
+    <div class="top-actions">
+      <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button>
+      <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
+      <a class="btn btn-ghost btn-sm" href="admin.php?logout=1">Log out</a>
     </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-num"><?= count($artists) ?></span><span class="stat-lbl">Artists</span></div>
+    <div class="stat-card"><span class="stat-num"><?= count($collectors) ?></span><span class="stat-lbl">Collectors</span></div>
+    <div class="stat-card"><span class="stat-num"><?= count($pendingArt) ?></span><span class="stat-lbl">Pending Artworks</span></div>
+    <div class="stat-card"><span class="stat-num"><span class="online-dot on" aria-hidden="true"></span> <?= (int) $onlineCount ?></span><span class="stat-lbl">Online Now</span></div>
+  </div>
   </div>
 
   <?php if (!empty($_SESSION['admin_err'])): ?>
-    <div class="card" style="border:1px solid rgba(255,0,85,0.3);background:rgba(255,0,85,0.06);color:#111111;margin-bottom:16px;">
+    <div class="alert alert-error">
       <strong>⚠ Could not save.</strong> <?= e($_SESSION['admin_err']) ?>
-      <div class="mini" style="margin-top:6px;color:#111111;">If this mentions a missing table, run <code>discover_setup.sql</code> in phpMyAdmin.</div>
+      <div class="mini" style="margin-top:6px;">If this mentions a missing table, run <code>discover_setup.sql</code> in phpMyAdmin.</div>
     </div>
     <?php unset($_SESSION['admin_err']); ?>
   <?php elseif (isset($_GET['ok'])): ?>
-    <div class="card" style="border:1px solid rgba(0,102,255,0.25);background:rgba(0,102,255,0.06);color:#111111;margin-bottom:16px;"><strong>✓ Saved.</strong></div>
+    <div class="alert alert-ok"><strong>✓ Saved.</strong></div>
   <?php endif; ?>
 
   <!-- TABS -->
   <div class="tabs">
-    <button class="tab-btn active" data-tab="artists" onclick="showTab('artists',this)">Artists <span class="pill count"><?= count($artists) ?></span></button>
-    <button class="tab-btn" data-tab="collectors" onclick="showTab('collectors',this)">Collectors <span class="pill count"><?= count($collectors) ?></span></button>
-    <button class="tab-btn" data-tab="pending" onclick="showTab('pending',this)">Pending Artworks <span class="pill count"><?= count($pendingArt) ?></span></button>
-    <button class="tab-btn" data-tab="styles" onclick="showTab('styles',this)">Art Styles <span class="pill count"><?= count($styles) ?></span></button>
-    <button class="tab-btn" data-tab="events" onclick="showTab('events',this)">Events <span class="pill count"><?= count($events) ?></span></button>
-    <button class="tab-btn" data-tab="training" onclick="showTab('training',this)">Training <span class="pill count"><?= count($training) ?></span></button>
+    <button class="tab tab-btn active" data-tab="artists" onclick="showTab('artists',this)">Artists <span class="pill count"><?= count($artists) ?></span></button>
+    <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)">Collectors <span class="pill count"><?= count($collectors) ?></span></button>
+    <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)">Pending Artworks <span class="pill count"><?= count($pendingArt) ?></span></button>
+    <button class="tab tab-btn" data-tab="styles" onclick="showTab('styles',this)">Art Styles <span class="pill count"><?= count($styles) ?></span></button>
+    <button class="tab tab-btn" data-tab="events" onclick="showTab('events',this)">Events <span class="pill count"><?= count($events) ?></span></button>
+    <button class="tab tab-btn" data-tab="training" onclick="showTab('training',this)">Training <span class="pill count"><?= count($training) ?></span></button>
   </div>
 
   <!-- ===== TAB: ARTISTS ===== -->
@@ -511,21 +487,21 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
           <div class="acard-foot">
             <div class="acts">
               <?php if (!$a['is_approved']): ?>
-                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn sm green" name="action" value="approve">Approve</button></form>
+                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="approve">Approve</button></form>
               <?php else: ?>
-                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn sm grey" name="action" value="unapprove">Unapprove</button></form>
+                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unapprove">Unapprove</button></form>
               <?php endif; ?>
               <?php if ((int)$a['is_banned'] === 1): ?>
-                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn sm grey" name="action" value="unban">Unban</button></form>
+                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unban">Unban</button></form>
               <?php else: ?>
-                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn sm red" name="action" value="ban">Ban</button></form>
+                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="ban">Ban</button></form>
               <?php endif; ?>
             </div>
             <form method="post" action="admin.php" class="role-form"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>">
               <select class="role-select" name="role">
                 <?php foreach (['collector','artist','sub_admin','admin'] as $r): ?><option value="<?= $r ?>" <?= ($a['role']??'')===$r?'selected':'' ?>><?= ucfirst(str_replace('_',' ',$r)) ?></option><?php endforeach; ?>
               </select>
-              <button class="btn sm grey" name="action" value="set_role">Set Role</button>
+              <button class="btn btn-ghost btn-sm" name="action" value="set_role">Set Role</button>
             </form>
           </div>
         </div>
@@ -542,7 +518,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
       <div class="empty">No collector accounts yet.</div>
     <?php else: ?>
       <div style="overflow-x:auto;">
-      <table>
+      <table class="table">
         <thead>
           <tr><th>Name</th><th>Email</th><th>Phone</th><th>City</th><th>Dates</th><th>Verified</th><th>Status</th><th>Actions</th></tr>
         </thead>
@@ -565,16 +541,16 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
             <td>
               <div class="acts">
                 <?php if ((int)$c['is_banned'] === 1): ?>
-                  <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn sm grey" name="action" value="unban">Unban</button></form>
+                  <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unban">Unban</button></form>
                 <?php else: ?>
-                  <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn sm red" name="action" value="ban">Ban</button></form>
+                  <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="ban">Ban</button></form>
                 <?php endif; ?>
               </div>
               <form method="post" action="admin.php" class="role-form"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>">
                 <select class="role-select" name="role">
                   <?php foreach (['collector','artist','sub_admin','admin'] as $r): ?><option value="<?= $r ?>" <?= ($c['role']??'')===$r?'selected':'' ?>><?= ucfirst(str_replace('_',' ',$r)) ?></option><?php endforeach; ?>
                 </select>
-                <button class="btn sm grey" name="action" value="set_role">Set</button>
+                <button class="btn btn-ghost btn-sm" name="action" value="set_role">Set</button>
               </form>
             </td>
           </tr>
@@ -609,8 +585,8 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
             </div>
           </div>
           <div class="acts">
-            <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn sm green" name="action" value="approve_art">Approve</button></form>
-            <form method="post" action="admin.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn sm red" name="action" value="reject_art">Reject</button></form>
+            <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="approve_art">Approve</button></form>
+            <form method="post" action="admin.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="reject_art">Reject</button></form>
           </div>
           <div class="art-proof"><?= owProofPanelHtml($pendingStages[(int)$art['id']] ?? [], $pendingColors[(int)$art['id']] ?? [], (string)$art['type'], $ART_TYPES) ?></div>
         </div>
@@ -644,12 +620,12 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
           </div>
           <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" placeholder="https://…"></div>
         </div>
-        <button type="submit" class="btn green">Add Style</button>
+        <button type="submit" class="btn btn-accent">Add Style</button>
       </form>
     </div>
 
     <div class="card">
-      <div class="sec-head"><h2>Art Styles <span class="count" style="background:#0066ff;"><?= count($styles) ?></span></h2></div>
+      <div class="sec-head"><h2>Art Styles <span class="count"><?= count($styles) ?></span></h2></div>
       <?php if (!$styles): ?>
         <div class="empty">No styles yet. Add your first one above.</div>
       <?php else: ?>
@@ -681,18 +657,18 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
                     </div>
                     <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" value="<?= e($s['image_url']) ?>"></div>
                   </div>
-                  <button type="submit" class="btn green sm">Save Changes</button>
-                  <button type="button" class="btn grey sm" onclick="toggleStyleEdit(<?= (int)$s['id'] ?>)">Cancel</button>
+                  <button type="submit" class="btn btn-accent btn-sm">Save Changes</button>
+                  <button type="button" class="btn btn-ghost btn-sm" onclick="toggleStyleEdit(<?= (int)$s['id'] ?>)">Cancel</button>
                 </form>
               </div>
             </div>
             <div class="acts" style="flex-direction:column;">
-              <button type="button" class="btn grey sm" onclick="toggleStyleEdit(<?= (int)$s['id'] ?>)">Edit</button>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="toggleStyleEdit(<?= (int)$s['id'] ?>)">Edit</button>
               <form method="post" action="admin.php#styles" onsubmit="return confirm('Delete this style?');" style="margin:0;">
                 <?= csrfField() ?>
                 <input type="hidden" name="action" value="style_delete">
                 <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
-                <button type="submit" class="btn red sm">Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
             </div>
           </div>
@@ -731,12 +707,12 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
           <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" placeholder="https://…"></div>
         </div>
         <div class="field"><label>Contact / Details Link</label><input type="text" name="contact_link" dir="ltr" placeholder="https://… or mailto:…"></div>
-        <button type="submit" class="btn green">Add Event</button>
+        <button type="submit" class="btn btn-accent">Add Event</button>
       </form>
     </div>
 
     <div class="card">
-      <div class="sec-head"><h2>Events <span class="count" style="background:#0066ff;"><?= count($events) ?></span></h2></div>
+      <div class="sec-head"><h2>Events <span class="count"><?= count($events) ?></span></h2></div>
       <?php if (!$events): ?>
         <div class="empty">No events yet. Add your first one above.</div>
       <?php else: ?>
@@ -756,7 +732,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
                 <?= csrfField() ?>
                 <input type="hidden" name="action" value="event_delete">
                 <input type="hidden" name="id" value="<?= (int)$ev['id'] ?>">
-                <button type="submit" class="btn red sm">Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
             </div>
           </div>
@@ -793,12 +769,12 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
           <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" placeholder="https://…"></div>
         </div>
         <div class="field"><label>Contact / Details Link</label><input type="text" name="contact_link" dir="ltr" placeholder="https://… or mailto:…"></div>
-        <button type="submit" class="btn green">Add Training</button>
+        <button type="submit" class="btn btn-accent">Add Training</button>
       </form>
     </div>
 
     <div class="card">
-      <div class="sec-head"><h2>Training <span class="count" style="background:#0066ff;"><?= count($training) ?></span></h2></div>
+      <div class="sec-head"><h2>Training <span class="count"><?= count($training) ?></span></h2></div>
       <?php if (!$training): ?>
         <div class="empty">No training listed yet. Add your first one above.</div>
       <?php else: ?>
@@ -818,7 +794,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
                 <?= csrfField() ?>
                 <input type="hidden" name="action" value="training_delete">
                 <input type="hidden" name="id" value="<?= (int)$tr['id'] ?>">
-                <button type="submit" class="btn red sm">Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
             </div>
           </div>

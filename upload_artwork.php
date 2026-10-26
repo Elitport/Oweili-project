@@ -223,7 +223,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
         <span class="cam-label-retake"<?= $saved ? '' : ' hidden' ?>><?= t2('Retake Photo', 'أعد التصوير') ?></span>
       </label>
       <p class="cam-err" role="alert" hidden><?= t2('This photo is larger than 10MB. Please take it again.', 'حجم الصورة أكبر من 10 ميغابايت. يرجى التقاطها مرة أخرى.') ?></p>
-      <button type="submit" class="btn-dark save-photo" hidden><?= t2('Save Photo', 'احفظ الصورة') ?></button>
+      <button type="submit" class="btn btn-dark btn-block save-photo" hidden><?= t2('Save Photo', 'احفظ الصورة') ?></button>
     </form>
     <?php return ob_get_clean();
 }
@@ -238,10 +238,15 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <link rel="stylesheet" href="/assets/css/nav.css">
 <style>
+/* 3-stage upload — layout only; buttons, cards, inputs and alerts come from oweili.css */
+.wrap h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
+.panel{margin-bottom:var(--space-md);}
+.panel h2{font-size:var(--fs-card);margin:0 0 var(--space-sm);}
+.field .opt{font-weight:400;color:var(--color-body);}
+.btn[disabled]{opacity:0.4;cursor:wait;}
 .ow{background:var(--color-bg);}
-.wrap{max-width:720px;margin:0 auto;padding:88px 16px 48px;}
-.ow .wrap h1{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-0.02em;margin-bottom:6px;}
-.ow .lead{color:var(--color-body);margin-bottom:24px;}
+.wrap{max-width:720px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-lg)) var(--space-sm) var(--space-xl);}
+.lead{color:var(--color-body);margin-bottom:24px;}
 /* progress bar — flex follows the page direction, so it fills right-to-left in Arabic */
 .progress{margin-bottom:24px;}
 .progress-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--color-dark);margin-bottom:8px;}
@@ -249,48 +254,29 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .bars a,.bars span{flex:1;height:6px;border-radius:999px;background:rgba(0,0,0,0.08);}
 .bars .on{background:var(--color-accent);}
 .bars a:focus-visible{outline:2px solid var(--color-accent);outline-offset:3px;}
-.panel{background:#fff;border:1px solid var(--color-border);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.04);padding:24px;margin-bottom:20px;}
 .ow .panel h2{font-size:20px;margin-bottom:14px;}
-.field{margin-bottom:16px;}
-.field label{display:block;font-size:13px;font-weight:600;color:var(--color-dark);margin-bottom:6px;}
-.field .opt{font-weight:400;color:var(--color-light);}
-.field input,.field textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1px solid rgba(0,0,0,0.15);border-radius:12px;background:#fff;color:var(--color-dark);}
-.field textarea{min-height:96px;resize:vertical;}
-.field input:focus,.field textarea:focus{outline:2px solid var(--color-accent);outline-offset:1px;border-color:transparent;}
-.ow .stage-msg{font-size:16px;line-height:1.7;color:var(--color-dark);margin-bottom:16px;}
+.stage-msg{font-size:16px;line-height:1.7;color:var(--color-dark);margin-bottom:16px;}
 .cam-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
 .preview{display:none;position:relative;margin-bottom:14px;border-radius:14px;overflow:hidden;background:#f4f5f7;}
 .preview.has{display:block;}
 .preview img{display:block;width:100%;max-height:60vh;object-fit:contain;}
 .saved-tag{position:absolute;top:10px;inset-inline-start:10px;background:var(--color-dark);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;}
-.cam-btn{display:flex;align-items:center;justify-content:center;gap:12px;min-height:88px;width:100%;border-radius:16px;border:2px dashed rgba(0,102,255,0.4);background:rgba(0,102,255,0.05);color:var(--color-accent);font-size:17px;font-weight:700;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
+.cam-btn{display:flex;align-items:center;justify-content:center;gap:12px;min-height:88px;width:100%;border-radius:var(--radius-card);border:2px dashed rgba(0,102,255,0.4);background:rgba(0,102,255,0.05);color:var(--color-accent);font-size:17px;font-weight:700;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
 .cam-btn:hover{background:rgba(0,102,255,0.1);border-color:var(--color-accent);}
 .cam-btn:active{background:rgba(0,102,255,0.16);}
 .cam-input:focus-visible + .preview + .cam-btn{outline:2px solid var(--color-accent);outline-offset:3px;}
 .cam-btn svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;}
-.ow .cam-err{color:#111111;font-size:14px;font-weight:600;margin-top:10px;}
-.btn-dark,.btn-light,.btn-pink{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:999px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.2s,transform 0.2s;border:1px solid transparent;}
-.btn-dark{background:var(--color-dark);color:#fff;}
-.btn-dark:hover{background:#333;}
-.btn-light{background:#fff;color:var(--color-dark);border-color:rgba(0,0,0,0.15);}
-.btn-light:hover{background:#f4f5f7;}
-.btn-pink{background:var(--color-primary);color:#fff;font-size:16px;}
-.btn-pink:hover{background:var(--color-primary-dark,#e0004b);}
-.btn-dark:active,.btn-light:active,.btn-pink:active{transform:scale(0.98);}
-.btn-dark:focus-visible,.btn-light:focus-visible,.btn-pink:focus-visible,.chip:focus-within,.type-card:focus-within{outline:2px solid var(--color-accent);outline-offset:2px;}
-.btn-dark[disabled],.btn-pink[disabled]{opacity:0.6;cursor:wait;}
+.cam-err{color:var(--color-primary-dark);font-size:14px;font-weight:600;margin-top:10px;}
+.chip:focus-within,.type-card:focus-within{outline:2px solid var(--color-accent);outline-offset:2px;}
 .save-photo{width:100%;margin-top:12px;}
 .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-top:8px;}
 .skip{font-size:14px;font-weight:600;color:var(--color-accent);text-decoration:underline;padding:12px 4px;}
-.alert{border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:14px;font-weight:600;}
-.alert-err{background:rgba(255,0,85,0.08);color:#111111;border:1px solid rgba(255,0,85,0.3);}
-.alert-ok{background:rgba(0,102,255,0.06);color:var(--color-dark);border:1px solid rgba(0,102,255,0.2);}
-.ow .note{font-size:14px;line-height:1.7;color:var(--color-body);background:#f7f8fa;border-radius:12px;padding:12px 14px;margin:6px 0 18px;}
+.note{font-size:14px;line-height:1.7;color:var(--color-body);background:#f7f8fa;border-radius:12px;padding:12px 14px;margin:6px 0 18px;}
 /* colors */
 .chips{display:flex;flex-wrap:wrap;gap:8px;}
 .chip{position:relative;}
 .chip input{position:absolute;opacity:0;width:1px;height:1px;}
-.chip > span{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid rgba(0,0,0,0.15);background:#fff;font-size:14px;font-weight:600;color:var(--color-dark);cursor:pointer;transition:background 0.15s,border-color 0.15s;}
+.chip > span{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);background:#fff;font-size:14px;font-weight:600;color:var(--color-dark);cursor:pointer;transition:background 0.15s,border-color 0.15s;}
 .chip > span:hover{border-color:var(--color-accent);}
 .chip i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,0.2);flex-shrink:0;}
 .chip input:checked + span{background:var(--color-accent);border-color:var(--color-accent);color:#fff;}
@@ -298,12 +284,12 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .types{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 .type-card{position:relative;}
 .type-card input{position:absolute;opacity:0;width:1px;height:1px;}
-.type-card > span{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:116px;padding:12px 8px;border-radius:16px;border:1px solid rgba(0,0,0,0.12);background:#fff;font-size:14px;font-weight:600;color:var(--color-dark);text-align:center;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;}
+.type-card > span{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:116px;padding:12px 8px;border-radius:var(--radius-card);border:1px solid var(--color-border-strong);background:#fff;font-size:14px;font-weight:600;color:var(--color-dark);text-align:center;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;}
 .type-card > span:hover{border-color:var(--color-accent);}
 .type-card svg{width:64px;height:64px;border-radius:10px;background:#f7f8fa;}
 .type-card input:checked + span{border:2px solid var(--color-accent);box-shadow:0 0 0 3px rgba(0,102,255,0.15);color:var(--color-accent);}
 .sub-h{font-size:16px;font-weight:700;color:var(--color-dark);margin:22px 0 4px;}
-.ow .sub-p{font-size:13px;color:var(--color-body);margin-bottom:12px;}
+.sub-p{font-size:var(--fs-label);color:var(--color-body);margin-bottom:12px;}
 .price-row{display:flex;align-items:center;gap:10px;}
 .price-row input{flex:1;}
 .price-row b{font-size:15px;color:var(--color-dark);}
@@ -311,7 +297,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .done-box svg{width:64px;height:64px;stroke:var(--color-accent);fill:none;stroke-width:2;margin-bottom:12px;}
 .done-box .actions{justify-content:center;}
 @media (min-width:640px){.types{grid-template-columns:repeat(3,1fr);}}
-@media (min-width:900px){.types{grid-template-columns:repeat(4,1fr);}.wrap{padding-top:100px;}}
+@media (min-width:900px){.types{grid-template-columns:repeat(4,1fr);}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
 </style>
 </head>
@@ -320,19 +306,19 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 
 <main class="wrap">
 <?php if (!$ready): ?>
-  <div class="panel">
+  <div class="card panel">
     <?= t2('Start New Artwork', 'ابدأ عملاً فنياً جديداً', 'h1') ?>
     <p class="lead"><?= t2('The new 3-stage upload is being set up. Please check back soon.', 'يجري تجهيز نظام الرفع الجديد بثلاث مراحل. يرجى العودة قريباً.') ?></p>
-    <a class="btn-light" href="artist_dashboard.php"><?= t2('Back to my dashboard', 'العودة إلى لوحتي') ?></a>
+    <a class="btn btn-secondary" href="artist_dashboard.php"><?= t2('Back to my dashboard', 'العودة إلى لوحتي') ?></a>
   </div>
 
 <?php elseif ($done): ?>
-  <div class="panel done-box">
+  <div class="card panel done-box">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>
     <?= t2('Your artwork has been submitted. Our team will review it within 24 hours.', 'تم إرسال عملك. سيراجعه فريقنا خلال 24 ساعة.', 'h1', 'style="font-size:22px;line-height:1.5;"') ?>
     <div class="actions" style="margin-top:20px;">
-      <a class="btn-dark" href="artist_dashboard.php"><?= t2('Back to my dashboard', 'العودة إلى لوحتي') ?></a>
-      <a class="btn-light" href="upload_artwork.php"><?= t2('Start another artwork', 'ابدأ عملاً آخر') ?></a>
+      <a class="btn btn-dark" href="artist_dashboard.php"><?= t2('Back to my dashboard', 'العودة إلى لوحتي') ?></a>
+      <a class="btn btn-secondary" href="upload_artwork.php"><?= t2('Start another artwork', 'ابدأ عملاً آخر') ?></a>
     </div>
   </div>
 
@@ -358,11 +344,11 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
   </nav>
 
   <?php if ($error !== '' && isset($ERR[$error])): ?>
-    <div class="alert alert-err" role="alert"><?= t2($ERR[$error][0], $ERR[$error][1]) ?></div>
+    <div class="alert alert-error" role="alert"><?= t2($ERR[$error][0], $ERR[$error][1]) ?></div>
   <?php endif; ?>
 
   <?php if ($step === 1): ?>
-    <section class="panel">
+    <section class="card panel">
       <?= t2('Artwork title', 'عنوان العمل', 'h2') ?>
       <form method="post" action="upload_artwork.php">
         <?= csrfField() ?>
@@ -386,44 +372,44 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
           <textarea id="desc_en" name="desc_en" dir="ltr" lang="en" maxlength="3000"><?= e($_POST['desc_en'] ?? ($draft['description_en'] ?? '')) ?></textarea>
         </div>
         <div class="actions">
-          <a class="btn-light" href="artist_dashboard.php"><?= t2('Cancel', 'إلغاء') ?></a>
-          <button type="submit" class="btn-dark"><?= t2('Save & Continue', 'احفظ وتابع') ?></button>
+          <a class="btn btn-secondary" href="artist_dashboard.php"><?= t2('Cancel', 'إلغاء') ?></a>
+          <button type="submit" class="btn btn-dark"><?= t2('Save & Continue', 'احفظ وتابع') ?></button>
         </div>
       </form>
     </section>
 
   <?php elseif ($step === 2): ?>
-    <section class="panel">
+    <section class="card panel">
       <?= t2('Stage 25% — Early stage', 'مرحلة 25% — البداية', 'h2') ?>
       <?= cameraBlock($draft, 25, $stages) ?>
     </section>
     <div class="actions">
-      <a class="btn-light" href="upload_artwork.php<?= $idQ ?>1"><?= t2('Back', 'رجوع') ?></a>
-      <?php if (isset($stages[25])): ?><a class="btn-dark" href="upload_artwork.php<?= $idQ ?>3"><?= t2('Continue', 'متابعة') ?></a><?php endif; ?>
+      <a class="btn btn-secondary" href="upload_artwork.php<?= $idQ ?>1"><?= t2('Back', 'رجوع') ?></a>
+      <?php if (isset($stages[25])): ?><a class="btn btn-dark" href="upload_artwork.php<?= $idQ ?>3"><?= t2('Continue', 'متابعة') ?></a><?php endif; ?>
     </div>
 
   <?php elseif ($step === 3): ?>
-    <section class="panel">
+    <section class="card panel">
       <?= t2('Stage 50% — Middle stage', 'مرحلة 50% — المنتصف', 'h2') ?>
       <?= cameraBlock($draft, 50, $stages) ?>
     </section>
     <div class="actions">
-      <a class="btn-light" href="upload_artwork.php<?= $idQ ?>2"><?= t2('Back', 'رجوع') ?></a>
+      <a class="btn btn-secondary" href="upload_artwork.php<?= $idQ ?>2"><?= t2('Back', 'رجوع') ?></a>
       <?php if (isset($stages[50])): ?>
-        <a class="btn-dark" href="upload_artwork.php<?= $idQ ?>4"><?= t2('Continue', 'متابعة') ?></a>
+        <a class="btn btn-dark" href="upload_artwork.php<?= $idQ ?>4"><?= t2('Continue', 'متابعة') ?></a>
       <?php else: ?>
         <a class="skip" href="upload_artwork.php<?= $idQ ?>4"><?= t2('Skip this stage (optional)', 'تخطَّ هذه المرحلة (اختياري)') ?></a>
       <?php endif; ?>
     </div>
 
   <?php elseif ($step === 4): ?>
-    <section class="panel">
+    <section class="card panel">
       <?= t2('Stage 100% — Finished piece', 'مرحلة 100% — العمل المكتمل', 'h2') ?>
       <?= cameraBlock($draft, 100, $stages) ?>
     </section>
 
     <?php if (isset($stages[100])): ?>
-    <section class="panel" id="choices">
+    <section class="card panel" id="choices">
       <form method="post" action="upload_artwork.php">
         <?= csrfField() ?>
         <input type="hidden" name="action" value="save_choices">
@@ -462,17 +448,17 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
         </fieldset>
 
         <div class="actions" style="margin-top:20px;">
-          <a class="btn-light" href="upload_artwork.php<?= $idQ ?>3"><?= t2('Back', 'رجوع') ?></a>
-          <button type="submit" class="btn-dark"><?= t2('Save & Continue', 'احفظ وتابع') ?></button>
+          <a class="btn btn-secondary" href="upload_artwork.php<?= $idQ ?>3"><?= t2('Back', 'رجوع') ?></a>
+          <button type="submit" class="btn btn-dark"><?= t2('Save & Continue', 'احفظ وتابع') ?></button>
         </div>
       </form>
     </section>
     <?php else: ?>
-      <div class="actions"><a class="btn-light" href="upload_artwork.php<?= $idQ ?>3"><?= t2('Back', 'رجوع') ?></a></div>
+      <div class="actions"><a class="btn btn-secondary" href="upload_artwork.php<?= $idQ ?>3"><?= t2('Back', 'رجوع') ?></a></div>
     <?php endif; ?>
 
   <?php elseif ($step === 5): ?>
-    <section class="panel">
+    <section class="card panel">
       <?= t2('Price', 'السعر', 'h2') ?>
       <form method="post" action="upload_artwork.php" class="submit-form">
         <?= csrfField() ?>
@@ -489,8 +475,8 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
         </div>
         <p class="note"><?= t2('Oweili charges 15% commission on the sale price, which covers shipping and advertising. You receive 85% of your price.', 'تأخذ أويلي 15% عمولة من سعر البيع، تشمل الشحن والإعلانات. تستلم أنت 85% من سعرك.') ?></p>
         <div class="actions">
-          <a class="btn-light" href="upload_artwork.php<?= $idQ ?>4"><?= t2('Back', 'رجوع') ?></a>
-          <button type="submit" class="btn-pink"><?= t2('Submit for Review', 'أرسل للمراجعة') ?></button>
+          <a class="btn btn-secondary" href="upload_artwork.php<?= $idQ ?>4"><?= t2('Back', 'رجوع') ?></a>
+          <button type="submit" class="btn btn-primary btn-pink"><?= t2('Submit for Review', 'أرسل للمراجعة') ?></button>
         </div>
       </form>
     </section>
@@ -558,10 +544,11 @@ document.querySelectorAll('.cam-form').forEach(function(form){
 });
 /* Loading state on the final submit */
 document.querySelectorAll('.submit-form').forEach(function(f){
-  f.addEventListener('submit', function(){ var b = f.querySelector('.btn-pink'); if (b) setTimeout(function(){ b.disabled = true; }, 0); });
+  f.addEventListener('submit', function(){ var b = f.querySelector('.btn-primary'); if (b) setTimeout(function(){ b.disabled = true; }, 0); });
 });
 /* Show the saved language straight away (nav.php may already have set the direction) */
 applyLang(document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en');
 </script>
+<?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

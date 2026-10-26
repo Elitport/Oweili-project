@@ -122,7 +122,7 @@
 
 ### Creation Journey (marketplace) — built, needs database_update.sql
 - What it does: in the artwork details window, buyers see "Creation Journey — Proof of Human Art" / «رحلة الإبداع — دليل الفن البشري» with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
-- A small blue "✓ Verified Human Artist" / «✓ فنان بشري موثّق» badge sits under the title — only on artworks that have the 25% and 100% photos
+- A small blue "✓ Human Art" / «✓ فن بشري» badge sits under the title (the same badge as everywhere else) — only on artworks that have the 25% and 100% photos
 - Old artworks without stage photos show exactly as before (no journey, no badge)
 - Every card in the marketplace grid also shows a tiny "✓ Human Art" / «✓ فن بشري» badge when the artwork has the 25% and 100% photos
 - Phone: the photos are one row you swipe sideways; tablet and desktop: side by side. Arabic runs right to left
@@ -130,7 +130,7 @@
 - Files: marketplace.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
 ### Creation Journey on artist profiles — built, needs database_update.sql
-- What it does: on an artist's public profile (artist_dashboard.php?id=N), every artwork that has the 25% and 100% photos shows the "✓ Verified Human Artist" badge, a strip of small stage photos (25% / 50% / 100%), and a "See the creation journey" / «شاهد رحلة الإبداع» link that opens the full journey with dates, colors and art type. Old artworks without stages show as before
+- What it does: on an artist's public profile (artist_dashboard.php?id=N), every artwork that has the 25% and 100% photos shows the "✓ Human Art" badge, a strip of small stage photos (25% / 50% / 100%), and a "See the creation journey" / «شاهد رحلة الإبداع» link that opens the full journey with dates, colors and art type. Old artworks without stages show as before
 - Anyone can now open a public profile, even without logging in (the marketplace links to it). Visitors only see artist accounts that are not banned, and only approved artworks. Earnings, drafts, edit and delete stay owner-only; your own dashboard (no ?id) still needs login
 - Files: artist_dashboard.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
@@ -183,15 +183,32 @@
 - Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes. Homepage "Discover the Art World" now has 3 cards: Art Institutes, Global Art Events, Art Education
 - Files: nav.php, index.php
 
+### Design system (one theme) — design-system branch
+- What it does: one look for every page and dashboard, defined once in assets/css/oweili.css and used everywhere
+- Fonts: DM Sans (English) + Tajawal (Arabic). Sizes: hero 48px (36px phone), section title 32px (26px phone), card title 24px, subtitle 18px, body 16px, labels and captions 13px, badges 12px (smallest allowed). Line height 1.6 English, 1.7 Arabic
+- Colors (variables): --color-primary #ff0055, --color-primary-dark #e0004b, --color-accent #0066ff, --color-accent-dark #0047ab, --color-dark #111111, --color-body, --color-light, --color-bg, --color-card, --color-border. Role colors for dashboards: --color-artist #ff0055, --color-collector #0066ff, --color-institute #7c3aed, --color-subadmin #059669, --color-admin #111111
+- Two extra helpers for readability: --color-border-strong (form field edges, so fields are visible) and small error text uses #e0004b (passes contrast; the field border itself turns #ff0055)
+- Spacing (8px grid): --space-xs 8, sm 16, md 24, lg 32, xl 48, 2xl 64, 3xl 96. Sections: 96px top and bottom desktop, 48px phone
+- Buttons: .btn + .btn-primary (pink) / .btn-secondary (white, dark border) / .btn-accent (blue) / .btn-dark / .btn-danger (delete, reject, ban — dark text on a pink tint) / .btn-ghost; .btn-sm (36px) only in tables and tight rows; .btn-block for full width. Disabled = 40% faded. Focus = 2px outline
+- Forms: .field (label above, 13px bold) with 48px inputs, 8px corners, 15px text, blue border on focus; .field.has-error + .field-error for errors; .alert-error / .alert-ok and .err-box / .ok-box for messages
+- Cards: .card (white, 16px corners, 24px padding, soft shadow), .card-hover (lifts 4px), .card-media (200px image area)
+- Artworks: .aw-card — every artwork image 4:3 on a white background with a thin border (the whole artwork shows, never cropped), artist name 13px, price 16px bold. The Human Art badge (.human-badge, "✓ Human Art" / «✓ فن بشري») is identical on every page
+- Stage photos: artwork_lib.php owStagesHtml() draws 25% / 50% / 100% as same-size squares (120px; smaller on cards and drafts) joined by a dashed line; a missing stage shows a dashed grey square. Used by the marketplace journey, artist profile cards, drafts and the reviewer proof panel
+- Dashboards: .dash + .role-artist / .role-collector / .role-institute / .role-subadmin / .role-admin set the role color; .stat-grid + .stat-card (3px top border in the role color); .table (alternating rows); .tabs / .tab. Admin and sub-admin panels now open with stat cards. There is no institute dashboard yet — the role color is ready for it
+- Menu: 64px tall, bigger logo mark (four pink quarters + OWEILI), links 13px, pink underline on the current page (also marked in the ☰ menu)
+- Removed: every hardcoded Helvetica Neue, the copied menu styles on 17 pages, page-by-page button/input/card copies, the gradient pink-to-blue heading text, and inline color styles
+- Files: assets/css/oweili.css, nav.css, proof.css, discover.css, nav.php, footer.php, artwork_lib.php (owStagesHtml), and every page
+- Tables: none
+
 ## Shared Files
 - .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, and hidden folders (.claude/, .agents/, .git/). Visitors get 403 Forbidden. Keep it when changing hosting settings
-- assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
-- assets/css/nav.css — styles for the shared menu (nav.php). New pages link it instead of copying the menu styles; older pages still have their own copy
-- oweili.css also gives opt-in pages (<body class="ow">) a box-sizing reset and removes the default page margin
+- assets/css/oweili.css — the design system (see Features). Applies to every page; pages keep only their own layout in their <style> blocks
+- assets/css/nav.css — styles for the shared menu. nav.php links it itself, so no page copies menu styles any more
 - oweili.css also loads the brand fonts (DM Sans + Tajawal from Google Fonts) and sets --font-en, --font-ar and --font-sans. --font-sans draws English letters in DM Sans and Arabic letters in Tajawal automatically. Every page uses it, including form fields and buttons; the welcome email in verify.php names the fonts directly because email apps cannot read CSS variables
 - oweili.css also has the two-language text rule for every page: <span class="bi-en">…</span><span class="bi-ar">…</span> shows the one matching the page direction
 - assets/css/proof.css — styles for the Creation Journey and Proof of Process panels. Text is printed in both languages and the one matching the page direction is shown
 - assets/css/discover.css + assets/js/discover.js — shared look and language button for the Discover pages (articles_list.php, article.php, training.php)
+- footer.php — the same footer on every public page: logo mark, links (Marketplace/المعرض, Events/الملتقيات, Institutes/المعاهد, Support/الدعم), © line in both languages. Social icons show only once their real addresses are filled in at the top of footer.php
 - uploads/consents/ — private consent proofs; never link to it directly
 - assets/logo/ — home for the official logo files (not added yet)
 - Mobile menu (in nav.php) — on screens 1100px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
@@ -215,8 +232,10 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Primary color: #ff0055
 - Accent color: #0066ff
 - Font: DM Sans (English) + Tajawal (Arabic), from Google Fonts — loaded once in oweili.css (see rule 30)
-- Cards: border-radius 16px, glass effect
-- Navbar: fixed top, frosted glass, dropdown menus
+- Cards: border-radius 16px, white, 1px border, soft shadow, 24px padding
+- Buttons: 8px corners (not pill), 48px tall, bold 14px uppercase. Chips, tags and badges stay rounded
+- Navbar: fixed top, 64px, frosted glass, dropdown menus, pink underline on the current page
+- The full design system lives in assets/css/oweili.css — see "Design system (one theme)" under Features
 
 ## Languages
 - Bilingual: English (LTR) and Arabic (RTL)
@@ -279,7 +298,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Consistent padding: 32px desktop, 16px mobile
 - Cards: border-radius 16px, subtle shadow, white background
 - Sections must breathe — use generous spacing between them
-- Navbar is always fixed at top, 56px height, frosted glass
+- Navbar is always fixed at top, 64px height, frosted glass
 
 ### 5. Better Accessibility
 - All images must have alt text in both Arabic and English
@@ -510,7 +529,7 @@ DO NOT:
   * Use CSS variables from oweili.css for every color
   * Use the same font stack on every page
   * Use the same spacing system (8px grid: 8, 16, 24, 32, 48, 64, 96)
-  * Use the same border-radius system (4px for inputs, 8px for buttons, 16px for cards)
+  * Use the same border-radius system (8px for inputs and buttons, 16px for cards)
 - Never use default browser styles — everything must be intentionally designed
 
 ### 30. Frontend Design (Professional)

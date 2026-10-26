@@ -8,6 +8,34 @@ $navName  = $navUser ? trim((string)($navUser['full_name_en'] ?: ($navUser['full
 if ($navName === '') { $navName = 'Account'; }
 $navFirst = $navUser ? (explode(' ', $navName)[0]) : '';
 $navId    = $navUser ? (int) $navUser['id'] : 0;
+
+/* Which menu item is the current page (pink underline) */
+$navPage  = basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+$navType  = (string) ($_GET['type'] ?? '');
+if ($navPage === 'article.php') { $navType = ''; }
+$navSection = [
+    'studio.php' => 'studio', 'community.php' => 'community', 'marketplace.php' => 'marketplace',
+    'explore.php' => 'explore', 'support.php' => 'support', 'articles_list.php' => 'discover',
+    'article.php' => 'discover', 'training.php' => 'discover', 'events.php' => 'discover',
+][$navPage] ?? '';
+if (!function_exists('navAct')) {
+function navAct(string $section, string $page = '', string $type = ''): string {
+    global $navSection, $navPage, $navType;
+    if ($page !== '') {
+        $hit = $navPage === $page && ($type === '' || $navType === $type || ($navType === '' && $type === 'event' && $page === 'articles_list.php'));
+        return $hit ? ' class="active" aria-current="page"' : '';
+    }
+    return $navSection === $section ? ' class="active"' : '';
+}
+}
+/* The Oweili mark: a circle made of four quarters, in brand pink */
+if (!function_exists('owLogoMark')) {
+    function owLogoMark(int $size = 24): void {
+        echo '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="#ff0055">'
+           . '<path d="M11 1A10 10 0 0 0 1 11h10z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z"/>'
+           . '<path d="M1 13a10 10 0 0 0 10 10V13z"/><path d="M13 13v10a10 10 0 0 0 10-10z"/></g></svg>';
+    }
+}
 ?>
 <script>
 /* Apply the saved language direction as early as possible to avoid a flash
@@ -15,39 +43,12 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
 (function(){try{var l=localStorage.getItem('lang');if(l==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}}catch(e){}})();
 </script>
 <link rel="stylesheet" href="/assets/css/oweili.css">
-<style>
-/* ── Mobile menu (phones, tablets and small laptops, where the desktop links are hidden) ── */
-.mnav-btn{display:none;align-items:center;justify-content:center;width:40px;height:40px;margin-inline-start:6px;padding:0;border:1px solid var(--color-border,rgba(0,0,0,0.07));border-radius:12px;background:rgba(255,255,255,0.7);color:var(--color-dark,#111111);cursor:pointer;flex-shrink:0;transition:background 0.2s;}
-.mnav-btn:hover{background:rgba(0,0,0,0.06);}
-.mnav-btn:active{background:rgba(0,0,0,0.1);}
-.mnav-btn:focus-visible,.mnav-link:focus-visible{outline:2px solid var(--color-accent,#0066ff);outline-offset:2px;}
-.mnav-btn svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none;}
-.mnav-btn .mnav-x{display:none;}
-.mnav-btn[aria-expanded="true"] .mnav-bars{display:none;}
-.mnav-btn[aria-expanded="true"] .mnav-x{display:block;}
-.mnav-panel{position:absolute;top:100%;left:0;right:0;max-height:calc(100vh - 56px);overflow-y:auto;padding:8px 16px 16px;background:rgba(255,255,255,0.97);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--color-border,rgba(0,0,0,0.07));box-shadow:0 16px 40px rgba(0,0,0,0.08);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity 0.25s ease,transform 0.25s ease,visibility 0.25s;}
-.mnav-panel.open{opacity:1;visibility:visible;transform:translateY(0);}
-.mnav-link{display:flex;align-items:center;min-height:48px;padding:0 12px;border-radius:12px;font-size:15px;font-weight:600;color:var(--color-dark,#111111);text-decoration:none;transition:background 0.15s,color 0.15s;}
-.mnav-link:hover{background:rgba(0,102,255,0.07);color:var(--color-accent,#0066ff);}
-.mnav-link:active{background:rgba(0,102,255,0.12);}
-.mnav-sub{padding-inline-start:28px;font-weight:500;color:var(--color-body,rgba(0,0,0,0.65));}
-[dir="rtl"] .mnav-panel{text-align:right;}
-.mnav-acct{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--color-border,rgba(0,0,0,0.07));}
-/* The full menu needs about 1100px since its text became 12px; below that the ☰ menu takes over */
-@media (max-width:1100px){.topnav .nav-center{display:none;}.mnav-btn{display:inline-flex;}.topnav .nav-right{margin-inline-start:auto;}}
-/* Small phones: the account buttons move from the top bar into the menu so the bar never overflows */
-@media (max-width:560px){.topnav .nav-right .nav-btn{display:none;}.mnav-acct{display:block;}}
-@media (min-width:1101px){.mnav-panel{display:none;}}
-@media (prefers-reduced-motion:reduce){.mnav-panel{transition:none;}}
-</style>
+<link rel="stylesheet" href="/assets/css/nav.css">
 <nav class="topnav" id="topnav">
-  <a class="nav-logo" href="index.php">
-    <span style="display:inline-block;background:linear-gradient(135deg,#ff0055,#0066ff,#0066ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-weight:800;font-size:15px;letter-spacing:0.14em;">OWEILI</span>
-    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="navLogoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff0055"/><stop offset="50%" stop-color="#0066ff"/><stop offset="100%" stop-color="#0066ff"/></linearGradient></defs><path fill="url(#navLogoGrad)" d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z"/></svg>
-  </a>
+  <a class="nav-logo" href="index.php" aria-label="Oweili · أويلي"><?php owLogoMark(); ?><span class="nav-word">OWEILI</span></a>
   <div class="nav-center" id="nav-center">
     <div class="nav-item">
-      <a href="studio.php" id="nav-studio-link"><span id="nav-studio-label">The Studio</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
+      <a href="studio.php" id="nav-studio-link"<?= navAct('studio') ?>><span id="nav-studio-label">The Studio</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-studio">
         <a href="studio.php#watercolor"><svg class="d-icon" viewBox="0 0 24 24"><path d="M12 2C8 2 4 6 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4-4-8-8-8z"/></svg><span id="dd-s1">Watercolor Workshop</span></a>
         <a href="studio.php#oil"><svg class="d-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg><span id="dd-s2">Oil Painting Studio</span></a>
@@ -56,26 +57,26 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
       </div>
     </div>
     <div class="nav-item">
-      <a href="community.php" id="nav-community-link"><span id="nav-community-label">Community</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
+      <a href="community.php" id="nav-community-link"<?= navAct('community') ?>><span id="nav-community-label">Community</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-community">
         <a href="community.php#meet"><svg class="d-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span id="dd-c2">Meet Fellow Artists</span></a>
         <a href="community.php#share"><svg class="d-icon" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span id="dd-c3">Share Your Work</span></a>
         <a href="community.php#learn"><svg class="d-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span id="dd-c4">Learn Together</span></a>
       </div>
     </div>
-    <div class="nav-item"><a href="marketplace.php" id="nav-marketplace-link"><span id="nav-marketplace-label">Marketplace</span></a></div>
-    <div class="nav-item"><a href="explore.php" id="nav-explore-link"><span id="nav-explore-label">Explore Art Styles</span></a></div>
+    <div class="nav-item"><a href="marketplace.php" id="nav-marketplace-link"<?= navAct('marketplace') ?>><span id="nav-marketplace-label">Marketplace</span></a></div>
+    <div class="nav-item"><a href="explore.php" id="nav-explore-link"<?= navAct('explore') ?>><span id="nav-explore-label">Explore Art Styles</span></a></div>
     <div class="nav-item">
-      <a href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
+      <a href="articles_list.php?type=event"<?= navAct('discover') ?>><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-discover">
-        <a href="articles_list.php?type=event"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
-        <a href="articles_list.php?type=artist_spotlight"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
-        <a href="articles_list.php?type=art_education"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a>
-        <a href="training.php"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
+        <a href="articles_list.php?type=event"<?= navAct('', 'articles_list.php', 'event') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
+        <a href="articles_list.php?type=artist_spotlight"<?= navAct('', 'articles_list.php', 'artist_spotlight') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
+        <a href="articles_list.php?type=art_education"<?= navAct('', 'articles_list.php', 'art_education') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a>
+        <a href="training.php"<?= navAct('', 'training.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
       </div>
     </div>
     <div class="nav-item">
-      <a href="support.php" id="nav-support-link"><span id="nav-support-label">Support</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
+      <a href="support.php" id="nav-support-link"<?= navAct('support') ?>><span id="nav-support-label">Support</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-support">
         <a href="mailto:contact@oweili.com"><svg class="d-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span id="dd-sp1">Contact Us</span></a>
         <a href="support.php#how"><svg class="d-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span id="dd-sp2">How It Works</span></a>
@@ -101,16 +102,16 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
     <svg class="mnav-x" viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
   </button>
   <div class="mnav-panel" id="mnav-panel">
-    <a class="mnav-link" href="studio.php"><span class="nav-i18n" data-en="The Studio" data-ar="الاستوديو">The Studio</span></a>
-    <a class="mnav-link" href="community.php"><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
-    <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"><span class="nav-i18n" data-en="Marketplace" data-ar="السوق">Marketplace</span></a>
-    <a class="mnav-link" href="explore.php"><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
+    <a class="mnav-link" href="studio.php"<?= navAct('studio') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="The Studio" data-ar="الاستوديو">The Studio</span></a>
+    <a class="mnav-link" href="community.php"<?= navAct('community') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
+    <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"<?= navAct('marketplace') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Marketplace" data-ar="السوق">Marketplace</span></a>
+    <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
     <a class="mnav-link" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=artist_spotlight"><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=art_education"><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a>
     <a class="mnav-link mnav-sub" href="training.php"><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
-    <a class="mnav-link" href="support.php"><span class="nav-i18n" data-en="Support" data-ar="الدعم">Support</span></a>
+    <a class="mnav-link" href="support.php"<?= navAct('support') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Support" data-ar="الدعم">Support</span></a>
     <div class="mnav-acct">
     <?php if ($navUser): ?>
       <?php if ($navIsAdmin): ?>

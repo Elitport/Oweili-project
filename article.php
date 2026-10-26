@@ -53,36 +53,38 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <link rel="stylesheet" href="/assets/css/discover.css">
 <script src="/assets/js/discover.js"></script>
 <style>
-.cover{position:relative;z-index:2;margin-top:56px;height:clamp(220px,52vh,520px);background:#f4f5f7;overflow:hidden;}
+/* One article — reading layout only; type, colors, buttons and cards come from oweili.css */
+.cover{position:relative;z-index:2;margin-top:var(--nav-h);height:clamp(220px,52vh,520px);background:#f4f5f7;overflow:hidden;}
 .cover img{width:100%;height:100%;object-fit:cover;display:block;}
-.art-wrap{max-width:820px;margin:0 auto;padding:32px 32px 64px;}
-.art-wrap.no-cover{padding-top:96px;}
-.art-card{padding:36px 40px;}
+.art-wrap{max-width:820px;margin:0 auto;padding:var(--space-lg) var(--space-lg) var(--space-2xl);}
+.art-wrap.no-cover{padding-top:calc(var(--nav-h) + var(--space-xl));}
+.art-card{padding:var(--space-xl);}
 .cover + main .art-card{margin-top:-80px;position:relative;}
-.art-type{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:700;color:var(--color-accent-dark);background:rgba(0,102,255,0.08);border:1px solid rgba(0,102,255,0.2);margin-bottom:12px;text-decoration:none;}
-.art-type:hover{background:rgba(0,102,255,0.15);}
-.ow .art-card h1{font-size:clamp(28px,4.4vw,42px);font-weight:700;letter-spacing:-0.03em;line-height:1.2;color:var(--color-dark);margin:0 0 10px;}
-.art-date{font-size:13px;color:var(--color-body);margin:0 0 22px;}
-.event-box{display:grid;gap:10px;padding:16px 18px;margin:0 0 26px;border-radius:14px;background:rgba(0,102,255,0.05);border:1px solid rgba(0,102,255,0.18);}
-.event-row{display:flex;gap:10px;align-items:flex-start;font-size:15px;font-weight:600;color:var(--color-dark);line-height:1.6;}
+.art-type{display:inline-block;padding:3px 12px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-accent-dark);background:rgba(0,102,255,0.08);border:1px solid rgba(0,102,255,0.2);margin-bottom:var(--space-sm);text-decoration:none;}
+.art-type:hover{background:rgba(0,102,255,0.15);color:var(--color-accent-dark);}
+.art-card h1{font-size:var(--fs-hero);letter-spacing:-0.03em;line-height:1.15;margin:0 0 var(--space-xs);}
+[dir="rtl"] .art-card h1{line-height:1.35;}
+.art-date{font-size:var(--fs-caption);color:var(--color-body);margin:0 0 var(--space-md);}
+.event-box{display:grid;gap:var(--space-xs);padding:var(--space-sm) var(--space-md);margin:0 0 var(--space-md);border-radius:var(--radius-card);background:var(--color-tint-blue);border:1px solid rgba(0,102,255,0.18);}
+.event-row{display:flex;gap:var(--space-xs);align-items:flex-start;font-size:var(--fs-body);font-weight:600;color:var(--color-dark);}
 .event-row svg{width:20px;height:20px;flex-shrink:0;margin-top:2px;stroke:var(--color-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.event-note{font-size:13px;font-weight:600;color:var(--color-accent-dark);}
-.article-body p{font-size:16px;line-height:1.85;color:rgba(0,0,0,0.72);margin:0 0 18px;}
-.article-body[dir="rtl"] p{font-size:17px;line-height:1.95;}
-.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px;}
-.gallery figure{margin:0;border-radius:14px;overflow:hidden;background:#f4f5f7;}
+.event-note{font-size:var(--fs-label);font-weight:600;color:var(--color-accent-dark);}
+.article-body p{font-size:17px;color:rgba(0,0,0,0.72);margin:0 0 var(--space-md);}
+.article-body[dir="rtl"] p{font-size:18px;}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);margin-top:var(--space-lg);}
+.gallery figure{margin:0;border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--color-border);}
 .gallery a{display:block;}
-.gallery img{width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform 0.4s;}
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform 0.4s;}
 .gallery a:hover img{transform:scale(1.03);}
 .gallery a:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
-.art-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;padding-top:24px;border-top:1px solid var(--color-border);}
+.art-actions{display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-top:var(--space-lg);padding-top:var(--space-md);border-top:1px solid var(--color-border);}
 @media (max-width:768px){
-  .art-wrap{padding:16px 16px 48px;}
-  .art-wrap.no-cover{padding-top:80px;}
-  .art-card{padding:24px 18px;}
+  .art-wrap{padding:var(--space-sm) var(--space-sm) var(--space-xl);}
+  .art-wrap.no-cover{padding-top:calc(var(--nav-h) + var(--space-md));}
+  .art-card{padding:var(--space-md);}
   .cover + main .art-card{margin-top:-40px;}
   .gallery{grid-template-columns:1fr;}
-  .article-body p{font-size:15px;}
+  .article-body p{font-size:16px;}
 }
 </style>
 </head>
@@ -95,13 +97,13 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <?php if (!$a): ?>
 <main>
   <div class="d-wrap">
-    <div class="glass-card d-empty">
+    <div class="card empty-state d-empty">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <h1 style="font-size:24px;font-weight:700;margin:0 0 8px;color:var(--color-dark);"><?= owBi('We could not find this article', 'لم نجد هذا المقال') ?></h1>
+      <h1 style="font-size:var(--fs-card);margin:0 0 var(--space-xs);"><?= owBi('We could not find this article', 'لم نجد هذا المقال') ?></h1>
       <?= owBi('It may have been moved or is not published yet.', 'ربما نُقل أو لم يُنشر بعد.') ?>
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
         <?php foreach ($TYPES as $k => [$en, $ar]): ?>
-          <a class="d-btn d-btn-glass" href="articles_list.php?type=<?= e($k) ?>"><?= owBi($en, $ar) ?></a>
+          <a class="btn btn-secondary" href="articles_list.php?type=<?= e($k) ?>"><?= owBi($en, $ar) ?></a>
         <?php endforeach; ?>
       </div>
     </div>
@@ -116,7 +118,7 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <?php endif; ?>
 <main>
   <div class="art-wrap<?= $cover ? '' : ' no-cover' ?>">
-    <article class="glass-card art-card">
+    <article class="card art-card">
       <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a>
       <h1><?= owBi($a['title_en'], $a['title_ar']) ?></h1>
       <p class="art-date"><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?></p>
@@ -143,14 +145,14 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
       <?php endif; ?>
 
       <div class="art-actions">
-        <a class="d-btn d-btn-glass" href="articles_list.php?type=<?= e($type) ?>"><?= owBi('← Back to ' . $typeEn, '→ العودة إلى ' . $typeAr) ?></a>
-        <a class="d-btn d-btn-pink" href="marketplace.php"><?= owBi('Explore Artworks', 'استكشف الأعمال') ?></a>
+        <a class="btn btn-secondary" href="articles_list.php?type=<?= e($type) ?>"><?= owBi('← Back to ' . $typeEn, '→ العودة إلى ' . $typeAr) ?></a>
+        <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Artworks', 'استكشف الأعمال') ?></a>
       </div>
     </article>
   </div>
 </main>
 <?php endif; ?>
 
-<footer class="d-foot"><?= owBi('© ' . date('Y') . ' Oweili — real art by real artists.', '© ' . date('Y') . ' أويلي — فن حقيقي بأيدي فنانين حقيقيين.') ?> · <a href="support.php"><?= owBi('Support', 'الدعم') ?></a></footer>
+<?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

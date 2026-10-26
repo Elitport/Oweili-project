@@ -150,145 +150,61 @@ $web = $artist['website']   ?? '';
 <title><?= $artist ? e($artist['full_name_en']) . ' · ' : '' ?>Artist Profile · Oweili</title>
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-sans);overflow-x:hidden;}
-.bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;}
-.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;z-index:2;}
-.bg-video.on{opacity:0.95;}
-.overlay{position:fixed;inset:0;z-index:3;pointer-events:none;background:linear-gradient(160deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,0.35) 100%);}
-/* ── TOP NAV (shared brand navbar) ── */
-.topnav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:56px;background:rgba(255,255,255,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.05);}
-[dir="rtl"] .dropdown{left:auto;right:0;text-align:right;}
-.nav-logo{display:flex;align-items:center;gap:6px;text-decoration:none;color:#111111;flex-shrink:0;}
-.nav-logo svg{color:#ff0055;}
-.nav-logo span{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
-.nav-center{display:flex;align-items:stretch;gap:0;height:100%;}
-.nav-item{position:relative;display:flex;align-items:center;}
-.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
-.nav-item > a:hover{color:#000;}
-.nav-item:hover > a{color:#0066ff;border-bottom-color:#0066ff;}
-.nav-item > a .chevron{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;}
-.nav-item:hover > a .chevron{transform:rotate(180deg);}
-.dropdown{position:absolute;top:100%;left:0;min-width:200px;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.07);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s,visibility 0.2s;pointer-events:none;}
-.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
-.dropdown a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12px;color:rgba(0,0,0,0.7);text-decoration:none;transition:background 0.15s,color 0.15s;}
-.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0066ff;}
-.dropdown a .d-icon{width:14px;height:14px;fill:currentColor;opacity:0.6;flex-shrink:0;}
-.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-.nav-btn{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
-.nav-btn:hover{background:rgba(0,0,0,0.08);color:#000;}
-.nav-btn.primary{background:rgba(0,100,255,0.1);border-color:rgba(0,100,255,0.2);color:#0066ff;}
-.nav-btn.primary:hover{background:rgba(0,100,255,0.18);}
-.lang-btn{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
-.lang-btn:hover{background:#111111;color:#fff;}
-@media(max-width:1024px){.nav-center{display:none;}}
-
-.page{position:relative;z-index:10;width:100%;max-width:1180px;margin:0 auto;padding:90px 24px 56px;}
-.gc{background:rgba(255,255,255,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,0.07);border-radius:20px;}
-.section-title{font-size:12px;text-transform:uppercase;letter-spacing:0.16em;color:rgba(0,0,0,0.45);font-weight:700;margin:36px 0 16px;}
-
+/* Artist dashboard / public profile — layout only; cards, buttons, stats, tables,
+   artwork cards and stage squares come from oweili.css (role color: artist pink) */
+.page{position:relative;z-index:10;}
+.section-title{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin:var(--space-xl) 0 var(--space-sm);}
+.section-title:first-child{margin-top:0;}
 /* PROFILE HEADER */
-.profile-head{padding:32px;display:flex;gap:28px;align-items:center;animation:riseUp 0.8s cubic-bezier(0.22,1,0.36,1) forwards;opacity:0;}
-[dir="rtl"] .profile-head{text-align:right;}
-.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid rgba(255,255,255,0.8);box-shadow:0 8px 24px rgba(0,0,0,0.12);background:linear-gradient(135deg,#ff0055,#0066ff,#0066ff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;font-weight:700;}
+.profile-head{display:flex;gap:var(--space-lg);align-items:center;padding:var(--space-lg);}
+.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid #fff;box-shadow:var(--shadow-card);background:var(--color-artist);display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;font-weight:700;}
 .profile-info{flex:1;min-width:0;}
-.profile-info h1{font-size:28px;font-weight:700;color:#111111;margin-bottom:2px;}
-.profile-info .name-ar{font-size:16px;color:rgba(0,0,0,0.55);margin-bottom:8px;}
-.profile-info .city{font-size:13px;color:#0066ff;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
-
-.profile-info .bio{font-size:13px;color:rgba(0,0,0,0.65);line-height:1.7;margin-bottom:6px;max-width:640px;}
-.profile-info .bio-ar{font-size:13px;color:rgba(0,0,0,0.5);line-height:1.8;max-width:640px;}
-.stats-row{display:flex;gap:28px;margin-top:16px;}
-
-.stat .num{font-size:24px;font-weight:700;background:linear-gradient(90deg,#ff0055,#0066ff,#0066ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.stat .lbl{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);font-weight:600;}
-.head-actions{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0;}
+.profile-info h1{font-size:var(--fs-section);margin:0 0 4px;}
+.profile-info .name-ar{font-size:var(--fs-subtitle);color:var(--color-body);margin-bottom:var(--space-xs);}
+.profile-info .city{font-size:15px;font-weight:600;color:var(--color-dark);margin-bottom:var(--space-xs);display:flex;align-items:center;gap:6px;}
+.profile-info .bio,.profile-info .bio-ar{max-width:640px;margin:0 0 var(--space-xs);}
+.stats-row{display:flex;flex-wrap:wrap;gap:var(--space-lg);margin-top:var(--space-sm);}
+.stat .num{font-size:var(--fs-card);font-weight:700;color:var(--color-dark);}
+.stat .lbl{font-size:var(--fs-label);font-weight:600;color:var(--color-body);}
+.head-actions{display:flex;flex-direction:column;gap:var(--space-sm);align-items:flex-end;flex-shrink:0;}
 [dir="rtl"] .head-actions{align-items:flex-start;}
-.btn-edit{padding:10px 20px;border-radius:999px;background:#111111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:all 0.25s;white-space:nowrap;}
-.btn-edit:hover{background:#ff0055;transform:translateY(-2px);}
-.socials{display:flex;gap:8px;}
-.socials a{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.05);color:#111111;transition:all 0.2s;}
-.socials a:hover{background:#0066ff;color:#fff;}
+.socials{display:flex;gap:var(--space-xs);}
+.socials a{width:40px;height:40px;border-radius:var(--radius-btn);display:flex;align-items:center;justify-content:center;border:1px solid var(--color-border-strong);color:var(--color-dark);transition:background var(--ease),color var(--ease);}
+.socials a:hover{background:var(--color-dark);color:#fff;}
 .socials svg{width:16px;height:16px;fill:currentColor;}
-
-/* ARTWORK GRID */
-.art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
-.art-card{overflow:hidden;display:flex;flex-direction:column;transition:transform 0.3s ease,box-shadow 0.3s ease;}
-.art-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.08);}
-.art-img-wrap{position:relative;height:190px;overflow:hidden;}
-.art-img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;}
-.art-card:hover .art-img{transform:scale(1.05);}
-.badge{position:absolute;top:10px;left:10px;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;backdrop-filter:blur(8px);}
-[dir="rtl"] .badge{left:auto;right:10px;}
-.b-available{background:rgba(0,102,255,0.16);color:#0066ff;border:1px solid rgba(0,102,255,0.3);}
-.b-sold{background:rgba(255,0,85,0.13);color:#111111;border:1px solid rgba(255,0,85,0.25);}
-.b-auction{background:rgba(0,102,255,0.13);color:#0066ff;border:1px solid rgba(0,102,255,0.25);}
-.art-body{padding:16px;display:flex;flex-direction:column;gap:3px;flex:1;}
-[dir="rtl"] .art-body{text-align:right;}
-.art-title{font-size:15px;font-weight:700;color:#111111;}
-.art-title-ar{font-size:12px;color:rgba(0,0,0,0.55);}
-.art-price{font-size:16px;font-weight:700;color:#0066ff;margin-top:8px;}
-.art-actions{display:flex;gap:8px;margin-top:12px;}
-.mini-btn{flex:1;padding:8px;border-radius:10px;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;border:1px solid rgba(0,0,0,0.12);background:rgba(255,255,255,0.7);color:#111111;cursor:pointer;text-decoration:none;text-align:center;transition:all 0.2s;}
-.mini-btn:hover{background:#111111;color:#fff;}
-.mini-btn.danger:hover{background:#ff0055;border-color:#ff0055;color:#fff;}
-.empty-msg{padding:40px;text-align:center;font-size:14px;color:rgba(0,0,0,0.5);}
-
-/* NEW ARTWORK + DRAFTS */
-.start-card{padding:28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;}
-.start-card p{font-size:14px;line-height:1.7;color:rgba(0,0,0,0.65);max-width:520px;}
-.btn-start{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:14px 28px;border-radius:999px;background:#ff0055;color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s;}
-.btn-start:hover{background:var(--color-primary-dark,#e0004b);transform:translateY(-2px);}
-.btn-start:active{transform:translateY(0);}
-.btn-start:focus-visible,.mini-btn:focus-visible{outline:2px solid #0066ff;outline-offset:2px;}
-.draft-list{display:grid;gap:12px;margin-top:14px;}
-.draft{display:flex;align-items:center;gap:14px;padding:14px;}
-.draft-thumb{width:64px;height:64px;border-radius:12px;object-fit:cover;background:#f4f5f7;flex-shrink:0;}
-.draft-info{flex:1;min-width:0;}
-.draft-title{font-size:14px;font-weight:700;color:#111111;}
-.draft-stages{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
-.draft-stages span{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.12);color:rgba(0,0,0,0.55);}
-.draft-stages span.ok{background:rgba(0,102,255,0.1);border-color:rgba(0,102,255,0.25);color:var(--color-accent-dark,#0047ab);}
-.draft .art-actions{margin-top:0;flex-shrink:0;}
-.draft .mini-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;font-size:12px;text-decoration:none;}
-.b-review{background:rgba(0,0,0,0.7);color:#fff;}
-/* Creation Journey on artwork cards */
-.art-verified{align-self:flex-start;margin-top:6px;}
-.stage-strip{display:flex;gap:6px;margin-top:8px;}
-.stage-strip span{position:relative;flex:1;height:56px;border-radius:8px;overflow:hidden;background:#f4f5f7;}
-.stage-strip img{width:100%;height:100%;object-fit:cover;display:block;}
-.stage-strip b{position:absolute;bottom:3px;inset-inline-start:3px;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,0.6);padding:1px 6px;border-radius:999px;}
-.journey-toggle{margin-top:8px;}
-.journey-toggle summary{cursor:pointer;font-size:13px;font-weight:700;color:#0066ff;padding:6px 0;list-style:none;}
+/* ARTWORKS — 4 columns desktop, 2 tablet, 1 phone */
+.art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);}
+.aw-review{background:var(--color-dark);color:#fff;border-color:var(--color-dark);}
+.art-actions{display:flex;gap:var(--space-xs);margin-top:var(--space-sm);}
+.art-actions > *{flex:1;}
+.art-actions form{margin:0;display:flex;}
+.art-actions form .btn{flex:1;}
+.aw-body .stages{margin-top:var(--space-xs);}
+.aw-body .stages-strip{--stage-size:56px;}
+.journey-toggle{margin-top:var(--space-xs);}
+.journey-toggle summary{cursor:pointer;font-size:var(--fs-label);font-weight:700;color:var(--color-accent);padding:6px 0;list-style:none;}
 .journey-toggle summary::-webkit-details-marker{display:none;}
 .journey-toggle summary::after{content:' +';}
 .journey-toggle[open] summary::after{content:' −';}
 .journey-toggle summary:hover{text-decoration:underline;}
-.journey-toggle summary:focus-visible{outline:2px solid #0066ff;outline-offset:2px;border-radius:4px;}
+.journey-toggle summary:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;border-radius:4px;}
 .journey-toggle .pj{margin-top:6px;}
-.art-card .pj-row{overflow-x:auto;}
-.art-card .pj-step{flex:0 0 78%;}
-.art-card .pj-step img{height:140px;}
-@media(max-width:560px){.draft{flex-wrap:wrap;}.draft .art-actions{width:100%;}}
-
+/* NEW ARTWORK + DRAFTS */
+.start-card{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-sm);}
+.start-card p{max-width:560px;margin:0;}
+.draft-list{display:grid;gap:var(--space-sm);}
+.draft{display:flex;align-items:center;gap:var(--space-md);flex-wrap:wrap;}
+.draft-info{flex:1;min-width:220px;}
+.draft-title{font-size:var(--fs-body);font-weight:700;color:var(--color-dark);margin-bottom:var(--space-xs);}
+.draft .stages{--stage-size:64px;}
+.draft .art-actions{margin-top:0;flex-shrink:0;}
 /* FINANCIAL REPORT */
-.fin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
-.fin-card{padding:22px;text-align:center;}
-[dir="rtl"] .fin-card{text-align:center;}
-.fin-num{font-size:26px;font-weight:700;color:#111;margin-bottom:4px;}
-.fin-num.money{background:linear-gradient(90deg,#0066ff,#0066ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.fin-lbl{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);font-weight:600;}
-.fin-table-wrap{padding:20px 24px;overflow-x:auto;}
-.fin-table{width:100%;border-collapse:collapse;font-size:13px;}
-.fin-table th,.fin-table td{text-align:left;padding:11px 10px;border-bottom:1px solid rgba(0,0,0,0.06);}
-[dir="rtl"] .fin-table th,[dir="rtl"] .fin-table td{text-align:right;}
-.fin-table th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);}
-.fin-table .price{color:#0066ff;font-weight:700;white-space:nowrap;}
-.fin-empty{padding:24px;text-align:center;color:rgba(0,0,0,0.45);font-size:13px;}
-.saved-box{background:rgba(0,102,255,0.1);border:1px solid rgba(0,102,255,0.3);color:#0066ff;font-size:13px;font-weight:600;padding:11px 14px;border-radius:12px;margin-top:16px;}
-@media(max-width:768px){.fin-grid{grid-template-columns:1fr 1fr;}}
-@keyframes riseUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
-@media(max-width:768px){.topnav{padding:10px 14px;}.nav-logo span{display:none;}.profile-head{flex-direction:column;text-align:center;}[dir="rtl"] .profile-head{flex-direction:column;}.head-actions{align-items:center;}.upload-card .grid2{grid-template-columns:1fr;}.stats-row{justify-content:center;}}
+.fin-price{font-weight:700;white-space:nowrap;}
+.art-title-ar{font-size:var(--fs-caption);color:var(--color-body);}
+.fin-empty{text-align:center;color:var(--color-body);padding:var(--space-md);}
+@media(max-width:1024px){.art-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.profile-head{flex-direction:column;text-align:center;padding:var(--space-md);}.head-actions{align-items:center;}[dir="rtl"] .head-actions{align-items:center;}.stats-row{justify-content:center;}.art-grid{gap:var(--space-sm);}}
+@media(max-width:480px){.art-grid{grid-template-columns:1fr;}.draft .art-actions{width:100%;}}
 </style>
 <link rel="stylesheet" href="/assets/css/proof.css">
 </head>
@@ -299,14 +215,14 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 <!-- NAV (shared brand navbar) -->
 <?php include __DIR__ . "/nav.php"; ?>
 
-<div class="page" id="pg">
+<div class="page dash role-artist dash-wrap" id="pg">
 <?php if (!$artist): ?>
-  <div class="gc empty-msg" style="margin-top:40px;">Artist not found.</div>
+  <div class="card empty-state">Artist not found.</div>
 <?php else: ?>
 
   <!-- SECTION 1: PROFILE HEADER -->
   <p class="section-title" id="t-profile-title">Artist Profile</p>
-  <div class="gc profile-head">
+  <div class="card profile-head">
     <?php if (!empty($artist['profile_picture'])): ?>
       <img class="avatar" src="<?= e($artist['profile_picture']) ?>" alt="<?= e($artist['full_name_en']) ?>">
     <?php else: ?>
@@ -337,7 +253,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 
     <div class="head-actions">
       <?php if ($isOwner): ?>
-        <a class="btn-edit" href="edit_profile.php" id="t-edit">Edit Profile</a>
+        <a class="btn btn-secondary" href="edit_profile.php" id="t-edit">Edit Profile</a>
       <?php endif; ?>
       <?php if ($ig || $tw || $web): ?>
       <div class="socials">
@@ -350,23 +266,23 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
   </div>
 
   <?php if ($isOwner && isset($_GET['saved'])): ?>
-    <div class="saved-box" id="t-saved">Profile updated successfully.</div>
+    <div class="ok-box" id="t-saved" style="margin-top:var(--space-sm);">Profile updated successfully.</div>
   <?php endif; ?>
 
   <!-- SECTION: FINANCIAL REPORT (owner only) -->
   <?php if ($isOwner): ?>
   <p class="section-title" id="t-fin-title">Financial Report</p>
-  <div class="fin-grid">
-    <div class="gc fin-card"><div class="fin-num"><?= (int) $totalCount ?></div><div class="fin-lbl" id="t-fin-total">Total Artworks</div></div>
-    <div class="gc fin-card"><div class="fin-num"><?= (int) $soldCount ?></div><div class="fin-lbl" id="t-fin-sold">Artworks Sold</div></div>
-    <div class="gc fin-card"><div class="fin-num money"><?= number_format($earnYear) ?></div><div class="fin-lbl" id="t-fin-year">Earnings This Year (SAR)</div></div>
-    <div class="gc fin-card"><div class="fin-num money"><?= number_format($earnAll) ?></div><div class="fin-lbl" id="t-fin-all">Earnings All Time (SAR)</div></div>
+  <div class="stat-grid" style="margin-bottom:var(--space-md);">
+    <div class="stat-card"><span class="stat-num"><?= (int) $totalCount ?></span><span class="stat-lbl" id="t-fin-total">Total Artworks</span></div>
+    <div class="stat-card"><span class="stat-num"><?= (int) $soldCount ?></span><span class="stat-lbl" id="t-fin-sold">Artworks Sold</span></div>
+    <div class="stat-card"><span class="stat-num"><?= number_format($earnYear) ?></span><span class="stat-lbl" id="t-fin-year">Earnings This Year (SAR)</span></div>
+    <div class="stat-card"><span class="stat-num"><?= number_format($earnAll) ?></span><span class="stat-lbl" id="t-fin-all">Earnings All Time (SAR)</span></div>
   </div>
-  <div class="gc fin-table-wrap">
+  <div class="table-wrap">
     <?php if (!$soldList): ?>
       <div class="fin-empty" id="t-fin-empty">No sales yet. Your sold artworks will appear here.</div>
     <?php else: ?>
-      <table class="fin-table">
+      <table class="table">
         <thead><tr>
           <th id="t-fin-h-art">Artwork</th>
           <th id="t-fin-h-date">Sale Date</th>
@@ -377,7 +293,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
           <tr>
             <td><?= e($s['title_en'] ?: ($s['title_ar'] ?: 'N/A')) ?><?php if (!empty($s['title_ar'])): ?><div class="art-title-ar" dir="rtl"><?= e($s['title_ar']) ?></div><?php endif; ?></td>
             <td><?= e($s['date']) ?></td>
-            <td class="price"><?= number_format($s['price']) ?> <span class="sar">SAR</span></td>
+            <td class="fin-price"><?= number_format($s['price']) ?> <span class="sar">SAR</span></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
@@ -389,53 +305,48 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
   <!-- SECTION 2: ARTWORKS -->
   <p class="section-title" id="t-works-title">Artworks</p>
   <?php if ($totalCount === 0): ?>
-    <div class="gc empty-msg" id="t-empty">No artworks yet. Start by uploading your first piece.</div>
+    <div class="card empty-state" id="t-empty">No artworks yet. Start by uploading your first piece.</div>
   <?php else: ?>
     <div class="art-grid">
       <?php foreach ($artworks as $aw):
         $st = $aw['status']; // available | sold | auction
-        $badgeClass = $st === 'sold' ? 'b-sold' : ($st === 'auction' ? 'b-auction' : 'b-available');
       ?>
-      <div class="gc art-card">
-        <div class="art-img-wrap">
-          <img class="art-img" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : '')) ?>">
+      <article class="aw-card">
+        <div class="aw-img">
+          <img loading="lazy" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : '')) ?>">
           <?php if ($isOwner && (int) $aw['is_approved'] === 0): ?>
-          <span class="badge b-review" data-status="review">In review</span>
+          <span class="aw-status aw-review badge" data-status="review">In review</span>
           <?php else: ?>
-          <span class="badge <?= $badgeClass ?>" data-status="<?= e($st) ?>"><?= e(ucfirst($st)) ?></span>
+          <span class="aw-status badge" data-status="<?= e($st) ?>"><?= e(ucfirst($st)) ?></span>
           <?php endif; ?>
         </div>
-        <div class="art-body">
-          <div class="art-title"><?= e($aw['title_en']) ?></div>
-          <div class="art-title-ar" dir="rtl"><?= e($aw['title_ar']) ?></div>
+        <div class="aw-body">
+          <div class="aw-title"><?= e($aw['title_en']) ?></div>
+          <?php if ($aw['title_ar'] !== ''): ?><div class="art-title-ar" dir="rtl" lang="ar"><?= e($aw['title_ar']) ?></div><?php endif; ?>
           <?php $stg = $artStages[(int) $aw['id']] ?? [];
           if (owHasJourney($stg)): ?>
-          <span class="verified-badge art-verified"><?= owBi('✓ Verified Human Artist', '✓ فنان بشري موثّق') ?></span>
-          <div class="stage-strip" aria-hidden="true">
-            <?php foreach (OW_STAGES as $n): if (!isset($stg[$n]) || !owSafeStagePath((string) $stg[$n]['photo_path'])) continue; ?>
-              <span><img loading="lazy" src="<?= e($stg[$n]['photo_path']) ?>" alt=""><b><?= $n ?>%</b></span>
-            <?php endforeach; ?>
-          </div>
+          <span class="human-badge"><?= owBi('✓ Human Art', '✓ فن بشري') ?></span>
+          <?= owStagesHtml($stg, 'strip') ?>
           <details class="journey-toggle">
             <summary><?= owBi('See the creation journey', 'شاهد رحلة الإبداع') ?></summary>
             <?= owJourneyHtml($stg, $artColors[(int) $aw['id']] ?? [], (string) $aw['type'], $ART_TYPES) ?>
           </details>
           <?php endif; ?>
-          <div class="art-price"><?= number_format((float) $aw['price']) ?> <span class="sar">SAR</span></div>
+          <div class="aw-price"><?= number_format((float) $aw['price']) ?> <span class="sar">SAR</span></div>
           <?php if ($isOwner): ?>
           <div class="art-actions">
-            <a class="mini-btn" href="edit_artwork.php?id=<?= (int) $aw['id'] ?>" data-t="edit">Edit</a>
-            <form method="post" action="artist_dashboard.php?id=<?= (int) $profileId ?>" style="flex:1;margin:0;"
+            <a class="btn btn-ghost btn-sm" href="edit_artwork.php?id=<?= (int) $aw['id'] ?>" data-t="edit">Edit</a>
+            <form method="post" action="artist_dashboard.php?id=<?= (int) $profileId ?>"
                   onsubmit="return confirm('Delete this artwork?');">
               <?= csrfField() ?>
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="artwork_id" value="<?= (int) $aw['id'] ?>">
-              <button type="submit" class="mini-btn danger" style="width:100%;" data-t="delete">Delete</button>
+              <button type="submit" class="btn btn-danger btn-sm" data-t="delete">Delete</button>
             </form>
           </div>
           <?php endif; ?>
         </div>
-      </div>
+      </article>
       <?php endforeach; ?>
     </div>
   <?php endif; ?>
@@ -443,39 +354,29 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
   <!-- SECTION 3: NEW ARTWORK + DRAFTS (owner only) -->
   <?php if ($isOwner): ?>
   <p class="section-title" id="t-upload-title">New Artwork</p>
-  <div class="gc start-card">
+  <div class="card start-card">
     <p id="t-start-desc">Show the real journey of your work: photograph it at 25%, 50% and 100%. Your progress is saved after every step.</p>
-    <a class="btn-start" href="upload_artwork.php" id="t-start">Start New Artwork</a>
+    <a class="btn btn-primary" href="upload_artwork.php" id="t-start">Start New Artwork</a>
   </div>
   <?php if ($drafts): ?>
   <p class="section-title" id="t-drafts-title">Drafts in progress</p>
   <div class="draft-list">
     <?php foreach ($drafts as $d):
       $ds = $draftStages[(int) $d['id']] ?? [];
-      $thumb = $ds[100]['photo_path'] ?? ($ds[50]['photo_path'] ?? ($ds[25]['photo_path'] ?? ''));
-    ?>
-    <div class="gc draft">
-      <?php if ($thumb): ?>
-        <img class="draft-thumb" src="<?= e($thumb) ?>" alt="<?= e($d['title_en'] . ' · ' . $d['title_ar']) ?>">
-      <?php else: ?>
-        <div class="draft-thumb" aria-hidden="true"></div>
-      <?php endif; ?>
+          ?>
+    <div class="card draft">
       <div class="draft-info">
         <div class="draft-title"><?= e($d['title_en']) ?> · <span dir="rtl"><?= e($d['title_ar']) ?></span></div>
-        <div class="draft-stages">
-          <?php foreach (OW_STAGES as $stg): ?>
-            <span class="<?= isset($ds[$stg]) ? 'ok' : '' ?>"><?= $stg ?>%<?= isset($ds[$stg]) ? ' ✓' : '' ?></span>
-          <?php endforeach; ?>
-        </div>
+        <?= owStagesHtml($ds, 'strip') ?>
       </div>
       <div class="art-actions">
-        <a class="mini-btn" href="upload_artwork.php?id=<?= (int) $d['id'] ?>" data-t="continue">Continue</a>
-        <form method="post" action="artist_dashboard.php?id=<?= (int) $profileId ?>" style="margin:0;"
+        <a class="btn btn-accent btn-sm" href="upload_artwork.php?id=<?= (int) $d['id'] ?>" data-t="continue">Continue</a>
+        <form method="post" action="artist_dashboard.php?id=<?= (int) $profileId ?>"
               onsubmit="return confirm(document.documentElement.dir === 'rtl' ? 'حذف هذه المسودة؟' : 'Delete this draft?');">
           <?= csrfField() ?>
           <input type="hidden" name="action" value="delete">
           <input type="hidden" name="artwork_id" value="<?= (int) $d['id'] ?>">
-          <button type="submit" class="mini-btn danger" data-t="delete">Delete</button>
+          <button type="submit" class="btn btn-danger btn-sm" data-t="delete">Delete</button>
         </form>
       </div>
     </div>
@@ -553,5 +454,6 @@ apply(L);
 const v=document.getElementById('vid');
 if(v){v.addEventListener('canplay',()=>v.classList.add('on'),{once:true});v.play().catch(()=>{});}
 </script>
+<?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

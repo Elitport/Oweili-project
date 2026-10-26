@@ -349,89 +349,61 @@ $v = fn(string $k) => e((string) ($form[$k] ?? ''));
 <script>try{if(localStorage.getItem('lang')==='ar'){document.documentElement.dir='rtl';document.documentElement.lang='ar';}}catch(e){}</script>
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
-body.ow{background:#f4f5f7;color:var(--color-dark);}
-.wrap{max-width:1000px;margin:0 auto;padding:32px;}
-.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;}
-.ow .top h1{font-size:24px;font-weight:700;letter-spacing:-0.02em;margin:0;}
-.top .sub{font-size:13px;color:var(--color-body);margin:2px 0 0;}
-.top-links{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 18px;border-radius:999px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:background 0.2s,transform 0.2s;}
-.btn:active{transform:translateY(1px);}
-.btn-pink{background:var(--color-primary);color:#fff;font-size:14px;}
-.btn-pink:hover{background:var(--color-primary-dark);}
-.btn-dark{background:var(--color-dark);color:#fff;}
-.btn-dark:hover{background:#333;}
-.btn-line{background:#fff;color:var(--color-dark);border-color:rgba(0,0,0,0.14);}
-.btn-line:hover{background:rgba(0,0,0,0.05);}
-.btn-blue{background:rgba(0,102,255,0.08);color:var(--color-accent-dark);border-color:rgba(0,102,255,0.2);}
-.btn-blue:hover{background:rgba(0,102,255,0.15);}
-.btn-del{background:rgba(255,0,85,0.07);color:var(--color-dark);border-color:rgba(255,0,85,0.3);}
-.btn-del:hover{background:rgba(255,0,85,0.14);}
-.btn-sm{min-height:34px;padding:6px 14px;font-size:12px;}
-.btn:focus-visible,.tab:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
-.card{background:#fff;border:1px solid var(--color-border);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.04);padding:24px;}
-.msg{padding:12px 16px;border-radius:12px;margin-bottom:16px;font-size:14px;line-height:1.6;}
-.msg.ok{background:rgba(0,102,255,0.07);border:1px solid rgba(0,102,255,0.2);}
-.msg.bad{background:rgba(255,0,85,0.07);border:1px solid rgba(255,0,85,0.3);}
+/* Articles tool — staff layout only; buttons, tabs, cards, inputs and pills come from oweili.css */
+.wrap{max-width:1000px;margin:0 auto;padding:var(--space-lg);}
+.top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:var(--space-sm);margin-bottom:var(--space-md);}
+.top h1{font-size:var(--fs-section);margin:0;}
+.top .sub{font-size:var(--fs-body);color:var(--color-body);margin:4px 0 0;}
+.top-links{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;}
+.msg{padding:12px 16px;border-radius:var(--radius-input);margin-bottom:var(--space-sm);font-size:15px;line-height:1.6;color:var(--color-dark);}
+.msg.ok{background:var(--color-tint-blue);border:1px solid rgba(0,102,255,0.2);}
+.msg.bad{background:var(--color-tint-pink);border:1px solid rgba(255,0,85,0.3);}
 .msg ul{margin:6px 0 0;padding-inline-start:20px;}
-.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;padding-bottom:2px;}
-.tab{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:10px 18px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;color:var(--color-dark);background:#fff;border:1px solid var(--color-border);}
-.tab:hover{background:rgba(0,102,255,0.06);}
-.tab.on{background:var(--color-dark);color:#fff;}
-.tab .n{font-size:12px;padding:1px 8px;border-radius:999px;background:rgba(0,0,0,0.07);}
-.tab.on .n{background:rgba(255,255,255,0.2);}
-.list-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;}
-.ow .list-head h2{font-size:18px;font-weight:700;margin:0;}
-.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px 0;border-top:1px solid var(--color-border);}
+.tab .n{font-size:var(--fs-min);padding:0 8px;border-radius:var(--radius-pill);background:rgba(0,0,0,0.07);}
+.tab.on .n{background:rgba(255,255,255,0.22);}
+.list-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-sm);}
+.list-head h2{font-size:var(--fs-subtitle);margin:0;}
+.row{display:grid;grid-template-columns:1fr auto;gap:var(--space-sm);align-items:center;padding:var(--space-sm);border-top:1px solid var(--color-border);}
+.row:nth-of-type(even){background:rgba(0,0,0,0.02);}
 .row:first-of-type{border-top:0;}
-.row-title{font-size:15px;font-weight:700;color:var(--color-dark);}
-.row-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--color-body);margin-top:4px;}
-.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700;}
+.row-title{font-size:var(--fs-body);font-weight:700;color:var(--color-dark);}
+.row-meta{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;font-size:var(--fs-label);color:var(--color-body);margin-top:4px;}
 .pill.pub{background:rgba(0,102,255,0.1);color:var(--color-accent-dark);}
 .pill.draft{background:rgba(0,0,0,0.07);color:var(--color-dark);}
-.pill.wd{background:rgba(255,0,85,0.08);color:var(--color-dark);border:1px solid rgba(255,0,85,0.3);}
-.row-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+.pill.wd{background:var(--color-tint-pink);color:var(--color-dark);border:1px solid rgba(255,0,85,0.3);}
+.row-actions{display:flex;gap:var(--space-xs);flex-wrap:wrap;justify-content:flex-end;}
 .row-actions form{margin:0;}
-.empty{text-align:center;padding:36px 16px;font-size:15px;line-height:1.7;}
-/* form */
-fieldset{border:0;padding:0;margin:0 0 22px;}
-legend{font-size:16px;font-weight:700;color:var(--color-dark);margin-bottom:10px;padding:0;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.field label,.lbl{font-size:13px;font-weight:700;color:var(--color-dark);}
+.empty{text-align:center;padding:var(--space-lg) var(--space-sm);}
+fieldset{border:0;padding:0;margin:0 0 var(--space-md);}
+legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin-bottom:var(--space-sm);padding:0;}
+.lbl{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);}
 .req{color:var(--color-dark);font-weight:700;}
-.hint{font-size:12px;color:var(--color-body);line-height:1.6;}
-input[type=text],input[type=date],input[type=email],select,textarea{width:100%;padding:11px 13px;border-radius:12px;border:1px solid rgba(0,0,0,0.16);font-size:14px;font-family:inherit;background:#fff;color:var(--color-dark);}
-input:hover,textarea:hover,select:hover{border-color:rgba(0,0,0,0.3);}
-input:focus,textarea:focus,select:focus{border-color:var(--color-accent);outline:none;box-shadow:0 0 0 3px rgba(0,102,255,0.12);}
-textarea{min-height:260px;line-height:1.7;resize:vertical;}
-input[type=file]{font-size:13px;font-family:inherit;max-width:100%;}
-.radios{display:flex;gap:10px;flex-wrap:wrap;}
-.radio{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid rgba(0,0,0,0.16);border-radius:12px;background:#fff;cursor:pointer;font-size:14px;font-weight:600;}
-.radio:has(input:checked){border-color:var(--color-accent);background:rgba(0,102,255,0.06);}
-.thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
-.thumb{width:120px;font-size:12px;}
-.thumb img{width:120px;height:90px;object-fit:cover;border-radius:10px;display:block;background:#eee;margin-bottom:4px;}
+.field textarea{min-height:260px;}
+.radios{display:flex;gap:var(--space-xs);flex-wrap:wrap;}
+.radio{display:flex;align-items:center;gap:var(--space-xs);min-height:var(--input-h);padding:0 var(--space-sm);border:1px solid var(--color-border-strong);border-radius:var(--radius-input);background:#fff;cursor:pointer;font-size:15px;font-weight:600;color:var(--color-dark);}
+.radio:has(input:checked){border-color:var(--color-accent);background:var(--color-tint-blue);}
+.thumbs{display:flex;flex-wrap:wrap;gap:var(--space-xs);margin-top:6px;}
+.thumb{width:120px;font-size:var(--fs-label);}
+.thumb img{width:120px;height:90px;object-fit:cover;border-radius:var(--radius-input);display:block;background:#f4f5f7;margin-bottom:4px;}
 .thumb label{display:flex;gap:6px;align-items:center;cursor:pointer;}
-.cover-now{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
-.cover-now img{width:180px;height:110px;object-fit:cover;border-radius:12px;background:#eee;}
-.box-blue{background:rgba(0,102,255,0.05);border:1px solid rgba(0,102,255,0.18);border-radius:14px;padding:18px;}
-.consent{padding:12px 0;border-top:1px solid var(--color-border);font-size:13px;line-height:1.7;}
+.cover-now{display:flex;gap:var(--space-sm);align-items:center;flex-wrap:wrap;}
+.cover-now img{width:180px;height:110px;object-fit:cover;border-radius:var(--radius-input);background:#f4f5f7;}
+.box-blue{background:var(--color-tint-blue);border:1px solid rgba(0,102,255,0.18);border-radius:var(--radius-card);padding:var(--space-md);}
+.consent{padding:var(--space-sm) 0;border-top:1px solid var(--color-border);font-size:15px;line-height:1.7;color:var(--color-body);}
 .consent:first-child{border-top:0;}
 .consent b{color:var(--color-dark);}
-.consent-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
-.form-foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid var(--color-border);padding-top:18px;}
-.slug{font-size:12px;color:var(--color-body);word-break:break-all;}
+.consent-actions{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-top:6px;}
+.form-foot{display:flex;flex-wrap:wrap;gap:var(--space-sm);align-items:center;justify-content:space-between;border-top:1px solid var(--color-border);padding-top:var(--space-md);}
+.slug{font-size:var(--fs-label);color:var(--color-body);word-break:break-all;}
 @media (max-width:768px){
-  .wrap{padding:16px;}
-  .card{padding:18px;}
-  .grid2{grid-template-columns:1fr;}
+  .wrap{padding:var(--space-sm);}
+  .card{padding:var(--space-sm);}
   .row{grid-template-columns:1fr;}
   .row-actions{justify-content:flex-start;}
 }
 </style>
 </head>
-<body class="ow">
+<body class="staff-page">
 <div class="wrap">
   <div class="top">
     <div>
@@ -439,13 +411,13 @@ input[type=file]{font-size:13px;font-family:inherit;max-width:100%;}
       <p class="sub"><?= owBi('Events, artist spotlights and art education — written by the Oweili team.', 'الملتقيات وأضواء الفنانين والتثقيف الفني — بقلم فريق أويلي.') ?></p>
     </div>
     <div class="top-links">
-      <button type="button" class="btn btn-line btn-sm" id="lb" onclick="tgl()">العربية</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="lb" onclick="tgl()">العربية</button>
       <?php if ($staff['user_id'] === null || (currentUser()['role'] ?? '') === 'admin'): ?>
-        <a class="btn btn-line btn-sm" href="admin.php"><?= owBi('Admin panel', 'لوحة الإدارة') ?></a>
+        <a class="btn btn-ghost btn-sm" href="admin.php"><?= owBi('Admin panel', 'لوحة الإدارة') ?></a>
       <?php else: ?>
-        <a class="btn btn-line btn-sm" href="subadmin_dashboard.php"><?= owBi('Review panel', 'لوحة المراجعة') ?></a>
+        <a class="btn btn-ghost btn-sm" href="subadmin_dashboard.php"><?= owBi('Review panel', 'لوحة المراجعة') ?></a>
       <?php endif; ?>
-      <a class="btn btn-line btn-sm" href="index.php"><?= owBi('View site', 'عرض الموقع') ?></a>
+      <a class="btn btn-ghost btn-sm" href="index.php"><?= owBi('View site', 'عرض الموقع') ?></a>
     </div>
   </div>
 
@@ -472,7 +444,7 @@ input[type=file]{font-size:13px;font-family:inherit;max-width:100%;}
     <div class="card">
       <div class="list-head">
         <h2><?= owBi($TYPES[$tab][0], $TYPES[$tab][1]) ?></h2>
-        <a class="btn btn-pink" href="admin_articles.php?new=1&amp;tab=<?= e($tab) ?>"><?= owBi('+ New Article', '+ مقال جديد') ?></a>
+        <a class="btn btn-primary" href="admin_articles.php?new=1&amp;tab=<?= e($tab) ?>"><?= owBi('+ New Article', '+ مقال جديد') ?></a>
       </div>
       <?php if (!$list): ?>
         <div class="empty"><?= owBi('No articles here yet. Press "New Article" to write the first one.', 'لا توجد مقالات هنا بعد. اضغط «مقال جديد» لكتابة أول مقال.') ?></div>
@@ -488,14 +460,14 @@ input[type=file]{font-size:13px;font-family:inherit;max-width:100%;}
           </div>
           <div class="row-actions">
             <?php if ($r['status'] === 'published'): ?>
-              <a class="btn btn-line btn-sm" href="article.php?slug=<?= e(rawurlencode($r['slug'])) ?>" target="_blank" rel="noopener"><?= owBi('View', 'عرض') ?></a>
+              <a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode($r['slug'])) ?>" target="_blank" rel="noopener"><?= owBi('View', 'عرض') ?></a>
             <?php endif; ?>
-            <a class="btn btn-blue btn-sm" href="admin_articles.php?edit=<?= (int) $r['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a>
+            <a class="btn btn-secondary btn-sm" href="admin_articles.php?edit=<?= (int) $r['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a>
             <form method="post" action="admin_articles.php?tab=<?= e($tab) ?>" class="js-confirm"
                   data-confirm-en="Delete “<?= e($r['title_en']) ?>”? Its photos will be deleted too. This cannot be undone."
                   data-confirm-ar="حذف «<?= e($r['title_ar']) ?>»؟ ستُحذف صوره أيضاً. لا يمكن التراجع عن ذلك.">
               <?= csrfField() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int) $r['id'] ?>">
-              <button class="btn btn-del btn-sm" type="submit"><?= owBi('Delete', 'حذف') ?></button>
+              <button class="btn btn-danger btn-sm" type="submit"><?= owBi('Delete', 'حذف') ?></button>
             </form>
           </div>
         </div>
@@ -522,7 +494,7 @@ input[type=file]{font-size:13px;font-family:inherit;max-width:100%;}
 
       <div class="list-head">
         <h2><?= $isEdit ? owBi('Edit article — ' . $TYPES[$type][0], 'تعديل مقال — ' . $TYPES[$type][1]) : owBi('New article — ' . $TYPES[$type][0], 'مقال جديد — ' . $TYPES[$type][1]) ?></h2>
-        <a class="btn btn-line btn-sm" href="admin_articles.php?tab=<?= e($type) ?>"><?= owBi('← Back to list', '→ العودة للقائمة') ?></a>
+        <a class="btn btn-ghost btn-sm" href="admin_articles.php?tab=<?= e($type) ?>"><?= owBi('← Back to list', '→ العودة للقائمة') ?></a>
       </div>
       <?php if ($article): ?>
         <p class="slug"><?= owBi('Web address:', 'عنوان الصفحة:') ?> article.php?slug=<?= e($article['slug']) ?>
@@ -610,12 +582,12 @@ input[type=file]{font-size:13px;font-family:inherit;max-width:100%;}
               <?php endif; ?>
               <div class="consent-actions">
                 <?php if ($c['proof_path'] !== ''): ?>
-                  <a class="btn btn-line btn-sm" href="admin_articles.php?proof=<?= (int) $c['id'] ?>" target="_blank" rel="noopener"><?= owBi('Open proof', 'فتح الإثبات') ?></a>
+                  <a class="btn btn-ghost btn-sm" href="admin_articles.php?proof=<?= (int) $c['id'] ?>" target="_blank" rel="noopener"><?= owBi('Open proof', 'فتح الإثبات') ?></a>
                 <?php else: ?>
                   <span class="hint"><?= owBi('No proof file uploaded', 'لم يُرفع ملف إثبات') ?></span>
                 <?php endif; ?>
                 <?php if (!$c['withdrawn_at']): ?>
-                  <button class="btn btn-del btn-sm" type="submit" form="wd-<?= (int) $c['id'] ?>"><?= owBi('Mark as withdrawn', 'تسجيل سحب الموافقة') ?></button>
+                  <button class="btn btn-danger btn-sm" type="submit" form="wd-<?= (int) $c['id'] ?>"><?= owBi('Mark as withdrawn', 'تسجيل سحب الموافقة') ?></button>
                 <?php endif; ?>
               </div>
             </div>
@@ -657,8 +629,8 @@ input[type=file]{font-size:13px;font-family:inherit;max-width:100%;}
       </fieldset>
 
       <div class="form-foot">
-        <a class="btn btn-line" href="admin_articles.php?tab=<?= e($type) ?>"><?= owBi('Cancel', 'إلغاء') ?></a>
-        <button class="btn btn-pink" type="submit"><?= owBi('Save Article', 'حفظ المقال') ?></button>
+        <a class="btn btn-ghost" href="admin_articles.php?tab=<?= e($type) ?>"><?= owBi('Cancel', 'إلغاء') ?></a>
+        <button class="btn btn-primary" type="submit"><?= owBi('Save Article', 'حفظ المقال') ?></button>
       </div>
     </form>
 

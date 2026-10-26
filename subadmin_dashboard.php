@@ -69,51 +69,48 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 <title>Sub-admin · Oweili</title>
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{min-height:100vh;background:#f4f5f7;font-family:var(--font-sans);color:#111111;padding:40px 20px;}
-.wrap{max-width:900px;margin:0 auto;}
-h1{font-size:24px;font-weight:700;margin-bottom:4px;}
-.sub{font-size:13px;color:rgba(0,0,0,0.5);margin-bottom:24px;}
-.card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.05);padding:26px;}
-.btn{padding:11px 22px;border-radius:999px;background:#111111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.22s;text-decoration:none;display:inline-block;}
-.btn:hover{background:#ff0055;}
-.btn.sm{padding:7px 14px;font-size:12px;}
-.btn.green{background:#0066ff;}.btn.green:hover{background:#0066ff;}
-.btn.red{background:#ff0055;}.btn.red:hover{background:#111111;}
-.btn.grey{background:rgba(0,0,0,0.08);color:#111111;}.btn.grey:hover{background:rgba(0,0,0,0.16);}
-.lang-btn{padding:9px 16px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:#fff;color:rgba(0,0,0,0.7);transition:all 0.2s;}
-.lang-btn:hover{background:#111;color:#fff;}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
-.sec-head h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.count{background:#ff0055;color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;}
-.art-list{display:flex;flex-direction:column;gap:12px;}
-.art-item{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:12px;border:1px solid rgba(0,0,0,0.07);border-radius:14px;}
-.art-thumb{width:64px;height:64px;border-radius:10px;background-size:cover;background-position:center;background-color:#eee;flex-shrink:0;}
+/* Sub-admin review panel — staff layout only; buttons, cards and stat cards come from oweili.css (role color: sub-admin green) */
+.wrap{max-width:960px;margin:0 auto;padding:var(--space-lg);}
+.sub{font-size:var(--fs-body);color:var(--color-body);margin:4px 0 0;}
+.top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-md);gap:var(--space-sm);flex-wrap:wrap;}
+.top h1{font-size:var(--fs-section);margin:0;}
+.top-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;}
+.stat-grid{grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-lg);}
+.sec-head h2{font-size:var(--fs-subtitle);display:flex;align-items:center;gap:var(--space-xs);margin:0 0 var(--space-sm);}
+.count{background:var(--color-dark);color:#fff;font-size:var(--fs-min);font-weight:700;padding:2px 9px;border-radius:var(--radius-pill);}
+.art-list{display:flex;flex-direction:column;gap:var(--space-sm);}
+.art-item{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-sm);padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--radius-card);background:#fff;}
+.art-thumb{width:72px;height:72px;border-radius:var(--radius-input);background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#fff;border:1px solid var(--color-border);flex-shrink:0;}
 .art-meta{flex:1;min-width:0;}
 .art-proof{flex-basis:100%;min-width:0;}
 .art-proof .pj{margin-top:4px;}
-.art-meta strong{font-size:14px;}
-.name-ar{font-size:12px;color:rgba(0,0,0,0.45);}
-.art-info{font-size:12px;color:rgba(0,0,0,0.5);margin-top:3px;}
-.acts{display:flex;gap:6px;flex-wrap:wrap;}
-.empty{padding:30px;text-align:center;color:rgba(0,0,0,0.4);}
-[dir="rtl"] body{direction:rtl;}
-
+.art-meta strong{font-size:var(--fs-body);color:var(--color-dark);}
+.name-ar{font-size:var(--fs-caption);color:var(--color-body);}
+.art-info{font-size:var(--fs-caption);color:var(--color-body);margin-top:3px;}
+.acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;}
+.empty{padding:var(--space-lg);text-align:center;color:var(--color-body);}
+@media(max-width:768px){.wrap{padding:var(--space-sm);}.stat-grid{grid-template-columns:1fr 1fr;}}
 </style>
 <link rel="stylesheet" href="/assets/css/proof.css">
 </head>
-<body>
-<div class="wrap">
+<body class="staff-page">
+<div class="wrap dash role-subadmin">
   <div class="top">
     <div>
       <h1>Artwork Approvals</h1>
       <div class="sub">Review and approve or reject pending artwork submissions.</div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <button class="lang-btn" id="lb" onclick="tglLang()">العربية</button>
-      <a class="btn" href="admin_articles.php">Articles</a>
-      <a class="btn grey" href="logout.php">Log out</a>
+    <div class="top-actions">
+      <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button>
+      <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
+      <a class="btn btn-ghost btn-sm" href="logout.php">Log out</a>
     </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-num"><?= count($pendingArt) ?></span><span class="stat-lbl">Pending Artworks</span></div>
+    <div class="stat-card"><span class="stat-num"><?= count(array_filter($pendingArt, fn($x) => !empty($pendingStages[(int) $x['id']]))) ?></span><span class="stat-lbl">With Proof of Process</span></div>
+    <div class="stat-card"><span class="stat-num"><?= count(array_filter($pendingArt, fn($x) => empty($pendingStages[(int) $x['id']]))) ?></span><span class="stat-lbl">Without Stage Photos</span></div>
   </div>
 
   <div class="card">
@@ -135,8 +132,8 @@ h1{font-size:24px;font-weight:700;margin-bottom:4px;}
             </div>
           </div>
           <div class="acts">
-            <form method="post" action="subadmin_dashboard.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn sm green" name="action" value="approve_art">Approve</button></form>
-            <form method="post" action="subadmin_dashboard.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn sm red" name="action" value="reject_art">Reject</button></form>
+            <form method="post" action="subadmin_dashboard.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="approve_art">Approve</button></form>
+            <form method="post" action="subadmin_dashboard.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="reject_art">Reject</button></form>
           </div>
           <div class="art-proof"><?= owProofPanelHtml($pendingStages[(int)$art['id']] ?? [], $pendingColors[(int)$art['id']] ?? [], (string)$art['type'], $ART_TYPES) ?></div>
         </div>
@@ -152,7 +149,7 @@ const ADICT = {
   "Artwork Approvals":"اعتماد الأعمال الفنية",
   "Review and approve or reject pending artwork submissions.":"راجع الأعمال المُرسلة ووافق عليها أو ارفضها.",
   "Log out":"تسجيل الخروج",
-  "Articles":"المقالات",
+  "Articles":"المقالات","With Proof of Process":"مع دليل المراحل","Without Stage Photos":"بدون صور مراحل",
   "Pending Artworks":"الأعمال المعلّقة",
   "Nothing pending — all caught up. 🎉":"لا يوجد معلّق — كل شيء محدّث. 🎉",
   "Approve":"موافقة","Reject":"رفض","Untitled":"بدون عنوان","Unknown artist":"فنان غير معروف"

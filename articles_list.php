@@ -87,10 +87,10 @@ $titleAr = $tAr . ' · أويلي';
     </nav>
 
     <?php if (!$items): ?>
-      <div class="glass-card d-empty reveal">
+      <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         <?= owBi($PAGE[$type]['empty'][0], $PAGE[$type]['empty'][1]) ?>
-        <div><a class="d-btn d-btn-pink" href="marketplace.php"><?= owBi('Explore Artworks', 'استكشف الأعمال') ?></a></div>
+        <div><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Artworks', 'استكشف الأعمال') ?></a></div>
       </div>
     <?php else: ?>
       <div class="a-grid">
@@ -98,11 +98,11 @@ $titleAr = $tAr . ' · أويلي';
           [$dEn, $dAr] = $type === 'event' ? owDateRangeBi($it['event_start_date'], $it['event_end_date']) : owDateBi($it['published_at']);
           $cover = (string) $it['cover_image_path'];
         ?>
-        <a class="glass-card a-card reveal" href="article.php?slug=<?= e(rawurlencode($it['slug'])) ?>">
+        <a class="card card-hover a-card reveal" href="article.php?slug=<?= e(rawurlencode($it['slug'])) ?>">
           <?php if ($cover !== '' && owSafeArticlePath($cover)): ?>
-            <span class="a-img"><img loading="lazy" src="<?= e($cover) ?>" alt="<?= e($it['title_en'] . ' · ' . $it['title_ar']) ?>"></span>
+            <span class="card-media"><img loading="lazy" src="<?= e($cover) ?>" alt="<?= e($it['title_en'] . ' · ' . $it['title_ar']) ?>"></span>
           <?php else: ?>
-            <span class="a-img none" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 3.58-9 8 0 4.4 3.5 8 8 8 1 0 1.5-.6 1.5-1.4 0-.8-.6-1.1-.6-1.9 0-.8.6-1.4 1.4-1.4H15c3.3 0 6-2.3 6-5.3C21 5.9 17 3 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="15.5" cy="8" r="1"/></svg></span>
+            <span class="card-media none" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 3.58-9 8 0 4.4 3.5 8 8 8 1 0 1.5-.6 1.5-1.4 0-.8-.6-1.1-.6-1.9 0-.8.6-1.4 1.4-1.4H15c3.3 0 6-2.3 6-5.3C21 5.9 17 3 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="15.5" cy="8" r="1"/></svg></span>
           <?php endif; ?>
           <span class="a-body">
             <span class="a-title"><?= owBi($it['title_en'], $it['title_ar']) ?></span>
@@ -116,6 +116,6 @@ $titleAr = $tAr . ' · أويلي';
   </div>
 </main>
 
-<footer class="d-foot"><?= owBi('© ' . date('Y') . ' Oweili — real art by real artists.', '© ' . date('Y') . ' أويلي — فن حقيقي بأيدي فنانين حقيقيين.') ?> · <a href="support.php"><?= owBi('Support', 'الدعم') ?></a></footer>
+<?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

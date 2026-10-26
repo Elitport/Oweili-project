@@ -303,20 +303,66 @@ function owMetaHtml(string $type, array $colors, array $artTypes): string {
     return $h;
 }
 
+/* ---------------------------------------------------------------------
+ *  The 3 stage photos as same-size squares joined by a dashed line
+ *  (design system: .stages / .stage / .stage-line in oweili.css).
+ *  $mode: 'strip'   — square + "25%" (cards, drafts)
+ *         'journey' — + stage name and date (buyers)
+ *         'proof'   — + date, time gap and warnings; photos open full size (reviewers)
+ * ------------------------------------------------------------------- */
+function owStagesHtml(array $stages, string $mode = 'strip'): string {
+    $missingIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/></svg>';
+    $h = '<div class="stages stages-' . $mode . '">';
+    $prevTs = null; $prevStage = null; $first = true;
+    foreach (OW_STAGES as $stg) {
+        if (!$first) $h .= '<span class="stage-line" aria-hidden="true"></span>';
+        $first = false;
+        [$lEn, $lAr] = owStageLabel($stg);
+        $row = $stages[$stg] ?? null;
+        $ok  = $row && owSafeStagePath((string) $row['photo_path']);
+        if (!$ok) {
+            [$mEn, $mAr] = $stg === 50 ? ['Skipped', 'تم التخطي'] : ['Not yet', 'لم تُضف بعد'];
+            if ($mode === 'proof') [$mEn, $mAr] = $stg === 50 ? ['Artist skipped middle stage', 'تخطى الفنان المرحلة الوسطى'] : ['Photo missing', 'الصورة مفقودة'];
+            $h .= '<div class="stage missing"><span class="stage-img">' . $missingIcon . '</span><span class="stage-label">' . $stg . '%</span>'
+                . ($mode === 'strip' ? '' : '<span class="stage-note">' . owBi($mEn, $mAr) . '</span>') . '</div>';
+            continue;
+        }
+        $img = '<span class="stage-img"><img loading="lazy" src="' . e($row['photo_path']) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '"></span>';
+        $cap = '<span class="stage-label">' . $stg . '%</span>';
+        if ($mode === 'journey') {
+            [$dEn, $dAr] = owDateBi($row['taken_at']);
+            $cap .= '<span class="stage-note">' . owBi($lEn, $lAr) . '</span><span class="pj-date">' . owBi($dEn, $dAr) . '</span>';
+        } elseif ($mode === 'proof') {
+            $ts = $row['taken_at'] ? strtotime($row['taken_at']) : null;
+            [$dEn, $dAr] = owDateBi($row['taken_at'], true);
+            $cap .= '<span class="pj-date">' . owBi($dEn, $dAr) . '</span>';
+            if ($prevTs !== null && $ts !== null) {
+                $gap = $ts - $prevTs;
+                if ($gap < 0) {
+                    $cap .= '<span class="pj-warn">' . owBi('⚠ Dated before stage ' . $prevStage . '%', '⚠ تاريخها أقدم من مرحلة ' . $prevStage . '%') . '</span>';
+                } else {
+                    [$gEn, $gAr] = owGapBi($gap, $prevStage);
+                    $cap .= '<span class="pj-gap">' . owBi($gEn, $gAr) . '</span>';
+                    if ($gap < 3600) {
+                        $cap .= '<span class="pj-warn">' . owBi('⚠ Less than an hour after the previous stage', '⚠ بعد أقل من ساعة من المرحلة السابقة') . '</span>';
+                    }
+                }
+            }
+            if ($ts !== null) { $prevTs = $ts; $prevStage = $stg; }
+        }
+        $h .= $mode === 'strip'
+            ? '<div class="stage">' . $img . $cap . '</div>'
+            : '<a class="stage" href="' . e($row['photo_path']) . '" target="_blank" rel="noopener" aria-label="' . e($stg . '% — ' . $lEn . ' · ' . $lAr . ' (opens full size)') . '">' . $img . $cap . '</a>';
+    }
+    return $h . '</div>';
+}
+
 /* Buyer view: "Creation Journey — Proof of Human Art". Empty string if no journey. */
 function owJourneyHtml(array $stages, array $colors, string $type, array $artTypes): string {
     if (!owHasJourney($stages)) return '';
-    $h = '<section class="pj" aria-label="Creation Journey · رحلة الإبداع">'
+    return '<section class="pj" aria-label="Creation Journey · رحلة الإبداع">'
        . '<h3 class="pj-title">' . owBi('Creation Journey — Proof of Human Art', 'رحلة الإبداع — دليل الفن البشري') . '</h3>'
-       . '<div class="pj-row">';
-    foreach (OW_STAGES as $stg) {
-        if (!isset($stages[$stg]) || !owSafeStagePath((string) $stages[$stg]['photo_path'])) continue;
-        [$lEn, $lAr] = owStageLabel($stg);
-        [$dEn, $dAr] = owDateBi($stages[$stg]['taken_at']);
-        $h .= '<figure class="pj-step"><img loading="lazy" src="' . e($stages[$stg]['photo_path']) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '">'
-            . '<figcaption><b>' . $stg . '%</b> ' . owBi($lEn, $lAr) . '<span class="pj-date">' . owBi($dEn, $dAr) . '</span></figcaption></figure>';
-    }
-    return $h . '</div>' . owMetaHtml($type, $colors, $artTypes) . '</section>';
+       . owStagesHtml($stages, 'journey') . owMetaHtml($type, $colors, $artTypes) . '</section>';
 }
 
 /* Admin / sub-admin view: "Proof of Process" with dates, gaps and warnings. */
@@ -325,43 +371,7 @@ function owProofPanelHtml(array $stages, array $colors, string $type, array $art
     if (!$stages) {
         return $h . '<p class="pj-note">' . owBi('No stage photos — this artwork was uploaded before the 3-stage system.', 'لا توجد صور مراحل — رُفع هذا العمل قبل نظام المراحل الثلاث.') . '</p></section>';
     }
-    $h .= '<div class="pj-row">';
-    $prevTs = null; $prevStage = null;
-    foreach (OW_STAGES as $stg) {
-        if (!isset($stages[$stg])) {
-            if ($stg === 50) {
-                $h .= '<div class="pj-step pj-missing"><b>50%</b>' . owBi('Artist skipped middle stage', 'تخطى الفنان المرحلة الوسطى') . '</div>';
-            } else {
-                $h .= '<div class="pj-step pj-missing"><b>' . $stg . '%</b>' . owBi('Photo missing', 'الصورة مفقودة') . '</div>';
-            }
-            continue;
-        }
-        $row = $stages[$stg];
-        $ts = $row['taken_at'] ? strtotime($row['taken_at']) : null;
-        [$dEn, $dAr] = owDateBi($row['taken_at'], true);
-        $h .= '<figure class="pj-step">';
-        if (owSafeStagePath((string) $row['photo_path'])) {
-            $h .= '<a href="' . e($row['photo_path']) . '" target="_blank" rel="noopener"><img loading="lazy" src="' . e($row['photo_path']) . '" alt="' . e('Stage ' . $stg . '% photo · صورة مرحلة ' . $stg . '%') . '"></a>';
-        }
-        $h .= '<figcaption><b>' . $stg . '%</b><span class="pj-date">' . owBi($dEn, $dAr) . '</span>';
-        if ($prevTs !== null && $ts !== null) {
-            $gap = $ts - $prevTs;
-            if ($gap < 0) {
-                $h .= '<span class="pj-warn">' . owBi('⚠ Dated before stage ' . $prevStage . '%', '⚠ تاريخها أقدم من مرحلة ' . $prevStage . '%') . '</span>';
-            } else {
-                [$gEn, $gAr] = owGapBi($gap, $prevStage);
-                $h .= '<span class="pj-gap">' . owBi($gEn, $gAr) . '</span>';
-                if ($gap < 3600) {
-                    $h .= '<span class="pj-warn">' . owBi('⚠ Less than an hour after the previous stage', '⚠ بعد أقل من ساعة من المرحلة السابقة') . '</span>';
-                }
-            }
-        }
-        $h .= '</figcaption></figure>';
-        if ($ts !== null) { $prevTs = $ts; $prevStage = $stg; }
-    }
-    $h .= '</div>' . owMetaHtml($type, $colors, $artTypes)
+    return $h . owStagesHtml($stages, 'proof') . owMetaHtml($type, $colors, $artTypes)
         . '<p class="pj-note">' . owBi('Check that the photos show real progress. The dates should make sense for this type of artwork.', 'تحقق أن الصور تظهر تقدماً حقيقياً. يجب أن تكون التواريخ منطقية لهذا النوع من الفن.') . '</p>'
         . '</section>';
-    return $h;
 }
-
