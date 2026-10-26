@@ -159,6 +159,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Artist Sign-up · Oweili</title>
+<meta name="description" content="We are glad you are here. Our team reviews every profile by hand. سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -172,7 +173,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 
 <div class="auth-wrap">
   <div class="auth-card wide">
-    <div class="auth-head"><h1 id="t-title">Artist Sign-up</h1><p id="t-sub">Reviewed by our team before your profile goes live.</p></div>
+    <div class="auth-head"><h1 id="t-title">Join as an Artist</h1><p id="t-sub">We are glad you are here. Our team reviews every profile by hand.</p></div>
     <div class="err-box" id="err" data-en="<?= e($errEn) ?>" data-ar="<?= e($errAr) ?>" style="display:<?= $errCode?'block':'none' ?>;"><?= e($errEn) ?></div>
     <div class="ok-box" id="ok" data-en="<?= e($okEn) ?>" data-ar="<?= e($okAr) ?>" style="display:<?= $okCode?'block':'none' ?>;"><?= e($okEn) ?></div>
     <form method="post" action="register_artist.php" enctype="multipart/form-data">
@@ -181,24 +182,24 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
         <div class="field"><label id="t-l-first">First name</label><input type="text" name="first_name" required value="<?= e($old['first']) ?>"></div>
         <div class="field"><label id="t-l-last">Last name</label><input type="text" name="last_name" value="<?= e($old['last']) ?>"></div>
       </div>
-      <div class="field"><label id="t-l-artist">Artist name (display name)</label><input type="text" name="artist_name" required value="<?= e($old['artist']) ?>"></div>
+      <div class="field"><label id="t-l-artist">Artist name (the name people will see)</label><input type="text" name="artist_name" required value="<?= e($old['artist']) ?>"></div>
       <div class="grid2">
         <div class="field"><label id="t-l-email">Email</label><input type="email" name="email" required value="<?= e($old['email']) ?>"></div>
         <div class="field"><label id="t-l-phone">Mobile number</label><input type="tel" name="phone" dir="ltr" required value="<?= e($old['phone']) ?>" placeholder="+966 5X XXX XXXX"></div>
       </div>
       <div class="field"><label id="t-l-city">City</label><input type="text" name="city" required value="<?= e($old['city']) ?>"></div>
       <div class="grid2">
-        <div class="field"><label id="t-l-bioen">Bio (English) — optional</label><textarea name="bio_en"><?= e($old['bioEn']) ?></textarea></div>
-        <div class="field"><label id="t-l-bioar">Bio (Arabic) — optional</label><textarea name="bio_ar" dir="rtl"><?= e($old['bioAr']) ?></textarea></div>
+        <div class="field"><label id="t-l-bioen">About you in English (optional)</label><textarea name="bio_en"><?= e($old['bioEn']) ?></textarea></div>
+        <div class="field"><label id="t-l-bioar">About you in Arabic (optional)</label><textarea name="bio_ar" dir="rtl"><?= e($old['bioAr']) ?></textarea></div>
       </div>
-      <div class="field"><label id="t-l-photo">Profile picture (required, JPG/PNG max 5MB)</label>
+      <div class="field"><label id="t-l-photo">Your photo (required, JPG or PNG, up to 5MB)</label>
         <input type="file" name="profile_picture" accept="image/jpeg,image/png" required></div>
-      <div class="field"><label id="t-l-port">Portfolio images (required, up to 5, JPG/PNG)</label>
+      <div class="field"><label id="t-l-port">Your artworks (required, up to 5 photos)</label>
         <input type="file" name="portfolio[]" accept="image/jpeg,image/png" multiple required>
-        <p class="hint" id="t-port-hint">Select up to 5 images of your work.</p></div>
-      <div class="field"><label id="t-l-video">Art video (required, MP4 max 50MB)</label>
+        <p class="hint" id="t-port-hint">Pick the pieces you are most proud of.</p></div>
+      <div class="field"><label id="t-l-video">A short video of you at work (required, MP4 up to 50MB)</label>
         <input type="file" name="art_video" accept="video/mp4" required>
-        <p class="hint" id="t-video-hint">A short clip of you drawing or painting — proof you create art. The admin reviews it before approval.</p></div>
+        <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours.</p></div>
       <div class="field"><label id="t-l-pass">Password</label><input type="password" id="password" name="password" required oninput="checkRules()">
         <ul class="pw-rules">
           <li id="r-len"><span class="mark">✓</span><span id="t-r-len">Minimum 8 characters</span></li>
@@ -208,34 +209,34 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
         </ul>
       </div>
       <div class="field"><label id="t-l-confirm">Confirm password</label><input type="password" name="confirm" required></div>
-      <button type="submit" class="btn btn-primary btn-block btn-submit" id="t-submit">Submit for Review</button>
+      <button type="submit" class="btn btn-primary btn-block btn-submit" id="t-submit">Send for Review</button>
     </form>
-    <div class="auth-foot"><span id="t-have">Already have an account?</span> <a class="link" href="login.php" id="t-login">Sign In</a></div>
+    <div class="auth-foot"><span id="t-have">Already one of us?</span> <a class="link" href="login.php" id="t-login">Sign In</a></div>
   </div>
 </div>
 
 <script>
 const T={
-  en:{dir:'ltr',lb:'العربية',title:'Artist Sign-up',sub:'Reviewed by our team before your profile goes live.',
-    first:'First name',last:'Last name',artist:'Artist name (display name)',email:'Email',phone:'Mobile number',city:'City',
-    bioen:'Bio (English) — optional',bioar:'Bio (Arabic) — optional',
-    photo:'Profile picture (required, JPG/PNG max 5MB)',port:'Portfolio images (required, up to 5, JPG/PNG)',portHint:'Select up to 5 images of your work.',
-    video:'Art video (required, MP4 max 50MB)',videoHint:'A short clip of you drawing or painting — proof you create art. The admin reviews it before approval.',
+  en:{dir:'ltr',lb:'العربية',title:'Join as an Artist',sub:'We are glad you are here. Our team reviews every profile by hand.',
+    first:'First name',last:'Last name',artist:'Artist name (the name people will see)',email:'Email',phone:'Mobile number',city:'City',
+    bioen:'About you in English (optional)',bioar:'About you in Arabic (optional)',
+    photo:'Your photo (required, JPG or PNG, up to 5MB)',port:'Your artworks (required, up to 5 photos)',portHint:'Pick the pieces you are most proud of.',
+    video:'A short video of you at work (required, MP4 up to 50MB)',videoHint:'Film your hands drawing or painting. It shows us the art is truly yours.',
     pass:'Password',confirm:'Confirm password',
     rlen:'Minimum 8 characters',rupper:'At least one uppercase letter',rnum:'At least one number',rspec:'At least one special character (!@#$%^&*)',
-    submit:'Submit for Review',have:'Already have an account?',login:'Sign In',
+    submit:'Send for Review',have:'Already one of us?',login:'Sign In',
     nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
       c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',title:'تسجيل فنان',sub:'تتم مراجعة طلبك من فريقنا قبل نشر ملفك.',
-    first:'الاسم الأول',last:'اسم العائلة',artist:'اسم الفنان (الاسم المعروض)',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
-    bioen:'نبذة (بالإنجليزية) — اختياري',bioar:'نبذة (بالعربية) — اختياري',
-    photo:'الصورة الشخصية (مطلوبة، JPG/PNG بحد أقصى 5 ميجابايت)',port:'صور الأعمال (مطلوبة، حتى 5، JPG/PNG)',portHint:'اختر حتى 5 صور من أعمالك.',
-    video:'فيديو فني (مطلوب، MP4 بحد أقصى 50 ميجابايت)',videoHint:'مقطع قصير أثناء رسمك — إثبات أنك تبدع الفن. يراجعه المشرف قبل الموافقة.',
+  ar:{dir:'rtl',lb:'English',title:'انضم إلينا كفنان',sub:'سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.',
+    first:'الاسم الأول',last:'اسم العائلة',artist:'اسمك الفني (الاسم الذي سيراه الناس)',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
+    bioen:'نبذة عنك بالإنجليزية (اختياري)',bioar:'نبذة عنك بالعربية (اختياري)',
+    photo:'صورتك (مطلوبة، JPG أو PNG حتى 5 ميغابايت)',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر.',
+    video:'مقطع قصير وأنت تعمل (مطلوب، MP4 حتى 50 ميغابايت)',videoHint:'صوّر يديك وهي ترسم أو تلوّن. هكذا نعرف أن الفن من صنعك.',
     pass:'كلمة المرور',confirm:'تأكيد كلمة المرور',
     rlen:'الحد الأدنى 8 أحرف',rupper:'حرف كبير واحد على الأقل',rnum:'رقم واحد على الأقل',rspec:'رمز خاص واحد على الأقل (!@#$%^&*)',
-    submit:'إرسال للمراجعة',have:'لديك حساب بالفعل؟',login:'تسجيل الدخول',
+    submit:'أرسل للمراجعة',have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
       c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',

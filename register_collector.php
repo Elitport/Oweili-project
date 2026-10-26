@@ -74,6 +74,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Collector Sign-up · Oweili</title>
+<meta name="description" content="Welcome. Real art made by real hands is waiting for you. أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -87,7 +88,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 
 <div class="auth-wrap">
   <div class="auth-card">
-    <div class="auth-head"><h1 id="t-title">Collector Sign-up</h1><p id="t-sub">Quick and easy — start collecting.</p></div>
+    <div class="auth-head"><h1 id="t-title">Join as a Collector</h1><p id="t-sub">Welcome. Real art made by real hands is waiting for you.</p></div>
     <div class="err-box" id="err" data-en="<?= e($errEn) ?>" data-ar="<?= e($errAr) ?>" style="display:<?= $errCode?'block':'none' ?>;"><?= e($errEn) ?></div>
     <div class="ok-box" id="ok" data-en="<?= e($okEn) ?>" data-ar="<?= e($okAr) ?>" style="display:<?= $okCode?'block':'none' ?>;"><?= e($okEn) ?></div>
     <form method="post" action="register_collector.php">
@@ -107,26 +108,26 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
         </ul>
       </div>
       <div class="field"><label id="t-l-confirm" for="confirm">Confirm password</label><input type="password" id="confirm" name="confirm" required></div>
-      <button type="submit" class="btn btn-accent btn-block btn-submit" id="t-submit">Create Account</button>
+      <button type="submit" class="btn btn-accent btn-block btn-submit" id="t-submit">Create My Account</button>
     </form>
-    <div class="auth-foot"><span id="t-have">Already have an account?</span> <a class="link" href="login.php" id="t-login">Sign In</a></div>
+    <div class="auth-foot"><span id="t-have">Already one of us?</span> <a class="link" href="login.php" id="t-login">Sign In</a></div>
   </div>
 </div>
 
 <script>
 const T={
-  en:{dir:'ltr',lb:'العربية',title:'Collector Sign-up',sub:'Quick and easy — start collecting.',
+  en:{dir:'ltr',lb:'العربية',title:'Join as a Collector',sub:'Welcome. Real art made by real hands is waiting for you.',
     first:'First name',last:'Last name',email:'Email',phone:'Mobile number',pass:'Password',confirm:'Confirm password',
     rlen:'Minimum 8 characters',rupper:'At least one uppercase letter',rnum:'At least one number',rspec:'At least one special character (!@#$%^&*)',
-    submit:'Create Account',have:'Already have an account?',login:'Sign In',
+    submit:'Create My Account',have:'Already one of us?',login:'Sign In',
     nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
       c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',title:'تسجيل مقتني',sub:'سريع وسهل — ابدأ الاقتناء.',
+  ar:{dir:'rtl',lb:'English',title:'انضم إلينا كمقتنٍ',sub:'أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.',
     first:'الاسم الأول',last:'اسم العائلة',email:'البريد الإلكتروني',phone:'رقم الجوال',pass:'كلمة المرور',confirm:'تأكيد كلمة المرور',
     rlen:'الحد الأدنى 8 أحرف',rupper:'حرف كبير واحد على الأقل',rnum:'رقم واحد على الأقل',rspec:'رمز خاص واحد على الأقل (!@#$%^&*)',
-    submit:'إنشاء الحساب',have:'لديك حساب بالفعل؟',login:'تسجيل الدخول',
+    submit:'أنشئ حسابي',have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
       c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',

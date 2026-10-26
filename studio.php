@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Studio · Oweili</title>
+<meta name="description" content="This is where your practice grows. Learn real art styles rooted in Saudi culture. Start with our style guides today. Workshops with Saudi art institutes are on their way. هنا تنمو موهبتك يوماً بعد يوم. تعلّم أساليب فنية أصيلة من روح الثقافة السعودية. ابدأ اليوم بأدلة الأساليب. وورش العمل مع معاهد الفنون السعودية في الطريق إليك.">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -87,7 +88,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
   <div class="page-header">
     <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">Learn &amp; Practice</span></div>
     <h1 id="t-h1">The <em>Oweili Studio</em></em></h1>
-    <p id="t-desc">Learn and practice real art styles rooted in Saudi culture — from desert landscapes to Arabic calligraphy. Explore our style guides today; workshops with Saudi art institutes are coming soon.</p>
+    <p id="t-desc">This is where your practice grows. Learn real art styles rooted in Saudi culture. Start with our style guides today. Workshops with Saudi art institutes are on their way.</p>
   </div>
 
   <!-- WORKSHOPS -->
@@ -98,7 +99,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="workshop-body">
         <span class="workshop-tag tag-watercolor" id="t-tag1">Watercolor</span>
         <h3 id="t-ws1">Desert Light in Watercolor</h3>
-        <p id="t-ws1d">Capture the warm light and soft dunes of the Saudi desert with layered watercolor washes.</p>
+        <p id="t-ws1d">Catch the warm light of the Saudi desert. Layer soft washes until the dunes glow.</p>
         <div class="workshop-meta">
           <span class="workshop-level" id="t-lv1">Coming Soon</span>
           <span class="workshop-cta" id="t-join1">Notify Me →</span>
@@ -110,7 +111,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="workshop-body">
         <span class="workshop-tag tag-oil" id="t-tag2">Oil Painting</span>
         <h3 id="t-ws2">Desert Landscapes in Oil</h3>
-        <p id="t-ws2d">Paint wide desert horizons, rock formations and golden-hour skies using classical oil techniques.</p>
+        <p id="t-ws2d">Paint wide horizons and golden evening skies. Learn classic oil techniques, one layer at a time.</p>
         <div class="workshop-meta">
           <span class="workshop-level" id="t-lv2">Coming Soon</span>
           <span class="workshop-cta" id="t-join2">Notify Me →</span>
@@ -122,7 +123,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="workshop-body">
         <span class="workshop-tag tag-digital" id="t-tag3">Digital Art</span>
         <h3 id="t-ws3">Digital Arabic Calligraphy</h3>
-        <p id="t-ws3d">Learn Arabic letterforms and Islamic geometric patterns, then bring them to life with digital tools.</p>
+        <p id="t-ws3d">Fall in love with Arabic letterforms and geometric patterns. Then bring them to life on screen.</p>
         <div class="workshop-meta">
           <span class="workshop-level" id="t-lv3">Coming Soon</span>
           <span class="workshop-cta" id="t-join3">Notify Me →</span>
@@ -134,7 +135,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="workshop-body">
         <span class="workshop-tag tag-charcoal" id="t-tag4">Charcoal</span>
         <h3 id="t-ws4">Saudi Heritage Drawing</h3>
-        <p id="t-ws4d">Draw the carved doors, Najdi mud architecture and traditional crafts of Saudi heritage in charcoal and ink.</p>
+        <p id="t-ws4d">Draw carved doors and Najdi mud houses in charcoal and ink. Every line keeps a story alive.</p>
         <div class="workshop-meta">
           <span class="workshop-level" id="t-lv4">Coming Soon</span>
           <span class="workshop-cta" id="t-join4">Notify Me →</span>
@@ -146,7 +147,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="workshop-body">
         <span class="workshop-tag tag-pastel" id="t-tag5">Community</span>
         <h3 id="t-ws5">Community Resource Library</h3>
-        <p id="t-ws5d">A curated resource library is being built by our artist community. Upload your first artwork to contribute.</p>
+        <p id="t-ws5d">Our artists are building this library together. Share your first artwork and add your voice.</p>
         <div class="workshop-meta">
           <span class="workshop-level" id="t-lv5">Coming Soon</span>
           <span class="workshop-cta" id="t-join5">Contribute →</span>
@@ -158,7 +159,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="workshop-body">
         <span class="workshop-tag tag-mixed" id="t-tag6">Mixed Media</span>
         <h3 id="t-ws6">Contemporary Saudi Expression</h3>
-        <p id="t-ws6d">Combine collage, paint and photography to tell the stories of Saudi Arabia today in your own contemporary voice.</p>
+        <p id="t-ws6d">Mix collage, paint and photography. Tell the story of Saudi Arabia today, in your own voice.</p>
         <div class="workshop-meta">
           <span class="workshop-level" id="t-lv6">Coming Soon</span>
           <span class="workshop-cta" id="t-join6">Notify Me →</span>
@@ -174,26 +175,26 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="featured-main">
         <div class="featured-main-img"></div>
         <div class="featured-main-body">
-          <h2 id="t-feat-h">Art Workshops with Saudi Institutes</h2>
-          <p id="t-feat-p">Art workshops are coming soon. We are building partnerships with Saudi art institutes to bring you real, in-person and online training.</p>
-          <a class="btn btn-dark" href="register.php" id="t-feat-btn">Notify Me</a>
+          <h2 id="t-featH">Workshops with Saudi Art Institutes</h2>
+          <p id="t-featP">We are partnering with Saudi art institutes. Soon you can learn with real teachers, in person and online.</p>
+          <a class="btn btn-dark" href="register.php" id="t-featBtn">Notify Me</a>
         </div>
       </div>
       <div class="featured-side">
         <div class="side-card" onclick="location.href='explore.php'">
           <div class="side-card-icon">🎨</div>
           <h4 id="t-sc1">Explore 12 Art Styles</h4>
-          <p id="t-sc1d">Discover 12 real art styles — from watercolor and oil to charcoal and mixed media — and choose the one you want to practice.</p>
+          <p id="t-sc1d">Watercolor, oil, charcoal, mixed media and more. Find the style that feels like yours.</p>
         </div>
         <div class="side-card" onclick="location.href='explore.php'">
           <div class="side-card-icon">📚</div>
           <h4 id="t-sc2">Art Style Guides</h4>
-          <p id="t-sc2d">Explore 12 real art styles with detailed guides for each one — from watercolor and oil painting to charcoal, pastel, and digital art.</p>
+          <p id="t-sc2d">A friendly guide for each of the 12 styles. From watercolor and oil to pastel and digital art.</p>
         </div>
         <div class="side-card" onclick="location.href='register.php'">
           <div class="side-card-icon">🏆</div>
-          <h4 id="t-sc3">Monthly Art Challenges — Coming Soon</h4>
-          <p id="t-sc3d">Themed challenges inspired by Saudi culture, where artists share new work and the community votes.</p>
+          <h4 id="t-sc3">Monthly Art Challenges (Coming Soon)</h4>
+          <p id="t-sc3d">A new theme each month, inspired by Saudi culture. Share your work and cheer on fellow artists.</p>
         </div>
       </div>
     </div>
@@ -206,25 +207,25 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
       <div class="roadmap-item">
         <div class="roadmap-num">01</div>
         <h4 id="t-r1">Color Theory Guides</h4>
-        <p id="t-r1d">Learn to build harmonious color palettes by hand, with step-by-step exercises for every medium.</p>
+        <p id="t-r1d">Learn to mix colors that sing together. Simple, hands-on exercises for every medium.</p>
         <span class="roadmap-status status-planned" id="t-rs1">Planned</span>
       </div>
       <div class="roadmap-item">
         <div class="roadmap-num">02</div>
         <h4 id="t-r2">Brush Simulator</h4>
-        <p id="t-r2d">Realistic digital brushes that mimic watercolor, oil, and charcoal.</p>
+        <p id="t-r2d">Digital brushes that feel like real watercolor, oil and charcoal.</p>
         <span class="roadmap-status status-soon" id="t-rs2">Coming Soon</span>
       </div>
       <div class="roadmap-item">
         <div class="roadmap-num">03</div>
         <h4 id="t-r3">Texture Scanner</h4>
-        <p id="t-r3d">Scan real-world textures with your phone and use them in artwork.</p>
+        <p id="t-r3d">Capture real textures with your phone. Then use them in your art.</p>
         <span class="roadmap-status status-planned" id="t-rs3">Planned</span>
       </div>
       <div class="roadmap-item">
         <div class="roadmap-num">04</div>
         <h4 id="t-r4">Art Portfolio</h4>
-        <p id="t-r4d">A personal gallery page for every artist to showcase their journey.</p>
+        <p id="t-r4d">A personal gallery page where every artist shares their journey.</p>
         <span class="roadmap-status status-planned" id="t-rs4">Planned</span>
       </div>
     </div>
@@ -237,41 +238,41 @@ const T={
   en:{dir:'ltr',lb:'العربية',
     studio:'The Studio',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
     badge:'Learn & Practice',h1:'The <em>Oweili Studio</em>',
-    desc:'Learn and practice real art styles rooted in Saudi culture — from desert landscapes to Arabic calligraphy. Explore our style guides today; workshops with Saudi art institutes are coming soon.',
-    wsTitle:'Upcoming Workshops',featTitle:'Training & Resources',roadTitle:'Future Tools Roadmap',
-    tag1:'Watercolor',ws1:'Desert Light in Watercolor',ws1d:'Capture the warm light and soft dunes of the Saudi desert with layered watercolor washes.',lv1:'Coming Soon',join1:'Notify Me →',
-    tag2:'Oil Painting',ws2:'Desert Landscapes in Oil',ws2d:'Paint wide desert horizons, rock formations and golden-hour skies using classical oil techniques.',lv2:'Coming Soon',join2:'Notify Me →',
-    tag3:'Digital Art',ws3:'Digital Arabic Calligraphy',ws3d:'Learn Arabic letterforms and Islamic geometric patterns, then bring them to life with digital tools.',lv3:'Coming Soon',join3:'Notify Me →',
-    tag4:'Charcoal',ws4:'Saudi Heritage Drawing',ws4d:'Draw the carved doors, Najdi mud architecture and traditional crafts of Saudi heritage in charcoal and ink.',lv4:'Coming Soon',join4:'Notify Me →',
-    tag5:'Community',ws5:'Community Resource Library',ws5d:'A curated resource library is being built by our artist community. Upload your first artwork to contribute.',lv5:'Coming Soon',join5:'Contribute →',
-    tag6:'Mixed Media',ws6:'Contemporary Saudi Expression',ws6d:'Combine collage, paint and photography to tell the stories of Saudi Arabia today in your own contemporary voice.',lv6:'Coming Soon',join6:'Notify Me →',
-    featH:'Art Workshops with Saudi Institutes',featP:'Art workshops are coming soon. We are building partnerships with Saudi art institutes to bring you real, in-person and online training.',featBtn:'Notify Me',
-    sc1:'Explore 12 Art Styles',sc1d:'Discover 12 real art styles — from watercolor and oil to charcoal and mixed media — and choose the one you want to practice.',
-    sc2:'Art Style Guides',sc2d:'Explore 12 real art styles with detailed guides for each one — from watercolor and oil painting to charcoal, pastel, and digital art.',
-    sc3:'Monthly Art Challenges — Coming Soon',sc3d:'Themed challenges inspired by Saudi culture, where artists share new work and the community votes.',
-    r1:'Color Theory Guides',r1d:'Learn to build harmonious color palettes by hand, with step-by-step exercises for every medium.',rs1:'Planned',
-    r2:'Brush Simulator',r2d:'Realistic digital brushes that mimic watercolor, oil, and charcoal.',rs2:'Coming Soon',
-    r3:'Texture Scanner',r3d:'Scan real-world textures with your phone and use them in artwork.',rs3:'Planned',
-    r4:'Art Portfolio',r4d:'A personal gallery page for every artist to showcase their journey.',rs4:'Planned'},
+    desc:'This is where your practice grows. Learn real art styles rooted in Saudi culture. Start with our style guides today. Workshops with Saudi art institutes are on their way.',
+    wsTitle:'Upcoming Workshops',featTitle:'Training & Resources',roadTitle:'Tools We Are Building',
+    tag1:'Watercolor',ws1:'Desert Light in Watercolor',ws1d:'Catch the warm light of the Saudi desert. Layer soft washes until the dunes glow.',lv1:'Coming Soon',join1:'Notify Me →',
+    tag2:'Oil Painting',ws2:'Desert Landscapes in Oil',ws2d:'Paint wide horizons and golden evening skies. Learn classic oil techniques, one layer at a time.',lv2:'Coming Soon',join2:'Notify Me →',
+    tag3:'Digital Art',ws3:'Digital Arabic Calligraphy',ws3d:'Fall in love with Arabic letterforms and geometric patterns. Then bring them to life on screen.',lv3:'Coming Soon',join3:'Notify Me →',
+    tag4:'Charcoal',ws4:'Saudi Heritage Drawing',ws4d:'Draw carved doors and Najdi mud houses in charcoal and ink. Every line keeps a story alive.',lv4:'Coming Soon',join4:'Notify Me →',
+    tag5:'Community',ws5:'Community Resource Library',ws5d:'Our artists are building this library together. Share your first artwork and add your voice.',lv5:'Coming Soon',join5:'Contribute →',
+    tag6:'Mixed Media',ws6:'Contemporary Saudi Expression',ws6d:'Mix collage, paint and photography. Tell the story of Saudi Arabia today, in your own voice.',lv6:'Coming Soon',join6:'Notify Me →',
+    featH:'Workshops with Saudi Art Institutes',featP:'We are partnering with Saudi art institutes. Soon you can learn with real teachers, in person and online.',featBtn:'Notify Me',
+    sc1:'Explore 12 Art Styles',sc1d:'Watercolor, oil, charcoal, mixed media and more. Find the style that feels like yours.',
+    sc2:'Art Style Guides',sc2d:'A friendly guide for each of the 12 styles. From watercolor and oil to pastel and digital art.',
+    sc3:'Monthly Art Challenges (Coming Soon)',sc3d:'A new theme each month, inspired by Saudi culture. Share your work and cheer on fellow artists.',
+    r1:'Color Theory Guides',r1d:'Learn to mix colors that sing together. Simple, hands-on exercises for every medium.',rs1:'Planned',
+    r2:'Brush Simulator',r2d:'Digital brushes that feel like real watercolor, oil and charcoal.',rs2:'Coming Soon',
+    r3:'Texture Scanner',r3d:'Capture real textures with your phone. Then use them in your art.',rs3:'Planned',
+    r4:'Art Portfolio',r4d:'A personal gallery page where every artist shares their journey.',rs4:'Planned'},
   ar:{dir:'rtl',lb:'English',
     studio:'الاستوديو',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'تعلّم وتدرّب',h1:'<em>استوديو</em> أويلي',
-    desc:'تعلّم وتدرّب على أساليب فنية حقيقية مستوحاة من الثقافة السعودية — من مناظر الصحراء إلى الخط العربي. استكشف أدلة الأساليب اليوم، وورش العمل مع معاهد الفنون السعودية قادمة قريباً.',
-    wsTitle:'ورش العمل القادمة',featTitle:'التدريب والموارد',roadTitle:'خارطة الأدوات المستقبلية',
-    tag1:'ألوان مائية',ws1:'ضوء الصحراء بالألوان المائية',ws1d:'التقط الضوء الدافئ والكثبان الناعمة للصحراء السعودية بطبقات من الألوان المائية.',lv1:'قريباً',join1:'أبلغني →',
-    tag2:'رسم زيتي',ws2:'مناظر الصحراء بالرسم الزيتي',ws2d:'ارسم آفاق الصحراء الواسعة وتكوينات الصخور وسماء الغروب الذهبية بتقنيات الرسم الزيتي الكلاسيكية.',lv2:'قريباً',join2:'أبلغني →',
-    tag3:'فن رقمي',ws3:'الخط العربي الرقمي',ws3d:'تعلّم أشكال الحروف العربية والزخارف الهندسية الإسلامية، ثم أحيِها بالأدوات الرقمية.',lv3:'قريباً',join3:'أبلغني →',
-    tag4:'فحم',ws4:'رسم التراث السعودي',ws4d:'ارسم الأبواب المنقوشة والعمارة النجدية الطينية والحرف التقليدية من التراث السعودي بالفحم والحبر.',lv4:'قريباً',join4:'أبلغني →',
-    tag5:'المجتمع',ws5:'مكتبة الموارد المجتمعية',ws5d:'مكتبة موارد فنية يبنيها مجتمع الفنانين. ارفع عملك الأول للمساهمة.',lv5:'قريباً',join5:'ساهم →',
-    tag6:'وسائط مختلطة',ws6:'التعبير السعودي المعاصر',ws6d:'امزج الكولاج والطلاء والتصوير لتروي قصص السعودية اليوم بصوتك المعاصر.',lv6:'قريباً',join6:'أبلغني →',
-    featH:'ورش عمل مع معاهد الفنون السعودية',featP:'ورش العمل الفنية قادمة قريباً. نبني شراكات مع معاهد الفنون السعودية لتقديم تدريب حقيقي، حضورياً وعبر الإنترنت.',featBtn:'أبلغني',
-    sc1:'استكشف 12 أسلوباً فنياً',sc1d:'اكتشف 12 أسلوباً فنياً حقيقياً — من الألوان المائية والزيت إلى الفحم والوسائط المختلطة — واختر الأسلوب الذي تريد ممارسته.',
-    sc2:'أدلة الأساليب الفنية',sc2d:'استكشف 12 أسلوباً فنياً حقيقياً مع أدلة تفصيلية لكل أسلوب — من الألوان المائية والرسم الزيتي إلى الفحم والباستيل والفن الرقمي.',
-    sc3:'تحديات فنية شهرية — قريباً',sc3d:'تحديات بمواضيع مستوحاة من الثقافة السعودية، يشارك فيها الفنانون أعمالاً جديدة ويصوّت المجتمع.',
-    r1:'أدلة نظرية الألوان',r1d:'تعلّم بناء لوحات ألوان متناسقة بيدك، مع تمارين خطوة بخطوة لكل وسيط.',rs1:'مخطط',
-    r2:'محاكي الفرشاة',r2d:'فرش رقمية واقعية تحاكي الألوان المائية والزيت والفحم.',rs2:'قريباً',
-    r3:'ماسح الخامات',r3d:'امسح خامات العالم الحقيقي بهاتفك واستخدمها في الأعمال الفنية.',rs3:'مخطط',
-    r4:'ملف الفنان',r4d:'صفحة معرض شخصية لكل فنان لعرض رحلته الإبداعية.',rs4:'مخطط'}
+    desc:'هنا تنمو موهبتك يوماً بعد يوم. تعلّم أساليب فنية أصيلة من روح الثقافة السعودية. ابدأ اليوم بأدلة الأساليب. وورش العمل مع معاهد الفنون السعودية في الطريق إليك.',
+    wsTitle:'ورش العمل القادمة',featTitle:'التدريب والموارد',roadTitle:'أدوات نعمل عليها',
+    tag1:'ألوان مائية',ws1:'ضوء الصحراء بالألوان المائية',ws1d:'التقط دفء ضوء الصحراء السعودية. طبقة بعد طبقة، حتى تتوهّج الكثبان.',lv1:'قريباً',join1:'أبلغني →',
+    tag2:'رسم زيتي',ws2:'مناظر الصحراء بالرسم الزيتي',ws2d:'ارسم الآفاق الواسعة وسماء الغروب الذهبية. تعلّم تقنيات الزيت الكلاسيكية خطوة بخطوة.',lv2:'قريباً',join2:'أبلغني →',
+    tag3:'فن رقمي',ws3:'الخط العربي الرقمي',ws3d:'اعشق الحرف العربي والزخارف الهندسية. ثم امنحها الحياة على الشاشة.',lv3:'قريباً',join3:'أبلغني →',
+    tag4:'فحم',ws4:'رسم التراث السعودي',ws4d:'ارسم الأبواب المنقوشة والبيوت النجدية بالفحم والحبر. كل خط يحفظ حكاية.',lv4:'قريباً',join4:'أبلغني →',
+    tag5:'المجتمع',ws5:'مكتبة الموارد المجتمعية',ws5d:'فنانونا يبنون هذه المكتبة معاً. شارك عملك الأول وأضف صوتك.',lv5:'قريباً',join5:'ساهم →',
+    tag6:'وسائط مختلطة',ws6:'التعبير السعودي المعاصر',ws6d:'امزج الكولاج والألوان والتصوير. احكِ قصة السعودية اليوم بصوتك أنت.',lv6:'قريباً',join6:'أبلغني →',
+    featH:'ورش عمل مع معاهد الفنون السعودية',featP:'نبني شراكات مع معاهد الفنون السعودية. قريباً تتعلّم مع معلمين حقيقيين، حضورياً وعبر الإنترنت.',featBtn:'أبلغني',
+    sc1:'استكشف 12 أسلوباً فنياً',sc1d:'الألوان المائية والزيت والفحم والوسائط المختلطة وغيرها. اعثر على الأسلوب الذي يشبهك.',
+    sc2:'أدلة الأساليب الفنية',sc2d:'دليل ودود لكل أسلوب من الأساليب الاثني عشر. من الألوان المائية والزيت إلى الباستيل والفن الرقمي.',
+    sc3:'تحديات فنية شهرية (قريباً)',sc3d:'موضوع جديد كل شهر من وحي الثقافة السعودية. شارك عملك وشجّع زملاءك الفنانين.',
+    r1:'أدلة نظرية الألوان',r1d:'تعلّم مزج ألوان تتناغم معاً. تمارين بسيطة بيدك لكل وسيط.',rs1:'مخطط',
+    r2:'محاكي الفرشاة',r2d:'فرش رقمية تشبه الألوان المائية والزيت والفحم الحقيقية.',rs2:'قريباً',
+    r3:'ماسح الخامات',r3d:'التقط خامات حقيقية بهاتفك. ثم استخدمها في أعمالك.',rs3:'مخطط',
+    r4:'ملف الفنان',r4d:'صفحة معرض شخصية يروي فيها كل فنان رحلته.',rs4:'مخطط'}
 };
 let L='en';
 const NAV={

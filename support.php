@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Support · Oweili</title>
+<meta name="description" content="Got a question? Just ask. A real person on our team will help you. لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -58,23 +59,23 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 <?php include __DIR__ . "/nav.php"; ?>
 <div class="page" id="pg">
   <div class="page-header">
-    <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">We're Here to Help</span></div>
+    <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">We Are Here for You</span></div>
     <h1 id="t-h1">Artist <em>Support Center</em></h1>
-    <p id="t-desc">Have a question or need help? We're here for every artist in the Oweili community. Find answers, get in touch, and access our resources below.</p>
+    <p id="t-desc">Got a question? Just ask. A real person on our team will help you.</p>
   </div>
 
   <p class="section-title" id="t-ct-title">Get in Touch</p>
   <div class="contact-grid">
     <a class="contact-card" href="mailto:contact@oweili.com">
       <div class="contact-icon">✉️</div>
-      <h3 id="t-c1">Contact the Gallery</h3>
-      <p id="t-c1d">Send us a message and our team will get back to you within 24 hours.</p>
+      <h3 id="t-c1">Write to Us</h3>
+      <p id="t-c1d">Send us a message. We reply within 24 hours, usually sooner.</p>
       <span class="contact-link">contact@oweili.com</span>
     </a>
     <a class="contact-card" href="register.php">
       <div class="contact-icon">🎨</div>
       <h3 id="t-c3">Join the Community</h3>
-      <p id="t-c3d">Create a free account to access all features, workshops, and the artist network.</p>
+      <p id="t-c3d">Create your free account and meet artists who share your love of art.</p>
       <span class="contact-link" id="t-c3l">Join Free →</span>
     </a>
   </div>
@@ -86,23 +87,23 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
   <div class="legal-grid">
     <a class="legal-card" href="#">
       <span class="legal-arrow">→</span>
-      <h4 id="t-l1">Artwork Rights Policy</h4>
-      <p id="t-l1d">All artwork shared on Oweili remains the intellectual property of the original creator.</p>
+      <h4 id="t-l1">Your Art Stays Yours</h4>
+      <p id="t-l1d">Everything you share on Oweili still belongs to you. Always.</p>
     </a>
     <a class="legal-card" href="#">
       <span class="legal-arrow">→</span>
-      <h4 id="t-l2">Terms of Digital Use</h4>
-      <p id="t-l2d">By using Oweili you agree to our community guidelines and terms of service.</p>
+      <h4 id="t-l2">Terms of Use</h4>
+      <p id="t-l2d">Using Oweili means you agree to our community guidelines.</p>
     </a>
     <a class="legal-card" href="#">
       <span class="legal-arrow">→</span>
-      <h4 id="t-l3">Privacy Policy</h4>
-      <p id="t-l3d">We are committed to protecting your personal data and creative work at all times.</p>
+      <h4 id="t-l3">Privacy</h4>
+      <p id="t-l3d">We protect your personal data and your creative work. That is a promise.</p>
     </a>
     <a class="legal-card" href="mailto:contact@oweili.com">
       <span class="legal-arrow">→</span>
-      <h4 id="t-l4">Report an Infringement</h4>
-      <p id="t-l4d">If you believe your artwork has been used without permission, contact us immediately.</p>
+      <h4 id="t-l4">Report Misuse of Your Art</h4>
+      <p id="t-l4d">Someone used your art without asking? Tell us right away.</p>
     </a>
   </div>
 </div>
@@ -110,37 +111,37 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 <script>
 const FAQS={
   en:[
-    {q:'How do I create an account?',a:'Click "Join Free" in the navigation bar, fill in your artist name, email, phone number, and password. Then verify your email to activate your account.'},
-    {q:'Is Oweili free to use?',a:'Yes! Oweili is completely free for all artists. Create your account, join workshops, and connect with the community at no cost.'},
-    {q:'Can I share my artwork on Oweili?',a:'Absolutely! Once your artist account is approved, upload your work from your dashboard and it appears in the gallery and on your public profile.'},
-    {q:'How do I report a problem?',a:'You can contact us directly at contact@oweili.com and our team will help with any community issues.'},
-    {q:'Is the platform available in Arabic?',a:'Yes! Oweili fully supports Arabic with RTL layout. Click the language button in the top navigation to switch between English and Arabic.'}
+    {q:'How do I create an account?',a:'Tap "Join Free" at the top. Add your name, email, phone and a password. Then confirm your email, and you are in.'},
+    {q:'Does it cost anything to join?',a:'Joining Oweili is free. When a piece sells, Oweili keeps 15% before VAT. That covers shipping and advertising.'},
+    {q:'Can I share my artwork on Oweili?',a:'Yes, please do. Once our team approves your profile, add your work from your dashboard. Photograph it at 25%, 50% and 100%. Then it appears in the gallery and on your profile.'},
+    {q:'How do I report a problem?',a:'Write to us at contact@oweili.com. A real person on our team will help you.'},
+    {q:'Is Oweili available in Arabic?',a:'Yes. Oweili speaks Arabic and English. Tap the language button at the top to switch.'}
   ],
   ar:[
-    {q:'كيف أنشئ حساباً؟',a:'انقر على "انضم مجاناً" في شريط التنقل، أدخل اسمك الفني والبريد الإلكتروني ورقم الجوال وكلمة السر. ثم تحقق من بريدك لتفعيل الحساب.'},
-    {q:'هل Oweili مجاني؟',a:'نعم! Oweili مجاني تماماً لجميع الفنانين. أنشئ حسابك، انضم إلى الورش، وتواصل مع المجتمع بدون أي تكلفة.'},
-    {q:'هل يمكنني مشاركة أعمالي الفنية؟',a:'بالتأكيد! بمجرد اعتماد حساب الفنان، ارفع أعمالك من لوحة التحكم لتظهر في المعرض وفي ملفك الشخصي العام.'},
-    {q:'كيف أبلّغ عن مشكلة؟',a:'يمكنك التواصل معنا مباشرة على contact@oweili.com وسيساعدك فريقنا في أي مشكلات تتعلق بالمجتمع.'},
-    {q:'هل المنصة متاحة باللغة العربية؟',a:'نعم! Oweili يدعم اللغة العربية بالكامل مع تخطيط RTL. انقر على زر اللغة في التنقل العلوي للتبديل بين الإنجليزية والعربية.'}
+    {q:'كيف أنشئ حساباً؟',a:'اضغط «انضم مجاناً» في الأعلى. أضف اسمك وبريدك وجوالك وكلمة مرور. ثم أكّد بريدك، وأهلاً بك معنا.'},
+    {q:'هل الانضمام مجاني؟',a:'الانضمام إلى أويلي مجاني. وعند بيع عمل، يأخذ أويلي 15% قبل ضريبة القيمة المضافة. وهي تغطي الشحن والإعلان.'},
+    {q:'هل يمكنني مشاركة أعمالي على أويلي؟',a:'نعم، ويسعدنا ذلك. بعد موافقة فريقنا على ملفك، أضف أعمالك من لوحة التحكم. صوّر العمل عند 25% و50% و100%. بعدها يظهر في المعرض وفي ملفك.'},
+    {q:'كيف أبلّغ عن مشكلة؟',a:'راسلنا على contact@oweili.com. سيساعدك شخص حقيقي من فريقنا.'},
+    {q:'هل أويلي متاح بالعربية؟',a:'نعم. أويلي يتحدث العربية والإنجليزية. اضغط زر اللغة في الأعلى للتبديل.'}
   ]
 };
 const T={
   en:{dir:'ltr',lb:'العربية',studio:'The Studio',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
-    badge:"We're Here to Help",h1:'Artist <em>Support Center</em>',desc:"Have a question or need help? We're here for every artist in the Oweili community.",
-    ctTitle:'Get in Touch',c1:'Contact the Gallery',c1d:'Send us a message and our team will get back to you within 24 hours.',c2:'Artist Chat Room',c2d:'Ask the community directly — artists helping artists, in real time.',c2l:'Open Chat →',c3:'Join the Community',c3d:'Create a free account to access all features, workshops, and the artist network.',c3l:'Join Free →',
-    faqTitle:'Frequently Asked Questions',legalTitle:'Legal & Policies',
-    l1:'Artwork Rights Policy',l1d:'All artwork shared on Oweili remains the intellectual property of the original creator.',
-    l2:'Terms of Digital Use',l2d:'By using Oweili you agree to our community guidelines and terms of service.',
-    l3:'Privacy Policy',l3d:'We are committed to protecting your personal data and creative work at all times.',
-    l4:'Report an Infringement',l4d:'If you believe your artwork has been used without permission, contact us immediately.'},
+    badge:'We Are Here for You',h1:'Artist <em>Support Center</em>',desc:'Got a question? Just ask. A real person on our team will help you.',
+    ctTitle:'Get in Touch',c1:'Write to Us',c1d:'Send us a message. We reply within 24 hours, usually sooner.',c2:'Artist Chat Room',c2d:'Ask fellow artists directly. Artists helping artists, right now.',c2l:'Open Chat →',c3:'Join the Community',c3d:'Create your free account and meet artists who share your love of art.',c3l:'Join Free →',
+    faqTitle:'Questions We Hear Often',legalTitle:'Rights & Privacy',
+    l1:'Your Art Stays Yours',l1d:'Everything you share on Oweili still belongs to you. Always.',
+    l2:'Terms of Use',l2d:'Using Oweili means you agree to our community guidelines.',
+    l3:'Privacy',l3d:'We protect your personal data and your creative work. That is a promise.',
+    l4:'Report Misuse of Your Art',l4d:'Someone used your art without asking? Tell us right away.'},
   ar:{dir:'rtl',lb:'English',studio:'الاستوديو',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
-    badge:'نحن هنا للمساعدة',h1:'<em>مركز دعم</em> الفنانين',desc:'هل لديك سؤال أو تحتاج مساعدة؟ نحن هنا لكل فنان في مجتمع أويلي.',
-    ctTitle:'تواصل معنا',c1:'تواصل مع المعرض',c1d:'أرسل لنا رسالة وسيرد فريقنا خلال 24 ساعة.',c2:'غرفة محادثة الفنانين',c2d:'اسأل المجتمع مباشرة — فنانون يساعدون فنانين، في الوقت الفعلي.',c2l:'افتح المحادثة →',c3:'انضم للمجتمع',c3d:'أنشئ حساباً مجانياً للوصول إلى جميع الميزات والورش وشبكة الفنانين.',c3l:'انضم مجاناً →',
-    faqTitle:'الأسئلة الشائعة',legalTitle:'القانوني والسياسات',
-    l1:'سياسة حقوق اللوحات',l1d:'جميع الأعمال الفنية المشتركة على Oweili تبقى ملكاً فكرياً للمبدع الأصلي.',
-    l2:'شروط الاستخدام الرقمي',l2d:'باستخدام Oweili فإنك توافق على إرشادات مجتمعنا وشروط الخدمة.',
-    l3:'سياسة الخصوصية',l3d:'نحن ملتزمون بحماية بياناتك الشخصية وأعمالك الإبداعية في جميع الأوقات.',
-    l4:'الإبلاغ عن انتهاك فني',l4d:'إذا كنت تعتقد أن أعمالك الفنية استُخدمت دون إذن، تواصل معنا فوراً.'}
+    badge:'نحن هنا من أجلك',h1:'<em>مركز دعم</em> الفنانين',desc:'لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.',
+    ctTitle:'تواصل معنا',c1:'اكتب لنا',c1d:'أرسل لنا رسالة. نرد خلال 24 ساعة، وغالباً أسرع.',c2:'غرفة محادثة الفنانين',c2d:'اسأل الفنانين مباشرة. فنانون يساعدون فنانين، الآن.',c2l:'افتح المحادثة →',c3:'انضم للمجتمع',c3d:'أنشئ حسابك المجاني والتقِ بفنانين يشاركونك حب الفن.',c3l:'انضم مجاناً →',
+    faqTitle:'أسئلة تصلنا كثيراً',legalTitle:'الحقوق والخصوصية',
+    l1:'فنك يبقى لك',l1d:'كل ما تشاركه على أويلي يبقى ملكك. دائماً.',
+    l2:'شروط الاستخدام',l2d:'باستخدامك أويلي توافق على إرشادات مجتمعنا.',
+    l3:'الخصوصية',l3d:'نحمي بياناتك وأعمالك الإبداعية. هذا وعد منا.',
+    l4:'أبلغ عن استخدام فنك دون إذن',l4d:'استخدم أحد فنك دون إذنك؟ أخبرنا فوراً.'}
 };
 let L='en';
 const NAV={

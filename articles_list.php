@@ -13,22 +13,22 @@ if (!isset($TYPES[$type])) $type = 'event';
 
 $PAGE = [
     'event' => [
-        'sub' => ['Exhibitions, fairs and gatherings around the world — chosen by the Oweili team to keep artists connected.',
-                  'معارض ومهرجانات وملتقيات حول العالم — يختارها فريق أويلي ليبقى الفنانون على تواصل مع عالم الفن.'],
-        'empty' => ['No events yet — our team is gathering the next art events from around the world. Check back soon.',
-                    'لا توجد ملتقيات بعد — فريقنا يجمع الملتقيات الفنية القادمة من حول العالم. عد قريباً.'],
+        'sub' => ['Exhibitions and art gatherings from around the world. Chosen with care by the Oweili team.',
+                  'معارض وملتقيات فنية من حول العالم. يختارها فريق أويلي بعناية.'],
+        'empty' => ['No events yet. We are finding the next ones for you right now.',
+                    'لا توجد ملتقيات بعد. نبحث لك الآن عن القادمة.'],
     ],
     'artist_spotlight' => [
-        'sub' => ['The stories of artists whose hands shape art — from Saudi Arabia and around the world.',
-                  'قصص فنانين تصنع أيديهم الفن — من المملكة العربية السعودية ومن حول العالم.'],
-        'empty' => ['No spotlights yet — our team is writing the first artist stories. Check back soon.',
-                    'لا توجد مقالات بعد — فريقنا يكتب أولى قصص الفنانين. عد قريباً.'],
+        'sub' => ['Meet the artists behind the work. Their stories, their hands, their journeys.',
+                  'تعرّف على الفنانين خلف الأعمال. حكاياتهم، وأيديهم، ورحلاتهم.'],
+        'empty' => ['The first artist stories are being written. They are worth the wait.',
+                    'نكتب الآن أولى حكايات الفنانين. وتستحق الانتظار.'],
     ],
     'art_education' => [
-        'sub' => ['Learn the names of art styles, why they are called that, and the history behind them.',
-                  'تعرّف على أسماء الأساليب الفنية، وسبب تسميتها، والتاريخ الذي يقف وراءها.'],
-        'empty' => ['No lessons yet — our team is preparing the first art education articles. Check back soon.',
-                    'لا توجد دروس بعد — فريقنا يجهّز أولى مقالات التثقيف الفني. عد قريباً.'],
+        'sub' => ['Why is a style called what it is? Discover the names and stories behind art.',
+                  'لماذا سُمّي كل أسلوب باسمه؟ اكتشف الأسماء والحكايات خلف الفن.'],
+        'empty' => ['Our first lessons are almost ready. Come back soon and learn with us.',
+                    'دروسنا الأولى أوشكت أن تجهز. عد قريباً وتعلّم معنا.'],
     ],
 ];
 
@@ -90,7 +90,7 @@ $titleAr = $tAr . ' · أويلي';
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         <?= owBi($PAGE[$type]['empty'][0], $PAGE[$type]['empty'][1]) ?>
-        <div><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Artworks', 'استكشف الأعمال') ?></a></div>
+        <div><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a></div>
       </div>
     <?php else: ?>
       <div class="a-grid">

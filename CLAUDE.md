@@ -143,7 +143,7 @@
 
 
 ### Homepage (index.php) — one screen
-- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "Real artists · Real art · Verified by proof"; headline "Where Human Hands Create Art" / «حيث تصنع اليد البشرية الفن» in one dark color (56px desktop, 36px phone, weight 300); one-line subtitle (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
+- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "Real artists · Real art · Verified by proof"; headline "Where Human Hands Create Art" / «حيث تصنع اليد البشرية الفن» in one dark color (56px desktop, 36px phone, weight 300); subtitle "Every piece here was made by real hands. And you can see how." / «كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.» (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
 - The badge, headline, subtitle and buttons fade in gently (CSS only; turned off for visitors who reduce motion)
 - Removed on purpose (owner's request): "Art You Can Trust" steps, "Latest Verified Artworks", the Join cards and the Discover cards
 - Files: index.php, assets/css/oweili.css, nav.css. Tables: none
@@ -174,13 +174,20 @@
 
 ### Art Institutes directory (training.php) — Sprint 3, needs database_update.sql
 - What it does: "Art Institutes" / «المعاهد الفنية» with a city filter (cities come from the database) and institute cards: logo (or a building icon), name, city, short description, number of active courses, and "View Courses" / «عرض الدورات» that opens the course list (title, dates, price in SAR or "Free" / «مجاني», seats left or "Fully booked", "Register Interest" → the institute's email, or phone, or website)
-- Only active institutes and courses that have not ended are shown. Empty: "We are building our institutes directory. Check back soon." / «نحن نبني دليل المعاهد. عد قريباً.»
+- Only active institutes and courses that have not ended are shown. Empty: "We are gathering the best art institutes for you. Check back soon." / «نجمع لك أفضل المعاهد الفنية. عد قريباً.»
 - Institutes and courses are added in phpMyAdmin for now (no admin screen yet). The old `training` table is no longer used
 - Files: training.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: institutes, courses
 
 ### Menu and homepage links — Sprint 3
 - Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes
 - Files: nav.php
+
+### Warm voice for all visitor text
+- What it does: every public page now speaks like a real person. English sounds like a trusted gallery owner; Arabic like a friend who loves art. Short sentences (15 words at most), no " — " dashes, no stiff words like "utilize" or "our system". Artists are celebrated, collectors are welcomed
+- Rewritten: index.php, marketplace.php, studio.php, community.php, support.php (headings and FAQ answers), explore.php (all style texts), articles_list.php, article.php, training.php, register.php, register_artist.php, register_collector.php. Pages that had no search description now have one in both languages
+- The FAQ answer about cost is now honest: joining is free, and Oweili keeps 15% (before VAT) only when a work sells
+- Fixed on the way: one Studio block ("Workshops with Saudi Art Institutes") never switched to Arabic; it does now
+- When adding new text, keep this voice. Tables: none
 
 ### Design system (one theme) — design-system branch
 - What it does: one look for every page and dashboard, defined once in assets/css/oweili.css and used everywhere

@@ -67,6 +67,7 @@ foreach ($artworks as $aw) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $ar ? 'المعرض · أويلي' : 'The Gallery · Oweili' ?></title>
+  <meta name="description" content="<?= $ar ? 'أعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية.' : 'Original works by real artists, from Saudi Arabia and all over the world. Every piece has a story.' ?>">
   <script>
   /* Honor the site-wide saved language. This page switches language via a
      server reload (?lang=), so if the visitor previously chose Arabic on
@@ -160,19 +161,19 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
   <div class="page-header">
     <h1><?= $ar ? 'المعرض' : 'The Gallery' ?></h1>
     <p><?= $ar
-        ? 'اكتشف واقتنِ أعمالاً فنية أصلية لفنانين حقيقيين من السعودية ومن حول العالم. كل قطعة فريدة من نوعها.'
-        : 'Discover and collect original artworks by real human artists from Saudi Arabia and around the world. Every piece is one of a kind.' ?></p>
+        ? 'هنا تلتقي بأعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية، ولا تتكرر أبداً.'
+        : 'Meet original works by real artists, from Saudi Arabia and all over the world. Every piece has a story. None of them repeat.' ?></p>
   </div>
 
   <!-- HUMAN-ONLY BANNER -->
   <div class="human-banner">
     <span class="hb-icon">✋</span>
-    <?= $ar ? 'كل عمل فني هنا صنعته يد إنسان' : 'Every artwork here was created by a human hand' ?>
+    <?= $ar ? 'كل عمل هنا رسمته يد إنسان، بصبر وحب' : 'Every work here was made by a human hand, with patience and love' ?>
   </div>
 
   <?php if ($total > 0): ?>
   <input type="search" class="input search-box" id="searchBox" aria-label="<?= $ar ? 'ابحث عن عمل فني' : 'Search artworks by title' ?>"
-         placeholder="<?= $ar ? 'ابحث عن عمل فني…' : 'Search artworks by title…' ?>"
+         placeholder="<?= $ar ? 'تبحث عن شيء؟ اكتب اسم العمل…' : 'Looking for something? Type a title…' ?>"
          oninput="onSearch(this.value)">
 
   <!-- TYPE FILTER -->
@@ -219,7 +220,7 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
             <span class="human-badge"><?= owBi('✓ Human Art', '✓ فن بشري') ?></span>
           <?php endif; ?>
           <div class="aw-price"><?= number_format((float) $aw['price']) ?> <?= $ar?'ر.س':'SAR' ?></div>
-          <button type="button" class="btn btn-dark btn-block" onclick="openModal(<?= (int) $aw['id'] ?>)"><?= $ar?'عرض التفاصيل':'View Details' ?></button>
+          <button type="button" class="btn btn-dark btn-block" onclick="openModal(<?= (int) $aw['id'] ?>)"><?= $ar?'شاهد القصة':'See the Story' ?></button>
         </div>
       </article>
     <?php endforeach; ?>
@@ -227,19 +228,19 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
 
   <!-- EMPTY STATE -->
   <div class="card empty-state" id="emptyState"
-       data-en="No artworks found" data-ar="لم يتم العثور على أعمال">
+       data-en="Nothing matches yet. Try another word or style." data-ar="لا يوجد ما يطابق بحثك. جرّب كلمة أو أسلوباً آخر.">
     <?php if ($total === 0): ?>
-      <?= $ar ? 'لم يتم العثور على أعمال' : 'No artworks found' ?>
+      <?= $ar ? 'لا يوجد ما يطابق بحثك. جرّب كلمة أو أسلوباً آخر.' : 'Nothing matches yet. Try another word or style.' ?>
     <?php else: ?>
-      <?= $ar ? 'لم يتم العثور على أعمال' : 'No artworks found' ?>
+      <?= $ar ? 'لا يوجد ما يطابق بحثك. جرّب كلمة أو أسلوباً آخر.' : 'Nothing matches yet. Try another word or style.' ?>
     <?php endif; ?>
   </div>
   <?php if ($total === 0): ?>
     <div class="card gallery-empty">
       <div class="ge-emoji">🎨</div>
-      <h2><?= $ar ? 'المعرض ينتظر أول لمسة إنسانية' : 'The gallery awaits its first human stroke' ?></h2>
-      <p><?= $ar ? 'هل أنت فنان؟ شارك عملك مع العالم.' : 'Are you an artist? Share your work with the world.' ?></p>
-      <a class="btn btn-primary" href="register_artist.php"><?= $ar ? 'انضم كفنان' : 'Join as an Artist' ?></a>
+      <h2><?= $ar ? 'المعرض ينتظر أول لمسة فرشاة' : 'The gallery is waiting for its first brushstroke' ?></h2>
+      <p><?= $ar ? 'هل أنت فنان؟ قد يكون عملك أول ما يراه الناس هنا.' : 'Are you an artist? Your work could be the first one here.' ?></p>
+      <a class="btn btn-primary" href="register_artist.php"><?= $ar ? 'انضم كفنان' : 'Join as Artist' ?></a>
     </div>
   <?php endif; ?>
 
@@ -266,9 +267,9 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
       <span class="human-badge" id="m-verified" hidden><?= owBi('✓ Human Art', '✓ فن بشري') ?></span>
       <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
       <a class="m-artist" id="m-artist" href="#"></a>
-      <div class="m-label" id="m-label-en-h"><?= $ar?'الوصف (إنجليزي)':'Description (English)' ?></div>
+      <div class="m-label" id="m-label-en-h"><?= $ar?'عن العمل (بالإنجليزية)':'About this work (English)' ?></div>
       <p id="m-desc-en"></p>
-      <div class="m-label" id="m-label-ar-h"><?= $ar?'الوصف (عربي)':'Description (Arabic)' ?></div>
+      <div class="m-label" id="m-label-ar-h"><?= $ar?'عن العمل (بالعربية)':'About this work (Arabic)' ?></div>
       <p id="m-desc-ar" dir="rtl"></p>
       <div class="m-price" id="m-price"></div>
       <?php foreach ($artworks as $aw):

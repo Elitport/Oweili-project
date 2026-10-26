@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Join Oweili · Choose Account Type</title>
+<meta name="description" content="Choose how you would like to join us. اختر كيف تحب أن تنضم إلينا.">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -39,7 +40,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 <div class="wrap">
   <div class="head">
     <h1 id="t-h1">Join <em>Oweili</em></h1>
-    <p id="t-sub">Choose the account that fits you.</p>
+    <p id="t-sub">Choose how you would like to join us.</p>
   </div>
   <div class="choices">
     <a class="choice artist" href="register_artist.php">
@@ -56,24 +57,24 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
     </a>
   </div>
   <div class="foot">
-    <span id="t-have">Already have an account?</span> <a href="login.php" id="t-login">Sign In</a>
+    <span id="t-have">Already one of us?</span> <a href="login.php" id="t-login">Sign In</a>
   </div>
 </div>
 
 <script>
 const T={
-  en:{dir:'ltr',lb:'العربية',h1:'Join <em>Oweili</em>',sub:'Choose the account that fits you.',
-    aTitle:'I am an Artist',aDesc:'Showcase and sell your work. Requires a profile picture, portfolio, and a short video, all reviewed by our team.',aGo:'Register as Artist',
-    cTitle:'I am a Collector',cDesc:"Discover and collect original art. Quick sign-up: just your details and you're in.",cGo:'Register as Collector',
-    have:'Already have an account?',login:'Sign In',
+  en:{dir:'ltr',lb:'العربية',h1:'Join <em>Oweili</em>',sub:'Choose how you would like to join us.',
+    aTitle:'I am an Artist',aDesc:'Share your work and sell it to people who care. We review every artist by hand. You will need a photo, a few artworks and a short video.',aGo:'Join as Artist',
+    cTitle:'I am a Collector',cDesc:'Find art made by real hands and bring it home. Signing up takes a minute.',cGo:'Join as Collector',
+    have:'Already one of us?',login:'Sign In',
     nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
       c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',h1:'انضم إلى <em>أويلي</em>',sub:'اختر نوع الحساب المناسب لك.',
-    aTitle:'أنا فنان',aDesc:'اعرض أعمالك وبِعها. يتطلب صورة شخصية وأعمالاً وفيديو قصير، تتم مراجعتها جميعاً من فريقنا.',aGo:'التسجيل كفنان',
-    cTitle:'أنا مقتني',cDesc:'اكتشف واقتنِ الفن الأصلي. تسجيل سريع، فقط بياناتك وتنضم فوراً.',cGo:'التسجيل كمقتني',
-    have:'لديك حساب بالفعل؟',login:'تسجيل الدخول',
+  ar:{dir:'rtl',lb:'English',h1:'انضم إلى <em>أويلي</em>',sub:'اختر كيف تحب أن تنضم إلينا.',
+    aTitle:'أنا فنان',aDesc:'شارك أعمالك وبِعها لمن يقدّرها. نراجع كل فنان بعناية. ستحتاج صورة وبعض أعمالك ومقطعاً قصيراً.',aGo:'انضم كفنان',
+    cTitle:'أنا مقتنٍ',cDesc:'اعثر على فن صنعته أيدٍ حقيقية، وخذه إلى بيتك. التسجيل يستغرق دقيقة.',cGo:'انضم كمقتنٍ',
+    have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
       c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',

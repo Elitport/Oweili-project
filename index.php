@@ -15,9 +15,9 @@ require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languag
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oweili · Where Human Hands Create Art</title>
-<meta name="description" content="Real art made by real artists, verified by proof and trusted by collectors worldwide. فن حقيقي يصنعه فنانون حقيقيون، موثّق بالدليل ويثق به المقتنون حول العالم.">
+<meta name="description" content="Every piece here was made by real hands. And you can see how. كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.">
 <meta property="og:title" content="Oweili · Where Human Hands Create Art · حيث تصنع اليد البشرية الفن">
-<meta property="og:description" content="Real art made by real artists, verified by proof and trusted by collectors worldwide.">
+<meta property="og:description" content="Every piece here was made by real hands. And you can see how.">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
@@ -98,7 +98,7 @@ body { overflow-x: hidden; }
   <div class="hero-inner">
     <span class="hero-badge fade fade-1"><i aria-hidden="true"></i><?= owBi('Real artists · Real art · Verified by proof', 'فنانون حقيقيون · فن حقيقي · موثّق بالدليل') ?></span>
     <h1 class="fade fade-2"><?= owBi('Where Human Hands Create Art', 'حيث تصنع اليد البشرية الفن') ?></h1>
-    <p class="hero-sub fade fade-3"><?= owBi('Real art made by real artists, verified by proof and trusted by collectors worldwide.', 'فن حقيقي يصنعه فنانون حقيقيون، موثّق بالدليل ويثق به المقتنون حول العالم.') ?></p>
+    <p class="hero-sub fade fade-3"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
     <div class="hero-btns fade fade-4">
       <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
       <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>

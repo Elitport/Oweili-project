@@ -63,7 +63,7 @@ $cityLabel = function (array $i): array {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Art Institutes · Oweili</title>
-<meta name="description" content="Find art institutes and courses near you on Oweili. ابحث عن معاهد فنية ودورات بالقرب منك على أويلي.">
+<meta name="description" content="Find the right place to learn art, close to home. اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.">
 <meta property="og:title" content="Art Institutes · المعاهد الفنية · Oweili">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
@@ -118,7 +118,7 @@ details[open] .when-closed{display:none;}
     <header class="d-head reveal">
       <span class="d-badge"><i aria-hidden="true"></i><?= owBi('Discover', 'اكتشف') ?></span>
       <h1><?= owBi('Art Institutes', 'المعاهد الفنية') ?></h1>
-      <p><?= owBi('Find art institutes and courses near you', 'ابحث عن معاهد فنية ودورات بالقرب منك') ?></p>
+      <p><?= owBi('Find the right place to learn art, close to home.', 'اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.') ?></p>
     </header>
 
     <?php if ($cities): ?>
@@ -138,10 +138,10 @@ details[open] .when-closed{display:none;}
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg>
         <?php if ($city !== '' && $cities): ?>
-          <?= owBi('No institutes in this city yet.', 'لا توجد معاهد في هذه المدينة بعد.') ?>
+          <?= owBi('No institutes in this city yet. Try another city.', 'لا توجد معاهد في هذه المدينة بعد. جرّب مدينة أخرى.') ?>
           <div><a class="btn btn-secondary" href="training.php"><?= owBi('Show all cities', 'عرض كل المدن') ?></a></div>
         <?php else: ?>
-          <?= owBi('We are building our institutes directory. Check back soon.', 'نحن نبني دليل المعاهد. عد قريباً.') ?>
+          <?= owBi('We are gathering the best art institutes for you. Check back soon.', 'نجمع لك أفضل المعاهد الفنية. عد قريباً.') ?>
           <div><a class="btn btn-primary" href="articles_list.php?type=art_education"><?= owBi('Learn about art styles', 'تعرّف على الأساليب الفنية') ?></a></div>
         <?php endif; ?>
       </div>
@@ -183,7 +183,7 @@ details[open] .when-closed{display:none;}
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
             </summary>
             <?php if (!$list): $link = instContact($i, $nameEn); ?>
-              <p class="c-none"><?= owBi('No open courses right now. Contact the institute to ask about the next one.', 'لا توجد دورات متاحة الآن. تواصل مع المعهد لتسأل عن الدورة القادمة.') ?></p>
+              <p class="c-none"><?= owBi('No open courses right now. Ask the institute when the next one starts.', 'لا توجد دورات متاحة الآن. اسأل المعهد عن موعد الدورة القادمة.') ?></p>
               <?php if ($link !== ''): ?><a class="btn btn-secondary btn-sm c-btn" href="<?= e($link) ?>"<?= strpos($link, 'http') === 0 ? ' target="_blank" rel="noopener"' : '' ?>><?= owBi('Contact the institute', 'تواصل مع المعهد') ?></a><?php endif; ?>
             <?php else: ?>
               <div class="c-list">

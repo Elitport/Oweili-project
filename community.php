@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Community · Oweili</title>
+<meta name="description" content="Art grows when artists meet. Share your work, learn from each other, and make friends who get it. الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.">
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -61,13 +62,13 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
 <?php include __DIR__ . "/nav.php"; ?>
 <div class="page" id="pg">
   <div class="page-header">
-    <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">Artists Network</span></div>
+    <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">Artists Together</span></div>
     <h1 id="t-h1">The <em>Artist Community</em></h1>
-    <p id="t-desc">Connect with fellow artists, share your work, learn together, and grow as part of a vibrant creative community powered by passion for nature and art.</p>
+    <p id="t-desc">Art grows when artists meet. Share your work, learn from each other, and make friends who get it.</p>
   </div>
 
   <div class="stats-row">
-    <div class="stat-card"><div class="stat-num" id="s-artists">N/A</div><div class="stat-label" id="t-s1">Registered Artists</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-artists">N/A</div><div class="stat-label" id="t-s1">Artists With Us</div></div>
     <div class="stat-card"><div class="stat-num" id="s-msgs">N/A</div><div class="stat-label" id="t-s2">Messages Shared</div></div>
     <div class="stat-card"><div class="stat-num">12</div><div class="stat-label" id="t-s3">Art Styles</div></div>
     <div class="stat-card"><div class="stat-num">🇸🇦</div><div class="stat-label" id="t-s4">Saudi Community</div></div>
@@ -78,59 +79,59 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-san
     <a class="comm-card" href="register.php">
       <div class="comm-icon">🎨</div>
       <h3 id="t-c2">Professional Artists Guild</h3>
-      <p id="t-c2d">An exclusive space for advanced artists to collaborate on projects, share expertise, and mentor emerging talents in the community.</p>
+      <p id="t-c2d">A space for experienced artists to work together and guide new talent.</p>
       <span class="comm-link" id="t-c2l">Apply to Join →</span>
     </a>
     <a class="comm-card" href="register.php">
       <div class="comm-icon">✨</div>
-      <h3 id="t-c3">Daily Inspiration Hub</h3>
-      <p id="t-c3d">Get a fresh dose of creative inspiration every day — featured artworks, nature prompts, color palettes, and technique spotlights.</p>
+      <h3 id="t-c3">Daily Inspiration</h3>
+      <p id="t-c3d">A little spark every day. Featured works, color palettes and new techniques to try.</p>
       <span class="comm-link" id="t-c3l">Explore →</span>
     </a>
     <a class="comm-card" href="register.php">
       <div class="comm-icon">🏆</div>
-      <h3 id="t-c4">Join as Art Instructor</h3>
-      <p id="t-c4d">Are you an experienced artist? Apply to become an instructor and share your knowledge with our growing community of passionate creators.</p>
+      <h3 id="t-c4">Teach With Us</h3>
+      <p id="t-c4d">Love sharing what you know? Become an instructor and help others grow.</p>
       <span class="comm-link" id="t-c4l">Apply Now →</span>
     </a>
   </div>
 
   <p class="section-title" id="t-inspo-title">Daily Inspiration</p>
   <div class="inspo-grid">
-    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i1">Jungle Light Studies</h4><p id="t-i1d">Capture the dappled light filtering through dense canopy</p></div></div>
-    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i2">Ocean Movement</h4><p id="t-i2d">Study the rhythm and energy of waves in motion</p></div></div>
-    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i3">Ancient Trees</h4><p id="t-i3d">Explore the texture and wisdom of centuries-old forests</p></div></div>
+    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i1">Light Studies</h4><p id="t-i1d">Watch how light falls through leaves and windows.</p></div></div>
+    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i2">Ocean Movement</h4><p id="t-i2d">Feel the rhythm of the waves, then paint it.</p></div></div>
+    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i3">Old Trees</h4><p id="t-i3d">Study bark, roots and the patience of time.</p></div></div>
   </div>
 </div>
 
 <script>
 const T={
   en:{dir:'ltr',lb:'العربية',studio:'The Studio',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
-    badge:'Artists Network',h1:'The <em>Artist Community</em>',desc:'Connect with fellow artists, share your work, learn together, and grow as part of a vibrant creative community powered by passion for nature and art.',
-    s1:'Registered Artists',s2:'Messages Shared',s3:'Art Styles',s4:'Saudi Community',
-    ctaH:'Join the Artist Chat Room',ctaP:'Talk to fellow artists in real time. Share techniques, get feedback, ask questions, and build friendships with creators who share your passion for art and nature.',live:'Live Now',ctaBtn:'Enter Chat Room',
+    badge:'Artists Together',h1:'The <em>Artist Community</em>',desc:'Art grows when artists meet. Share your work, learn from each other, and make friends who get it.',
+    s1:'Artists With Us',s2:'Messages Shared',s3:'Art Styles',s4:'Saudi Community',
+    ctaH:'Join the Artist Chat Room',ctaP:'Talk with fellow artists right now. Share a trick, ask a question, get honest feedback. Friendships start here.',live:'Live Now',ctaBtn:'Enter the Chat Room',
     commTitle:'Community Spaces',
-    c1:'Artist Chat Room',c1d:'A live chat room where artists from across Saudi Arabia connect, share their work, and inspire each other in real time.',c1l:'Enter Room →',
-    c2:'Professional Artists Guild',c2d:'An exclusive space for advanced artists to collaborate on projects, share expertise, and mentor emerging talents.',c2l:'Apply to Join →',
-    c3:'Daily Inspiration Hub',c3d:'Get a fresh dose of creative inspiration every day — featured artworks, nature prompts, color palettes, and technique spotlights.',c3l:'Explore →',
-    c4:'Join as Art Instructor',c4d:'Apply to become an instructor and share your knowledge with our growing community of passionate creators.',c4l:'Apply Now →',
+    c1:'Artist Chat Room',c1d:'Artists from Saudi Arabia and beyond, chatting in real time. Pull up a chair.',c1l:'Enter Room →',
+    c2:'Professional Artists Guild',c2d:'A space for experienced artists to work together and guide new talent.',c2l:'Apply to Join →',
+    c3:'Daily Inspiration',c3d:'A little spark every day. Featured works, color palettes and new techniques to try.',c3l:'Explore →',
+    c4:'Teach With Us',c4d:'Love sharing what you know? Become an instructor and help others grow.',c4l:'Apply Now →',
     inspoTitle:'Daily Inspiration',
-    i1:'Jungle Light Studies',i1d:'Capture the dappled light filtering through dense canopy',
-    i2:'Ocean Movement',i2d:'Study the rhythm and energy of waves in motion',
-    i3:'Ancient Trees',i3d:'Explore the texture and wisdom of centuries-old forests'},
+    i1:'Light Studies',i1d:'Watch how light falls through leaves and windows.',
+    i2:'Ocean Movement',i2d:'Feel the rhythm of the waves, then paint it.',
+    i3:'Old Trees',i3d:'Study bark, roots and the patience of time.'},
   ar:{dir:'rtl',lb:'English',studio:'الاستوديو',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
-    badge:'شبكة الفنانين',h1:'<em>مجتمع</em> الفنانين',desc:'تواصل مع فنانين آخرين وشارك أعمالك وتعلّم معاً وانمُ كجزء من مجتمع إبداعي نابض بالحياة مدفوع بشغف الطبيعة والفن.',
-    s1:'الفنانين المسجلين',s2:'الرسائل المتبادلة',s3:'أساليب فنية',s4:'المجتمع السعودي',
-    ctaH:'انضم إلى غرفة محادثة الفنانين',ctaP:'تحدّث مع فنانين آخرين في الوقت الفعلي. شارك التقنيات واحصل على ملاحظات واطرح أسئلتك وابنِ صداقات مع المبدعين.',live:'مباشر الآن',ctaBtn:'ادخل غرفة المحادثة',
-    commTitle:'فضاءات المجتمع',
-    c1:'غرفة محادثة الفنانين',c1d:'غرفة محادثة مباشرة حيث يتواصل الفنانون من جميع أنحاء المملكة العربية السعودية ويشاركون أعمالهم.',c1l:'ادخل الغرفة →',
-    c2:'رابطة الرسامين المحترفين',c2d:'مساحة حصرية للفنانين المتقدمين للتعاون في المشاريع ومشاركة الخبرات وإرشاد المواهب الناشئة.',c2l:'تقدّم للانضمام →',
-    c3:'مركز الإلهام اليومي',c3d:'احصل على جرعة إبداعية يومية — أعمال مميزة وموضوعات طبيعية ولوحات ألوان وأضواء تقنية.',c3l:'استكشف →',
-    c4:'انضم كمدرب فني',c4d:'هل أنت فنان متمرس؟ تقدّم لتصبح مدرباً وشارك معرفتك مع مجتمعنا المتنامي من المبدعين.',c4l:'تقدّم الآن →',
-    inspoTitle:'الإلهام اليومي',
-    i1:'دراسات ضوء الأدغال',i1d:'التقط الضوء المتناثر عبر الغابة الكثيفة',
-    i2:'حركة المحيط',i2d:'ادرس إيقاع وطاقة الأمواج في حركتها',
-    i3:'الأشجار القديمة',i3d:'استكشف ملمس وحكمة الغابات التي عمرها قرون'}
+    badge:'فنانون معاً',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
+    s1:'فنانون معنا',s2:'الرسائل المتبادلة',s3:'أساليب فنية',s4:'المجتمع السعودي',
+    ctaH:'انضم إلى غرفة محادثة الفنانين',ctaP:'تحدّث مع فنانين مثلك الآن. شارك فكرة، واسأل سؤالاً، واحصل على رأي صادق. هنا تبدأ الصداقات.',live:'مباشر الآن',ctaBtn:'ادخل غرفة المحادثة',
+    commTitle:'مساحات المجتمع',
+    c1:'غرفة محادثة الفنانين',c1d:'فنانون من السعودية وخارجها يتحدثون مباشرة. تفضّل وانضم إليهم.',c1l:'ادخل الغرفة →',
+    c2:'رابطة الرسامين المحترفين',c2d:'مساحة للفنانين المتمرّسين ليتعاونوا ويأخذوا بيد المواهب الجديدة.',c2l:'تقدّم للانضمام →',
+    c3:'الإلهام اليومي',c3d:'شرارة صغيرة كل يوم. أعمال مختارة، ولوحات ألوان، وتقنيات جديدة لتجربتها.',c3l:'استكشف →',
+    c4:'علّم معنا',c4d:'تحب أن تشارك ما تعرفه؟ كن مدرباً وساعد غيرك على النمو.',c4l:'تقدّم الآن →',
+    inspoTitle:'إلهام اليوم',
+    i1:'دراسات الضوء',i1d:'تأمّل كيف يتسلل الضوء بين الأوراق والنوافذ.',
+    i2:'حركة البحر',i2d:'اشعر بإيقاع الموج، ثم ارسمه.',
+    i3:'الأشجار المعمّرة',i3d:'تأمّل اللحاء والجذور وصبر السنين.'}
 };
 let L='en';
 const NAV={

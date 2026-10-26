@@ -146,7 +146,7 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 
       <div class="art-actions">
         <a class="btn btn-secondary" href="articles_list.php?type=<?= e($type) ?>"><?= owBi('← Back to ' . $typeEn, '→ العودة إلى ' . $typeAr) ?></a>
-        <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Artworks', 'استكشف الأعمال') ?></a>
+        <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
       </div>
     </article>
   </div>
