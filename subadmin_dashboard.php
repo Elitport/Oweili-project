@@ -70,7 +70,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{min-height:100vh;background:#f4f5f7;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#111111;padding:40px 20px;}
+body{min-height:100vh;background:#f4f5f7;font-family:var(--font-sans);color:#111111;padding:40px 20px;}
 .wrap{max-width:900px;margin:0 auto;}
 h1{font-size:24px;font-weight:700;margin-bottom:4px;}
 .sub{font-size:13px;color:rgba(0,0,0,0.5);margin-bottom:24px;}

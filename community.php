@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;overflow-x:hidden;}
+html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-sans);overflow-x:hidden;}
 .bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;}
 .bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;z-index:2;}
 .bg-video.on{opacity:0.95;}

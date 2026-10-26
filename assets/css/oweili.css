@@ -8,6 +8,10 @@
  *  until they are converted one by one — then add class="ow" to <body>.
  * ===================================================================== */
 
+/* ── BRAND FONTS (CLAUDE.md rule 30) ──
+   DM Sans for English, Tajawal for Arabic. Must stay the first rule in the file. */
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..800&family=Tajawal:wght@300;400;500;700;800&display=swap");
+
 /* ── BRAND COLORS ── */
 :root {
   --color-primary: #ff0055;
@@ -20,6 +24,12 @@
   --color-bg: #ffffff;
   --color-card: rgba(255,255,255,0.6);
   --color-border: rgba(0,0,0,0.07);
+
+  /* Fonts: DM Sans has no Arabic letters, so in --font-sans every English
+     letter is drawn in DM Sans and every Arabic letter falls through to Tajawal. */
+  --font-en: "DM Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-ar: "Tajawal", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "DM Sans", "Tajawal", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* ── TWO-LANGUAGE TEXT (works on every page) ──
@@ -28,13 +38,16 @@
 html:not([dir="rtl"]) .bi-ar { display: none; }
 html[dir="rtl"] .bi-en { display: none; }
 
+/* Form fields and buttons use the brand fonts too (browsers default them to a system font) */
+input, select, textarea, button { font-family: inherit; }
+
 /* ── BASE RESET (opt-in pages only) ── */
 body.ow { margin: 0; }
 .ow, .ow *, .ow *::before, .ow *::after { box-sizing: border-box; }
 
 /* ── TYPOGRAPHY ── */
 body.ow {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.75;
   color: var(--color-body);

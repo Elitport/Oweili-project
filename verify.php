@@ -55,7 +55,7 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
     return <<<HTML
 <!DOCTYPE html>
 <html>
-<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'DM Sans','Tajawal','Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 12px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.06);">
@@ -120,7 +120,7 @@ HTML;
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;overflow-x:hidden;}
+html,body{width:100%;min-height:100vh;background:#fff;font-family:var(--font-sans);overflow-x:hidden;}
 .bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;}
 .bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;z-index:2;}
 .bg-video.on{opacity:0.95;}

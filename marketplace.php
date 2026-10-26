@@ -84,7 +84,7 @@ foreach ($artworks as $aw) {
   <link rel="stylesheet" href="/assets/css/proof.css">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    body, html { width:100%; min-height:100vh; background:#fff; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; overflow-x:hidden; }
+    body, html { width:100%; min-height:100vh; background:#fff; font-family:var(--font-sans); overflow-x:hidden; }
     .bg-wrap { position: fixed; inset: 0; z-index: 0; overflow:hidden; }
     .bg-video { position:absolute; inset:0; width: 100%; height: 100%; object-fit: cover; }
 

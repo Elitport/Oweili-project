@@ -188,6 +188,7 @@
 - assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
 - assets/css/nav.css — styles for the shared menu (nav.php). New pages link it instead of copying the menu styles; older pages still have their own copy
 - oweili.css also gives opt-in pages (<body class="ow">) a box-sizing reset and removes the default page margin
+- oweili.css also loads the brand fonts (DM Sans + Tajawal from Google Fonts) and sets --font-en, --font-ar and --font-sans. --font-sans draws English letters in DM Sans and Arabic letters in Tajawal automatically. Every page uses it, including form fields and buttons; the welcome email in verify.php names the fonts directly because email apps cannot read CSS variables
 - oweili.css also has the two-language text rule for every page: <span class="bi-en">…</span><span class="bi-ar">…</span> shows the one matching the page direction
 - assets/css/proof.css — styles for the Creation Journey and Proof of Process panels. Text is printed in both languages and the one matching the page direction is shown
 - assets/css/discover.css + assets/js/discover.js — shared look and language button for the Discover pages (articles_list.php, article.php, training.php)
@@ -213,7 +214,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Background: Video (bg.mp4) with white overlay
 - Primary color: #ff0055
 - Accent color: #0066ff
-- Font: Helvetica Neue
+- Font: DM Sans (English) + Tajawal (Arabic), from Google Fonts — loaded once in oweili.css (see rule 30)
 - Cards: border-radius 16px, glass effect
 - Navbar: fixed top, frosted glass, dropdown menus
 
@@ -267,9 +268,9 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Small text links use blue #0066ff or dark grey #111111 — never pink
 
 ### 3. Better Typography
-- Font: Helvetica Neue for English, system Arabic font for Arabic
+- Font: DM Sans for English, Tajawal for Arabic (Google Fonts, see rule 30). Pages use var(--font-sans) from oweili.css — never type a font name into a page
 - Headings: bold, tight letter spacing
-- Body: 13-14px, line height 1.7-1.8
+- Body: 16px minimum, line height 1.7 Arabic / 1.6 English (rule 30). Existing pages still use 13-14px body text until they are updated
 - Arabic text must align right and use proper RTL sizing
 - Never mix too many font sizes — keep a clear hierarchy
 
@@ -412,8 +413,8 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Primary color: #ff0055 (red) — buttons and large highlights only
 - Accent color: #0066ff (blue) — links and secondary actions
 - Background: white #ffffff with frosted glass cards
-- Arabic font: system Arabic font, clean and readable
-- English font: Helvetica Neue
+- Arabic font: Tajawal (Google Fonts)
+- English font: DM Sans (Google Fonts)
 
 ### Brand Voice
 - Tone in English: confident, warm, professional
@@ -494,3 +495,75 @@ DO NOT:
 - If a security risk is found, fix it and explain what it was in simple words
 - Never store passwords in plain text
 - Always follow the Saudi Personal Data Protection Law
+
+## Design & Brand Creation Skills
+
+### 29. Theme Factory
+- Oweili has one visual theme only — never mix themes
+- The theme must feel like a luxury art gallery: clean, refined, spacious
+- Core theme values:
+  * White space is as important as content — never crowd the page
+  * Every color must serve a purpose — no decorative colors
+  * Typography creates the mood — font choice is as important as color
+  * Every element must feel intentional — nothing random or default
+- When building or redesigning any page, apply the full theme consistently:
+  * Use CSS variables from oweili.css for every color
+  * Use the same font stack on every page
+  * Use the same spacing system (8px grid: 8, 16, 24, 32, 48, 64, 96)
+  * Use the same border-radius system (4px for inputs, 8px for buttons, 16px for cards)
+- Never use default browser styles — everything must be intentionally designed
+
+### 30. Frontend Design (Professional)
+- Before writing any HTML or CSS, think about the visual hierarchy first:
+  * What is the ONE thing the visitor should notice first?
+  * What is the second thing?
+  * What action do we want them to take?
+- Apply these professional design principles on every page:
+  * Contrast: important things are dark and bold, supporting things are light and small
+  * Alignment: everything aligns to an invisible grid — nothing floats randomly
+  * Proximity: related things are close together, unrelated things have space between them
+  * Repetition: the same style repeats — buttons always look the same, headings always look the same
+- Typography rules for Oweili:
+  * Arabic: use "Tajawal" from Google Fonts — elegant, readable, modern
+  * English: use "DM Sans" from Google Fonts — clean, contemporary, professional
+  * Headline size: 48-64px desktop, 32-40px mobile
+  * Body size: 16px minimum for readability
+  * Line height: 1.7 for Arabic body text, 1.6 for English body text
+  * Never use more than 2 font families on one page
+- Spacing rules:
+  * Sections need at least 80px padding top and bottom on desktop
+  * Cards need at least 24px internal padding
+  * Never put two things right next to each other without breathing room
+
+### 31. Algorithmic Art & Visual Identity
+- Oweili's visual identity is built on human creativity — never use AI art images
+- For visual elements that represent Oweili (icons, patterns, backgrounds):
+  * Use SVG-based geometric patterns inspired by Islamic art
+  * Use the brand colors only: #ff0055 and #0066ff
+  * Keep them subtle — they support the content, never compete with it
+- The logo placeholder (until a professional logo is purchased):
+  * Use a simple geometric SVG mark in #ff0055
+  * Always paired with the word "OWEILI" in DM Sans bold
+  * Never stretch, rotate, or recolor the logo mark
+- When creating any visual element:
+  * Ask: does this feel like a luxury art gallery?
+  * Ask: does this look like it was made by a human with intention?
+  * Ask: does this serve the content or distract from it?
+
+### 32. Canva & Social Media Content
+- Every social media post for Oweili must follow these rules:
+  * Always include the Oweili brand mark or name
+  * Use only brand colors: #ff0055 and #0066ff on white
+  * Arabic posts: right-aligned, Tajawal font
+  * English posts: left-aligned, DM Sans font
+  * Never use stock photos — use artworks from real Oweili artists only
+  * Post formats to always have ready:
+    - Artist spotlight: artist photo + artwork + short quote
+    - New artwork: artwork photo + title + artist name + price
+    - Art education: tip or fact about an art style with a visual
+    - Event announcement: event name + date + location + visual
+- Tone for every post:
+  * Warm, proud, human
+  * Never salesy or promotional-sounding
+  * Always bilingual — Arabic first, then English below
+  * Hashtags in both languages
