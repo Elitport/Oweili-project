@@ -8,6 +8,13 @@
 - Stack: PHP, MySQL, HTML, CSS, JavaScript
 - Hosting: Hostinger — auto-deploy from GitHub main branch (now active)
 
+## Roles
+- Artist: registers, photographs artwork in 3 stages, sets price and art type
+- Collector: browses and buys artworks
+- Institute Admin: manages their institute page, courses and registrations
+- Sub-admin: approves artworks and manages content
+- Admin: full control
+
 ## What Oweili Is (5 pillars)
 
 ### 1. Art Marketplace with Proof of Process
@@ -94,6 +101,7 @@
 - art_styles.js — Shared data file for all art styles (single source of truth)
 
 ## Shared Files
+- .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, and hidden folders (.claude/, .agents/, .git/). Visitors get 403 Forbidden. Keep it when changing hosting settings
 - assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
 - assets/logo/ — home for the official logo files (not added yet)
 - Mobile menu (in nav.php) — on screens 1024px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
@@ -135,7 +143,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ## Known Issues
 - Fixed: the Arabic menu order. A CSS line on 18 pages flipped the menu back to left-to-right; it was removed. Never add `flex-direction:row-reverse` to the menu for Arabic — dir="rtl" already puts items in the right order
 - Some page sections (buttons, stats rows, filters) still use `[dir="rtl"] ... row-reverse` and may show in the wrong order in Arabic — check each when converting a page
-- Manual deployment means live site may be out of sync with repo
+- The site is auto-deployed from GitHub main via Hostinger — anything saved to main goes live straight away, so test on a working branch first
 
 ## Work Rules
 - Always answer in simple non-technical English
