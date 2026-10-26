@@ -146,7 +146,8 @@
 - DB name: u405344949_reshaart
 - Tables: users (artists, collectors and admins), messages, art_styles, plus migration tables from SQL files
 - The live database may use u405344949_contact — confirm in phpMyAdmin before any database change
-- config.php is NOT in GitHub (contains DB and SMTP secrets — lives on server only)
+- config.php is NOT in GitHub (contains DB and SMTP secrets and the admin password hash — lives on server only)
+- Admin password: stored only as a hash in config.php as define('ADMIN_HASH', '...'); admin.php reads it from there. If it is missing, the admin login refuses with a setup message. Changing the hash signs out every admin
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql

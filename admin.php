@@ -5,19 +5,25 @@ require_once __DIR__ . '/artwork_lib.php';
 /* =====================================================================
  *  Oweili · admin.php — approve / ban artists
  *  Simple password gate (no user account needed). The password is stored
- *  as a BCRYPT hash, never in plaintext. To change it, run:
+ *  as a BCRYPT hash in config.php (on the server only, never on GitHub):
+ *     define('ADMIN_HASH', '$2y$12$...');
+ *  To change it, create a new hash with
  *     php -r "echo password_hash('NEW_PASS', PASSWORD_BCRYPT, ['cost'=>12]);"
- *  and paste the result below.
+ *  and replace the value in config.php. Changing it signs out every admin.
  * ===================================================================== */
-const ADMIN_HASH = '$2y$12$LpsTBtU/4y7kG.uNE4ANke2/nUPPm0XjGmjQCcV3v7SZEPildM9qK';
+$adminHash = defined('ADMIN_HASH') ? (string) ADMIN_HASH : '';
+$adminSig  = $adminHash !== '' ? hash('sha256', $adminHash) : '';
 
 $loginError = '';
 
 /* ---- Handle login ---- */
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['admin_pass'])) {
-    if (verifyCsrf($_POST['csrf_token'] ?? null) && password_verify((string) $_POST['admin_pass'], ADMIN_HASH)) {
+    if ($adminHash === '') {
+        $loginError = 'Admin password is not set up yet. Add ADMIN_HASH to config.php.';
+    } elseif (verifyCsrf($_POST['csrf_token'] ?? null) && password_verify((string) $_POST['admin_pass'], $adminHash)) {
         session_regenerate_id(true);
         $_SESSION['is_admin'] = true;
+        $_SESSION['admin_sig'] = $adminSig;   // ties the login to the current password
     } else {
         $loginError = 'Incorrect password.';
     }
@@ -25,12 +31,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['admin_pass
 
 /* ---- Handle logout ---- */
 if (isset($_GET['logout'])) {
-    unset($_SESSION['is_admin']);
+    unset($_SESSION['is_admin'], $_SESSION['admin_sig']);
     header('Location: admin.php');
     exit;
 }
 
-$isAdmin = !empty($_SESSION['is_admin']);
+/* Logged in only if the login was made with the current password —
+   after the password changes, older admin sessions are signed out. */
+$isAdmin = !empty($_SESSION['is_admin']) && $adminSig !== '' && hash_equals($adminSig, (string) ($_SESSION['admin_sig'] ?? ''));
 
 /* ---- Handle approve / ban actions (admin only, CSRF-checked) ---- */
 $flash = '';
@@ -846,7 +854,7 @@ const ADICT = {
   "Admin Dashboard":"لوحة الإدارة",
   "Manage artists, collectors, and artwork approvals.":"إدارة الفنانين والمقتنين واعتماد الأعمال.",
   "Log out":"تسجيل الخروج",
-  "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Incorrect password.":"كلمة مرور غير صحيحة.",
+  "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.",
   "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"أساليب الرسم",
   "Events":"الأحداث","Training":"التدريب",
   "Add New Event":"إضافة حدث جديد","Add Event":"إضافة الحدث",
