@@ -1,18 +1,78 @@
 # Oweili — Saudi Art Platform
 
 ## Project Overview
-- Name: Oweili (previously Resha Art)
+- Name: Oweili (أويلي)
 - Domain: oweili.com
-- Purpose: Saudi bilingual art community platform for artists and collectors
-- Hosting: Hostinger (manual upload — no auto-deploy)
+- Founded: Saudi Arabia, open to the world
+- Mission: The home of real human art — where artists prove their work is handmade, and buyers purchase with full confidence
 - Stack: PHP, MySQL, HTML, CSS, JavaScript
-- Deployment: Files uploaded manually to Hostinger public_html, SQL run via phpMyAdmin
+- Hosting: Hostinger — auto-deploy from GitHub main branch (now active)
 
-## Roles
-- Artist — can register, upload artworks, manage profile
-- Collector — can browse and buy artworks
-- Sub-admin — limited admin access
-- Admin — full control via admin.php
+## What Oweili Is (5 pillars)
+
+### 1. Art Marketplace with Proof of Process
+- Artists photograph their artwork in 3 stages using their phone camera from inside the website:
+  * 25% — early stage (first strokes, first layer)
+  * 50% — middle stage (work in progress)
+  * 100% — finished piece (final photo, ready to sell)
+- When uploading, artist selects:
+  * Colors used (from a color list shown during upload)
+  * Type of art (guided selection with example images — never automatic AI detection)
+  * Price
+- Oweili charges 15% commission (excluding VAT), which covers shipping and advertising
+- Buyers see the full creation journey, not just the final piece
+- This is what makes Oweili different from every other marketplace
+
+### 2. Art Institutes Directory
+- A directory of art institutes in Jeddah and Saudi Arabia, all in one place
+- Each institute gets its own login (institute account type)
+- Institute admins can see: number of course registrations, financial summary
+- Helps anyone looking for art education find the right place easily
+
+### 3. Global Art Events
+- Art events and gatherings happening around the world
+- Each event has a simple article (title, description, date, location, image)
+- Added only by Oweili admins — never by the public
+- Helps local artists stay connected with the global art world
+
+### 4. Artist Spotlight Articles
+- Simple articles about notable local and international artists
+- For local artists: photos are added only after the artist gives personal approval
+- A consent record must be saved before any local artist photo is published
+- Written and managed by the Oweili team only
+
+### 5. Art Education
+- Explains art types, their names, why they are called that, their history
+- With images for every art style
+- Makes Oweili a trusted reference for anyone wanting to learn about art
+- Content lives in the database (single source — never typed directly into pages)
+
+## Business Rules
+- Commission: 15% of artwork price, excluding VAT, covers shipping and advertising
+- Payments: NOT built yet — this is the last thing to add, after everything else is complete
+- Proof of process: all 3 stage photos must be taken through the Oweili website camera
+- Art type selection: always guided with example images, never automatic AI detection
+- Local artist photos: never published without a saved consent record
+
+## Database Tables Needed (not yet built — need approval before creating)
+- artwork_stages: the 3 stage photos per artwork (25%, 50%, 100%) with dates
+- artwork_colors: colors used in each artwork
+- institutes: name in Arabic and English, city, description, logo, contact, owner account
+- courses: belongs to an institute, with dates, price and available seats
+- course_registrations: who signed up, payment status
+- articles: type (event / artist spotlight / art education), title and body in both languages, cover image, published or draft
+- article_images: extra photos for each article
+- photo_consents: record of local artist approval (who, when, how)
+
+## Sprint Plan
+- Sprint 1 (now): update CLAUDE.md + database tables + proof-of-process camera upload
+- Sprint 2: typography, design applied to all pages, homepage rebuilt to reflect vision
+- Sprint 3: articles system + institutes directory + art education with images
+- Sprint 4: payments (last — after everything else is complete)
+
+## What NOT to build yet
+- Any payment system, checkout, orders or commission calculation
+- These wait until Sprint 4
 
 ## Pages Built
 - index.php — Homepage
