@@ -401,7 +401,7 @@ const T={
     abstract:'Abstract',landscape:'Landscape',portrait:'Portrait',other:'Other',
     cardEdit:'Edit',cardDelete:'Delete',
     available:'Available',sold:'Sold',auction:'Auction',sar:'SAR',
-    nav:{studio:'The Studio',community:'Community',marketplace:'Marketplace',explore:'Explore Art Styles',support:'Support',
+    nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
       c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
@@ -414,7 +414,7 @@ const T={
     abstract:'تجريدي',landscape:'طبيعي',portrait:'بورتريه',other:'أخرى',
     cardEdit:'تعديل',cardDelete:'حذف',
     available:'متاح',sold:'مباع',auction:'مزاد',sar:'ر.س',
-    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'السوق',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
       c1:'غرفة محادثة الفنانين',c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
@@ -452,7 +452,7 @@ function tgl(){L=L==='en'?'ar':'en';apply(L);try{localStorage.setItem('lang',L);
 try{var _s=localStorage.getItem('lang');if(_s==='ar'||_s==='en')L=_s;}catch(e){}
 apply(L);
 const v=document.getElementById('vid');
-if(v){v.addEventListener('canplay',()=>v.classList.add('on'),{once:true});v.play().catch(()=>{});}
+if(v){{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}v.play().catch(()=>{});}
 </script>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>

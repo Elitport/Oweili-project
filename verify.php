@@ -77,7 +77,7 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0"><tr>
             <td style="padding-right:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#111111;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Go to your dashboard</a></td>
-            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#ff0055;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Browse the marketplace</a></td>
+            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#ff0055;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Browse the gallery</a></td>
           </tr></table>
         </td></tr>
 
@@ -95,13 +95,13 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0" align="right"><tr>
             <td style="padding-left:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#111111;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">لوحة التحكم</a></td>
-            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#ff0055;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">تصفّح السوق</a></td>
+            <td><a href="{$mU}" style="display:inline-block;padding:12px 24px;background:#ff0055;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">تصفّح المعرض</a></td>
           </tr></table>
         </td></tr>
 
         <!-- Footer -->
         <tr><td style="background:#fafafa;padding:20px 32px;text-align:center;">
-          <p style="margin:0;font-size:12px;color:#999;">© Oweili · oweili.com — Saudi bilingual art marketplace</p>
+          <p style="margin:0;font-size:12px;color:#999;">© Oweili · oweili.com — Saudi-born bilingual art gallery</p>
         </td></tr>
       </table>
     </td></tr>
@@ -158,14 +158,14 @@ const T={
   en:{dir:'ltr',lb:'العربية',
     okTitle:'Your account is verified',okSub:'You can now sign in.',okBtn:'Sign In',redir:'Redirecting to sign in…',
     badTitle:'Invalid or expired link',badSub:'This verification link is invalid or has expired. Please register again or request a new link.',badBtn:'Register',
-    nav:{studio:'The Studio',community:'Community',marketplace:'Marketplace',explore:'Explore Art Styles',support:'Support',
+    nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
       c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',
     okTitle:'تم التحقق من حسابك',okSub:'يمكنك الآن تسجيل الدخول.',okBtn:'تسجيل الدخول',redir:'جارٍ التحويل إلى تسجيل الدخول…',
     badTitle:'رابط غير صالح أو منتهي',badSub:'رابط التحقق غير صالح أو منتهي الصلاحية. يرجى التسجيل مرة أخرى أو طلب رابط جديد.',badBtn:'إنشاء حساب',
-    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'السوق',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
       c1:'غرفة محادثة الفنانين',c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
@@ -196,7 +196,7 @@ function tgl(){L=L==='en'?'ar':'en';apply(L);try{localStorage.setItem('lang',L);
 try{var _s=localStorage.getItem('lang');if(_s==='ar'||_s==='en')L=_s;}catch(e){}
 apply(L);
 const v=document.getElementById('vid');
-if(v){v.addEventListener('canplay',()=>v.classList.add('on'),{once:true});v.play().catch(()=>{});}
+if(v){{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}v.play().catch(()=>{});}
 // Auto-redirect to login 3s after a successful verification.
 if(STATE==='success'){ setTimeout(()=>{ window.location.href='login.php'; }, 3000); }
 </script>

@@ -33,7 +33,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
   var v = document.getElementById('vid');
   if (v) {
-    v.addEventListener('canplay', function(){ v.classList.add('on'); }, { once: true });
+    var on = function(){ v.classList.add('on'); };
+    if (v.readyState >= 3) on();   /* already ready (e.g. saved in the browser) */
+    v.addEventListener('canplay', on, { once: true });
+    v.addEventListener('playing', on, { once: true });
     var p = v.play(); if (p && p.catch) p.catch(function(){});
   }
 });

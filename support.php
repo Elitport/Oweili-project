@@ -112,14 +112,14 @@ const FAQS={
   en:[
     {q:'How do I create an account?',a:'Click "Join Free" in the navigation bar, fill in your artist name, email, phone number, and password. Then verify your email to activate your account.'},
     {q:'Is Oweili free to use?',a:'Yes! Oweili is completely free for all artists. Create your account, join workshops, and connect with the community at no cost.'},
-    {q:'Can I share my artwork on Oweili?',a:'Absolutely! Once your artist account is approved, upload your work from your dashboard and it appears in the marketplace and on your public profile.'},
+    {q:'Can I share my artwork on Oweili?',a:'Absolutely! Once your artist account is approved, upload your work from your dashboard and it appears in the gallery and on your public profile.'},
     {q:'How do I report a problem?',a:'You can contact us directly at contact@oweili.com and our team will help with any community issues.'},
     {q:'Is the platform available in Arabic?',a:'Yes! Oweili fully supports Arabic with RTL layout. Click the language button in the top navigation to switch between English and Arabic.'}
   ],
   ar:[
     {q:'كيف أنشئ حساباً؟',a:'انقر على "انضم مجاناً" في شريط التنقل، أدخل اسمك الفني والبريد الإلكتروني ورقم الجوال وكلمة السر. ثم تحقق من بريدك لتفعيل الحساب.'},
     {q:'هل Oweili مجاني؟',a:'نعم! Oweili مجاني تماماً لجميع الفنانين. أنشئ حسابك، انضم إلى الورش، وتواصل مع المجتمع بدون أي تكلفة.'},
-    {q:'هل يمكنني مشاركة أعمالي الفنية؟',a:'بالتأكيد! بمجرد اعتماد حساب الفنان، ارفع أعمالك من لوحة التحكم لتظهر في السوق وفي ملفك الشخصي العام.'},
+    {q:'هل يمكنني مشاركة أعمالي الفنية؟',a:'بالتأكيد! بمجرد اعتماد حساب الفنان، ارفع أعمالك من لوحة التحكم لتظهر في المعرض وفي ملفك الشخصي العام.'},
     {q:'كيف أبلّغ عن مشكلة؟',a:'يمكنك التواصل معنا مباشرة على contact@oweili.com وسيساعدك فريقنا في أي مشكلات تتعلق بالمجتمع.'},
     {q:'هل المنصة متاحة باللغة العربية؟',a:'نعم! Oweili يدعم اللغة العربية بالكامل مع تخطيط RTL. انقر على زر اللغة في التنقل العلوي للتبديل بين الإنجليزية والعربية.'}
   ]
@@ -144,12 +144,12 @@ const T={
 };
 let L='en';
 const NAV={
-  en:{lb:'العربية',studio:'The Studio',community:'Community',marketplace:'Marketplace',explore:'Explore Art Styles',support:'Support',
+  en:{lb:'العربية',studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
     s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
     c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',
     login:'Sign In',reg:'Join Free'},
-  ar:{lb:'English',studio:'الاستوديو',community:'المجتمع',marketplace:'السوق',explore:'استكشف أساليب الرسم',support:'الدعم',
+  ar:{lb:'English',studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
     s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
     c1:'غرفة محادثة الفنانين',c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
@@ -201,7 +201,7 @@ function tgl(){L=L==='en'?'ar':'en';apply(L);try{localStorage.setItem('lang',L);
 try{var _s=localStorage.getItem('lang');if(_s==='ar'||_s==='en')L=_s;}catch(e){}
 apply(L);
 const v=document.getElementById('vid');
-v.addEventListener('canplay',()=>v.classList.add('on'),{once:true});
+{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}
 v.play().catch(()=>{});
 </script>
 <?php include __DIR__ . '/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-// marketplace.php — Oweili · Marketplace (live, database-driven)
+// marketplace.php — Oweili · The Gallery (live, database-driven; file name kept as marketplace.php)
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 $ART_TYPES = require __DIR__ . '/art_types.php';
@@ -66,7 +66,7 @@ foreach ($artworks as $aw) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oweili Marketplace</title>
+  <title><?= $ar ? 'المعرض · أويلي' : 'The Gallery · Oweili' ?></title>
   <script>
   /* Honor the site-wide saved language. This page switches language via a
      server reload (?lang=), so if the visitor previously chose Arabic on
@@ -83,7 +83,7 @@ foreach ($artworks as $aw) {
   <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
   <link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
   <style>
-    /* Marketplace layout only — type, colors, buttons, artwork cards and badges come from oweili.css */
+    /* Gallery (marketplace.php) layout only — type, colors, buttons, artwork cards and badges come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
     .page-header{margin-bottom:var(--space-md);}
     .page-header h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
@@ -144,7 +144,7 @@ foreach ($artworks as $aw) {
 function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
 <?php if ($ar): ?>
 (function(){
-  var t = {'nav-studio-label':'الاستوديو','nav-community-label':'المجتمع','nav-marketplace-label':'السوق',
+  var t = {'nav-studio-label':'الاستوديو','nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
     'nav-explore-label':'استكشف أساليب الرسم','nav-support-label':'الدعم',
     'dd-s1':'ورشة الألوان المائية','dd-s2':'استوديو الرسم الزيتي','dd-s3':'مختبر الفن الرقمي','dd-s4':'الفحم والحبر',
     'dd-c2':'تعرّف على فنانين','dd-c3':'شارك أعمالك','dd-c4':'تعلّم معاً',
@@ -158,7 +158,7 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
 <main class="main-content">
 
   <div class="page-header">
-    <h1><?= $ar ? 'فن <em>السوق</em>' : 'The <em>Marketplace</em>' ?></h1>
+    <h1><?= $ar ? 'المعرض' : 'The Gallery' ?></h1>
     <p><?= $ar
         ? 'اكتشف واقتنِ أعمالاً فنية أصلية لفنانين حقيقيين من السعودية ومن حول العالم. كل قطعة فريدة من نوعها.'
         : 'Discover and collect original artworks by real human artists from Saudi Arabia and around the world. Every piece is one of a kind.' ?></p>

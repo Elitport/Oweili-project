@@ -29,7 +29,7 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
     <a class="ow-footer-brand" href="index.php" aria-label="Oweili · أويلي"><?php owLogoMark(22); ?>OWEILI</a>
     <nav aria-label="Footer · روابط الموقع">
       <ul class="ow-footer-links">
-        <li><a href="marketplace.php"><?= $owFt('Marketplace', 'المعرض') ?></a></li>
+        <li><a href="marketplace.php"><?= $owFt('Gallery', 'المعرض') ?></a></li>
         <li><a href="articles_list.php?type=event"><?= $owFt('Events', 'الملتقيات') ?></a></li>
         <li><a href="training.php"><?= $owFt('Institutes', 'المعاهد') ?></a></li>
         <li><a href="support.php"><?= $owFt('Support', 'الدعم') ?></a></li>

@@ -64,7 +64,7 @@ if (!function_exists('owLogoMark')) {
         <a href="community.php#learn"><svg class="d-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span id="dd-c4">Learn Together</span></a>
       </div>
     </div>
-    <div class="nav-item"><a href="marketplace.php" id="nav-marketplace-link"<?= navAct('marketplace') ?>><span id="nav-marketplace-label">Marketplace</span></a></div>
+    <div class="nav-item"><a href="marketplace.php" id="nav-marketplace-link"<?= navAct('marketplace') ?>><span id="nav-marketplace-label">Gallery</span></a></div>
     <div class="nav-item"><a href="explore.php" id="nav-explore-link"<?= navAct('explore') ?>><span id="nav-explore-label">Explore Art Styles</span></a></div>
     <div class="nav-item">
       <a href="articles_list.php?type=event"<?= navAct('discover') ?>><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
@@ -104,7 +104,7 @@ if (!function_exists('owLogoMark')) {
   <div class="mnav-panel" id="mnav-panel">
     <a class="mnav-link" href="studio.php"<?= navAct('studio') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="The Studio" data-ar="الاستوديو">The Studio</span></a>
     <a class="mnav-link" href="community.php"<?= navAct('community') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
-    <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"<?= navAct('marketplace') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Marketplace" data-ar="السوق">Marketplace</span></a>
+    <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"<?= navAct('marketplace') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Gallery" data-ar="المعرض">Gallery</span></a>
     <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
     <a class="mnav-link" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
@@ -151,7 +151,7 @@ if (!function_exists('owLogoMark')) {
   var NAV_WORDS = {
     'nav-studio-label':      ['The Studio', 'الاستوديو'],
     'nav-community-label':   ['Community', 'المجتمع'],
-    'nav-marketplace-label': ['Marketplace', 'السوق'],
+    'nav-marketplace-label': ['Gallery', 'المعرض'],
     'nav-explore-label':     ['Explore Art Styles', 'استكشف أساليب الرسم'],
     'nav-support-label':     ['Support', 'الدعم'],
     'dd-s1': ['Watercolor Workshop', 'ورشة الألوان المائية'], 'dd-s2': ['Oil Painting Studio', 'استوديو الرسم الزيتي'],

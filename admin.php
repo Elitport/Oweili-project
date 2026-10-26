@@ -566,7 +566,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
   <div class="tab-panel" id="tab-pending">
   <div class="card" id="pending">
     <div class="sec-head">
-      <div class="sub" style="margin:0;">New uploads waiting for approval before they appear in the marketplace.</div>
+      <div class="sub" style="margin:0;">New uploads waiting for approval before they appear in the gallery.</div>
     </div>
     <?php if (!$pendingArt): ?>
       <div class="empty">Nothing pending — all caught up. 🎉</div>
@@ -857,7 +857,7 @@ const ADICT = {
   "Name":"الاسم","Email":"البريد الإلكتروني","Phone":"الهاتف","Date":"التاريخ",
   "No artist accounts yet.":"لا توجد حسابات فنانين بعد.","No collector accounts yet.":"لا يوجد مقتنون بعد.",
   "Nothing pending — all caught up. 🎉":"لا يوجد معلّق — كل شيء محدّث. 🎉",
-  "New uploads waiting for approval before they appear in the marketplace.":"أعمال جديدة بانتظار الموافقة قبل ظهورها في السوق.",
+  "New uploads waiting for approval before they appear in the gallery.":"أعمال جديدة بانتظار الموافقة قبل ظهورها في المعرض.",
   "Approve":"موافقة","Unapprove":"إلغاء الموافقة","Ban":"حظر","Unban":"رفع الحظر","Reject":"رفض",
   "Yes":"نعم","No":"لا","Banned":"محظور","Active":"نشط",
   "No photo":"لا صورة","No video":"لا فيديو","Open video ↗":"فتح الفيديو ↗"

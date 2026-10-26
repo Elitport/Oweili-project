@@ -66,7 +66,7 @@ const T={
     aTitle:'I am an Artist',aDesc:'Showcase and sell your work. Requires a profile picture, portfolio, and a short video, all reviewed by our team.',aGo:'Register as Artist',
     cTitle:'I am a Collector',cDesc:"Discover and collect original art. Quick sign-up: just your details and you're in.",cGo:'Register as Collector',
     have:'Already have an account?',login:'Sign In',
-    nav:{studio:'The Studio',community:'Community',marketplace:'Marketplace',explore:'Explore Art Styles',support:'Support',
+    nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
       c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
@@ -74,7 +74,7 @@ const T={
     aTitle:'أنا فنان',aDesc:'اعرض أعمالك وبِعها. يتطلب صورة شخصية وأعمالاً وفيديو قصير، تتم مراجعتها جميعاً من فريقنا.',aGo:'التسجيل كفنان',
     cTitle:'أنا مقتني',cDesc:'اكتشف واقتنِ الفن الأصلي. تسجيل سريع، فقط بياناتك وتنضم فوراً.',cGo:'التسجيل كمقتني',
     have:'لديك حساب بالفعل؟',login:'تسجيل الدخول',
-    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'السوق',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
       c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
@@ -105,7 +105,7 @@ function tgl(){L=L==='en'?'ar':'en';apply(L);try{localStorage.setItem('lang',L);
 try{var _s=localStorage.getItem('lang');if(_s==='ar'||_s==='en')L=_s;}catch(e){}
 apply(L);
 const v=document.getElementById('vid');
-if(v){v.addEventListener('canplay',()=>v.classList.add('on'),{once:true});v.play().catch(()=>{});}
+if(v){{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}v.play().catch(()=>{});}
 </script>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>

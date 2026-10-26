@@ -83,10 +83,10 @@
 - These wait until Sprint 4
 
 ## Pages Built
-- index.php — Homepage (rebuilt in Sprint 2, see Features)
+- index.php — Homepage: one full-screen hero (see Features)
 - nav.php — Shared navbar (used across all pages)
 - explore.php — Art styles gallery
-- marketplace.php — Browse and buy artworks (bilingual)
+- marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — Studio content page
 - community.php — Community page
 - support.php — Support and FAQ
@@ -142,12 +142,11 @@
 - Files: admin.php, subadmin_dashboard.php, artwork_lib.php (owProofPanelHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
 
-### New homepage (index.php) — Sprint 2
-- What it does: 5 sections over the background video with frosted glass cards: 1 hero "Where Human Hands Create Art" / «حيث تصنع اليد البشرية الفن» with "Explore Artworks" (marketplace) and "Join as Artist" (artist sign-up); 2 "Art You Can Trust" — 3 steps (photograph every stage, team verifies, collectors buy with confidence); 3 "Latest Verified Artworks" — the 8 newest approved artworks that are available or at auction (not sold, not drafts, not from banned artists), showing the 100% photo, title, artist name, "✓ Human Art" badge when it has stage photos, and price; a warm message if there are none yet; 4 two "Join" cards (artists / collectors); 5 "Discover the Art World" cards → training.php and events.php; small footer
-- Sections rise in on scroll (visible straight away for visitors without JavaScript or with reduced motion), smooth scrolling
-- The old welcome splash, the jungle text and the art styles gallery (which needed the missing art_styles.js) were removed
-- Note: "newest" uses the date the artwork was uploaded — there is no separate approval date yet
-- Files: index.php, artwork_lib.php, assets/css/oweili.css, nav.css, proof.css. Tables: artworks, users, artwork_stages
+### Homepage (index.php) — one screen
+- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "Real artists · Real art · Verified by proof"; headline "Where Human Hands Create Art" / «حيث تصنع اليد البشرية الفن» in one dark color (56px desktop, 36px phone, weight 300); one-line subtitle (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
+- The badge, headline, subtitle and buttons fade in gently (CSS only; turned off for visitors who reduce motion)
+- Removed on purpose (owner's request): "Art You Can Trust" steps, "Latest Verified Artworks", the Join cards and the Discover cards
+- Files: index.php, assets/css/oweili.css, nav.css. Tables: none
 
 ### Design overhaul (all pages) — Sprint 2
 - Every page links oweili.css. Purple (#aa00ff) and the wrong blue (#0055ff) are now brand blue #0066ff; green, orange and gold accents are now brand blue or a pink tint; small pink text (error boxes, small badges) is now dark #111111 on the pink tint (rule 2)
@@ -180,8 +179,8 @@
 - Files: training.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: institutes, courses
 
 ### Menu and homepage links — Sprint 3
-- Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes. Homepage "Discover the Art World" now has 3 cards: Art Institutes, Global Art Events, Art Education
-- Files: nav.php, index.php
+- Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes
+- Files: nav.php
 
 ### Design system (one theme) — design-system branch
 - What it does: one look for every page and dashboard, defined once in assets/css/oweili.css and used everywhere
@@ -208,7 +207,7 @@
 - oweili.css also has the two-language text rule for every page: <span class="bi-en">…</span><span class="bi-ar">…</span> shows the one matching the page direction
 - assets/css/proof.css — styles for the Creation Journey and Proof of Process panels. Text is printed in both languages and the one matching the page direction is shown
 - assets/css/discover.css + assets/js/discover.js — shared look and language button for the Discover pages (articles_list.php, article.php, training.php)
-- footer.php — the same footer on every public page: logo mark, links (Marketplace/المعرض, Events/الملتقيات, Institutes/المعاهد, Support/الدعم), © line in both languages. Social icons show only once their real addresses are filled in at the top of footer.php
+- footer.php — the same footer on every public page: logo mark, links (Gallery/المعرض, Events/الملتقيات, Institutes/المعاهد, Support/الدعم), © line in both languages. Social icons show only once their real addresses are filled in at the top of footer.php
 - uploads/consents/ — private consent proofs; never link to it directly
 - assets/logo/ — home for the official logo files (not added yet)
 - Mobile menu (in nav.php) — on screens 1100px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
@@ -249,12 +248,13 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Discover → Art Events / Artist Spotlights / Art Education (articles_list.php?type=...) / Art Institutes (training.php)
 - Explore Art Styles → explore.php
 - Support → support.php
-- Marketplace → marketplace.php
+- Gallery / «المعرض» → marketplace.php (never call it "Marketplace" / «السوق» on the site)
 
 ## Known Issues
 - Fixed: the Arabic menu order. A CSS line on 18 pages flipped the menu back to left-to-right; it was removed. Never add `flex-direction:row-reverse` to the menu for Arabic — dir="rtl" already puts items in the right order
 - Fixed in Sprint 2: the last `[dir="rtl"] ... row-reverse` lines in page sections were removed. Do not add them back
 - Fixed: the menu showed twice after the design-system merge, because browsers kept an old saved copy of nav.css. Every CSS and JS link now carries a version number taken from the file's last-changed time, e.g. href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>". When a file changes, the number changes and every browser loads the new copy. Any new page must link its CSS and JS files the same way
+- Fixed: the background video could stay invisible when the browser already had it ready (e.g. saved from an earlier visit). Every page now also checks whether the video is ready straight away
 - The site is auto-deployed from GitHub main via Hostinger — anything saved to main goes live straight away, so test on a working branch first
 
 ## Work Rules
@@ -327,7 +327,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Homepage goal: attract artists and collectors worldwide → register or explore
 - Do not restrict language or content to Saudi Arabia only
 - Saudi culture is celebrated but not exclusive
-- Marketplace: browse → buy
+- Gallery (marketplace.php): browse → buy
 - Artist profile: discover → follow or contact
 - Never leave a page without a next step for the visitor
 
