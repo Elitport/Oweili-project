@@ -161,6 +161,7 @@ foreach ($artworks as $aw) {
     [dir="rtl"] .card-btn{align-self:flex-end;}
     .card-title { font-size:16px; font-weight:700; color:#111111; }
     .card-title-ar { font-size:13px; font-weight:600; color:rgba(0,0,0,0.55); }
+    .card-human { align-self:flex-start; margin-top:4px; padding:2px 8px; }
     .card-artist { font-size:12px; color:rgba(0,0,0,0.6); margin-top:6px; }
     .card-artist a { color:#0066ff; text-decoration:none; font-weight:600; }
     .card-artist a:hover { text-decoration:underline; }
@@ -297,6 +298,9 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
           <?php else: ?>
             <div class="card-title"><?= e($aw['title_en']) ?></div>
             <div class="card-title-ar" dir="rtl"><?= e($aw['title_ar']) ?></div>
+          <?php endif; ?>
+          <?php if (owHasJourney($mpStages[(int) $aw['id']] ?? [])): ?>
+            <span class="verified-badge card-human"><?= owBi('✓ Human Art', '✓ فن بشري') ?></span>
           <?php endif; ?>
           <?php $tlbl = $ART_TYPES[$aw['type']] ?? null; ?>
           <?php if ($tlbl): ?><div class="card-type"><?= e($ar ? $tlbl['ar'] : $tlbl['en']) ?></div><?php endif; ?>

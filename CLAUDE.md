@@ -111,6 +111,7 @@
 - After submit: is_draft = 0, is_approved = 0 (waits for admin approval as before), image_url = the 100% photo, so the marketplace keeps working
 - Photos: taken with the phone camera (camera opens directly on phones; on computers a file picker opens instead). Max 10MB, JPG/PNG/WEBP only, checked on the server. Saved to uploads/artworks/stages/ with random names. Each photo is re-saved: the phone's rotation is applied and hidden data such as GPS location is removed (privacy). taken_at = the camera's own date if present, otherwise the upload time
 - Retaking a photo replaces the old one and deletes the old file. Deleting or rejecting an artwork also deletes its stage photos
+- Photo lock: in edit_artwork.php, artworks with stage photos cannot change their main photo (blocked on the server too). A bilingual note explains why. Title, description, price, type and status can still be edited. Descriptions are optional when editing, like in the upload
 - Files: upload_artwork.php, artwork_lib.php, artist_dashboard.php, edit_artwork.php (drafts are sent back to the upload flow), admin.php + subadmin_dashboard.php (drafts hidden from the review list), art_types.php (added mixed_media, digital_art, islamic_geometric), assets/css/nav.css
 - Tables: artworks (new column is_draft), artwork_stages, artwork_colors — all created by database_update.sql. Until that file is run, the upload page shows a friendly "being set up" message and every other page keeps working
 - Hosting needs: PHP upload_max_filesize and post_max_size of at least 10M on Hostinger
@@ -119,6 +120,7 @@
 - What it does: in the artwork details window, buyers see "Creation Journey — Proof of Human Art" / «رحلة الإبداع — دليل الفن البشري» with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
 - A small blue "✓ Verified Human Artist" / «✓ فنان بشري موثّق» badge sits under the title — only on artworks that have the 25% and 100% photos
 - Old artworks without stage photos show exactly as before (no journey, no badge)
+- Every card in the marketplace grid also shows a tiny "✓ Human Art" / «✓ فن بشري» badge when the artwork has the 25% and 100% photos
 - Phone: the photos are one row you swipe sideways; tablet and desktop: side by side. Arabic runs right to left
 - Only approved artworks on the current page are loaded — unapproved or draft photos are never sent to visitors
 - Files: marketplace.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors

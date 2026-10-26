@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/artwork_lib.php';
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $viewerId  = (int) $_SESSION['user_id'];
@@ -15,6 +16,10 @@ if (!$aw) { http_response_code(404); exit('Artwork not found or not yours.'); }
 /* Unfinished 3-stage drafts are completed in the upload flow, not here. */
 if (!empty($aw['is_draft'])) { header('Location: upload_artwork.php?id=' . (int) $aw['id']); exit; }
 
+/* Artworks verified through the 3-stage process keep their main photo:
+   swapping it would break the proof that buyers and reviewers rely on. */
+$photoLocked = owGetStages((int) $aw['id']) !== [];
+
 $err = '';
 
 /* ---- Handle save ---- */
@@ -29,13 +34,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $type   = array_key_exists($_POST['type'] ?? '', $ART_TYPES) ? $_POST['type'] : '';
     $status = in_array($_POST['status'] ?? '', ['available','sold','auction'], true) ? $_POST['status'] : $aw['status'];
 
-    if ($tEn === '' || $tAr === '' || $dEn === '' || $dAr === '' || $type === '' || !is_numeric($price)) {
+    // Descriptions are optional (same as the 3-stage upload); titles, type and price are required.
+    if ($tEn === '' || $tAr === '' || $type === '' || !is_numeric($price) || (float) $price < 0) {
         $err = 'required';
     } else {
         $imageUrl = $aw['image_url'];
 
-        // Optional image replacement.
-        if (!empty($_FILES['image']['name'])) {
+        // Optional image replacement — never for 3-stage artworks (checked here on the server too).
+        if (!$photoLocked && !empty($_FILES['image']['name'])) {
             $check = validateUpload($_FILES['image']);
             if (!$check['ok']) {
                 $err = 'image';
@@ -136,7 +142,6 @@ h1{font-size:24px;font-weight:700;color:#111111;margin-bottom:6px;}
 .field input,.field textarea,.field select{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.12);background:rgba(255,255,255,0.7);font-size:14px;color:#111111;font-family:inherit;}
 .field textarea{resize:vertical;min-height:70px;}
 .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#0066ff;box-shadow:0 0 0 3px rgba(0,100,255,0.12);}
-.ai-hint{font-size:10px;font-weight:600;color:#0066ff;text-transform:none;margin-inline-start:6px;}
 .row{display:flex;gap:12px;align-items:center;margin-top:8px;}
 [dir="rtl"] .row{flex-direction:row-reverse;}
 .btn{padding:13px 30px;border-radius:999px;background:#111111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.25s;text-decoration:none;display:inline-block;}
@@ -146,6 +151,12 @@ h1{font-size:24px;font-weight:700;color:#111111;margin-bottom:6px;}
 .err-box{background:rgba(255,0,85,0.08);border:1px solid rgba(255,0,85,0.25);color:#ff0055;font-size:13px;font-weight:600;padding:11px 14px;border-radius:12px;margin-bottom:16px;}
 [dir="rtl"] .gc{text-align:right;}
 @media(max-width:768px){.topnav{padding:10px 14px;}.nav-logo span{display:none;}.grid2{grid-template-columns:1fr;}}
+</style>
+<style>
+html:not([dir="rtl"]) .bi-ar{display:none;}
+html[dir="rtl"] .bi-en{display:none;}
+.lock-note{font-size:13px;line-height:1.6;color:#111111;background:rgba(0,102,255,0.06);border:1px solid rgba(0,102,255,0.2);border-radius:12px;padding:12px 14px;}
+.lock-note::before{content:'🔒 ';}
 </style>
 </head>
 <body>
@@ -161,9 +172,9 @@ h1{font-size:24px;font-weight:700;color:#111111;margin-bottom:6px;}
 
     <?php if ($err): ?>
       <div class="err-box"
-           data-en="<?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'All fields are required and the price must be a number.' ?>"
-           data-ar="<?= $err === 'image' ? 'يجب أن تكون الصورة JPG/PNG/WEBP بحجم أقل من 5 ميغابايت.' : 'جميع الحقول مطلوبة ويجب أن يكون السعر رقماً.' ?>"
-           id="errbox"><?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'All fields are required and the price must be a number.' ?></div>
+           data-en="<?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?>"
+           data-ar="<?= $err === 'image' ? 'يجب أن تكون الصورة JPG/PNG/WEBP بحجم أقل من 5 ميغابايت.' : 'العنوانان مطلوبان ويجب أن يكون السعر رقماً.' ?>"
+           id="errbox"><?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?></div>
     <?php endif; ?>
 
     <?php if (!empty($aw['image_url'])): ?>
@@ -176,15 +187,15 @@ h1{font-size:24px;font-weight:700;color:#111111;margin-bottom:6px;}
 
       <div class="grid2">
         <div class="field"><label id="t-l-ten">Title in English</label>
-          <input type="text" id="f-title-en" name="title_en" value="<?= e($aw['title_en']) ?>" required onblur="autoTranslate('f-title-en','f-title-ar')"></div>
-        <div class="field"><label id="t-l-tar">Title in Arabic <span class="ai-hint" id="hint-title"></span></label>
+          <input type="text" id="f-title-en" name="title_en" value="<?= e($aw['title_en']) ?>" required></div>
+        <div class="field"><label id="t-l-tar">Title in Arabic</label>
           <input type="text" id="f-title-ar" name="title_ar" dir="rtl" value="<?= e($aw['title_ar']) ?>" required></div>
       </div>
       <div class="grid2">
         <div class="field"><label id="t-l-den">Description in English</label>
-          <textarea id="f-desc-en" name="desc_en" required onblur="autoTranslate('f-desc-en','f-desc-ar')"><?= e($aw['description_en']) ?></textarea></div>
-        <div class="field"><label id="t-l-dar">Description in Arabic <span class="ai-hint" id="hint-desc"></span></label>
-          <textarea id="f-desc-ar" name="desc_ar" dir="rtl" required><?= e($aw['description_ar']) ?></textarea></div>
+          <textarea id="f-desc-en" name="desc_en"><?= e($aw['description_en']) ?></textarea></div>
+        <div class="field"><label id="t-l-dar">Description in Arabic</label>
+          <textarea id="f-desc-ar" name="desc_ar" dir="rtl"><?= e($aw['description_ar']) ?></textarea></div>
       </div>
       <div class="grid2">
         <div class="field"><label id="t-l-price">Price in SAR</label>
@@ -203,8 +214,15 @@ h1{font-size:24px;font-weight:700;color:#111111;margin-bottom:6px;}
             <option value="sold" data-en="Sold" data-ar="مباع" <?= $aw['status']==='sold'?'selected':'' ?>>Sold</option>
             <option value="auction" data-en="Auction" data-ar="مزاد" <?= $aw['status']==='auction'?'selected':'' ?>>Auction</option>
           </select></div>
+        <?php if ($photoLocked): ?>
+        <div class="field"><div class="lock-note" role="note">
+          <span class="bi-en" lang="en">This artwork was verified through the 3-stage process. The main photo cannot be changed to protect its authenticity.</span>
+          <span class="bi-ar" lang="ar">تم التحقق من هذا العمل عبر نظام المراحل الثلاث. لا يمكن تغيير الصورة الرئيسية للحفاظ على أصالته.</span>
+        </div></div>
+        <?php else: ?>
         <div class="field"><label id="t-l-img">Replace Image (optional, JPG/PNG/WEBP, max 5MB)</label>
           <input type="file" name="image" accept="image/jpeg,image/png,image/webp"></div>
+        <?php endif; ?>
       </div>
 
       <div class="row">
@@ -217,25 +235,6 @@ h1{font-size:24px;font-weight:700;color:#111111;margin-bottom:6px;}
 
 <script>
 let L = 'en';
-
-/* Free Google Translate (client-side, no key) EN -> AR */
-function autoTranslate(srcId, dstId){
-  const src = document.getElementById(srcId), dst = document.getElementById(dstId);
-  if(!src || !dst) return;
-  const text = src.value.trim();
-  if(!text) return;
-  if(dst.value.trim() && dst.dataset.auto !== '1') return;
-  const hint = document.getElementById(srcId.indexOf('title')>-1 ? 'hint-title' : 'hint-desc');
-  if(hint) hint.textContent = (L==='ar'?'... جارٍ الترجمة':'translating…');
-  fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q='+encodeURIComponent(text))
-    .then(r=>r.json())
-    .then(d=>{ let ar=''; if(Array.isArray(d)&&Array.isArray(d[0])){ ar=d[0].map(s=>(s&&s[0])?s[0]:'').join(''); }
-      ar=ar.trim();
-      if(ar){ dst.value=ar; dst.dataset.auto='1'; if(hint) hint.textContent=(L==='ar'?'✓ مُترجم تلقائياً':'✓ auto-translated'); }
-      else if(hint){ hint.textContent=(L==='ar'?'تعذّرت الترجمة':'translation unavailable'); } })
-    .catch(()=>{ if(hint) hint.textContent=(L==='ar'?'خطأ في الشبكة':'network error'); });
-}
-['f-title-ar','f-desc-ar'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',()=>{el.dataset.auto='0';});});
 
 /* Bilingual nav + labels */
 const NAV={
