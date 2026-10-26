@@ -66,10 +66,10 @@ $cityLabel = function (array $i): array {
 <meta name="description" content="Find art institutes and courses near you on Oweili. ابحث عن معاهد فنية ودورات بالقرب منك على أويلي.">
 <meta property="og:title" content="Art Institutes · المعاهد الفنية · Oweili">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="/assets/css/oweili.css">
-<link rel="stylesheet" href="/assets/css/nav.css">
-<link rel="stylesheet" href="/assets/css/discover.css">
-<script src="/assets/js/discover.js"></script>
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
+<link rel="stylesheet" href="/assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">
+<script src="/assets/js/discover.js?v=<?= @filemtime(__DIR__ . '/assets/js/discover.js') ?>"></script>
 <style>
 /* Art Institutes — layout only; type, colors, buttons and cards come from oweili.css */
 .filter{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin:0 auto var(--space-lg);}

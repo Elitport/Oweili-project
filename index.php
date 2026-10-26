@@ -50,9 +50,9 @@ function hb(string $en, string $ar): string { return owBi($en, $ar); }
 <meta property="og:title" content="Oweili · Where Human Hands Create Art · حيث تصنع اليد البشرية الفن">
 <meta property="og:description" content="Real art by real artists, with proof of every stage of creation.">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="/assets/css/oweili.css">
-<link rel="stylesheet" href="/assets/css/nav.css">
-<link rel="stylesheet" href="/assets/css/proof.css">
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
+<link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
 <style>
 /* Homepage layout only — colors, type, buttons, cards and badges come from oweili.css */
 html{scroll-behavior:smooth;}

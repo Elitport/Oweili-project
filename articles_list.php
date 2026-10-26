@@ -60,10 +60,10 @@ $titleAr = $tAr . ' · أويلي';
 <meta name="description" content="<?= e($PAGE[$type]['sub'][0] . ' ' . $PAGE[$type]['sub'][1]) ?>">
 <meta property="og:title" content="<?= e($tEn . ' · ' . $tAr . ' · Oweili') ?>">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="/assets/css/oweili.css">
-<link rel="stylesheet" href="/assets/css/nav.css">
-<link rel="stylesheet" href="/assets/css/discover.css">
-<script src="/assets/js/discover.js"></script>
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
+<link rel="stylesheet" href="/assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">
+<script src="/assets/js/discover.js?v=<?= @filemtime(__DIR__ . '/assets/js/discover.js') ?>"></script>
 </head>
 <body class="ow">
 <div class="bg-wrap" aria-hidden="true"><video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video></div>

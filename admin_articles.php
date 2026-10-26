@@ -18,7 +18,7 @@ $staff   = owArticleStaff();
 if (!$staff) {
     http_response_code(403);
     ?><!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff only · Oweili</title><meta name="robots" content="noindex"><link rel="stylesheet" href="/assets/css/oweili.css">
+    <title>Staff only · Oweili</title><meta name="robots" content="noindex"><link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
     <script>try{if(localStorage.getItem('lang')==='ar'){document.documentElement.dir='rtl';document.documentElement.lang='ar';}}catch(e){}</script>
     <style>body.ow{background:#f4f5f7;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px;}.box{max-width:420px;background:#fff;border:1px solid var(--color-border);border-radius:16px;padding:32px;text-align:center;}.box h1{font-size:22px;font-weight:700;margin:0 0 8px;}.box a{display:inline-block;margin:8px 6px 0;font-weight:700;color:var(--color-accent);}</style></head>
     <body class="ow"><div class="box"><h1><?= owBi('Staff only', 'للفريق فقط') ?></h1>
@@ -347,7 +347,7 @@ $v = fn(string $k) => e((string) ($form[$k] ?? ''));
 <title>Articles · Oweili Team</title>
 <meta name="robots" content="noindex">
 <script>try{if(localStorage.getItem('lang')==='ar'){document.documentElement.dir='rtl';document.documentElement.lang='ar';}}catch(e){}</script>
-<link rel="stylesheet" href="/assets/css/oweili.css">
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Articles tool — staff layout only; buttons, tabs, cards, inputs and pills come from oweili.css */
 .wrap{max-width:1000px;margin:0 auto;padding:var(--space-lg);}

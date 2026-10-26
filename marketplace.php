@@ -80,8 +80,8 @@ foreach ($artworks as $aw) {
     else if(saved==='ar'){ params.set('lang','ar'); location.replace(location.pathname+'?'+params.toString()); }
   })();
   </script>
-  <link rel="stylesheet" href="/assets/css/oweili.css">
-  <link rel="stylesheet" href="/assets/css/proof.css">
+  <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+  <link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
   <style>
     /* Marketplace layout only — type, colors, buttons, artwork cards and badges come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }

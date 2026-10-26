@@ -79,7 +79,7 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Profile · Oweili</title>
-<link rel="stylesheet" href="/assets/css/oweili.css">
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Edit profile — layout only; card, fields, buttons and messages come from oweili.css */
 .page{position:relative;z-index:10;width:100%;max-width:760px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl);}

@@ -254,6 +254,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ## Known Issues
 - Fixed: the Arabic menu order. A CSS line on 18 pages flipped the menu back to left-to-right; it was removed. Never add `flex-direction:row-reverse` to the menu for Arabic — dir="rtl" already puts items in the right order
 - Fixed in Sprint 2: the last `[dir="rtl"] ... row-reverse` lines in page sections were removed. Do not add them back
+- Fixed: the menu showed twice after the design-system merge, because browsers kept an old saved copy of nav.css. Every CSS and JS link now carries a version number taken from the file's last-changed time, e.g. href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>". When a file changes, the number changes and every browser loads the new copy. Any new page must link its CSS and JS files the same way
 - The site is auto-deployed from GitHub main via Hostinger — anything saved to main goes live straight away, so test on a working branch first
 
 ## Work Rules

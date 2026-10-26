@@ -235,8 +235,8 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Start New Artwork · Oweili</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/css/oweili.css">
-<link rel="stylesheet" href="/assets/css/nav.css">
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
 <style>
 /* 3-stage upload — layout only; buttons, cards, inputs and alerts come from oweili.css */
 .wrap h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}

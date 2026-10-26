@@ -305,7 +305,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin · Oweili</title>
-<link rel="stylesheet" href="/assets/css/oweili.css">
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Admin panel — staff layout only; buttons, tabs, tables, cards, forms and stat cards come from oweili.css (role color: admin dark) */
 .wrap{max-width:1100px;margin:0 auto;padding:var(--space-lg);}
@@ -380,7 +380,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 @media(max-width:768px){.wrap{padding:var(--space-sm);}}
 @media(max-width:640px){.style-item{flex-direction:column;}.acards{grid-template-columns:1fr;}}
 </style>
-<link rel="stylesheet" href="/assets/css/proof.css">
+<link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
 </head>
 <body class="staff-page">
 <div class="wrap">

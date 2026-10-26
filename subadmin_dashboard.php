@@ -67,7 +67,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sub-admin · Oweili</title>
-<link rel="stylesheet" href="/assets/css/oweili.css">
+<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Sub-admin review panel — staff layout only; buttons, cards and stat cards come from oweili.css (role color: sub-admin green) */
 .wrap{max-width:960px;margin:0 auto;padding:var(--space-lg);}
@@ -91,7 +91,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 .empty{padding:var(--space-lg);text-align:center;color:var(--color-body);}
 @media(max-width:768px){.wrap{padding:var(--space-sm);}.stat-grid{grid-template-columns:1fr 1fr;}}
 </style>
-<link rel="stylesheet" href="/assets/css/proof.css">
+<link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
 </head>
 <body class="staff-page">
 <div class="wrap dash role-subadmin">
