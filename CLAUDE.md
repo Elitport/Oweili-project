@@ -62,6 +62,7 @@
 - Local artist photos: never published without a saved consent record
 
 ## Database Tables Needed (not yet built — need approval before creating)
+- The SQL for all of these is ready in database_update.sql (also adds the 'institute' role to users). It has NOT been run yet — the owner runs it in phpMyAdmin after a backup
 - artwork_stages: the 3 stage photos per artwork (25%, 50%, 100%) with dates
 - artwork_colors: colors used in each artwork
 - institutes: name in Arabic and English, city, description, logo, contact, owner account
@@ -116,6 +117,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
+- database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Not run yet
 
 ## Design System
 - Style: Luxury white minimal
