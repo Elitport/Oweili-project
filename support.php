@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Support · Oweili</title>
 <meta name="description" content="Got a question? Just ask. A real person on our team will help you. لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.">
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}

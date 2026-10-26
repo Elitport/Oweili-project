@@ -67,6 +67,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sub-admin · Oweili</title>
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Sub-admin review panel — staff layout only; buttons, cards and stat cards come from oweili.css (role color: sub-admin green) */
@@ -101,7 +102,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
       <div class="sub">Review and approve or reject pending artwork submissions.</div>
     </div>
     <div class="top-actions">
-      <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button>
+      <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?>
       <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
       <a class="btn btn-ghost btn-sm" href="logout.php">Log out</a>
     </div>

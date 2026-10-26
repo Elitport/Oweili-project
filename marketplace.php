@@ -81,6 +81,7 @@ foreach ($artworks as $aw) {
     else if(saved==='ar'){ params.set('lang','ar'); location.replace(location.pathname+'?'+params.toString()); }
   })();
   </script>
+  <?php include __DIR__ . '/theme_head.php'; ?>
   <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
   <link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
   <style>

@@ -305,6 +305,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin · Oweili</title>
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Admin panel — staff layout only; buttons, tabs, tables, cards, forms and stat cards come from oweili.css (role color: admin dark) */
@@ -386,7 +387,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 <div class="wrap">
 <?php if (!$isAdmin): ?>
 
-  <div style="max-width:380px;margin:6vh auto 0;text-align:right;"><button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button></div>
+  <div style="max-width:380px;margin:6vh auto 0;text-align:right;"><button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?></div>
   <form class="card login-card" method="post" action="admin.php">
     <h1>Admin Login</h1>
     <?php if ($loginError): ?><div class="err"><?= e($loginError) ?></div><?php endif; ?>
@@ -405,7 +406,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
       <div class="sub">Manage artists, collectors, and artwork approvals.</div>
     </div>
     <div class="top-actions">
-      <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button>
+      <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?>
       <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?logout=1">Log out</a>
     </div>

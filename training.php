@@ -66,6 +66,7 @@ $cityLabel = function (array $i): array {
 <meta name="description" content="Find the right place to learn art, close to home. اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.">
 <meta property="og:title" content="Art Institutes · المعاهد الفنية · Oweili">
 <meta property="og:type" content="website">
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
 <link rel="stylesheet" href="/assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">

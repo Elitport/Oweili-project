@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Studio · Oweili</title>
 <meta name="description" content="This is where your practice grows. Learn real art styles rooted in Saudi culture. Start with our style guides today. Workshops with Saudi art institutes are on their way. هنا تنمو موهبتك يوماً بعد يوم. تعلّم أساليب فنية أصيلة من روح الثقافة السعودية. ابدأ اليوم بأدلة الأساليب. وورش العمل مع معاهد الفنون السعودية في الطريق إليك.">
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}

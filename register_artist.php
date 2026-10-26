@@ -160,6 +160,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Artist Sign-up · Oweili</title>
 <meta name="description" content="We are glad you are here. Our team reviews every profile by hand. سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.">
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}

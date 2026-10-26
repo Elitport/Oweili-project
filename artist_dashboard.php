@@ -148,6 +148,7 @@ $web = $artist['website']   ?? '';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= $artist ? e($artist['full_name_en']) . ' · ' : '' ?>Artist Profile · Oweili</title>
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Artist dashboard / public profile — layout only; cards, buttons, stats, tables,

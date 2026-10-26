@@ -42,6 +42,7 @@ if (!function_exists('owLogoMark')) {
    of the wrong direction before the page's own script runs. */
 (function(){try{var l=localStorage.getItem('lang');if(l==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}}catch(e){}})();
 </script>
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
 <nav class="topnav" id="topnav">
@@ -96,6 +97,7 @@ if (!function_exists('owLogoMark')) {
       <a class="nav-btn" href="register.php" id="n-reg"><span id="n-reg-t">Join Free</span></a>
     <?php endif; ?>
     <button class="lang-btn" onclick="tgl()" id="lb">العربية</button>
+    <?php owThemeButton(); ?>
   </div>
   <button type="button" class="mnav-btn" id="mnav-btn" aria-expanded="false" aria-controls="mnav-panel" aria-label="Open menu" data-label-en="Open menu" data-label-ar="فتح القائمة" data-close-en="Close menu" data-close-ar="إغلاق القائمة">
     <svg class="mnav-bars" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>

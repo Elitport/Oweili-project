@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Human Hand · Oweili</title>
 <meta name="description" content="Oweili celebrates art made by people. Here are four great families of human art. Each one shows a different bond between artist and material. We will show you how to spot the living touch in every real work. يحتفي أويلي بالفن الذي تصنعه أيدي البشر. هنا أربع عائلات كبرى من الفن الإنساني. لكل منها علاقة مختلفة بين الفنان وخامته. وسنريك كيف تلمح اللمسة الحيّة في كل عمل أصيل.">
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}

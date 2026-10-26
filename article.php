@@ -48,6 +48,7 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <?php else: ?>
 <meta name="robots" content="noindex">
 <?php endif; ?>
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
 <link rel="stylesheet" href="/assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">

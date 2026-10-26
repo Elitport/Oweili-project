@@ -60,6 +60,7 @@ $titleAr = $tAr . ' · أويلي';
 <meta name="description" content="<?= e($PAGE[$type]['sub'][0] . ' ' . $PAGE[$type]['sub'][1]) ?>">
 <meta property="og:title" content="<?= e($tEn . ' · ' . $tAr . ' · Oweili') ?>">
 <meta property="og:type" content="website">
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
 <link rel="stylesheet" href="/assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">

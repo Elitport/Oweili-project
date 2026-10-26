@@ -44,6 +44,7 @@ $memberSince = !empty($me['created_at']) ? date('Y', strtotime($me['created_at']
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Collection · Oweili</title>
+<?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Collector dashboard — layout only; cards, buttons, stats and tables come from oweili.css (role color: collector blue) */

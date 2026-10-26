@@ -107,54 +107,58 @@
   --stage-size: 120px;
 }
 
-/* ── 2b. DARK MODE — follows the visitor's phone or computer setting ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --color-primary: #DB8084;
-    --color-primary-dark: #C96A6E;
-    --color-accent: #8FA1B1;       /* lighter in dark mode so links stay readable */
-    --color-accent-dark: #B4C2CE;
-    --color-dark: #F0F4F8;
-    --color-body: #CBD5E0;
-    --color-light: #8FA1B1;
-    --color-bg: #0F1520;
-    --color-card: rgba(35,49,74,0.6);
-    --color-border: rgba(143,161,177,0.15);
-    --color-border-strong: rgba(143,161,177,0.32);
-    --rgb-accent: 143,161,177;
-    --rgb-ink: 143,161,177;
-    --rgb-shadow: 0,0,0;
-    --rgb-surface: 35,49,74;
-    --color-surface: rgba(35,49,74,0.6);   /* frosted glass cards */
-    --color-surface-2: #172031;
-    --color-frame: #1A2538;
-    --color-menu: #1A2538;
-    --color-on-primary: #23314A;
-    --color-on-accent: #0F1520;
-    --color-on-dark: #0F1520;
-    --color-dark-hover: #CBD5E0;
-    --color-highlight: var(--color-primary);
-    --color-tint-blue: rgba(143,161,177,0.1);
-    --color-tint-pink: rgba(219,128,132,0.14);
-    --nav-bg: rgba(15,21,32,0.88);
-    --veil: rgba(15,21,32,0.6);
-    --veil-strong: rgba(15,21,32,0.9);
-    --hero-shade: rgba(15,21,32,0.6);
-    --shadow-card: 0 4px 24px rgba(0,0,0,0.35);
-    --shadow-card-hover: 0 16px 40px rgba(0,0,0,0.5);
-    --color-collector: #8FA1B1;
-    --color-admin: #F0F4F8;
-  }
-  /* cards become frosted glass on the dark background */
-  .card, .aw-card, .stat-card, .table-wrap, .auth-card, .glass-card {
-    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
-  }
-  /* inputs and menus stay solid so text is always easy to read */
-  .input, .field input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=hidden]),
-  .field select, .field textarea, .ow-form input, .ow-form select, .ow-form textarea { background: #172031; }
-  .staff-page { background: var(--color-bg); }
+/* ── 2b. DARK MODE — class "dark-mode" on <html>, set by theme_head.php:
+    the visitor's saved choice, or their phone or computer setting until they choose ── */
+html.dark-mode {
+  color-scheme: dark;
+  --color-primary: #DB8084;
+  --color-primary-dark: #C96A6E;
+  --color-accent: #8FA1B1;       /* lighter in dark mode so links stay readable */
+  --color-accent-dark: #B4C2CE;
+  --color-dark: #F0F4F8;
+  --color-body: #CBD5E0;
+  --color-light: #8FA1B1;
+  --color-bg: #0F1520;
+  --color-card: rgba(35,49,74,0.6);
+  --color-border: rgba(143,161,177,0.15);
+  --color-border-strong: rgba(143,161,177,0.32);
+  --rgb-accent: 143,161,177;
+  --rgb-ink: 143,161,177;
+  --rgb-shadow: 0,0,0;
+  --rgb-surface: 35,49,74;
+  --color-surface: rgba(35,49,74,0.6);   /* frosted glass cards */
+  --color-surface-2: #172031;
+  --color-frame: #1A2538;
+  --color-menu: #1A2538;
+  --color-on-primary: #23314A;
+  --color-on-accent: #0F1520;
+  --color-on-dark: #0F1520;
+  --color-dark-hover: #CBD5E0;
+  --color-highlight: var(--color-primary);
+  --color-tint-blue: rgba(143,161,177,0.1);
+  --color-tint-pink: rgba(219,128,132,0.14);
+  --nav-bg: rgba(15,21,32,0.88);
+  --veil: rgba(15,21,32,0.6);
+  --veil-strong: rgba(15,21,32,0.9);
+  --hero-shade: rgba(15,21,32,0.6);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.35);
+  --shadow-card-hover: 0 16px 40px rgba(0,0,0,0.5);
+  --color-collector: #8FA1B1;
+  --color-admin: #F0F4F8;
 }
+/* cards become frosted glass on the dark background */
+.dark-mode .card, .dark-mode .aw-card, .dark-mode .stat-card, .dark-mode .table-wrap, .dark-mode .auth-card, .dark-mode .glass-card {
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+}
+/* inputs stay solid so text is always easy to read */
+.dark-mode .input, .dark-mode .field input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=hidden]),
+.dark-mode .field select, .dark-mode .field textarea, .dark-mode .ow-form input, .dark-mode .ow-form select, .dark-mode .ow-form textarea { background: #172031; }
+
+/* the light / dark button (theme_head.php): moon in light mode, sun in dark mode */
+.theme-btn { min-width: 40px; padding: 0 10px; }
+.theme-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.theme-btn .i-sun, .dark-mode .theme-btn .i-moon { display: none; }
+.dark-mode .theme-btn .i-sun { display: block; }
 
 @media (max-width: 768px) {
   :root {

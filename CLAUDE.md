@@ -189,11 +189,17 @@
 - Fixed on the way: one Studio block ("Workshops with Saudi Art Institutes") never switched to Arabic; it does now
 - When adding new text, keep this voice. Tables: none
 
-### Rebrand: new colors + dark mode — rebrand branch (waiting for owner approval)
+### Rebrand: new colors + dark mode — live (approved by the owner)
 - What it does: new palette — warm pink #DB8084 (hover #C96A6E), deep navy #23314A (hover #1A2538), soft grey-blue #8FA1B1, body text #4A5568. Role colors: artist pink, collector navy, institute grey-blue, sub-admin #5B8A6E, admin navy
-- Dark mode turns on by itself when the visitor's phone or computer is set to dark: background #0F1520, frosted navy glass cards, headings #F0F4F8, body #CBD5E0, links grey-blue #8FA1B1, menu #0F1520 with blur, and a navy shade rgba(15,21,32,0.6) over the background video
+- Dark mode (class "dark-mode" on <html>): background #0F1520, frosted navy glass cards, headings #F0F4F8, body #CBD5E0, links grey-blue #8FA1B1, menu #0F1520 with blur, and a navy shade rgba(15,21,32,0.6) over the background video
 - No page has its own colors any more: every color comes from oweili.css variables (plus helpers like --rgb-primary, --color-surface, --color-on-primary), so light and dark mode work on every page. Kept on purpose: real paint swatches in the upload, black behind admin videos, and the welcome email in verify.php (email apps cannot read CSS variables, so it uses the new colors typed in)
 - Homepage: new headline and badge (see Homepage)
+
+### Light / dark mode button
+- What it does: a small round button next to the language button in the menu (and in the admin, sub-admin and articles staff headers). Moon icon in light mode ("Dark mode" / «الوضع الليلي»), sun icon in dark mode ("Light mode" / «الوضع النهاري»). The icons are drawn in SVG
+- The choice is saved in the browser (localStorage "theme" = dark or light) and kept on every page and visit. Before the visitor chooses, the site follows their phone or computer setting (light for most people)
+- No flash: theme_head.php runs at the top of every page head, before anything is drawn. New pages must include it before oweili.css: <?php include __DIR__ . '/theme_head.php'; ?>
+- Files: theme_head.php (the switch and owThemeButton()), nav.php, oweili.css (dark colors under html.dark-mode, button style), admin.php, subadmin_dashboard.php, admin_articles.php, and every page head. Tables: none
 - Files: assets/css/oweili.css, nav.css, proof.css, discover.css, nav.php and footer.php (logo color), artwork_lib.php (art type drawings follow the text color), verify.php, and every page's style block. Tables: none
 
 ### Design system (one theme) — design-system branch
@@ -242,9 +248,9 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ## Design System
 - Style: Luxury white minimal
 - Background: Video (bg.mp4) with white overlay
-- Primary color: #DB8084 (warm pink) — rebrand branch, waiting for owner approval
+- Primary color: #DB8084 (warm pink)
 - Accent color: #23314A (deep navy)
-- Dark mode: follows the visitor's phone or computer setting (see "Rebrand" under Features)
+- Dark mode: the sun / moon button in the menu; before a choice it follows the visitor's device (see "Light / dark mode button" under Features)
 - Font: DM Sans (English) + Tajawal (Arabic), from Google Fonts — loaded once in oweili.css (see rule 30)
 - Cards: border-radius 16px, white, 1px border, soft shadow, 24px padding
 - Buttons: 8px corners (not pill), 48px tall, bold 14px uppercase. Chips, tags and badges stay rounded
