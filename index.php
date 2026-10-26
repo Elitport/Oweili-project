@@ -75,7 +75,7 @@ section{padding:72px 0;}
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 30px;border-radius:999px;font-size:16px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s,box-shadow 0.2s;border:1px solid transparent;}
 .btn-pink{background:var(--color-primary);color:#fff;box-shadow:0 10px 24px rgba(255,0,85,0.22);}
-.btn-pink:hover{background:#e0004b;transform:translateY(-2px);}
+.btn-pink:hover{background:var(--color-primary-dark,#e0004b);transform:translateY(-2px);}
 .btn-glass{background:rgba(255,255,255,0.8);color:var(--color-dark);border-color:rgba(0,0,0,0.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
 .btn-glass:hover{background:#fff;transform:translateY(-2px);}
 .btn:active{transform:translateY(0);}

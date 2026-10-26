@@ -275,7 +275,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .btn-light{background:#fff;color:var(--color-dark);border-color:rgba(0,0,0,0.15);}
 .btn-light:hover{background:#f4f5f7;}
 .btn-pink{background:var(--color-primary);color:#fff;font-size:16px;}
-.btn-pink:hover{background:#e0004b;}
+.btn-pink:hover{background:var(--color-primary-dark,#e0004b);}
 .btn-dark:active,.btn-light:active,.btn-pink:active{transform:scale(0.98);}
 .btn-dark:focus-visible,.btn-light:focus-visible,.btn-pink:focus-visible,.chip:focus-within,.type-card:focus-within{outline:2px solid var(--color-accent);outline-offset:2px;}
 .btn-dark[disabled],.btn-pink[disabled]{opacity:0.6;cursor:wait;}

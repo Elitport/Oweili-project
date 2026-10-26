@@ -12,6 +12,8 @@
 :root {
   --color-primary: #ff0055;
   --color-accent: #0066ff;
+  --color-primary-dark: #e0004b;   /* pink button hover */
+  --color-accent-dark: #0047ab;    /* small blue text on light blue backgrounds */
   --color-dark: #111111;
   --color-body: rgba(0,0,0,0.65);
   --color-light: rgba(0,0,0,0.45);

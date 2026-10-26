@@ -150,7 +150,7 @@
 - All text is at least 12px, including the menu. Because the menu text is bigger, the ☰ menu now takes over below 1100px (was 1024px)
 - The remaining Arabic "flip" lines (row-reverse) were removed from all pages — Arabic sections now read right to left correctly
 - nav.php now sets the menu words itself (one list for every page), so new pages need no menu translation code
-- Darker shades kept for hover and readable small text: #e0004b (pink hover) and #0047ab (dark blue text on blue tints) — owner to confirm. Paint colors in the upload (artwork_lib.php) are real paint swatches and stay
+- Darker shades (approved by the owner): --color-primary-dark #e0004b for pink button hovers, and --color-accent-dark #0047ab for small blue text on light blue backgrounds. Both live in oweili.css; pages use var(--color-primary-dark) / var(--color-accent-dark). Paint colors in the upload (artwork_lib.php) are real paint swatches and stay
 - Not changed on purpose: admin.php and subadmin_dashboard.php keep their own staff header instead of the public menu
 
 ## Shared Files
@@ -227,6 +227,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Accent: #0066ff (blue) — use for links and secondary actions
 - Background: white #ffffff with frosted glass cards
 - Text: #111111 for headings, rgba(0,0,0,0.65) for body
+- Hover on pink buttons: --color-primary-dark #e0004b. Small blue text on light blue backgrounds: --color-accent-dark #0047ab
 - Never add random colors — stick to this palette
 - Ensure contrast ratio is always readable
 - Pink #ff0055 is for buttons and large highlights only (large text = 18px+, or 14px+ bold) — never for small text, since it fails WCAG AA at small sizes

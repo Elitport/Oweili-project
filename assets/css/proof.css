@@ -40,7 +40,7 @@ html[dir="rtl"] .bi-en { display: none; }
 .pj-step figcaption { padding: 8px 10px 10px; font-size: 13px; line-height: 1.5; color: #111111; }
 .pj-step figcaption b { margin-inline-end: 4px; }
 .pj-date { display: block; font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 2px; }
-.pj-gap  { display: block; font-size: 12px; font-weight: 600; color: #0047ab; margin-top: 4px; }
+.pj-gap  { display: block; font-size: 12px; font-weight: 600; color: var(--color-accent-dark, #0047ab); margin-top: 4px; }
 .pj-warn {
   display: block; font-size: 12px; font-weight: 700; color: #111111; margin-top: 6px;
   background: rgba(255,0,85,0.08); border: 1px solid rgba(255,0,85,0.3); border-radius: 8px; padding: 4px 8px;

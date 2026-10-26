@@ -238,7 +238,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .start-card{padding:28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;}
 .start-card p{font-size:14px;line-height:1.7;color:rgba(0,0,0,0.65);max-width:520px;}
 .btn-start{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:14px 28px;border-radius:999px;background:#ff0055;color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s;}
-.btn-start:hover{background:#e0004b;transform:translateY(-2px);}
+.btn-start:hover{background:var(--color-primary-dark,#e0004b);transform:translateY(-2px);}
 .btn-start:active{transform:translateY(0);}
 .btn-start:focus-visible,.mini-btn:focus-visible{outline:2px solid #0066ff;outline-offset:2px;}
 .draft-list{display:grid;gap:12px;margin-top:14px;}
@@ -248,7 +248,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .draft-title{font-size:14px;font-weight:700;color:#111111;}
 .draft-stages{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
 .draft-stages span{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.12);color:rgba(0,0,0,0.55);}
-.draft-stages span.ok{background:rgba(0,102,255,0.1);border-color:rgba(0,102,255,0.25);color:#0047ab;}
+.draft-stages span.ok{background:rgba(0,102,255,0.1);border-color:rgba(0,102,255,0.25);color:var(--color-accent-dark,#0047ab);}
 .draft .art-actions{margin-top:0;flex-shrink:0;}
 .draft .mini-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;font-size:12px;text-decoration:none;}
 .b-review{background:rgba(0,0,0,0.7);color:#fff;}
