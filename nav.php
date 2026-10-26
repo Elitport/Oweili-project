@@ -66,10 +66,12 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
     <div class="nav-item"><a href="marketplace.php" id="nav-marketplace-link"><span id="nav-marketplace-label">Marketplace</span></a></div>
     <div class="nav-item"><a href="explore.php" id="nav-explore-link"><span id="nav-explore-label">Explore Art Styles</span></a></div>
     <div class="nav-item">
-      <a href="events.php"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
+      <a href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-discover">
-        <a href="events.php"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-i18n" data-en="Art Events" data-ar="أحداث فنية">Art Events</span></a>
-        <a href="training.php"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg><span class="nav-i18n" data-en="Training Institutes" data-ar="معاهد تدريب">Training Institutes</span></a>
+        <a href="articles_list.php?type=event"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
+        <a href="articles_list.php?type=artist_spotlight"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
+        <a href="articles_list.php?type=art_education"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a>
+        <a href="training.php"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
       </div>
     </div>
     <div class="nav-item">
@@ -103,9 +105,11 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
     <a class="mnav-link" href="community.php"><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
     <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"><span class="nav-i18n" data-en="Marketplace" data-ar="السوق">Marketplace</span></a>
     <a class="mnav-link" href="explore.php"><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
-    <a class="mnav-link" href="events.php"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
-    <a class="mnav-link mnav-sub" href="events.php"><span class="nav-i18n" data-en="Art Events" data-ar="أحداث فنية">Art Events</span></a>
-    <a class="mnav-link mnav-sub" href="training.php"><span class="nav-i18n" data-en="Training Institutes" data-ar="معاهد تدريب">Training Institutes</span></a>
+    <a class="mnav-link" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
+    <a class="mnav-link mnav-sub" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
+    <a class="mnav-link mnav-sub" href="articles_list.php?type=artist_spotlight"><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
+    <a class="mnav-link mnav-sub" href="articles_list.php?type=art_education"><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a>
+    <a class="mnav-link mnav-sub" href="training.php"><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
     <a class="mnav-link" href="support.php"><span class="nav-i18n" data-en="Support" data-ar="الدعم">Support</span></a>
     <div class="mnav-acct">
     <?php if ($navUser): ?>

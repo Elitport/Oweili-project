@@ -111,6 +111,7 @@ h1{font-size:24px;font-weight:700;margin-bottom:4px;}
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
       <button class="lang-btn" id="lb" onclick="tglLang()">العربية</button>
+      <a class="btn" href="admin_articles.php">Articles</a>
       <a class="btn grey" href="logout.php">Log out</a>
     </div>
   </div>
@@ -151,6 +152,7 @@ const ADICT = {
   "Artwork Approvals":"اعتماد الأعمال الفنية",
   "Review and approve or reject pending artwork submissions.":"راجع الأعمال المُرسلة ووافق عليها أو ارفضها.",
   "Log out":"تسجيل الخروج",
+  "Articles":"المقالات",
   "Pending Artworks":"الأعمال المعلّقة",
   "Nothing pending — all caught up. 🎉":"لا يوجد معلّق — كل شيء محدّث. 🎉",
   "Approve":"موافقة","Reject":"رفض","Untitled":"بدون عنوان","Unknown artist":"فنان غير معروف"

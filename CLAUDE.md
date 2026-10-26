@@ -75,7 +75,7 @@
 ## Sprint Plan
 - Sprint 1 (now): update CLAUDE.md + database tables + proof-of-process camera upload
 - Sprint 2: typography, design applied to all pages, homepage rebuilt to reflect vision (done — see Features)
-- Sprint 3: articles system + institutes directory + art education with images
+- Sprint 3: articles system + institutes directory + art education with images (built — see Features; institutes are still added in phpMyAdmin, an institute admin tool is next)
 - Sprint 4: payments (last — after everything else is complete)
 
 ## What NOT to build yet
@@ -90,8 +90,12 @@
 - studio.php — Studio content page
 - community.php — Community page
 - support.php — Support and FAQ
-- events.php — Art events (under Discover)
-- training.php — Training institutes (under Discover)
+- events.php — old events page (no longer in the menu; its events live in the old `events` table — move them into Art Events articles)
+- training.php — Art Institutes directory (rebuilt in Sprint 3)
+- articles_list.php — all published articles of one type (?type=event / artist_spotlight / art_education)
+- article.php — one article (article.php?slug=...)
+- admin_articles.php — team tool to write articles (sub-admins and admins only)
+- article_lib.php — shared helpers for articles, consent records and institutes
 - register.php / register_artist.php / register_collector.php — Sign up flows
 - login.php / logout.php / verify.php / forgot.php — Auth
 - edit_profile.php / edit_artwork.php — Self-service editing
@@ -153,6 +157,32 @@
 - Darker shades (approved by the owner): --color-primary-dark #e0004b for pink button hovers, and --color-accent-dark #0047ab for small blue text on light blue backgrounds. Both live in oweili.css; pages use var(--color-primary-dark) / var(--color-accent-dark). Paint colors in the upload (artwork_lib.php) are real paint swatches and stay
 - Not changed on purpose: admin.php and subadmin_dashboard.php keep their own staff header instead of the public menu
 
+### Articles system (admin tool) — Sprint 3, needs database_update.sql
+- What it does: admin_articles.php has 3 tabs — "Art Events" / «الملتقيات الفنية», "Artist Spotlights" / «أضواء على الفنانين», "Art Education" / «التثقيف الفني». Each tab lists its articles (title, Draft/Published, date created, View, Edit, Delete with a confirm question) and a "New Article" button
+- Form: title and text in English and Arabic (all required), cover image, extra photos (up to 12, shown under the text), Draft or Published. Events also need start date, optional end date, and the location in both languages
+- The web address (slug) is made from the English title (lowercase, spaces to hyphens, -2 added if taken). It stays fixed once the article has been published, so shared links never break
+- Artist Spotlights have a "Photo consent" section: artist name EN/AR, email or phone, how they agreed (Email / WhatsApp / Signed Form / In Person / Other), the date, and a proof file (photo or PDF). A spotlight with photos cannot be published until there is a consent that is not withdrawn
+- Consent records can never be deleted — only "Mark as withdrawn" (saves the date). If the last consent is withdrawn, the article goes back to draft automatically. Deleting an article keeps its consent records and proof files
+- Who: sub-admins and admins (logged in with that role) and admins signed in on admin.php. Everyone else gets "Staff only". Linked from admin.php and subadmin_dashboard.php ("Articles")
+- Photos are re-saved like artwork photos (rotation fixed, GPS removed) into uploads/articles/. Proof files go to uploads/consents/, which is private: blocked in .htaccess (plus its own lock file); staff open them only through admin_articles.php?proof=N
+- Files: admin_articles.php, article_lib.php, artwork_lib.php (owStoreImage), .htaccess. Tables: articles, article_images, photo_consents
+
+### Public articles pages — Sprint 3, needs database_update.sql
+- articles_list.php?type=event|artist_spotlight|art_education: page title and short intro, buttons to switch type (and to Art Institutes), grid of cards (cover, title, date — events show their dates and place). A warm message and an "Explore Artworks" button when there are none yet
+- article.php?slug=...: full-width cover, title, published date, the text in the page language (paragraphs; any HTML is shown as plain text for safety), extra photos, "Back" to the list and "Explore Artworks". Events also show dates, place and "Added by the Oweili team" / «أضافه فريق أويلي». Unknown or draft articles show a friendly "not found" page
+- Visitors only see published articles; spotlights with photos also need an active consent
+- Files: articles_list.php, article.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: articles, article_images, photo_consents
+
+### Art Institutes directory (training.php) — Sprint 3, needs database_update.sql
+- What it does: "Art Institutes" / «المعاهد الفنية» with a city filter (cities come from the database) and institute cards: logo (or a building icon), name, city, short description, number of active courses, and "View Courses" / «عرض الدورات» that opens the course list (title, dates, price in SAR or "Free" / «مجاني», seats left or "Fully booked", "Register Interest" → the institute's email, or phone, or website)
+- Only active institutes and courses that have not ended are shown. Empty: "We are building our institutes directory. Check back soon." / «نحن نبني دليل المعاهد. عد قريباً.»
+- Institutes and courses are added in phpMyAdmin for now (no admin screen yet). The old `training` table is no longer used
+- Files: training.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: institutes, courses
+
+### Menu and homepage links — Sprint 3
+- Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes. Homepage "Discover the Art World" now has 3 cards: Art Institutes, Global Art Events, Art Education
+- Files: nav.php, index.php
+
 ## Shared Files
 - .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, and hidden folders (.claude/, .agents/, .git/). Visitors get 403 Forbidden. Keep it when changing hosting settings
 - assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
@@ -160,6 +190,8 @@
 - oweili.css also gives opt-in pages (<body class="ow">) a box-sizing reset and removes the default page margin
 - oweili.css also has the two-language text rule for every page: <span class="bi-en">…</span><span class="bi-ar">…</span> shows the one matching the page direction
 - assets/css/proof.css — styles for the Creation Journey and Proof of Process panels. Text is printed in both languages and the one matching the page direction is shown
+- assets/css/discover.css + assets/js/discover.js — shared look and language button for the Discover pages (articles_list.php, article.php, training.php)
+- uploads/consents/ — private consent proofs; never link to it directly
 - assets/logo/ — home for the official logo files (not added yet)
 - Mobile menu (in nav.php) — on screens 1100px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
 - Every page that shows the main menu now uses nav.php, including index.php and marketplace.php
@@ -194,7 +226,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 ## Navigation Structure
 - The Studio → studio.php
 - Community → community.php
-- Discover → events.php / training.php
+- Discover → Art Events / Artist Spotlights / Art Education (articles_list.php?type=...) / Art Institutes (training.php)
 - Explore Art Styles → explore.php
 - Support → support.php
 - Marketplace → marketplace.php

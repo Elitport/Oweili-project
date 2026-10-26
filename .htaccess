@@ -12,6 +12,9 @@ Options -Indexes
   RewriteEngine On
   RewriteCond %{REQUEST_URI} !^/\.well-known/
   RewriteRule (^|/)\. - [F,L]
+  # Photo consent proofs are private records (Saudi PDPL) — staff open them
+  # only through admin_articles.php, never by a direct link
+  RewriteRule ^uploads/consents/ - [F,L]
 </IfModule>
 
 # Project notes, database setup files and the skills list

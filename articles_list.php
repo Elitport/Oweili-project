@@ -1,0 +1,121 @@
+<?php
+/* =====================================================================
+ *  articles_list.php — all published articles of one type, for everyone
+ *  ?type=event | artist_spotlight | art_education
+ *  Tables: articles, article_images, photo_consents (see article_lib.php)
+ * ===================================================================== */
+require_once 'config.php';
+require_once __DIR__ . '/article_lib.php';
+
+$TYPES = owArticleTypes();
+$type  = (string) ($_GET['type'] ?? 'event');
+if (!isset($TYPES[$type])) $type = 'event';
+
+$PAGE = [
+    'event' => [
+        'sub' => ['Exhibitions, fairs and gatherings around the world — chosen by the Oweili team to keep artists connected.',
+                  'معارض ومهرجانات وملتقيات حول العالم — يختارها فريق أويلي ليبقى الفنانون على تواصل مع عالم الفن.'],
+        'empty' => ['No events yet — our team is gathering the next art events from around the world. Check back soon.',
+                    'لا توجد ملتقيات بعد — فريقنا يجمع الملتقيات الفنية القادمة من حول العالم. عد قريباً.'],
+    ],
+    'artist_spotlight' => [
+        'sub' => ['The stories of artists whose hands shape art — from Saudi Arabia and around the world.',
+                  'قصص فنانين تصنع أيديهم الفن — من المملكة العربية السعودية ومن حول العالم.'],
+        'empty' => ['No spotlights yet — our team is writing the first artist stories. Check back soon.',
+                    'لا توجد مقالات بعد — فريقنا يكتب أولى قصص الفنانين. عد قريباً.'],
+    ],
+    'art_education' => [
+        'sub' => ['Learn the names of art styles, why they are called that, and the history behind them.',
+                  'تعرّف على أسماء الأساليب الفنية، وسبب تسميتها، والتاريخ الذي يقف وراءها.'],
+        'empty' => ['No lessons yet — our team is preparing the first art education articles. Check back soon.',
+                    'لا توجد دروس بعد — فريقنا يجهّز أولى مقالات التثقيف الفني. عد قريباً.'],
+    ],
+];
+
+$items = [];
+if (owArticlesReady()) {
+    try {
+        $order = $type === 'event' ? 'a.event_start_date DESC, a.id DESC' : 'a.published_at DESC, a.id DESC';
+        $st = getDB()->prepare('SELECT a.slug, a.title_en, a.title_ar, a.cover_image_path, a.published_at, a.event_start_date, a.event_end_date,
+                                       a.event_location_en, a.event_location_ar
+                                FROM articles a WHERE a.type = :t AND ' . owArticlePublicSql('a') . ' ORDER BY ' . $order . ' LIMIT 200');
+        $st->execute([':t' => $type]);
+        $items = $st->fetchAll();
+    } catch (Throwable $e) {
+        error_log('articles_list: ' . $e->getMessage());
+        $items = [];
+    }
+}
+
+[$tEn, $tAr] = $TYPES[$type];
+$titleEn = $tEn . ' · Oweili';
+$titleAr = $tAr . ' · أويلي';
+?>
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-title-en="<?= e($titleEn) ?>" data-title-ar="<?= e($titleAr) ?>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?= e($titleEn) ?></title>
+<meta name="description" content="<?= e($PAGE[$type]['sub'][0] . ' ' . $PAGE[$type]['sub'][1]) ?>">
+<meta property="og:title" content="<?= e($tEn . ' · ' . $tAr . ' · Oweili') ?>">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="/assets/css/oweili.css">
+<link rel="stylesheet" href="/assets/css/nav.css">
+<link rel="stylesheet" href="/assets/css/discover.css">
+<script src="/assets/js/discover.js"></script>
+</head>
+<body class="ow">
+<div class="bg-wrap" aria-hidden="true"><video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video></div>
+<div class="veil" aria-hidden="true"></div>
+
+<?php include __DIR__ . '/nav.php'; ?>
+
+<main>
+  <div class="d-wrap">
+    <header class="d-head reveal">
+      <span class="d-badge"><i aria-hidden="true"></i><?= owBi('Discover', 'اكتشف') ?></span>
+      <h1><?= owBi($tEn, $tAr) ?></h1>
+      <p><?= owBi($PAGE[$type]['sub'][0], $PAGE[$type]['sub'][1]) ?></p>
+    </header>
+
+    <nav class="type-pills reveal" aria-label="Article types · أنواع المقالات">
+      <?php foreach ($TYPES as $k => [$en, $ar]): ?>
+        <a class="type-pill<?= $k === $type ? ' on' : '' ?>" href="articles_list.php?type=<?= e($k) ?>"<?= $k === $type ? ' aria-current="page"' : '' ?>><?= owBi($en, $ar) ?></a>
+      <?php endforeach; ?>
+      <a class="type-pill" href="training.php"><?= owBi('Art Institutes', 'المعاهد الفنية') ?></a>
+    </nav>
+
+    <?php if (!$items): ?>
+      <div class="glass-card d-empty reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <?= owBi($PAGE[$type]['empty'][0], $PAGE[$type]['empty'][1]) ?>
+        <div><a class="d-btn d-btn-pink" href="marketplace.php"><?= owBi('Explore Artworks', 'استكشف الأعمال') ?></a></div>
+      </div>
+    <?php else: ?>
+      <div class="a-grid">
+        <?php foreach ($items as $it):
+          [$dEn, $dAr] = $type === 'event' ? owDateRangeBi($it['event_start_date'], $it['event_end_date']) : owDateBi($it['published_at']);
+          $cover = (string) $it['cover_image_path'];
+        ?>
+        <a class="glass-card a-card reveal" href="article.php?slug=<?= e(rawurlencode($it['slug'])) ?>">
+          <?php if ($cover !== '' && owSafeArticlePath($cover)): ?>
+            <span class="a-img"><img loading="lazy" src="<?= e($cover) ?>" alt="<?= e($it['title_en'] . ' · ' . $it['title_ar']) ?>"></span>
+          <?php else: ?>
+            <span class="a-img none" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 3.58-9 8 0 4.4 3.5 8 8 8 1 0 1.5-.6 1.5-1.4 0-.8-.6-1.1-.6-1.9 0-.8.6-1.4 1.4-1.4H15c3.3 0 6-2.3 6-5.3C21 5.9 17 3 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="15.5" cy="8" r="1"/></svg></span>
+          <?php endif; ?>
+          <span class="a-body">
+            <span class="a-title"><?= owBi($it['title_en'], $it['title_ar']) ?></span>
+            <span class="a-date"><?= owBi($dEn, $dAr) ?><?php if ($type === 'event' && ($it['event_location_en'] !== '' || $it['event_location_ar'] !== '')): ?> · <?= owBi($it['event_location_en'], $it['event_location_ar']) ?><?php endif; ?></span>
+            <span class="a-more"><?= owBi('Read more →', 'اقرأ المزيد ←') ?></span>
+          </span>
+        </a>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+  </div>
+</main>
+
+<footer class="d-foot"><?= owBi('© ' . date('Y') . ' Oweili — real art by real artists.', '© ' . date('Y') . ' أويلي — فن حقيقي بأيدي فنانين حقيقيين.') ?> · <a href="support.php"><?= owBi('Support', 'الدعم') ?></a></footer>
+</body>
+</html>

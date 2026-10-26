@@ -437,6 +437,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
       <button class="lang-btn" id="lb" onclick="tglLang()">العربية</button>
+      <a class="btn" href="admin_articles.php">Articles</a>
       <a class="btn grey" href="admin.php?logout=1">Log out</a>
     </div>
   </div>
@@ -855,6 +856,7 @@ const ADICT = {
   "Admin Dashboard":"لوحة الإدارة",
   "Manage artists, collectors, and artwork approvals.":"إدارة الفنانين والمقتنين واعتماد الأعمال.",
   "Log out":"تسجيل الخروج",
+  "Articles":"المقالات",
   "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.",
   "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"أساليب الرسم",
   "Events":"الأحداث","Training":"التدريب",

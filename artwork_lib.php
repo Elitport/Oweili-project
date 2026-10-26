@@ -124,13 +124,18 @@ function owDeleteAllStageFiles(int $artworkId): void {
 }
 
 /* ---------------------------------------------------------------------
- *  Validate and store one stage photo.
+ *  Validate and store one stage photo (owStoreImage does the same for any
+ *  folder, e.g. article photos in uploads/articles/).
  *  Returns ['ok'=>true,'path'=>..., 'taken_at'=>...] or ['ok'=>false,'err'=>code]
  *  Error codes: none | size | type | save
  *  The photo is re-saved with GD when available: this applies the phone's
  *  rotation and strips hidden data such as GPS location (privacy / PDPL).
  * ------------------------------------------------------------------- */
 function owStoreStagePhoto(array $file): array {
+    return owStoreImage($file, OW_STAGE_DIR);
+}
+
+function owStoreImage(array $file, string $relDir): array {
     if (empty($file['tmp_name']) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         return ['ok' => false, 'err' => 'none'];
     }
@@ -170,7 +175,7 @@ function owStoreStagePhoto(array $file): array {
         $orientation = (int) ($exif['Orientation'] ?? 1);
     }
 
-    $dir = __DIR__ . '/' . OW_STAGE_DIR;
+    $dir = __DIR__ . '/' . $relDir;
     if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
         return ['ok' => false, 'err' => 'save'];
     }
@@ -203,7 +208,7 @@ function owStoreStagePhoto(array $file): array {
         return ['ok' => false, 'err' => 'save'];
     }
     @chmod($dest, 0644);
-    return ['ok' => true, 'path' => OW_STAGE_DIR . $name, 'taken_at' => $takenAt];
+    return ['ok' => true, 'path' => $relDir . $name, 'taken_at' => $takenAt];
 }
 
 /* =====================================================================

@@ -130,7 +130,7 @@ section{padding:72px 0;}
 .join-card .tag-line{font-size:12px;font-weight:700;letter-spacing:0.08em;color:var(--color-accent);}
 
 /* 5 — discover */
-.disc{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:820px;margin:0 auto;}
+.disc{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1100px;margin:0 auto;}
 .disc-card{display:flex;align-items:center;gap:16px;padding:22px 24px;text-decoration:none;color:var(--color-dark);transition:transform 0.2s,box-shadow 0.2s;}
 .disc-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.07);}
 .disc-card svg.ic{width:40px;height:40px;flex-shrink:0;padding:9px;border-radius:12px;background:rgba(0,102,255,0.08);stroke:var(--color-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
@@ -146,7 +146,7 @@ footer a{color:var(--color-dark);font-weight:600;}
 .js .reveal{opacity:0;transform:translateY(22px);}
 .js .reveal.in{animation:ow-riseUp 0.9s cubic-bezier(0.22,1,0.36,1) both;}
 
-@media (max-width:1024px){.art-grid{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:1024px){.art-grid{grid-template-columns:repeat(3,1fr);}.disc{grid-template-columns:1fr;max-width:620px;}}
 @media (max-width:768px){
   .wrap{padding:0 16px;}
   section{padding:52px 0;}
@@ -284,16 +284,21 @@ footer a{color:var(--color-dark);font-weight:600;}
   <section id="discover">
     <div class="wrap">
       <h2 class="sec-title reveal"><?= hb('Discover the Art World', 'اكتشف عالم الفن') ?></h2>
-      <p class="sec-sub reveal"><?= hb('Find a place to learn, and the gatherings that bring artists together.', 'اعثر على مكان للتعلّم، وعلى الملتقيات التي تجمع الفنانين.') ?></p>
+      <p class="sec-sub reveal"><?= hb('Find a place to learn, the gatherings that bring artists together, and the stories behind every art style.', 'اعثر على مكان للتعلّم، وعلى الملتقيات التي تجمع الفنانين، وعلى قصص الأساليب الفنية.') ?></p>
       <div class="disc">
         <a class="glass-card disc-card reveal" href="training.php">
           <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg>
           <span><b><?= hb('Art Institutes', 'المعاهد الفنية') ?></b><span class="small"><?= hb('Courses and schools in one place', 'الدورات والمعاهد في مكان واحد') ?></span></span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
-        <a class="glass-card disc-card reveal" href="events.php">
+        <a class="glass-card disc-card reveal" href="articles_list.php?type=event">
           <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
           <span><b><?= hb('Global Art Events', 'الملتقيات الفنية العالمية') ?></b><span class="small"><?= hb('Exhibitions and gatherings worldwide', 'معارض وملتقيات حول العالم') ?></span></span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="glass-card disc-card reveal" href="articles_list.php?type=art_education">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <span><b><?= hb('Art Education', 'التثقيف الفني') ?></b><span class="small"><?= hb('The names, stories and history of art styles', 'أسماء الأساليب الفنية وقصصها وتاريخها') ?></span></span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
       </div>
