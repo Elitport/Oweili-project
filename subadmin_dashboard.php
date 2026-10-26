@@ -67,6 +67,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sub-admin · Oweili</title>
+<link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{min-height:100vh;background:#f4f5f7;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#111111;padding:40px 20px;}
@@ -74,17 +75,17 @@ body{min-height:100vh;background:#f4f5f7;font-family:"Helvetica Neue",Helvetica,
 h1{font-size:24px;font-weight:700;margin-bottom:4px;}
 .sub{font-size:13px;color:rgba(0,0,0,0.5);margin-bottom:24px;}
 .card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.05);padding:26px;}
-.btn{padding:11px 22px;border-radius:999px;background:#111111;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.22s;text-decoration:none;display:inline-block;}
+.btn{padding:11px 22px;border-radius:999px;background:#111111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.22s;text-decoration:none;display:inline-block;}
 .btn:hover{background:#ff0055;}
-.btn.sm{padding:7px 14px;font-size:10px;}
-.btn.green{background:#00a050;}.btn.green:hover{background:#0066ff;}
+.btn.sm{padding:7px 14px;font-size:12px;}
+.btn.green{background:#0066ff;}.btn.green:hover{background:#0066ff;}
 .btn.red{background:#ff0055;}.btn.red:hover{background:#111111;}
 .btn.grey{background:rgba(0,0,0,0.08);color:#111111;}.btn.grey:hover{background:rgba(0,0,0,0.16);}
 .lang-btn{padding:9px 16px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:#fff;color:rgba(0,0,0,0.7);transition:all 0.2s;}
 .lang-btn:hover{background:#111;color:#fff;}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
 .sec-head h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.count{background:#ff0055;color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;}
+.count{background:#ff0055;color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;}
 .art-list{display:flex;flex-direction:column;gap:12px;}
 .art-item{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:12px;border:1px solid rgba(0,0,0,0.07);border-radius:14px;}
 .art-thumb{width:64px;height:64px;border-radius:10px;background-size:cover;background-position:center;background-color:#eee;flex-shrink:0;}
@@ -92,12 +93,12 @@ h1{font-size:24px;font-weight:700;margin-bottom:4px;}
 .art-proof{flex-basis:100%;min-width:0;}
 .art-proof .pj{margin-top:4px;}
 .art-meta strong{font-size:14px;}
-.name-ar{font-size:11px;color:rgba(0,0,0,0.45);}
+.name-ar{font-size:12px;color:rgba(0,0,0,0.45);}
 .art-info{font-size:12px;color:rgba(0,0,0,0.5);margin-top:3px;}
 .acts{display:flex;gap:6px;flex-wrap:wrap;}
 .empty{padding:30px;text-align:center;color:rgba(0,0,0,0.4);}
 [dir="rtl"] body{direction:rtl;}
-[dir="rtl"] .top,[dir="rtl"] .art-item,[dir="rtl"] .acts{flex-direction:row-reverse;}
+
 </style>
 <link rel="stylesheet" href="/assets/css/proof.css">
 </head>

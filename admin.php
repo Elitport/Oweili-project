@@ -305,6 +305,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin · Oweili</title>
+<link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{min-height:100vh;background:#f4f5f7;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#111111;padding:40px 20px;}
@@ -314,30 +315,30 @@ h1{font-size:24px;font-weight:700;margin-bottom:4px;}
 .card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.05);padding:26px;}
 .login-card{max-width:380px;margin:8vh auto 0;}
 .login-card h1{margin-bottom:16px;}
-label{display:block;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.5);margin-bottom:6px;}
+label{display:block;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.5);margin-bottom:6px;}
 input[type=password]{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(0,0,0,0.15);font-size:14px;font-family:inherit;}
 input:focus{outline:none;border-color:#0066ff;box-shadow:0 0 0 3px rgba(0,100,255,0.12);}
-.btn{padding:11px 22px;border-radius:999px;background:#111111;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.22s;text-decoration:none;display:inline-block;}
+.btn{padding:11px 22px;border-radius:999px;background:#111111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.22s;text-decoration:none;display:inline-block;}
 .btn:hover{background:#ff0055;}
-.btn.sm{padding:7px 14px;font-size:10px;}
-.btn.green{background:#00a050;}.btn.green:hover{background:#0066ff;}
+.btn.sm{padding:7px 14px;font-size:12px;}
+.btn.green{background:#0066ff;}.btn.green:hover{background:#0066ff;}
 .btn.red{background:#ff0055;}.btn.red:hover{background:#111111;}
 .btn.grey{background:rgba(0,0,0,0.08);color:#111111;}.btn.grey:hover{background:rgba(0,0,0,0.16);}
-.err{color:#ff0055;font-size:13px;font-weight:600;margin-bottom:12px;}
+.err{color:#111111;font-size:13px;font-weight:600;margin-bottom:12px;}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 th,td{text-align:left;padding:12px 10px;border-bottom:1px solid rgba(0,0,0,0.06);vertical-align:middle;}
-th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);}
-.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;}
-.pill.on{background:rgba(0,180,100,0.14);color:#00a050;}
+th{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.45);}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;}
+.pill.on{background:rgba(0,102,255,0.14);color:#0066ff;}
 .pill.off{background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.5);}
-.pill.ban{background:rgba(255,0,85,0.12);color:#ff0055;}
+.pill.ban{background:rgba(255,0,85,0.12);color:#111111;}
 .acts{display:flex;gap:6px;flex-wrap:wrap;}
-.name-ar{font-size:11px;color:rgba(0,0,0,0.45);}
+.name-ar{font-size:12px;color:rgba(0,0,0,0.45);}
 .empty{padding:30px;text-align:center;color:rgba(0,0,0,0.4);}
 .sec-head{margin-bottom:16px;}
 .sec-head h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.count{background:#ff0055;color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;}
+.count{background:#ff0055;color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;}
 .art-list{display:flex;flex-direction:column;gap:12px;}
 .art-item{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:12px;border:1px solid rgba(0,0,0,0.07);border-radius:14px;}
 .art-thumb{width:64px;height:64px;border-radius:10px;background-size:cover;background-position:center;background-color:#eee;flex-shrink:0;}
@@ -349,12 +350,12 @@ th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
 .verify-cell{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:150px;}
 .verify-photo{width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid rgba(0,0,0,0.1);}
 .verify-video{width:150px;max-width:100%;border-radius:10px;background:#000;}
-.video-link{font-size:11px;font-weight:600;color:#0066ff;text-decoration:none;}
+.video-link{font-size:12px;font-weight:600;color:#0066ff;text-decoration:none;}
 .video-link:hover{text-decoration:underline;}
-.no-media{font-size:11px;color:rgba(0,0,0,0.35);font-style:italic;}
-.pill.role-artist{background:rgba(255,0,85,0.1);color:#ff0055;}
+.no-media{font-size:12px;color:rgba(0,0,0,0.35);font-style:italic;}
+.pill.role-artist{background:rgba(255,0,85,0.1);color:#111111;}
 .pill.role-collector{background:rgba(0,100,255,0.1);color:#0066ff;}
-.pill.role-admin{background:rgba(170,0,255,0.1);color:#aa00ff;}
+.pill.role-admin{background:rgba(0,102,255,0.1);color:#0066ff;}
 .status-pills{display:flex;gap:5px;flex-wrap:wrap;}
 .tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
 .tab-btn{padding:10px 22px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:#fff;color:rgba(0,0,0,0.6);transition:all 0.2s;display:flex;align-items:center;gap:8px;}
@@ -368,7 +369,7 @@ th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
 .lang-btn:hover{background:#111;color:#fff;}
 [dir="rtl"] body{direction:rtl;}
 [dir="rtl"] th,[dir="rtl"] td{text-align:right;}
-[dir="rtl"] .top,[dir="rtl"] .acts,[dir="rtl"] .tabs{flex-direction:row-reverse;}
+
 [dir="rtl"] .verify-cell{align-items:flex-end;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .field{margin-bottom:14px;}
@@ -381,24 +382,24 @@ th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
 .style-body{flex:1;min-width:0;}
 .style-body h3{font-size:15px;font-weight:700;margin-bottom:2px;}
 .style-desc{font-size:12px;color:rgba(0,0,0,0.6);line-height:1.6;margin:4px 0 6px;}
-.tag-pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;background:rgba(0,100,255,0.1);color:#0066ff;}
+.tag-pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(0,100,255,0.1);color:#0066ff;}
 .edit-form{display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);}
 .edit-form.open{display:block;}
-[dir="rtl"] .style-item{flex-direction:row-reverse;}
+
 .online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ccc;margin-inline-end:5px;vertical-align:middle;}
-.online-dot.on{background:#00c853;box-shadow:0 0 6px rgba(0,200,83,0.6);}
-.online-stat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#00a050;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.25);padding:6px 14px;border-radius:999px;}
+.online-dot.on{background:#0066ff;box-shadow:0 0 6px rgba(0,102,255,0.6);}
+.online-stat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#0066ff;background:rgba(0,102,255,0.1);border:1px solid rgba(0,102,255,0.25);padding:6px 14px;border-radius:999px;}
 .port-thumbs{display:flex;gap:4px;flex-wrap:wrap;max-width:150px;}
 .port-thumbs a{display:block;}
 .port-thumbs img{width:34px;height:34px;border-radius:6px;object-fit:cover;border:1px solid rgba(0,0,0,0.1);}
-.role-select{padding:6px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font-size:11px;font-family:inherit;background:#fff;}
+.role-select{padding:6px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);font-size:12px;font-family:inherit;background:#fff;}
 .role-form{display:flex;gap:4px;align-items:center;margin-top:4px;}
-.mini{font-size:10px;color:rgba(0,0,0,0.4);}
+.mini{font-size:12px;color:rgba(0,0,0,0.4);}
 /* Artist review cards */
 .acards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
 .acard{border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:12px;}
 .acard-head{display:flex;gap:12px;align-items:center;}
-.acard-photo{width:56px;height:56px;border-radius:50%;object-fit:cover;background-size:cover;background-position:center;background:linear-gradient(135deg,#ff0055,#0066ff,#aa00ff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;flex-shrink:0;}
+.acard-photo{width:56px;height:56px;border-radius:50%;object-fit:cover;background-size:cover;background-position:center;background:linear-gradient(135deg,#ff0055,#0066ff,#0066ff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;flex-shrink:0;}
 .acard-id{flex:1;min-width:0;}
 .acard-id .nm{font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;}
 .acard-id .an{font-size:12px;color:rgba(0,0,0,0.5);}
@@ -441,13 +442,13 @@ th{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,
   </div>
 
   <?php if (!empty($_SESSION['admin_err'])): ?>
-    <div class="card" style="border:1px solid #ffb3c1;background:#fff0f3;color:#c9184a;margin-bottom:16px;">
+    <div class="card" style="border:1px solid rgba(255,0,85,0.3);background:rgba(255,0,85,0.06);color:#111111;margin-bottom:16px;">
       <strong>⚠ Could not save.</strong> <?= e($_SESSION['admin_err']) ?>
-      <div class="mini" style="margin-top:6px;color:#c9184a;">If this mentions a missing table, run <code>discover_setup.sql</code> in phpMyAdmin.</div>
+      <div class="mini" style="margin-top:6px;color:#111111;">If this mentions a missing table, run <code>discover_setup.sql</code> in phpMyAdmin.</div>
     </div>
     <?php unset($_SESSION['admin_err']); ?>
   <?php elseif (isset($_GET['ok'])): ?>
-    <div class="card" style="border:1px solid #b7e4c7;background:#f0fff4;color:#1b7a43;margin-bottom:16px;"><strong>✓ Saved.</strong></div>
+    <div class="card" style="border:1px solid rgba(0,102,255,0.25);background:rgba(0,102,255,0.06);color:#111111;margin-bottom:16px;"><strong>✓ Saved.</strong></div>
   <?php endif; ?>
 
   <!-- TABS -->

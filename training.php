@@ -25,6 +25,7 @@ foreach ($training as $tr) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Training Institutes · Oweili</title>
+<link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;overflow-x:hidden;}
@@ -39,30 +40,30 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .nav-logo span{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
 .nav-center{display:flex;align-items:stretch;gap:0;height:100%;}
 .nav-item{position:relative;display:flex;align-items:center;}
-.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
+.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
 .nav-item > a:hover{color:#000;}
-.nav-item:hover > a{color:#0055ff;border-bottom-color:#0055ff;}
+.nav-item:hover > a{color:#0066ff;border-bottom-color:#0066ff;}
 .nav-item > a .chevron{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;}
 .nav-item:hover > a .chevron{transform:rotate(180deg);}
 .dropdown{position:absolute;top:100%;left:0;min-width:200px;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.07);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s,visibility 0.2s;pointer-events:none;}
 .nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
 .dropdown a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12px;color:rgba(0,0,0,0.7);text-decoration:none;transition:background 0.15s,color 0.15s;}
-.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0055ff;}
+.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0066ff;}
 .dropdown a .d-icon{width:14px;height:14px;fill:currentColor;opacity:0.6;flex-shrink:0;}
 .nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-.nav-btn{padding:5px 12px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
+.nav-btn{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
 .nav-btn:hover{background:rgba(0,0,0,0.08);color:#000;}
-.lang-btn{padding:4px 10px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
+.lang-btn{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
 .lang-btn:hover{background:#111111;color:#fff;}
 @media(max-width:1024px){.nav-center{display:none;}}
 
 .page{position:relative;z-index:10;width:100%;max-width:1160px;margin:0 auto;padding:100px 24px 60px;}
 .page-header{margin-bottom:30px;}
-.page-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;margin-bottom:14px;background:rgba(255,0,85,0.06);border:1px solid rgba(255,0,85,0.15);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff0055;}
+.page-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;margin-bottom:14px;background:rgba(255,0,85,0.06);border:1px solid rgba(255,0,85,0.15);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#111111;}
 .pulse-dot{width:6px;height:6px;border-radius:50%;background:#ff0055;box-shadow:0 0 8px rgba(255,0,85,0.5);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 .page-header h1{font-size:clamp(28px,4vw,46px);font-weight:300;color:#111;margin-bottom:12px;letter-spacing:-0.02em;}
-.page-header h1 em{font-style:normal;font-weight:700;background:linear-gradient(90deg,#ff0055,#0066ff,#aa00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-header h1 em{font-style:normal;font-weight:700;background:linear-gradient(90deg,#ff0055,#0066ff,#0066ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .page-header p{font-size:15px;color:rgba(0,0,0,0.6);line-height:1.8;max-width:600px;}
 [dir="rtl"] .page-header p{text-align:right;}
 
@@ -72,14 +73,14 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .ev-img{height:170px;background-size:cover;background-position:center;background-color:#eee;}
 .ev-body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1;}
 [dir="rtl"] .ev-body{text-align:right;direction:rtl;}
-.ev-badge{align-self:flex-start;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.04em;background:rgba(0,102,255,0.1);color:#0066ff;}
+.ev-badge{align-self:flex-start;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;background:rgba(0,102,255,0.1);color:#0066ff;}
 [dir="rtl"] .ev-badge{align-self:flex-end;}
-.ev-badge.free{background:rgba(0,180,100,0.12);color:#00a050;}
+.ev-badge.free{background:rgba(0,102,255,0.12);color:#0066ff;}
 .ev-title{font-size:18px;font-weight:700;color:#111;}
 .ev-meta{font-size:12.5px;color:rgba(0,0,0,0.6);display:flex;gap:14px;flex-wrap:wrap;}
-[dir="rtl"] .ev-meta{flex-direction:row-reverse;}
+
 .ev-desc{font-size:13px;color:rgba(0,0,0,0.65);line-height:1.7;flex:1;}
-.ev-link{align-self:flex-start;margin-top:6px;padding:10px 22px;border-radius:999px;background:#111;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:all 0.25s;}
+.ev-link{align-self:flex-start;margin-top:6px;padding:10px 22px;border-radius:999px;background:#111;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:all 0.25s;}
 [dir="rtl"] .ev-link{align-self:flex-end;}
 .ev-link:hover{background:#ff0055;transform:translateY(-2px);}
 .empty{padding:56px;text-align:center;color:rgba(0,0,0,0.5);background:rgba(255,255,255,0.6);border:1px dashed rgba(0,0,0,0.15);border-radius:22px;}

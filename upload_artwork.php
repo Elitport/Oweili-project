@@ -268,7 +268,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .cam-btn:active{background:rgba(0,102,255,0.16);}
 .cam-input:focus-visible + .preview + .cam-btn{outline:2px solid var(--color-accent);outline-offset:3px;}
 .cam-btn svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;}
-.ow .cam-err{color:#b00020;font-size:14px;font-weight:600;margin-top:10px;}
+.ow .cam-err{color:#111111;font-size:14px;font-weight:600;margin-top:10px;}
 .btn-dark,.btn-light,.btn-pink{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:999px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.2s,transform 0.2s;border:1px solid transparent;}
 .btn-dark{background:var(--color-dark);color:#fff;}
 .btn-dark:hover{background:#333;}
@@ -283,7 +283,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-top:8px;}
 .skip{font-size:14px;font-weight:600;color:var(--color-accent);text-decoration:underline;padding:12px 4px;}
 .alert{border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:14px;font-weight:600;}
-.alert-err{background:#fdecee;color:#8a0018;border:1px solid #f5c2c9;}
+.alert-err{background:rgba(255,0,85,0.08);color:#111111;border:1px solid rgba(255,0,85,0.3);}
 .alert-ok{background:rgba(0,102,255,0.06);color:var(--color-dark);border:1px solid rgba(0,102,255,0.2);}
 .ow .note{font-size:14px;line-height:1.7;color:var(--color-body);background:#f7f8fa;border-radius:12px;padding:12px 14px;margin:6px 0 18px;}
 /* colors */

@@ -96,22 +96,22 @@ foreach ($artworks as $aw) {
     .nav-logo span{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
     .nav-center{display:flex;align-items:stretch;gap:0;height:100%;}
     .nav-item{position:relative;display:flex;align-items:center;}
-    .nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
+    .nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
     .nav-item > a:hover{color:#000;}
-    .nav-item:hover > a{color:#0055ff;border-bottom-color:#0055ff;}
+    .nav-item:hover > a{color:#0066ff;border-bottom-color:#0066ff;}
     .nav-item > a .chevron{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;}
     .nav-item:hover > a .chevron{transform:rotate(180deg);}
     .dropdown{position:absolute;top:100%;left:0;min-width:200px;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.07);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s,visibility 0.2s;pointer-events:none;}
     .nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
     .dropdown a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12px;color:rgba(0,0,0,0.7);text-decoration:none;transition:background 0.15s,color 0.15s;}
-    .dropdown a:hover{background:rgba(0,100,255,0.07);color:#0055ff;}
+    .dropdown a:hover{background:rgba(0,100,255,0.07);color:#0066ff;}
     .dropdown a .d-icon{width:14px;height:14px;fill:currentColor;opacity:0.6;flex-shrink:0;}
     .nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-    .nav-btn{padding:5px 12px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
+    .nav-btn{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
     .nav-btn:hover{background:rgba(0,0,0,0.08);color:#000;}
     .nav-btn.primary{background:rgba(0,100,255,0.1);border-color:rgba(0,100,255,0.2);color:#0066ff;}
     .nav-btn.primary:hover{background:rgba(0,100,255,0.18);}
-    .lang-btn{padding:4px 10px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
+    .lang-btn{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
     .lang-btn:hover{background:#111111;color:#fff;}
     @media(max-width:1024px){.nav-center{display:none;}}
 
@@ -130,9 +130,9 @@ foreach ($artworks as $aw) {
 
     /* FILTER BAR */
     .filter-group{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center;}
-    [dir="rtl"] .filter-group{flex-direction:row-reverse;}
-    .filter-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.4);margin-inline-end:4px;}
-    .filter-btn{padding:8px 18px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);color:rgba(0,0,0,0.7);transition:all 0.22s;}
+    
+    .filter-label{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.4);margin-inline-end:4px;}
+    .filter-btn{padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);color:rgba(0,0,0,0.7);transition:all 0.22s;}
     .filter-btn:hover{background:rgba(255,255,255,0.9);color:#111111;}
     .filter-btn.active{background:#111111;color:#fff;border-color:#111111;}
 
@@ -145,13 +145,13 @@ foreach ($artworks as $aw) {
     .card-img-wrap { position:relative; height: 200px; overflow:hidden; }
     .card-img { width:100%; height:100%; object-fit:cover; transition: transform 0.5s ease; }
     .card:hover .card-img { transform: scale(1.05); }
-    .status-badge { position:absolute; top:12px; left:12px; padding:4px 12px; border-radius:999px; font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; backdrop-filter:blur(8px); }
+    .status-badge { position:absolute; top:12px; left:12px; padding:4px 12px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; backdrop-filter:blur(8px); }
     [dir="rtl"] .status-badge { left:auto; right:12px; }
-    .status-available { background:rgba(0,180,100,0.15); color:#00a050; border:1px solid rgba(0,180,100,0.3); }
+    .status-available { background:rgba(0,102,255,0.15); color:#0066ff; border:1px solid rgba(0,102,255,0.3); }
     .status-sold { background:rgba(120,120,120,0.15); color:#666; border:1px solid rgba(120,120,120,0.3); }
-    .status-auction { background:rgba(255,140,0,0.15); color:#ff8c00; border:1px solid rgba(255,140,0,0.35); }
+    .status-auction { background:rgba(255,0,85,0.15); color:#111111; border:1px solid rgba(255,0,85,0.35); }
     .card-body { padding:18px; display:flex; flex-direction:column; gap:4px; flex:1; }
-    .card-type{font-size:11px;color:#aa00ff;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-top:4px;}
+    .card-type{font-size:12px;color:#0066ff;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-top:4px;}
     [dir="rtl"] .card-body,
     [dir="rtl"] .card-title,
     [dir="rtl"] .card-title-ar,
@@ -166,7 +166,7 @@ foreach ($artworks as $aw) {
     .card-artist a { color:#0066ff; text-decoration:none; font-weight:600; }
     .card-artist a:hover { text-decoration:underline; }
     .card-price { font-size:18px; font-weight:700; color:#0066ff; margin-top:10px; }
-    .card-btn { margin-top:14px; display:inline-block; text-align:center; padding:10px 18px; border-radius:999px; background:#111111; color:#fff; font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; text-decoration:none; border:none; cursor:pointer; transition:all 0.25s ease; }
+    .card-btn { margin-top:14px; display:inline-block; text-align:center; padding:10px 18px; border-radius:999px; background:#111111; color:#fff; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; text-decoration:none; border:none; cursor:pointer; transition:all 0.25s ease; }
     .card-btn:hover { background:#ff0055; transform:translateY(-2px); }
     .card.hidden { display:none; }
 
@@ -174,9 +174,9 @@ foreach ($artworks as $aw) {
     .empty-state{display:none;padding:48px;text-align:center;font-size:15px;color:rgba(0,0,0,0.5);background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.07);border-radius:20px;backdrop-filter:blur(16px);margin-top:8px;}
 
     /* HUMAN-ONLY BANNER */
-    .human-banner{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;margin:0 0 24px;padding:15px 22px;border-radius:16px;font-size:14.5px;font-weight:600;color:#111;background:linear-gradient(90deg,rgba(255,0,85,0.08),rgba(255,215,0,0.08),rgba(0,102,255,0.08),rgba(170,0,255,0.08));border:1px solid rgba(0,0,0,0.06);letter-spacing:0.01em;}
+    .human-banner{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;margin:0 0 24px;padding:15px 22px;border-radius:16px;font-size:14.5px;font-weight:600;color:#111;background:linear-gradient(90deg,rgba(255,0,85,0.08),rgba(0,102,255,0.08),rgba(0,102,255,0.08),rgba(0,102,255,0.08));border:1px solid rgba(0,0,0,0.06);letter-spacing:0.01em;}
     .human-banner .hb-icon{font-size:18px;flex-shrink:0;}
-    [dir="rtl"] .human-banner{flex-direction:row-reverse;}
+    
 
     /* FIRST-STROKE (no approved artworks) */
     .gallery-empty{text-align:center;padding:64px 30px;background:rgba(255,255,255,0.6);border:1px dashed rgba(0,0,0,0.15);border-radius:24px;backdrop-filter:blur(16px);margin-top:10px;}
@@ -193,7 +193,7 @@ foreach ($artworks as $aw) {
 
     /* PAGINATION */
     .pagination{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:36px;}
-    .page-btn{padding:10px 22px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(0,0,0,0.12);background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);color:#111111;transition:all 0.22s;}
+    .page-btn{padding:10px 22px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(0,0,0,0.12);background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);color:#111111;transition:all 0.22s;}
     .page-btn:hover{background:#111111;color:#fff;}
     .page-btn.disabled{opacity:0.4;pointer-events:none;}
     .page-info{font-size:12px;color:rgba(0,0,0,0.55);font-weight:600;}
@@ -208,7 +208,7 @@ foreach ($artworks as $aw) {
     .modal-body h2{font-size:22px;font-weight:700;color:#111111;margin-bottom:2px;}
     .modal-body .m-title-ar{font-size:15px;color:rgba(0,0,0,0.55);margin-bottom:10px;}
     .modal-body .m-artist{font-size:13px;color:#0066ff;font-weight:600;margin-bottom:14px;text-decoration:none;display:inline-block;}
-    .modal-body .m-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.4);margin:14px 0 4px;}
+    .modal-body .m-label{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.4);margin:14px 0 4px;}
     .modal-body p{font-size:13px;color:rgba(0,0,0,0.7);line-height:1.8;}
     .modal-body .m-price{font-size:22px;font-weight:700;color:#0066ff;margin-top:16px;}
     .modal-close{float:right;background:none;border:none;font-size:22px;cursor:pointer;color:rgba(0,0,0,0.4);line-height:1;}

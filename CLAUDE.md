@@ -74,7 +74,7 @@
 
 ## Sprint Plan
 - Sprint 1 (now): update CLAUDE.md + database tables + proof-of-process camera upload
-- Sprint 2: typography, design applied to all pages, homepage rebuilt to reflect vision
+- Sprint 2: typography, design applied to all pages, homepage rebuilt to reflect vision (done — see Features)
 - Sprint 3: articles system + institutes directory + art education with images
 - Sprint 4: payments (last — after everything else is complete)
 
@@ -83,7 +83,7 @@
 - These wait until Sprint 4
 
 ## Pages Built
-- index.php — Homepage
+- index.php — Homepage (rebuilt in Sprint 2, see Features)
 - nav.php — Shared navbar (used across all pages)
 - explore.php — Art styles gallery
 - marketplace.php — Browse and buy artworks (bilingual)
@@ -138,14 +138,30 @@
 - Files: admin.php, subadmin_dashboard.php, artwork_lib.php (owProofPanelHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
 
+### New homepage (index.php) — Sprint 2
+- What it does: 5 sections over the background video with frosted glass cards: 1 hero "Where Human Hands Create Art" / «حيث تصنع اليد البشرية الفن» with "Explore Artworks" (marketplace) and "Join as Artist" (artist sign-up); 2 "Art You Can Trust" — 3 steps (photograph every stage, team verifies, collectors buy with confidence); 3 "Latest Verified Artworks" — the 8 newest approved artworks that are available or at auction (not sold, not drafts, not from banned artists), showing the 100% photo, title, artist name, "✓ Human Art" badge when it has stage photos, and price; a warm message if there are none yet; 4 two "Join" cards (artists / collectors); 5 "Discover the Art World" cards → training.php and events.php; small footer
+- Sections rise in on scroll (visible straight away for visitors without JavaScript or with reduced motion), smooth scrolling
+- The old welcome splash, the jungle text and the art styles gallery (which needed the missing art_styles.js) were removed
+- Note: "newest" uses the date the artwork was uploaded — there is no separate approval date yet
+- Files: index.php, artwork_lib.php, assets/css/oweili.css, nav.css, proof.css. Tables: artworks, users, artwork_stages
+
+### Design overhaul (all pages) — Sprint 2
+- Every page links oweili.css. Purple (#aa00ff) and the wrong blue (#0055ff) are now brand blue #0066ff; green, orange and gold accents are now brand blue or a pink tint; small pink text (error boxes, small badges) is now dark #111111 on the pink tint (rule 2)
+- All text is at least 12px, including the menu. Because the menu text is bigger, the ☰ menu now takes over below 1100px (was 1024px)
+- The remaining Arabic "flip" lines (row-reverse) were removed from all pages — Arabic sections now read right to left correctly
+- nav.php now sets the menu words itself (one list for every page), so new pages need no menu translation code
+- Darker shades kept for hover and readable small text: #e0004b (pink hover) and #0047ab (dark blue text on blue tints) — owner to confirm. Paint colors in the upload (artwork_lib.php) are real paint swatches and stay
+- Not changed on purpose: admin.php and subadmin_dashboard.php keep their own staff header instead of the public menu
+
 ## Shared Files
 - .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, and hidden folders (.claude/, .agents/, .git/). Visitors get 403 Forbidden. Keep it when changing hosting settings
 - assets/css/oweili.css — shared styles. The brand color variables (--color-primary, --color-accent, etc.) work on every page. All other shared styles only switch on for pages with <body class="ow">, so older pages keep their look until they are converted one by one
 - assets/css/nav.css — styles for the shared menu (nav.php). New pages link it instead of copying the menu styles; older pages still have their own copy
 - oweili.css also gives opt-in pages (<body class="ow">) a box-sizing reset and removes the default page margin
+- oweili.css also has the two-language text rule for every page: <span class="bi-en">…</span><span class="bi-ar">…</span> shows the one matching the page direction
 - assets/css/proof.css — styles for the Creation Journey and Proof of Process panels. Text is printed in both languages and the one matching the page direction is shown
 - assets/logo/ — home for the official logo files (not added yet)
-- Mobile menu (in nav.php) — on screens 1024px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
+- Mobile menu (in nav.php) — on screens 1100px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
 - Every page that shows the main menu now uses nav.php, including index.php and marketplace.php
 - index.html — tiny forwarding file only: sends old links and bookmarks to index.php. Do not put content in it
 
@@ -185,7 +201,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 
 ## Known Issues
 - Fixed: the Arabic menu order. A CSS line on 18 pages flipped the menu back to left-to-right; it was removed. Never add `flex-direction:row-reverse` to the menu for Arabic — dir="rtl" already puts items in the right order
-- Some page sections (buttons, stats rows, filters) still use `[dir="rtl"] ... row-reverse` and may show in the wrong order in Arabic — check each when converting a page
+- Fixed in Sprint 2: the last `[dir="rtl"] ... row-reverse` lines in page sections were removed. Do not add them back
 - The site is auto-deployed from GitHub main via Hostinger — anything saved to main goes live straight away, so test on a working branch first
 
 ## Work Rules

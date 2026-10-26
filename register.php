@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Join Oweili · Choose Account Type</title>
+<link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;overflow-x:hidden;}
@@ -19,27 +20,27 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .nav-logo span{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
 .nav-center{display:flex;align-items:stretch;gap:0;height:100%;}
 .nav-item{position:relative;display:flex;align-items:center;}
-.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
+.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
 .nav-item > a:hover{color:#000;}
-.nav-item:hover > a{color:#0055ff;border-bottom-color:#0055ff;}
+.nav-item:hover > a{color:#0066ff;border-bottom-color:#0066ff;}
 .nav-item > a .chevron{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;}
 .nav-item:hover > a .chevron{transform:rotate(180deg);}
 .dropdown{position:absolute;top:100%;left:0;min-width:200px;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.07);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s,visibility 0.2s;pointer-events:none;}
 .nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
 .dropdown a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12px;color:rgba(0,0,0,0.7);text-decoration:none;transition:background 0.15s,color 0.15s;}
-.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0055ff;}
+.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0066ff;}
 .dropdown a .d-icon{width:14px;height:14px;fill:currentColor;opacity:0.6;flex-shrink:0;}
 .nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-.nav-btn{padding:5px 12px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
+.nav-btn{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
 .nav-btn:hover{background:rgba(0,0,0,0.08);color:#000;}
-.lang-btn{padding:4px 10px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
+.lang-btn{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
 .lang-btn:hover{background:#111111;color:#fff;}
 @media(max-width:1024px){.nav-center{display:none;}}
 
 .wrap{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 20px 50px;}
 .head{text-align:center;margin-bottom:34px;animation:riseUp 0.7s cubic-bezier(0.22,1,0.36,1) both;}
 .head h1{font-size:clamp(28px,4vw,40px);font-weight:300;color:#111;margin-bottom:10px;letter-spacing:-0.02em;}
-.head h1 em{font-style:normal;font-weight:700;background:linear-gradient(90deg,#ff0055,#0066ff,#aa00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.head h1 em{font-style:normal;font-weight:700;background:linear-gradient(90deg,#ff0055,#0066ff,#0066ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .head p{font-size:15px;color:rgba(0,0,0,0.6);}
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:22px;width:100%;max-width:720px;}
 .choice{display:block;text-decoration:none;background:rgba(255,255,255,0.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,0.08);border-radius:22px;padding:36px 28px;text-align:center;transition:transform 0.3s ease,box-shadow 0.3s ease,border-color 0.3s;animation:riseUp 0.8s 0.1s cubic-bezier(0.22,1,0.36,1) both;}
@@ -49,7 +50,7 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .choice.collector .icon{background:rgba(0,100,255,0.1);}
 .choice h2{font-size:20px;font-weight:700;color:#111;margin-bottom:8px;}
 .choice p{font-size:13px;color:rgba(0,0,0,0.6);line-height:1.7;margin-bottom:18px;}
-.choice .go{display:inline-block;padding:10px 24px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#fff;}
+.choice .go{display:inline-block;padding:10px 24px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#fff;}
 .choice.artist .go{background:#ff0055;}
 .choice.collector .go{background:#0066ff;}
 .foot{margin-top:26px;font-size:13px;color:rgba(0,0,0,0.6);}

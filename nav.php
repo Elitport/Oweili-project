@@ -16,7 +16,7 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
 </script>
 <link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
-/* ── Mobile menu (phones and tablets, where the desktop links are hidden) ── */
+/* ── Mobile menu (phones, tablets and small laptops, where the desktop links are hidden) ── */
 .mnav-btn{display:none;align-items:center;justify-content:center;width:40px;height:40px;margin-inline-start:6px;padding:0;border:1px solid var(--color-border,rgba(0,0,0,0.07));border-radius:12px;background:rgba(255,255,255,0.7);color:var(--color-dark,#111111);cursor:pointer;flex-shrink:0;transition:background 0.2s;}
 .mnav-btn:hover{background:rgba(0,0,0,0.06);}
 .mnav-btn:active{background:rgba(0,0,0,0.1);}
@@ -33,16 +33,17 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
 .mnav-sub{padding-inline-start:28px;font-weight:500;color:var(--color-body,rgba(0,0,0,0.65));}
 [dir="rtl"] .mnav-panel{text-align:right;}
 .mnav-acct{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--color-border,rgba(0,0,0,0.07));}
-@media (max-width:1024px){.mnav-btn{display:inline-flex;}.topnav .nav-right{margin-inline-start:auto;}}
+/* The full menu needs about 1100px since its text became 12px; below that the ☰ menu takes over */
+@media (max-width:1100px){.topnav .nav-center{display:none;}.mnav-btn{display:inline-flex;}.topnav .nav-right{margin-inline-start:auto;}}
 /* Small phones: the account buttons move from the top bar into the menu so the bar never overflows */
 @media (max-width:560px){.topnav .nav-right .nav-btn{display:none;}.mnav-acct{display:block;}}
-@media (min-width:1025px){.mnav-panel{display:none;}}
+@media (min-width:1101px){.mnav-panel{display:none;}}
 @media (prefers-reduced-motion:reduce){.mnav-panel{transition:none;}}
 </style>
 <nav class="topnav" id="topnav">
   <a class="nav-logo" href="index.php">
-    <span style="display:inline-block;background:linear-gradient(135deg,#ff0055,#0066ff,#aa00ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-weight:800;font-size:15px;letter-spacing:0.14em;">OWEILI</span>
-    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="navLogoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff0055"/><stop offset="50%" stop-color="#0066ff"/><stop offset="100%" stop-color="#aa00ff"/></linearGradient></defs><path fill="url(#navLogoGrad)" d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z"/></svg>
+    <span style="display:inline-block;background:linear-gradient(135deg,#ff0055,#0066ff,#0066ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-weight:800;font-size:15px;letter-spacing:0.14em;">OWEILI</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="navLogoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff0055"/><stop offset="50%" stop-color="#0066ff"/><stop offset="100%" stop-color="#0066ff"/></linearGradient></defs><path fill="url(#navLogoGrad)" d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z"/></svg>
   </a>
   <div class="nav-center" id="nav-center">
     <div class="nav-item">
@@ -141,11 +142,29 @@ $navId    = $navUser ? (int) $navUser['id'] : 0;
   }
   function save(l){ try { localStorage.setItem(KEY, l); } catch (e) {} }
 
+  // One set of menu words for every page (pages no longer need their own copy).
+  var NAV_WORDS = {
+    'nav-studio-label':      ['The Studio', 'الاستوديو'],
+    'nav-community-label':   ['Community', 'المجتمع'],
+    'nav-marketplace-label': ['Marketplace', 'السوق'],
+    'nav-explore-label':     ['Explore Art Styles', 'استكشف أساليب الرسم'],
+    'nav-support-label':     ['Support', 'الدعم'],
+    'dd-s1': ['Watercolor Workshop', 'ورشة الألوان المائية'], 'dd-s2': ['Oil Painting Studio', 'استوديو الرسم الزيتي'],
+    'dd-s3': ['Digital Art Lab', 'مختبر الفن الرقمي'],        'dd-s4': ['Charcoal & Ink', 'الفحم والحبر'],
+    'dd-c2': ['Meet Fellow Artists', 'تعرّف على فنانين'],    'dd-c3': ['Share Your Work', 'شارك أعمالك'],
+    'dd-c4': ['Learn Together', 'تعلّم معاً'],
+    'dd-sp1': ['Contact Us', 'تواصل معنا'], 'dd-sp2': ['How It Works', 'كيف يعمل الموقع'], 'dd-sp3': ['Terms of Use', 'شروط الاستخدام'],
+    'n-login-t': ['Sign In', 'تسجيل الدخول'], 'n-reg-t': ['Join Free', 'انضم مجاناً'], 'lb': ['العربية', 'English']
+  };
   function syncNavI18n(){
     var ar = curLang() === 'ar';
     document.querySelectorAll('.nav-i18n').forEach(function(el){
       el.textContent = ar ? (el.dataset.ar || el.dataset.en) : el.dataset.en;
     });
+    for (var id in NAV_WORDS) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = NAV_WORDS[id][ar ? 1 : 0];
+    }
   }
 
   // Persist whatever language the page settles on (toggle, or our re-apply).

@@ -1,315 +1,339 @@
+<?php
+/* =====================================================================
+ *  index.php — Oweili homepage
+ *  Sections: hero · how it works · latest verified artworks ·
+ *            join the community · discover the art world
+ *  Text is printed in both languages (bi-en / bi-ar); the shared menu's
+ *  language switch shows the one that matches the page direction.
+ *  Tables: artworks, users, artwork_stages (stage photos, if set up)
+ * ===================================================================== */
+require_once 'config.php';
+require_once __DIR__ . '/artwork_lib.php';
+
+/* ---- Latest verified artworks: 8 newest approved, available pieces ---- */
+$featured = [];
+$sqlBase = "SELECT a.id, a.title_en, a.title_ar, a.price, a.image_url, a.artist_id,
+                   u.full_name_en, u.full_name_ar%s
+            FROM artworks a
+            JOIN users u ON u.id = a.artist_id
+            WHERE a.is_approved = 1 AND a.status IN ('available','auction')%s
+            ORDER BY a.created_at DESC, a.id DESC
+            LIMIT :lim";
+try {
+    // Hide work by banned artists and show the artist's chosen name (columns from migrations.sql / profiles_setup.sql)
+    $st = getDB()->prepare(sprintf($sqlBase, ', u.artist_name', owNotDraftSql('a') . ' AND u.is_banned = 0'));
+    $st->bindValue(':lim', 8, PDO::PARAM_INT);
+    $st->execute();
+    $featured = $st->fetchAll();
+} catch (Throwable $e) {
+    try {   // older database without those columns
+        $st = getDB()->prepare(sprintf($sqlBase, '', owNotDraftSql('a')));
+        $st->bindValue(':lim', 8, PDO::PARAM_INT);
+        $st->execute();
+        $featured = $st->fetchAll();
+    } catch (Throwable $e2) {
+        $featured = [];   // the warm empty message is shown instead
+    }
+}
+$featStages = owGetStagesFor(array_column($featured, 'id'));
+
+/* Small helper: one link/button label in both languages */
+function hb(string $en, string $ar): string { return owBi($en, $ar); }
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oweili · منصة الفن السعودية</title>
+<title>Oweili · Where Human Hands Create Art</title>
+<meta name="description" content="Oweili is the home of real art — made by real artists, verified by proof, trusted by collectors worldwide. أويلي هو بيت الفن الحقيقي — يصنعه فنانون حقيقيون، موثّق بالدليل.">
+<meta property="og:title" content="Oweili · Where Human Hands Create Art · حيث تصنع اليد البشرية الفن">
+<meta property="og:description" content="Real art by real artists, with proof of every stage of creation.">
+<meta property="og:type" content="website">
 <link rel="stylesheet" href="/assets/css/oweili.css">
+<link rel="stylesheet" href="/assets/css/nav.css">
+<link rel="stylesheet" href="/assets/css/proof.css">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;min-height:100vh;background:#ffffff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;overflow-x:hidden;}
+html{scroll-behavior:smooth;}
+.ow{background:var(--color-bg);overflow-x:hidden;}
 
-/* ── BACKGROUND ── */
+/* background video with a white veil (kept from the original homepage) */
 .bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;}
-.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;z-index:2;}
-.bg-video.on{opacity:0.95;}
-.overlay{position:fixed;inset:0;z-index:3;pointer-events:none;background:linear-gradient(160deg,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,0.4) 100%);}
-.overlay2{position:fixed;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 20% 50%,rgba(0,100,255,0.06) 0%,transparent 60%);}
+.bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;}
+.bg-video.on{opacity:0.9;}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0.55) 0%,rgba(255,255,255,0.78) 55%,rgba(255,255,255,0.92) 100%);}
+main{position:relative;z-index:2;}
 
-/* ── TOP NAV ── */
-.topnav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 16px;height:56px;
-  background:rgba(255,255,255,0.6);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(0,0,0,0.05);
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+section{padding:72px 0;}
+.ow .sec-title{font-size:clamp(24px,3.4vw,36px);font-weight:700;letter-spacing:-0.02em;color:var(--color-dark);text-align:center;margin:0 0 12px;}
+.ow .sec-sub{font-size:15px;line-height:1.75;color:var(--color-body);text-align:center;max-width:620px;margin:0 auto 36px;}
+
+/* glass card */
+.glass-card{background:rgba(255,255,255,0.7);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(0,0,0,0.07);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.04);}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 30px;border-radius:999px;font-size:16px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s,box-shadow 0.2s;border:1px solid transparent;}
+.btn-pink{background:var(--color-primary);color:#fff;box-shadow:0 10px 24px rgba(255,0,85,0.22);}
+.btn-pink:hover{background:#e0004b;transform:translateY(-2px);}
+.btn-glass{background:rgba(255,255,255,0.8);color:var(--color-dark);border-color:rgba(0,0,0,0.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+.btn-glass:hover{background:#fff;transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+.btn:focus-visible,.art-card a:focus-visible,.disc-card:focus-visible,.text-link:focus-visible,.scroll-cue:focus-visible{outline:2px solid var(--color-accent);outline-offset:3px;}
+
+/* 1 — hero */
+.hero{min-height:calc(100vh - 56px);min-height:calc(100svh - 56px);display:flex;align-items:center;padding:96px 0 64px;}
+.hero-inner{text-align:center;max-width:820px;margin:0 auto;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,0.75);border:1px solid rgba(0,102,255,0.2);font-size:13px;font-weight:700;color:var(--color-dark);margin-bottom:22px;}
+.hero-badge i{width:8px;height:8px;border-radius:50%;background:var(--color-accent);}
+.ow .hero h1{font-size:clamp(38px,7vw,72px);font-weight:700;letter-spacing:-0.035em;line-height:1.05;color:var(--color-dark);margin:0 0 20px;}
+.hero h1 em{font-style:normal;color:var(--color-primary);}
+.ow .hero-sub{font-size:clamp(16px,2.2vw,19px);line-height:1.75;color:var(--color-body);max-width:640px;margin:0 auto 34px;}
+.hero-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.scroll-cue{display:inline-flex;flex-direction:column;align-items:center;gap:6px;margin-top:44px;font-size:13px;font-weight:600;color:var(--color-body);text-decoration:none;}
+.scroll-cue svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;}
+
+/* 2 — how it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:step;}
+.step{padding:30px 26px;text-align:center;}
+.step-icon{width:60px;height:60px;border-radius:18px;display:inline-flex;align-items:center;justify-content:center;background:rgba(0,102,255,0.08);color:var(--color-accent);margin-bottom:16px;}
+.step-icon svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.step-num{display:block;font-size:12px;font-weight:700;color:var(--color-light);letter-spacing:0.08em;margin-bottom:6px;}
+.ow .step h3{font-size:18px;font-weight:700;color:var(--color-dark);margin:0 0 8px;}
+.ow .step p{font-size:14px;line-height:1.75;color:var(--color-body);margin:0;}
+
+/* 3 — latest verified artworks */
+.art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+.art-card{overflow:hidden;display:flex;flex-direction:column;transition:transform 0.3s,box-shadow 0.3s;}
+.art-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.08);}
+.art-img{display:block;aspect-ratio:4/5;background:#f4f5f7;overflow:hidden;}
+.art-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s;}
+.art-card:hover .art-img img{transform:scale(1.04);}
+.art-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px;flex:1;}
+.art-title{font-size:15px;font-weight:700;color:var(--color-dark);text-decoration:none;line-height:1.4;}
+.art-title:hover{color:var(--color-accent);}
+.art-artist{font-size:13px;font-weight:600;color:var(--color-accent);text-decoration:none;}
+.art-artist:hover{text-decoration:underline;}
+.art-badge{align-self:flex-start;margin-top:4px;padding:2px 8px;}
+.art-price{margin-top:auto;padding-top:8px;font-size:16px;font-weight:700;color:var(--color-dark);}
+.sec-foot{text-align:center;margin-top:28px;}
+.text-link{font-size:15px;font-weight:700;color:var(--color-accent);text-decoration:none;}
+.text-link:hover{text-decoration:underline;}
+.empty{padding:44px 24px;text-align:center;font-size:16px;line-height:1.75;color:var(--color-dark);}
+.empty svg{width:44px;height:44px;stroke:var(--color-accent);fill:none;stroke-width:1.6;display:block;margin:0 auto 12px;}
+
+/* 4 — join */
+.join{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.join-card{padding:36px 32px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;}
+.ow .join-card h3{font-size:24px;font-weight:700;letter-spacing:-0.02em;color:var(--color-dark);margin:0;}
+.ow .join-card p{font-size:15px;line-height:1.75;color:var(--color-body);margin:0 0 8px;}
+.join-card .tag-line{font-size:12px;font-weight:700;letter-spacing:0.08em;color:var(--color-accent);}
+
+/* 5 — discover */
+.disc{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:820px;margin:0 auto;}
+.disc-card{display:flex;align-items:center;gap:16px;padding:22px 24px;text-decoration:none;color:var(--color-dark);transition:transform 0.2s,box-shadow 0.2s;}
+.disc-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.07);}
+.disc-card svg.ic{width:40px;height:40px;flex-shrink:0;padding:9px;border-radius:12px;background:rgba(0,102,255,0.08);stroke:var(--color-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.disc-card b{display:block;font-size:17px;}
+.disc-card span.small{display:block;font-size:13px;color:var(--color-body);margin-top:2px;}
+.disc-card .arrow{margin-inline-start:auto;font-size:20px;color:var(--color-accent);}
+[dir="rtl"] .disc-card .arrow{transform:scaleX(-1);}
+
+footer{position:relative;z-index:2;padding:28px 0 36px;text-align:center;font-size:13px;color:var(--color-body);}
+footer a{color:var(--color-dark);font-weight:600;}
+
+/* rise-up on scroll (only when JavaScript is on, so content is never hidden without it) */
+.js .reveal{opacity:0;transform:translateY(22px);}
+.js .reveal.in{animation:ow-riseUp 0.9s cubic-bezier(0.22,1,0.36,1) both;}
+
+@media (max-width:1024px){.art-grid{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:768px){
+  .wrap{padding:0 16px;}
+  section{padding:52px 0;}
+  .steps{grid-template-columns:1fr;}
+  .art-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .join,.disc{grid-template-columns:1fr;}
+  .join-card{padding:28px 22px;}
 }
-[dir="rtl"] .dropdown{left:auto;right:0;text-align:right;}
-.nav-logo{display:flex;align-items:center;gap:6px;text-decoration:none;color:#111111;flex-shrink:0;}
-.nav-logo svg{color:#ff0055;}
-.nav-logo span{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
-
-/* ── NAV CENTER (dropdown menu) ── */
-.nav-center{display:flex;align-items:stretch;gap:0;height:100%;}
-
-.nav-item{position:relative;display:flex;align-items:center;}
-.nav-item > a{
-  display:flex;align-items:center;gap:4px;
-  padding:0 12px;height:100%;
-  font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
-  color:rgba(0,0,0,0.65);text-decoration:none;
-  transition:color 0.2s;white-space:nowrap;
-  border-bottom:2px solid transparent;
+@media (max-width:360px){.art-grid{grid-template-columns:1fr;}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .js .reveal{opacity:1;transform:none;}
+  .js .reveal.in{animation:none;}
+  .bg-video{display:none;}
 }
-.nav-item > a:hover{color:#000;}
-.nav-item:hover > a{color:#0055ff;border-bottom-color:#0055ff;}
-
-.nav-item > a .chevron{
-  width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round;
-  transition:transform 0.2s;flex-shrink:0;
-}
-.nav-item:hover > a .chevron{transform:rotate(180deg);}
-
-/* dropdown */
-.dropdown{
-  position:absolute;top:100%;left:0;min-width:200px;
-  background:rgba(255,255,255,0.96);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1px solid rgba(0,0,0,0.07);
-  border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);
-  padding:8px;
-  opacity:0;visibility:hidden;transform:translateY(8px);
-  transition:opacity 0.2s,transform 0.2s,visibility 0.2s;
-  pointer-events:none;
-}
-[dir="rtl"] .dropdown{left:auto;right:0;}
-.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
-
-.dropdown a{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 12px;border-radius:9px;
-  font-size:12px;color:rgba(0,0,0,0.7);text-decoration:none;
-  transition:background 0.15s,color 0.15s;
-}
-.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0055ff;}
-.dropdown a .d-icon{width:14px;height:14px;fill:currentColor;opacity:0.6;flex-shrink:0;}
-
-/* ── NAV RIGHT ── */
-.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-
-.nav-btn{
-  padding:5px 12px;border-radius:999px;font-size:10px;font-weight:600;
-  letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;
-  text-decoration:none;display:inline-flex;align-items:center;gap:4px;
-  transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);
-  background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);
-}
-.nav-btn:hover{background:rgba(0,0,0,0.08);color:#000;}
-.nav-btn.primary{background:rgba(0,100,255,0.1);border-color:rgba(0,100,255,0.2);color:#0066ff;}
-.nav-btn.primary:hover{background:rgba(0,100,255,0.18);}
-
-.lang-btn{
-  padding:4px 10px;border-radius:999px;font-size:10px;font-weight:600;
-  letter-spacing:0.04em;cursor:pointer;
-  border:1px solid rgba(0,0,0,0.1);
-  background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);
-  backdrop-filter:blur(8px);transition:all 0.22s;
-}
-.lang-btn:hover{background:#111111;color:#fff;}
-
-/* ── PAGE ── */
-.page{position:relative;z-index:10;width:100%;max-width:1280px;margin:0 auto;padding:90px 32px 48px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;gap:48px;}
-
-/* ── HERO ── */
-.hero{max-width:600px;animation:riseUp 1.1s cubic-bezier(0.22,1,0.36,1) forwards;opacity:0;}
-[dir="ltr"] .hero{margin-right:auto;}
-[dir="rtl"] .hero{margin-left:auto;text-align:right;}
-
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;margin-bottom:22px;background:rgba(255,0,85,0.05);border:1px solid rgba(255,0,85,0.15);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#ff0055;}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:#ff0055;box-shadow:0 0 10px rgba(255,0,85,0.5);animation:pulse 2s infinite;}
-
-.hero h1{font-size:clamp(28px,4.8vw,52px);font-weight:300;line-height:1.15;color:#111111;margin-bottom:16px;letter-spacing:-0.02em;}
-.hero h1 em{font-style:normal;font-weight:700;background:linear-gradient(90deg,#ff0055,#0066ff,#aa00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero p{font-size:14px;line-height:1.82;color:rgba(15,15,15,0.75);margin-bottom:30px;}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
-[dir="rtl"] .hero-btns{flex-direction:row-reverse;}
-
-.btn-p{padding:13px 28px;border-radius:999px;background:#111111;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.25s ease;box-shadow:0 10px 25px rgba(0,0,0,0.08);}
-.btn-p:hover{background:#333333;transform:translateY(-2px);}
-.btn-g{padding:13px 28px;border-radius:999px;background:rgba(255,255,255,0.6);color:#111111;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(0,0,0,0.12);cursor:pointer;transition:all 0.25s ease;backdrop-filter:blur(6px);}
-.btn-g:hover{background:rgba(255,255,255,0.9);transform:translateY(-2px);}
-
-/* ── MODAL ── */
-.modal-bg{position:fixed;inset:0;z-index:500;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-bg.open{display:flex;}
-.modal{background:#ffffff;border:1px solid rgba(0,100,255,0.1);border-radius:24px;max-width:560px;width:100%;overflow:hidden;position:relative;animation:riseUp 0.4s ease;box-shadow:0 30px 70px rgba(0,0,0,0.12);}
-.modal-img{width:100%;height:220px;object-fit:cover;display:block;}
-.modal-body{padding:28px;}
-.modal-tag{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(0,100,255,0.08);border:1px solid rgba(0,100,255,0.15);font-size:10px;color:#0055ff;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;}
-.modal-body h2{font-size:20px;font-weight:700;color:#111111;margin-bottom:10px;}
-.modal-body p{font-size:13px;color:rgba(0,0,0,0.7);line-height:1.8;margin-bottom:18px;}
-.modal-tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
-.modal-tool{padding:4px 10px;border-radius:8px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);font-size:11px;color:rgba(0,0,0,0.7);}
-.modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:#ffffff;border:1px solid rgba(0,0,0,0.1);color:#111111;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
-.modal-close:hover{background:rgba(255,0,0,0.1);color:red;}
-
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
-@keyframes riseUp{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:translateY(0);}}
-
-/* ── MOBILE ── */
-@media(max-width:1024px){.nav-center{display:none;}}
-@media(max-width:768px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:560px){.gallery-grid{grid-template-columns:1fr 1fr;}.page{padding:75px 16px 24px;}.topnav{padding:0 14px;}.nav-logo span{display:none;}}
-
-/* ── WELCOME SPLASH ── */
-#splash{position:fixed;inset:0;z-index:9999;background:#ffffff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;transition:opacity 0.8s ease;}
-#splash.show{opacity:1;}
-#splash.hide{opacity:0;pointer-events:none;}
-#splash .sp-logo{width:96px;height:96px;transform:scale(0.8);opacity:0;transition:transform 1s cubic-bezier(0.22,1,0.36,1),opacity 1s ease;}
-#splash.show .sp-logo{transform:scale(1);opacity:1;}
-#splash .sp-word{font-size:24px;font-weight:800;letter-spacing:0.32em;text-transform:uppercase;padding-inline-start:0.32em;background:linear-gradient(135deg,#ff0055,#0066ff,#aa00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1s ease 0.15s;}
-#splash.show .sp-word{opacity:1;}
-#splash .sp-welcome{font-size:14px;letter-spacing:0.05em;color:rgba(0,0,0,0.55);opacity:0;transition:opacity 1s ease 0.3s;}
-#splash.show .sp-welcome{opacity:1;}
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
-<body>
-
-<!-- WELCOME SPLASH (once per session) -->
-<div id="splash" aria-hidden="true">
-  <svg class="sp-logo" viewBox="0 0 24 24">
-    <defs><linearGradient id="spGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ff0055"/><stop offset="50%" stop-color="#0066ff"/><stop offset="100%" stop-color="#aa00ff"/>
-    </linearGradient></defs>
-    <path fill="url(#spGrad)" d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z"/>
-  </svg>
-  <div class="sp-word">OWEILI</div>
-  <div class="sp-welcome" id="sp-welcome">Welcome to Oweili</div>
-</div>
-<script>
-/* Luxury welcome splash: once per browser session, bilingual, gentle scale + fade. */
-(function(){
-  var sp=document.getElementById('splash');
-  if(!sp) return;
-  var seen=null; try{seen=sessionStorage.getItem('oweili_splash');}catch(e){}
-  if(seen){ if(sp.parentNode) sp.parentNode.removeChild(sp); return; }
-  try{sessionStorage.setItem('oweili_splash','1');}catch(e){}
-  var ar=false; try{ar=localStorage.getItem('lang')==='ar';}catch(e){}
-  var w=document.getElementById('sp-welcome');
-  if(ar){ w.textContent='أهلاً بك في أويلي'; sp.setAttribute('dir','rtl'); }
-  else { w.textContent='Welcome to Oweili'; }
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){ sp.classList.add('show'); }); });
-  setTimeout(function(){
-    sp.classList.remove('show'); sp.classList.add('hide');
-    setTimeout(function(){ if(sp.parentNode) sp.parentNode.removeChild(sp); }, 900);
-  }, 3000);
-})();
-</script>
-
-<div class="bg-wrap">
+<body class="ow">
+<div class="bg-wrap" aria-hidden="true">
   <video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video>
 </div>
-<div class="overlay"></div>
-<div class="overlay2"></div>
+<div class="veil" aria-hidden="true"></div>
 
-<?php include 'nav.php'; ?>
+<?php include __DIR__ . '/nav.php'; ?>
 
-<div class="page" id="pg">
-  <div class="hero">
-    <div class="hero-badge"><div class="pulse-dot"></div><span id="t-badge">Saudi Art Community · مجتمع الفن السعودي</span></div>
-    <h1 id="t-h1">Where artists<br><em>come alive</em></h1>
-    <p id="t-desc">Discover, learn, and sell your artwork. Oweili is Saudi Arabia's bilingual art platform — connecting artists, collectors, and art lovers in one creative space.</p>
-    <div class="hero-btns">
-      <button class="btn-p" onclick="location.href='/register.php'" id="t-b1">Start Creating Free</button>
-      <button class="btn-g" onclick="location.href='/explore.php'" id="t-b2">Explore Art Styles</button>
+<main>
+  <!-- 1 — HERO -->
+  <section class="hero" id="top">
+    <div class="wrap hero-inner reveal">
+      <span class="hero-badge"><i aria-hidden="true"></i><?= hb('Real artists · Real art · Verified by proof', 'فنانون حقيقيون · فن حقيقي · موثّق بالدليل') ?></span>
+      <h1><span class="bi-en" lang="en">Where Human Hands <em>Create Art</em></span><span class="bi-ar" lang="ar">حيث تصنع <em>اليد البشرية</em> الفن</span></h1>
+      <p class="hero-sub"><?= hb('Oweili is the home of real art — made by real artists, verified by proof, trusted by collectors worldwide.', 'أويلي هو بيت الفن الحقيقي — يصنعه فنانون حقيقيون، موثّق بالدليل، يثق به المقتنون حول العالم.') ?></p>
+      <div class="hero-btns">
+        <a class="btn btn-pink" href="marketplace.php"><?= hb('Explore Artworks', 'استكشف الأعمال') ?></a>
+        <a class="btn btn-glass" href="register_artist.php"><?= hb('Join as Artist', 'انضم كفنان') ?></a>
+      </div>
+      <a class="scroll-cue" href="#how">
+        <?= hb('How it works', 'كيف يعمل') ?>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
     </div>
-  </div>
-</div>
+  </section>
 
-<div class="modal-bg" id="modal" onclick="closeModal(event)">
-  <div class="modal" id="modal-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <img id="m-img" src="" alt="" class="modal-img">
-    <div class="modal-body">
-      <span class="modal-tag" id="m-tag"></span>
-      <h2 id="m-title"></h2>
-      <p id="m-desc"></p>
-      <div class="modal-tools" id="m-tools"></div>
-      <a class="btn-p" href="/register.php" style="display:inline-block;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;" id="m-cta">Start This Style</a>
+  <!-- 2 — HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <h2 class="sec-title reveal"><?= hb('Art You Can Trust', 'فن يمكنك الوثوق به') ?></h2>
+      <p class="sec-sub reveal"><?= hb('Three simple steps stand behind every artwork on Oweili.', 'ثلاث خطوات بسيطة وراء كل عمل فني على أويلي.') ?></p>
+      <div class="steps">
+        <div class="glass-card step reveal">
+          <span class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/></svg></span>
+          <span class="step-num"><?= hb('STEP 1', 'الخطوة 1') ?></span>
+          <h3><?= hb('Artists photograph every stage', 'الفنانون يصوّرون كل مرحلة') ?></h3>
+          <p><?= hb('From first stroke to finished piece — every artwork comes with proof of creation.', 'من أول ضربة ريشة حتى اللمسة الأخيرة — كل عمل فني يأتي مع دليل على خلقه.') ?></p>
+        </div>
+        <div class="glass-card step reveal">
+          <span class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg></span>
+          <span class="step-num"><?= hb('STEP 2', 'الخطوة 2') ?></span>
+          <h3><?= hb('Our team verifies the work', 'فريقنا يتحقق من العمل') ?></h3>
+          <p><?= hb('Every artwork is reviewed by our team before it goes live.', 'كل عمل فني يراجعه فريقنا قبل نشره.') ?></p>
+        </div>
+        <div class="glass-card step reveal">
+          <span class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span>
+          <span class="step-num"><?= hb('STEP 3', 'الخطوة 3') ?></span>
+          <h3><?= hb('Collectors buy with confidence', 'المقتنون يشترون بثقة') ?></h3>
+          <p><?= hb('See the full creation journey before you buy. Real art, real artists.', 'شاهد رحلة الإبداع كاملة قبل الشراء. فن حقيقي، فنانون حقيقيون.') ?></p>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
 
-<script src="/art_styles.js"></script>
+  <!-- 3 — LATEST VERIFIED ARTWORKS -->
+  <section id="latest">
+    <div class="wrap">
+      <h2 class="sec-title reveal"><?= hb('Latest Verified Artworks', 'أحدث الأعمال الموثّقة') ?></h2>
+      <p class="sec-sub reveal"><?= hb('Fresh from our artists’ studios, reviewed by our team.', 'جديد من مراسم فنانينا، بعد مراجعة فريقنا.') ?></p>
+      <?php if (!$featured): ?>
+        <div class="glass-card empty reveal">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c-4.97 0-9 3.58-9 8 0 2.5 1.3 4.7 3.3 6.2L6 21l3.6-1.8c.8.2 1.6.3 2.4.3 4.97 0 9-3.58 9-8s-4.03-8-9-8z"/><circle cx="8" cy="11" r="1"/><circle cx="12" cy="11" r="1"/><circle cx="16" cy="11" r="1"/></svg>
+          <?= hb('Our artists are preparing their first works. Check back soon.', 'فنانونا يجهّزون أعمالهم الأولى. عد قريباً.') ?>
+        </div>
+      <?php else: ?>
+        <div class="art-grid">
+          <?php foreach ($featured as $aw):
+            $aid    = (int) $aw['id'];
+            $stg    = $featStages[$aid] ?? [];
+            $img    = isset($stg[100]) && owSafeStagePath((string) $stg[100]['photo_path']) ? $stg[100]['photo_path'] : $aw['image_url'];
+            $tEn    = $aw['title_en'] !== '' ? $aw['title_en'] : $aw['title_ar'];
+            $tAr    = $aw['title_ar'] !== '' ? $aw['title_ar'] : $aw['title_en'];
+            $artistEn = trim((string) (($aw['artist_name'] ?? '') ?: $aw['full_name_en'] ?: $aw['full_name_ar']));
+            $artistAr = trim((string) (($aw['artist_name'] ?? '') ?: $aw['full_name_ar'] ?: $aw['full_name_en']));
+          ?>
+          <article class="glass-card art-card reveal">
+            <a class="art-img" href="marketplace.php" tabindex="-1" aria-hidden="true">
+              <img loading="lazy" src="<?= e($img) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>">
+            </a>
+            <div class="art-body">
+              <a class="art-title" href="marketplace.php"><?= hb($tEn, $tAr) ?></a>
+              <a class="art-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>"><?= hb('by ' . $artistEn, 'بواسطة ' . $artistAr) ?></a>
+              <?php if (owHasJourney($stg)): ?>
+                <span class="verified-badge art-badge"><?= hb('✓ Human Art', '✓ فن بشري') ?></span>
+              <?php endif; ?>
+              <div class="art-price"><?= e(number_format((float) $aw['price'])) ?> <?= hb('SAR', 'ر.س') ?></div>
+            </div>
+          </article>
+          <?php endforeach; ?>
+        </div>
+        <div class="sec-foot reveal"><a class="text-link" href="marketplace.php"><?= hb('See all artworks →', 'شاهد كل الأعمال ←') ?></a></div>
+      <?php endif; ?>
+    </div>
+  </section>
+
+  <!-- 4 — JOIN THE COMMUNITY -->
+  <section id="join">
+    <div class="wrap">
+      <div class="join">
+        <div class="glass-card join-card reveal">
+          <span class="tag-line"><?= hb('FOR ARTISTS', 'للفنانين') ?></span>
+          <h3><?= hb('Are you an artist?', 'هل أنت فنان؟') ?></h3>
+          <p><?= hb('Share your work, prove your craft, and reach collectors worldwide.', 'شارك أعمالك، أثبت حرفتك، وصل إلى مقتنين حول العالم.') ?></p>
+          <a class="btn btn-pink" href="register_artist.php"><?= hb('Join as Artist', 'انضم كفنان') ?></a>
+        </div>
+        <div class="glass-card join-card reveal">
+          <span class="tag-line"><?= hb('FOR COLLECTORS', 'للمقتنين') ?></span>
+          <h3><?= hb('Looking for real art?', 'تبحث عن فن حقيقي؟') ?></h3>
+          <p><?= hb('Discover verified human artworks and buy directly from the artist.', 'اكتشف أعمالاً فنية بشرية موثّقة واشترِ مباشرة من الفنان.') ?></p>
+          <a class="btn btn-glass" href="marketplace.php"><?= hb('Start Exploring', 'ابدأ الاستكشاف') ?></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — DISCOVER THE ART WORLD -->
+  <section id="discover">
+    <div class="wrap">
+      <h2 class="sec-title reveal"><?= hb('Discover the Art World', 'اكتشف عالم الفن') ?></h2>
+      <p class="sec-sub reveal"><?= hb('Find a place to learn, and the gatherings that bring artists together.', 'اعثر على مكان للتعلّم، وعلى الملتقيات التي تجمع الفنانين.') ?></p>
+      <div class="disc">
+        <a class="glass-card disc-card reveal" href="training.php">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg>
+          <span><b><?= hb('Art Institutes', 'المعاهد الفنية') ?></b><span class="small"><?= hb('Courses and schools in one place', 'الدورات والمعاهد في مكان واحد') ?></span></span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="glass-card disc-card reveal" href="events.php">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span><b><?= hb('Global Art Events', 'الملتقيات الفنية العالمية') ?></b><span class="small"><?= hb('Exhibitions and gatherings worldwide', 'معارض وملتقيات حول العالم') ?></span></span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><?= hb('© ' . date('Y') . ' Oweili — real art by real artists.', '© ' . date('Y') . ' أويلي — فن حقيقي بأيدي فنانين حقيقيين.') ?> · <a href="support.php"><?= hb('Support', 'الدعم') ?></a></div>
+</footer>
+
 <script>
-const T = {
-  en:{dir:'ltr',lb:'العربية',
-    badge:'Digital Ink Studio',
-    h1:'Where art meets<br><em>the living wild</em>',
-    desc:"Step inside the jungle. Paint with the rhythm of ocean waves and the breath of ancient forests. A fully immersive creative sanctuary built for artists who draw from nature's soul.",
-    b1:'Start Creating Free',b2:'Explore Art Styles',
-    galleryTitle:'Explore Art Styles',
-    'n-login':'Sign In','n-reg':'Join Free',
-    modalCta:'Start This Style',
-    nav:{
-      studio:'The Studio', community:'Community', marketplace:'Marketplace', explore:'Explore Art Styles', support:'Support',
-      's1':'Watercolor Workshop','s2':'Oil Painting Studio','s3':'Digital Art Lab','s4':'Charcoal & Ink',
-      'c2':'Meet Fellow Artists','c3':'Share Your Work','c4':'Learn Together',
-      'sp1':'Contact Us','sp2':'How It Works','sp3':'Terms of Use'
-    }
-  },
-  ar:{dir:'rtl',lb:'English',
-    badge:'مجتمع الفن السعودي · Saudi Art Community',
-    h1:'حيث يتألق<br><em>الفنانون</em>',
-    desc:'اكتشف الفن وتعلّم وبِع أعمالك. أويلي هي منصة الفن السعودية الثنائية اللغة — تجمع الفنانين والهواة والمقتنين في فضاء إبداعي واحد.',
-    b1:'ابدأ الإبداع مجاناً',b2:'استكشف أساليب الرسم',
-    galleryTitle:'استكشف أساليب الرسم',
-    'n-login':'تسجيل الدخول','n-reg':'انضم مجاناً',
-    modalCta:'ابدأ هذا الأسلوب',
-    nav:{
-      studio:'الاستوديو', community:'المجتمع', marketplace:'السوق', explore:'استكشف أساليب الرسم', support:'الدعم',
-      's1':'ورشة الألوان المائية','s2':'استوديو الرسم الزيتي','s3':'مختبر الفن الرقمي','s4':'الفحم والحبر',
-      'c2':'تعرّف على فنانين','c3':'شارك أعمالك','c4':'تعلّم معاً',
-      'sp1':'تواصل معنا','sp2':'كيف يعمل الموقع','sp3':'شروط الاستخدام'
-    }
-  }
-};
-
-let L = 'en';
-
-function closeModal(e) {
-  if(!e || e.target === document.getElementById('modal')) {
-    document.getElementById('modal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
+/* Language button in the shared menu: flip the page direction; nav.php then
+   updates the menu words and the bi-en / bi-ar texts follow the direction. */
+function tgl(){
+  var h = document.documentElement, ar = h.getAttribute('dir') !== 'rtl';
+  h.setAttribute('dir', ar ? 'rtl' : 'ltr');
+  h.setAttribute('lang', ar ? 'ar' : 'en');
+  document.title = ar ? 'أويلي · حيث تصنع اليد البشرية الفن' : 'Oweili · Where Human Hands Create Art';
+  try { localStorage.setItem('lang', ar ? 'ar' : 'en'); } catch (e) {}
 }
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+if (document.documentElement.getAttribute('dir') === 'rtl') { document.title = 'أويلي · حيث تصنع اليد البشرية الفن'; }
 
-function apply(l) {
-  const t = T[l];
-  document.documentElement.lang = l;
-  document.documentElement.setAttribute('dir', t.dir);
-  document.getElementById('pg').setAttribute('dir', t.dir);
-  document.getElementById('topnav').setAttribute('dir', t.dir);
-  document.getElementById('nav-center').setAttribute('dir', t.dir);
-  document.getElementById('lb').textContent = t.lb;
-  document.getElementById('t-badge').textContent = t.badge;
-  document.getElementById('t-h1').innerHTML = t.h1;
-  document.getElementById('t-desc').textContent = t.desc;
-  document.getElementById('t-b1').textContent = t.b1;
-  document.getElementById('t-b2').textContent = t.b2;
-  // Sign In / Join Free only exist when logged out (shared nav.php)
-  const nLogin = document.getElementById('n-login-t'); if (nLogin) nLogin.textContent = t['n-login'];
-  const nReg = document.getElementById('n-reg-t'); if (nReg) nReg.textContent = t['n-reg'];
-  const n = t.nav;
-  document.getElementById('nav-explore-label').textContent = n.explore;
-  document.getElementById('nav-studio-label').textContent = n.studio;
-  document.getElementById('nav-community-label').textContent = n.community;
-  document.getElementById('nav-marketplace-label').textContent = n.marketplace;
-  document.getElementById('nav-support-label').textContent = n.support;
-  
-  // تحديث الرابط ديناميكياً ليمرر اللغة للمتجر أوتوماتيكياً
-  document.getElementById('nav-marketplace-link').href = l === 'en' ? 'marketplace.php?lang=en' : 'marketplace.php?lang=ar';
+/* Sections rise in as they scroll into view */
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) { els.forEach(function(el){ el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  els.forEach(function(el){ io.observe(el); });
+})();
 
-  ['s1','s2','s3','s4','c2','c3','c4','sp1','sp2','sp3'].forEach(k=>{
-    const el = document.getElementById('dd-'+k);
-    if(el) el.textContent = n[k];
-  });
-}
-
-function tgl() { L = L==='en'?'ar':'en'; apply(L); try{localStorage.setItem('lang',L);}catch(e){} }
-
-/* Restore the site-wide saved language (shared with every other page). */
-try{ var _saved=localStorage.getItem('lang'); L=(_saved==='ar')?'ar':'en'; }catch(e){}
-apply(L);
-
-const v = document.getElementById('vid');
-if(v){
-  v.addEventListener('canplay', ()=>v.classList.add('on'), {once:true});
-  v.play().catch(()=>{});
-}
+/* Background video fades in once it can play */
+(function(){
+  var v = document.getElementById('vid');
+  if (!v) return;
+  v.addEventListener('canplay', function(){ v.classList.add('on'); }, { once: true });
+  var p = v.play(); if (p && p.catch) p.catch(function(){});
+})();
 </script>
 </body>
 </html>

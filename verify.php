@@ -62,7 +62,7 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
         <!-- Header -->
         <tr><td style="background:#111111;padding:34px 32px;text-align:center;">
           <div style="font-size:22px;font-weight:700;letter-spacing:0.14em;color:#ffffff;text-transform:uppercase;">OWEILI</div>
-          <div style="height:3px;width:56px;margin:14px auto 0;background:linear-gradient(90deg,#ff0055,#0066ff,#aa00ff);border-radius:3px;"></div>
+          <div style="height:3px;width:56px;margin:14px auto 0;background:linear-gradient(90deg,#ff0055,#0066ff,#0066ff);border-radius:3px;"></div>
         </td></tr>
 
         <!-- English -->
@@ -101,7 +101,7 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
 
         <!-- Footer -->
         <tr><td style="background:#fafafa;padding:20px 32px;text-align:center;">
-          <p style="margin:0;font-size:11px;color:#999;">© Oweili · oweili.com — Saudi bilingual art marketplace</p>
+          <p style="margin:0;font-size:12px;color:#999;">© Oweili · oweili.com — Saudi bilingual art marketplace</p>
         </td></tr>
       </table>
     </td></tr>
@@ -117,6 +117,7 @@ HTML;
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Verify Account · Oweili</title>
+<link rel="stylesheet" href="/assets/css/oweili.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;overflow-x:hidden;}
@@ -132,29 +133,29 @@ html,body{width:100%;min-height:100vh;background:#fff;font-family:"Helvetica Neu
 .nav-logo span{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
 .nav-center{display:flex;align-items:stretch;gap:0;height:100%;}
 .nav-item{position:relative;display:flex;align-items:center;}
-.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
+.nav-item > a{display:flex;align-items:center;gap:4px;padding:0 12px;height:100%;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(0,0,0,0.65);text-decoration:none;transition:color 0.2s;white-space:nowrap;border-bottom:2px solid transparent;}
 .nav-item > a:hover{color:#000;}
-.nav-item:hover > a{color:#0055ff;border-bottom-color:#0055ff;}
+.nav-item:hover > a{color:#0066ff;border-bottom-color:#0066ff;}
 .nav-item > a .chevron{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;}
 .nav-item:hover > a .chevron{transform:rotate(180deg);}
 .dropdown{position:absolute;top:100%;left:0;min-width:200px;background:rgba(255,255,255,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.07);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,0.1);padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s,visibility 0.2s;pointer-events:none;}
 .nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
 .dropdown a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:12px;color:rgba(0,0,0,0.7);text-decoration:none;transition:background 0.15s,color 0.15s;}
-.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0055ff;}
+.dropdown a:hover{background:rgba(0,100,255,0.07);color:#0066ff;}
 .dropdown a .d-icon{width:14px;height:14px;fill:currentColor;opacity:0.6;flex-shrink:0;}
 .nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-.nav-btn{padding:5px 12px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
+.nav-btn{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.22s;border:1px solid rgba(0,0,0,0.1);background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.8);}
 .nav-btn:hover{background:rgba(0,0,0,0.08);color:#000;}
 .nav-btn.primary{background:rgba(0,100,255,0.1);border-color:rgba(0,100,255,0.2);color:#0066ff;}
 .nav-btn.primary:hover{background:rgba(0,100,255,0.18);}
-.lang-btn{padding:4px 10px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
+.lang-btn{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.7);color:rgba(0,0,0,0.7);backdrop-filter:blur(8px);transition:all 0.22s;}
 .lang-btn:hover{background:#111111;color:#fff;}
 @media(max-width:1024px){.nav-center{display:none;}}
 
 .auth-wrap{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:90px 20px 40px;}
 .auth-card{width:100%;max-width:440px;background:rgba(255,255,255,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,0.07);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,0.1);padding:40px 32px;text-align:center;animation:riseUp 0.8s cubic-bezier(0.22,1,0.36,1) forwards;opacity:0;}
 .v-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:34px;}
-.v-icon.ok{background:rgba(0,180,100,0.12);border:1px solid rgba(0,180,100,0.3);}
+.v-icon.ok{background:rgba(0,102,255,0.12);border:1px solid rgba(0,102,255,0.3);}
 .v-icon.bad{background:rgba(255,0,85,0.1);border:1px solid rgba(255,0,85,0.25);}
 .auth-card h1{font-size:24px;font-weight:700;color:#111111;margin-bottom:10px;}
 .auth-card p{font-size:14px;color:rgba(0,0,0,0.6);line-height:1.7;margin-bottom:24px;}

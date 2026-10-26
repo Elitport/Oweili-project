@@ -20,6 +20,12 @@
   --color-border: rgba(0,0,0,0.07);
 }
 
+/* ── TWO-LANGUAGE TEXT (works on every page) ──
+   Print <span class="bi-en">…</span><span class="bi-ar">…</span>; the one that
+   matches the page direction is shown. */
+html:not([dir="rtl"]) .bi-ar { display: none; }
+html[dir="rtl"] .bi-en { display: none; }
+
 /* ── BASE RESET (opt-in pages only) ── */
 body.ow { margin: 0; }
 .ow, .ow *, .ow *::before, .ow *::after { box-sizing: border-box; }
