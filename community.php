@@ -109,6 +109,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 const T={
   en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
     badge:'Artists Together',h1:'The <em>Artist Community</em>',desc:'Art grows when artists meet. Share your work, learn from each other, and make friends who get it.',
+    s1:'Artists With Us',s2:'Messages Shared',s3:'Art Styles',s4:'Saudi Community',
     ctaH:'Join the Artist Chat Room',ctaP:'Talk with fellow artists right now. Share a trick, ask a question, get honest feedback. Friendships start here.',live:'Live Now',ctaBtn:'Enter the Chat Room',
     commTitle:'Community Spaces',
     c1:'Artist Chat Room',c1d:'Artists from Saudi Arabia and beyond, chatting in real time. Pull up a chair.',c1l:'Enter Room →',
@@ -121,6 +122,7 @@ const T={
     i3:'Old Trees',i3d:'Study bark, roots and the patience of time.'},
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'فنانون معاً',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
+    s1:'فنانون معنا',s2:'الرسائل المتبادلة',s3:'أساليب فنية',s4:'المجتمع السعودي',
     ctaH:'انضم إلى غرفة محادثة الفنانين',ctaP:'تحدّث مع فنانين مثلك الآن. شارك فكرة، واسأل سؤالاً، واحصل على رأي صادق. هنا تبدأ الصداقات.',live:'مباشر الآن',ctaBtn:'ادخل غرفة المحادثة',
     commTitle:'مساحات المجتمع',
     c1:'غرفة محادثة الفنانين',c1d:'فنانون من السعودية وخارجها يتحدثون مباشرة. تفضّل وانضم إليهم.',c1l:'ادخل الغرفة →',
