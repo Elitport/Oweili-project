@@ -51,7 +51,11 @@
   --nav-bg: rgba(255,255,255,0.82);
   --veil: linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.8) 55%, rgba(255,255,255,0.92) 100%);
   --veil-strong: rgba(255,255,255,0.93);
-  --hero-shade: rgba(0,0,0,0.15);
+  /* homepage hero (luxury gallery): faint video under a strong veil */
+  --hero-shade: rgba(255,255,255,0.75);
+  --hero-video-opacity: 0.3;
+  --hero-ink: var(--color-dark);       /* headline, navy button, outlines */
+  --hero-on-ink: #FFFFFF;              /* text on the navy button */
 
   /* role accent colors (dashboards) */
   --color-artist: #DB8084;
@@ -140,7 +144,10 @@ html.dark-mode {
   --nav-bg: rgba(15,21,32,0.88);
   --veil: rgba(15,21,32,0.6);
   --veil-strong: rgba(15,21,32,0.9);
-  --hero-shade: rgba(15,21,32,0.6);
+  --hero-shade: rgba(15,21,32,0.85);
+  --hero-video-opacity: 0.2;
+  --hero-ink: #FFFFFF;
+  --hero-on-ink: #23314A;
   --shadow-card: 0 4px 24px rgba(0,0,0,0.35);
   --shadow-card-hover: 0 16px 40px rgba(0,0,0,0.5);
   --color-collector: #8FA1B1;

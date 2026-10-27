@@ -1,8 +1,8 @@
 <?php
 /* =====================================================================
  *  index.php — Oweili homepage: one full-screen hero, nothing else.
- *  Video background (bg.mp4) with a soft dark shade, badge, headline,
- *  one-line subtitle and two buttons. Text is printed in both languages
+ *  Calm luxury-gallery hero: faint video (bg.mp4) under a strong veil,
+ *  small badge, light headline, one short line and two navy buttons. Text is printed in both languages
  *  (bi-en / bi-ar); the shared menu's language switch shows the one that
  *  matches the page direction. No database tables used.
  * ===================================================================== */
@@ -15,70 +15,88 @@ require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languag
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oweili · Everything here started with human hands</title>
-<meta name="description" content="Every piece here was made by real hands. And you can see how. كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.">
+<meta name="description" content="Original art. Real artists. Verified. فن أصيل. فنانون حقيقيون. موثّق.">
 <meta property="og:title" content="Oweili · Everything here started with human hands · كل ما تراه هنا، بدأ بيدٍ حقيقية">
-<meta property="og:description" content="Every piece here was made by real hands. And you can see how.">
+<meta property="og:description" content="Original art. Real artists. Verified.">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
 <style>
-/* Homepage — one screen. The headline is the first thing to notice, the two
-   buttons are the action (rule 30). Colors, fonts and buttons come from oweili.css. */
+/* Homepage — a calm, white gallery entrance. One centered block:
+   badge, headline, one short line, two navy buttons. Nothing else.
+   Every color comes from oweili.css (light and dark mode). */
 html, body { height: 100%; }
-body { overflow-x: hidden; }
+body { overflow: hidden; }
 
-/* full-screen video with a soft dark shade so the text stays readable */
+/* the video is barely there; a strong veil keeps the page mostly white (or navy) */
 .hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
 .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; }
-.hero-bg video.on { opacity: 1; }
-.hero-shade { position: absolute; inset: 0; background: var(--hero-shade); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
-.hero-bg video.on + .hero-shade { opacity: 1; }
+.hero-bg video.on { opacity: var(--hero-video-opacity); }
+.hero-shade { position: absolute; inset: 0; background: var(--hero-shade); pointer-events: none; }
 
 .hero {
   position: relative; z-index: 2;
-  min-height: 100vh; min-height: 100svh;
+  height: 100vh; height: 100svh;
   display: flex; align-items: center; justify-content: center;
-  padding: calc(var(--nav-h) + var(--space-lg)) var(--space-sm) var(--space-xl);
+  padding: var(--nav-h) var(--space-md) 0;
   text-align: center;
 }
-.hero-inner { max-width: 880px; display: flex; flex-direction: column; align-items: center; }
+.hero-inner { max-width: 920px; display: flex; flex-direction: column; align-items: center; }
 
 .hero-badge {
-  display: inline-flex; align-items: center; gap: var(--space-xs);
-  padding: 6px 14px; margin-bottom: var(--space-lg);
-  border: 1px solid rgba(var(--rgb-ink),0.18); border-radius: var(--radius-pill);
-  background: rgba(var(--rgb-surface),0.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  font-size: var(--fs-min); font-weight: 500; letter-spacing: 0.04em; color: var(--color-dark);
+  display: inline-block; margin-bottom: 32px; padding: 7px 18px;
+  border: 1px solid rgba(var(--rgb-ink),0.14); border-radius: var(--radius-pill);
+  font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.4;
+  color: var(--hero-ink);
 }
-[dir="rtl"] .hero-badge { letter-spacing: 0; font-size: 13px; }
+[dir="rtl"] .hero-badge { letter-spacing: 0.08em; }
 
 .hero h1 {
-  font-size: 56px; font-weight: 300; letter-spacing: -0.02em; line-height: 1.1;
-  color: var(--color-dark); margin: 0 0 var(--space-md);
+  margin: 0 0 20px;
+  font-size: 64px; font-weight: 200; letter-spacing: -0.03em; line-height: 1.2;
+  color: var(--hero-ink);
 }
-[dir="rtl"] .hero h1 { letter-spacing: 0; line-height: 1.3; }
-.hero-sub { font-size: 18px; line-height: 1.6; color: var(--color-body); max-width: 520px; margin: 0 auto var(--space-lg); }
-[dir="rtl"] .hero-sub { line-height: 1.7; }
+[dir="rtl"] .hero h1 { letter-spacing: 0; }
 
-.hero-btns { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; }
-.hero-btns .btn { min-width: 200px; }
+.hero-sub {
+  margin: 0 0 48px;
+  font-size: 16px; letter-spacing: 0.05em; line-height: 1.6;
+  color: var(--color-light);
+}
+[dir="rtl"] .hero-sub { letter-spacing: 0; }
 
-/* gentle fade-in, CSS only: badge, then headline, subtitle and buttons */
-@keyframes ow-fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.fade { animation: ow-fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) both; }
-.fade-1 { animation-delay: 0.05s; }
-.fade-2 { animation-delay: 0.2s; }
-.fade-3 { animation-delay: 0.35s; }
-.fade-4 { animation-delay: 0.5s; }
+.hero-btns { display: flex; gap: 16px; justify-content: center; }
+.hero-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 180px; height: 52px; padding: 0 12px; border-radius: 4px;
+  border: 1px solid var(--hero-ink);
+  font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; white-space: nowrap;
+  transition: opacity var(--ease), background var(--ease);
+}
+[dir="rtl"] .hero-btn { letter-spacing: 0; font-size: 14px; }
+.hero-btn-primary { background: var(--hero-ink); color: var(--hero-on-ink); }
+.hero-btn-primary:hover { opacity: 0.85; color: var(--hero-on-ink); }
+.hero-btn-secondary { background: transparent; color: var(--hero-ink); }
+.hero-btn-secondary:hover { background: rgba(var(--rgb-ink),0.06); color: var(--hero-ink); }
+.hero-btn:focus-visible { outline: 2px solid var(--hero-ink); outline-offset: 3px; }
+.hero-btn:active { transform: translateY(1px); }
+
+/* a slow, quiet fade-in (CSS only) */
+@keyframes ow-fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.fade { animation: ow-fadeUp 1.1s cubic-bezier(0.22,1,0.36,1) both; }
+.fade-1 { animation-delay: 0.1s; }
+.fade-2 { animation-delay: 0.25s; }
+.fade-3 { animation-delay: 0.4s; }
+.fade-4 { animation-delay: 0.55s; }
 
 @media (max-width: 768px) {
-  .hero h1 { font-size: 36px; }
-  .hero-sub { font-size: 16px; }
+  .hero h1 { font-size: 38px; }
 }
 @media (max-width: 420px) {
-  .hero-btns { flex-direction: column; width: 100%; max-width: 320px; }
-  .hero-btns .btn { width: 100%; min-width: 0; }
+  .hero-btns { width: 100%; max-width: 376px; }
+  .hero-btn { flex: 1 1 0; width: auto; min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fade { animation: none; }
@@ -96,12 +114,12 @@ body { overflow-x: hidden; }
 
 <main class="hero">
   <div class="hero-inner">
-    <span class="hero-badge fade fade-1"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
+    <span class="hero-badge fade fade-1"><?= owBi('Oweili · Art', 'أويلي · فن') ?></span>
     <h1 class="fade fade-2"><?= owBi('Everything here started with human hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
-    <p class="hero-sub fade fade-3"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
+    <p class="hero-sub fade fade-3"><?= owBi('Original art. Real artists. Verified.', 'فن أصيل. فنانون حقيقيون. موثّق.') ?></p>
     <div class="hero-btns fade fade-4">
-      <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
-      <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
+      <a class="hero-btn hero-btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
+      <a class="hero-btn hero-btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
     </div>
   </div>
 </main>

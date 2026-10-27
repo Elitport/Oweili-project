@@ -142,8 +142,11 @@
 - Files: admin.php, subadmin_dashboard.php, artwork_lib.php (owProofPanelHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
 
-### Homepage (index.php) — one screen
-- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "✦ A Real Touch" / «✦ لمسة حقيقية»; headline "Everything here started with human hands" / «كل ما تراه هنا، بدأ بيدٍ حقيقية» in one dark color (56px desktop, 36px phone, weight 300); subtitle "Every piece here was made by real hands. And you can see how." / «كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.» (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
+### Homepage (index.php) — one screen, luxury gallery hero (luxury-hero branch, waiting for owner approval)
+- What it does: exactly one full screen, everything centered, lots of white space. The background video is barely there (opacity 0.3) under a strong white veil rgba(255,255,255,0.75); in dark mode video 0.2 under rgba(15,21,32,0.85)
+- Badge "OWEILI · ART" / «أويلي · فن» (11px, wide spacing, thin border). Headline "Everything here started with human hands" / «كل ما تراه هنا، بدأ بيدٍ حقيقية» (64px desktop, 38px phone, weight 200, one color: navy, white in dark mode). Subtitle "Original art. Real artists. Verified." / «فن أصيل. فنانون حقيقيون. موثّق.» (16px, grey-blue)
+- Two navy buttons, 180×52px, 4px corners, 16px apart: "Explore Gallery" (filled navy; white in dark mode) and "Join as Artist" (outline). No pink on this page. Spacing: badge 32px, headline 20px, subtitle 48px
+- Colors come from oweili.css: --hero-shade, --hero-video-opacity, --hero-ink, --hero-on-ink (light and dark values)
 - The badge, headline, subtitle and buttons fade in gently (CSS only; turned off for visitors who reduce motion)
 - Removed on purpose (owner's request): "Art You Can Trust" steps, "Latest Verified Artworks", the Join cards and the Discover cards
 - Files: index.php, assets/css/oweili.css, nav.css. Tables: none
