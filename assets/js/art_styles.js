@@ -1,13 +1,14 @@
 /* =====================================================================
  *  art_styles.js: the single source for all art style content (50 styles).
- *  Used by explore.php (cards + the style window). Never copy this data
- *  into a page: load this file instead.
+ *  Used by explore.php (cards + the style window), and read by
+ *  art_types.php for the art type names. Never copy this data into a
+ *  page: load this file instead.
  *
  *  Each style:
  *    id     short name, also used in the web address (explore.php#watercolor)
  *    cat    traditional | digital | heritage | contemporary | nature | photography
- *    type   the matching Gallery type from art_types.php (marketplace.php?type=...),
- *           or null when the Gallery has no type for it yet
+ *    type   the Gallery type for this style (same as id). art_types.php reads
+ *           the names from this file, so every style is a Gallery type
  *    level  beginner | intermediate | advanced
  *    en/ar  name, feel (one word), essence (one line), story (3 paragraphs),
  *           tech [name, one-line explanation], signs (numbered list),
@@ -1858,7 +1859,7 @@ window.OW_ART_STYLES = [
  {
   "id": "tempera",
   "cat": "traditional",
-  "type": null,
+  "type": "tempera",
   "level": "advanced",
   "en": {
    "name": "Tempera",
@@ -2068,7 +2069,7 @@ window.OW_ART_STYLES = [
  {
   "id": "fresco",
   "cat": "traditional",
-  "type": null,
+  "type": "fresco",
   "level": "advanced",
   "en": {
    "name": "Fresco",
@@ -2278,7 +2279,7 @@ window.OW_ART_STYLES = [
  {
   "id": "pencil",
   "cat": "traditional",
-  "type": null,
+  "type": "pencil",
   "level": "beginner",
   "en": {
    "name": "Pencil Drawing",
@@ -2488,7 +2489,7 @@ window.OW_ART_STYLES = [
  {
   "id": "encaustic",
   "cat": "traditional",
-  "type": null,
+  "type": "encaustic",
   "level": "intermediate",
   "en": {
    "name": "Encaustic (Wax)",
@@ -2698,7 +2699,7 @@ window.OW_ART_STYLES = [
  {
   "id": "chinese_ink",
   "cat": "traditional",
-  "type": "ink",
+  "type": "chinese_ink",
   "level": "intermediate",
   "en": {
    "name": "Chinese Ink",
@@ -3156,7 +3157,7 @@ window.OW_ART_STYLES = [
  {
   "id": "stained_glass",
   "cat": "traditional",
-  "type": null,
+  "type": "stained_glass",
   "level": "advanced",
   "en": {
    "name": "Stained Glass",
@@ -3796,7 +3797,7 @@ window.OW_ART_STYLES = [
  {
   "id": "sculpting_3d",
   "cat": "digital",
-  "type": "3d",
+  "type": "sculpting_3d",
   "level": "advanced",
   "en": {
    "name": "3D Sculpting",
@@ -4006,7 +4007,7 @@ window.OW_ART_STYLES = [
  {
   "id": "pixel_art",
   "cat": "digital",
-  "type": "digital_art",
+  "type": "pixel_art",
   "level": "beginner",
   "en": {
    "name": "Pixel Art",
@@ -4208,7 +4209,7 @@ window.OW_ART_STYLES = [
  {
   "id": "motion_graphics",
   "cat": "digital",
-  "type": "digital_art",
+  "type": "motion_graphics",
   "level": "intermediate",
   "en": {
    "name": "Motion Graphics",
@@ -4420,7 +4421,7 @@ window.OW_ART_STYLES = [
  {
   "id": "concept_art",
   "cat": "digital",
-  "type": "digital_painting",
+  "type": "concept_art",
   "level": "advanced",
   "en": {
    "name": "Concept Art",
@@ -4632,7 +4633,7 @@ window.OW_ART_STYLES = [
  {
   "id": "generative_art",
   "cat": "digital",
-  "type": "digital_art",
+  "type": "generative_art",
   "level": "advanced",
   "en": {
    "name": "Generative Art",
@@ -4844,7 +4845,7 @@ window.OW_ART_STYLES = [
  {
   "id": "nft_art",
   "cat": "digital",
-  "type": "digital_art",
+  "type": "nft_art",
   "level": "intermediate",
   "en": {
    "name": "NFT Art",
@@ -5494,7 +5495,7 @@ window.OW_ART_STYLES = [
  {
   "id": "islamic_ornament",
   "cat": "heritage",
-  "type": null,
+  "type": "islamic_ornament",
   "level": "advanced",
   "en": {
    "name": "Islamic Ornamental Art",
@@ -5722,7 +5723,7 @@ window.OW_ART_STYLES = [
  {
   "id": "manuscript",
   "cat": "heritage",
-  "type": null,
+  "type": "manuscript",
   "level": "advanced",
   "en": {
    "name": "Manuscript Art",
@@ -5942,7 +5943,7 @@ window.OW_ART_STYLES = [
  {
   "id": "egyptian_linen",
   "cat": "heritage",
-  "type": null,
+  "type": "egyptian_linen",
   "level": "intermediate",
   "en": {
    "name": "Egyptian Linen Art",
@@ -6180,7 +6181,7 @@ window.OW_ART_STYLES = [
  {
   "id": "textile",
   "cat": "heritage",
-  "type": null,
+  "type": "textile",
   "level": "intermediate",
   "en": {
    "name": "Textile Art",
@@ -6408,7 +6409,7 @@ window.OW_ART_STYLES = [
  {
   "id": "islamic_mosaic",
   "cat": "heritage",
-  "type": "mosaic",
+  "type": "islamic_mosaic",
   "level": "advanced",
   "en": {
    "name": "Islamic Mosaic",
@@ -6630,7 +6631,7 @@ window.OW_ART_STYLES = [
  {
   "id": "street_art",
   "cat": "contemporary",
-  "type": null,
+  "type": "street_art",
   "level": "intermediate",
   "en": {
    "name": "Street Art",
@@ -6842,7 +6843,7 @@ window.OW_ART_STYLES = [
  {
   "id": "hyperrealism",
   "cat": "contemporary",
-  "type": null,
+  "type": "hyperrealism",
   "level": "advanced",
   "en": {
    "name": "Hyperrealism",
@@ -7504,7 +7505,7 @@ window.OW_ART_STYLES = [
  {
   "id": "pop_art",
   "cat": "contemporary",
-  "type": null,
+  "type": "pop_art",
   "level": "beginner",
   "en": {
    "name": "Pop Art",
@@ -7718,7 +7719,7 @@ window.OW_ART_STYLES = [
  {
   "id": "minimalism",
   "cat": "contemporary",
-  "type": null,
+  "type": "minimalism",
   "level": "intermediate",
   "en": {
    "name": "Minimalism",
@@ -7932,7 +7933,7 @@ window.OW_ART_STYLES = [
  {
   "id": "surrealism",
   "cat": "contemporary",
-  "type": null,
+  "type": "surrealism",
   "level": "intermediate",
   "en": {
    "name": "Surrealism",
@@ -8142,7 +8143,7 @@ window.OW_ART_STYLES = [
  {
   "id": "expressionism",
   "cat": "contemporary",
-  "type": null,
+  "type": "expressionism",
   "level": "beginner",
   "en": {
    "name": "Expressionism",
@@ -8352,7 +8353,7 @@ window.OW_ART_STYLES = [
  {
   "id": "conceptual",
   "cat": "contemporary",
-  "type": null,
+  "type": "conceptual",
   "level": "advanced",
   "en": {
    "name": "Conceptual Art",
@@ -8564,7 +8565,7 @@ window.OW_ART_STYLES = [
  {
   "id": "performance",
   "cat": "contemporary",
-  "type": null,
+  "type": "performance",
   "level": "advanced",
   "en": {
    "name": "Performance Art",
@@ -9236,7 +9237,7 @@ window.OW_ART_STYLES = [
  {
   "id": "botanical",
   "cat": "nature",
-  "type": null,
+  "type": "botanical",
   "level": "intermediate",
   "en": {
    "name": "Botanical Art",
@@ -9456,7 +9457,7 @@ window.OW_ART_STYLES = [
  {
   "id": "animal",
   "cat": "nature",
-  "type": null,
+  "type": "animal",
   "level": "intermediate",
   "en": {
    "name": "Animal Art",
@@ -9676,7 +9677,7 @@ window.OW_ART_STYLES = [
  {
   "id": "marine",
   "cat": "nature",
-  "type": null,
+  "type": "marine",
   "level": "advanced",
   "en": {
    "name": "Marine Art",
@@ -9888,7 +9889,7 @@ window.OW_ART_STYLES = [
  {
   "id": "architectural",
   "cat": "nature",
-  "type": null,
+  "type": "architectural",
   "level": "advanced",
   "en": {
    "name": "Architectural Drawing",
@@ -10108,7 +10109,7 @@ window.OW_ART_STYLES = [
  {
   "id": "fine_art_photo",
   "cat": "photography",
-  "type": "photography",
+  "type": "fine_art_photo",
   "level": "intermediate",
   "en": {
    "name": "Fine Art Photography",
@@ -10328,7 +10329,7 @@ window.OW_ART_STYLES = [
  {
   "id": "bw_photo",
   "cat": "photography",
-  "type": "photography",
+  "type": "bw_photo",
   "level": "intermediate",
   "en": {
    "name": "Black & White Photography",
@@ -10540,7 +10541,7 @@ window.OW_ART_STYLES = [
  {
   "id": "artistic_photo",
   "cat": "photography",
-  "type": "photography",
+  "type": "artistic_photo",
   "level": "advanced",
   "en": {
    "name": "Artistic Photography",
@@ -10752,7 +10753,7 @@ window.OW_ART_STYLES = [
  {
   "id": "photo_manipulation",
   "cat": "photography",
-  "type": "photography",
+  "type": "photo_manipulation",
   "level": "advanced",
   "en": {
    "name": "Photo Manipulation",

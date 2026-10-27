@@ -31,7 +31,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $dEn    = sanitize($_POST['desc_en'] ?? '');
     $dAr    = sanitize($_POST['desc_ar'] ?? '');
     $price  = $_POST['price'] ?? '';
-    $type   = array_key_exists($_POST['type'] ?? '', $ART_TYPES) ? $_POST['type'] : '';
+    $pType  = (string) ($_POST['type'] ?? '');
+    // one of the 50 styles, or the older type this artwork already has
+    $type   = (isset($ART_TYPES[$pType]) && (empty($ART_TYPES[$pType]['legacy']) || $pType === (string) $aw['type'])) ? $pType : '';
     $status = in_array($_POST['status'] ?? '', ['available','sold','auction'], true) ? $_POST['status'] : $aw['status'];
 
     // Descriptions are optional (same as the 3-stage upload); titles, type and price are required.
@@ -157,8 +159,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
           <input type="number" name="price" min="0" step="0.01" value="<?= e($aw['price']) ?>" required></div>
         <div class="field"><label id="t-l-type">Type</label>
           <select name="type" class="type-select" required>
-            <?php foreach ($ART_TYPES as $slug => $lbl): ?>
-              <option value="<?= e($slug) ?>" data-en="<?= e($lbl['en']) ?>" data-ar="<?= e($lbl['ar']) ?>" <?= $aw['type'] === $slug ? 'selected' : '' ?>><?= e($lbl['en']) ?></option>
+            <?php if (!empty($ART_TYPES[$aw['type']]['legacy'])): $lbl = $ART_TYPES[$aw['type']]; ?>
+              <option value="<?= e($aw['type']) ?>" data-en="<?= e($lbl['en']) ?>" data-ar="<?= e($lbl['ar']) ?>" selected><?= e($lbl['en']) ?></option>
+            <?php endif; ?>
+            <?php foreach (owStyleGroups() as $gKey => $g): ?>
+              <optgroup label="<?= e($g['en']) ?>" data-en="<?= e($g['en']) ?>" data-ar="<?= e($g['ar']) ?>">
+              <?php foreach ($ART_TYPES as $slug => $lbl): if (($lbl['cat'] ?? '') !== $gKey || !empty($lbl['legacy'])) continue; ?>
+                <option value="<?= e($slug) ?>" data-en="<?= e($lbl['en']) ?>" data-ar="<?= e($lbl['ar']) ?>" <?= $aw['type'] === $slug ? 'selected' : '' ?>><?= e($lbl['en']) ?></option>
+              <?php endforeach; ?>
+              </optgroup>
             <?php endforeach; ?>
           </select></div>
       </div>
@@ -227,6 +236,7 @@ function apply(l){
   setTxt('t-save',n.save);setTxt('t-cancel',n.cancel);
   document.querySelectorAll('.type-select option, .status-select option').forEach(o=>{
     o.textContent = (l==='ar' ? o.dataset.ar : o.dataset.en) || o.textContent; });
+  document.querySelectorAll('.type-select optgroup').forEach(g=>{ g.label = (l==='ar' ? g.dataset.ar : g.dataset.en) || g.label; });
   const eb=document.getElementById('errbox'); if(eb){ const v=l==='ar'?eb.dataset.ar:eb.dataset.en; if(v) eb.textContent=v; }
 }
 function tgl(){L=L==='en'?'ar':'en';apply(L);try{localStorage.setItem('lang',L);}catch(e){}}

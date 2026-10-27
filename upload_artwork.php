@@ -24,7 +24,7 @@ $uid = (int) $me['id'];
 
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $COLORS    = owColors();
-$TYPES     = owUploadTypes();
+$GROUPS    = owStyleGroups();
 $ready     = owStagesReady();
 
 $error = '';                       // error code for the current step
@@ -115,7 +115,7 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $picked = array_values(array_unique(array_intersect((array) ($_POST['colors'] ?? []), array_keys($COLORS))));
         if (!isset($stages[100])) {
             $error = 'need100';
-        } elseif (!isset($TYPES[$type]) || !isset($ART_TYPES[$type])) {
+        } elseif (!isset($ART_TYPES[$type]) || !empty($ART_TYPES[$type]['legacy'])) {   // one of the 50 styles only
             $error = 'type';
         } else {
             $db->beginTransaction();
@@ -285,9 +285,12 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .types{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 .type-card{position:relative;}
 .type-card input{position:absolute;opacity:0;width:1px;height:1px;}
-.type-card > span{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:116px;padding:12px 8px;border-radius:var(--radius-card);border:1px solid var(--color-border-strong);background:var(--color-surface);font-size:14px;font-weight:600;color:var(--color-dark);text-align:center;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;}
+.type-card > span{display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;padding:8px 8px 12px;border-radius:var(--radius-card);border:1px solid var(--color-border-strong);background:var(--color-surface);font-size:14px;font-weight:600;color:var(--color-dark);text-align:center;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;}
 .type-card > span:hover{border-color:var(--color-accent);}
-.type-card svg{width:64px;height:64px;border-radius:10px;background:var(--color-surface-2);}
+.type-card .tp-art{display:block;width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--color-surface-2);}
+.type-card .tp-art .ill{display:block;width:100%;height:100%;}
+.tg-h{font-size:var(--fs-label);font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--color-dark);margin:18px 0 8px;}
+.tg-h:first-of-type{margin-top:4px;}
 .type-card input:checked + span{border:2px solid var(--color-accent);box-shadow:0 0 0 3px rgba(var(--rgb-accent),0.15);color:var(--color-accent);}
 .sub-h{font-size:16px;font-weight:700;color:var(--color-dark);margin:22px 0 4px;}
 .sub-p{font-size:var(--fs-label);color:var(--color-body);margin-bottom:12px;}
@@ -434,18 +437,21 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
         <fieldset style="border:0;">
           <legend class="sub-h"><?= t2('Type of art', 'نوع الفن') ?></legend>
           <p class="sub-p"><?= t2('Choose the one closest to your work. The pictures show how each type usually looks.', 'اختر الأقرب إلى عملك. توضح الصور الشكل المعتاد لكل نوع.') ?></p>
+          <?php $selType = (string) ($_POST['type'] ?? $draft['type']);
+          foreach ($GROUPS as $gKey => $g): ?>
+          <h3 class="tg-h"><?= t2($g['en'], $g['ar']) ?></h3>
           <div class="types">
-            <?php $selType = (string) ($_POST['type'] ?? $draft['type']);
-            foreach ($TYPES as $key => $svg): if (!isset($ART_TYPES[$key])) continue; ?>
+            <?php foreach ($ART_TYPES as $key => $tp): if (($tp['cat'] ?? '') !== $gKey || !empty($tp['legacy'])) continue; ?>
               <label class="type-card">
                 <input type="radio" name="type" value="<?= e($key) ?>" required<?= $selType === $key ? ' checked' : '' ?>>
                 <span>
-                  <svg viewBox="0 0 64 64" role="img" aria-label="<?= e($ART_TYPES[$key]['en'] . ' example · مثال ' . $ART_TYPES[$key]['ar']) ?>"><?= $svg ?></svg>
-                  <?= t2($ART_TYPES[$key]['en'], $ART_TYPES[$key]['ar']) ?>
+                  <span class="tp-art" data-style="<?= e($key) ?>" aria-hidden="true"></span>
+                  <?= t2($tp['en'], $tp['ar']) ?>
                 </span>
               </label>
             <?php endforeach; ?>
           </div>
+          <?php endforeach; ?>
         </fieldset>
 
         <div class="actions" style="margin-top:20px;">
@@ -485,6 +491,13 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 <?php endif; ?>
 </main>
 
+<script src="/assets/js/art_covers.js?v=<?= @filemtime(__DIR__ . '/assets/js/art_covers.js') ?>"></script>
+<script>
+/* Draw the example picture on every art type card (same drawings as Explore Art Styles) */
+if (window.OW_ART_COVER) document.querySelectorAll('.tp-art[data-style]').forEach(function (el) {
+  el.innerHTML = window.OW_ART_COVER(el.getAttribute('data-style'), '', false);
+});
+</script>
 <script>
 /* Language switch for this page: flips direction, then nav.php's sync
    updates every .nav-i18n text. The menu's own labels are set here too. */

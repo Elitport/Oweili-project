@@ -326,7 +326,7 @@ $web = $artist['website']   ?? '';
           <?php if ($aw['title_ar'] !== ''): ?><div class="art-title-ar" dir="rtl" lang="ar"><?= e($aw['title_ar']) ?></div><?php endif; ?>
           <?php $stg = $artStages[(int) $aw['id']] ?? [];
           if (owHasJourney($stg)): ?>
-          <span class="human-badge"><?= owBi('✓ Human Art', '✓ فن بشري') ?></span>
+          <span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
           <?= owStagesHtml($stg, 'strip') ?>
           <details class="journey-toggle">
             <summary><?= owBi('See the creation journey', 'شاهد رحلة الإبداع') ?></summary>

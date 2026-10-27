@@ -105,12 +105,14 @@
 - collector_dashboard.php — Collector control panel
 - subadmin_dashboard.php — Sub-admin panel
 - admin.php — Main admin panel
-- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual
+- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the 50 style names from it
+- art_types.php — the art type list: the 50 styles (names from art_styles.js) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
+- assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 
 ## Features
 
 ### 3-stage artwork upload (proof of process) — built, needs database_update.sql
-- What it does: artists start a new artwork from their dashboard and go through 5 steps: 1 titles (Arabic + English required), 2 photo at 25% (required), 3 photo at 50% (optional, can skip), 4 photo at 100% (required) + colors used + art type (guided cards with small drawn examples), 5 price in SAR + the 15% commission note, then "Submit for Review"
+- What it does: artists start a new artwork from their dashboard and go through 5 steps: 1 titles (Arabic + English required), 2 photo at 25% (required), 3 photo at 50% (optional, can skip), 4 photo at 100% (required) + colors used + art type (all 50 encyclopedia styles as guided cards with their drawn picture, under 6 group labels: Traditional, Digital, Islamic & Arab Heritage, Contemporary, Nature & Portrait, Photography), 5 price in SAR + the 15% commission note, then "Submit for Review"
 - Every step is saved straight away, so the artist can come back days later. Unfinished work is a private draft (artworks.is_draft = 1): only the artist sees it (dashboard → "Drafts in progress" → Continue). Admins and sub-admins only see it after it is submitted
 - After submit: is_draft = 0, is_approved = 0 (waits for admin approval as before), image_url = the 100% photo, so the marketplace keeps working
 - Photos: taken with the phone camera (camera opens directly on phones; on computers a file picker opens instead). Max 10MB, JPG/PNG/WEBP only, checked on the server. Saved to uploads/artworks/stages/ with random names. Each photo is re-saved: the phone's rotation is applied and hidden data such as GPS location is removed (privacy). taken_at = the camera's own date if present, otherwise the upload time
@@ -127,20 +129,20 @@
 - Cards: picture 4:3 filling the frame, title 15px bold, artist name, navy art type pill, "✦ A Real Touch" / «✦ لمسة حقيقية» badge when the 25% and 100% photos exist, price, full-width navy "See the Story" button. Lift on hover, soft fade-in (off for visitors who reduce motion). 4 columns desktop, 3 tablet, 2 phone
 - Empty: "No artworks here yet. Be the first to share yours." / «لا أعمال هنا بعد. كن أول من يشارك عمله.» + "Join as Artist" (and "See all artworks" when a filter is on)
 - Banner: text only, no hand emoji
-- Category list: art_categories.php (single source, like art_types.php). Not in any category, so All only: sculpture, other. Landscape and portrait sit in Traditional; vector art and 3D in Digital; mosaic in Islamic Heritage; abstract and collage in Contemporary
+- Category list: art_categories.php, built from each type's encyclopedia group (Nature & Portrait styles sit in Traditional; Islamic & Arab Heritage = Islamic Heritage). Old types: vector art, 3D art and digital art in Digital; mixed media in Contemporary; photography in Photography; sculpture and other under All only
 - Files: marketplace.php, art_categories.php. Tables read: artworks, users, artwork_stages, artwork_colors
 
 ### Creation Journey (marketplace) — built, needs database_update.sql
 - What it does: in the artwork details window, buyers see "Creation Journey — Proof of Human Art" / «رحلة الإبداع — دليل الفن البشري» with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
-- A small blue "✓ Human Art" / «✓ فن بشري» badge sits under the title (the same badge as everywhere else) — only on artworks that have the 25% and 100% photos
+- The "✦ A Real Touch" / «✦ لمسة حقيقية» badge sits under the title (the same badge as everywhere else) — only on artworks that have the 25% and 100% photos
 - Old artworks without stage photos show exactly as before (no journey, no badge)
-- Every card in the marketplace grid also shows a tiny "✓ Human Art" / «✓ فن بشري» badge when the artwork has the 25% and 100% photos
+- Every card in the marketplace grid also shows the "✦ A Real Touch" / «✦ لمسة حقيقية» badge when the artwork has the 25% and 100% photos
 - Phone: the photos are one row you swipe sideways; tablet and desktop: side by side. Arabic runs right to left
 - Only approved artworks on the current page are loaded — unapproved or draft photos are never sent to visitors
 - Files: marketplace.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
 ### Creation Journey on artist profiles — built, needs database_update.sql
-- What it does: on an artist's public profile (artist_dashboard.php?id=N), every artwork that has the 25% and 100% photos shows the "✓ Human Art" badge, a strip of small stage photos (25% / 50% / 100%), and a "See the creation journey" / «شاهد رحلة الإبداع» link that opens the full journey with dates, colors and art type. Old artworks without stages show as before
+- What it does: on an artist's public profile (artist_dashboard.php?id=N), every artwork that has the 25% and 100% photos shows the "✦ A Real Touch" / «✦ لمسة حقيقية» badge, a strip of small stage photos (25% / 50% / 100%), and a "See the creation journey" / «شاهد رحلة الإبداع» link that opens the full journey with dates, colors and art type. Old artworks without stages show as before
 - Anyone can now open a public profile, even without logging in (the marketplace links to it). Visitors only see artist accounts that are not banned, and only approved artworks. Earnings, drafts, edit and delete stay owner-only; your own dashboard (no ?id) still needs login
 - Files: artist_dashboard.php, artwork_lib.php (owJourneyHtml), assets/css/proof.css. Tables: artwork_stages, artwork_colors
 
@@ -211,12 +213,12 @@
 - What it does: "Explore Art Styles" / «استكشف أساليب الرسم». Filter pills with counts: All 50 / Traditional 15 / Digital 8 / Islamic & Arab Heritage 7 / Contemporary 10 / Nature & Portrait 6 / Photography 4 (navy when active). Equal square cards (4 columns desktop, 3 tablet, 2 phone): a drawn cover, the style name and one feeling word. Hover: lift + thin pink border. Closing line: "Fifty styles. Fifty human stories. Every one began with a hand." / «خمسون أسلوباً. خمسون قصة إنسانية. كلها بدأت بيد.»
 - The window (max 760px, full screen on phones; close top right, top left in Arabic, Escape or tap outside) has 10 parts: name + feeling, one-line essence, The Human Story (3 paragraphs), Key Techniques (hover or tap explains), Signs of a Human Hand (numbered), Tools & Materials, Difficulty & Time (Beginner / Intermediate / Advanced, time for one artwork, who it suits), Famous Artists (name, nationality, dates, contribution), Collector's Guide (3 tips), From Our Gallery
 - From Our Gallery: the newest approved, for-sale artwork of that type by an artist who is not banned (one prepared database read in explore.php; pictures only from uploads/ or https). If there is none yet: the drawing, an invitation to artists, and the pink button. Button: "See [style] in Gallery" → marketplace.php?type=…. Styles with no Gallery type yet open the whole Gallery
-- Gallery types used: exact types where they exist; Chinese Ink → ink, Islamic Mosaic → mosaic, Concept Art → digital_painting, Pixel Art / Motion Graphics / Generative Art / NFT Art → digital_art, all four photography styles → photography. No type yet: Tempera, Fresco, Pencil Drawing, Encaustic, Stained Glass, Islamic Ornamental Art, Manuscript Art, Egyptian Linen Art, Textile Art, Street Art, Hyperrealism, Pop Art, Minimalism, Surrealism, Expressionism, Conceptual Art, Performance Art, Botanical, Animal, Marine, Architectural Drawing
+- Gallery types: every style is now its own Gallery type (type = style id), so every "See [style] in Gallery" button opens exactly that style. Artworks saved under the old shared types (photography, digital_art, 3d, mixed_media, vector_art, sculpture, other) still show in the Gallery, but not in a style window
 - Shared links open a style directly: explore.php#calligraphy. Unknown links are ignored
 - Content: assets/js/art_styles.js (about 400KB, 120KB compressed; loaded after the page shows). Famous artists' names and dates must be double-checked by the team before launch (a list of doubts was given to the owner)
 - Generative Art and NFT Art are written only as human-made work (the artist writes the rules; an NFT is an ownership certificate). No mention of AI anywhere
-- Cover pictures are simple SVG drawings in the brand colors; they follow light and dark mode and can be replaced later with real artworks
-- Files: explore.php, assets/js/art_styles.js, assets/js/explore.js, assets/css/discover.css, assets/js/discover.js, marketplace.php (?type=). Tables read: artworks, users
+- Cover pictures are simple SVG drawings in the brand colors, in assets/js/art_covers.js (shared with the upload form; window.OW_ART_COVER). Their colors (.ill classes) live in oweili.css, so they follow light and dark mode. They can be replaced later with real artworks
+- Files: explore.php, assets/js/art_styles.js, assets/js/art_covers.js, assets/js/explore.js, assets/css/discover.css, assets/js/discover.js, marketplace.php (?type=). Tables read: artworks, users
 
 ### Menu and homepage links — Sprint 3
 - Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes
@@ -251,7 +253,7 @@
 - Buttons: .btn + .btn-primary (pink) / .btn-secondary (white, dark border) / .btn-accent (blue) / .btn-dark / .btn-danger (delete, reject, ban — dark text on a pink tint) / .btn-ghost; .btn-sm (36px) only in tables and tight rows; .btn-block for full width. Disabled = 40% faded. Focus = 2px outline
 - Forms: .field (label above, 13px bold) with 48px inputs, 8px corners, 15px text, blue border on focus; .field.has-error + .field-error for errors; .alert-error / .alert-ok and .err-box / .ok-box for messages
 - Cards: .card (white, 16px corners, 24px padding, soft shadow), .card-hover (lifts 4px), .card-media (200px image area)
-- Artworks: .aw-card — every artwork image 4:3 on a white background with a thin border (the whole artwork shows, never cropped), artist name 13px, price 16px bold. The Human Art badge (.human-badge, "✓ Human Art" / «✓ فن بشري») is identical on every page
+- Artworks: .aw-card — every artwork image 4:3 on a white background with a thin border (the whole artwork shows, never cropped), artist name 13px, price 16px bold. The badge (.human-badge, "✦ A Real Touch" / «✦ لمسة حقيقية») is identical on every page: same class, same text, printed with owBi()
 - Stage photos: artwork_lib.php owStagesHtml() draws 25% / 50% / 100% as same-size squares (120px; smaller on cards and drafts) joined by a dashed line; a missing stage shows a dashed grey square. Used by the marketplace journey, artist profile cards, drafts and the reviewer proof panel
 - Dashboards: .dash + .role-artist / .role-collector / .role-institute / .role-subadmin / .role-admin set the role color; .stat-grid + .stat-card (3px top border in the role color); .table (alternating rows); .tabs / .tab. Admin and sub-admin panels now open with stat cards. There is no institute dashboard yet — the role color is ready for it
 - Menu: 64px tall, bigger logo mark (four pink quarters + OWEILI), links 13px, pink underline on the current page (also marked in the ☰ menu)

@@ -312,7 +312,7 @@ a.aw-title:hover { color: var(--color-accent); }
 a.aw-artist:hover { color: var(--color-accent); text-decoration: underline; }
 .aw-price { margin-top: auto; padding-top: var(--space-xs); font-size: var(--fs-body); font-weight: 700; color: var(--color-dark); }
 .aw-status { position: absolute; top: 10px; inset-inline-start: 10px; padding: 2px 10px; border-radius: var(--radius-pill); font-size: var(--fs-min); font-weight: 700; background: rgba(var(--rgb-surface),0.92); color: var(--color-dark); border: 1px solid var(--color-border-strong); }
-/* the Human Art badge — identical on every page */
+/* the "✦ A Real Touch" / «✦ لمسة حقيقية» badge — identical on every page */
 .human-badge, .verified-badge {
   display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; width: auto;
   padding: 2px 10px; border-radius: var(--radius-pill);
@@ -320,6 +320,22 @@ a.aw-artist:hover { color: var(--color-accent); text-decoration: underline; }
   color: var(--color-accent); background: rgba(var(--rgb-accent),0.06); border: 1px solid rgba(var(--rgb-accent),0.15);
 }
 .human-badge[hidden], .verified-badge[hidden] { display: none !important; }
+
+/* the drawn art style pictures from art_covers.js (Explore + upload) — brand colors, follow light and dark mode */
+.ill .bgk { fill: var(--color-surface-2); }
+.ill .pk { fill: var(--color-primary); }
+.ill .gb { fill: var(--color-neutral); }
+.ill .ink { fill: var(--color-dark); }
+.ill .ln { fill: none; stroke: var(--color-dark); }
+.ill .st { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.ill .st.pk { stroke: var(--color-primary); }
+.ill .st.gb { stroke: var(--color-neutral); }
+.ill .st.ink { stroke: var(--color-dark); }
+.ill .st.bgk { stroke: var(--color-surface-2); }
+.ill .tx { fill: var(--color-dark); font-family: var(--font-sans); font-size: 13px; font-weight: 600; }
+.ill .sgb { stop-color: var(--color-neutral); }
+.ill .sbg { stop-color: var(--color-surface-2); }
+.ill .sink { stop-color: var(--color-dark); }
 
 /* ── 9. STAGE PHOTOS (25% / 50% / 100%) — same squares everywhere ── */
 .stages { display: flex; align-items: flex-start; gap: 0; }

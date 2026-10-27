@@ -33,23 +33,16 @@ function owColors(): array {
     ];
 }
 
-/* Art types offered in the guided picker. Keys must exist in art_types.php.
-   'svg' is a small drawn example of how the medium looks. */
-function owUploadTypes(): array {
+/* The 6 groups of the guided art type picker, in the same order and words as
+   Explore Art Styles. The styles in each group come from art_types.php ('cat'). */
+function owStyleGroups(): array {
     return [
-        'watercolor'        => '<circle cx="22" cy="24" r="14" fill="#2A52BE" opacity=".35"/><circle cx="38" cy="30" r="13" fill="#E30022" opacity=".3"/><circle cx="30" cy="38" r="12" fill="#CB9D06" opacity=".35"/>',
-        'oil'               => '<path d="M8 40 C16 14 30 46 40 20 S54 30 56 16" stroke="#8A3324" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M8 48 C22 38 34 54 56 40" stroke="#CB9D06" stroke-width="7" fill="none" stroke-linecap="round"/>',
-        'acrylic'           => '<rect x="8" y="10" width="22" height="22" rx="3" fill="#0047AB"/><rect x="34" y="14" width="22" height="18" rx="3" fill="#FFE500"/><rect x="14" y="36" width="36" height="16" rx="3" fill="#E30022"/>',
-        'charcoal'          => '<path d="M8 50 L20 14 L30 44 L40 18 L54 50" stroke="#1B1B1B" stroke-width="5" fill="none" stroke-linejoin="round" opacity=".8"/><path d="M8 54 H56" stroke="#1B1B1B" stroke-width="10" opacity=".15"/>',
-        'ink'               => '<path d="M10 46 C20 20 44 20 54 46" stroke="currentColor" stroke-width="2.5" fill="none"/><path d="M14 52 L50 12 M20 54 L54 18 M26 56 L56 26" stroke="currentColor" stroke-width="1.5" opacity=".6"/>',
-        'pastel'            => '<rect x="8" y="12" width="48" height="12" rx="6" fill="#FADA5E" opacity=".8"/><rect x="8" y="28" width="48" height="12" rx="6" fill="#F6A6B8" opacity=".8"/><rect x="8" y="44" width="48" height="10" rx="5" fill="#9FC5E8" opacity=".8"/>',
-        'mixed_media'       => '<rect x="8" y="10" width="26" height="30" fill="#D9C7A7" transform="rotate(-6 21 25)"/><circle cx="40" cy="36" r="14" fill="#0047AB" opacity=".6"/><path d="M10 52 L54 46" stroke="#E30022" stroke-width="4"/>',
-        'digital_art'       => '<rect x="8" y="10" width="48" height="34" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M14 38 L26 24 L34 32 L42 20 L50 38 Z" fill="currentColor" opacity=".7"/><path d="M26 54 H38 M32 44 V54" stroke="currentColor" stroke-width="2.5"/>',
-        'calligraphy'       => '<path d="M50 18 C40 18 40 30 30 30 C20 30 22 44 12 44" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="46" cy="44" r="3" fill="currentColor"/><circle cx="20" cy="18" r="3" fill="currentColor"/>',
-        'islamic_geometric' => '<path d="M32 6 L38 22 L54 18 L44 32 L54 46 L38 42 L32 58 L26 42 L10 46 L20 32 L10 18 L26 22 Z" fill="none" stroke="#0047AB" stroke-width="2.5"/><circle cx="32" cy="32" r="8" fill="none" stroke="#CB9D06" stroke-width="2.5"/>',
-        'gouache'           => '<rect x="8" y="10" width="48" height="16" fill="#E30022" opacity=".85"/><rect x="8" y="26" width="48" height="14" fill="#FADA5E"/><rect x="8" y="40" width="48" height="14" fill="#40826D" opacity=".9"/>',
-        'printmaking'       => '<rect x="10" y="10" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 46 L28 22 L36 36 L42 28 L48 46 Z" fill="currentColor"/><circle cx="44" cy="18" r="4" fill="#E30022"/>',
-        'other'             => '<circle cx="20" cy="32" r="4" fill="currentColor"/><circle cx="32" cy="32" r="4" fill="currentColor"/><circle cx="44" cy="32" r="4" fill="currentColor"/>',
+        'traditional'  => ['en' => 'Traditional',             'ar' => 'تقليدي'],
+        'digital'      => ['en' => 'Digital',                 'ar' => 'رقمي'],
+        'heritage'     => ['en' => 'Islamic & Arab Heritage', 'ar' => 'تراث إسلامي وعربي'],
+        'contemporary' => ['en' => 'Contemporary',            'ar' => 'معاصر'],
+        'nature'       => ['en' => 'Nature & Portrait',       'ar' => 'طبيعة وبورتريه'],
+        'photography'  => ['en' => 'Photography',             'ar' => 'تصوير'],
     ];
 }
 

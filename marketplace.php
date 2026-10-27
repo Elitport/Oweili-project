@@ -313,7 +313,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
           <a class="aw-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>&amp;lang=<?= $lang ?>"><?= $ar ? 'بواسطة' : 'by' ?> <?= e($ar ? $aw['artist_ar'] : $aw['artist_en']) ?></a>
           <div class="mp-meta">
             <?php if ($tlbl): ?><span class="type-pill"><?= e($ar ? $tlbl['ar'] : $tlbl['en']) ?></span><?php endif; ?>
-            <?php if (owHasJourney($mpStages[$id] ?? [])): ?><span class="human-badge"><?= $ar ? '✦ لمسة حقيقية' : '✦ A Real Touch' ?></span><?php endif; ?>
+            <?php if (owHasJourney($mpStages[$id] ?? [])): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
           </div>
           <div class="aw-price"><?= number_format((float) $aw['price']) ?> <?= $ar ? 'ر.س' : 'SAR' ?></div>
           <button type="button" class="btn btn-dark btn-block" onclick="openModal(<?= $id ?>)"><?= $ar ? 'شاهد القصة' : 'See the Story' ?></button>
@@ -351,7 +351,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       <button class="modal-close" onclick="closeModal()" aria-label="<?= $ar ? 'إغلاق' : 'Close' ?>">&times;</button>
       <img id="m-img" class="modal-img" src="" alt="">
       <h2 id="m-title-en"></h2>
-      <span class="human-badge" id="m-verified" hidden><?= $ar ? '✦ لمسة حقيقية' : '✦ A Real Touch' ?></span>
+      <span class="human-badge" id="m-verified" hidden><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
       <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
       <a class="m-artist" id="m-artist" href="#"></a>
       <div class="m-label" id="m-label-en-h"><?= $ar?'عن العمل (بالإنجليزية)':'About this work (English)' ?></div>

@@ -63,6 +63,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <script src="/assets/js/discover.js?v=<?= $v('/assets/js/discover.js') ?>"></script>
 <script>window.OW_LIVE = <?= json_encode((object) $live, $jsonFlags) ?>;</script>
 <script defer src="/assets/js/art_styles.js?v=<?= $v('/assets/js/art_styles.js') ?>"></script>
+<script defer src="/assets/js/art_covers.js?v=<?= $v('/assets/js/art_covers.js') ?>"></script>
 <script defer src="/assets/js/explore.js?v=<?= $v('/assets/js/explore.js') ?>"></script>
 <style>
 /* Explore Art Styles — layout only. Colors, type and buttons come from oweili.css. */
@@ -104,21 +105,6 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 .sc-feel { display: block; margin-top: 4px; font-size: 12px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-body); }
 [dir="rtl"] .sc-feel { letter-spacing: 0; font-size: 13px; }
 
-/* the drawn cover pictures (brand colors, follow light and dark mode) */
-.ill .bgk { fill: var(--color-surface-2); }
-.ill .pk { fill: var(--color-primary); }
-.ill .gb { fill: var(--color-neutral); }
-.ill .ink { fill: var(--color-dark); }
-.ill .ln { fill: none; stroke: var(--color-dark); }
-.ill .st { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.ill .st.pk { stroke: var(--color-primary); }
-.ill .st.gb { stroke: var(--color-neutral); }
-.ill .st.ink { stroke: var(--color-dark); }
-.ill .st.bgk { stroke: var(--color-surface-2); }
-.ill .tx { fill: var(--color-dark); font-family: var(--font-sans); font-size: 13px; font-weight: 600; }
-.ill .sgb { stop-color: var(--color-neutral); }
-.ill .sbg { stop-color: var(--color-surface-2); }
-.ill .sink { stop-color: var(--color-dark); }
 
 /* closing note under the grid */
 .ex-end { max-width: 620px; margin: var(--space-2xl) auto 0; text-align: center; }
