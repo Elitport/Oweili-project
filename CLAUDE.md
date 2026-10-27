@@ -85,7 +85,7 @@
 ## Pages Built
 - index.php — Homepage: one full-screen hero (see Features)
 - nav.php — Shared navbar (used across all pages)
-- explore.php — Explore Art Styles: an art encyclopedia (50 styles on the explore-encyclopedia branch) with a rich window for each (see Features)
+- explore.php — Explore Art Styles: an art encyclopedia of 50 styles with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — Studio content page
 - community.php — Community page
@@ -178,7 +178,7 @@
 - Institutes and courses are added in phpMyAdmin for now (no admin screen yet). The old `training` table is no longer used
 - Files: training.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: institutes, courses
 
-### Explore Art Styles (explore.php) — art encyclopedia of 50 styles (explore-encyclopedia branch, waiting for owner approval; the 16-style version is live)
+### Explore Art Styles (explore.php) — art encyclopedia of 50 styles, live (approved by the owner)
 - What it does: "Explore Art Styles" / «استكشف أساليب الرسم». Filter pills with counts: All 50 / Traditional 15 / Digital 8 / Islamic & Arab Heritage 7 / Contemporary 10 / Nature & Portrait 6 / Photography 4 (navy when active). Equal square cards (4 columns desktop, 3 tablet, 2 phone): a drawn cover, the style name and one feeling word. Hover: lift + thin pink border. Closing line: "Fifty styles. Fifty human stories. Every one began with a hand." / «خمسون أسلوباً. خمسون قصة إنسانية. كلها بدأت بيد.»
 - The window (max 760px, full screen on phones; close top right, top left in Arabic, Escape or tap outside) has 10 parts: name + feeling, one-line essence, The Human Story (3 paragraphs), Key Techniques (hover or tap explains), Signs of a Human Hand (numbered), Tools & Materials, Difficulty & Time (Beginner / Intermediate / Advanced, time for one artwork, who it suits), Famous Artists (name, nationality, dates, contribution), Collector's Guide (3 tips), From Our Gallery
 - From Our Gallery: the newest approved, for-sale artwork of that type by an artist who is not banned (one prepared database read in explore.php; pictures only from uploads/ or https). If there is none yet: the drawing, an invitation to artists, and the pink button. Button: "See [style] in Gallery" → marketplace.php?type=…. Styles with no Gallery type yet open the whole Gallery
