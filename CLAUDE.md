@@ -120,7 +120,7 @@
 - Tables: artworks (new column is_draft), artwork_stages, artwork_colors — all created by database_update.sql. Until that file is run, the upload page shows a friendly "being set up" message and every other page keeps working
 - Hosting needs: PHP upload_max_filesize and post_max_size of at least 10M on Hostinger
 
-### Gallery redesign (marketplace.php) — gallery-redesign branch, waiting for owner approval
+### Gallery redesign (marketplace.php) — live (approved by the owner)
 - What it does: only approved works that are available or at auction, by artists who are not banned (no drafts). Search box (titles in both languages), 6 category pills: All / Traditional / Digital / Islamic Heritage / Contemporary / Photography («الكل / تقليدي / رقمي / تراث إسلامي / معاصر / تصوير»), a small Status row (All / Available / Auction) and a Sort menu: Newest First (default) / Price: Low to High / Price: High to Low
 - Filters, search and sort now run on the server, so they cover every page of results, not just the 12 on screen. Every choice is kept in the web address (shareable) and when switching language. Every value is checked against a fixed list; all reads use prepared statements
 - Links from Explore Art Styles (?type=oil) still work: they show that one type, light up its category and add a small removable chip
