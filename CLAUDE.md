@@ -178,7 +178,7 @@
 - Institutes and courses are added in phpMyAdmin for now (no admin screen yet). The old `training` table is no longer used
 - Files: training.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: institutes, courses
 
-### Explore Art Styles (explore.php) — explore-redesign branch, waiting for owner approval
+### Explore Art Styles (explore.php) — live (approved by the owner)
 - What it does: "Explore Art Styles" / «استكشف أساليب الرسم» with the line "Learn the story behind every style. Know what you are looking at." / «تعرّف على قصة كل أسلوب. اعرف ما تراه.». Filter pills: All / Traditional / Digital / Mixed Media / Modern (navy when active). A grid of 16 equal square cards (4 columns desktop, 3 tablet, 2 phone): a drawn cover picture, the style name and one feeling word (e.g. Dreamy / «حالم»). Hover: the card lifts and a thin pink border appears
 - Clicking a card opens a window (max 720px, full screen on phones, close button top right, top left in Arabic, Escape or tap outside closes): cover, name, one-line essence, The Human Story, Key Techniques (chips; hover or tap shows a one-line explanation), Signs of a Human Hand (numbered), Famous Artists (name, nationality and dates), Collector's Guide (3 tips), and a pink "See this style in our Gallery" button → marketplace.php?type=… (Street Art and Hyperrealism have no Gallery type yet, so their button opens the whole Gallery)
 - Shared links open a style directly: explore.php#calligraphy. Unknown links are ignored
