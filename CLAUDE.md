@@ -186,9 +186,10 @@
 - Files: community.php, marketplace.php (#artwork-N link, kept through the Arabic redirect), artwork_lib.php (owBi, owNotDraftSql). Tables read: users, messages, artworks
 
 ### Artist names shown to visitors
-- Gallery cards, the artwork window, Community and Explore show the artist name chosen at sign-up ("the name people will see"), not the private full name. If it is empty, the full name is used. In Arabic: the Arabic name if the artist filled it in, otherwise the same artist name
+- Gallery cards, the artwork window, Community, Explore, the artist profile (page title, main heading, photo text) and the Artist column of the collector's purchases show the artist name chosen at sign-up ("the name people will see"), not the private full name. If it is empty, the full name is used. In Arabic: the Arabic name if the artist filled it in, otherwise the same artist name
 - One shared helper: owArtistNameSql() in artwork_lib.php. New pages that show artist names should use it
-- Files: artwork_lib.php, marketplace.php, community.php, explore.php. Tables read: users
+- On the profile, the Arabic line under the heading shows only when it differs from the main name. The collector's own name on their dashboard is not an artist name, so it stays as is
+- Files: artwork_lib.php, marketplace.php, community.php, explore.php, artist_dashboard.php, collector_dashboard.php. Tables read: users
 
 ### Art Institutes directory (training.php) — Sprint 3, needs database_update.sql
 - What it does: "Art Institutes" / «المعاهد الفنية» with a city filter (cities come from the database) and institute cards: logo (or a building icon), name, city, short description, number of active courses, and "View Courses" / «عرض الدورات» that opens the course list (title, dates, price in SAR or "Free" / «مجاني», seats left or "Fully booked", "Register Interest" → the institute's email, or phone, or website)

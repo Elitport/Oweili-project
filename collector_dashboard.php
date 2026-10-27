@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/artwork_lib.php';   // owArtistNameSql(): the artist's public name
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $uid = (int) $_SESSION['user_id'];
@@ -22,7 +23,7 @@ try {
     $stmt = getDB()->prepare(
         "SELECT p.price, p.purchased_at,
                 a.title_en, a.title_ar, a.image_url,
-                u.full_name_en AS artist_en, u.full_name_ar AS artist_ar
+                " . owArtistNameSql('u') . "
          FROM purchases p
          JOIN artworks a ON a.id = p.artwork_id
          LEFT JOIN users u ON u.id = a.artist_id

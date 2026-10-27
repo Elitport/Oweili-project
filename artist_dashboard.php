@@ -66,7 +66,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 /* ---------------------------------------------------------------------
  *  Load profile + artworks.
  * ------------------------------------------------------------------- */
-$stmt = getDB()->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
+$stmt = getDB()->prepare('SELECT u.*, ' . owArtistNameSql('u') . ' FROM users u WHERE u.id = :id LIMIT 1');
 $stmt->execute([':id' => $profileId]);
 $artist = $stmt->fetch();
 
@@ -147,7 +147,7 @@ $web = $artist['website']   ?? '';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= $artist ? e($artist['full_name_en']) . ' · ' : '' ?>Artist Profile · Oweili</title>
+<title><?= $artist ? e($artist['artist_en']) . ' · ' : '' ?>Artist Profile · Oweili</title>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
@@ -225,15 +225,15 @@ $web = $artist['website']   ?? '';
   <p class="section-title" id="t-profile-title">Artist Profile</p>
   <div class="card profile-head">
     <?php if (!empty($artist['profile_picture'])): ?>
-      <img class="avatar" src="<?= e($artist['profile_picture']) ?>" alt="<?= e($artist['full_name_en']) ?>">
+      <img class="avatar" src="<?= e($artist['profile_picture']) ?>" alt="<?= e($artist['artist_en'] . ($artist['artist_ar'] !== $artist['artist_en'] ? ' · ' . $artist['artist_ar'] : '')) ?>">
     <?php else: ?>
-      <div class="avatar"><?= e(mb_strtoupper(mb_substr($artist['full_name_en'] ?: 'A', 0, 1))) ?></div>
+      <div class="avatar"><?= e(mb_strtoupper(mb_substr($artist['artist_en'] ?: 'A', 0, 1))) ?></div>
     <?php endif; ?>
 
     <div class="profile-info">
-      <h1><?= e($artist['full_name_en']) ?></h1>
-      <?php if (!empty($artist['full_name_ar'])): ?>
-        <div class="name-ar" dir="rtl"><?= e($artist['full_name_ar']) ?></div>
+      <h1><?= e($artist['artist_en']) ?></h1>
+      <?php if ($artist['artist_ar'] !== '' && $artist['artist_ar'] !== $artist['artist_en']): ?>
+        <div class="name-ar" dir="rtl"><?= e($artist['artist_ar']) ?></div>
       <?php endif; ?>
       <?php if (!empty($artist['city'])): ?>
         <div class="city">📍 <?= e($artist['city']) ?></div>
