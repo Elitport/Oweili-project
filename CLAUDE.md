@@ -120,6 +120,16 @@
 - Tables: artworks (new column is_draft), artwork_stages, artwork_colors — all created by database_update.sql. Until that file is run, the upload page shows a friendly "being set up" message and every other page keeps working
 - Hosting needs: PHP upload_max_filesize and post_max_size of at least 10M on Hostinger
 
+### Gallery redesign (marketplace.php) — gallery-redesign branch, waiting for owner approval
+- What it does: only approved works that are available or at auction, by artists who are not banned (no drafts). Search box (titles in both languages), 6 category pills: All / Traditional / Digital / Islamic Heritage / Contemporary / Photography («الكل / تقليدي / رقمي / تراث إسلامي / معاصر / تصوير»), a small Status row (All / Available / Auction) and a Sort menu: Newest First (default) / Price: Low to High / Price: High to Low
+- Filters, search and sort now run on the server, so they cover every page of results, not just the 12 on screen. Every choice is kept in the web address (shareable) and when switching language. Every value is checked against a fixed list; all reads use prepared statements
+- Links from Explore Art Styles (?type=oil) still work: they show that one type, light up its category and add a small removable chip
+- Cards: picture 4:3 filling the frame, title 15px bold, artist name, navy art type pill, "✦ A Real Touch" / «✦ لمسة حقيقية» badge when the 25% and 100% photos exist, price, full-width navy "See the Story" button. Lift on hover, soft fade-in (off for visitors who reduce motion). 4 columns desktop, 3 tablet, 2 phone
+- Empty: "No artworks here yet. Be the first to share yours." / «لا أعمال هنا بعد. كن أول من يشارك عمله.» + "Join as Artist" (and "See all artworks" when a filter is on)
+- Banner: text only, no hand emoji
+- Category list: art_categories.php (single source, like art_types.php). Not in any category, so All only: sculpture, other. Landscape and portrait sit in Traditional; vector art and 3D in Digital; mosaic in Islamic Heritage; abstract and collage in Contemporary
+- Files: marketplace.php, art_categories.php. Tables read: artworks, users, artwork_stages, artwork_colors
+
 ### Creation Journey (marketplace) — built, needs database_update.sql
 - What it does: in the artwork details window, buyers see "Creation Journey — Proof of Human Art" / «رحلة الإبداع — دليل الفن البشري» with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
 - A small blue "✓ Human Art" / «✓ فن بشري» badge sits under the title (the same badge as everywhere else) — only on artworks that have the 25% and 100% photos

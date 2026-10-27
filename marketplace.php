@@ -3,49 +3,88 @@
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 $ART_TYPES = require __DIR__ . '/art_types.php';
+$ART_CATS  = require __DIR__ . '/art_categories.php';
 
 $lang = isset($_GET['lang']) && $_GET['lang'] === 'ar' ? 'ar' : 'en';
 $ar   = $lang === 'ar';
 
-/* ---- Start filtered by type (e.g. from Explore Art Styles): only a known type is accepted ---- */
-$initType = (isset($_GET['type']) && is_string($_GET['type']) && isset($ART_TYPES[$_GET['type']])) ? $_GET['type'] : 'all';
-$typeQ    = $initType !== 'all' ? '&type=' . rawurlencode($initType) : '';   // kept when switching language or page
+/* ---- What the visitor asked for: every value is checked against a fixed list ---- */
+$getStr  = fn(string $k): string => (isset($_GET[$k]) && is_string($_GET[$k])) ? $_GET[$k] : '';
+$SORTS   = [
+    'newest'     => 'a.created_at DESC, a.id DESC',
+    'price_low'  => 'a.price ASC, a.created_at DESC, a.id DESC',
+    'price_high' => 'a.price DESC, a.created_at DESC, a.id DESC',
+];
+$initType = isset($ART_TYPES[$getStr('type')]) ? $getStr('type') : '';      // one exact type (links from Explore Art Styles)
+$cat      = isset($ART_CATS[$getStr('cat')]) ? $getStr('cat') : 'all';
+if ($initType !== '') {                                                      // light up the category that holds this type
+    $cat = 'all';
+    foreach ($ART_CATS as $ck => $cv) { if (in_array($initType, $cv['types'], true)) { $cat = $ck; break; } }
+}
+$status   = in_array($getStr('status'), ['available', 'auction'], true) ? $getStr('status') : 'all';
+$sort     = isset($SORTS[$getStr('sort')]) ? $getStr('sort') : 'newest';
+$q        = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>"\'`]/u', '', $getStr('q')) ?? ''), 0, 60);
+$page     = max(1, (int) $getStr('page'));
+
+/* A link to this page with some choices changed (defaults are left out, so links stay short) */
+function mpUrl(array $over = []): string {
+    global $lang, $cat, $initType, $status, $sort, $q;
+    $st = array_merge(['lang' => $lang, 'cat' => $cat, 'type' => $initType, 'status' => $status, 'sort' => $sort, 'q' => $q, 'page' => 1], $over);
+    $defaults = ['lang' => 'en', 'cat' => 'all', 'type' => '', 'status' => 'all', 'sort' => 'newest', 'q' => '', 'page' => 1];
+    foreach ($defaults as $k => $d) { if ((string) $st[$k] === (string) $d) unset($st[$k]); }
+    return 'marketplace.php' . ($st ? '?' . http_build_query($st) : '');
+}
+
+/* ---- One set of conditions for the count and the page: approved, for sale, artist not banned, no drafts ---- */
+$where  = "a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0" . owNotDraftSql('a');
+$params = [];
+if ($status !== 'all') { $where .= ' AND a.status = :status'; $params[':status'] = $status; }
+$typeList = $initType !== '' ? [$initType] : $ART_CATS[$cat]['types'];
+if ($typeList) {
+    $ph = [];
+    foreach (array_values($typeList) as $i => $t) { $ph[] = ':t' . $i; $params[':t' . $i] = $t; }
+    $where .= ' AND a.type IN (' . implode(',', $ph) . ')';
+}
+if ($q !== '') {
+    $like = '%' . addcslashes($q, '\\%_') . '%';
+    $where .= ' AND (a.title_en LIKE :q1 OR a.title_ar LIKE :q2)';
+    $params[':q1'] = $like; $params[':q2'] = $like;
+}
 
 /* ---- Pagination ---- */
 $perPage = 12;
-$page    = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-$offset  = ($page - 1) * $perPage;
-
-/* ---- Count (for Prev/Next) — PDO prepared ---- */
-$countStmt = getDB()->prepare(
-    "SELECT COUNT(*) FROM artworks
-     WHERE is_approved = 1 AND status IN ('available','auction')" . owNotDraftSql() . "
-");
-$countStmt->execute();
+$countStmt = getDB()->prepare("SELECT COUNT(*) FROM artworks a JOIN users u ON u.id = a.artist_id WHERE $where");
+$countStmt->execute($params);
 $total      = (int) $countStmt->fetchColumn();
 $totalPages = max(1, (int) ceil($total / $perPage));
-if ($page > $totalPages) { $page = $totalPages; $offset = ($page - 1) * $perPage; }
+$page       = min($page, $totalPages);
+$offset     = ($page - 1) * $perPage;
 
-/* ---- Fetch this page of artworks, joined with the artist — PDO prepared ---- */
+/* ---- This page of artworks, joined with the artist — PDO prepared, sort from the fixed list ---- */
 $stmt = getDB()->prepare(
     "SELECT a.id, a.title_en, a.title_ar, a.description_en, a.description_ar,
             a.price, a.type, a.status, a.image_url, a.artist_id,
             " . owArtistNameSql('u') . "
      FROM artworks a
      JOIN users u ON u.id = a.artist_id
-     WHERE a.is_approved = 1 AND a.status IN ('available','auction')" . owNotDraftSql('a') . "
-     ORDER BY a.created_at DESC
+     WHERE $where
+     ORDER BY " . $SORTS[$sort] . "
      LIMIT :lim OFFSET :off"
 );
+foreach ($params as $k => $v) $stmt->bindValue($k, $v);
 $stmt->bindValue(':lim', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $artworks = $stmt->fetchAll();
+$filtered = $cat !== 'all' || $initType !== '' || $status !== 'all' || $q !== '';
 
 /* Creation Journey: stage photos + colors, only for the approved artworks on this page */
 $pageIds  = array_map(fn($r) => (int) $r['id'], $artworks);
 $mpStages = owGetStagesFor($pageIds);
 $mpColors = owGetColorsFor($pageIds);
+
+/* Pictures only from our own uploads folder (or a full https address) */
+$mpImg = fn(string $u): string => (preg_match('#^(https://|/?uploads/)[^"\'<>\s]*$#', $u) && strpos($u, '..') === false) ? $u : '';
 
 /* Data for the details modal (escaped on output via JSON flags) */
 $modalData = [];
@@ -59,7 +98,7 @@ foreach ($artworks as $aw) {
         'artist_ar' => $aw['artist_ar'],
         'artist_id' => (int) $aw['artist_id'],
         'price'     => (float) $aw['price'],
-        'image'     => $aw['image_url'],
+        'image'     => $mpImg((string) $aw['image_url']),
         'status'    => $aw['status'],
         'journey'   => owHasJourney($mpStages[(int) $aw['id']] ?? []),
     ];
@@ -89,38 +128,69 @@ foreach ($artworks as $aw) {
   <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
   <link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
   <style>
-    /* Gallery (marketplace.php) layout only — type, colors, buttons, artwork cards and badges come from oweili.css */
+    /* Gallery (marketplace.php) layout only — colors, type sizes and buttons come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
-    .page-header{margin-bottom:var(--space-md);}
+    .page-header{margin-bottom:var(--space-md);animation:mpRise .6s cubic-bezier(.22,1,.36,1) both;}
     .page-header h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
-    .page-header h1 em{font-style:normal;color:var(--color-highlight);}
     .page-header p{font-size:var(--fs-body);max-width:600px;margin:0;}
-    .search-box{max-width:420px;margin-bottom:var(--space-sm);}
-    .filter-group{display:flex;flex-wrap:wrap;gap:var(--space-xs);margin-bottom:var(--space-sm);align-items:center;}
-    .filter-label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-inline-end:4px;}
-    /* filters are chips (on/off choices), so they stay rounded; real buttons use .btn */
-    .filter-btn{min-height:36px;padding:0 14px;border-radius:var(--radius-pill);font-family:inherit;font-size:var(--fs-label);font-weight:600;cursor:pointer;border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);transition:background var(--ease),border-color var(--ease);}
-    .filter-btn:hover{background:var(--color-hover-light);}
-    .filter-btn.active{background:var(--color-dark);color:var(--color-on-dark);border-color:var(--color-dark);}
-    .filter-btn:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
-    .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);margin-top:var(--space-md);}
-    .aw-card.hidden{display:none;}
-    .aw-type{font-size:var(--fs-min);font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--color-accent-dark);}
-    .aw-alt{font-size:var(--fs-caption);color:var(--color-body);}
-    .aw-body .btn{margin-top:var(--space-sm);}
-    .empty-state{display:none;margin-top:var(--space-md);}
-    .human-banner{display:flex;align-items:center;justify-content:center;gap:var(--space-xs);text-align:center;margin:0 0 var(--space-md);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-card);font-size:var(--fs-body);font-weight:600;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.15);}
-    .human-banner .hb-icon{font-size:18px;flex-shrink:0;}
-    .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);margin-top:var(--space-sm);}
-    .gallery-empty .ge-emoji{font-size:44px;margin-bottom:var(--space-sm);}
-    .gallery-empty h2{font-size:var(--fs-card);margin:0 0 var(--space-xs);}
-    .gallery-empty p{max-width:460px;margin:0 auto var(--space-md);}
+    .human-banner{text-align:center;margin:0 0 var(--space-lg);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-card);font-size:var(--fs-body);font-weight:600;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.15);animation:mpRise .6s .08s cubic-bezier(.22,1,.36,1) both;}
+
+    /* filters: search, 6 category pills, then a small row with status and sort */
+    .mp-tools{display:flex;flex-direction:column;gap:var(--space-sm);margin-bottom:var(--space-md);animation:mpRise .6s .14s cubic-bezier(.22,1,.36,1) both;}
+    .mp-search{display:flex;gap:var(--space-xs);max-width:460px;}
+    .mp-search .input{flex:1;min-width:0;}
+    .cat-pills{display:flex;flex-wrap:wrap;gap:var(--space-xs);}
+    .cat-pill{display:inline-flex;align-items:center;min-height:40px;padding:0 18px;border-radius:var(--radius-pill);font-size:var(--fs-button);font-weight:700;text-decoration:none;color:var(--color-dark);background:var(--color-surface);border:1px solid var(--color-border-strong);transition:background var(--ease),border-color var(--ease),color var(--ease);}
+    .cat-pill:hover{background:var(--color-hover-light);color:var(--color-dark);}
+    .cat-pill.active{background:var(--color-dark);border-color:var(--color-dark);color:var(--color-on-dark);}
+    .cat-pill:focus-visible,.st-pill:focus-visible,.type-chip:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
+    .mp-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-sm);}
+    .st-pills{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+    .mp-label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-inline-end:4px;}
+    .st-pill{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:var(--radius-pill);font-size:var(--fs-label);font-weight:600;text-decoration:none;color:var(--color-body);border:1px solid var(--color-border);background:transparent;transition:background var(--ease),color var(--ease);}
+    .st-pill:hover{background:var(--color-hover-light);color:var(--color-dark);}
+    .st-pill.active{color:var(--color-dark);border-color:var(--color-dark);background:var(--color-surface);}
+    .mp-sort{display:flex;align-items:center;gap:var(--space-xs);}
+    .mp-sort select{min-height:40px;padding:0 36px 0 12px;border-radius:var(--radius-input);border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);font-size:var(--fs-label);font-weight:600;cursor:pointer;}
+    [dir="rtl"] .mp-sort select{padding:0 12px 0 36px;}
+    .mp-sort select:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
+    .type-chip{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:32px;padding:0 12px;border-radius:var(--radius-pill);font-size:var(--fs-label);font-weight:600;text-decoration:none;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.2);}
+    .type-chip span{font-size:16px;line-height:1;}
+    .mp-count{font-size:var(--fs-label);color:var(--color-body);margin:0 0 var(--space-sm);}
+
+    /* artwork cards */
+    .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);}
+    .mp-card{border-radius:16px;animation:mpRise .5s cubic-bezier(.22,1,.36,1) both;}
+    .mp-card:nth-child(2){animation-delay:.04s}.mp-card:nth-child(3){animation-delay:.08s}.mp-card:nth-child(4){animation-delay:.12s}
+    .mp-card:nth-child(n+5){animation-delay:.16s}
+    .mp-card:hover{transform:translateY(-6px);}
+    .mp-card .aw-img{background:var(--color-surface);}
+    .mp-card .aw-img img{object-fit:cover;background:var(--color-surface);transition:transform .6s cubic-bezier(.22,1,.36,1);}
+    .mp-card:hover .aw-img img{transform:scale(1.03);}
+    .mp-card .aw-body{gap:6px;padding:var(--space-sm) var(--space-sm) var(--space-sm);}
+    .mp-card .aw-title{font-size:15px;line-height:1.4;margin:0;}
+    .mp-card .aw-artist{font-size:var(--fs-caption);}
+    .mp-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+    .type-pill{display:inline-flex;align-items:center;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;line-height:1.6;white-space:nowrap;background:var(--color-dark);color:var(--color-on-dark);}
+    .mp-card .aw-price{font-size:16px;padding-top:var(--space-xs);}
+    .mp-card .btn{margin-top:var(--space-xs);border-radius:8px;}
+    .aw-img-noimg{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--color-light);}
+    .aw-img-noimg svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+
+    /* empty state */
+    .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);animation:mpRise .5s cubic-bezier(.22,1,.36,1) both;}
+    .gallery-empty svg{width:48px;height:48px;fill:none;stroke:var(--color-light);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:var(--space-sm);}
+    .gallery-empty h2{font-size:var(--fs-subtitle);margin:0 0 var(--space-md);}
+    .gallery-empty .ge-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);justify-content:center;}
+
     .pagination{display:flex;justify-content:center;align-items:center;gap:var(--space-sm);margin-top:var(--space-xl);}
     .page-info{font-size:var(--fs-label);color:var(--color-body);font-weight:600;}
+    .pagination .disabled{opacity:.4;pointer-events:none;}
+
     /* details window */
     .modal-bg{position:fixed;inset:0;z-index:2000;background:rgba(var(--rgb-shadow),0.5);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:var(--space-sm);}
     .modal-bg.open{display:flex;}
-    .modal{background:var(--color-menu);border:1px solid var(--color-border);border-radius:var(--radius-card);max-width:600px;width:100%;box-shadow:0 30px 70px rgba(var(--rgb-shadow),0.25);max-height:90vh;overflow-y:auto;}
+    .modal{background:var(--color-menu);border:1px solid var(--color-border);border-radius:var(--radius-card);max-width:600px;width:100%;box-shadow:0 30px 70px rgba(var(--rgb-shadow),0.25);max-height:90vh;overflow-y:auto;animation:mpRise .35s cubic-bezier(.22,1,.36,1) both;}
     .modal-body{padding:var(--space-md);}
     .modal-img{width:100%;aspect-ratio:4/3;object-fit:contain;background:var(--color-frame);border:1px solid var(--color-border);border-radius:12px;margin-bottom:var(--space-sm);display:block;}
     .modal-body h2{font-size:var(--fs-card);margin:0 0 4px;}
@@ -132,9 +202,13 @@ foreach ($artworks as $aw) {
     .modal-close{float:right;width:40px;height:40px;border-radius:var(--radius-btn);background:none;border:1px solid var(--color-border-strong);font-size:22px;cursor:pointer;color:var(--color-dark);line-height:1;}
     .modal-close:hover{background:var(--color-hover-light);}
     [dir="rtl"] .modal-close{float:left;}
-    @media(max-width:1024px){ .art-grid{grid-template-columns:repeat(2,1fr);} }
-    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} }
-    @media(max-width:420px){ .art-grid{grid-template-columns:1fr;} }
+
+    @keyframes mpRise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+    @media (prefers-reduced-motion: reduce){ .page-header,.human-banner,.mp-tools,.mp-card,.gallery-empty,.modal{animation:none;} .mp-card:hover,.mp-card:hover .aw-img img{transform:none;} }
+    @media(max-width:1024px){ .art-grid{grid-template-columns:repeat(3,1fr);} }
+    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} .mp-search{max-width:none;} }
+    @media(max-width:640px){ .art-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:420px){ .mp-card .aw-body{padding:12px;} .mp-card .btn{padding:0 8px;} .cat-pill{padding:0 14px;} }
   </style>
 </head>
 <body>
@@ -147,7 +221,7 @@ foreach ($artworks as $aw) {
 <script>
 /* This page switches language with a reload (?lang=), so the shared menu's
    language button reloads too, and the menu labels are set to match. */
-function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?><?= e($typeQ) ?>'; }
+function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'en' : 'ar', 'page' => $page]), JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>; }
 <?php if ($ar): ?>
 (function(){
   var t = {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
@@ -171,91 +245,100 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?><?= e($typ
 
   <!-- HUMAN-ONLY BANNER -->
   <div class="human-banner">
-    <span class="hb-icon">✋</span>
-    <?= $ar ? 'كل عمل هنا رسمته يد إنسان، بصبر وحب' : 'Every work here was made by a human hand, with patience and love' ?>
+    <?= $ar ? 'كل عمل هنا رسمته يد إنسان، بصبر وحب' : 'Every piece here was drawn by a human hand, with patience and love.' ?>
+  </div>
+
+  <div class="mp-tools">
+    <!-- SEARCH + SORT (one small form, so every choice travels together) -->
+    <form class="mp-search" method="get" action="marketplace.php" role="search" id="mpForm">
+      <?php if ($ar): ?><input type="hidden" name="lang" value="ar"><?php endif; ?>
+      <?php if ($cat !== 'all' && $initType === ''): ?><input type="hidden" name="cat" value="<?= e($cat) ?>"><?php endif; ?>
+      <?php if ($initType !== ''): ?><input type="hidden" name="type" value="<?= e($initType) ?>"><?php endif; ?>
+      <?php if ($status !== 'all'): ?><input type="hidden" name="status" value="<?= e($status) ?>"><?php endif; ?>
+      <input type="search" class="input" name="q" maxlength="60" value="<?= e($q) ?>"
+             aria-label="<?= $ar ? 'ابحث عن عمل فني' : 'Search artworks by title' ?>"
+             placeholder="<?= $ar ? 'تبحث عن شيء؟ اكتب اسم العمل…' : 'Looking for something? Type a title…' ?>">
+      <button type="submit" class="btn btn-secondary"><?= $ar ? 'ابحث' : 'Search' ?></button>
+    </form>
+
+    <!-- 6 CATEGORIES -->
+    <nav class="cat-pills" aria-label="<?= $ar ? 'الفئات' : 'Categories' ?>">
+      <?php foreach ($ART_CATS as $ck => $cv): ?>
+      <a class="cat-pill<?= $cat === $ck ? ' active' : '' ?>" href="<?= e(mpUrl(['cat' => $ck, 'type' => ''])) ?>"<?= $cat === $ck ? ' aria-current="page"' : '' ?>><?= e($ar ? $cv['ar'] : $cv['en']) ?></a>
+      <?php endforeach; ?>
+    </nav>
+
+    <?php if ($initType !== ''): $tl = $ART_TYPES[$initType]; ?>
+    <a class="type-chip" href="<?= e(mpUrl(['type' => ''])) ?>" aria-label="<?= $ar ? 'إزالة هذا الأسلوب' : 'Remove this style' ?>"><?= e($ar ? $tl['ar'] : $tl['en']) ?> <span aria-hidden="true">×</span></a>
+    <?php endif; ?>
+
+    <!-- STATUS + SORT -->
+    <div class="mp-row">
+      <div class="st-pills">
+        <span class="mp-label"><?= $ar ? 'الحالة' : 'Status' ?></span>
+        <?php foreach (['all' => ['All', 'الكل'], 'available' => ['Available', 'متاح'], 'auction' => ['Auction', 'مزاد']] as $sk => $sl): ?>
+        <a class="st-pill<?= $status === $sk ? ' active' : '' ?>" href="<?= e(mpUrl(['status' => $sk])) ?>"<?= $status === $sk ? ' aria-current="page"' : '' ?>><?= $ar ? $sl[1] : $sl[0] ?></a>
+        <?php endforeach; ?>
+      </div>
+      <div class="mp-sort">
+        <label class="mp-label" for="mpSort"><?= $ar ? 'الترتيب' : 'Sort' ?></label>
+        <select id="mpSort" name="sort" form="mpForm" onchange="this.form.submit()">
+          <?php foreach (['newest' => ['Newest First', 'الأحدث أولاً'], 'price_low' => ['Price: Low to High', 'السعر: من الأقل'], 'price_high' => ['Price: High to Low', 'السعر: من الأعلى']] as $ok => $ol): ?>
+          <option value="<?= $ok ?>"<?= $sort === $ok ? ' selected' : '' ?>><?= $ar ? $ol[1] : $ol[0] ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
   </div>
 
   <?php if ($total > 0): ?>
-  <input type="search" class="input search-box" id="searchBox" aria-label="<?= $ar ? 'ابحث عن عمل فني' : 'Search artworks by title' ?>"
-         placeholder="<?= $ar ? 'تبحث عن شيء؟ اكتب اسم العمل…' : 'Looking for something? Type a title…' ?>"
-         oninput="onSearch(this.value)">
-
-  <!-- TYPE FILTER -->
-  <div class="filter-group">
-    <span class="filter-label"><?= $ar?'النوع':'Type' ?></span>
-    <button class="filter-btn<?= $initType === 'all' ? ' active' : '' ?>" data-type="all" onclick="setType('all',this)"><?= $ar?'الكل':'All' ?></button>
-    <?php foreach ($ART_TYPES as $slug => $lbl): ?>
-    <button class="filter-btn<?= $initType === $slug ? ' active' : '' ?>" data-type="<?= e($slug) ?>" onclick="setType('<?= e($slug) ?>',this)"><?= e($ar ? $lbl['ar'] : $lbl['en']) ?></button>
-    <?php endforeach; ?>
-  </div>
-
-  <!-- STATUS FILTER -->
-  <div class="filter-group">
-    <span class="filter-label"><?= $ar?'الحالة':'Status' ?></span>
-    <button class="filter-btn active" data-status="all" onclick="setStatus('all',this)"><?= $ar?'الكل':'All' ?></button>
-    <button class="filter-btn" data-status="available" onclick="setStatus('available',this)"><?= $ar?'متاح':'Available' ?></button>
-    <button class="filter-btn" data-status="auction" onclick="setStatus('auction',this)"><?= $ar?'مزاد':'Auction' ?></button>
-  </div>
-  <?php endif; ?>
-
+  <p class="mp-count"><?= $ar ? ('عدد الأعمال: ' . $total) : ($total === 1 ? '1 artwork' : $total . ' artworks') ?></p>
   <div class="art-grid" id="artGrid">
     <?php foreach ($artworks as $aw):
-      $st = $aw['status']; // available | auction (sold excluded by query)
-        $badgeLabel = $st === 'auction' ? ($ar?'مزاد':'Auction') : ($st === 'sold' ? ($ar?'مباع':'Sold') : ($ar?'متاح':'Available'));
-    ?>
-      <article class="aw-card" data-type="<?= e($aw['type']) ?>" data-status="<?= e($st) ?>"
-           data-title-en="<?= e($aw['title_en']) ?>" data-title-ar="<?= e($aw['title_ar']) ?>">
+      $id  = (int) $aw['id'];
+      $img = $mpImg((string) $aw['image_url']);
+      $tEn = (string) $aw['title_en']; $tAr = (string) ($aw['title_ar'] ?: $aw['title_en']);
+      $tlbl = $ART_TYPES[$aw['type']] ?? null; ?>
+      <article class="aw-card mp-card">
         <div class="aw-img">
-          <img loading="lazy" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en'] . ' · ' . $aw['title_ar']) ?>">
-          <span class="aw-status"><?= e($badgeLabel) ?></span>
+          <?php if ($img !== ''): ?>
+          <img loading="lazy" src="<?= e($img) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>">
+          <?php else: ?>
+          <div class="aw-img-noimg" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>
+          <?php endif; ?>
+          <span class="aw-status"><?= $aw['status'] === 'auction' ? ($ar ? 'مزاد' : 'Auction') : ($ar ? 'متاح' : 'Available') ?></span>
         </div>
         <div class="aw-body">
-          <?php if ($ar): ?>
-            <div class="aw-title"><?= e($aw['title_ar'] ?: $aw['title_en']) ?></div>
-            <?php if (!empty($aw['title_en'])): ?><div class="aw-alt" lang="en"><?= e($aw['title_en']) ?></div><?php endif; ?>
-          <?php else: ?>
-            <div class="aw-title"><?= e($aw['title_en']) ?></div>
-            <?php if (!empty($aw['title_ar'])): ?><div class="aw-alt" lang="ar" dir="rtl"><?= e($aw['title_ar']) ?></div><?php endif; ?>
-          <?php endif; ?>
-          <a class="aw-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>&lang=<?= $lang ?>"><?= $ar?'بواسطة':'by' ?> <?= e($ar ? $aw['artist_ar'] : $aw['artist_en']) ?></a>
-          <?php $tlbl = $ART_TYPES[$aw['type']] ?? null; ?>
-          <?php if ($tlbl): ?><div class="aw-type"><?= e($ar ? $tlbl['ar'] : $tlbl['en']) ?></div><?php endif; ?>
-          <?php if (owHasJourney($mpStages[(int) $aw['id']] ?? [])): ?>
-            <span class="human-badge"><?= owBi('✓ Human Art', '✓ فن بشري') ?></span>
-          <?php endif; ?>
-          <div class="aw-price"><?= number_format((float) $aw['price']) ?> <?= $ar?'ر.س':'SAR' ?></div>
-          <button type="button" class="btn btn-dark btn-block" onclick="openModal(<?= (int) $aw['id'] ?>)"><?= $ar?'شاهد القصة':'See the Story' ?></button>
+          <h2 class="aw-title"><?= e($ar ? $tAr : ($tEn ?: $tAr)) ?></h2>
+          <a class="aw-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>&amp;lang=<?= $lang ?>"><?= $ar ? 'بواسطة' : 'by' ?> <?= e($ar ? $aw['artist_ar'] : $aw['artist_en']) ?></a>
+          <div class="mp-meta">
+            <?php if ($tlbl): ?><span class="type-pill"><?= e($ar ? $tlbl['ar'] : $tlbl['en']) ?></span><?php endif; ?>
+            <?php if (owHasJourney($mpStages[$id] ?? [])): ?><span class="human-badge"><?= $ar ? '✦ لمسة حقيقية' : '✦ A Real Touch' ?></span><?php endif; ?>
+          </div>
+          <div class="aw-price"><?= number_format((float) $aw['price']) ?> <?= $ar ? 'ر.س' : 'SAR' ?></div>
+          <button type="button" class="btn btn-dark btn-block" onclick="openModal(<?= $id ?>)"><?= $ar ? 'شاهد القصة' : 'See the Story' ?></button>
         </div>
       </article>
     <?php endforeach; ?>
   </div>
-
+  <?php else: ?>
   <!-- EMPTY STATE -->
-  <div class="card empty-state" id="emptyState"
-       data-en="Nothing matches yet. Try another word or style." data-ar="لا يوجد ما يطابق بحثك. جرّب كلمة أو أسلوباً آخر.">
-    <?php if ($total === 0): ?>
-      <?= $ar ? 'لا يوجد ما يطابق بحثك. جرّب كلمة أو أسلوباً آخر.' : 'Nothing matches yet. Try another word or style.' ?>
-    <?php else: ?>
-      <?= $ar ? 'لا يوجد ما يطابق بحثك. جرّب كلمة أو أسلوباً آخر.' : 'Nothing matches yet. Try another word or style.' ?>
-    <?php endif; ?>
-  </div>
-  <?php if ($total === 0): ?>
-    <div class="card gallery-empty">
-      <div class="ge-emoji">🎨</div>
-      <h2><?= $ar ? 'المعرض ينتظر أول لمسة فرشاة' : 'The gallery is waiting for its first brushstroke' ?></h2>
-      <p><?= $ar ? 'هل أنت فنان؟ قد يكون عملك أول ما يراه الناس هنا.' : 'Are you an artist? Your work could be the first one here.' ?></p>
+  <div class="card gallery-empty">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg>
+    <h2><?= $ar ? 'لا أعمال هنا بعد. كن أول من يشارك عمله.' : 'No artworks here yet. Be the first to share yours.' ?></h2>
+    <div class="ge-actions">
       <a class="btn btn-primary" href="register_artist.php"><?= $ar ? 'انضم كفنان' : 'Join as Artist' ?></a>
+      <?php if ($filtered): ?><a class="btn btn-secondary" href="<?= e(mpUrl(['cat' => 'all', 'type' => '', 'status' => 'all', 'q' => ''])) ?>"><?= $ar ? 'شاهد كل الأعمال' : 'See all artworks' ?></a><?php endif; ?>
     </div>
+  </div>
   <?php endif; ?>
 
   <!-- PAGINATION -->
   <?php if ($totalPages > 1): ?>
   <div class="pagination">
-    <a class="btn btn-secondary <?= $page <= 1 ? 'disabled' : '' ?>"
-       href="?lang=<?= $lang ?>&page=<?= max(1, $page - 1) ?><?= e($typeQ) ?>"><?= $ar?'السابق':'Previous' ?></a>
+    <a class="btn btn-secondary<?= $page <= 1 ? ' disabled' : '' ?>" href="<?= e(mpUrl(['page' => max(1, $page - 1)])) ?>"<?= $page <= 1 ? ' aria-disabled="true" tabindex="-1"' : '' ?>><?= $ar ? 'السابق' : 'Previous' ?></a>
     <span class="page-info"><?= $ar ? "صفحة $page من $totalPages" : "Page $page of $totalPages" ?></span>
-    <a class="btn btn-secondary <?= $page >= $totalPages ? 'disabled' : '' ?>"
-       href="?lang=<?= $lang ?>&page=<?= min($totalPages, $page + 1) ?><?= e($typeQ) ?>"><?= $ar?'التالي':'Next' ?></a>
+    <a class="btn btn-secondary<?= $page >= $totalPages ? ' disabled' : '' ?>" href="<?= e(mpUrl(['page' => min($totalPages, $page + 1)])) ?>"<?= $page >= $totalPages ? ' aria-disabled="true" tabindex="-1"' : '' ?>><?= $ar ? 'التالي' : 'Next' ?></a>
   </div>
   <?php endif; ?>
 
@@ -268,7 +351,7 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?><?= e($typ
       <button class="modal-close" onclick="closeModal()" aria-label="<?= $ar ? 'إغلاق' : 'Close' ?>">&times;</button>
       <img id="m-img" class="modal-img" src="" alt="">
       <h2 id="m-title-en"></h2>
-      <span class="human-badge" id="m-verified" hidden><?= owBi('✓ Human Art', '✓ فن بشري') ?></span>
+      <span class="human-badge" id="m-verified" hidden><?= $ar ? '✦ لمسة حقيقية' : '✦ A Real Touch' ?></span>
       <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
       <a class="m-artist" id="m-artist" href="#"></a>
       <div class="m-label" id="m-label-en-h"><?= $ar?'عن العمل (بالإنجليزية)':'About this work (English)' ?></div>
@@ -289,44 +372,6 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?><?= e($typ
 <script>
 const LANG = <?= json_encode($lang) ?>;
 const ARTWORKS = <?= json_encode($modalData, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>;
-
-/* ---- Filters + search (client-side, no reload) ---- */
-let curType = <?= json_encode($initType) ?>, curStatus = 'all', curSearch = '';
-if (curType !== 'all') document.addEventListener('DOMContentLoaded', applyFilters);
-
-function sanitizeSearch(v){
-  // strip characters that have no business in a title search
-  return String(v).replace(/[<>"'`]/g, '').trim().toLowerCase();
-}
-function setType(t, btn){
-  curType = t;
-  document.querySelectorAll('[data-type]').forEach(b=>{ if(b.classList.contains('filter-btn')) b.classList.remove('active'); });
-  btn.classList.add('active');
-  applyFilters();
-}
-function setStatus(s, btn){
-  curStatus = s;
-  document.querySelectorAll('[data-status].filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  applyFilters();
-}
-function onSearch(v){ curSearch = sanitizeSearch(v); applyFilters(); }
-
-function applyFilters(){
-  let visible = 0;
-  document.querySelectorAll('#artGrid .aw-card').forEach(card=>{
-    const okType   = curType === 'all'   || card.dataset.type === curType;
-    const okStatus = curStatus === 'all' || card.dataset.status === curStatus;
-    const okSearch = !curSearch
-      || (card.dataset.titleEn||'').toLowerCase().includes(curSearch)
-      || (card.dataset.titleAr||'').toLowerCase().includes(curSearch);
-    const show = okType && okStatus && okSearch;
-    card.classList.toggle('hidden', !show);
-    if (show) visible++;
-  });
-  const empty = document.getElementById('emptyState');
-  empty.style.display = visible === 0 ? 'block' : 'none';
-}
 
 /* ---- Details modal ---- */
 function esc(s){ return String(s==null?'':s); }
