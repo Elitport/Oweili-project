@@ -7,6 +7,10 @@ $ART_TYPES = require __DIR__ . '/art_types.php';
 $lang = isset($_GET['lang']) && $_GET['lang'] === 'ar' ? 'ar' : 'en';
 $ar   = $lang === 'ar';
 
+/* ---- Start filtered by type (e.g. from Explore Art Styles): only a known type is accepted ---- */
+$initType = (isset($_GET['type']) && is_string($_GET['type']) && isset($ART_TYPES[$_GET['type']])) ? $_GET['type'] : 'all';
+$typeQ    = $initType !== 'all' ? '&type=' . rawurlencode($initType) : '';   // kept when switching language or page
+
 /* ---- Pagination ---- */
 $perPage = 12;
 $page    = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
@@ -143,7 +147,7 @@ foreach ($artworks as $aw) {
 <script>
 /* This page switches language with a reload (?lang=), so the shared menu's
    language button reloads too, and the menu labels are set to match. */
-function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
+function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?><?= e($typeQ) ?>'; }
 <?php if ($ar): ?>
 (function(){
   var t = {'nav-studio-label':'الاستوديو','nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
@@ -180,9 +184,9 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
   <!-- TYPE FILTER -->
   <div class="filter-group">
     <span class="filter-label"><?= $ar?'النوع':'Type' ?></span>
-    <button class="filter-btn active" data-type="all" onclick="setType('all',this)"><?= $ar?'الكل':'All' ?></button>
+    <button class="filter-btn<?= $initType === 'all' ? ' active' : '' ?>" data-type="all" onclick="setType('all',this)"><?= $ar?'الكل':'All' ?></button>
     <?php foreach ($ART_TYPES as $slug => $lbl): ?>
-    <button class="filter-btn" data-type="<?= e($slug) ?>" onclick="setType('<?= e($slug) ?>',this)"><?= e($ar ? $lbl['ar'] : $lbl['en']) ?></button>
+    <button class="filter-btn<?= $initType === $slug ? ' active' : '' ?>" data-type="<?= e($slug) ?>" onclick="setType('<?= e($slug) ?>',this)"><?= e($ar ? $lbl['ar'] : $lbl['en']) ?></button>
     <?php endforeach; ?>
   </div>
 
@@ -249,10 +253,10 @@ function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?>'; }
   <?php if ($totalPages > 1): ?>
   <div class="pagination">
     <a class="btn btn-secondary <?= $page <= 1 ? 'disabled' : '' ?>"
-       href="?lang=<?= $lang ?>&page=<?= max(1, $page - 1) ?>"><?= $ar?'السابق':'Previous' ?></a>
+       href="?lang=<?= $lang ?>&page=<?= max(1, $page - 1) ?><?= e($typeQ) ?>"><?= $ar?'السابق':'Previous' ?></a>
     <span class="page-info"><?= $ar ? "صفحة $page من $totalPages" : "Page $page of $totalPages" ?></span>
     <a class="btn btn-secondary <?= $page >= $totalPages ? 'disabled' : '' ?>"
-       href="?lang=<?= $lang ?>&page=<?= min($totalPages, $page + 1) ?>"><?= $ar?'التالي':'Next' ?></a>
+       href="?lang=<?= $lang ?>&page=<?= min($totalPages, $page + 1) ?><?= e($typeQ) ?>"><?= $ar?'التالي':'Next' ?></a>
   </div>
   <?php endif; ?>
 
@@ -288,7 +292,8 @@ const LANG = <?= json_encode($lang) ?>;
 const ARTWORKS = <?= json_encode($modalData, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>;
 
 /* ---- Filters + search (client-side, no reload) ---- */
-let curType = 'all', curStatus = 'all', curSearch = '';
+let curType = <?= json_encode($initType) ?>, curStatus = 'all', curSearch = '';
+if (curType !== 'all') document.addEventListener('DOMContentLoaded', applyFilters);
 
 function sanitizeSearch(v){
   // strip characters that have no business in a title search
