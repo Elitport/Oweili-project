@@ -30,7 +30,7 @@ if ($page > $totalPages) { $page = $totalPages; $offset = ($page - 1) * $perPage
 $stmt = getDB()->prepare(
     "SELECT a.id, a.title_en, a.title_ar, a.description_en, a.description_ar,
             a.price, a.type, a.status, a.image_url, a.artist_id,
-            u.full_name_en AS artist_en, u.full_name_ar AS artist_ar
+            " . owArtistNameSql('u') . "
      FROM artworks a
      JOIN users u ON u.id = a.artist_id
      WHERE a.is_approved = 1 AND a.status IN ('available','auction')" . owNotDraftSql('a') . "

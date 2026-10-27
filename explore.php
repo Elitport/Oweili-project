@@ -22,7 +22,7 @@ try {
     $types = array_keys($ART_TYPES);
     $in    = implode(',', array_fill(0, count($types), '?'));
     $st = getDB()->prepare(
-        "SELECT a.type, a.title_en, a.title_ar, a.image_url, u.full_name_en AS artist_en, u.full_name_ar AS artist_ar
+        "SELECT a.type, a.title_en, a.title_ar, a.image_url, " . owArtistNameSql('u') . "
          FROM artworks a
          JOIN users u ON u.id = a.artist_id
          WHERE a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0

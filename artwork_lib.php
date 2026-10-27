@@ -89,6 +89,15 @@ function owNotDraftSql(string $alias = ''): string {
     return ' AND ' . ($alias !== '' ? $alias . '.' : '') . 'is_draft = 0';
 }
 
+/* The artist's public name for visitors, as two columns artist_en / artist_ar.
+   English: the artist name chosen at sign-up, else the full name.
+   Arabic: the Arabic name if filled in, else the English one. */
+function owArtistNameSql(string $u = 'u'): string {
+    $en = "COALESCE(NULLIF(TRIM($u.artist_name), ''), NULLIF(TRIM($u.full_name_en), ''), NULLIF(TRIM($u.full_name_ar), ''), '')";
+    $ar = "COALESCE(NULLIF(TRIM($u.full_name_ar), ''), $en)";
+    return "$en AS artist_en, $ar AS artist_ar";
+}
+
 /* Stage photos for one artwork, keyed by stage (25 / 50 / 100). */
 function owGetStages(int $artworkId): array {
     if (!owStagesReady()) return [];
