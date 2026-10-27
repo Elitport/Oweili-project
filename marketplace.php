@@ -82,7 +82,7 @@ foreach ($artworks as $aw) {
     var urlLang=params.get('lang');
     var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
     if(urlLang){ try{ localStorage.setItem(KEY, urlLang==='ar'?'ar':'en'); }catch(e){} }
-    else if(saved==='ar'){ params.set('lang','ar'); location.replace(location.pathname+'?'+params.toString()); }
+    else if(saved==='ar'){ params.set('lang','ar'); location.replace(location.pathname+'?'+params.toString()+location.hash); }
   })();
   </script>
   <?php include __DIR__ . '/theme_head.php'; ?>
@@ -351,6 +351,11 @@ function openModal(id){
 }
 function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+/* Links like marketplace.php#artwork-12 (from the Community page) open that artwork */
+(function(){
+  const m = /^#artwork-(\d+)$/.exec(location.hash);
+  if (m && ARTWORKS[m[1]]) openModal(m[1]);
+})();
 </script>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>

@@ -1,4 +1,58 @@
-<?php require_once 'config.php'; ?>
+<?php
+/* =====================================================================
+ *  community.php: The Artist Community
+ *  - Number boxes show real counts: artists (users, role artist, not
+ *    banned), messages shared (messages), and art styles covered (counted
+ *    from assets/js/art_styles.js, the one source for styles).
+ *  - Daily Inspiration shows the 3 newest approved artworks from the Gallery
+ *    (approved, for sale, finished, by artists who are not banned), each
+ *    linking to that artwork in the Gallery. Empty spots invite artists.
+ *  All database reads use prepared statements. If the database is not
+ *  reachable, the page still shows, with friendly empty cards.
+ * ===================================================================== */
+require_once 'config.php';
+require_once __DIR__ . '/artwork_lib.php';   // owBi(), owNotDraftSql()
+
+/* 54 → "54+", 7 → "7" (a "+" only once the number is over 10) */
+function owCountLabel(int $n): string { return $n > 10 ? $n . '+' : (string) $n; }
+
+$artistCount = 0; $messageCount = 0; $inspo = [];
+try {
+    $db = getDB();
+    $st = $db->prepare("SELECT COUNT(*) FROM users WHERE role = :role AND is_banned = 0");
+    $st->execute([':role' => 'artist']);
+    $artistCount = (int) $st->fetchColumn();
+
+    $st = $db->prepare("SELECT COUNT(*) FROM messages");
+    $st->execute();
+    $messageCount = (int) $st->fetchColumn();
+
+    $st = $db->prepare(
+        "SELECT a.id, a.title_en, a.title_ar, a.image_url, u.full_name_en AS artist_en, u.full_name_ar AS artist_ar
+         FROM artworks a
+         JOIN users u ON u.id = a.artist_id
+         WHERE a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0" . owNotDraftSql('a') . "
+         ORDER BY a.created_at DESC, a.id DESC
+         LIMIT :lim"
+    );
+    $st->bindValue(':lim', 3, PDO::PARAM_INT);
+    $st->execute();
+    $inspo = $st->fetchAll();
+} catch (Throwable $ex) {
+    $inspo = [];
+}
+
+/* Art styles covered: counted from the shared style file, never typed in */
+$styleCount = 0;
+$stylesJs = @file_get_contents(__DIR__ . '/assets/js/art_styles.js');
+if ($stylesJs !== false && ($p = strpos($stylesJs, 'OW_ART_STYLES =')) !== false) {
+    $list = json_decode(rtrim(trim(substr($stylesJs, $p + strlen('OW_ART_STYLES ='))), ';'), true);
+    $styleCount = is_array($list) ? count($list) : 0;
+}
+
+/* pictures only from our own uploads folder (or a full https address) */
+$owSafeImg = fn(string $u): string => (preg_match('#^(https://|/?uploads/)[^"\'<>\s]*$#', $u) && strpos($u, '..') === false) ? $u : '';
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html">
 <head>
@@ -44,6 +98,18 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .inspo-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(var(--rgb-shadow),0.08);}
 .inspo-img{height:140px;background-size:cover;background-position:center;transition:transform 0.5s;}
 .inspo-card:hover .inspo-img{transform:scale(1.05);}
+.inspo-img img{display:block;width:100%;height:100%;object-fit:contain;background:var(--color-frame);}
+a.inspo-card{display:block;color:inherit;text-decoration:none;}
+a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
+.inspo-empty{cursor:default;text-align:center;}
+.inspo-empty:hover{transform:none;}
+.inspo-empty .inspo-img{display:flex;align-items:center;justify-content:center;background:rgba(var(--rgb-primary),0.10);}
+.inspo-empty:hover .inspo-img{transform:none;}
+.inspo-empty svg{width:48px;height:48px;fill:none;stroke:var(--color-body);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.inspo-empty .btn{margin-top:12px;}
+.stat-link{display:block;color:inherit;text-decoration:none;}
+.stat-link:focus-visible{outline:2px solid var(--color-accent);outline-offset:4px;border-radius:8px;}
+.inspo-body .comm-link{display:inline-block;margin-top:8px;}
 .inspo-body{padding:16px;}
 .inspo-body h4{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin-bottom:4px;}
 .inspo-body p{font-size:var(--fs-body);color:var(--color-body);}
@@ -53,6 +119,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 [dir="rtl"] .page-header p{text-align:right;}
 @media(max-width:1024px){.stats-row{grid-template-columns:repeat(2,1fr);}.inspo-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:768px){.community-grid{grid-template-columns:1fr;}.stats-row{grid-template-columns:1fr 1fr;}.chat-cta{flex-direction:column;}.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
+@media(max-width:560px){.inspo-grid{grid-template-columns:1fr;}.inspo-img{height:200px;}}
 </style>
 </head>
 <body>
@@ -69,9 +136,9 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   </div>
 
   <div class="stats-row">
-    <div class="stat-card"><div class="stat-num" id="s-artists">N/A</div><div class="stat-label" id="t-s1">Artists With Us</div></div>
-    <div class="stat-card"><div class="stat-num" id="s-msgs">N/A</div><div class="stat-label" id="t-s2">Messages Shared</div></div>
-    <div class="stat-card"><div class="stat-num">12</div><div class="stat-label" id="t-s3">Art Styles</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-artists"><?= e(owCountLabel($artistCount)) ?></div><div class="stat-label" id="t-s1">Artists With Us</div></div>
+    <div class="stat-card"><div class="stat-num" id="s-msgs"><?= e(owCountLabel($messageCount)) ?></div><div class="stat-label" id="t-s2">Messages Shared</div></div>
+    <div class="stat-card"><a class="stat-link" href="explore.php"><div class="stat-num" id="s-styles"><?= (int) $styleCount ?></div><div class="stat-label" id="t-s3">Art Styles Covered</div></a></div>
     <div class="stat-card"><div class="stat-num">🇸🇦</div><div class="stat-label" id="t-s4">Saudi Community</div></div>
   </div>
 
@@ -99,9 +166,28 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
   <p class="section-title" id="t-inspo-title">Daily Inspiration</p>
   <div class="inspo-grid">
-    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i1">Light Studies</h4><p id="t-i1d">Watch how light falls through leaves and windows.</p></div></div>
-    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i2">Ocean Movement</h4><p id="t-i2d">Feel the rhythm of the waves, then paint it.</p></div></div>
-    <div class="inspo-card"><div class="inspo-img" style="background-image:url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80')"></div><div class="inspo-body"><h4 id="t-i3">Old Trees</h4><p id="t-i3d">Study bark, roots and the patience of time.</p></div></div>
+    <?php foreach ($inspo as $aw):
+      $img = $owSafeImg((string) $aw['image_url']);
+      $tEn = (string) $aw['title_en']; $tAr = (string) ($aw['title_ar'] ?: $aw['title_en']);
+      $nEn = (string) ($aw['artist_en'] ?: $aw['artist_ar']); $nAr = (string) ($aw['artist_ar'] ?: $aw['artist_en']); ?>
+    <a class="inspo-card" href="marketplace.php#artwork-<?= (int) $aw['id'] ?>">
+      <div class="inspo-img"><?php if ($img !== ''): ?><img src="<?= e($img) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>" loading="lazy"><?php endif; ?></div>
+      <div class="inspo-body">
+        <h4><?= owBi($tEn, $tAr) ?></h4>
+        <p><?= owBi('by ' . $nEn, 'بواسطة ' . $nAr) ?></p>
+        <span class="comm-link"><?= owBi('See it in the Gallery →', 'شاهده في المعرض ←') ?></span>
+      </div>
+    </a>
+    <?php endforeach; ?>
+    <?php for ($k = count($inspo); $k < 3; $k++): ?>
+    <div class="inspo-card inspo-empty">
+      <div class="inspo-img" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>
+      <div class="inspo-body">
+        <h4><?= owBi('Be the first to share your work here.', 'كن أول من يشارك عمله هنا.') ?></h4>
+        <a class="btn btn-primary btn-sm" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
+      </div>
+    </div>
+    <?php endfor; ?>
   </div>
 </div>
 
@@ -109,7 +195,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 const T={
   en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
     badge:'Artists Together',h1:'The <em>Artist Community</em>',desc:'Art grows when artists meet. Share your work, learn from each other, and make friends who get it.',
-    s1:'Artists With Us',s2:'Messages Shared',s3:'Art Styles',s4:'Saudi Community',
+    s1:'Artists With Us',s2:'Messages Shared',s3:'Art Styles Covered',s4:'Saudi Community',
     ctaH:'Join the Artist Chat Room',ctaP:'Talk with fellow artists right now. Share a trick, ask a question, get honest feedback. Friendships start here.',live:'Live Now',ctaBtn:'Enter the Chat Room',
     commTitle:'Community Spaces',
     c1:'Artist Chat Room',c1d:'Artists from Saudi Arabia and beyond, chatting in real time. Pull up a chair.',c1l:'Enter Room →',
@@ -117,12 +203,10 @@ const T={
     c3:'Daily Inspiration',c3d:'A little spark every day. Featured works, color palettes and new techniques to try.',c3l:'Explore →',
     c4:'Teach With Us',c4d:'Love sharing what you know? Become an instructor and help others grow.',c4l:'Apply Now →',
     inspoTitle:'Daily Inspiration',
-    i1:'Light Studies',i1d:'Watch how light falls through leaves and windows.',
-    i2:'Ocean Movement',i2d:'Feel the rhythm of the waves, then paint it.',
-    i3:'Old Trees',i3d:'Study bark, roots and the patience of time.'},
+},
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'فنانون معاً',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
-    s1:'فنانون معنا',s2:'الرسائل المتبادلة',s3:'أساليب فنية',s4:'المجتمع السعودي',
+    s1:'فنانون معنا',s2:'الرسائل المتبادلة',s3:'أسلوب فني موثّق',s4:'المجتمع السعودي',
     ctaH:'انضم إلى غرفة محادثة الفنانين',ctaP:'تحدّث مع فنانين مثلك الآن. شارك فكرة، واسأل سؤالاً، واحصل على رأي صادق. هنا تبدأ الصداقات.',live:'مباشر الآن',ctaBtn:'ادخل غرفة المحادثة',
     commTitle:'مساحات المجتمع',
     c1:'غرفة محادثة الفنانين',c1d:'فنانون من السعودية وخارجها يتحدثون مباشرة. تفضّل وانضم إليهم.',c1l:'ادخل الغرفة →',
@@ -130,9 +214,7 @@ const T={
     c3:'الإلهام اليومي',c3d:'شرارة صغيرة كل يوم. أعمال مختارة، ولوحات ألوان، وتقنيات جديدة لتجربتها.',c3l:'استكشف →',
     c4:'علّم معنا',c4d:'تحب أن تشارك ما تعرفه؟ كن مدرباً وساعد غيرك على النمو.',c4l:'تقدّم الآن →',
     inspoTitle:'إلهام اليوم',
-    i1:'دراسات الضوء',i1d:'تأمّل كيف يتسلل الضوء بين الأوراق والنوافذ.',
-    i2:'حركة البحر',i2d:'اشعر بإيقاع الموج، ثم ارسمه.',
-    i3:'الأشجار المعمّرة',i3d:'تأمّل اللحاء والجذور وصبر السنين.'}
+}
 };
 let L='en';
 const NAV={
@@ -165,7 +247,7 @@ function apply(l){
   document.getElementById('pg').setAttribute('dir',t.dir);
   document.getElementById('topnav').setAttribute('dir',t.dir);
   applyNav(l);
-  const keys=['badge','h1','desc','s1','s2','s3','s4','live','c1','c1d','c1l','c2','c2d','c2l','c3','c3d','c3l','c4','c4d','c4l','i1','i1d','i2','i2d','i3','i3d'];
+  const keys=['badge','h1','desc','s1','s2','s3','s4','live','c1','c1d','c1l','c2','c2d','c2l','c3','c3d','c3l','c4','c4d','c4l'];
   keys.forEach(k=>{const el=document.getElementById('t-'+k);if(el)el.innerHTML=t[k];});
   // elements whose ids differ from their T keys
   const setH=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
@@ -178,12 +260,6 @@ function apply(l){
 function tgl(){L=L==='en'?'ar':'en';apply(L);try{localStorage.setItem('lang',L);}catch(e){}}
 try{var _s=localStorage.getItem('lang');if(_s==='ar'||_s==='en')L=_s;}catch(e){}
 apply(L);
-
-// Community stats
-(function(){
-  var a=document.getElementById('s-artists');if(a)a.textContent='50+';
-  var m=document.getElementById('s-msgs');if(m)m.textContent='200+';
-})();
 
 const v=document.getElementById('vid');
 {const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}

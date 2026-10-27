@@ -88,7 +88,7 @@
 - explore.php — Explore Art Styles: an art encyclopedia of 50 styles with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
-- community.php — Community page
+- community.php — Community page: real counts and the newest artworks (see Features)
 - support.php — Support and FAQ
 - events.php — old events page (no longer in the menu; its events live in the old `events` table — move them into Art Events articles)
 - training.php — Art Institutes: Upcoming Workshops on top, then the institutes directory
@@ -177,6 +177,13 @@
 - Below it, "Institutes Directory" / «دليل المعاهد» introduces the institutes list
 - Moved here from the old Studio page, which was removed from the menu and now redirects to explore.php
 - Files: training.php, studio.php (redirect), nav.php (Studio and its dropdown removed; leftover Studio menu words removed from 15 pages). Tables: none for the workshops
+
+### Community page (community.php): real numbers and real artworks
+- Number boxes come from the database: "Artists With Us" counts artist accounts that are not banned, "Messages Shared" counts the messages table. Over 10 shows the number with "+" (e.g. 52+), 10 or less shows the plain number. "Art Styles Covered" / «أسلوب فني موثّق» is counted from assets/js/art_styles.js (now 50) and links to explore.php. "Saudi Community" stays a label
+- Daily Inspiration / «إلهام اليوم»: the 3 newest approved, for-sale artworks by artists who are not banned (no drafts). Each shows the photo (whole artwork, never cropped), title and artist name in the page language, and opens that artwork in the Gallery (marketplace.php#artwork-N opens its details window). Pictures only from uploads/ or https
+- Fewer than 3 artworks: the empty spots say "Be the first to share your work here." / «كن أول من يشارك عمله هنا.» with a "Join as Artist" / «انضم كفنان» button to register_artist.php
+- Phone: one card per row. All reads use prepared statements; if the database is unavailable the page still shows with 0 and the invitation cards
+- Files: community.php, marketplace.php (#artwork-N link, kept through the Arabic redirect), artwork_lib.php (owBi, owNotDraftSql). Tables read: users, messages, artworks
 
 ### Art Institutes directory (training.php) — Sprint 3, needs database_update.sql
 - What it does: "Art Institutes" / «المعاهد الفنية» with a city filter (cities come from the database) and institute cards: logo (or a building icon), name, city, short description, number of active courses, and "View Courses" / «عرض الدورات» that opens the course list (title, dates, price in SAR or "Free" / «مجاني», seats left or "Fully booked", "Register Interest" → the institute's email, or phone, or website)
