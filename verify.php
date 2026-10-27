@@ -159,15 +159,13 @@ const T={
   en:{dir:'ltr',lb:'العربية',
     okTitle:'Your account is verified',okSub:'You can now sign in.',okBtn:'Sign In',redir:'Redirecting to sign in…',
     badTitle:'Invalid or expired link',badSub:'This verification link is invalid or has expired. Please register again or request a new link.',badBtn:'Register',
-    nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-      s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
+    nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',
     okTitle:'تم التحقق من حسابك',okSub:'يمكنك الآن تسجيل الدخول.',okBtn:'تسجيل الدخول',redir:'جارٍ التحويل إلى تسجيل الدخول…',
     badTitle:'رابط غير صالح أو منتهي',badSub:'رابط التحقق غير صالح أو منتهي الصلاحية. يرجى التسجيل مرة أخرى أو طلب رابط جديد.',badBtn:'إنشاء حساب',
-    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-      s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       c1:'غرفة محادثة الفنانين',c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
@@ -186,9 +184,8 @@ function apply(l){
     setTxt('t-title',t.badTitle);setTxt('t-sub',t.badSub);setTxt('t-btn',t.badBtn);
   }
   const n=t.nav;
-  setTxt('nav-studio-label',n.studio);setTxt('nav-community-label',n.community);
+  setTxt('nav-community-label',n.community);
   setTxt('nav-marketplace-label',n.marketplace);setTxt('nav-explore-label',n.explore);setTxt('nav-support-label',n.support);
-  setTxt('dd-s1',n.s1);setTxt('dd-s2',n.s2);setTxt('dd-s3',n.s3);setTxt('dd-s4',n.s4);
   setTxt('dd-c1',n.c1);setTxt('dd-c2',n.c2);setTxt('dd-c3',n.c3);setTxt('dd-c4',n.c4);
   setTxt('dd-sp1',n.sp1);setTxt('dd-sp2',n.sp2);setTxt('dd-sp3',n.sp3);
   setTxt('n-login-t',n.login);setTxt('n-reg-t',n.reg);

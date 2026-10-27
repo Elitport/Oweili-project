@@ -150,9 +150,8 @@ foreach ($artworks as $aw) {
 function tgl(){ window.location.href = '?lang=<?= $ar ? 'en' : 'ar' ?><?= e($typeQ) ?>'; }
 <?php if ($ar): ?>
 (function(){
-  var t = {'nav-studio-label':'الاستوديو','nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
+  var t = {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
     'nav-explore-label':'استكشف أساليب الرسم','nav-support-label':'الدعم',
-    'dd-s1':'ورشة الألوان المائية','dd-s2':'استوديو الرسم الزيتي','dd-s3':'مختبر الفن الرقمي','dd-s4':'الفحم والحبر',
     'dd-c2':'تعرّف على فنانين','dd-c3':'شارك أعمالك','dd-c4':'تعلّم معاً',
     'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام',
     'n-login-t':'تسجيل الدخول','n-reg-t':'انضم مجاناً','lb':'English'};

@@ -107,9 +107,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
 <script>
 const T={
-  en:{dir:'ltr',lb:'العربية',studio:'The Studio',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
+  en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
     badge:'Artists Together',h1:'The <em>Artist Community</em>',desc:'Art grows when artists meet. Share your work, learn from each other, and make friends who get it.',
-    s1:'Artists With Us',s2:'Messages Shared',s3:'Art Styles',s4:'Saudi Community',
     ctaH:'Join the Artist Chat Room',ctaP:'Talk with fellow artists right now. Share a trick, ask a question, get honest feedback. Friendships start here.',live:'Live Now',ctaBtn:'Enter the Chat Room',
     commTitle:'Community Spaces',
     c1:'Artist Chat Room',c1d:'Artists from Saudi Arabia and beyond, chatting in real time. Pull up a chair.',c1l:'Enter Room →',
@@ -120,9 +119,8 @@ const T={
     i1:'Light Studies',i1d:'Watch how light falls through leaves and windows.',
     i2:'Ocean Movement',i2d:'Feel the rhythm of the waves, then paint it.',
     i3:'Old Trees',i3d:'Study bark, roots and the patience of time.'},
-  ar:{dir:'rtl',lb:'English',studio:'الاستوديو',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
+  ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'فنانون معاً',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
-    s1:'فنانون معنا',s2:'الرسائل المتبادلة',s3:'أساليب فنية',s4:'المجتمع السعودي',
     ctaH:'انضم إلى غرفة محادثة الفنانين',ctaP:'تحدّث مع فنانين مثلك الآن. شارك فكرة، واسأل سؤالاً، واحصل على رأي صادق. هنا تبدأ الصداقات.',live:'مباشر الآن',ctaBtn:'ادخل غرفة المحادثة',
     commTitle:'مساحات المجتمع',
     c1:'غرفة محادثة الفنانين',c1d:'فنانون من السعودية وخارجها يتحدثون مباشرة. تفضّل وانضم إليهم.',c1l:'ادخل الغرفة →',
@@ -136,13 +134,11 @@ const T={
 };
 let L='en';
 const NAV={
-  en:{lb:'العربية',studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-    s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
+  en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
     c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',
     login:'Sign In',reg:'Join Free'},
-  ar:{lb:'English',studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-    s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
+  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
     c1:'غرفة محادثة الفنانين',c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
     login:'تسجيل الدخول',reg:'انضم مجاناً'}
@@ -151,9 +147,8 @@ function applyNav(l){
   const n=NAV[l];
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   set('lb',n.lb);
-  set('nav-studio-label',n.studio);set('nav-community-label',n.community);
+  set('nav-community-label',n.community);
   set('nav-marketplace-label',n.marketplace);set('nav-explore-label',n.explore);set('nav-support-label',n.support);
-  set('dd-s1',n.s1);set('dd-s2',n.s2);set('dd-s3',n.s3);set('dd-s4',n.s4);
   set('dd-c1',n.c1);set('dd-c2',n.c2);set('dd-c3',n.c3);set('dd-c4',n.c4);
   set('dd-sp1',n.sp1);set('dd-sp2',n.sp2);set('dd-sp3',n.sp3);
   set('n-login-t',n.login);set('n-reg-t',n.reg);

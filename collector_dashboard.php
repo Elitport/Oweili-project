@@ -150,16 +150,14 @@ const T={
     statCount:'Artworks Purchased',statSpent:'Total Spent (SAR)',statSince:'Member Since',
     purTitle:'Purchase History',purEmpty:'No purchases yet. Explore the gallery to start your collection.',purGo:'Explore Artworks',
     hArt:'Artwork',hArtist:'Artist',hDate:'Date',hPrice:'Price',sar:'SAR',
-    nav:{studio:'The Studio',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-      s1:'Watercolor Workshop',s2:'Oil Painting Studio',s3:'Digital Art Lab',s4:'Charcoal & Ink',
+    nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',profileTitle:'ملفي الشخصي',edit:'تعديل الملف الشخصي',saved:'تم تحديث الملف الشخصي بنجاح.',
     statCount:'الأعمال المقتناة',statSpent:'إجمالي الإنفاق (ر.س)',statSince:'عضو منذ',
     purTitle:'سجل المشتريات',purEmpty:'لا توجد مشتريات بعد. استكشف المعرض لبدء مجموعتك.',purGo:'استكشف الأعمال',
     hArt:'العمل الفني',hArtist:'الفنان',hDate:'التاريخ',hPrice:'السعر',sar:'ر.س',
-    nav:{studio:'الاستوديو',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-      s1:'ورشة الألوان المائية',s2:'استوديو الرسم الزيتي',s3:'مختبر الفن الرقمي',s4:'الفحم والحبر',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
@@ -178,9 +176,8 @@ function apply(l){
   setTxt('t-h-art',t.hArt);setTxt('t-h-artist',t.hArtist);setTxt('t-h-date',t.hDate);setTxt('t-h-price',t.hPrice);
   document.querySelectorAll('.sar').forEach(s=>s.textContent=t.sar);
   const n=t.nav;
-  setTxt('nav-studio-label',n.studio);setTxt('nav-community-label',n.community);
+  setTxt('nav-community-label',n.community);
   setTxt('nav-marketplace-label',n.marketplace);setTxt('nav-explore-label',n.explore);setTxt('nav-support-label',n.support);
-  setTxt('dd-s1',n.s1);setTxt('dd-s2',n.s2);setTxt('dd-s3',n.s3);setTxt('dd-s4',n.s4);
   setTxt('dd-c2',n.c2);setTxt('dd-c3',n.c3);setTxt('dd-c4',n.c4);
   setTxt('dd-sp1',n.sp1);setTxt('dd-sp2',n.sp2);setTxt('dd-sp3',n.sp3);
   setTxt('n-login-t',n.login);setTxt('n-reg-t',n.reg);

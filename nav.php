@@ -14,7 +14,7 @@ $navPage  = basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''));
 $navType  = (string) ($_GET['type'] ?? '');
 if ($navPage === 'article.php') { $navType = ''; }
 $navSection = [
-    'studio.php' => 'studio', 'community.php' => 'community', 'marketplace.php' => 'marketplace',
+    'community.php' => 'community', 'marketplace.php' => 'marketplace',
     'explore.php' => 'explore', 'support.php' => 'support', 'articles_list.php' => 'discover',
     'article.php' => 'discover', 'training.php' => 'discover', 'events.php' => 'discover',
 ][$navPage] ?? '';
@@ -48,15 +48,6 @@ if (!function_exists('owLogoMark')) {
 <nav class="topnav" id="topnav">
   <a class="nav-logo" href="index.php" aria-label="Oweili · أويلي"><?php owLogoMark(); ?><span class="nav-word">OWEILI</span></a>
   <div class="nav-center" id="nav-center">
-    <div class="nav-item">
-      <a href="studio.php" id="nav-studio-link"<?= navAct('studio') ?>><span id="nav-studio-label">The Studio</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
-      <div class="dropdown" id="dd-studio">
-        <a href="studio.php#watercolor"><svg class="d-icon" viewBox="0 0 24 24"><path d="M12 2C8 2 4 6 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4-4-8-8-8z"/></svg><span id="dd-s1">Watercolor Workshop</span></a>
-        <a href="studio.php#oil"><svg class="d-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg><span id="dd-s2">Oil Painting Studio</span></a>
-        <a href="studio.php#digital"><svg class="d-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span id="dd-s3">Digital Art Lab</span></a>
-        <a href="studio.php#charcoal"><svg class="d-icon" viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10"/></svg><span id="dd-s4">Charcoal & Ink</span></a>
-      </div>
-    </div>
     <div class="nav-item">
       <a href="community.php" id="nav-community-link"<?= navAct('community') ?>><span id="nav-community-label">Community</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-community">
@@ -104,7 +95,6 @@ if (!function_exists('owLogoMark')) {
     <svg class="mnav-x" viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
   </button>
   <div class="mnav-panel" id="mnav-panel">
-    <a class="mnav-link" href="studio.php"<?= navAct('studio') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="The Studio" data-ar="الاستوديو">The Studio</span></a>
     <a class="mnav-link" href="community.php"<?= navAct('community') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
     <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"<?= navAct('marketplace') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Gallery" data-ar="المعرض">Gallery</span></a>
     <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
@@ -151,13 +141,10 @@ if (!function_exists('owLogoMark')) {
 
   // One set of menu words for every page (pages no longer need their own copy).
   var NAV_WORDS = {
-    'nav-studio-label':      ['The Studio', 'الاستوديو'],
     'nav-community-label':   ['Community', 'المجتمع'],
     'nav-marketplace-label': ['Gallery', 'المعرض'],
     'nav-explore-label':     ['Explore Art Styles', 'استكشف أساليب الرسم'],
     'nav-support-label':     ['Support', 'الدعم'],
-    'dd-s1': ['Watercolor Workshop', 'ورشة الألوان المائية'], 'dd-s2': ['Oil Painting Studio', 'استوديو الرسم الزيتي'],
-    'dd-s3': ['Digital Art Lab', 'مختبر الفن الرقمي'],        'dd-s4': ['Charcoal & Ink', 'الفحم والحبر'],
     'dd-c2': ['Meet Fellow Artists', 'تعرّف على فنانين'],    'dd-c3': ['Share Your Work', 'شارك أعمالك'],
     'dd-c4': ['Learn Together', 'تعلّم معاً'],
     'dd-sp1': ['Contact Us', 'تواصل معنا'], 'dd-sp2': ['How It Works', 'كيف يعمل الموقع'], 'dd-sp3': ['Terms of Use', 'شروط الاستخدام'],

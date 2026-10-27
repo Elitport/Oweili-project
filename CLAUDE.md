@@ -87,11 +87,11 @@
 - nav.php — Shared navbar (used across all pages)
 - explore.php — Explore Art Styles: an art encyclopedia of 50 styles with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
-- studio.php — Studio content page
+- studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
 - community.php — Community page
 - support.php — Support and FAQ
 - events.php — old events page (no longer in the menu; its events live in the old `events` table — move them into Art Events articles)
-- training.php — Art Institutes directory (rebuilt in Sprint 3)
+- training.php — Art Institutes: Upcoming Workshops on top, then the institutes directory
 - articles_list.php — all published articles of one type (?type=event / artist_spotlight / art_education)
 - article.php — one article (article.php?slug=...)
 - admin_articles.php — team tool to write articles (sub-admins and admins only)
@@ -171,6 +171,12 @@
 - article.php?slug=...: full-width cover, title, published date, the text in the page language (paragraphs; any HTML is shown as plain text for safety), extra photos, "Back" to the list and "Explore Artworks". Events also show dates, place and "Added by the Oweili team" / «أضافه فريق أويلي». Unknown or draft articles show a friendly "not found" page
 - Visitors only see published articles; spotlights with photos also need an active consent
 - Files: articles_list.php, article.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: articles, article_images, photo_consents
+
+### Upcoming Workshops (top of training.php)
+- What it does: "Upcoming Workshops" / «ورش العمل القادمة» with 5 planned workshops as cards in the same style as the institute cards: Desert Light in Watercolor, Desert Landscapes in Oil, Digital Arabic Calligraphy, Saudi Heritage Drawing (charcoal), Contemporary Saudi Expression (mixed media). Each shows its art type, title, a short line, "Coming Soon" / «قريباً» and a "Notify Me" / «أبلغني» button to register.php (allowed by rule 25: real planned feature with a notify button)
+- Below it, "Institutes Directory" / «دليل المعاهد» introduces the institutes list
+- Moved here from the old Studio page, which was removed from the menu and now redirects to explore.php
+- Files: training.php, studio.php (redirect), nav.php (Studio and its dropdown removed; leftover Studio menu words removed from 15 pages). Tables: none for the workshops
 
 ### Art Institutes directory (training.php) — Sprint 3, needs database_update.sql
 - What it does: "Art Institutes" / «المعاهد الفنية» with a city filter (cities come from the database) and institute cards: logo (or a building icon), name, city, short description, number of active courses, and "View Courses" / «عرض الدورات» that opens the course list (title, dates, price in SAR or "Free" / «مجاني», seats left or "Fully booked", "Register Interest" → the institute's email, or phone, or website)
@@ -275,7 +281,6 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- The Studio → studio.php
 - Community → community.php
 - Discover → Art Events / Artist Spotlights / Art Education (articles_list.php?type=...) / Art Institutes (training.php)
 - Explore Art Styles → explore.php

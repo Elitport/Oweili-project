@@ -1,7 +1,9 @@
 <?php
 /* =====================================================================
- *  training.php — Art Institutes directory, for everyone
- *  Institute cards (logo, name, city, short description, active courses)
+ *  training.php: Art Institutes, for everyone.
+ *  Top: "Upcoming Workshops" (5 planned workshops, Coming Soon + Notify Me,
+ *  moved here from the retired Studio page). Then the institutes directory:
+ *  institute cards (logo, name, city, short description, active courses)
  *  with a "View Courses" panel. Filter by city (?city=...).
  *  Tables: institutes, courses (created by database_update.sql)
  * ===================================================================== */
@@ -104,6 +106,20 @@ details[open] .when-closed{display:none;}
 .c-meta{display:flex;flex-wrap:wrap;gap:4px var(--space-sm);margin:6px 0 var(--space-sm);font-size:var(--fs-caption);color:var(--color-body);}
 .c-meta b{color:var(--color-dark);}
 .c-none{margin-top:var(--space-sm);}
+.ws{margin:0 0 var(--space-2xl);}
+.ws-head{text-align:center;margin:0 auto var(--space-lg);max-width:640px;}
+.ws-head h2{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
+.ws-head p{margin:0;color:var(--color-body);}
+.ws-grid{align-items:stretch;}
+.ws-card{height:100%;}
+.ws-icon{background:var(--color-tint-pink);border-color:rgba(var(--rgb-primary),0.3);}
+.ws-icon svg{stroke:var(--color-dark);}
+.ws-tag{font-size:var(--fs-min);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-body);}
+[dir="rtl"] .ws-tag{letter-spacing:0;font-size:13px;}
+.ws-soon{align-self:flex-start;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),0.35);}
+.ws-card .btn{margin-top:auto;align-self:flex-start;}
+.dir-head{text-align:center;margin:0 0 var(--space-md);}
+.dir-head h2{font-size:var(--fs-section);margin:0;}
 @media (max-width:1024px){.i-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:640px){.i-grid{grid-template-columns:1fr;}.filter select{min-width:0;flex:1 1 200px;}}
 </style>
@@ -121,6 +137,78 @@ details[open] .when-closed{display:none;}
       <h1><?= owBi('Art Institutes', 'المعاهد الفنية') ?></h1>
       <p><?= owBi('Find the right place to learn art, close to home.', 'اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.') ?></p>
     </header>
+
+    <!-- Upcoming Workshops (moved here from the retired Studio page). Planned, so "Coming Soon" + Notify Me (rule 25). -->
+    <section class="ws" aria-labelledby="ws-h">
+      <div class="ws-head reveal">
+        <h2 id="ws-h"><?= owBi('Upcoming Workshops', 'ورش العمل القادمة') ?></h2>
+        <p><?= owBi('Hands-on workshops with Saudi art institutes are on their way. Be the first to know.', 'ورش عمل تطبيقية مع معاهد الفنون السعودية في الطريق. كن أول من يعرف.') ?></p>
+      </div>
+      <div class="i-grid ws-grid">
+        <article class="card i-card ws-card reveal">
+          <div class="i-top">
+            <span class="i-logo ws-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C8.5 7.5 6 10.6 6 14a6 6 0 0 0 12 0c0-3.4-2.5-6.5-6-11z"/></svg></span>
+            <div>
+              <span class="ws-tag"><?= owBi('Watercolor', 'ألوان مائية') ?></span>
+              <h3 class="i-name"><?= owBi('Desert Light in Watercolor', 'ضوء الصحراء بالألوان المائية') ?></h3>
+            </div>
+          </div>
+          <p class="i-desc"><?= owBi('Capture the warmth of Saudi desert light. Layer by layer, until the dunes glow.', 'التقط دفء ضوء الصحراء السعودية. طبقة بعد طبقة، حتى تتوهّج الكثبان.') ?></p>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
+        </article>
+        <article class="card i-card ws-card reveal">
+          <div class="i-top">
+            <span class="i-logo ws-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="16" cy="8" r="3"/><path d="M3 18c4-4 8-4 18-1M3 21h18"/></svg></span>
+            <div>
+              <span class="ws-tag"><?= owBi('Oil Painting', 'رسم زيتي') ?></span>
+              <h3 class="i-name"><?= owBi('Desert Landscapes in Oil', 'مناظر الصحراء بالرسم الزيتي') ?></h3>
+            </div>
+          </div>
+          <p class="i-desc"><?= owBi('Paint wide horizons and golden sunset skies. Classic oil techniques, step by step.', 'ارسم الآفاق الواسعة وسماء الغروب الذهبية. تعلّم تقنيات الزيت الكلاسيكية خطوة بخطوة.') ?></p>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
+        </article>
+        <article class="card i-card ws-card reveal">
+          <div class="i-top">
+            <span class="i-logo ws-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+            <div>
+              <span class="ws-tag"><?= owBi('Digital Art', 'فن رقمي') ?></span>
+              <h3 class="i-name"><?= owBi('Digital Arabic Calligraphy', 'الخط العربي الرقمي') ?></h3>
+            </div>
+          </div>
+          <p class="i-desc"><?= owBi('Love Arabic letters and geometric patterns. Then bring them to life on screen.', 'اعشق الحرف العربي والزخارف الهندسية. ثم امنحها الحياة على الشاشة.') ?></p>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
+        </article>
+        <article class="card i-card ws-card reveal">
+          <div class="i-top">
+            <span class="i-logo ws-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 21V9l7-5 7 5v12"/><path d="M10 21v-6h4v6M9 11h1M14 11h1"/></svg></span>
+            <div>
+              <span class="ws-tag"><?= owBi('Charcoal', 'فحم') ?></span>
+              <h3 class="i-name"><?= owBi('Saudi Heritage Drawing', 'رسم التراث السعودي') ?></h3>
+            </div>
+          </div>
+          <p class="i-desc"><?= owBi('Draw carved doors and Najdi mud houses in charcoal and ink. Every line holds a story.', 'ارسم الأبواب المنقوشة والبيوت النجدية بالفحم والحبر. كل خط يحفظ حكاية.') ?></p>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
+        </article>
+        <article class="card i-card ws-card reveal">
+          <div class="i-top">
+            <span class="i-logo ws-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="11" height="9" rx="1"/><rect x="10" y="10" width="11" height="9" rx="1"/></svg></span>
+            <div>
+              <span class="ws-tag"><?= owBi('Mixed Media', 'وسائط مختلطة') ?></span>
+              <h3 class="i-name"><?= owBi('Contemporary Saudi Expression', 'التعبير السعودي المعاصر') ?></h3>
+            </div>
+          </div>
+          <p class="i-desc"><?= owBi('Mix collage, color and photography. Tell the story of Saudi Arabia today, in your own voice.', 'امزج الكولاج والألوان والتصوير. احكِ قصة السعودية اليوم بصوتك أنت.') ?></p>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
+        </article>
+      </div>
+    </section>
+
+    <div class="dir-head reveal"><h2><?= owBi('Institutes Directory', 'دليل المعاهد') ?></h2></div>
 
     <?php if ($cities): ?>
     <form class="filter reveal" method="get" action="training.php">

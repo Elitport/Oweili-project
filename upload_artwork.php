@@ -489,14 +489,12 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 /* Language switch for this page: flips direction, then nav.php's sync
    updates every .nav-i18n text. The menu's own labels are set here too. */
 var NAV_T = {
-  en: {'nav-studio-label':'The Studio','nav-community-label':'Community','nav-marketplace-label':'Gallery',
+  en: {'nav-community-label':'Community','nav-marketplace-label':'Gallery',
        'nav-explore-label':'Explore Art Styles','nav-support-label':'Support',
-       'dd-s1':'Watercolor Workshop','dd-s2':'Oil Painting Studio','dd-s3':'Digital Art Lab','dd-s4':'Charcoal & Ink',
        'dd-c2':'Meet Fellow Artists','dd-c3':'Share Your Work','dd-c4':'Learn Together',
        'dd-sp1':'Contact Us','dd-sp2':'How It Works','dd-sp3':'Terms of Use','lb':'العربية'},
-  ar: {'nav-studio-label':'الاستوديو','nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
+  ar: {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
        'nav-explore-label':'استكشف أساليب الرسم','nav-support-label':'الدعم',
-       'dd-s1':'ورشة الألوان المائية','dd-s2':'استوديو الرسم الزيتي','dd-s3':'مختبر الفن الرقمي','dd-s4':'الفحم والحبر',
        'dd-c2':'تعرّف على فنانين','dd-c3':'شارك أعمالك','dd-c4':'تعلّم معاً',
        'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام','lb':'English'}
 };
