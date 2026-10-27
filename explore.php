@@ -1,16 +1,50 @@
 <?php
 /* =====================================================================
- *  explore.php — Explore Art Styles: a calm, magazine-like reference.
- *  A grid of 16 style cards (filter: All / Traditional / Digital /
- *  Mixed Media / Modern). A card opens a window with the full story,
- *  techniques, signs of a human hand, famous artists, a collector's guide
- *  and a link to that style in the Gallery.
+ *  explore.php: Explore Art Styles, a calm art encyclopedia of 50 styles.
+ *  A grid of cards (filter: All + 6 categories). A card opens a window
+ *  with 10 parts, ending with the newest artwork of that type from the
+ *  Gallery (or a drawing when there is none yet).
  *  Content: assets/js/art_styles.js (the single source). Drawing and the
- *  window: assets/js/explore.js. Read only — no forms, no database.
+ *  window: assets/js/explore.js. Read only: no forms. The one database
+ *  read below uses a prepared statement.
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languages
 $v = fn(string $f) => @filemtime(__DIR__ . $f);
+
+/* Newest approved artwork per Gallery type, for "From Our Gallery" in each style window.
+   Only approved, finished, for-sale works by artists who are not banned. Prepared statement;
+   the types come from the fixed list in art_types.php. If the database is not reachable,
+   the page still works and shows the drawings instead. */
+$ART_TYPES = require __DIR__ . '/art_types.php';
+$live = [];
+try {
+    $types = array_keys($ART_TYPES);
+    $in    = implode(',', array_fill(0, count($types), '?'));
+    $st = getDB()->prepare(
+        "SELECT a.type, a.title_en, a.title_ar, a.image_url, u.full_name_en AS artist_en, u.full_name_ar AS artist_ar
+         FROM artworks a
+         JOIN users u ON u.id = a.artist_id
+         WHERE a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0
+           AND a.type IN ($in)" . owNotDraftSql('a') . "
+         ORDER BY a.created_at DESC, a.id DESC
+         LIMIT 300"
+    );
+    $st->execute($types);
+    foreach ($st->fetchAll() as $r) {
+        if (isset($live[$r['type']])) continue;   // keep only the newest of each type
+        $live[$r['type']] = [
+            'title_en'  => (string) $r['title_en'],
+            'title_ar'  => (string) ($r['title_ar'] ?: $r['title_en']),
+            'image'     => (string) $r['image_url'],
+            'artist_en' => (string) ($r['artist_en'] ?: $r['artist_ar']),
+            'artist_ar' => (string) ($r['artist_ar'] ?: $r['artist_en']),
+        ];
+    }
+} catch (Throwable $ex) {
+    $live = [];
+}
+$jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-title-en="Explore Art Styles · Oweili" data-title-ar="استكشف أساليب الرسم · أويلي">
@@ -18,7 +52,7 @@ $v = fn(string $f) => @filemtime(__DIR__ . $f);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Explore Art Styles · Oweili</title>
-<meta name="description" content="Learn the story behind every style. Know what you are looking at. تعرّف على قصة كل أسلوب. اعرف ما تراه.">
+<meta name="description" content="Fifty art styles, fifty human stories. Learn the story behind every style. Know what you are looking at. خمسون أسلوباً وخمسون قصة إنسانية. تعرّف على قصة كل أسلوب. اعرف ما تراه.">
 <meta property="og:title" content="Explore Art Styles · استكشف أساليب الرسم · Oweili">
 <meta property="og:description" content="Learn the story behind every style. Know what you are looking at.">
 <meta property="og:type" content="website">
@@ -27,6 +61,7 @@ $v = fn(string $f) => @filemtime(__DIR__ . $f);
 <link rel="stylesheet" href="/assets/css/nav.css?v=<?= $v('/assets/css/nav.css') ?>">
 <link rel="stylesheet" href="/assets/css/discover.css?v=<?= $v('/assets/css/discover.css') ?>">
 <script src="/assets/js/discover.js?v=<?= $v('/assets/js/discover.js') ?>"></script>
+<script>window.OW_LIVE = <?= json_encode((object) $live, $jsonFlags) ?>;</script>
 <script src="/assets/js/art_styles.js?v=<?= $v('/assets/js/art_styles.js') ?>"></script>
 <script src="/assets/js/explore.js?v=<?= $v('/assets/js/explore.js') ?>"></script>
 <style>
@@ -46,6 +81,7 @@ $v = fn(string $f) => @filemtime(__DIR__ . $f);
 }
 .pill-f:hover { background: var(--color-hover-light); }
 .pill-f.on { background: var(--color-dark); border-color: var(--color-dark); color: var(--color-on-dark); }
+.pill-n { display: inline-block; margin-inline-start: 6px; font-size: 12px; font-weight: 500; opacity: 0.75; }
 .pill-f:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 .sc-count { text-align: center; font-size: var(--fs-caption); color: var(--color-body); margin: 0 0 var(--space-lg); }
 
@@ -87,12 +123,14 @@ $v = fn(string $f) => @filemtime(__DIR__ . $f);
 /* closing note under the grid */
 .ex-end { max-width: 620px; margin: var(--space-2xl) auto 0; text-align: center; }
 .ex-end p { font-size: var(--fs-subtitle); line-height: 1.7; color: var(--color-body); margin: 0 0 var(--space-md); }
+.ex-end .ex-end-line { font-size: 26px; font-weight: 300; line-height: 1.5; letter-spacing: -0.01em; color: var(--color-dark); }
+[dir="rtl"] .ex-end .ex-end-line { letter-spacing: 0; }
 .ex-end .btns { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm); }
 
 /* ---- the style window ---- */
 html.m-open { overflow: hidden; }
 .m-dlg {
-  width: min(720px, calc(100% - 32px)); max-width: 720px; max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px);
+  width: min(760px, calc(100% - 32px)); max-width: 760px; max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px);
   padding: 0; border: 1px solid var(--color-border); border-radius: var(--radius-card);
   background: var(--color-menu); color: var(--color-body); box-shadow: var(--shadow-card-hover); overflow: hidden;
 }
@@ -154,7 +192,34 @@ html.m-open { overflow: hidden; }
 .m-artists li { padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface-2); }
 .a-name { display: block; font-size: 16px; font-weight: 600; line-height: 1.4; color: var(--color-dark); }
 .a-meta { display: block; margin-top: 2px; font-size: var(--fs-caption); color: var(--color-body); }
-.m-cta { margin-top: var(--space-xl); text-align: center; }
+.m-cta { margin-top: var(--space-lg); text-align: center; }
+.m-tools .m-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; }
+.m-tools li { padding-inline-start: 18px; position: relative; }
+.m-tools li::before { content: ""; position: absolute; inset-inline-start: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--color-primary); }
+.t-name { display: block; font-size: 15px; font-weight: 600; color: var(--color-dark); line-height: 1.4; }
+.t-use { display: block; font-size: 14px; line-height: 1.55; color: var(--color-body); }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fact { padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface-2); }
+.fact-wide { grid-column: 1 / -1; }
+.f-k { display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-body); margin-bottom: 4px; }
+[dir="rtl"] .f-k { letter-spacing: 0; font-size: 13px; }
+.f-v { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; color: var(--color-dark); line-height: 1.5; }
+.fact-wide .f-v { font-weight: 400; color: var(--color-body); }
+.lvl { display: inline-flex; gap: 4px; }
+.lvl i { width: 18px; height: 6px; border-radius: 3px; background: var(--color-border-strong); }
+.lvl i.on { background: var(--color-primary); }
+.a-note { display: block; margin-top: 6px; font-size: 14px; line-height: 1.55; color: var(--color-body); }
+.live-card { display: grid; grid-template-columns: 200px 1fr; gap: var(--space-md); align-items: center; padding: 12px; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface-2); text-decoration: none; color: inherit; transition: border-color var(--ease), transform var(--ease); }
+a.live-card:hover { border-color: var(--color-primary); transform: translateY(-2px); color: inherit; }
+a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.live-img { display: block; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; background: var(--color-frame); border: 1px solid var(--color-border); }
+.live-img img, .live-img .ill { width: 100%; height: 100%; display: block; object-fit: contain; }
+.live-txt { display: flex; flex-direction: column; gap: 4px; }
+.live-kick { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-body); }
+[dir="rtl"] .live-kick { letter-spacing: 0; font-size: 13px; }
+.live-title { font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--color-dark); }
+.live-by { font-size: 14px; line-height: 1.55; color: var(--color-body); }
+.live-empty .link { font-size: 14px; margin-top: 4px; }
 
 @media (max-width: 1024px) { .sc-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) {
@@ -167,7 +232,8 @@ html.m-open { overflow: hidden; }
   .m-cover { height: 240px; }
   .m-in { padding: var(--space-md) 20px var(--space-xl); }
   .m-title { font-size: 32px; }
-  .m-artists .m-list { grid-template-columns: 1fr; }
+  .m-artists .m-list, .m-tools .m-list, .facts { grid-template-columns: 1fr; }
+  .live-card { grid-template-columns: 1fr; }
 }
 @media (hover: none) { .ttip { display: none; } }
 @media (prefers-reduced-motion: reduce) {
@@ -193,7 +259,7 @@ html.m-open { overflow: hidden; }
     <noscript><p class="empty-state"><?= owBi('Please turn on JavaScript to explore the art styles.', 'يرجى تفعيل جافاسكربت لاستكشاف أساليب الرسم.') ?></p></noscript>
 
     <section class="ex-end reveal">
-      <p><?= owBi('Every style here holds human patience and courage. When you collect on Oweili, you keep proof that a person dared to leave a mark.', 'كل أسلوب هنا يحمل صبر الإنسان وجرأته. حين تقتني من أويلي، تحتفظ بدليل على إنسان تجرّأ أن يترك أثراً.') ?></p>
+      <p class="ex-end-line"><?= owBi('Fifty styles. Fifty human stories. Every one began with a hand.', 'خمسون أسلوباً. خمسون قصة إنسانية. كلها بدأت بيد.') ?></p>
       <div class="btns">
         <a class="btn btn-dark" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
         <a class="btn btn-secondary" href="mailto:contact@oweili.com?subject=Art%20Style%20Suggestion"><?= owBi('Suggest a Style', 'اقترح أسلوباً') ?></a>
