@@ -62,8 +62,8 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <link rel="stylesheet" href="/assets/css/discover.css?v=<?= $v('/assets/css/discover.css') ?>">
 <script src="/assets/js/discover.js?v=<?= $v('/assets/js/discover.js') ?>"></script>
 <script>window.OW_LIVE = <?= json_encode((object) $live, $jsonFlags) ?>;</script>
-<script src="/assets/js/art_styles.js?v=<?= $v('/assets/js/art_styles.js') ?>"></script>
-<script src="/assets/js/explore.js?v=<?= $v('/assets/js/explore.js') ?>"></script>
+<script defer src="/assets/js/art_styles.js?v=<?= $v('/assets/js/art_styles.js') ?>"></script>
+<script defer src="/assets/js/explore.js?v=<?= $v('/assets/js/explore.js') ?>"></script>
 <style>
 /* Explore Art Styles — layout only. Colors, type and buttons come from oweili.css. */
 .ex-head { margin-bottom: var(--space-lg); }

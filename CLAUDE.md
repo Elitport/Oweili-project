@@ -85,7 +85,7 @@
 ## Pages Built
 - index.php — Homepage: one full-screen hero (see Features)
 - nav.php — Shared navbar (used across all pages)
-- explore.php — Explore Art Styles: a reference grid of 16 styles with a rich window for each (see Features)
+- explore.php — Explore Art Styles: an art encyclopedia (50 styles on the explore-encyclopedia branch) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — Studio content page
 - community.php — Community page
@@ -178,16 +178,16 @@
 - Institutes and courses are added in phpMyAdmin for now (no admin screen yet). The old `training` table is no longer used
 - Files: training.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: institutes, courses
 
-### Explore Art Styles (explore.php) — live (approved by the owner)
-- What it does: "Explore Art Styles" / «استكشف أساليب الرسم» with the line "Learn the story behind every style. Know what you are looking at." / «تعرّف على قصة كل أسلوب. اعرف ما تراه.». Filter pills: All / Traditional / Digital / Mixed Media / Modern (navy when active). A grid of 16 equal square cards (4 columns desktop, 3 tablet, 2 phone): a drawn cover picture, the style name and one feeling word (e.g. Dreamy / «حالم»). Hover: the card lifts and a thin pink border appears
-- Clicking a card opens a window (max 720px, full screen on phones, close button top right, top left in Arabic, Escape or tap outside closes): cover, name, one-line essence, The Human Story, Key Techniques (chips; hover or tap shows a one-line explanation), Signs of a Human Hand (numbered), Famous Artists (name, nationality and dates), Collector's Guide (3 tips), and a pink "See this style in our Gallery" button → marketplace.php?type=… (Street Art and Hyperrealism have no Gallery type yet, so their button opens the whole Gallery)
+### Explore Art Styles (explore.php) — art encyclopedia of 50 styles (explore-encyclopedia branch, waiting for owner approval; the 16-style version is live)
+- What it does: "Explore Art Styles" / «استكشف أساليب الرسم». Filter pills with counts: All 50 / Traditional 15 / Digital 8 / Islamic & Arab Heritage 7 / Contemporary 10 / Nature & Portrait 6 / Photography 4 (navy when active). Equal square cards (4 columns desktop, 3 tablet, 2 phone): a drawn cover, the style name and one feeling word. Hover: lift + thin pink border. Closing line: "Fifty styles. Fifty human stories. Every one began with a hand." / «خمسون أسلوباً. خمسون قصة إنسانية. كلها بدأت بيد.»
+- The window (max 760px, full screen on phones; close top right, top left in Arabic, Escape or tap outside) has 10 parts: name + feeling, one-line essence, The Human Story (3 paragraphs), Key Techniques (hover or tap explains), Signs of a Human Hand (numbered), Tools & Materials, Difficulty & Time (Beginner / Intermediate / Advanced, time for one artwork, who it suits), Famous Artists (name, nationality, dates, contribution), Collector's Guide (3 tips), From Our Gallery
+- From Our Gallery: the newest approved, for-sale artwork of that type by an artist who is not banned (one prepared database read in explore.php; pictures only from uploads/ or https). If there is none yet: the drawing, an invitation to artists, and the pink button. Button: "See [style] in Gallery" → marketplace.php?type=…. Styles with no Gallery type yet open the whole Gallery
+- Gallery types used: exact types where they exist; Chinese Ink → ink, Islamic Mosaic → mosaic, Concept Art → digital_painting, Pixel Art / Motion Graphics / Generative Art / NFT Art → digital_art, all four photography styles → photography. No type yet: Tempera, Fresco, Pencil Drawing, Encaustic, Stained Glass, Islamic Ornamental Art, Manuscript Art, Egyptian Linen Art, Textile Art, Street Art, Hyperrealism, Pop Art, Minimalism, Surrealism, Expressionism, Conceptual Art, Performance Art, Botanical, Animal, Marine, Architectural Drawing
 - Shared links open a style directly: explore.php#calligraphy. Unknown links are ignored
-- The 16 styles: Watercolor, Oil Painting, Charcoal, Acrylic, Ink & Pen, Pastel, Gouache, Printmaking, Digital Illustration, Digital Painting, 3D Sculpting, Collage & Mixed Media, Street Art, Hyperrealism, Arabic Calligraphy, Islamic Geometric Art
-- Cover pictures are simple SVG drawings in the brand colors (rule 31), so they follow light and dark mode. They can be replaced later with real artworks from Oweili artists
-- Famous artists' names and dates should be double-checked by the team before launch, especially living digital artists
-- Gallery: marketplace.php now accepts ?type=<art type> (only types listed in art_types.php; anything else is ignored) and opens with that filter on. The type is kept when switching language or page
-- Read only: no forms and no database on this page
-- Files: explore.php, assets/js/art_styles.js (all content), assets/js/explore.js (cards, filter, window, drawings), assets/css/discover.css, assets/js/discover.js, marketplace.php. Tables: none
+- Content: assets/js/art_styles.js (about 400KB, 120KB compressed; loaded after the page shows). Famous artists' names and dates must be double-checked by the team before launch (a list of doubts was given to the owner)
+- Generative Art and NFT Art are written only as human-made work (the artist writes the rules; an NFT is an ownership certificate). No mention of AI anywhere
+- Cover pictures are simple SVG drawings in the brand colors; they follow light and dark mode and can be replaced later with real artworks
+- Files: explore.php, assets/js/art_styles.js, assets/js/explore.js, assets/css/discover.css, assets/js/discover.js, marketplace.php (?type=). Tables read: artworks, users
 
 ### Menu and homepage links — Sprint 3
 - Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes
