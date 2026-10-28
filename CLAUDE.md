@@ -192,11 +192,11 @@
 - Files: training.php, studio.php (redirect), nav.php (Studio and its dropdown removed; leftover Studio menu words removed from 15 pages). Tables: none for the workshops
 
 ### Community page (community.php): real numbers and real artworks
-- Number boxes come from the database: "Artists With Us" counts artist accounts that are not banned, "Messages Shared" counts the messages table. Over 10 shows the number with "+" (e.g. 52+), 10 or less shows the plain number. "Art Styles Covered" / «أسلوب فني موثّق» is counted from assets/js/art_styles.js (now 50) and links to explore.php. "Saudi Community" stays a label
+- Number boxes come from the database: "Artists With Us" counts artist accounts that are not banned, "Artworks in Gallery" / «عمل فني في المعرض» counts the works a visitor can see in the Gallery (approved, available or auction, finished, artist not banned) and links to marketplace.php. Over 10 shows the number with "+" (e.g. 52+), 10 or less shows the plain number. "Art Styles Covered" / «أسلوب فني موثّق» is counted from assets/js/art_styles.js (now 50) and links to explore.php. "Saudi Community" stays a label
 - Daily Inspiration / «إلهام اليوم»: the 3 newest approved, for-sale artworks by artists who are not banned (no drafts). Each shows the photo (whole artwork, never cropped), title and artist name in the page language, and opens that artwork in the Gallery (marketplace.php#artwork-N opens its details window). Pictures only from uploads/ or https
 - Fewer than 3 artworks: the empty spots say "Be the first to share your work here." / «كن أول من يشارك عمله هنا.» with a "Join as Artist" / «انضم كفنان» button to register_artist.php
 - Phone: one card per row. All reads use prepared statements; if the database is unavailable the page still shows with 0 and the invitation cards
-- Files: community.php, marketplace.php (#artwork-N link, kept through the Arabic redirect), artwork_lib.php (owBi, owNotDraftSql). Tables read: users, messages, artworks
+- Files: community.php, marketplace.php (#artwork-N link, kept through the Arabic redirect), artwork_lib.php (owBi, owNotDraftSql). Tables read: users, artworks
 
 ### Artist names shown to visitors
 - Gallery cards, the artwork window, Community, Explore, the artist profile (page title, main heading, photo text) and the Artist column of the collector's purchases show the artist name chosen at sign-up ("the name people will see"), not the private full name. If it is empty, the full name is used. In Arabic: the Arabic name if the artist filled it in, otherwise the same artist name
@@ -224,7 +224,7 @@
 ### Artist Chat Room — removed
 - The chat room is gone from the site. "Artist Chat Room" / «غرفة محادثة الفنانين» is not in the menu, the Community dropdown, the ☰ menu or any page. Leftover hidden chat words and styles were removed from community.php, support.php, login.php, forgot.php, verify.php, edit_artwork.php and artist_dashboard.php
 - chat.php now only redirects to community.php
-- The messages table (set up in setup.sql as the chat room's messages) is not changed. The Community page still counts it for "Messages Shared"
+- The messages table (set up in setup.sql as the chat room's messages) is not changed, and no page reads it any more. The "Messages Shared" box on Community was replaced by "Artworks in Gallery"
 - Files: chat.php and the pages above. Tables: none changed
 
 ### Menu and homepage links — Sprint 3

@@ -2,7 +2,8 @@
 /* =====================================================================
  *  community.php: The Artist Community
  *  - Number boxes show real counts: artists (users, role artist, not
- *    banned), messages shared (messages), and art styles covered (counted
+ *    banned), artworks in the Gallery (approved, for sale, finished, by
+ *    artists who are not banned), and art styles covered (counted
  *    from assets/js/art_styles.js, the one source for styles).
  *  - Daily Inspiration shows the 3 newest approved artworks from the Gallery
  *    (approved, for sale, finished, by artists who are not banned), each
@@ -16,16 +17,18 @@ require_once __DIR__ . '/artwork_lib.php';   // owBi(), owNotDraftSql()
 /* 54 → "54+", 7 → "7" (a "+" only once the number is over 10) */
 function owCountLabel(int $n): string { return $n > 10 ? $n . '+' : (string) $n; }
 
-$artistCount = 0; $messageCount = 0; $inspo = [];
+$artistCount = 0; $artworkCount = 0; $inspo = [];
 try {
     $db = getDB();
     $st = $db->prepare("SELECT COUNT(*) FROM users WHERE role = :role AND is_banned = 0");
     $st->execute([':role' => 'artist']);
     $artistCount = (int) $st->fetchColumn();
 
-    $st = $db->prepare("SELECT COUNT(*) FROM messages");
-    $st->execute();
-    $messageCount = (int) $st->fetchColumn();
+    /* the same artworks a visitor can see in the Gallery */
+    $st = $db->prepare("SELECT COUNT(*) FROM artworks a JOIN users u ON u.id = a.artist_id
+                        WHERE a.is_approved = :ok AND a.status IN ('available','auction') AND u.is_banned = 0" . owNotDraftSql('a'));
+    $st->execute([':ok' => 1]);
+    $artworkCount = (int) $st->fetchColumn();
 
     $st = $db->prepare(
         "SELECT a.id, a.title_en, a.title_ar, a.image_url, " . owArtistNameSql('u') . "
@@ -130,7 +133,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
 
   <div class="stats-row">
     <div class="stat-card"><div class="stat-num" id="s-artists"><?= e(owCountLabel($artistCount)) ?></div><div class="stat-label" id="t-s1">Artists With Us</div></div>
-    <div class="stat-card"><div class="stat-num" id="s-msgs"><?= e(owCountLabel($messageCount)) ?></div><div class="stat-label" id="t-s2">Messages Shared</div></div>
+    <div class="stat-card"><a class="stat-link" href="marketplace.php"><div class="stat-num" id="s-artworks"><?= e(owCountLabel($artworkCount)) ?></div><div class="stat-label" id="t-s2">Artworks in Gallery</div></a></div>
     <div class="stat-card"><a class="stat-link" href="explore.php"><div class="stat-num" id="s-styles"><?= (int) $styleCount ?></div><div class="stat-label" id="t-s3">Art Styles Covered</div></a></div>
     <div class="stat-card"><div class="stat-num">🇸🇦</div><div class="stat-label" id="t-s4">Saudi Community</div></div>
   </div>
@@ -188,7 +191,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
 const T={
   en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
     badge:'Artists Together',h1:'The <em>Artist Community</em>',desc:'Art grows when artists meet. Share your work, learn from each other, and make friends who get it.',
-    s1:'Artists With Us',s2:'Messages Shared',s3:'Art Styles Covered',s4:'Saudi Community',
+    s1:'Artists With Us',s2:'Artworks in Gallery',s3:'Art Styles Covered',s4:'Saudi Community',
     commTitle:'Community Spaces',
     c2:'Professional Artists Guild',c2d:'A space for experienced artists to work together and guide new talent.',c2l:'Apply to Join →',
     c3:'Daily Inspiration',c3d:'A little spark every day. Featured works, color palettes and new techniques to try.',c3l:'Explore →',
@@ -197,7 +200,7 @@ const T={
 },
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'فنانون معاً',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
-    s1:'فنانون معنا',s2:'الرسائل المتبادلة',s3:'أسلوب فني موثّق',s4:'المجتمع السعودي',
+    s1:'فنانون معنا',s2:'عمل فني في المعرض',s3:'أسلوب فني موثّق',s4:'المجتمع السعودي',
     commTitle:'مساحات المجتمع',
     c2:'رابطة الرسامين المحترفين',c2d:'مساحة للفنانين المتمرّسين ليتعاونوا ويأخذوا بيد المواهب الجديدة.',c2l:'تقدّم للانضمام →',
     c3:'الإلهام اليومي',c3d:'شرارة صغيرة كل يوم. أعمال مختارة، ولوحات ألوان، وتقنيات جديدة لتجربتها.',c3l:'استكشف →',
