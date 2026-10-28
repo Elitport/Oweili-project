@@ -8,6 +8,7 @@
  *  - Before they choose, the phone or computer setting decides
  *  - Dark mode = class "dark-mode" on <html>; the colors live in oweili.css
  *  - owThemeButton() prints the sun / moon button (nav.php, staff headers)
+ *  - also the page transition script (fade out on link click; fade in is CSS)
  * ===================================================================== */
 if (!function_exists('owThemeButton')) {
     function owThemeButton(string $class = 'lang-btn'): void {
@@ -46,6 +47,34 @@ if (!defined('OW_THEME_HEAD')):
     sync();
     new MutationObserver(sync).observe(d, { attributes: true, attributeFilter: ['dir'] });
   });
+})();
+</script>
+<script>
+/* Page transitions: fade out for 0.2s when a link to another page on this site is
+   followed (the fade-in is pure CSS in oweili.css). Left alone: new-tab clicks,
+   downloads, other sites, email/phone links, jumps on the same page, and links
+   any page script already handled. Listening on window means page scripts run first. */
+(function(){
+  var d = document.documentElement;
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var undo = null;
+  function reset(){ d.classList.remove('ow-leaving'); if (undo) { clearTimeout(undo); undo = null; } }
+  window.addEventListener('click', function(e){
+    if (calm || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+    var raw = a.getAttribute('href') || '', u;
+    if (raw.charAt(0) === '#') return;
+    try { u = new URL(a.href, location.href); } catch (x) { return; }
+    if (u.origin !== location.origin) return;
+    if (u.pathname === location.pathname && u.search === location.search && u.hash) return;
+    e.preventDefault();
+    d.classList.add('ow-leaving');
+    setTimeout(function(){ location.href = u.href; }, 200);
+    undo = setTimeout(reset, 3000);   // a link that never leaves the page (e.g. a download) shows the page again
+  });
+  /* back / forward buttons can show a saved copy of the page: never leave it faded */
+  window.addEventListener('pageshow', reset);
 })();
 </script>
 <?php endif; ?>

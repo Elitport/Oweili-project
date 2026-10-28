@@ -228,7 +228,7 @@
 - Files: chat.php and the pages above. Tables: none changed
 
 ### Menu and homepage links — Sprint 3
-- Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes
+- Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Institutes (see Navigation Structure)
 - Files: nav.php
 
 ### Warm voice for all visitor text
@@ -243,6 +243,12 @@
 - Dark mode (class "dark-mode" on <html>): background #0F1520, frosted navy glass cards, headings #F0F4F8, body #CBD5E0, links grey-blue #8FA1B1, menu #0F1520 with blur, and a navy shade rgba(15,21,32,0.6) over the background video
 - No page has its own colors any more: every color comes from oweili.css variables (plus helpers like --rgb-primary, --color-surface, --color-on-primary), so light and dark mode work on every page. Kept on purpose: real paint swatches in the upload, black behind admin videos, and the welcome email in verify.php (email apps cannot read CSS variables, so it uses the new colors typed in)
 - Homepage: new headline and badge (see Homepage)
+
+### Page transitions (every page)
+- What it does: every page fades in over 0.3 seconds. When a visitor follows a link to another page of the site, the page fades out over 0.2 seconds, then the next page opens and fades in
+- Left alone (no fade): links that open a new tab, downloads, other websites, email and phone links, jumps within the same page, links a page script already handles, and visitors who ask their device for less motion
+- Back and forward buttons never show a faded page (Safari keeps a saved copy of pages; the script clears the fade when one is shown). If a link never leaves the page, it shows again after 3 seconds
+- Files: assets/css/oweili.css (the fade in / fade out, under BASE), theme_head.php (the small click script, so every page gets it). Tables: none
 
 ### Light / dark mode button
 - What it does: a small round button next to the language button in the menu (and in the admin, sub-admin and articles staff headers). Moon icon in light mode ("Dark mode" / «الوضع الليلي»), sun icon in dark mode ("Light mode" / «الوضع النهاري»). The icons are drawn in SVG
@@ -313,11 +319,11 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- Order: Community · Gallery · Explore Art Styles · Discover ↓ · Support ↓
-- Community → community.php (direct link, no dropdown; Meet Fellow Artists, Share Your Work and Learn Together were removed because they led nowhere specific)
+- Order (owner's choice): Gallery · Explore Art Styles · Discover ↓ · Community · Support ↓ (Arabic, right to left: المعرض · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
 - Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)
 - Explore Art Styles → explore.php, no dropdown
-- Discover ↓ → Art Events / Artist Spotlights / Art Education (articles_list.php?type=...) / Art Institutes (training.php)
+- Discover ↓ → Art Events / Artist Spotlights (articles_list.php?type=...) / Art Institutes (training.php). Art Education was taken out of the menu because Explore Art Styles covers it; its page (articles_list.php?type=art_education) still works and is reachable from the type buttons on the articles pages
+- Community → community.php (direct link, no dropdown; Meet Fellow Artists, Share Your Work and Learn Together were removed because they led nowhere specific)
 - Support ↓ → Contact Us (email) / How It Works (support.php#how) / Terms of Use (support.php#terms)
 - Dropdown icons: one thin outline style only (set once in nav.css on .d-icon, never filled). New icons must be outline drawings
 

@@ -183,6 +183,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 [dir="rtl"] body { line-height: var(--lh-ar); text-align: right; }
+/* page transitions: every page fades in (0.3s); when a link is followed the page
+   fades out (0.2s) first. The script that adds .ow-leaving lives in theme_head.php.
+   "backwards" lets the fade-in stop applying once it ends, so nothing else changes */
+@keyframes owPageIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes owPageOut { from { opacity: 1; } to { opacity: 0; } }
+body { animation: owPageIn 0.3s ease-out backwards; }
+html.ow-leaving body { animation: owPageOut 0.2s ease-in forwards; }
+@media (prefers-reduced-motion: reduce) { body, html.ow-leaving body { animation: none; } }
 img { max-width: 100%; }
 a { color: var(--color-accent); }
 a:hover { color: var(--color-accent-dark); }
