@@ -129,7 +129,7 @@ const FAQS={
 const T={
   en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
     badge:'We Are Here for You',h1:'Artist <em>Support Center</em>',desc:'Got a question? Just ask. A real person on our team will help you.',
-    ctTitle:'Get in Touch',c1:'Write to Us',c1d:'Send us a message. We reply within 24 hours, usually sooner.',c2:'Artist Chat Room',c2d:'Ask fellow artists directly. Artists helping artists, right now.',c2l:'Open Chat →',c3:'Join the Community',c3d:'Create your free account and meet artists who share your love of art.',c3l:'Join Free →',
+    ctTitle:'Get in Touch',c1:'Write to Us',c1d:'Send us a message. We reply within 24 hours, usually sooner.',c3:'Join the Community',c3d:'Create your free account and meet artists who share your love of art.',c3l:'Join Free →',
     faqTitle:'Questions We Hear Often',legalTitle:'Rights & Privacy',
     l1:'Your Art Stays Yours',l1d:'Everything you share on Oweili still belongs to you. Always.',
     l2:'Terms of Use',l2d:'Using Oweili means you agree to our community guidelines.',
@@ -137,7 +137,7 @@ const T={
     l4:'Report Misuse of Your Art',l4d:'Someone used your art without asking? Tell us right away.'},
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'نحن هنا من أجلك',h1:'<em>مركز دعم</em> الفنانين',desc:'لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.',
-    ctTitle:'تواصل معنا',c1:'اكتب لنا',c1d:'أرسل لنا رسالة. نرد خلال 24 ساعة، وغالباً أسرع.',c2:'غرفة محادثة الفنانين',c2d:'اسأل الفنانين مباشرة. فنانون يساعدون فنانين، الآن.',c2l:'افتح المحادثة →',c3:'انضم للمجتمع',c3d:'أنشئ حسابك المجاني والتقِ بفنانين يشاركونك حب الفن.',c3l:'انضم مجاناً →',
+    ctTitle:'تواصل معنا',c1:'اكتب لنا',c1d:'أرسل لنا رسالة. نرد خلال 24 ساعة، وغالباً أسرع.',c3:'انضم للمجتمع',c3d:'أنشئ حسابك المجاني والتقِ بفنانين يشاركونك حب الفن.',c3l:'انضم مجاناً →',
     faqTitle:'أسئلة تصلنا كثيراً',legalTitle:'الحقوق والخصوصية',
     l1:'فنك يبقى لك',l1d:'كل ما تشاركه على أويلي يبقى ملكك. دائماً.',
     l2:'شروط الاستخدام',l2d:'باستخدامك أويلي توافق على إرشادات مجتمعنا.',
@@ -147,11 +147,11 @@ const T={
 let L='en';
 const NAV={
   en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-    c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
+    c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',
     login:'Sign In',reg:'Join Free'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-    c1:'غرفة محادثة الفنانين',c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
+    c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
     login:'تسجيل الدخول',reg:'انضم مجاناً'}
 };
@@ -161,7 +161,7 @@ function applyNav(l){
   set('lb',n.lb);
   set('nav-community-label',n.community);
   set('nav-marketplace-label',n.marketplace);set('nav-explore-label',n.explore);set('nav-support-label',n.support);
-  set('dd-c1',n.c1);set('dd-c2',n.c2);set('dd-c3',n.c3);set('dd-c4',n.c4);
+  set('dd-c2',n.c2);set('dd-c3',n.c3);set('dd-c4',n.c4);
   set('dd-sp1',n.sp1);set('dd-sp2',n.sp2);set('dd-sp3',n.sp3);
   set('n-login-t',n.login);set('n-reg-t',n.reg);
   const mk=document.getElementById('nav-marketplace-link');
@@ -187,7 +187,7 @@ function apply(l){
   document.getElementById('pg').setAttribute('dir',t.dir);
   document.getElementById('topnav').setAttribute('dir',t.dir);
   applyNav(l);
-  const keys=['badge','h1','desc','c1','c1d','c2','c2d','c2l','c3','c3d','c3l','l1','l1d','l2','l2d','l3','l3d','l4','l4d'];
+  const keys=['badge','h1','desc','c1','c1d','c3','c3d','c3l','l1','l1d','l2','l2d','l3','l3d','l4','l4d'];
   keys.forEach(k=>{const el=document.getElementById('t-'+k);if(el)el.innerHTML=t[k];});
   // section titles whose ids differ from their T keys
   const setH=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};

@@ -77,13 +77,6 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .stat-card{background:var(--color-surface);border:1px solid rgba(var(--rgb-ink),0.07);border-radius:16px;padding:24px;text-align:center;box-shadow:var(--shadow-card);}
 .stat-num{font-size:32px;font-weight:700;color:var(--color-highlight);margin-bottom:4px;}
 .stat-label{font-size:12px;color:var(--color-body);text-transform:uppercase;letter-spacing:0.1em;}
-/* CHAT CTA */
-.chat-cta{background:var(--color-surface);border:1px solid rgba(var(--rgb-accent),0.12);border-radius:var(--radius-card);padding:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:48px;animation:riseUp 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) both;box-shadow:var(--shadow-card);}
-.chat-cta-left h2{font-size:var(--fs-card);font-weight:700;color:var(--color-dark);margin-bottom:8px;}
-.chat-cta-left p{font-size:var(--fs-body);color:var(--color-body);line-height:1.7;max-width:480px;}
-.chat-cta-right{flex-shrink:0;}
-.live-badge{display:flex;align-items:center;gap:6px;margin-bottom:14px;font-size:12px;color:var(--color-accent);font-weight:600;letter-spacing:0.08em;}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--color-accent);box-shadow:0 0 8px rgba(var(--rgb-accent),0.5);animation:pulse 2s infinite;}
 /* COMMUNITY CARDS */
 .community-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:48px;animation:riseUp 0.9s 0.15s cubic-bezier(0.22,1,0.36,1) both;}
 .comm-card{background:var(--color-surface);border:1px solid rgba(var(--rgb-ink),0.07);border-radius:var(--radius-card);padding:28px;cursor:pointer;transition:all 0.3s;text-decoration:none;display:block;box-shadow:var(--shadow-card);}
@@ -118,7 +111,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
 [dir="rtl"] .stats-row,[dir="rtl"] .community-grid,[dir="rtl"] .inspo-grid{direction:rtl;}
 [dir="rtl"] .page-header p{text-align:right;}
 @media(max-width:1024px){.stats-row{grid-template-columns:repeat(2,1fr);}.inspo-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:768px){.community-grid{grid-template-columns:1fr;}.stats-row{grid-template-columns:1fr 1fr;}.chat-cta{flex-direction:column;}.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
+@media(max-width:768px){.community-grid{grid-template-columns:1fr;}.stats-row{grid-template-columns:1fr 1fr;}.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
 @media(max-width:560px){.inspo-grid{grid-template-columns:1fr;}.inspo-img{height:200px;}}
 </style>
 </head>
@@ -196,9 +189,7 @@ const T={
   en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
     badge:'Artists Together',h1:'The <em>Artist Community</em>',desc:'Art grows when artists meet. Share your work, learn from each other, and make friends who get it.',
     s1:'Artists With Us',s2:'Messages Shared',s3:'Art Styles Covered',s4:'Saudi Community',
-    ctaH:'Join the Artist Chat Room',ctaP:'Talk with fellow artists right now. Share a trick, ask a question, get honest feedback. Friendships start here.',live:'Live Now',ctaBtn:'Enter the Chat Room',
     commTitle:'Community Spaces',
-    c1:'Artist Chat Room',c1d:'Artists from Saudi Arabia and beyond, chatting in real time. Pull up a chair.',c1l:'Enter Room →',
     c2:'Professional Artists Guild',c2d:'A space for experienced artists to work together and guide new talent.',c2l:'Apply to Join →',
     c3:'Daily Inspiration',c3d:'A little spark every day. Featured works, color palettes and new techniques to try.',c3l:'Explore →',
     c4:'Teach With Us',c4d:'Love sharing what you know? Become an instructor and help others grow.',c4l:'Apply Now →',
@@ -207,9 +198,7 @@ const T={
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'فنانون معاً',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
     s1:'فنانون معنا',s2:'الرسائل المتبادلة',s3:'أسلوب فني موثّق',s4:'المجتمع السعودي',
-    ctaH:'انضم إلى غرفة محادثة الفنانين',ctaP:'تحدّث مع فنانين مثلك الآن. شارك فكرة، واسأل سؤالاً، واحصل على رأي صادق. هنا تبدأ الصداقات.',live:'مباشر الآن',ctaBtn:'ادخل غرفة المحادثة',
     commTitle:'مساحات المجتمع',
-    c1:'غرفة محادثة الفنانين',c1d:'فنانون من السعودية وخارجها يتحدثون مباشرة. تفضّل وانضم إليهم.',c1l:'ادخل الغرفة →',
     c2:'رابطة الرسامين المحترفين',c2d:'مساحة للفنانين المتمرّسين ليتعاونوا ويأخذوا بيد المواهب الجديدة.',c2l:'تقدّم للانضمام →',
     c3:'الإلهام اليومي',c3d:'شرارة صغيرة كل يوم. أعمال مختارة، ولوحات ألوان، وتقنيات جديدة لتجربتها.',c3l:'استكشف →',
     c4:'علّم معنا',c4d:'تحب أن تشارك ما تعرفه؟ كن مدرباً وساعد غيرك على النمو.',c4l:'تقدّم الآن →',
@@ -219,11 +208,11 @@ const T={
 let L='en';
 const NAV={
   en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-    c1:'Artist Chat Room',c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
+    c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',
     login:'Sign In',reg:'Join Free'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-    c1:'غرفة محادثة الفنانين',c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
+    c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
     login:'تسجيل الدخول',reg:'انضم مجاناً'}
 };
@@ -233,7 +222,7 @@ function applyNav(l){
   set('lb',n.lb);
   set('nav-community-label',n.community);
   set('nav-marketplace-label',n.marketplace);set('nav-explore-label',n.explore);set('nav-support-label',n.support);
-  set('dd-c1',n.c1);set('dd-c2',n.c2);set('dd-c3',n.c3);set('dd-c4',n.c4);
+  set('dd-c2',n.c2);set('dd-c3',n.c3);set('dd-c4',n.c4);
   set('dd-sp1',n.sp1);set('dd-sp2',n.sp2);set('dd-sp3',n.sp3);
   set('n-login-t',n.login);set('n-reg-t',n.reg);
   const mk=document.getElementById('nav-marketplace-link');
@@ -247,13 +236,10 @@ function apply(l){
   document.getElementById('pg').setAttribute('dir',t.dir);
   document.getElementById('topnav').setAttribute('dir',t.dir);
   applyNav(l);
-  const keys=['badge','h1','desc','s1','s2','s3','s4','live','c1','c1d','c1l','c2','c2d','c2l','c3','c3d','c3l','c4','c4d','c4l'];
+  const keys=['badge','h1','desc','s1','s2','s3','s4','c2','c2d','c2l','c3','c3d','c3l','c4','c4d','c4l'];
   keys.forEach(k=>{const el=document.getElementById('t-'+k);if(el)el.innerHTML=t[k];});
   // elements whose ids differ from their T keys
   const setH=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
-  setH('t-cta-h',t.ctaH);
-  setH('t-cta-p',t.ctaP);
-  setH('t-cta-btn',t.ctaBtn);
   setH('t-comm-title',t.commTitle);
   setH('t-inspo-title',t.inspoTitle);
 }

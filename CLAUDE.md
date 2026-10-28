@@ -89,6 +89,7 @@
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
 - community.php — Community page: real counts and the newest artworks (see Features)
+- chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
 - events.php — old events page (no longer in the menu; its events live in the old `events` table — move them into Art Events articles)
 - training.php — Art Institutes: Upcoming Workshops on top, then the institutes directory
@@ -219,6 +220,12 @@
 - Generative Art and NFT Art are written only as human-made work (the artist writes the rules; an NFT is an ownership certificate). No mention of AI anywhere
 - Cover pictures are simple SVG drawings in the brand colors, in assets/js/art_covers.js (shared with the upload form; window.OW_ART_COVER). Their colors (.ill classes) live in oweili.css, so they follow light and dark mode. They can be replaced later with real artworks
 - Files: explore.php, assets/js/art_styles.js, assets/js/art_covers.js, assets/js/explore.js, assets/css/discover.css, assets/js/discover.js, marketplace.php (?type=). Tables read: artworks, users
+
+### Artist Chat Room — removed
+- The chat room is gone from the site. "Artist Chat Room" / «غرفة محادثة الفنانين» is not in the menu, the Community dropdown, the ☰ menu or any page. Leftover hidden chat words and styles were removed from community.php, support.php, login.php, forgot.php, verify.php, edit_artwork.php and artist_dashboard.php
+- chat.php now only redirects to community.php
+- The messages table (set up in setup.sql as the chat room's messages) is not changed. The Community page still counts it for "Messages Shared"
+- Files: chat.php and the pages above. Tables: none changed
 
 ### Menu and homepage links — Sprint 3
 - Discover menu (desktop and ☰): Art Events, Artist Spotlights, Art Education, Art Institutes
