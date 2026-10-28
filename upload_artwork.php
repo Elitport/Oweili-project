@@ -504,11 +504,11 @@ if (window.OW_ART_COVER) document.querySelectorAll('.tp-art[data-style]').forEac
 var NAV_T = {
   en: {'nav-community-label':'Community','nav-marketplace-label':'Gallery',
        'nav-explore-label':'Explore Art Styles','nav-support-label':'Support',
-       'dd-c2':'Meet Fellow Artists','dd-c3':'Share Your Work','dd-c4':'Learn Together',
+       
        'dd-sp1':'Contact Us','dd-sp2':'How It Works','dd-sp3':'Terms of Use','lb':'العربية'},
   ar: {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
        'nav-explore-label':'استكشف أساليب الرسم','nav-support-label':'الدعم',
-       'dd-c2':'تعرّف على فنانين','dd-c3':'شارك أعمالك','dd-c4':'تعلّم معاً',
+       
        'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام','lb':'English'}
 };
 function applyLang(l){

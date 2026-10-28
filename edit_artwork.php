@@ -203,14 +203,12 @@ let L = 'en';
 /* Bilingual nav + labels */
 const NAV={
   en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-    c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free',
     title:'Edit Artwork',sub:'Update the details of your artwork.',
     ten:'Title in English',tar:'Title in Arabic',den:'Description in English',dar:'Description in Arabic',
     price:'Price in SAR',type:'Type',status:'Status',img:'Replace Image (optional, JPG/PNG/WEBP, max 5MB)',
     save:'Save Changes',cancel:'Cancel'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-    c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً',
     title:'تعديل العمل الفني',sub:'حدّث تفاصيل عملك الفني.',
     ten:'العنوان بالإنجليزية',tar:'العنوان بالعربية',den:'الوصف بالإنجليزية',dar:'الوصف بالعربية',
@@ -227,7 +225,7 @@ function apply(l){
   document.getElementById('lb').textContent=n.lb;
   setTxt('nav-community-label',n.community);
   setTxt('nav-marketplace-label',n.marketplace);setTxt('nav-explore-label',n.explore);setTxt('nav-support-label',n.support);
-  setTxt('dd-c2',n.c2);setTxt('dd-c3',n.c3);setTxt('dd-c4',n.c4);
+  
   setTxt('dd-sp1',n.sp1);setTxt('dd-sp2',n.sp2);setTxt('dd-sp3',n.sp3);
   setTxt('n-login-t',n.login);setTxt('n-reg-t',n.reg);
   setTxt('t-title',n.title);setTxt('t-sub',n.sub);

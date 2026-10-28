@@ -69,14 +69,12 @@ const T={
     cTitle:'I am a Collector',cDesc:'Find art made by real hands and bring it home. Signing up takes a minute.',cGo:'Join as Collector',
     have:'Already one of us?',login:'Sign In',
     nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-      c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',h1:'انضم إلى <em>أويلي</em>',sub:'اختر كيف تحب أن تنضم إلينا.',
     aTitle:'أنا فنان',aDesc:'شارك أعمالك وبِعها لمن يقدّرها. نراجع كل فنان بعناية. ستحتاج صورة وبعض أعمالك ومقطعاً قصيراً.',aGo:'انضم كفنان',
     cTitle:'أنا مقتنٍ',cDesc:'اعثر على فن صنعته أيدٍ حقيقية، وخذه إلى بيتك. التسجيل يستغرق دقيقة.',cGo:'انضم كمقتنٍ',
     have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-      c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';
@@ -96,7 +94,7 @@ function apply(l){
   const n=t.nav;
   setTxt('nav-community-label',n.community);
   setTxt('nav-marketplace-label',n.marketplace);setTxt('nav-explore-label',n.explore);setTxt('nav-support-label',n.support);
-  setTxt('dd-c2',n.c2);setTxt('dd-c3',n.c3);setTxt('dd-c4',n.c4);
+  
   setTxt('dd-sp1',n.sp1);setTxt('dd-sp2',n.sp2);setTxt('dd-sp3',n.sp3);
   setTxt('n-login-t',n.login);setTxt('n-reg-t',n.reg);
 }

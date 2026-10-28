@@ -80,12 +80,10 @@ const T={
   en:{dir:'ltr',lb:'العربية',badge:'Discover',h1:'Art <em>Events</em>',desc:'Exhibitions, workshops, and gatherings for artists and art lovers across Saudi Arabia.',
     free:'Free',paid:'Paid',contact:'Details & Contact',empty:'No events listed yet. Check back soon.',
     nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-      c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',badge:'اكتشف',h1:'<em>أحداث</em> فنية',desc:'معارض وورش ولقاءات للفنانين ومحبي الفن في جميع أنحاء المملكة العربية السعودية.',
     free:'مجاني',paid:'مدفوع',contact:'التفاصيل والتواصل',empty:'لا توجد أحداث مدرجة بعد. عد قريباً.',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-      c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';
@@ -120,7 +118,7 @@ function apply(l){
   setTxt('t-badge',t.badge);document.getElementById('t-h1').innerHTML=t.h1;setTxt('t-desc',t.desc);
   setTxt('nav-community-label',n.community);
   setTxt('nav-marketplace-label',n.marketplace);setTxt('nav-explore-label',n.explore);setTxt('nav-support-label',n.support);
-  setTxt('dd-c2',n.c2);setTxt('dd-c3',n.c3);setTxt('dd-c4',n.c4);
+  
   setTxt('dd-sp1',n.sp1);setTxt('dd-sp2',n.sp2);setTxt('dd-sp3',n.sp3);
   setTxt('n-login-t',n.login);setTxt('n-reg-t',n.reg);
   buildGrid(l);

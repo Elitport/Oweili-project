@@ -147,11 +147,9 @@ const T={
 let L='en';
 const NAV={
   en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-    c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',
     login:'Sign In',reg:'Join Free'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-    c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
     login:'تسجيل الدخول',reg:'انضم مجاناً'}
 };
@@ -161,7 +159,7 @@ function applyNav(l){
   set('lb',n.lb);
   set('nav-community-label',n.community);
   set('nav-marketplace-label',n.marketplace);set('nav-explore-label',n.explore);set('nav-support-label',n.support);
-  set('dd-c2',n.c2);set('dd-c3',n.c3);set('dd-c4',n.c4);
+  
   set('dd-sp1',n.sp1);set('dd-sp2',n.sp2);set('dd-sp3',n.sp3);
   set('n-login-t',n.login);set('n-reg-t',n.reg);
   const mk=document.getElementById('nav-marketplace-link');

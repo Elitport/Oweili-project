@@ -170,7 +170,6 @@ let L='en';
 const MODE = <?= json_encode($mode) ?>;
 const NAV={
   en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
-    c2:'Meet Fellow Artists',c3:'Share Your Work',c4:'Learn Together',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free',
     titleReq:'Reset password',subReq:"Enter your email and we'll send a reset link.",
     titleRes:'Set a new password',subRes:'Choose a new password for your account.',
@@ -178,7 +177,6 @@ const NAV={
     r1:'Minimum 8 characters',r2:'At least one uppercase letter',r3:'At least one number',r4:'At least one special character (!@#$%^&*)',
     sendBtn:'Send Reset Link',resetBtn:'Reset Password',go:'Go to Sign In',back:'Back to Sign In'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
-    c2:'تعرّف على فنانين',c3:'شارك أعمالك',c4:'تعلّم معاً',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً',
     titleReq:'إعادة تعيين كلمة المرور',subReq:'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.',
     titleRes:'تعيين كلمة مرور جديدة',subRes:'اختر كلمة مرور جديدة لحسابك.',
@@ -196,7 +194,7 @@ function apply(l){
   document.getElementById('lb').textContent=n.lb;
   setTxt('nav-community-label',n.community);
   setTxt('nav-marketplace-label',n.marketplace);setTxt('nav-explore-label',n.explore);setTxt('nav-support-label',n.support);
-  setTxt('dd-c2',n.c2);setTxt('dd-c3',n.c3);setTxt('dd-c4',n.c4);
+  
   setTxt('dd-sp1',n.sp1);setTxt('dd-sp2',n.sp2);setTxt('dd-sp3',n.sp3);
   setTxt('n-login-t',n.login);setTxt('n-reg-t',n.reg);
   if(MODE==='reset'){ setTxt('t-title',n.titleRes); setTxt('t-sub',n.subRes);

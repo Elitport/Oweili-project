@@ -313,11 +313,13 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- Community → community.php
-- Discover → Art Events / Artist Spotlights / Art Education (articles_list.php?type=...) / Art Institutes (training.php)
-- Explore Art Styles → explore.php
-- Support → support.php
-- Gallery / «المعرض» → marketplace.php (never call it "Marketplace" / «السوق» on the site)
+- Order: Community · Gallery · Explore Art Styles · Discover ↓ · Support ↓
+- Community → community.php (direct link, no dropdown; Meet Fellow Artists, Share Your Work and Learn Together were removed because they led nowhere specific)
+- Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)
+- Explore Art Styles → explore.php, no dropdown
+- Discover ↓ → Art Events / Artist Spotlights / Art Education (articles_list.php?type=...) / Art Institutes (training.php)
+- Support ↓ → Contact Us (email) / How It Works (support.php#how) / Terms of Use (support.php#terms)
+- Dropdown icons: one thin outline style only (set once in nav.css on .d-icon, never filled). New icons must be outline drawings
 
 ## Known Issues
 - Fixed: the Arabic menu order. A CSS line on 18 pages flipped the menu back to left-to-right; it was removed. Never add `flex-direction:row-reverse` to the menu for Arabic — dir="rtl" already puts items in the right order

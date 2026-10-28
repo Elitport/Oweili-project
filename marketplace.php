@@ -226,7 +226,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
 (function(){
   var t = {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
     'nav-explore-label':'استكشف أساليب الرسم','nav-support-label':'الدعم',
-    'dd-c2':'تعرّف على فنانين','dd-c3':'شارك أعمالك','dd-c4':'تعلّم معاً',
+    
     'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام',
     'n-login-t':'تسجيل الدخول','n-reg-t':'انضم مجاناً','lb':'English'};
   for (var id in t) { var el = document.getElementById(id); if (el) el.textContent = t[id]; }

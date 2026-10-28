@@ -18,8 +18,8 @@
 .dropdown a{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border-radius:var(--radius-btn);font-size:14px;font-weight:500;color:var(--color-dark);text-decoration:none;transition:background var(--ease),color var(--ease);}
 .dropdown a:hover{background:var(--color-tint-blue);color:var(--color-accent);}
 .dropdown a.active{color:var(--color-dark);background:var(--color-tint-pink);font-weight:700;}
-.dropdown a .d-icon{width:16px;height:16px;fill:currentColor;opacity:0.6;flex-shrink:0;}
-.dropdown a svg.d-icon[fill="none"]{fill:none;}
+/* one icon style for every dropdown: thin outline, never filled */
+.dropdown a .d-icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0.7;flex-shrink:0;}
 .nav-right{display:flex;align-items:center;gap:var(--space-xs);flex-shrink:0;}
 .nav-btn,.lang-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:40px;padding:0 14px;border-radius:var(--radius-btn);font-family:inherit;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background var(--ease),color var(--ease),border-color var(--ease);}
 [dir="rtl"] .nav-btn,[dir="rtl"] .lang-btn{letter-spacing:0;font-size:14px;}
