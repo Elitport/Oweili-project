@@ -288,6 +288,7 @@
 - Mobile menu (in nav.php) — on screens 1100px and smaller, a ☰ button opens a full-width menu with all main links (48px tall, bilingual). It closes on link tap, outside tap or Escape. On phones (560px and smaller) Sign In / Join Free (or the account links) move into this menu. No database tables used
 - Every page that shows the main menu now uses nav.php, including index.php and marketplace.php
 - ow_paths.php — owBase() (web address of the site's folder, "/" on Hostinger) and owAsset('assets/css/x.css') (full CSS/JS address with its version number). Loaded by theme_head.php and artwork_lib.php, so every page has them. Use them for every link to our own files
+- bg.mp4 — the background video, now in the GitHub project (next to index.php), so it deploys to Hostinger with every save to main. 8 seconds, 1280×720, H.264, about 2.9MB, with its index at the front of the file so phones can start playing before it has fully downloaded. Pages load it from /bg.mp4. To replace it, keep the same name and keep it small (under 10MB)
 - index.html — tiny forwarding file only: sends old links and bookmarks to index.php. Do not put content in it
 
 ## Database
