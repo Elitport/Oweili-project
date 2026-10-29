@@ -236,22 +236,32 @@ function owGetColorsFor(array $artworkIds): array {
 }
 
 /* One piece of text in both languages. */
-/* A safe picture address for an artwork photo, or '' when there is no usable picture.
-   Saved paths are cleaned up so they work wherever the site lives on the server:
-   "/uploads/x.jpg", "./uploads/x.jpg", a full server path ".../public_html/uploads/x.jpg"
-   or "https://oweili.com/uploads/x.jpg" all become "/uploads/x.jpg" (from owBase()). A local file that is
-   not on the server gives '' (the page then shows a drawn placeholder, never a broken
-   picture). Other https pictures are kept; anything else is refused. */
+/* A safe picture address for an artwork photo, or '' when nothing usable is saved.
+   Saved values are cleaned up so they work wherever the site lives:
+   - "uploads/x.jpg", "/uploads/x.jpg", "./uploads/x.jpg" or a full server path
+     ".../public_html/uploads/x.jpg"            -> "/uploads/x.jpg" (from owBase())
+   - "https://oweili.com/uploads/x.jpg" or http://  -> "/uploads/x.jpg"
+   - a picture on another site                       -> kept, http upgraded to https
+   - a bare file name "x.jpg"                        -> uploads/artworks/x.jpg when that file is there
+   The browser always tries the real photo; owArtImgHtml() swaps in a drawn
+   placeholder only if it truly fails to load. */
 function owImgSrc(?string $u): string {
     $u = str_replace('\\', '/', trim((string) $u));
     if ($u === '' || preg_match('/["\'<>\s]/', $u) || strpos($u, '..') !== false) return '';
-    $p = strpos($u, 'uploads/');
-    if ($p !== false && ($p === 0 || $u[$p - 1] === '/')) {
-        $rel = substr($u, $p);
-        $isOurs = $p === 0 || $u[0] === '/' || $u[0] === '.' || preg_match('#^https?://(www\.)?oweili\.com/#i', $u);
-        if ($isOurs) return is_file(__DIR__ . '/' . $rel) ? owBase() . $rel : '';
+    if (preg_match('#^(https?:)?//([^/]+)(/.*)?$#i', $u, $m)) {
+        $host = strtolower($m[2]);
+        if ($host === 'oweili.com' || $host === 'www.oweili.com') {
+            $path = ltrim($m[3] ?? '', '/');
+            return $path === '' ? '' : owBase() . $path;
+        }
+        return 'https://' . $m[2] . ($m[3] ?? '');
     }
-    return preg_match('#^https://[^/]+/#i', $u) ? $u : '';
+    if (preg_match('#^[a-z][a-z0-9+.-]*:#i', $u)) return '';           // data:, javascript: and the like
+    $p = strpos($u, 'uploads/');
+    if ($p !== false && ($p === 0 || $u[$p - 1] === '/')) return owBase() . substr($u, $p);
+    $u = ltrim(preg_replace('#^(\./)+#', '', $u), '/');
+    if (strpos($u, '/') === false && is_file(__DIR__ . '/uploads/artworks/' . $u)) return owBase() . 'uploads/artworks/' . $u;
+    return owBase() . $u;
 }
 
 /* The artwork picture for a card: the photo, with a drawn placeholder that takes its

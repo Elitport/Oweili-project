@@ -76,6 +76,17 @@ if (!defined('OW_THEME_HEAD')):
   });
   /* back / forward buttons can show a saved copy of the page: never leave it faded */
   window.addEventListener('pageshow', reset);
+  /* background video: fade it in on every page as soon as it can play
+     (also when the browser already had it ready from an earlier visit) */
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('video.bg-video').forEach(function(v){
+      var on = function(){ v.classList.add('on'); };
+      if (v.readyState >= 3) on();
+      v.addEventListener('canplay', on, { once: true });
+      v.addEventListener('playing', on, { once: true });
+      var p = v.play && v.play(); if (p && p.catch) p.catch(function(){});
+    });
+  });
 })();
 </script>
 <?php endif; ?>
