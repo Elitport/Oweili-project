@@ -20,8 +20,8 @@ require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languag
 <meta property="og:description" content="Every piece here was made by real hands. And you can see how.">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
-<link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
+<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
 <style>
 /* Homepage — one screen. The headline is the first thing to notice, the two
    buttons are the action (rule 30). Colors, fonts and buttons come from oweili.css. */

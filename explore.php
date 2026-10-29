@@ -36,7 +36,7 @@ try {
         $live[$r['type']] = [
             'title_en'  => (string) $r['title_en'],
             'title_ar'  => (string) ($r['title_ar'] ?: $r['title_en']),
-            'image'     => (string) $r['image_url'],
+            'image'     => owImgSrc($r['image_url']),
             'artist_en' => (string) ($r['artist_en'] ?: $r['artist_ar']),
             'artist_ar' => (string) ($r['artist_ar'] ?: $r['artist_en']),
         ];
@@ -57,14 +57,14 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <meta property="og:description" content="Learn the story behind every style. Know what you are looking at.">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= $v('/assets/css/oweili.css') ?>">
-<link rel="stylesheet" href="/assets/css/nav.css?v=<?= $v('/assets/css/nav.css') ?>">
-<link rel="stylesheet" href="/assets/css/discover.css?v=<?= $v('/assets/css/discover.css') ?>">
-<script src="/assets/js/discover.js?v=<?= $v('/assets/js/discover.js') ?>"></script>
+<link rel="stylesheet" href="assets/css/oweili.css?v=<?= $v('/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="assets/css/nav.css?v=<?= $v('/assets/css/nav.css') ?>">
+<link rel="stylesheet" href="assets/css/discover.css?v=<?= $v('/assets/css/discover.css') ?>">
+<script src="assets/js/discover.js?v=<?= $v('/assets/js/discover.js') ?>"></script>
 <script>window.OW_LIVE = <?= json_encode((object) $live, $jsonFlags) ?>;</script>
-<script defer src="/assets/js/art_styles.js?v=<?= $v('/assets/js/art_styles.js') ?>"></script>
-<script defer src="/assets/js/art_covers.js?v=<?= $v('/assets/js/art_covers.js') ?>"></script>
-<script defer src="/assets/js/explore.js?v=<?= $v('/assets/js/explore.js') ?>"></script>
+<script defer src="assets/js/art_styles.js?v=<?= $v('/assets/js/art_styles.js') ?>"></script>
+<script defer src="assets/js/art_covers.js?v=<?= $v('/assets/js/art_covers.js') ?>"></script>
+<script defer src="assets/js/explore.js?v=<?= $v('/assets/js/explore.js') ?>"></script>
 <style>
 /* Explore Art Styles — layout only. Colors, type and buttons come from oweili.css. */
 .ex-head { margin-bottom: var(--space-lg); }

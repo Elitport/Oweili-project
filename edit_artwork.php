@@ -100,7 +100,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Artwork · Oweili</title>
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Edit artwork — layout only; card, fields, buttons and messages come from oweili.css */
 .page{position:relative;z-index:10;width:100%;max-width:760px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl);}
@@ -134,8 +134,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
            id="errbox"><?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?></div>
     <?php endif; ?>
 
-    <?php if (!empty($aw['image_url'])): ?>
-      <img class="cur-img" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en'] . ' · ' . $aw['title_ar']) ?>">
+    <?php if (($curImg = owImgSrc($aw['image_url'])) !== ''): ?>
+      <img class="cur-img" src="<?= e($curImg) ?>" alt="<?= e($aw['title_en'] . ' · ' . $aw['title_ar']) ?>">
     <?php endif; ?>
 
     <form method="post" action="edit_artwork.php?id=<?= (int) $artId ?>" enctype="multipart/form-data">

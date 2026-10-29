@@ -7,7 +7,7 @@
 <title>Join Oweili · Choose Account Type</title>
 <meta name="description" content="Choose how you would like to join us. اختر كيف تحب أن تنضم إلينا.">
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}

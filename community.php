@@ -54,7 +54,7 @@ if ($stylesJs !== false && ($p = strpos($stylesJs, 'OW_ART_STYLES =')) !== false
 }
 
 /* pictures only from our own uploads folder (or a full https address) */
-$owSafeImg = fn(string $u): string => (preg_match('#^(https://|/?uploads/)[^"\'<>\s]*$#', $u) && strpos($u, '..') === false) ? $u : '';
+$owSafeImg = 'owImgSrc';   // artwork_lib.php: cleans up saved picture paths
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html">
@@ -64,7 +64,7 @@ $owSafeImg = fn(string $u): string => (preg_match('#^(https://|/?uploads/)[^"\'<
 <title>Community · Oweili</title>
 <meta name="description" content="Art grows when artists meet. Share your work, learn from each other, and make friends who get it. الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.">
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
@@ -167,7 +167,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
       $tEn = (string) $aw['title_en']; $tAr = (string) ($aw['title_ar'] ?: $aw['title_en']);
       $nEn = (string) ($aw['artist_en'] ?: $aw['artist_ar']); $nAr = (string) ($aw['artist_ar'] ?: $aw['artist_en']); ?>
     <a class="inspo-card" href="marketplace.php#artwork-<?= (int) $aw['id'] ?>">
-      <div class="inspo-img"><?php if ($img !== ''): ?><img src="<?= e($img) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>" loading="lazy"><?php endif; ?></div>
+      <div class="inspo-img"><?php if ($img !== ''): ?><img src="<?= e($img) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>" loading="lazy" onerror="this.remove()"><?php endif; ?></div>
       <div class="inspo-body">
         <h4><?= owBi($tEn, $tAr) ?></h4>
         <p><?= owBi('by ' . $nEn, 'بواسطة ' . $nAr) ?></p>

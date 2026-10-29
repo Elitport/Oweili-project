@@ -83,8 +83,8 @@ $pageIds  = array_map(fn($r) => (int) $r['id'], $artworks);
 $mpStages = owGetStagesFor($pageIds);
 $mpColors = owGetColorsFor($pageIds);
 
-/* Pictures only from our own uploads folder (or a full https address) */
-$mpImg = fn(string $u): string => (preg_match('#^(https://|/?uploads/)[^"\'<>\s]*$#', $u) && strpos($u, '..') === false) ? $u : '';
+/* Pictures: cleaned up by owImgSrc() (artwork_lib.php) */
+$mpImg = 'owImgSrc';
 
 /* Data for the details modal (escaped on output via JSON flags) */
 $modalData = [];
@@ -125,8 +125,8 @@ foreach ($artworks as $aw) {
   })();
   </script>
   <?php include __DIR__ . '/theme_head.php'; ?>
-  <link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
-  <link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
+  <link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+  <link rel="stylesheet" href="assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
   <style>
     /* Gallery (marketplace.php) layout only — colors, type sizes and buttons come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
@@ -174,8 +174,6 @@ foreach ($artworks as $aw) {
     .type-pill{display:inline-flex;align-items:center;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;line-height:1.6;white-space:nowrap;background:var(--color-dark);color:var(--color-on-dark);}
     .mp-card .aw-price{font-size:16px;padding-top:var(--space-xs);}
     .mp-card .btn{margin-top:var(--space-xs);border-radius:8px;}
-    .aw-img-noimg{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--color-light);}
-    .aw-img-noimg svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
 
     /* empty state */
     .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);animation:mpRise .5s cubic-bezier(.22,1,.36,1) both;}
@@ -301,11 +299,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       $tlbl = $ART_TYPES[$aw['type']] ?? null; ?>
       <article class="aw-card mp-card">
         <div class="aw-img">
-          <?php if ($img !== ''): ?>
-          <img loading="lazy" src="<?= e($img) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>">
-          <?php else: ?>
-          <div class="aw-img-noimg" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>
-          <?php endif; ?>
+          <?= owArtImgHtml($img, $tEn . ' · ' . $tAr) ?>
           <span class="aw-status"><?= $aw['status'] === 'auction' ? ($ar ? 'مزاد' : 'Auction') : ($ar ? 'متاح' : 'Available') ?></span>
         </div>
         <div class="aw-body">
@@ -349,7 +343,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   <div class="modal">
     <div class="modal-body">
       <button class="modal-close" onclick="closeModal()" aria-label="<?= $ar ? 'إغلاق' : 'Close' ?>">&times;</button>
-      <img id="m-img" class="modal-img" src="" alt="">
+      <img id="m-img" class="modal-img" src="" alt="" onerror="this.hidden=true">
       <h2 id="m-title-en"></h2>
       <span class="human-badge" id="m-verified" hidden><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
       <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
@@ -378,7 +372,9 @@ function esc(s){ return String(s==null?'':s); }
 function openModal(id){
   const a = ARTWORKS[id];
   if(!a) return;
-  document.getElementById('m-img').src = a.image;
+  const mImg = document.getElementById('m-img');
+  mImg.hidden = !a.image;
+  if (a.image) mImg.src = a.image;
   document.getElementById('m-img').alt = a.title_en + ' · ' + a.title_ar;
   document.getElementById('m-title-en').textContent = a.title_en;
   document.getElementById('m-title-ar').textContent = a.title_ar;

@@ -49,10 +49,10 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <meta name="robots" content="noindex">
 <?php endif; ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
-<link rel="stylesheet" href="/assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
-<link rel="stylesheet" href="/assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">
-<script src="/assets/js/discover.js?v=<?= @filemtime(__DIR__ . '/assets/js/discover.js') ?>"></script>
+<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
+<link rel="stylesheet" href="assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">
+<script src="assets/js/discover.js?v=<?= @filemtime(__DIR__ . '/assets/js/discover.js') ?>"></script>
 <style>
 /* One article — reading layout only; type, colors, buttons and cards come from oweili.css */
 .cover{position:relative;z-index:2;margin-top:var(--nav-h);height:clamp(220px,52vh,520px);background:var(--color-surface-2);overflow:hidden;}

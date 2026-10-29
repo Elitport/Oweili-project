@@ -84,10 +84,13 @@ function owNotDraftSql(string $alias = ''): string {
 
 /* The artist's public name for visitors, as two columns artist_en / artist_ar.
    English: the artist name chosen at sign-up, else the full name.
-   Arabic: the Arabic name if filled in, else the English one. */
+   Arabic: the Arabic name if filled in, else the English one.
+   Names made only of digits are skipped; with no name at all: "Oweili Artist" / «فنان أويلي». */
 function owArtistNameSql(string $u = 'u'): string {
-    $en = "COALESCE(NULLIF(TRIM($u.artist_name), ''), NULLIF(TRIM($u.full_name_en), ''), NULLIF(TRIM($u.full_name_ar), ''), '')";
-    $ar = "COALESCE(NULLIF(TRIM($u.full_name_ar), ''), $en)";
+    // a name made only of digits (e.g. "82") is never shown: the next name is used
+    $nm = fn(string $col): string => "CASE WHEN TRIM($u.$col) = '' OR TRIM($u.$col) REGEXP '^[0-9]+$' THEN NULL ELSE TRIM($u.$col) END";
+    $en = "COALESCE(" . $nm('artist_name') . ", " . $nm('full_name_en') . ", " . $nm('full_name_ar') . ", 'Oweili Artist')";
+    $ar = "COALESCE(" . $nm('full_name_ar') . ", " . $nm('artist_name') . ", " . $nm('full_name_en') . ", 'فنان أويلي')";
     return "$en AS artist_en, $ar AS artist_ar";
 }
 
@@ -232,6 +235,32 @@ function owGetColorsFor(array $artworkIds): array {
 }
 
 /* One piece of text in both languages. */
+/* A safe picture address for an artwork photo, or '' when there is no usable picture.
+   Saved paths are cleaned up so they work wherever the site lives on the server:
+   "/uploads/x.jpg", "./uploads/x.jpg", a full server path ".../public_html/uploads/x.jpg"
+   or "https://oweili.com/uploads/x.jpg" all become "uploads/x.jpg". A local file that is
+   not on the server gives '' (the page then shows a drawn placeholder, never a broken
+   picture). Other https pictures are kept; anything else is refused. */
+function owImgSrc(?string $u): string {
+    $u = str_replace('\\', '/', trim((string) $u));
+    if ($u === '' || preg_match('/["\'<>\s]/', $u) || strpos($u, '..') !== false) return '';
+    $p = strpos($u, 'uploads/');
+    if ($p !== false && ($p === 0 || $u[$p - 1] === '/')) {
+        $rel = substr($u, $p);
+        $isOurs = $p === 0 || $u[0] === '/' || $u[0] === '.' || preg_match('#^https?://(www\.)?oweili\.com/#i', $u);
+        if ($isOurs) return is_file(__DIR__ . '/' . $rel) ? $rel : '';
+    }
+    return preg_match('#^https://[^/]+/#i', $u) ? $u : '';
+}
+
+/* The artwork picture for a card: the photo, with a drawn placeholder that takes its
+   place if the photo is missing or fails to load (no broken "?" picture). */
+function owArtImgHtml(string $src, string $alt): string {
+    $ph = '<div class="aw-img-noimg"' . ($src !== '' ? ' hidden' : '') . ' aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>';
+    if ($src === '') return $ph;
+    return '<img loading="lazy" src="' . e($src) . '" alt="' . e($alt) . '" onerror="this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false">' . $ph;
+}
+
 function owBi(string $en, string $ar, string $tag = 'span'): string {
     return '<' . $tag . ' class="bi-en" lang="en">' . e($en) . '</' . $tag . '><' . $tag . ' class="bi-ar" lang="ar">' . e($ar) . '</' . $tag . '>';
 }

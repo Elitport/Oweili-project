@@ -149,7 +149,7 @@ $web = $artist['website']   ?? '';
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= $artist ? e($artist['artist_en']) . ' · ' : '' ?>Artist Profile · Oweili</title>
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="/assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
 <style>
 /* Artist dashboard / public profile — layout only; cards, buttons, stats, tables,
    artwork cards and stage squares come from oweili.css (role color: artist pink) */
@@ -207,7 +207,7 @@ $web = $artist['website']   ?? '';
 @media(max-width:768px){.profile-head{flex-direction:column;text-align:center;padding:var(--space-md);}.head-actions{align-items:center;}[dir="rtl"] .head-actions{align-items:center;}.stats-row{justify-content:center;}.art-grid{gap:var(--space-sm);}}
 @media(max-width:480px){.art-grid{grid-template-columns:1fr;}.draft .art-actions{width:100%;}}
 </style>
-<link rel="stylesheet" href="/assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
+<link rel="stylesheet" href="assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
 </head>
 <body>
 <div class="bg-wrap"><video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video></div>
@@ -314,7 +314,7 @@ $web = $artist['website']   ?? '';
       ?>
       <article class="aw-card">
         <div class="aw-img">
-          <img loading="lazy" src="<?= e($aw['image_url']) ?>" alt="<?= e($aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : '')) ?>">
+          <?= owArtImgHtml(owImgSrc($aw['image_url']), $aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : '')) ?>
           <?php if ($isOwner && (int) $aw['is_approved'] === 0): ?>
           <span class="aw-status aw-review badge" data-status="review">In review</span>
           <?php else: ?>
