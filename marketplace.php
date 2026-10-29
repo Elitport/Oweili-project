@@ -125,8 +125,8 @@ foreach ($artworks as $aw) {
   })();
   </script>
   <?php include __DIR__ . '/theme_head.php'; ?>
-  <link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
-  <link rel="stylesheet" href="assets/css/proof.css?v=<?= @filemtime(__DIR__ . '/assets/css/proof.css') ?>">
+  <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
+  <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
   <style>
     /* Gallery (marketplace.php) layout only — colors, type sizes and buttons come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
@@ -212,7 +212,7 @@ foreach ($artworks as $aw) {
 <body>
 
 <div class="bg-wrap">
-  <video class="bg-video" autoplay loop muted playsinline src="bg.mp4"></video>
+  <video class="bg-video" autoplay loop muted playsinline src="<?= owBase() ?>bg.mp4"></video>
 </div>
 
 <?php include 'nav.php'; ?>

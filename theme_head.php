@@ -10,6 +10,7 @@
  *  - owThemeButton() prints the sun / moon button (nav.php, staff headers)
  *  - also the page transition script (fade out on link click; fade in is CSS)
  * ===================================================================== */
+require_once __DIR__ . '/ow_paths.php';   // owAsset(): links to our CSS and JS files
 if (!function_exists('owThemeButton')) {
     function owThemeButton(string $class = 'lang-btn'): void {
         echo '<button type="button" class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . ' theme-btn" onclick="owToggleTheme()" title="Dark mode" aria-label="Dark mode">'

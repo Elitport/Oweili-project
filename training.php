@@ -69,10 +69,10 @@ $cityLabel = function (array $i): array {
 <meta property="og:title" content="Art Institutes · المعاهد الفنية · Oweili">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
-<link rel="stylesheet" href="assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
-<link rel="stylesheet" href="assets/css/discover.css?v=<?= @filemtime(__DIR__ . '/assets/css/discover.css') ?>">
-<script src="assets/js/discover.js?v=<?= @filemtime(__DIR__ . '/assets/js/discover.js') ?>"></script>
+<link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
+<script src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
 /* Art Institutes — layout only; type, colors, buttons and cards come from oweili.css */
 .filter{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin:0 auto var(--space-lg);}
@@ -125,7 +125,7 @@ details[open] .when-closed{display:none;}
 </style>
 </head>
 <body class="ow">
-<div class="bg-wrap" aria-hidden="true"><video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video></div>
+<div class="bg-wrap" aria-hidden="true"><video class="bg-video" id="vid" autoplay loop muted playsinline src="<?= owBase() ?>bg.mp4"></video></div>
 <div class="veil" aria-hidden="true"></div>
 
 <?php include __DIR__ . '/nav.php'; ?>

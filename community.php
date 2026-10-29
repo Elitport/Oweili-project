@@ -64,7 +64,7 @@ $owSafeImg = 'owImgSrc';   // artwork_lib.php: cleans up saved picture paths
 <title>Community · Oweili</title>
 <meta name="description" content="Art grows when artists meet. Share your work, learn from each other, and make friends who get it. الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.">
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
@@ -120,7 +120,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
 </head>
 <body>
 <div class="bg-wrap">
-  <video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video>
+  <video class="bg-video" id="vid" autoplay loop muted playsinline src="<?= owBase() ?>bg.mp4"></video>
 </div>
 <div class="overlay"></div>
 <?php include __DIR__ . "/nav.php"; ?>

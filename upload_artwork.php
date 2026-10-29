@@ -236,8 +236,8 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 <title>Start New Artwork · Oweili</title>
 <meta name="robots" content="noindex">
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
-<link rel="stylesheet" href="assets/css/nav.css?v=<?= @filemtime(__DIR__ . '/assets/css/nav.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <style>
 /* 3-stage upload — layout only; buttons, cards, inputs and alerts come from oweili.css */
 .wrap h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
@@ -491,7 +491,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 <?php endif; ?>
 </main>
 
-<script src="assets/js/art_covers.js?v=<?= @filemtime(__DIR__ . '/assets/js/art_covers.js') ?>"></script>
+<script src="<?= owAsset('assets/js/art_covers.js') ?>"></script>
 <script>
 /* Draw the example picture on every art type card (same drawings as Explore Art Styles) */
 if (window.OW_ART_COVER) document.querySelectorAll('.tp-art[data-style]').forEach(function (el) {

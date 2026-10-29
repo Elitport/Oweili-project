@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/ow_paths.php';   // owBase(): web address of the site's folder
 /* =====================================================================
  *  artwork_lib.php — shared helpers for the 3-stage proof-of-process upload
  *  Used by: upload_artwork.php, artist_dashboard.php, edit_artwork.php,
@@ -238,7 +239,7 @@ function owGetColorsFor(array $artworkIds): array {
 /* A safe picture address for an artwork photo, or '' when there is no usable picture.
    Saved paths are cleaned up so they work wherever the site lives on the server:
    "/uploads/x.jpg", "./uploads/x.jpg", a full server path ".../public_html/uploads/x.jpg"
-   or "https://oweili.com/uploads/x.jpg" all become "uploads/x.jpg". A local file that is
+   or "https://oweili.com/uploads/x.jpg" all become "/uploads/x.jpg" (from owBase()). A local file that is
    not on the server gives '' (the page then shows a drawn placeholder, never a broken
    picture). Other https pictures are kept; anything else is refused. */
 function owImgSrc(?string $u): string {
@@ -248,7 +249,7 @@ function owImgSrc(?string $u): string {
     if ($p !== false && ($p === 0 || $u[$p - 1] === '/')) {
         $rel = substr($u, $p);
         $isOurs = $p === 0 || $u[0] === '/' || $u[0] === '.' || preg_match('#^https?://(www\.)?oweili\.com/#i', $u);
-        if ($isOurs) return is_file(__DIR__ . '/' . $rel) ? $rel : '';
+        if ($isOurs) return is_file(__DIR__ . '/' . $rel) ? owBase() . $rel : '';
     }
     return preg_match('#^https://[^/]+/#i', $u) ? $u : '';
 }
@@ -358,7 +359,7 @@ function owStagesHtml(array $stages, string $mode = 'strip'): string {
                 . ($mode === 'strip' ? '' : '<span class="stage-note">' . owBi($mEn, $mAr) . '</span>') . '</div>';
             continue;
         }
-        $img = '<span class="stage-img"><img loading="lazy" src="' . e($row['photo_path']) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '"></span>';
+        $img = '<span class="stage-img"><img loading="lazy" src="' . e(owBase() . ltrim((string) $row['photo_path'], '/')) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '"></span>';
         $cap = '<span class="stage-label">' . $stg . '%</span>';
         if ($mode === 'journey') {
             [$dEn, $dAr] = owDateBi($row['taken_at']);
@@ -383,7 +384,7 @@ function owStagesHtml(array $stages, string $mode = 'strip'): string {
         }
         $h .= $mode === 'strip'
             ? '<div class="stage">' . $img . $cap . '</div>'
-            : '<a class="stage" href="' . e($row['photo_path']) . '" target="_blank" rel="noopener" aria-label="' . e($stg . '% — ' . $lEn . ' · ' . $lAr . ' (opens full size)') . '">' . $img . $cap . '</a>';
+            : '<a class="stage" href="' . e(owBase() . ltrim((string) $row['photo_path'], '/')) . '" target="_blank" rel="noopener" aria-label="' . e($stg . '% — ' . $lEn . ' · ' . $lAr . ' (opens full size)') . '">' . $img . $cap . '</a>';
     }
     return $h . '</div>';
 }

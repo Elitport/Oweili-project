@@ -100,7 +100,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Artwork · Oweili</title>
 <?php include __DIR__ . '/theme_head.php'; ?>
-<link rel="stylesheet" href="assets/css/oweili.css?v=<?= @filemtime(__DIR__ . '/assets/css/oweili.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
 /* Edit artwork — layout only; card, fields, buttons and messages come from oweili.css */
 .page{position:relative;z-index:10;width:100%;max-width:760px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl);}
@@ -117,7 +117,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 </style>
 </head>
 <body>
-<div class="bg-wrap"><video class="bg-video" id="vid" autoplay loop muted playsinline src="bg.mp4"></video></div>
+<div class="bg-wrap"><video class="bg-video" id="vid" autoplay loop muted playsinline src="<?= owBase() ?>bg.mp4"></video></div>
 <div class="overlay"></div>
 
 <?php include __DIR__ . "/nav.php"; ?>
