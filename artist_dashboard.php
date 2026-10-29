@@ -314,7 +314,7 @@ $web = $artist['website']   ?? '';
       ?>
       <article class="aw-card">
         <div class="aw-img">
-          <?= owArtImgHtml(owImgSrc($aw['image_url']), $aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : '')) ?>
+          <?= owArtImgHtml(owImgSrc($aw['image_url']), $aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : ''), ($awNo = ($awNo ?? 0) + 1) <= 4) ?>
           <?php if ($isOwner && (int) $aw['is_approved'] === 0): ?>
           <span class="aw-status aw-review badge" data-status="review">In review</span>
           <?php else: ?>

@@ -265,11 +265,16 @@ function owImgSrc(?string $u): string {
 }
 
 /* The artwork picture for a card: the photo, with a drawn placeholder that takes its
-   place if the photo is missing or fails to load (no broken "?" picture). */
-function owArtImgHtml(string $src, string $alt): string {
+   place if the photo is missing or fails to load (no broken "?" picture).
+   $eager: the first cards on screen load straight away instead of waiting (lazy loading
+   is for cards further down). A photo that fails once (a weak phone connection) is
+   tried one more time before the placeholder shows. */
+function owArtImgHtml(string $src, string $alt, bool $eager = false): string {
     $ph = '<div class="aw-img-noimg"' . ($src !== '' ? ' hidden' : '') . ' aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>';
     if ($src === '') return $ph;
-    return '<img loading="lazy" src="' . e($src) . '" alt="' . e($alt) . '" onerror="this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false">' . $ph;
+    $retry = "if(!this.dataset.retry){this.dataset.retry=1;this.src=this.src+(this.src.indexOf('?')<0?'?':'&')+'r=1';return;}"
+           . "this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false";
+    return '<img ' . ($eager ? 'fetchpriority="high"' : 'loading="lazy"') . ' decoding="async" src="' . e($src) . '" alt="' . e($alt) . '" onerror="' . e($retry) . '">' . $ph;
 }
 
 function owBi(string $en, string $ar, string $tag = 'span'): string {

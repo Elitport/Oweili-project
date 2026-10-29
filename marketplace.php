@@ -292,14 +292,14 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   <?php if ($total > 0): ?>
   <p class="mp-count"><?= $ar ? ('عدد الأعمال: ' . $total) : ($total === 1 ? '1 artwork' : $total . ' artworks') ?></p>
   <div class="art-grid" id="artGrid">
-    <?php foreach ($artworks as $aw):
+    <?php $cardNo = 0; foreach ($artworks as $aw):
       $id  = (int) $aw['id'];
       $img = $mpImg((string) $aw['image_url']);
       $tEn = (string) $aw['title_en']; $tAr = (string) ($aw['title_ar'] ?: $aw['title_en']);
       $tlbl = $ART_TYPES[$aw['type']] ?? null; ?>
       <article class="aw-card mp-card">
         <div class="aw-img">
-          <?= owArtImgHtml($img, $tEn . ' · ' . $tAr) ?>
+          <?= owArtImgHtml($img, $tEn . ' · ' . $tAr, $cardNo++ < 4) ?>
           <span class="aw-status"><?= $aw['status'] === 'auction' ? ($ar ? 'مزاد' : 'Auction') : ($ar ? 'متاح' : 'Available') ?></span>
         </div>
         <div class="aw-body">
