@@ -29,7 +29,7 @@ html, body { height: 100%; }
 body { overflow-x: hidden; }
 
 /* full-screen video with a soft dark shade so the text stays readable */
-.hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
+.hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg-video); }
 .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; }
 .hero-bg video.on { opacity: 1; }
 .hero-shade { position: absolute; inset: 0; background: var(--hero-shade); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
