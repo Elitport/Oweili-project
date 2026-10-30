@@ -53,3 +53,9 @@ $walk = function (string $dir, int $depth, string $pad) use (&$walk) {
     }
 };
 $walk(dirname($root) . '/.builds', 3, '   ');
+
+/* Deploy survival test: one tiny file in uploads/ that only holds the time it was made */
+$mdir = $up . '/deploy_test';
+$mark = $mdir . '/marker.txt';
+if (!is_file($mark)) { @mkdir($mdir, 0755, true); @file_put_contents($mark, 'made ' . gmdate('Y-m-d H:i:s') . " UTC\n"); $new = true; }
+echo "\nDeploy survival test file: ", is_file($mark) ? trim((string) file_get_contents($mark)) . (!empty($new) ? ' (just made now)' : ' (already there from before this deploy)') : 'could not be made', "\n";
