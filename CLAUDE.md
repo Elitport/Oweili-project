@@ -91,7 +91,7 @@
 - community.php — Community page: real counts and the newest artworks (see Features)
 - chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
-- events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). Its old events were moved into Art Events articles on 31 Oct 2026 (the old `events` rows are kept)
+- events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). The old events table was empty on the live site (checked 31 Oct 2026)
 - training.php — Art Institutes: Upcoming Workshops on top, then the institutes directory
 - articles_list.php — all published articles of one type (?type=event / artist_spotlight / art_education)
 - article.php — one article (article.php?slug=...)
@@ -137,7 +137,7 @@
 - Files: seo_lib.php, sitemap.php, robots.txt, artwork.php, assets/img/share.jpg, .htaccess, marketplace.php, community.php, collector_dashboard.php, and every public page head. Tables read: artworks, users, articles
 
 ### Clean-up (31 Oct 2026)
-- Old events moved into Art Events articles (published, with their date, city, details link and free/paid line), once, by a temporary page that made a full database backup first and was removed straight after. The old `events` rows are kept. events.php now redirects to Art Events
+- Old events: the live events table was empty (0 rows), so there was nothing to move. A temporary clean-up page that could move them (into published Art Events articles, after a full backup) was used and removed straight after. events.php now redirects to Art Events
 - Admin panel: the old Art Styles, Events and Training tabs were removed, because nothing on the site reads those tables any more (styles come from assets/js/art_styles.js, events are articles, institutes and courses are in admin_institutes.php). The tables themselves are kept. Shortcut tabs to Articles & events and Institutes took their place
 - uploads/deploy_test/ (a test file from 30 Oct) deleted on the server
 - Kept on purpose: Photo check, Email check and Error log (useful admin tools, linked from Settings). config_setup.php was not touched (owner's rule; it switches itself off and waits for the password change)
