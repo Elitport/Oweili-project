@@ -245,6 +245,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         </ul>
       </div>
       <div class="field"><label id="t-l-confirm">Confirm password</label><input type="password" name="confirm" required></div>
+      <p class="agree-note"><?= owBi('By joining you agree to our', 'بانضمامك فإنك توافق على') ?> <a href="terms.php" target="_blank" rel="noopener"><?= owBi('Terms of Use', 'شروط الاستخدام') ?></a> <?= owBi('and', 'و') ?> <a href="privacy.php" target="_blank" rel="noopener"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>
       <button type="submit" class="btn btn-primary btn-block btn-submit" id="t-submit">Send for Review</button>
     </form>
     <div class="auth-foot"><span id="t-have">Already one of us?</span> <a class="link" href="login.php" id="t-login">Sign In</a></div>

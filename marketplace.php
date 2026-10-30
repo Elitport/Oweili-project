@@ -397,7 +397,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
           <div class="field"><label for="mi-email"><?= $ar ? 'البريد الإلكتروني' : 'Email Address' ?></label>
             <input type="email" id="mi-email" name="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($pre['email']) ?>"></div>
           <?php if ($isBuyer): ?><p class="mi-note"><?= $ar ? 'أضفنا بياناتك من حسابك. يمكنك تعديلها هنا.' : 'We filled in your details from your account. You can change them here.' ?></p><?php endif; ?>
-          <p class="mi-note"><?= $ar ? 'نستخدم بياناتك فقط للتواصل معك بخصوص هذا العمل.' : 'We use your details only to contact you about this artwork.' ?></p>
+          <p class="mi-note"><?= $ar ? 'نستخدم بياناتك فقط للتواصل معك بخصوص هذا العمل.' : 'We use your details only to contact you about this artwork.' ?> <a href="privacy.php<?= $ar ? '?lang=ar' : '' ?>" target="_blank" rel="noopener"><?= $ar ? 'سياسة الخصوصية' : 'Privacy Policy' ?></a></p>
           <div class="err-box" id="mi-err" role="alert" hidden></div>
           <button type="submit" class="btn btn-primary btn-block" id="mi-send"><?= $ar ? 'إرسال' : 'Send' ?></button>
         </form>

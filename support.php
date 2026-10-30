@@ -91,12 +91,12 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <h4 id="t-l1">Your Art Stays Yours</h4>
       <p id="t-l1d">Everything you share on Oweili still belongs to you. Always.</p>
     </a>
-    <a class="legal-card" href="#">
+    <a class="legal-card" href="terms.php">
       <span class="legal-arrow">→</span>
       <h4 id="t-l2">Terms of Use</h4>
       <p id="t-l2d">Using Oweili means you agree to our community guidelines.</p>
     </a>
-    <a class="legal-card" href="#">
+    <a class="legal-card" href="privacy.php">
       <span class="legal-arrow">→</span>
       <h4 id="t-l3">Privacy</h4>
       <p id="t-l3d">We protect your personal data and your creative work. That is a promise.</p>

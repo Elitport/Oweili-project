@@ -465,3 +465,7 @@ a.stage:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* "By joining you agree to…" under sign-up buttons */
+.agree-note { font-size: var(--fs-caption); color: var(--color-body); margin: 0 0 var(--space-sm); line-height: 1.6; }
+.agree-note a { color: var(--color-accent); font-weight: 600; }

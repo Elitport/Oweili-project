@@ -33,6 +33,8 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
         <li><a href="articles_list.php?type=event"><?= $owFt('Events', 'الملتقيات') ?></a></li>
         <li><a href="training.php"><?= $owFt('Institutes', 'المعاهد') ?></a></li>
         <li><a href="support.php"><?= $owFt('Support', 'الدعم') ?></a></li>
+        <li><a href="privacy.php"><?= $owFt('Privacy', 'الخصوصية') ?></a></li>
+        <li><a href="terms.php"><?= $owFt('Terms', 'الشروط') ?></a></li>
       </ul>
     </nav>
     <?php $owSocialSet = array_filter($OW_SOCIAL, fn($u) => preg_match('#^https://#', $u)); if ($owSocialSet): ?>

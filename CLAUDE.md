@@ -128,6 +128,14 @@
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
+### Privacy Policy and Terms of Use — DRAFT, under review
+- privacy.php («سياسة الخصوصية») and terms.php («شروط الاستخدام»): full pages in English and Arabic, written to fit the Saudi Personal Data Protection Law (PDPL). Both show a "Draft, under review" banner on top. A list of sections at the top jumps to each part
+- Privacy: who we are, Oweili as the middle party (buyer details never go to artists), what we collect (names, phones, emails, passwords as one-way codes, profile and artwork photos with GPS removed, requests, favorites, activity with a monthly one-way address code, consent records, browser storage), why, who can see it (public profile, team, Hostinger, Bashro, authorities), how long we keep it, PDPL rights, how to delete (email from the account address, done within 30 days), security, under-18s, changes
+- Terms: using Oweili, middle party (no sales outside Oweili, "I’m Interested" is not a purchase), accounts (18+ or with a guardian), human-made art only and real 25/50/100% photos, artwork rights stay with the artist, prices in SAR and the 15% commission before VAT, conduct, removal, liability, Saudi law (Arabic version applies)
+- Linked from: the footer (Privacy · Terms), the Support menu (Terms of Use now opens terms.php), the Support page cards, both sign-up forms ("By joining you agree to…") and the "I’m Interested" form
+- The keeping periods (requests 2 years, activity 12 months, backups 90 days, consents 5 years after) are proposals for the owner and a lawyer to confirm. Automatic clean-up for them is not built yet
+- Files: privacy.php, terms.php, legal_lib.php (shared layout), footer.php, nav.php, support.php, register_collector.php, register_artist.php, marketplace.php, assets/css/oweili.css (.agree-note). Tables: none
+
 ### Admin dashboard upgrades — Phase 3 of 4 built
 - Overview on top of admin.php: Artists, Buyers, Artworks (and how many are in the Gallery), Interest requests (and how many are new), New sign-ups this week, Waiting for review, Online now
 - Artists and Buyers tabs: a search box (name, email, phone, city), Approve / Suspend (was "Ban"; suspended accounts' works leave the Gallery), and "View" → admin.php?person=N: every detail of the person (admin only), status, approve / suspend, their artworks with status and views, interest in their works (full buyer details), requests they sent, favorites and their activity
@@ -390,7 +398,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Explore Art Styles → explore.php, no dropdown
 - Discover ↓ → Art Events / Artist Spotlights (articles_list.php?type=...) / Art Institutes (training.php). Art Education was taken out of the menu because Explore Art Styles covers it; its page (articles_list.php?type=art_education) still works and is reachable from the type buttons on the articles pages
 - Community → community.php (direct link, no dropdown; Meet Fellow Artists, Share Your Work and Learn Together were removed because they led nowhere specific)
-- Support ↓ → Contact Us (email) / How It Works (support.php#how) / Terms of Use (support.php#terms)
+- Support ↓ → Contact Us (email) / How It Works (support.php#how) / Terms of Use (terms.php)
 - Dropdown icons: one thin outline style only (set once in nav.css on .d-icon, never filled). New icons must be outline drawings
 
 ## Known Issues
