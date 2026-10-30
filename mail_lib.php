@@ -64,9 +64,11 @@ function owMailMessage(string $to, string $subject, string $body, bool $isHtml):
 }
 
 /* One SMTP conversation. Returns true when the server accepted the email. */
-/* $loginOnly = true only signs in and signs out (used by email_test.php to
+/* $loginOnly = true only signs in and signs out (used by config_setup.php to
    check the mailbox and password without sending anything). */
-function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log, bool $loginOnly = false): bool {
+/* $pass: test a different password than the one in config.php (config_setup.php). */
+function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log, bool $loginOnly = false,
+                    #[\SensitiveParameter] ?string $pass = null): bool {
     $secure = $port === 465 ? 'ssl://' : 'tcp://';
     $ctx = stream_context_create(['ssl' => ['verify_peer' => true, 'verify_peer_name' => true, 'SNI_enabled' => true]]);
     $fp = @stream_socket_client($secure . $host . ':' . $port, $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $ctx);   // 10s: never keep a visitor waiting long
@@ -107,7 +109,7 @@ function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log
     }
     $ok = $ok && $cmd('AUTH LOGIN', [334])
               && $cmd(base64_encode(owMailSetting('SMTP_USER')), [334], 'Mailbox name')
-              && $cmd(base64_encode(owMailSetting('SMTP_PASS')), [235], 'Password');
+              && $cmd(base64_encode($pass ?? owMailSetting('SMTP_PASS')), [235], 'Password');
     if ($ok && $loginOnly) {
         @fwrite($fp, "QUIT\r\n");
         fclose($fp);

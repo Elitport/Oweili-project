@@ -48,6 +48,12 @@ if ($isAdmin && isset($_GET['photo_check'])) {
     require __DIR__ . '/photo_check.php';
     exit;
 }
+/* ---- Error log: the private PHP error log (visitors never see errors) ---- */
+if ($isAdmin && isset($_GET['error_log'])) {
+    define('OW_ADMIN_OK', true);
+    require __DIR__ . '/error_log_view.php';
+    exit;
+}
 /* ---- Email check: can the site send reset / welcome emails? ---- */
 if ($isAdmin && isset($_GET['mail_check'])) {
     define('OW_ADMIN_OK', true);
@@ -431,6 +437,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
       <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?photo_check=1">Photo check</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?mail_check=1">Email check</a>
+      <a class="btn btn-ghost btn-sm" href="admin.php?error_log=1">Error log</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?logout=1">Log out</a>
     </div>
   </div>
@@ -897,6 +904,7 @@ const ADICT = {
   "Articles":"المقالات",
   "Photo check":"فحص الصور",
   "Email check":"فحص البريد",
+  "Error log":"سجل الأخطاء",
   "Inquiries":"طلبات الاهتمام","Artwork":"العمل الفني","Buyer":"المشتري",
   "No inquiries yet. They appear here when a visitor presses \"I'm Interested\" in the Gallery.":"لا توجد طلبات بعد. تظهر هنا عندما يضغط زائر «أنا مهتم» في المعرض.",
   "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.",

@@ -15,7 +15,20 @@ Options -Indexes
   # Photo consent proofs are private records (Saudi PDPL) — staff open them
   # only through admin_articles.php, never by a direct link
   RewriteRule ^uploads/consents/ - [F,L]
+  # The old, unused app sources and database notes are never public
+  RewriteRule ^(resha-app|supabase)(/|$) - [F,L]
 </IfModule>
+
+# Logs, backups and leftover copies of files (error_log, *.log, *.bak, *~ ...)
+<FilesMatch "(?i)(^error_log$|\.(log|bak|old|orig|save|swp|tmp|gz|zip|tar)$|~$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
 
 # Project notes, database setup files and the skills list
 <FilesMatch "(?i)(\.md|\.sql|^skills-lock\.json)$">

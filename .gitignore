@@ -4,3 +4,5 @@ config.php
 uploads/
 # Database backups made on the server. Hidden from visitors and kept by deploys.
 .backups/
+# Private PHP error log made on the server. Hidden from visitors and kept by deploys.
+.logs/
