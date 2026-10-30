@@ -3,6 +3,7 @@ require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/mail_lib.php';
 require_once __DIR__ . '/inquiry_lib.php';
+require_once __DIR__ . '/admin_lib.php';
 
 /* =====================================================================
  *  Oweili · admin.php — approve / ban artists
@@ -26,6 +27,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['admin_pass
         session_regenerate_id(true);
         $_SESSION['is_admin'] = true;
         $_SESSION['admin_sig'] = $adminSig;   // ties the login to the current password
+        owLog('admin_login', null, null, '', ['type' => 'admin', 'id' => null]);
     } else {
         $loginError = 'Incorrect password.';
     }
@@ -54,6 +56,18 @@ if ($isAdmin && isset($_GET['error_log'])) {
     require __DIR__ . '/error_log_view.php';
     exit;
 }
+/* ---- One person (artist or buyer): profile, works, requests, favorites, activity ---- */
+if ($isAdmin && isset($_GET['person'])) {
+    define('OW_ADMIN_OK', true);
+    require __DIR__ . '/admin_person.php';
+    exit;
+}
+/* ---- Settings: what is switched on, checks, the Bashro connection ---- */
+if ($isAdmin && isset($_GET['settings'])) {
+    define('OW_ADMIN_OK', true);
+    require __DIR__ . '/admin_settings.php';
+    exit;
+}
 /* ---- Email check: can the site send reset / welcome emails? ---- */
 if ($isAdmin && isset($_GET['mail_check'])) {
     define('OW_ADMIN_OK', true);
@@ -76,8 +90,12 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
         $awId = (int) ($_POST['artwork_id'] ?? 0);
         if ($awId > 0) {
             if ($action === 'approve_art') {
-                getDB()->prepare('UPDATE artworks SET is_approved = 1 WHERE id = :id' . owNotDraftSql())
-                       ->execute([':id' => $awId]);
+                owApproveArtwork($awId);
+            } elseif (owHasColumn('artworks', 'rejected_at')) {
+                /* Not approved: kept with the reason, so the artist can fix it */
+                if (!owRejectArtwork($awId, (string) ($_POST['reason'] ?? ''))) {
+                    $_SESSION['admin_err'] = 'Please write the reason, so the artist knows what to fix.';
+                }
             } else {
                 // Reject = remove the pending artwork and its uploaded image file.
                 $row = getDB()->prepare('SELECT image_url FROM artworks WHERE id = :id');
@@ -91,7 +109,21 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
                 }
             }
         }
-        header('Location: admin.php?ok=1#pending');
+        header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#' . (($_POST['back'] ?? '') === 'artworks' ? 'artworks' : 'pending'));
+        exit;
+    }
+
+    /* --- Mark an artwork as sold / back to available --- */
+    if ($action === 'sell_art' || $action === 'unsell_art') {
+        owSetArtworkSale((int) ($_POST['artwork_id'] ?? 0), $action === 'sell_art');
+        header('Location: admin.php?ok=1#artworks');
+        exit;
+    }
+
+    /* --- "I'm Interested" request: status + private note --- */
+    if ($action === 'inquiry_update') {
+        owSetInquiry((int) ($_POST['inquiry_id'] ?? 0), (string) ($_POST['status'] ?? ''), isset($_POST['admin_notes']) ? (string) $_POST['admin_notes'] : null);
+        header('Location: admin.php?ok=1#inquiries');
         exit;
     }
 
@@ -201,9 +233,12 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
     ];
     if (isset($map[$action]) && $uid > 0) {
         getDB()->prepare($map[$action])->execute([':id' => $uid]);
+        owLog(['approve' => 'user_approve', 'unapprove' => 'user_unapprove', 'ban' => 'user_suspend', 'unban' => 'user_unsuspend'][$action], 'user', $uid, '', ['type' => 'admin', 'id' => null]);
         $flash = 'Updated.';
     }
-    header('Location: admin.php' . ($flash ? '?ok=1' : ''));
+    $backTo = in_array($_POST['back'] ?? '', ['collectors', 'artists'], true) ? '#' . $_POST['back'] : '';
+    if (($_POST['back'] ?? '') === 'person') $backTo = '';
+    header('Location: ' . (($_POST['back'] ?? '') === 'person' ? 'admin.php?person=' . $uid . '&ok=1' : 'admin.php' . ($flash ? '?ok=1' : '') . $backTo));
     exit;
 }
 
@@ -215,7 +250,7 @@ if ($isAdmin) {
                 u.full_name_en AS artist_name
          FROM artworks a
          LEFT JOIN users u ON u.id = a.artist_id
-         WHERE a.is_approved = 0" . owNotDraftSql('a') . "
+         WHERE a.is_approved = 0" . owNotDraftSql('a') . (owHasColumn('artworks', 'rejected_at') ? ' AND a.rejected_at IS NULL' : '') . "
          ORDER BY a.created_at DESC"
     )->fetchAll();
 /* Proof of Process for each pending artwork (stage photos + colors) */
@@ -325,6 +360,22 @@ if ($isAdmin) {
     }
 }
 $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
+
+/* ---- Overview numbers and every artwork (with its status) ---- */
+$overview = $isAdmin ? owAdminOverview() : [];
+$allArt = [];
+if ($isAdmin) {
+    try {
+        $allArt = getDB()->query(
+            "SELECT a.id, a.title_en, a.title_ar, a.price, a.status, a.image_url, a.created_at, a.artist_id,
+                    " . owArtworkStatusSql('a') . " AS state, " . (owHasColumn('artworks', 'rejected_reason') ? 'a.rejected_reason' : 'NULL') . " AS reason,
+                    " . (owHasColumn('artworks', 'view_count') ? 'a.view_count' : '0') . " AS views, " . owArtistNameSql('u') . "
+             FROM artworks a LEFT JOIN users u ON u.id = a.artist_id
+             WHERE 1" . owNotDraftSql('a') . " ORDER BY a.created_at DESC, a.id DESC LIMIT 1000")->fetchAll();
+    } catch (Throwable $e) { error_log('admin all artworks: ' . $e->getMessage()); }
+}
+$ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'قيد المراجعة'], 'approved' => ['In the Gallery', 'في المعرض'],
+              'rejected' => ['Not approved', 'لم تتم الموافقة'], 'sold' => ['Sold', 'مباع']];
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -335,6 +386,17 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
+.ov-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+.adm-search{max-width:420px;margin-bottom:var(--space-sm);}
+.rej-box{display:inline-block;}
+.rej-box summary{list-style:none;cursor:pointer;}
+.rej-box summary::-webkit-details-marker{display:none;}
+.rej-box[open]{display:block;width:100%;margin-top:var(--space-xs);padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--radius-input);background:var(--color-surface);}
+.rej-box textarea,.inq-edit textarea{width:100%;min-height:0;}
+.inq-edit form{display:grid;gap:6px;min-width:220px;}
+.inq-edit select{min-height:40px;}
+.acard-head{flex-wrap:wrap;}
+.acard-view{margin-inline-start:auto;align-self:flex-start;white-space:normal;max-width:100%;}
 /* Admin panel — staff layout only; buttons, tabs, tables, cards, forms and stat cards come from oweili.css (role color: admin dark) */
 .wrap{max-width:1100px;margin:0 auto;padding:var(--space-lg);}
 .sub{font-size:var(--fs-body);color:var(--color-body);margin:4px 0 var(--space-sm);}
@@ -430,21 +492,26 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
   <div class="top">
     <div>
       <h1>Admin Dashboard</h1>
-      <div class="sub">Manage artists, collectors, and artwork approvals.</div>
+      <div class="sub">Manage artists, buyers, artworks and requests.</div>
     </div>
     <div class="top-actions">
       <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?>
       <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
+      <a class="btn btn-dark btn-sm" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
+      <a class="btn btn-ghost btn-sm" href="admin.php?settings=1"><?= owBi('Settings', 'الإعدادات') ?></a>
       <a class="btn btn-ghost btn-sm" href="admin.php?photo_check=1">Photo check</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?mail_check=1">Email check</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?error_log=1">Error log</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?logout=1">Log out</a>
     </div>
   </div>
-  <div class="stat-grid">
-    <div class="stat-card"><span class="stat-num"><?= count($artists) ?></span><span class="stat-lbl">Artists</span></div>
-    <div class="stat-card"><span class="stat-num"><?= count($collectors) ?></span><span class="stat-lbl">Collectors</span></div>
-    <div class="stat-card"><span class="stat-num"><?= count($pendingArt) ?></span><span class="stat-lbl">Pending Artworks</span></div>
+  <div class="stat-grid ov-grid">
+    <div class="stat-card"><span class="stat-num"><?= (int) $overview['artists'] ?></span><span class="stat-lbl"><?= owBi('Artists', 'الفنانون') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= (int) $overview['buyers'] ?></span><span class="stat-lbl"><?= owBi('Buyers', 'المشترون') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= (int) $overview['artworks'] ?></span><span class="stat-lbl"><?= owBi('Artworks (' . (int) $overview['in_gallery'] . ' in the Gallery)', 'الأعمال (' . (int) $overview['in_gallery'] . ' في المعرض)') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= (int) $overview['inquiries'] ?></span><span class="stat-lbl"><?= owBi('Interest requests (' . (int) $overview['new_inq'] . ' new)', 'طلبات الاهتمام (' . (int) $overview['new_inq'] . ' جديد)') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= (int) $overview['week'] ?></span><span class="stat-lbl"><?= owBi('New sign-ups this week', 'تسجيلات هذا الأسبوع') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= count($pendingArt) ?></span><span class="stat-lbl"><?= owBi('Waiting for review', 'بانتظار المراجعة') ?></span></div>
     <div class="stat-card"><span class="stat-num"><span class="online-dot on" aria-hidden="true"></span> <?= (int) $onlineCount ?></span><span class="stat-lbl">Online Now</span></div>
   </div>
   </div>
@@ -462,8 +529,9 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
   <!-- TABS -->
   <div class="tabs">
     <button class="tab tab-btn active" data-tab="artists" onclick="showTab('artists',this)">Artists <span class="pill count"><?= count($artists) ?></span></button>
-    <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)">Collectors <span class="pill count"><?= count($collectors) ?></span></button>
+    <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)"><?= owBi('Buyers', 'المشترون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
     <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)">Pending Artworks <span class="pill count"><?= count($pendingArt) ?></span></button>
+    <button class="tab tab-btn" data-tab="artworks" onclick="showTab('artworks',this)"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
     <button class="tab tab-btn" data-tab="inquiries" onclick="showTab('inquiries',this)">Inquiries <span class="pill count"><?= count($inquiries) ?></span></button>
     <button class="tab tab-btn" data-tab="styles" onclick="showTab('styles',this)">Art Styles <span class="pill count"><?= count($styles) ?></span></button>
     <button class="tab tab-btn" data-tab="events" onclick="showTab('events',this)">Events <span class="pill count"><?= count($events) ?></span></button>
@@ -473,6 +541,8 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
   <!-- ===== TAB: ARTISTS ===== -->
   <div class="tab-panel active" id="tab-artists">
   <div class="card">
+    <div class="field adm-search"><label for="s-artists"><?= owBi('Search artists (name, email, phone, city)', 'ابحث عن فنان (الاسم، البريد، الهاتف، المدينة)') ?></label>
+      <input id="s-artists" type="search" data-search=".acard" autocomplete="off"></div>
     <?php if (!$artists): ?>
       <div class="empty">No artist accounts yet.</div>
     <?php else: ?>
@@ -490,7 +560,9 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
               <?php if (!empty($a['artist_name'])): ?><div class="an"><?= e($a['artist_name']) ?></div><?php endif; ?>
               <?php if (!empty($a['full_name_ar'])): ?><div class="an" dir="rtl"><?= e($a['full_name_ar']) ?></div><?php endif; ?>
             </div>
+            <a class="btn btn-secondary btn-sm acard-view" href="admin.php?person=<?= (int) $a['id'] ?>"><?= owBi('View works & activity', 'الأعمال والنشاط') ?></a>
           </div>
+          <span class="adm-hay" hidden><?= e(mb_strtolower(implode(' ', [$a['full_name_en'], $a['full_name_ar'], $a['artist_name'], $a['email'], $a['phone'], $a['city']]))) ?></span>
 
           <div class="acard-badges">
             <span class="pill <?= $a['is_verified'] ? 'on' : 'off' ?>"><?= $a['is_verified'] ? 'Verified' : 'Unverified' ?></span>
@@ -524,9 +596,9 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
                 <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unapprove">Unapprove</button></form>
               <?php endif; ?>
               <?php if ((int)$a['is_banned'] === 1): ?>
-                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unban">Unban</button></form>
+                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="back" value="artists"><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unban"><?= owBi('Lift suspension', 'إلغاء الإيقاف') ?></button></form>
               <?php else: ?>
-                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="ban">Ban</button></form>
+                <form method="post" action="admin.php" onsubmit="return confirm('Suspend this account? Their works leave the Gallery until you lift it.');"><?= csrfField() ?><input type="hidden" name="back" value="artists"><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="ban"><?= owBi('Suspend', 'إيقاف') ?></button></form>
               <?php endif; ?>
             </div>
             <form method="post" action="admin.php" class="role-form"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>">
@@ -546,6 +618,8 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
   <!-- ===== TAB: COLLECTORS ===== -->
   <div class="tab-panel" id="tab-collectors">
   <div class="card">
+    <div class="field adm-search"><label for="s-buyers"><?= owBi('Search buyers (name, email, phone, city)', 'ابحث عن مشترٍ (الاسم، البريد، الهاتف، المدينة)') ?></label>
+      <input id="s-buyers" type="search" data-search="#tab-collectors tbody tr" autocomplete="off"></div>
     <?php if (!$collectors): ?>
       <div class="empty">No collector accounts yet.</div>
     <?php else: ?>
@@ -572,10 +646,11 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
             <td><?php if ((int)$c['is_banned'] === 1): ?><span class="pill ban">Banned</span><?php else: ?><span class="pill on">Active</span><?php endif; ?></td>
             <td>
               <div class="acts">
+                <a class="btn btn-secondary btn-sm" href="admin.php?person=<?= (int) $c['id'] ?>"><?= owBi('View requests & favorites', 'الطلبات والمفضلة') ?></a>
                 <?php if ((int)$c['is_banned'] === 1): ?>
-                  <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unban">Unban</button></form>
+                  <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="back" value="collectors"><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unban"><?= owBi('Lift suspension', 'إلغاء الإيقاف') ?></button></form>
                 <?php else: ?>
-                  <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="ban">Ban</button></form>
+                  <form method="post" action="admin.php" onsubmit="return confirm('Suspend this account?');"><?= csrfField() ?><input type="hidden" name="back" value="collectors"><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="ban"><?= owBi('Suspend', 'إيقاف') ?></button></form>
                 <?php endif; ?>
               </div>
               <form method="post" action="admin.php" class="role-form"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>">
@@ -603,7 +678,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
       <div style="overflow-x:auto;">
       <table class="table">
         <thead>
-          <tr><th>Date</th><th>Artwork</th><th>Artist</th><th>Buyer</th><th>Phone</th><th>Email</th></tr>
+          <tr><th>Date</th><th>Artwork</th><th>Artist</th><th>Buyer</th><th>Phone</th><th>Email</th><th><?= owBi('Status & private note', 'الحالة وملاحظة خاصة') ?></th></tr>
         </thead>
         <tbody>
         <?php foreach ($inquiries as $q): ?>
@@ -618,10 +693,16 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
                 <span class="mini">Deleted artwork #<?= (int) $q['artwork_id'] ?></span>
               <?php endif; ?>
             </td>
-            <td><?= e($q['artist_en']) ?></td>
-            <td><strong><?= e($q['buyer_name']) ?></strong></td>
+            <td><?php if (!empty($q['artist_id'])): ?><a href="admin.php?person=<?= (int) $q['artist_id'] ?>"><?= e($q['artist_en']) ?></a><?php else: ?><?= e($q['artist_en']) ?><?php endif; ?></td>
+            <td><strong><?= e($q['buyer_name']) ?></strong><?php if (!empty($q['buyer_id'])): ?><div class="mini"><a href="admin.php?person=<?= (int) $q['buyer_id'] ?>"><?= owBi('Buyer account', 'حساب المشتري') ?></a></div><?php else: ?><div class="mini"><?= owBi('Guest', 'زائر') ?></div><?php endif; ?></td>
             <td dir="ltr"><a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $q['buyer_phone'])) ?>"><?= e($q['buyer_phone']) ?></a></td>
             <td><a href="mailto:<?= e($q['buyer_email']) ?>"><?= e($q['buyer_email']) ?></a></td>
+            <td class="inq-edit"><?php if (isset($q['status'])): ?>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="inquiry_id" value="<?= (int) $q['id'] ?>">
+                <select name="status" aria-label="Status"><?php foreach (OW_INQUIRY_STATUS as $sk => $sl): ?><option value="<?= $sk ?>"<?= $q['status'] === $sk ? ' selected' : '' ?>><?= e($sl[0] . ' · ' . $sl[1]) ?></option><?php endforeach; ?></select>
+                <textarea name="admin_notes" rows="2" maxlength="4000" aria-label="Private note" placeholder="Private note · ملاحظة خاصة"><?= e((string) ($q['admin_notes'] ?? '')) ?></textarea>
+                <button class="btn btn-dark btn-sm" name="action" value="inquiry_update"><?= owBi('Save', 'حفظ') ?></button>
+              </form><?php endif; ?></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
@@ -655,12 +736,59 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
           </div>
           <div class="acts">
             <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="approve_art">Approve</button></form>
+            <?php if (owHasColumn('artworks', 'rejected_at')): ?>
+            <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Not approve…', 'عدم الموافقة…') ?></summary>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>">
+                <div class="field"><label for="rr-<?= (int)$art['id'] ?>"><?= owBi('Reason (the artist sees it)', 'السبب (يراه الفنان)') ?></label>
+                  <textarea id="rr-<?= (int)$art['id'] ?>" name="reason" required maxlength="500" rows="3"></textarea></div>
+                <button class="btn btn-danger btn-sm" name="action" value="reject_art"><?= owBi('Send to the artist', 'أرسل إلى الفنان') ?></button>
+              </form></details>
+            <?php else: ?>
             <form method="post" action="admin.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="reject_art">Reject</button></form>
+            <?php endif; ?>
           </div>
           <div class="art-proof"><?= owProofPanelHtml($pendingStages[(int)$art['id']] ?? [], $pendingColors[(int)$art['id']] ?? [], (string)$art['type'], $ART_TYPES) ?></div>
         </div>
       <?php endforeach; ?>
       </div>
+    <?php endif; ?>
+  </div>
+  </div>
+
+  <!-- ===== TAB: ALL ARTWORKS ===== -->
+  <div class="tab-panel" id="tab-artworks">
+  <div class="card">
+    <div class="field adm-search"><label for="s-art"><?= owBi('Search artworks (title or artist)', 'ابحث عن عمل (العنوان أو الفنان)') ?></label>
+      <input id="s-art" type="search" data-search="#tab-artworks tbody tr" autocomplete="off"></div>
+    <?php if (!$allArt): ?><div class="empty"><?= owBi('No artworks yet.', 'لا أعمال بعد.') ?></div><?php else: ?>
+    <div style="overflow-x:auto;"><table class="table">
+      <thead><tr><th>Artwork</th><th>Artist</th><th>Price</th><th>Status</th><th><?= owBi('Views', 'المشاهدات') ?></th><th>Actions</th></tr></thead>
+      <tbody>
+      <?php foreach ($allArt as $w): $stw = isset($ART_STATE[$w['state']]) ? $w['state'] : 'pending'; ?>
+        <tr>
+          <td><strong><?= e($w['title_en'] ?: $w['title_ar']) ?></strong><?php if (!empty($w['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($w['title_ar']) ?></div><?php endif; ?><div class="mini">#<?= (int) $w['id'] ?> · <?= e(date('Y-m-d', strtotime($w['created_at']))) ?></div></td>
+          <td><a href="admin.php?person=<?= (int) $w['artist_id'] ?>"><?= e($w['artist_en']) ?></a></td>
+          <td><?= number_format((float) $w['price']) ?> SAR</td>
+          <td><span class="pill <?= $stw === 'approved' ? 'on' : ($stw === 'rejected' ? 'ban' : 'off') ?>"><?= owBi($ART_STATE[$stw][0], $ART_STATE[$stw][1]) ?></span><?php if ($stw === 'rejected' && $w['reason']): ?><div class="mini"><?= e($w['reason']) ?></div><?php endif; ?></td>
+          <td><?= (int) $w['views'] ?></td>
+          <td><div class="acts">
+            <?php if ($stw === 'sold'): ?>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unsell_art"><?= owBi('Back to available', 'أعده متاحاً') ?></button></form>
+            <?php else: ?>
+              <form method="post" action="admin.php" onsubmit="return confirm('Mark this artwork as sold? It leaves the Gallery.');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><button class="btn btn-dark btn-sm" name="action" value="sell_art"><?= owBi('Mark as sold', 'علّمه كمباع') ?></button></form>
+            <?php endif; ?>
+            <?php if ($stw === 'approved'): ?>
+            <details class="rej-box"><summary class="btn btn-ghost btn-sm"><?= owBi('Take down…', 'إزالة من المعرض…') ?></summary>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><input type="hidden" name="back" value="artworks">
+                <div class="field"><label for="rt-<?= (int) $w['id'] ?>"><?= owBi('Reason (the artist sees it)', 'السبب (يراه الفنان)') ?></label><textarea id="rt-<?= (int) $w['id'] ?>" name="reason" required maxlength="500" rows="2"></textarea></div>
+                <button class="btn btn-danger btn-sm" name="action" value="reject_art"><?= owBi('Take down', 'إزالة') ?></button></form></details>
+            <?php elseif ($stw === 'rejected' || $stw === 'pending'): ?>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><input type="hidden" name="back" value="artworks"><button class="btn btn-accent btn-sm" name="action" value="approve_art">Approve</button></form>
+            <?php endif; ?>
+          </div></td>
+        </tr>
+      <?php endforeach; ?>
+      </tbody></table></div>
     <?php endif; ?>
   </div>
   </div>
@@ -874,6 +1002,16 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
   </div>
 
   <script>
+  /* search boxes: hide rows that do not match */
+  document.querySelectorAll('input[data-search]').forEach(function(inp){
+    inp.addEventListener('input', function(){
+      var q = inp.value.trim().toLowerCase();
+      document.querySelectorAll(inp.dataset.search).forEach(function(row){
+        var hay = (row.querySelector('.adm-hay') || row).textContent.toLowerCase();
+        row.style.display = (!q || hay.indexOf(q) >= 0) ? '' : 'none';
+      });
+    });
+  });
   function toggleStyleEdit(id){ var el=document.getElementById('style-edit-'+id); if(el) el.classList.toggle('open'); }
   function showTab(name, btn){
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -885,7 +1023,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
   // Restore the tab from the URL hash (e.g. after approving an artwork).
   (function(){
     var h=(location.hash||'').replace('#','');
-    if(h==='pending'||h==='collectors'||h==='artists'||h==='styles'||h==='events'||h==='training'){
+    if(['pending','collectors','artists','styles','events','training','artworks','inquiries'].indexOf(h)>=0){
       var btn=document.querySelector('.tab-btn[data-tab="'+h+'"]');
       showTab(h,btn);
     }
@@ -899,7 +1037,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
    nodes, so the whole panel translates without per-element markup. */
 const ADICT = {
   "Admin Dashboard":"لوحة الإدارة",
-  "Manage artists, collectors, and artwork approvals.":"إدارة الفنانين والمقتنين واعتماد الأعمال.",
+  "Manage artists, buyers, artworks and requests.":"إدارة الفنانين والمشترين والأعمال والطلبات.",
   "Log out":"تسجيل الخروج",
   "Articles":"المقالات",
   "Photo check":"فحص الصور",

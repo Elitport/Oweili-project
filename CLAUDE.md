@@ -107,7 +107,9 @@
 - artwork_lib.php — shared helpers for the upload: color list, art type pictures, photo checks and saving
 - collector_dashboard.php — the Buyer dashboard (see Features). Inside the database the account type is still "collector"
 - subadmin_dashboard.php — Sub-admin panel
-- admin.php — Main admin panel
+- admin.php — Main admin panel (see Admin dashboard upgrades); admin_person.php (one person), admin_settings.php (Settings), admin_lib.php (shared staff actions)
+- admin_institutes.php — team tool for institutes and courses
+- bashro_api.php — the Bashro data connection (off by default)
 - assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the 50 style names from it
 - art_types.php — the art type list: the 50 styles (names from art_styles.js) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
@@ -125,6 +127,22 @@
 - Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
+
+### Admin dashboard upgrades — Phase 3 of 4 built
+- Overview on top of admin.php: Artists, Buyers, Artworks (and how many are in the Gallery), Interest requests (and how many are new), New sign-ups this week, Waiting for review, Online now
+- Artists and Buyers tabs: a search box (name, email, phone, city), Approve / Suspend (was "Ban"; suspended accounts' works leave the Gallery), and "View" → admin.php?person=N: every detail of the person (admin only), status, approve / suspend, their artworks with status and views, interest in their works (full buyer details), requests they sent, favorites and their activity
+- All artworks tab: every artwork with its status, reason and views, search, Mark as sold / Back to available, Approve, and "Take down…" with a reason
+- Not approved (admin and sub-admin): the reviewer must write a reason; the artwork is kept (hidden from the Gallery) so the artist can fix it. Before, "Reject" deleted the artwork and its photos for good. The artist gets a short email for approved and not approved works (with the reason)
+- Inquiries tab: status (New / Contacted / In progress / Closed) and a private note per request, links to the buyer account and the artist. Buyers see the status in their dashboard, never the note
+- Content: Articles (events, spotlights, art education) as before, plus the new Institutes tool (admin_institutes.php): add and edit institutes (names, cities, descriptions in both languages, contact, website, logo, shown or hidden) and their courses (titles, dates, price, seats). Nothing is deleted, only hidden. Also linked for sub-admins
+- Settings (admin.php?settings=1): what is switched on, links to Error log / Email check / Photo check / Articles / Institutes, the database backups on the server, and the Bashro connection status with how to switch it on
+- Every staff action is in the activity log (admin sign-in, approve, not approved, sold, suspend, request status and note, institutes and courses)
+- Files: admin.php, admin_lib.php, admin_person.php, admin_settings.php, admin_institutes.php, subadmin_dashboard.php, platform_lib.php. Tables: users, artworks, artwork_inquiries, favorites, activity_log, institutes, courses (no database change needed)
+
+### Bashro connection — Phase 4 of 4 built, switched OFF
+- bashro_api.php: a private, read-only data connection for Bashro. Off by default: every request gets 404 until config.php on the server has define('BASHRO_API_ENABLED', true) and define('BASHRO_API_KEY', '…32+ random characters…') (optional: define('BASHRO_API_IPS', 'address,address')). The key goes in the Authorization header (Bearer), never in the web address
+- Read only (GET): resource=summary | people | artworks | inquiries | favorites | activity, with since= (changed on or after) and after= (next page), up to 500 rows a page. Every record carries its permanent public_id, a status, created_at and updated_at. At most 120 requests a minute; every read and every refused key is in the activity log
+- Admin → Settings shows whether it is on. Tables read: users, artworks, artwork_inquiries, favorites, activity_log
 
 ### Artist dashboard upgrades — Phase 2 of 4 built
 - My Studio (artist_studio.php, «مرسمي»): the artist's private area, linked from their dashboard ("My Studio" button). 4 number boxes (Artworks, Views, Favorites, Interested buyers) and 4 tabs: My artworks (every work with its status: Draft / In review / In the Gallery / Not approved + the reason / Sold, and its views, favorites and "I'm Interested" count, never buyer names, phones or emails), Account (email choices, email, password), Activity (what they did and when), Sales & payouts (sold works, sales total, payouts list; structure only until payments open in Sprint 4)

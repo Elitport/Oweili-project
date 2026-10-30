@@ -130,6 +130,7 @@ const OW_ACTION_WORDS = [
     'artwork_reject'  => ['Did not approve an artwork', 'لم يوافق على عمل'],
     'artwork_sold'    => ['Marked an artwork as sold', 'علّم عملاً كمباع'],
     'user_approve'    => ['Approved an artist', 'وافق على فنان'],
+    'user_unapprove'  => ['Set an artist back to pending', 'أعاد فناناً إلى الانتظار'],
     'user_suspend'    => ['Suspended an account', 'أوقف حساباً'],
     'user_unsuspend'  => ['Lifted a suspension', 'ألغى إيقاف حساب'],
     'inquiry_status'  => ['Changed a request status', 'غيّر حالة طلب'],

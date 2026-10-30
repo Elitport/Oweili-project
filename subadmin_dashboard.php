@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
+require_once __DIR__ . '/admin_lib.php';
 
 /* =====================================================================
  *  Oweili · subadmin_dashboard.php
@@ -27,7 +28,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
     $awId   = (int) ($_POST['artwork_id'] ?? 0);
     if ($awId > 0 && ($action === 'approve_art' || $action === 'reject_art')) {
         if ($action === 'approve_art') {
-            getDB()->prepare('UPDATE artworks SET is_approved = 1 WHERE id = :id' . owNotDraftSql())->execute([':id' => $awId]);
+            owApproveArtwork($awId);
+        } elseif (owHasColumn('artworks', 'rejected_at')) {
+            /* Not approved: kept with the reason, so the artist can fix it */
+            if (!owRejectArtwork($awId, (string) ($_POST['reason'] ?? ''))) { header('Location: subadmin_dashboard.php?need_reason=1'); exit; }
         } else {
             $row = getDB()->prepare('SELECT image_url FROM artworks WHERE id = :id');
             $row->execute([':id' => $awId]);
@@ -50,7 +54,7 @@ $pendingArt = getDB()->query(
             u.full_name_en AS artist_name
      FROM artworks a
      LEFT JOIN users u ON u.id = a.artist_id
-     WHERE a.is_approved = 0" . owNotDraftSql('a') . "
+     WHERE a.is_approved = 0" . owNotDraftSql('a') . (owHasColumn('artworks', 'rejected_at') ? ' AND a.rejected_at IS NULL' : '') . "
      ORDER BY a.created_at DESC"
 )->fetchAll();
 /* Proof of Process for each pending artwork (stage photos + colors) */
@@ -70,6 +74,9 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
+.rej-box{display:inline-block;}.rej-box summary{list-style:none;cursor:pointer;}.rej-box summary::-webkit-details-marker{display:none;}
+.rej-box[open]{display:block;width:100%;margin-top:var(--space-xs);padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--radius-input);background:var(--color-surface);}
+.rej-box textarea{width:100%;}
 /* Sub-admin review panel — staff layout only; buttons, cards and stat cards come from oweili.css (role color: sub-admin green) */
 .wrap{max-width:960px;margin:0 auto;padding:var(--space-lg);}
 .sub{font-size:var(--fs-body);color:var(--color-body);margin:4px 0 0;}
@@ -104,6 +111,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
     <div class="top-actions">
       <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?>
       <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
+      <a class="btn btn-dark btn-sm" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
       <a class="btn btn-ghost btn-sm" href="logout.php">Log out</a>
     </div>
   </div>
@@ -134,7 +142,16 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
           </div>
           <div class="acts">
             <form method="post" action="subadmin_dashboard.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="approve_art">Approve</button></form>
+            <?php if (owHasColumn('artworks', 'rejected_at')): ?>
+            <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Not approve…', 'عدم الموافقة…') ?></summary>
+              <form method="post" action="subadmin_dashboard.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>">
+                <div class="field"><label for="rr-<?= (int)$art['id'] ?>"><?= owBi('Reason (the artist sees it)', 'السبب (يراه الفنان)') ?></label>
+                  <textarea id="rr-<?= (int)$art['id'] ?>" name="reason" required maxlength="500" rows="3"></textarea></div>
+                <button class="btn btn-danger btn-sm" name="action" value="reject_art"><?= owBi('Send to the artist', 'أرسل إلى الفنان') ?></button>
+              </form></details>
+            <?php else: ?>
             <form method="post" action="subadmin_dashboard.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="reject_art">Reject</button></form>
+            <?php endif; ?>
           </div>
           <div class="art-proof"><?= owProofPanelHtml($pendingStages[(int)$art['id']] ?? [], $pendingColors[(int)$art['id']] ?? [], (string)$art['type'], $ART_TYPES) ?></div>
         </div>
