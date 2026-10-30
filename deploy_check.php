@@ -1,7 +1,7 @@
 <?php
 /* TEMPORARY read-only check (remove after use). Switches itself off at 2026-10-30 21:32 UTC.
    Shows only folder and file names, sizes and dates, and the deploy log.
-   No passwords, no database, no personal data. Changes nothing. */
+   No passwords, no database, no personal data. Only writes one tiny test file in uploads/deploy_test/. */
 if (time() > 1793395974) { http_response_code(404); exit; }
 header('Content-Type: text/plain; charset=UTF-8');
 header('Cache-Control: no-store');
