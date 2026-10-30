@@ -133,6 +133,14 @@
 - Category list: art_categories.php, built from each type's encyclopedia group (Nature & Portrait styles sit in Traditional; Islamic & Arab Heritage = Islamic Heritage). Old types: vector art, 3D art and digital art in Digital; mixed media in Contemporary; photography in Photography; sculpture and other under All only
 - Files: marketplace.php, art_categories.php. Tables read: artworks, users, artwork_stages, artwork_colors
 
+### "I'm Interested" (Gallery popup) — built
+- What it does: in the artwork window, under the price, a pink "I’m Interested" / «أنا مهتم» button opens a small form: Full Name, Phone Number, Email Address (all required) and the note "We use your details only to contact you about this artwork." On send: "Thank you! We will contact you soon." / «شكراً! سنتواصل معك قريباً.» Error messages in both languages
+- Each inquiry is saved and emailed to contact@elitport.com (artwork title, artist name, price, link, buyer name, phone, email). If the email fails, the inquiry is still saved and shows in admin
+- Safety: security token on the form, a hidden trap field for robots, at most 5 inquiries per visitor per hour, the same email on the same artwork within a day is saved once, and only artworks a visitor can see in the Gallery are accepted (checked on the server)
+- Admin: admin.php → "Inquiries" tab (admin.php#inquiries): date, artwork, artist, buyer name, phone (tap to call), email (tap to write), newest first
+- Files: marketplace.php (button, form, script), inquire.php (receives the form), inquiry_lib.php (table, checks, saving, email, list), admin.php (Inquiries tab), mail_lib.php (sending). Tables: artwork_inquiries (id, artwork_id, artist_id, buyer_name, buyer_phone, buyer_email, created_at), created automatically with CREATE TABLE IF NOT EXISTS the first time it is used (owner's request); reads artworks, users
+- Removed on the way: a leftover debug block in marketplace.php that logged failed pictures to the browser console
+
 ### Creation Journey (marketplace) — built, needs database_update.sql
 - What it does: in the artwork details window, buyers see "Creation Journey — Proof of Human Art" / «رحلة الإبداع — دليل الفن البشري» with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
 - The "✦ A Real Touch" / «✦ لمسة حقيقية» badge sits under the title (the same badge as everywhere else) — only on artworks that have the 25% and 100% photos

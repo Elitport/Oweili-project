@@ -1,6 +1,8 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
+require_once __DIR__ . '/mail_lib.php';
+require_once __DIR__ . '/inquiry_lib.php';
 
 /* =====================================================================
  *  Oweili · admin.php — approve / ban artists
@@ -289,6 +291,12 @@ if ($isAdmin) {
     }
 }
 
+/* ---- Load "I'm Interested" inquiries, newest first (only when authed) ---- */
+$inquiries = [];
+if ($isAdmin) {
+    try { $inquiries = owListInquiries(); } catch (\Throwable $e) { error_log('admin inquiries: ' . $e->getMessage()); }
+}
+
 /* ---- Load events (only when authed) ---- */
 $events = [];
 $eventsTableMissing = false;
@@ -449,6 +457,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
     <button class="tab tab-btn active" data-tab="artists" onclick="showTab('artists',this)">Artists <span class="pill count"><?= count($artists) ?></span></button>
     <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)">Collectors <span class="pill count"><?= count($collectors) ?></span></button>
     <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)">Pending Artworks <span class="pill count"><?= count($pendingArt) ?></span></button>
+    <button class="tab tab-btn" data-tab="inquiries" onclick="showTab('inquiries',this)">Inquiries <span class="pill count"><?= count($inquiries) ?></span></button>
     <button class="tab tab-btn" data-tab="styles" onclick="showTab('styles',this)">Art Styles <span class="pill count"><?= count($styles) ?></span></button>
     <button class="tab tab-btn" data-tab="events" onclick="showTab('events',this)">Events <span class="pill count"><?= count($events) ?></span></button>
     <button class="tab tab-btn" data-tab="training" onclick="showTab('training',this)">Training <span class="pill count"><?= count($training) ?></span></button>
@@ -569,6 +578,43 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
                 <button class="btn btn-ghost btn-sm" name="action" value="set_role">Set</button>
               </form>
             </td>
+          </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+      </div>
+    <?php endif; ?>
+  </div>
+  </div>
+
+  <!-- ===== TAB: INQUIRIES ("I'm Interested" from the Gallery) ===== -->
+  <div class="tab-panel" id="tab-inquiries">
+  <div class="card">
+    <?php if (!$inquiries): ?>
+      <div class="empty">No inquiries yet. They appear here when a visitor presses "I'm Interested" in the Gallery.</div>
+    <?php else: ?>
+      <div style="overflow-x:auto;">
+      <table class="table">
+        <thead>
+          <tr><th>Date</th><th>Artwork</th><th>Artist</th><th>Buyer</th><th>Phone</th><th>Email</th></tr>
+        </thead>
+        <tbody>
+        <?php foreach ($inquiries as $q): ?>
+          <tr>
+            <td class="mini"><?= e(fmtDateTime($q['created_at'] ?? null)) ?></td>
+            <td>
+              <?php if ($q['title_en'] !== null): ?>
+                <strong><?= e($q['title_en']) ?></strong>
+                <?php if (!empty($q['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($q['title_ar']) ?></div><?php endif; ?>
+                <div class="mini">#<?= (int) $q['artwork_id'] ?></div>
+              <?php else: ?>
+                <span class="mini">Deleted artwork #<?= (int) $q['artwork_id'] ?></span>
+              <?php endif; ?>
+            </td>
+            <td><?= e($q['artist_en']) ?></td>
+            <td><strong><?= e($q['buyer_name']) ?></strong></td>
+            <td dir="ltr"><a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $q['buyer_phone'])) ?>"><?= e($q['buyer_phone']) ?></a></td>
+            <td><a href="mailto:<?= e($q['buyer_email']) ?>"><?= e($q['buyer_email']) ?></a></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
@@ -851,6 +897,8 @@ const ADICT = {
   "Articles":"المقالات",
   "Photo check":"فحص الصور",
   "Email check":"فحص البريد",
+  "Inquiries":"طلبات الاهتمام","Artwork":"العمل الفني","Buyer":"المشتري",
+  "No inquiries yet. They appear here when a visitor presses \"I'm Interested\" in the Gallery.":"لا توجد طلبات بعد. تظهر هنا عندما يضغط زائر «أنا مهتم» في المعرض.",
   "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.",
   "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"أساليب الرسم",
   "Events":"الأحداث","Training":"التدريب",

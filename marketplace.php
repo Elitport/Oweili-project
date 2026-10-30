@@ -197,6 +197,13 @@ foreach ($artworks as $aw) {
     .modal-body .m-label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin:var(--space-sm) 0 4px;}
     .modal-body p{margin:0;}
     .modal-body .m-price{font-size:var(--fs-card);font-weight:700;color:var(--color-dark);margin-top:var(--space-sm);}
+    .m-interest{margin-top:var(--space-sm);}
+    .mi-form{margin-top:var(--space-sm);display:grid;gap:var(--space-xs);}
+    .mi-form .field{margin:0;}
+    .mi-note{font-size:var(--fs-caption);color:var(--color-body);}
+    .m-interest [hidden]{display:none !important;}
+    .mi-trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+    #mi-ok{margin-top:var(--space-sm);}
     .modal-close{float:right;width:40px;height:40px;border-radius:var(--radius-btn);background:none;border:1px solid var(--color-border-strong);font-size:22px;cursor:pointer;color:var(--color-dark);line-height:1;}
     .modal-close:hover{background:var(--color-hover-light);}
     [dir="rtl"] .modal-close{float:left;}
@@ -353,6 +360,25 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       <div class="m-label" id="m-label-ar-h"><?= $ar?'عن العمل (بالعربية)':'About this work (Arabic)' ?></div>
       <p id="m-desc-ar" dir="rtl"></p>
       <div class="m-price" id="m-price"></div>
+      <!-- I'm Interested: name, phone, email → inquire.php -->
+      <div class="m-interest">
+        <button type="button" class="btn btn-primary btn-block" id="mi-open" onclick="openInterest()"><?= $ar ? 'أنا مهتم' : 'I’m Interested' ?></button>
+        <form id="mi-form" class="mi-form" hidden novalidate onsubmit="return sendInterest(event)">
+          <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
+          <input type="hidden" name="artwork_id" id="mi-aw" value="">
+          <div class="mi-trap" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <div class="field"><label for="mi-name"><?= $ar ? 'الاسم الكامل' : 'Full Name' ?></label>
+            <input type="text" id="mi-name" name="name" required maxlength="120" autocomplete="name"></div>
+          <div class="field"><label for="mi-phone"><?= $ar ? 'رقم الهاتف' : 'Phone Number' ?></label>
+            <input type="tel" id="mi-phone" name="phone" required maxlength="40" autocomplete="tel" inputmode="tel" dir="ltr"></div>
+          <div class="field"><label for="mi-email"><?= $ar ? 'البريد الإلكتروني' : 'Email Address' ?></label>
+            <input type="email" id="mi-email" name="email" required maxlength="190" autocomplete="email" dir="ltr"></div>
+          <p class="mi-note"><?= $ar ? 'نستخدم بياناتك فقط للتواصل معك بخصوص هذا العمل.' : 'We use your details only to contact you about this artwork.' ?></p>
+          <div class="err-box" id="mi-err" role="alert" hidden></div>
+          <button type="submit" class="btn btn-primary btn-block" id="mi-send"><?= $ar ? 'إرسال' : 'Send' ?></button>
+        </form>
+        <div class="ok-box" id="mi-ok" role="status" hidden><?= $ar ? 'شكراً! سنتواصل معك قريباً.' : 'Thank you! We will contact you soon.' ?></div>
+      </div>
       <?php foreach ($artworks as $aw):
         $jid = (int) $aw['id'];
         $jh  = owJourneyHtml($mpStages[$jid] ?? [], $mpColors[$jid] ?? [], (string) $aw['type'], $ART_TYPES);
@@ -366,18 +392,6 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
 <script>
 const LANG = <?= json_encode($lang) ?>;
 const ARTWORKS = <?= json_encode($modalData, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>;
-
-/* Debug: log any artwork image that fails to load (remove after diagnosing) */
-document.addEventListener('DOMContentLoaded', function(){
-  document.querySelectorAll('.aw-img img').forEach(function(img){
-    img.addEventListener('error', function(){
-      console.warn('[Oweili] img failed:', img.src, 'retry:', img.dataset.retry||'0');
-    });
-    img.addEventListener('load', function(){
-      if(img.naturalWidth===0) console.warn('[Oweili] img loaded but empty:', img.src);
-    });
-  });
-});
 
 /* ---- Details modal ---- */
 function esc(s){ return String(s==null?'':s); }
@@ -400,7 +414,53 @@ function openModal(id){
   // Creation Journey + trust badge (only for artworks with stage photos)
   document.getElementById('m-verified').hidden = !a.journey;
   document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });
+  resetInterest(id);
   document.getElementById('modalBg').classList.add('open');
+}
+/* ---- I'm Interested ---- */
+const MI_ERR = <?= json_encode($ar ? [
+  'required' => 'يرجى تعبئة الحقول الثلاثة.', 'name' => 'يرجى كتابة اسمك الكامل.',
+  'phone' => 'يرجى كتابة رقم هاتف صحيح.', 'email' => 'يرجى كتابة بريد إلكتروني صحيح.',
+  'rate' => 'أرسلت عدة طلبات. حاول مرة أخرى بعد ساعة.', 'other' => 'حدث خطأ. حاول مرة أخرى.',
+] : [
+  'required' => 'Please fill in all three fields.', 'name' => 'Please enter your full name.',
+  'phone' => 'Please enter a valid phone number.', 'email' => 'Please enter a valid email address.',
+  'rate' => 'You have sent several requests. Please try again in an hour.', 'other' => 'Something went wrong. Please try again.',
+], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>;
+function resetInterest(id){
+  const f = document.getElementById('mi-form');
+  f.reset(); f.hidden = true;
+  document.getElementById('mi-aw').value = id;
+  document.getElementById('mi-open').hidden = false;
+  document.getElementById('mi-ok').hidden = true;
+  document.getElementById('mi-err').hidden = true;
+  document.getElementById('mi-send').disabled = false;
+}
+function openInterest(){
+  document.getElementById('mi-open').hidden = true;
+  document.getElementById('mi-form').hidden = false;
+  document.getElementById('mi-name').focus();
+}
+function showInterestError(code){
+  const box = document.getElementById('mi-err');
+  box.textContent = MI_ERR[code] || MI_ERR.other; box.hidden = false;
+}
+function sendInterest(ev){
+  ev.preventDefault();
+  const f = ev.target, btn = document.getElementById('mi-send');
+  document.getElementById('mi-err').hidden = true;
+  const v = n => f.elements[n].value.trim();
+  if (!v('name') || !v('phone') || !v('email')) { showInterestError('required'); return false; }
+  if (!f.elements.email.checkValidity()) { showInterestError('email'); return false; }
+  btn.disabled = true;
+  fetch('inquire.php', {method:'POST', body:new FormData(f), credentials:'same-origin'})
+    .then(r => r.json().catch(() => ({ok:false, error:'other'})))
+    .then(d => {
+      if (d && d.ok) { f.hidden = true; document.getElementById('mi-ok').hidden = false; }
+      else { showInterestError(d && d.error); btn.disabled = false; }
+    })
+    .catch(() => { showInterestError('other'); btn.disabled = false; });
+  return false;
 }
 function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
