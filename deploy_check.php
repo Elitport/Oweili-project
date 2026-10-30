@@ -41,3 +41,15 @@ foreach (array_slice($log, -25) as $line) {
     }
 }
 echo "\n.git folder created: ", is_dir($root . '/.git') ? date('Y-m-d H:i', (int) filemtime($root . '/.git/config')) : 'no .git folder', "\n";
+
+echo "\nconfig.php: ", is_link($root . '/config.php') ? 'is a link to ' . str_replace(dirname($root), '[site]', (string) readlink($root . '/config.php')) : (is_file($root . '/config.php') ? 'normal file, dated ' . date('Y-m-d H:i', (int) filemtime($root . '/config.php')) : 'missing'), "\n";
+echo ".user.ini: ", is_file($root . '/.user.ini') ? 'present' : 'missing', "\n";
+echo "\nInside .builds (names only, 3 levels):\n";
+$walk = function (string $dir, int $depth, string $pad) use (&$walk) {
+    foreach (array_slice(array_diff(@scandir($dir) ?: [], ['.', '..']), 0, 25) as $i) {
+        $p = $dir . '/' . $i;
+        printf("%s%s%s  %s\n", $pad, $i, is_dir($p) ? '/' : '', date('Y-m-d H:i', (int) @filemtime($p)));
+        if (is_dir($p) && !is_link($p) && $depth > 1 && $i !== '.git' && $i !== 'node_modules') $walk($p, $depth - 1, $pad . '   ');
+    }
+};
+$walk(dirname($root) . '/.builds', 3, '   ');
