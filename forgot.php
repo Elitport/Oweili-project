@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/mail_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 /* forgot.php — request a reset link, or set a new password via ?token= */
 
@@ -74,6 +75,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         else {
             getDB()->prepare('UPDATE users SET password = :p, reset_token = NULL, reset_expires = NULL WHERE id = :id')
                    ->execute([':p' => hashPassword($pass), ':id' => $uid]);
+            /* a reset signs out every phone and computer (someone else may have known the old password) */
+            getDB()->prepare('DELETE FROM sessions WHERE user_id = :id')->execute([':id' => $uid]);
+            owLog('password_reset', 'user', $uid, 'through the email link', ['type' => 'guest', 'id' => null]);
             $okCode = 'done';
             $mode   = 'done';
         }

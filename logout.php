@@ -1,6 +1,11 @@
 <?php
 require_once 'config.php';
 
+require_once __DIR__ . '/platform_lib.php';
+if (!empty($_SESSION['user_id']) && isLoggedIn() && ($u = currentUser())) {
+    owLog('logout', 'user', (int) $u['id'], '', ['type' => owActorType($u['role'] ?? ''), 'id' => (int) $u['id']]);
+}
+
 // End the session everywhere (deletes the sessions-table row + clears cookie).
 if (function_exists('logoutUser')) {
     logoutUser();

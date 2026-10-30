@@ -53,8 +53,10 @@ function owInquiryArtwork(int $id): ?array {
     return $st->fetch() ?: null;
 }
 
-/* Saves one inquiry and emails the team. Returns true when it was saved. */
-function owSaveInquiry(array $aw, array $v): bool {
+/* Saves one inquiry and emails the team. Returns true when it was saved.
+   $buyerId: the signed-in buyer's account (0 for guests), so the request
+   shows in their Buyer dashboard. */
+function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
     owEnsureInquiryTable();
     /* the same person asking about the same artwork twice in a day is saved once */
     $dup = getDB()->prepare('SELECT 1 FROM artwork_inquiries WHERE artwork_id = :a AND buyer_email = :e
@@ -62,10 +64,16 @@ function owSaveInquiry(array $aw, array $v): bool {
     $dup->execute([':a' => (int) $aw['id'], ':e' => $v['email']]);
     if ($dup->fetchColumn()) return true;
 
-    getDB()->prepare('INSERT INTO artwork_inquiries (artwork_id, artist_id, buyer_name, buyer_phone, buyer_email)
-                      VALUES (:a, :ar, :n, :p, :e)')
+    $withBuyer = $buyerId > 0 && function_exists('owHasColumn') && owHasColumn('artwork_inquiries', 'buyer_id');
+    getDB()->prepare('INSERT INTO artwork_inquiries (artwork_id, artist_id, buyer_name, buyer_phone, buyer_email' . ($withBuyer ? ', buyer_id' : '') . ')
+                      VALUES (:a, :ar, :n, :p, :e' . ($withBuyer ? ', :b' : '') . ')')
            ->execute([':a' => (int) $aw['id'], ':ar' => (int) $aw['artist_id'],
-                      ':n' => $v['name'], ':p' => $v['phone'], ':e' => $v['email']]);
+                      ':n' => $v['name'], ':p' => $v['phone'], ':e' => $v['email']] + ($withBuyer ? [':b' => $buyerId] : []));
+    $newId = (int) getDB()->lastInsertId();
+    if (function_exists('owLog')) {
+        owLog('inquiry_sent', 'inquiry', $newId, 'artwork ' . (int) $aw['id'],
+              $buyerId > 0 ? ['type' => 'buyer', 'id' => $buyerId] : ['type' => 'guest', 'id' => null]);
+    }
 
     $host = preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com';
     $body = "New interest in an artwork on Oweili\r\n"

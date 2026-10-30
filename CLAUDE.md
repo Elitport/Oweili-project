@@ -103,7 +103,7 @@
 - artist_dashboard.php — Artist control panel ("Start New Artwork" button + drafts in progress); with ?id=N it is the artist's public profile, open to everyone
 - upload_artwork.php — 3-stage proof-of-process upload (see Features below)
 - artwork_lib.php — shared helpers for the upload: color list, art type pictures, photo checks and saving
-- collector_dashboard.php — Collector control panel
+- collector_dashboard.php — the Buyer dashboard (see Features). Inside the database the account type is still "collector"
 - subadmin_dashboard.php — Sub-admin panel
 - admin.php — Main admin panel
 - assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the 50 style names from it
@@ -111,6 +111,18 @@
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 
 ## Features
+
+### Three dashboards + ready for Bashro — Phase 1 of 4 built: Buyer dashboard (needs dashboards_update.sql)
+- Plan (approved by the owner, 30 Oct 2026): Phase 1 Buyer dashboard + shared foundation, Phase 2 Artist dashboard upgrades, Phase 3 Admin dashboard upgrades (+ institutes tool), Phase 4 Bashro connection (read-only, secret key, off by default). After each phase: push, check the live site (phone + desktop, English + Arabic), short report with screenshots
+- Buyer dashboard (collector_dashboard.php, «لوحة المشتري»): greeting, 3 number boxes (My requests, Favorites, Member since) and 5 tabs: My requests (every "I’m Interested" request with its status New / Contacted / In progress / Closed — «جديد / تم التواصل / قيد المتابعة / مغلق»), Favorites (hearts; the heart removes), Profile (name, phone, country, city, preferred language), Email & password, Purchases (purchase history; payments come in Sprint 4). A banner asks to confirm the email, with "Send the link again" (3 per hour). Only the buyer's own data; artists and staff are sent to their own dashboard
+- Requests shown: the ones sent while signed in, plus (only once the email is confirmed) ones sent as a guest from the same email
+- Heart button (favorites): on Gallery cards and in the artwork window. Signed-in buyers save with one tap; guests are sent to sign in and come straight back to that artwork; artists and staff do not see it. Only artworks a visitor can see in the Gallery can be saved. Shared code: assets/js/favorites.js + favorite.php
+- "I’m Interested" for a signed-in buyer: name, phone and email are filled in from the account (they can change them), and the request is linked to the account. Guests use the form as before
+- Sign up / sign in / confirm email / forgot password: all already in English and Arabic. New: the confirmation email is in both languages, the language the visitor signed up in is saved, at most 5 new accounts per hour from one address (3 per browser session) for buyers and artists, the welcome email sends buyers to their dashboard, and sign-in returns to the page that asked for it (only our own pages, never another site)
+- Account safety: changing the password needs the current one, signs out every other phone and computer and sends a notice email. Changing the email needs the password, sends a confirmation link to the new address and a notice to the old one. A password reset by email also signs out every device
+- Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
+- Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql, db_update.php (temporary)
+- Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
 ### 3-stage artwork upload (proof of process) — built, needs database_update.sql
 - What it does: artists start a new artwork from their dashboard and go through 5 steps: 1 titles (Arabic + English required), 2 photo at 25% (required), 3 photo at 50% (optional, can skip), 4 photo at 100% (required) + colors used + art type (all 50 encyclopedia styles as guided cards with their drawn picture, under 6 group labels: Traditional, Digital, Islamic & Arab Heritage, Contemporary, Nature & Portrait, Photography), 5 price in SAR + the 15% commission note, then "Submit for Review"
@@ -302,6 +314,9 @@
 - photo_check.php — "Photo check" button in admin.php (admin.php?photo_check=1, admin password needed; opening the file directly shows nothing). Shows whether the server has GD / Imagick, the memory limit, whether uploads/ and uploads/thumbs/ can be written, and the 8 newest artworks: saved photo address, file size and dimensions, and a live test of the phone copy ("Small copy works" or what failed). Tables read: artworks. Also has a "Make all small copies" button: makes the copies for every artwork photo and stage photo, one at a time (press again if it says some are still waiting). Tables read: artworks, artwork_stages
 - mail_lib.php — sends every site email (password reset, account verification, welcome) with owSendMail(). It signs in to the Hostinger mailbox itself (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, optional SMTP_FROM / SMTP_FROM_NAME in config.php), tries port 465 and 587, then falls back to the old sendEmail() in config.php, then PHP mail(). Emails come from the mailbox address (Hostinger refuses any other). Failures go to the PHP error log with the mail server's answer, never the password. Tables: none
 - mail_check.php — "Email check" button in admin.php (admin.php?mail_check=1, admin password needed; opening the file directly shows nothing). Shows the mailbox settings (never the password), whether the password-reset columns exist, and a "Send test" box that shows the mail server's exact answer. Tables read: users (column list only)
+- platform_lib.php — shared pieces for the dashboards and Bashro: owHasColumn / owHasTable (pages keep working before a database update), owLog() activity log, owUserStatusSql / owArtworkStatusSql, favorites, inquiry status words, owSafeNext (safe return page after sign-in), owSignupLimited, the bilingual confirmation email. Tables: activity_log, favorites
+- account_lib.php — a signed-in person's own account changes: owChangePassword, owChangeEmail, owResendVerify (with limits and notice emails). Used by the Buyer dashboard; the Artist dashboard will use it next. Tables: users, sessions, activity_log
+- dashboards_update.sql — the database parts for the dashboards (approved 30 Oct 2026). Only adds columns, tables and indexes; safe to run more than once
 - error_guard.php — loaded at the top of config.php on the live site. Visitors never see PHP errors, database errors or file paths: they get a short friendly page in English and Arabic ("We will be right back" / «سنعود حالاً»). The real error is written to the private log .logs/php-errors.log (blocked for visitors, kept by deploys through .gitignore, starts a fresh file at 5MB). Tables: none
 - error_log_view.php — "Error log" button in admin.php (admin.php?error_log=1, admin password needed; opening the file directly shows nothing). Shows the newest 150 lines of the private log, newest first. Tables: none
 - config_setup.php — TEMPORARY page used once to turn debug mode off in the live config.php and to save the new database and email passwords (each one is tested first and saved only if it works; never shown afterwards). Switches itself off after about 8 hours and is removed straight after use. One safety copy of the original config.php is kept in .backups/ (private)
@@ -320,6 +335,7 @@
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
 - database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Already in place on the live database (checked 30 Oct 2026)
+- dashboards_update.sql — the dashboards and Bashro parts (permanent IDs, dates, request status, favorites, activity log, empty shipping and payout tables). Safe to run more than once
 
 ## Design System
 - Style: Luxury white minimal

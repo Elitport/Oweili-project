@@ -2,11 +2,24 @@
 // marketplace.php — Oweili · The Gallery (live, database-driven; file name kept as marketplace.php)
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $ART_CATS  = require __DIR__ . '/art_categories.php';
 
 $lang = isset($_GET['lang']) && $_GET['lang'] === 'ar' ? 'ar' : 'en';
 $ar   = $lang === 'ar';
+
+/* Who is looking: a signed-in buyer gets hearts that save, and the
+   "I'm Interested" form filled in. Guests see the heart too (it asks them
+   to sign in); artists and staff do not. */
+$viewer  = isLoggedIn() ? currentUser() : null;
+$isBuyer = $viewer && ($viewer['role'] ?? '') === 'collector';
+$showFav = (!$viewer || $isBuyer) && owHasTable('favorites');
+$favIds  = $isBuyer ? array_flip(owFavIds((int) $viewer['id'])) : [];
+$pre     = $isBuyer ? ['name' => (string) ($viewer['full_name_en'] ?: $viewer['full_name_ar']), 'phone' => (string) ($viewer['phone'] ?? ''), 'email' => (string) $viewer['email']]
+                    : ['name' => '', 'phone' => '', 'email' => ''];
+$favLbl  = $ar ? ['on' => 'احفظ في المفضلة', 'off' => 'أزل من المفضلة'] : ['on' => 'Save to favorites', 'off' => 'Remove from favorites'];
+const MP_HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
 
 /* ---- What the visitor asked for: every value is checked against a fixed list ---- */
 $getStr  = fn(string $k): string => (isset($_GET[$k]) && is_string($_GET[$k])) ? $_GET[$k] : '';
@@ -202,6 +215,8 @@ foreach ($artworks as $aw) {
     .mi-form{margin-top:var(--space-sm);display:grid;gap:var(--space-xs);}
     .mi-form .field{margin:0;}
     .mi-note{font-size:var(--fs-caption);color:var(--color-body);}
+    .m-price-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-sm);margin-top:var(--space-sm);}
+    .modal-body .m-price-row .m-price{margin-top:0;}
     .m-interest [hidden]{display:none !important;}
     .mi-trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
     #mi-ok{margin-top:var(--space-sm);}
@@ -312,6 +327,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         <div class="aw-img">
           <?= owArtImgHtml($img, $tEn . ' · ' . $tAr, $cardNo++ < 4) ?>
           <span class="aw-status"><?= $aw['status'] === 'auction' ? ($ar ? 'مزاد' : 'Auction') : ($ar ? 'متاح' : 'Available') ?></span>
+          <?php if ($showFav): $fon = isset($favIds[$id]); ?><button type="button" class="fav-btn" data-fav="<?= $id ?>" aria-pressed="<?= $fon ? 'true' : 'false' ?>" aria-label="<?= e($fon ? $favLbl['off'] : $favLbl['on']) ?>"><?= MP_HEART ?></button><?php endif; ?>
         </div>
         <div class="aw-body">
           <h2 class="aw-title"><?= e($ar ? $tAr : ($tEn ?: $tAr)) ?></h2>
@@ -354,7 +370,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   <div class="modal">
     <div class="modal-body">
       <button class="modal-close" onclick="closeModal()" aria-label="<?= $ar ? 'إغلاق' : 'Close' ?>">&times;</button>
-      <img id="m-img" class="modal-img" src="" alt="" onerror="modalImgFailed(this)">
+      <img id="m-img" class="modal-img" alt="" onerror="if(window.modalImgFailed)modalImgFailed(this)">
       <div class="modal-img modal-noimg" id="m-noimg" hidden aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>
       <h2 id="m-title-en"></h2>
       <span class="human-badge" id="m-verified" hidden><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
@@ -364,7 +380,9 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       <p id="m-desc-en"></p>
       <div class="m-label" id="m-label-ar-h"><?= $ar?'عن العمل (بالعربية)':'About this work (Arabic)' ?></div>
       <p id="m-desc-ar" dir="rtl"></p>
-      <div class="m-price" id="m-price"></div>
+      <div class="m-price-row"><div class="m-price" id="m-price"></div>
+        <?php if ($showFav): ?><button type="button" class="fav-btn fav-inline" id="m-fav" data-fav="" aria-pressed="false" aria-label="<?= e($favLbl['on']) ?>"><?= MP_HEART ?></button><?php endif; ?>
+      </div>
       <!-- I'm Interested: name, phone, email → inquire.php -->
       <div class="m-interest">
         <button type="button" class="btn btn-primary btn-block" id="mi-open" onclick="openInterest()"><?= $ar ? 'أنا مهتم' : 'I’m Interested' ?></button>
@@ -373,11 +391,12 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
           <input type="hidden" name="artwork_id" id="mi-aw" value="">
           <div class="mi-trap" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
           <div class="field"><label for="mi-name"><?= $ar ? 'الاسم الكامل' : 'Full Name' ?></label>
-            <input type="text" id="mi-name" name="name" required maxlength="120" autocomplete="name"></div>
+            <input type="text" id="mi-name" name="name" required maxlength="120" autocomplete="name" value="<?= e($pre['name']) ?>"></div>
           <div class="field"><label for="mi-phone"><?= $ar ? 'رقم الهاتف' : 'Phone Number' ?></label>
-            <input type="tel" id="mi-phone" name="phone" required maxlength="40" autocomplete="tel" inputmode="tel" dir="ltr"></div>
+            <input type="tel" id="mi-phone" name="phone" required maxlength="40" autocomplete="tel" inputmode="tel" dir="ltr" value="<?= e($pre['phone']) ?>"></div>
           <div class="field"><label for="mi-email"><?= $ar ? 'البريد الإلكتروني' : 'Email Address' ?></label>
-            <input type="email" id="mi-email" name="email" required maxlength="190" autocomplete="email" dir="ltr"></div>
+            <input type="email" id="mi-email" name="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($pre['email']) ?>"></div>
+          <?php if ($isBuyer): ?><p class="mi-note"><?= $ar ? 'أضفنا بياناتك من حسابك. يمكنك تعديلها هنا.' : 'We filled in your details from your account. You can change them here.' ?></p><?php endif; ?>
           <p class="mi-note"><?= $ar ? 'نستخدم بياناتك فقط للتواصل معك بخصوص هذا العمل.' : 'We use your details only to contact you about this artwork.' ?></p>
           <div class="err-box" id="mi-err" role="alert" hidden></div>
           <button type="submit" class="btn btn-primary btn-block" id="mi-send"><?= $ar ? 'إرسال' : 'Send' ?></button>
@@ -394,6 +413,17 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   </div>
 </div>
 
+<?php if ($showFav): ?>
+<script>
+window.OW_FAV = {
+  buyer: <?= $isBuyer ? 'true' : 'false' ?>, csrf: <?= json_encode(csrfToken()) ?>,
+  ids: <?= json_encode(array_map('strval', array_keys($favIds))) ?>,
+  labels: <?= json_encode($favLbl, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>,
+  login: function(id){ location.href = 'login.php?next=' + encodeURIComponent('marketplace.php' + (LANG === 'ar' ? '?lang=ar' : '') + '#artwork-' + id); }
+};
+</script>
+<script src="<?= owAsset('assets/js/favorites.js') ?>"></script>
+<?php endif; ?>
 <script>
 const LANG = <?= json_encode($lang) ?>;
 const ARTWORKS = <?= json_encode($modalData, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>;
@@ -422,6 +452,8 @@ function openModal(id){
   document.getElementById('m-verified').hidden = !a.journey;
   document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });
   resetInterest(id);
+  const mf = document.getElementById('m-fav');
+  if (mf && window.owFavSync) { mf.dataset.fav = id; owFavSync(id, owFavHas(id)); }
   document.getElementById('modalBg').classList.add('open');
 }
 /* ---- I'm Interested ---- */

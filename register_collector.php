@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/mail_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 $errCode = '';
 $okCode  = '';
@@ -14,11 +15,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $pass    = (string) ($_POST['password'] ?? '');
     $confirm = (string) ($_POST['confirm'] ?? '');
 
-    $strong = strlen($pass) >= 8 && preg_match('/[A-Z]/', $pass) && preg_match('/[0-9]/', $pass) && preg_match('/[!@#$%^&*]/', $pass);
+    $strong = owPasswordStrong($pass);
+    $lang   = (string) ($_POST['lang'] ?? '') === 'ar' ? 'ar' : 'en';        // the language the page was in
     $fullName = trim($old['first'] . ' ' . $old['last']);
 
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         $errCode = 'csrf';
+    } elseif (owSignupLimited()) {
+        $errCode = 'rate';
     } elseif ($old['first'] === '' || $old['email'] === '' || $old['phone'] === '') {
         $errCode = 'required';
     } elseif (!filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
@@ -37,17 +41,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         } else {
             $token   = bin2hex(random_bytes(32));
             $expires = date('Y-m-d H:i:s', time() + 24 * 60 * 60);
+            $withLang = owHasColumn('users', 'preferred_lang');
             getDB()->prepare(
-                'INSERT INTO users (email, password, full_name_en, phone, role, is_verified, is_approved, verification_token, verification_expires)
-                 VALUES (:email,:pass,:name,:phone,"collector",0,0,:tok,:exp)'
+                'INSERT INTO users (email, password, full_name_en, phone, role, is_verified, is_approved, verification_token, verification_expires' . ($withLang ? ', preferred_lang' : '') . ')
+                 VALUES (:email,:pass,:name,:phone,"collector",0,0,:tok,:exp' . ($withLang ? ',:lang' : '') . ')'
             )->execute([
                 ':email' => $old['email'], ':pass' => hashPassword($pass), ':name' => $fullName,
                 ':phone' => $old['phone'], ':tok' => $token, ':exp' => $expires,
-            ]);
+            ] + ($withLang ? [':lang' => $lang] : []));
+            owSignupCounted((int) getDB()->lastInsertId(), 'collector');
 
             $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
-            $body = "Welcome!\r\n\r\nPlease verify your account by clicking the link below:\r\n" . $verifyUrl . "\r\n\r\nThis link expires in 24 hours.\r\n";
-            if (!owSendMail($old['email'], 'Verify your account', $body)) {
+            if (!owSendMail($old['email'], 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody($verifyUrl))) {
                 error_log('register_collector: verification email failed to ' . $old['email']);
             }
             $okCode = 'check_email';
@@ -58,6 +63,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
 $ERR = [
     'csrf'=>['en'=>'Security check failed. Please try again.','ar'=>'فشل التحقق الأمني. حاول مرة أخرى.'],
+    'rate'=>['en'=>'Too many new accounts from here. Please try again in an hour.','ar'=>'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'],
     'required'=>['en'=>'Please fill in the required fields.','ar'=>'يرجى تعبئة الحقول المطلوبة.'],
     'email'=>['en'=>'Please enter a valid email address.','ar'=>'يرجى إدخال بريد إلكتروني صالح.'],
     'phone'=>['en'=>'Please enter a valid mobile number.','ar'=>'يرجى إدخال رقم جوال صالح.'],
@@ -95,6 +101,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <div class="ok-box" id="ok" data-en="<?= e($okEn) ?>" data-ar="<?= e($okAr) ?>" style="display:<?= $okCode?'block':'none' ?>;"><?= e($okEn) ?></div>
     <form method="post" action="register_collector.php">
       <?= csrfField() ?>
+      <input type="hidden" name="lang" id="f-lang" value="en">
       <div class="grid2">
         <div class="field"><label id="t-l-first" for="first_name">First name</label><input type="text" id="first_name" name="first_name" required value="<?= e($old['first']) ?>"></div>
         <div class="field"><label id="t-l-last" for="last_name">Last name</label><input type="text" id="last_name" name="last_name" value="<?= e($old['last']) ?>"></div>
@@ -135,6 +142,7 @@ let L='en';
 function checkRules(){const p=document.getElementById('password').value;const set=(id,ok)=>document.getElementById(id).classList.toggle('ok',ok);set('r-len',p.length>=8);set('r-upper',/[A-Z]/.test(p));set('r-num',/[0-9]/.test(p));set('r-spec',/[!@#$%^&*]/.test(p));}
 function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
 function apply(l){
+  {const fl=document.getElementById('f-lang');if(fl)fl.value=l;}
   const t=T[l];
   document.getElementById('html').lang=l;document.getElementById('html').setAttribute('dir',t.dir);
   document.documentElement.setAttribute('dir',t.dir);document.getElementById('topnav').setAttribute('dir',t.dir);

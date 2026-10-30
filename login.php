@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/platform_lib.php';
 
 /* Checks a password and quietly upgrades old saves.
    Accounts made on the old site or typed into phpMyAdmin can hold the
@@ -50,7 +51,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             recordLoginAttempt($email, true);
             loginUser((int) $u['id']);            // regenerates session + stores token + last_login_at
             $role = $u['role'];
-            header('Location: ' . dashboardUrl($role));
+            owLog('login', 'user', (int) $u['id'], '', ['type' => owActorType($role), 'id' => (int) $u['id']]);
+            /* back to the page that sent them here (e.g. the heart on an artwork), never another site */
+            $next = owSafeNext($_POST['next'] ?? '');
+            header('Location: ' . ($next !== '' && !in_array($role, ['admin', 'sub_admin'], true) ? $next : dashboardUrl($role)));
             exit;
         } else {
             recordLoginAttempt($email, false);
@@ -110,6 +114,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
     <form method="post" action="login.php" autocomplete="on">
       <?= csrfField() ?>
+      <?php if (($nextPage = owSafeNext($_POST['next'] ?? $_GET['next'] ?? '')) !== ''): ?><input type="hidden" name="next" value="<?= e($nextPage) ?>"><?php endif; ?>
       <div class="field">
         <label id="t-l-email" for="email">Email</label>
         <input type="email" id="email" name="email" required

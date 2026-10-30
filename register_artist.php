@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/mail_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 const AR_VIDEO_MAX = 50 * 1024 * 1024; // 50 MB
 const AR_PORTFOLIO_MAX = 5;
@@ -68,6 +69,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $errCode = 'too_big';
     } elseif (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         $errCode = 'csrf';
+    } elseif (owSignupLimited()) {
+        $errCode = 'rate';
     } elseif ($old['first']==='' || $old['artist']==='' || $old['email']==='' || $old['phone']==='' || $old['city']==='') {
         $errCode = 'required';
     } elseif (!filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
@@ -131,6 +134,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     ':pic'=>$photoRel, ':vid'=>$videoRel, ':tok'=>$token, ':exp'=>$expires,
                 ]);
                 $newId = (int) getDB()->lastInsertId();
+                owSignupCounted($newId, 'artist');
                 // Save portfolio images
                 $podir = __DIR__ . '/uploads/portfolio/'; if (!is_dir($podir)) @mkdir($podir, 0755, true);
                 $sort = 0;
@@ -149,8 +153,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     }
                 }
                 $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
-                $body = "Welcome!\r\n\r\nPlease verify your account by clicking the link below:\r\n" . $verifyUrl . "\r\n\r\nAfter verifying, our team reviews your portfolio before your profile goes live.\r\n";
-                if (!owSendMail($old['email'], 'Verify your artist account', $body)) {
+                if (!owSendMail($old['email'], 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody($verifyUrl, true))) {
                     error_log('register_artist: verification email failed to ' . $old['email']);
                 }
                 $okCode = 'check_email';
@@ -176,6 +179,7 @@ $ERR = [
     'portfolio'=>['en'=>'Portfolio images must be JPG/PNG under ' . $LIM['photo'] . 'MB each.','ar'=>'يجب أن تكون صور الأعمال JPG/PNG وأقل من ' . $LIM['photo'] . ' ميغابايت لكل صورة.'],
     'video'=>['en'=>'The video must be MP4 or MOV and under ' . $LIM['video'] . 'MB. You can also leave it out.','ar'=>'يجب أن يكون الفيديو بصيغة MP4 أو MOV وأقل من ' . $LIM['video'] . ' ميغابايت. ويمكنك تركه.'],
     'exists'=>['en'=>'An account with this email already exists.','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل.'],
+    'rate'=>['en'=>'Too many new accounts from here. Please try again in an hour.','ar'=>'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'],
 ];
 $OK = ['check_email'=>['en'=>'Thanks! Check your email to verify. Our team will review your portfolio before approval.','ar'=>'شكراً! راجع بريدك للتفعيل. سيراجع فريقنا أعمالك قبل الموافقة.']];
 $errEn = $errCode ? $ERR[$errCode]['en'] : ''; $errAr = $errCode ? $ERR[$errCode]['ar'] : '';

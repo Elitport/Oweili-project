@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/mail_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 /* ---- Validate token (before output) ---- */
 $token = sanitize($_GET['token'] ?? '');
@@ -8,7 +9,7 @@ $state = 'invalid';   // 'success' | 'invalid'
 
 if ($token !== '' && ctype_xdigit($token) && strlen($token) <= 128) {
     $stmt = getDB()->prepare(
-        'SELECT id, email, full_name_en, full_name_ar, is_verified
+        'SELECT id, email, full_name_en, full_name_ar, is_verified, role
          FROM users
          WHERE verification_token = :t
            AND (verification_expires IS NULL OR verification_expires > NOW())
@@ -25,11 +26,12 @@ if ($token !== '' && ctype_xdigit($token) && strlen($token) <= 128) {
         );
         $upd->execute([':id' => $row['id']]);
         $state = 'success';
+        owLog('email_verified', 'user', (int) $row['id'], '', ['type' => owActorType($row['role'] ?? ''), 'id' => (int) $row['id']]);
 
         // Send the bilingual welcome email once, only on first verification.
         if (!$alreadyVerified) {
             $host      = $_SERVER['HTTP_HOST'] ?? 'oweili.com';
-            $dashUrl   = 'https://' . $host . '/artist_dashboard.php?id=' . (int) $row['id'];
+            $dashUrl   = 'https://' . $host . '/' . (($row['role'] ?? '') === 'artist' ? 'artist_dashboard.php?id=' . (int) $row['id'] : dashboardUrl($row['role'] ?? ''));
             $marketUrl = 'https://' . $host . '/marketplace.php';
             $welcome   = welcomeEmailHtml(
                 $row['full_name_en'] ?: '',

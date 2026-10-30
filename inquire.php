@@ -6,12 +6,14 @@
  *  Checks: POST only, security token (CSRF), a hidden trap field for
  *  robots, at most 5 inquiries per visitor per hour, and the artwork
  *  must be one a visitor can see in the Gallery.
- *  Tables: artwork_inquiries (created automatically), artworks, users
+ *  A signed-in buyer's request is linked to their account (buyer_id).
+ *  Tables: artwork_inquiries (created automatically), artworks, users, activity_log
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/mail_lib.php';
 require_once __DIR__ . '/inquiry_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 header('Content-Type: application/json; charset=UTF-8');
 header('Cache-Control: no-store');
@@ -36,7 +38,9 @@ if ($err !== '') $reply(false, $err, 422);
 try {
     $aw = owInquiryArtwork((int) ($_POST['artwork_id'] ?? 0));
     if (!$aw) $reply(false, 'artwork', 404);
-    owSaveInquiry($aw, $v);
+    /* a signed-in buyer: the request is linked to their account (their Buyer dashboard) */
+    $buyer = isLoggedIn() ? currentUser() : null;
+    owSaveInquiry($aw, $v, ($buyer && ($buyer['role'] ?? '') === 'collector') ? (int) $buyer['id'] : 0);
 } catch (Throwable $e) {
     error_log('inquire.php: ' . $e->getMessage());
     $reply(false, 'server', 500);
