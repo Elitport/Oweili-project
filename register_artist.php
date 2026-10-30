@@ -11,9 +11,27 @@ function validateVideoUpload(array $file): array {
     if (!is_uploaded_file($file['tmp_name'])) return ['ok'=>false,'ext'=>''];
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
     $ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (!in_array($mime, ['video/mp4','application/mp4'], true) || $ext !== 'mp4') return ['ok'=>false,'ext'=>''];
-    return ['ok'=>true,'ext'=>'mp4'];
+    // MP4, or MOV (what iPhones record)
+    $types = ['mp4' => ['video/mp4', 'application/mp4'], 'mov' => ['video/quicktime', 'video/mp4', 'application/octet-stream']];
+    if (!isset($types[$ext]) || !in_array($mime, $types[$ext], true)) return ['ok'=>false,'ext'=>''];
+    return ['ok'=>true,'ext'=>$ext];
 }
+
+/* A size from the server settings ("8M", "512K", "1G") in bytes; 0 = no limit */
+function arIniBytes(string $key): int {
+    $v = trim((string) ini_get($key));
+    if ($v === '' || $v === '-1') return 0;
+    $n = (int) $v;
+    return $n * ([ 'g' => 1073741824, 'm' => 1048576, 'k' => 1024 ][strtolower(substr($v, -1))] ?? 1);
+}
+$arMb = fn(int $b): string => rtrim(rtrim(number_format($b / 1048576, 1, '.', ''), '0'), '.');
+/* The real limits: our own, but never more than the server allows */
+$arFileMax  = arIniBytes('upload_max_filesize');                        // each single file
+$arTotalMax = arIniBytes('post_max_size');                              // everything sent together
+$arPhotoMax = defined('UPLOAD_MAX_BYTES') ? (int) UPLOAD_MAX_BYTES : 5 * 1024 * 1024;
+if ($arFileMax > 0) $arPhotoMax = min($arPhotoMax, $arFileMax);
+$arVideoMax = $arFileMax > 0 ? min(AR_VIDEO_MAX, $arFileMax) : AR_VIDEO_MAX;
+$LIM = ['photo' => $arMb($arPhotoMax), 'video' => $arMb($arVideoMax), 'total' => $arTotalMax > 0 ? $arMb($arTotalMax) : ''];
 
 $errCode = '';
 $okCode  = '';
@@ -42,7 +60,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         foreach ($_FILES['portfolio']['name'] as $nm) { if ($nm !== '') $portCount++; }
     }
 
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
+    /* When the files together are bigger than the server allows, the server
+       throws the whole form away and nothing arrives (not even the security
+       token). Say so clearly instead of "security check failed". */
+    $tooBig = empty($_POST) && empty($_FILES) && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0;
+    if ($tooBig) {
+        $errCode = 'too_big';
+    } elseif (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         $errCode = 'csrf';
     } elseif ($old['first']==='' || $old['artist']==='' || $old['email']==='' || $old['phone']==='' || $old['city']==='') {
         $errCode = 'required';
@@ -60,10 +84,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $errCode = 'portfolio_req';
     } elseif ($portCount > AR_PORTFOLIO_MAX) {
         $errCode = 'portfolio_max';
-    } elseif (!$hasVideo) {
-        $errCode = 'video_req';
-    } elseif (!validateVideoUpload($_FILES['art_video'])['ok']) {
-        $errCode = 'video';
+    } elseif ($hasVideo && !validateVideoUpload($_FILES['art_video'])['ok']) {
+        $errCode = 'video';                                      // the video is optional, but must be valid if sent
     } else {
         // Validate every portfolio image before saving anything.
         $portOk = true;
@@ -89,11 +111,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $pdir = __DIR__ . '/uploads/profiles/'; if (!is_dir($pdir)) @mkdir($pdir, 0755, true);
                 $pName = safeUploadName($pChk['ext']); $photoRel = '';
                 if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $pdir . $pName)) $photoRel = 'uploads/profiles/' . $pName;
-                // Save video
-                $vChk = validateVideoUpload($_FILES['art_video']);
-                $vdir = __DIR__ . '/uploads/videos/'; if (!is_dir($vdir)) @mkdir($vdir, 0755, true);
-                $vName = safeUploadName($vChk['ext']); $videoRel = '';
-                if (move_uploaded_file($_FILES['art_video']['tmp_name'], $vdir . $vName)) $videoRel = 'uploads/videos/' . $vName;
+                // Save video (optional)
+                $videoRel = '';
+                if ($hasVideo) {
+                    $vChk = validateVideoUpload($_FILES['art_video']);
+                    $vdir = __DIR__ . '/uploads/videos/'; if (!is_dir($vdir)) @mkdir($vdir, 0755, true);
+                    $vName = safeUploadName($vChk['ext']);
+                    if (move_uploaded_file($_FILES['art_video']['tmp_name'], $vdir . $vName)) $videoRel = 'uploads/videos/' . $vName;
+                }
                 // Insert user
                 $token = bin2hex(random_bytes(32));
                 $expires = date('Y-m-d H:i:s', time() + 24*60*60);
@@ -136,18 +161,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 }
 
 $ERR = [
-    'csrf'=>['en'=>'Security check failed. Please try again.','ar'=>'فشل التحقق الأمني. حاول مرة أخرى.'],
+    'too_big'=>['en'=>'Your files are too large to send together. The limit is ' . ($LIM['total'] !== '' ? $LIM['total'] . 'MB in total' : 'set by the server') . ': photo up to ' . $LIM['photo'] . 'MB, each artwork photo up to ' . $LIM['photo'] . 'MB, video up to ' . $LIM['video'] . 'MB. Please choose smaller files or leave the video out.',
+                'ar'=>'ملفاتك أكبر من المسموح إرسالها معاً. الحد ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'يحدده الخادم') . ': الصورة حتى ' . $LIM['photo'] . ' ميغابايت، وكل صورة عمل حتى ' . $LIM['photo'] . ' ميغابايت، والفيديو حتى ' . $LIM['video'] . ' ميغابايت. يرجى اختيار ملفات أصغر أو ترك الفيديو.'],
+    'csrf'=>['en'=>'This page was open for a long time, so we could not send it. Please try again. Files must stay under ' . ($LIM['total'] !== '' ? $LIM['total'] . 'MB in total' : 'the size limits shown') . '.',
+             'ar'=>'بقيت الصفحة مفتوحة وقتاً طويلاً فلم نتمكن من إرسالها. حاول مرة أخرى. يجب ألا تتجاوز الملفات ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'الحدود الموضحة') . '.'],
     'required'=>['en'=>'Please fill in all required fields.','ar'=>'يرجى تعبئة جميع الحقول المطلوبة.'],
     'email'=>['en'=>'Please enter a valid email address.','ar'=>'يرجى إدخال بريد إلكتروني صالح.'],
     'phone'=>['en'=>'Please enter a valid mobile number.','ar'=>'يرجى إدخال رقم جوال صالح.'],
     'weak'=>['en'=>'Password does not meet the requirements.','ar'=>'كلمة المرور لا تستوفي الشروط.'],
     'mismatch'=>['en'=>'Passwords do not match.','ar'=>'كلمتا المرور غير متطابقتين.'],
-    'photo'=>['en'=>'A profile picture (JPG/PNG, max 5MB) is required.','ar'=>'الصورة الشخصية مطلوبة (JPG/PNG، بحد أقصى 5 ميجابايت).'],
+    'photo'=>['en'=>'A profile picture (JPG/PNG, max ' . $LIM['photo'] . 'MB) is required.','ar'=>'الصورة الشخصية مطلوبة (JPG/PNG، بحد أقصى ' . $LIM['photo'] . ' ميغابايت).'],
     'portfolio_req'=>['en'=>'Please upload at least one portfolio image.','ar'=>'يرجى رفع صورة واحدة على الأقل لأعمالك.'],
     'portfolio_max'=>['en'=>'You can upload up to 5 portfolio images.','ar'=>'يمكنك رفع حتى 5 صور لأعمالك.'],
-    'portfolio'=>['en'=>'Portfolio images must be JPG/PNG under 5MB each.','ar'=>'يجب أن تكون صور الأعمال JPG/PNG وأقل من 5 ميجابايت لكل صورة.'],
-    'video_req'=>['en'=>'A video of you creating art is required.','ar'=>'مطلوب فيديو أثناء إبداعك للفن.'],
-    'video'=>['en'=>'The art video must be an MP4 file under 50MB.','ar'=>'يجب أن يكون الفيديو بصيغة MP4 وأقل من 50 ميجابايت.'],
+    'portfolio'=>['en'=>'Portfolio images must be JPG/PNG under ' . $LIM['photo'] . 'MB each.','ar'=>'يجب أن تكون صور الأعمال JPG/PNG وأقل من ' . $LIM['photo'] . ' ميغابايت لكل صورة.'],
+    'video'=>['en'=>'The video must be MP4 or MOV and under ' . $LIM['video'] . 'MB. You can also leave it out.','ar'=>'يجب أن يكون الفيديو بصيغة MP4 أو MOV وأقل من ' . $LIM['video'] . ' ميغابايت. ويمكنك تركه.'],
     'exists'=>['en'=>'An account with this email already exists.','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل.'],
 ];
 $OK = ['check_email'=>['en'=>'Thanks! Check your email to verify. Our team will review your portfolio before approval.','ar'=>'شكراً! راجع بريدك للتفعيل. سيراجع فريقنا أعمالك قبل الموافقة.']];
@@ -166,6 +193,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
+.opt-badge{display:inline-block;font-size:var(--fs-min);font-weight:700;line-height:1.4;padding:2px 8px;border-radius:999px;background:rgba(var(--rgb-ink),0.07);color:var(--color-dark);margin-inline-start:6px;vertical-align:middle;}
 </style>
 </head>
 <body>
@@ -178,7 +206,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <div class="auth-head"><h1 id="t-title">Join as an Artist</h1><p id="t-sub">We are glad you are here. Our team reviews every profile by hand.</p></div>
     <div class="err-box" id="err" data-en="<?= e($errEn) ?>" data-ar="<?= e($errAr) ?>" style="display:<?= $errCode?'block':'none' ?>;"><?= e($errEn) ?></div>
     <div class="ok-box" id="ok" data-en="<?= e($okEn) ?>" data-ar="<?= e($okAr) ?>" style="display:<?= $okCode?'block':'none' ?>;"><?= e($okEn) ?></div>
-    <form method="post" action="register_artist.php" enctype="multipart/form-data">
+    <form method="post" action="register_artist.php" enctype="multipart/form-data" onsubmit="return checkSizes()" data-total="<?= (int) $arTotalMax ?>">
       <?= csrfField() ?>
       <div class="grid2">
         <div class="field"><label id="t-l-first">First name</label><input type="text" name="first_name" required value="<?= e($old['first']) ?>"></div>
@@ -194,14 +222,16 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <div class="field"><label id="t-l-bioen">About you in English (optional)</label><textarea name="bio_en"><?= e($old['bioEn']) ?></textarea></div>
         <div class="field"><label id="t-l-bioar">About you in Arabic (optional)</label><textarea name="bio_ar" dir="rtl"><?= e($old['bioAr']) ?></textarea></div>
       </div>
-      <div class="field"><label id="t-l-photo">Your photo (required, JPG or PNG, up to 5MB)</label>
-        <input type="file" name="profile_picture" accept="image/jpeg,image/png" required></div>
-      <div class="field"><label id="t-l-port">Your artworks (required, up to 5 photos)</label>
-        <input type="file" name="portfolio[]" accept="image/jpeg,image/png" multiple required>
-        <p class="hint" id="t-port-hint">Pick the pieces you are most proud of.</p></div>
-      <div class="field"><label id="t-l-video">A short video of you at work (required, MP4 up to 50MB)</label>
-        <input type="file" name="art_video" accept="video/mp4" required>
-        <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours.</p></div>
+      <div class="field"><label id="t-l-photo" for="f-photo">Your photo (required)</label>
+        <input type="file" id="f-photo" name="profile_picture" accept="image/jpeg,image/png" required data-max="<?= (int) $arPhotoMax ?>">
+        <p class="hint" id="t-photo-hint">JPG or PNG, up to <?= e($LIM['photo']) ?>MB</p></div>
+      <div class="field"><label id="t-l-port" for="f-port">Your artworks (required, up to 5 photos)</label>
+        <input type="file" id="f-port" name="portfolio[]" accept="image/jpeg,image/png" multiple required data-max="<?= (int) $arPhotoMax ?>">
+        <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each.</p></div>
+      <div class="field"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt">Optional / اختياري</span></label>
+        <input type="file" id="f-video" name="art_video" accept="video/mp4,video/quicktime,.mp4,.mov" data-max="<?= (int) $arVideoMax ?>">
+        <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to <?= e($LIM['video']) ?>MB.</p></div>
+      <?php if ($LIM['total'] !== ''): ?><p class="hint" id="t-total-hint">All files together: up to <?= e($LIM['total']) ?>MB.</p><?php endif; ?>
       <div class="field"><label id="t-l-pass">Password</label><input type="password" id="password" name="password" required oninput="checkRules()">
         <ul class="pw-rules">
           <li id="r-len"><span class="mark">✓</span><span id="t-r-len">Minimum 8 characters</span></li>
@@ -218,12 +248,16 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 </div>
 
 <script>
+const LIM=<?= json_encode($LIM, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 const T={
   en:{dir:'ltr',lb:'العربية',title:'Join as an Artist',sub:'We are glad you are here. Our team reviews every profile by hand.',
     first:'First name',last:'Last name',artist:'Artist name (the name people will see)',email:'Email',phone:'Mobile number',city:'City',
     bioen:'About you in English (optional)',bioar:'About you in Arabic (optional)',
-    photo:'Your photo (required, JPG or PNG, up to 5MB)',port:'Your artworks (required, up to 5 photos)',portHint:'Pick the pieces you are most proud of.',
-    video:'A short video of you at work (required, MP4 up to 50MB)',videoHint:'Film your hands drawing or painting. It shows us the art is truly yours.',
+    photo:'Your photo (required)',photoHint:'JPG or PNG, up to '+LIM.photo+'MB',port:'Your artworks (required, up to 5 photos)',portHint:'Pick the pieces you are most proud of. JPG or PNG, up to '+LIM.photo+'MB each.',
+    video:'A short video of you at work',videoHint:'Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to '+LIM.video+'MB.',
+    totalHint:'All files together: up to '+LIM.total+'MB.',
+    tooBigFile:function(n,mb){return '“'+n+'” is larger than '+mb+'MB. Please choose a smaller file.';},
+    tooBigAll:'Your files are larger than '+LIM.total+'MB together. Please choose smaller files or leave the video out.',
     pass:'Password',confirm:'Confirm password',
     rlen:'Minimum 8 characters',rupper:'At least one uppercase letter',rnum:'At least one number',rspec:'At least one special character (!@#$%^&*)',
     submit:'Send for Review',have:'Already one of us?',login:'Sign In',
@@ -232,8 +266,11 @@ const T={
   ar:{dir:'rtl',lb:'English',title:'انضم إلينا كفنان',sub:'سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.',
     first:'الاسم الأول',last:'اسم العائلة',artist:'اسمك الفني (الاسم الذي سيراه الناس)',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
     bioen:'نبذة عنك بالإنجليزية (اختياري)',bioar:'نبذة عنك بالعربية (اختياري)',
-    photo:'صورتك (مطلوبة، JPG أو PNG حتى 5 ميغابايت)',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر.',
-    video:'مقطع قصير وأنت تعمل (مطلوب، MP4 حتى 50 ميغابايت)',videoHint:'صوّر يديك وهي ترسم أو تلوّن. هكذا نعرف أن الفن من صنعك.',
+    photo:'صورتك (مطلوبة)',photoHint:'JPG أو PNG حتى '+LIM.photo+' ميغابايت',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر. JPG أو PNG حتى '+LIM.photo+' ميغابايت لكل صورة.',
+    video:'مقطع قصير وأنت تعمل',videoHint:'صوّر يديك وهي ترسم أو تلوّن. هكذا نعرف أن الفن من صنعك. MP4 أو MOV حتى '+LIM.video+' ميغابايت.',
+    totalHint:'كل الملفات معاً: حتى '+LIM.total+' ميغابايت.',
+    tooBigFile:function(n,mb){return '«'+n+'» أكبر من '+mb+' ميغابايت. يرجى اختيار ملف أصغر.';},
+    tooBigAll:'ملفاتك معاً أكبر من '+LIM.total+' ميغابايت. يرجى اختيار ملفات أصغر أو ترك الفيديو.',
     pass:'كلمة المرور',confirm:'تأكيد كلمة المرور',
     rlen:'الحد الأدنى 8 أحرف',rupper:'حرف كبير واحد على الأقل',rnum:'رقم واحد على الأقل',rspec:'رمز خاص واحد على الأقل (!@#$%^&*)',
     submit:'أرسل للمراجعة',have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
@@ -241,6 +278,19 @@ const T={
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';
+/* Check sizes on the phone before sending, so nothing is uploaded for nothing */
+function checkSizes(){
+  const t=T[L], err=document.getElementById('err'), form=document.querySelector('form[data-total]');
+  let total=0, msg='';
+  form.querySelectorAll('input[type=file][data-max]').forEach(function(inp){
+    const max=+inp.dataset.max;
+    Array.from(inp.files||[]).forEach(function(f){ total+=f.size; if(!msg && max && f.size>max) msg=t.tooBigFile(f.name,(max/1048576).toFixed(0)); });
+  });
+  const lim=+form.dataset.total;
+  if(!msg && lim && total>lim*0.97) msg=t.tooBigAll;
+  if(msg){ err.textContent=msg; err.style.display='block'; err.scrollIntoView({behavior:'smooth',block:'center'}); return false; }
+  return true;
+}
 function checkRules(){const p=document.getElementById('password').value;const set=(id,ok)=>document.getElementById(id).classList.toggle('ok',ok);set('r-len',p.length>=8);set('r-upper',/[A-Z]/.test(p));set('r-num',/[0-9]/.test(p));set('r-spec',/[!@#$%^&*]/.test(p));}
 function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
 function apply(l){
@@ -252,7 +302,7 @@ function apply(l){
   setTxt('t-l-first',t.first);setTxt('t-l-last',t.last);setTxt('t-l-artist',t.artist);setTxt('t-l-email',t.email);setTxt('t-l-phone',t.phone);setTxt('t-l-city',t.city);
   setTxt('t-l-bioen',t.bioen);setTxt('t-l-bioar',t.bioar);
   setTxt('t-l-photo',t.photo);setTxt('t-l-port',t.port);setTxt('t-port-hint',t.portHint);
-  setTxt('t-l-video',t.video);setTxt('t-video-hint',t.videoHint);
+  setTxt('t-l-video',t.video);setTxt('t-video-hint',t.videoHint);setTxt('t-photo-hint',t.photoHint);setTxt('t-total-hint',t.totalHint);
   setTxt('t-l-pass',t.pass);setTxt('t-l-confirm',t.confirm);
   setTxt('t-r-len',t.rlen);setTxt('t-r-upper',t.rupper);setTxt('t-r-num',t.rnum);setTxt('t-r-spec',t.rspec);
   setTxt('t-submit',t.submit);setTxt('t-have',t.have);setTxt('t-login',t.login);
