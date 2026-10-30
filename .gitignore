@@ -2,3 +2,5 @@ config.php
 # Photos and files that artists and the team upload live only on the server.
 # Listed here so a deploy never treats them as stray files and removes them.
 uploads/
+# Database backups made on the server. Hidden from visitors and kept by deploys.
+.backups/
