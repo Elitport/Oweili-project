@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/mail_lib.php';
 
 /* ---- Validate token (before output) ---- */
 $token = sanitize($_GET['token'] ?? '');
@@ -36,7 +37,7 @@ if ($token !== '' && ctype_xdigit($token) && strlen($token) <= 128) {
                 $dashUrl,
                 $marketUrl
             );
-            if (!sendEmail($row['email'], 'Welcome to Oweili · مرحباً بك في أويلي', $welcome, true)) {
+            if (!owSendMail($row['email'], 'Welcome to Oweili · مرحباً بك في أويلي', $welcome, true)) {
                 error_log('verify.php: welcome email failed to send to ' . $row['email']);
             }
         }

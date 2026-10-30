@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/mail_lib.php';
 
 $errCode = '';
 $okCode  = '';
@@ -46,7 +47,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
             $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
             $body = "Welcome!\r\n\r\nPlease verify your account by clicking the link below:\r\n" . $verifyUrl . "\r\n\r\nThis link expires in 24 hours.\r\n";
-            if (!sendEmail($old['email'], 'Verify your account', $body)) {
+            if (!owSendMail($old['email'], 'Verify your account', $body)) {
                 error_log('register_collector: verification email failed to ' . $old['email']);
             }
             $okCode = 'check_email';

@@ -46,6 +46,12 @@ if ($isAdmin && isset($_GET['photo_check'])) {
     require __DIR__ . '/photo_check.php';
     exit;
 }
+/* ---- Email check: can the site send reset / welcome emails? ---- */
+if ($isAdmin && isset($_GET['mail_check'])) {
+    define('OW_ADMIN_OK', true);
+    require __DIR__ . '/mail_check.php';
+    exit;
+}
 
 /* ---- Handle approve / ban actions (admin only, CSRF-checked) ---- */
 $flash = '';
@@ -416,6 +422,7 @@ $STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
       <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?>
       <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?photo_check=1">Photo check</a>
+      <a class="btn btn-ghost btn-sm" href="admin.php?mail_check=1">Email check</a>
       <a class="btn btn-ghost btn-sm" href="admin.php?logout=1">Log out</a>
     </div>
   </div>
@@ -843,6 +850,7 @@ const ADICT = {
   "Log out":"تسجيل الخروج",
   "Articles":"المقالات",
   "Photo check":"فحص الصور",
+  "Email check":"فحص البريد",
   "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.",
   "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"أساليب الرسم",
   "Events":"الأحداث","Training":"التدريب",

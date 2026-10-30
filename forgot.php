@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/mail_lib.php';
 
 /* forgot.php — request a reset link, or set a new password via ?token= */
 
@@ -36,19 +37,22 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $uid = (int) ($stmt->fetchColumn() ?: 0);
 
             if ($uid > 0) {
-                $rtok    = bin2hex(random_bytes(32));
-                $expires = date('Y-m-d H:i:s', time() + 60 * 60); // 1 hour
-                getDB()->prepare('UPDATE users SET reset_token = :t, reset_expires = :x WHERE id = :id')
-                       ->execute([':t' => $rtok, ':x' => $expires, ':id' => $uid]);
+                $rtok = bin2hex(random_bytes(32));
+                // 1 hour, counted by the database clock (the same clock that checks it later)
+                getDB()->prepare('UPDATE users SET reset_token = :t, reset_expires = NOW() + INTERVAL 1 HOUR WHERE id = :id')
+                       ->execute([':t' => $rtok, ':id' => $uid]);
 
                 $resetUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/forgot.php?token=' . $rtok;
-                $subject  = 'Reset your password';
-                $body     = "You (or someone) requested a password reset.\r\n\r\n"
-                          . "Open this link to set a new password (valid for 1 hour):\r\n"
-                          . $resetUrl . "\r\n\r\nIf you didn't request this, ignore this email.\r\n";
+                $subject  = 'Reset your Oweili password · إعادة تعيين كلمة المرور';
+                $body     = "Hello,\r\n\r\nSomeone asked to reset the password for your Oweili account.\r\n"
+                          . "Open this link to choose a new one. It works for 1 hour:\r\n"
+                          . $resetUrl . "\r\n\r\nIf this was not you, you can ignore this email.\r\n\r\n"
+                          . "مرحباً،\r\n\r\nطلب أحدهم إعادة تعيين كلمة المرور لحسابك في أويلي.\r\n"
+                          . "افتح هذا الرابط لاختيار كلمة جديدة. يعمل لمدة ساعة واحدة:\r\n"
+                          . $resetUrl . "\r\n\r\nإن لم تطلب ذلك، تجاهل هذه الرسالة.\r\n\r\nOweili · أويلي\r\n";
 
-                // Authenticated SMTP only (Hostinger mail() is unreliable).
-                if (!sendEmail($email, $subject, $body)) {
+                // Mailbox SMTP first, with fallbacks (mail_lib.php)
+                if (!owSendMail($email, $subject, $body)) {
                     error_log('forgot.php: password-reset email failed to send to ' . $email);
                 }
             }
