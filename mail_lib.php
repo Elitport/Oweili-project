@@ -64,7 +64,9 @@ function owMailMessage(string $to, string $subject, string $body, bool $isHtml):
 }
 
 /* One SMTP conversation. Returns true when the server accepted the email. */
-function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log): bool {
+/* $loginOnly = true only signs in and signs out (used by email_test.php to
+   check the mailbox and password without sending anything). */
+function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log, bool $loginOnly = false): bool {
     $secure = $port === 465 ? 'ssl://' : 'tcp://';
     $ctx = stream_context_create(['ssl' => ['verify_peer' => true, 'verify_peer_name' => true, 'SNI_enabled' => true]]);
     $fp = @stream_socket_client($secure . $host . ':' . $port, $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $ctx);   // 10s: never keep a visitor waiting long
@@ -106,6 +108,12 @@ function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log
     $ok = $ok && $cmd('AUTH LOGIN', [334])
               && $cmd(base64_encode(owMailSetting('SMTP_USER')), [334], 'Mailbox name')
               && $cmd(base64_encode(owMailSetting('SMTP_PASS')), [235], 'Password');
+    if ($ok && $loginOnly) {
+        @fwrite($fp, "QUIT\r\n");
+        fclose($fp);
+        $log[] = "$host:$port: mailbox and password accepted";
+        return true;
+    }
     $ok = $ok && $cmd('MAIL FROM:<' . $msg['from'] . '>', [250])
               && $cmd('RCPT TO:<' . $to . '>', [250, 251])
               && $cmd('DATA', [354]);
