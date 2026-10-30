@@ -27,11 +27,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     }
     /* ---- Step 1: request a reset link ---- */
     elseif ($mode === 'request') {
-        $email = sanitize($_POST['email'] ?? '');
+        $email = strtolower(sanitize($_POST['email'] ?? ''));
         if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errCode = 'email';
         } else {
-            $stmt = getDB()->prepare('SELECT id FROM users WHERE email = :e LIMIT 1');
+            $stmt = getDB()->prepare('SELECT id FROM users WHERE LOWER(TRIM(email)) = :e ORDER BY id LIMIT 1');
             $stmt->execute([':e' => $email]);
             $uid = (int) ($stmt->fetchColumn() ?: 0);
 

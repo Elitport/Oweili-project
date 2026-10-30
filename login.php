@@ -1,6 +1,35 @@
 <?php
 require_once 'config.php';
 
+/* Checks a password and quietly upgrades old saves.
+   Accounts made on the old site or typed into phpMyAdmin can hold the
+   password as plain text or an old MD5 / SHA code instead of a modern hash,
+   so password_verify() always said "wrong password" for them. When one of
+   those matches, it is replaced by a proper hash straight away, so it is
+   never kept the old way again. */
+function owPasswordMatches(string $pass, string $stored, int $uid): bool {
+    $stored = trim($stored);
+    if ($stored === '' || $pass === '') return false;
+    $modern = (bool) password_get_info($stored)['algo'];
+    $ok = verifyPassword($pass, $stored);                         // modern hashes (and old crypt ones)
+    if (!$ok && !$modern) {                                       // an old save
+        $low = strtolower($stored);
+        $isDigest = (bool) preg_match('/^([0-9a-f]{32}|[0-9a-f]{40}|[0-9a-f]{64})$/', $low);
+        $ok = (!$isDigest && hash_equals($stored, $pass))         // plain text (never the code itself)
+           || hash_equals($low, md5($pass))
+           || hash_equals($low, sha1($pass))
+           || hash_equals($low, hash('sha256', $pass));
+    }
+    if (!$ok) return false;
+    if (!$modern) {
+        try {
+            getDB()->prepare('UPDATE users SET password = :p WHERE id = :id')
+                   ->execute([':p' => hashPassword($pass), ':id' => $uid]);
+        } catch (Throwable $e) { error_log('login.php: could not upgrade password for user ' . $uid); }
+    }
+    return $ok;
+}
+
 /* ---- Handle submit (before any output) ---- */
 $errCode = '';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -9,13 +38,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } elseif (isRateLimited()) {
         $errCode = 'rate';
     } else {
-        $email = sanitize($_POST['email'] ?? '');
+        $email = strtolower(sanitize($_POST['email'] ?? ''));
         $pass  = (string) ($_POST['password'] ?? '');
-        $stmt  = getDB()->prepare('SELECT * FROM users WHERE email = :e LIMIT 1');
+        /* Emails are matched without caring about capitals or stray spaces:
+           phones often save "Sara@..." at sign-up and send "sara@..." later. */
+        $stmt  = getDB()->prepare('SELECT * FROM users WHERE LOWER(TRIM(email)) = :e ORDER BY id LIMIT 1');
         $stmt->execute([':e' => $email]);
         $u = $stmt->fetch();
 
-        if ($u && verifyPassword($pass, $u['password'])) {
+        if ($u && owPasswordMatches($pass, (string) $u['password'], (int) $u['id'])) {
             recordLoginAttempt($email, true);
             loginUser((int) $u['id']);            // regenerates session + stores token + last_login_at
             $role = $u['role'];

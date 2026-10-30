@@ -22,7 +22,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $old['first']  = sanitize($_POST['first_name'] ?? '');
     $old['last']   = sanitize($_POST['last_name'] ?? '');
     $old['artist'] = sanitize($_POST['artist_name'] ?? '');
-    $old['email']  = sanitize($_POST['email'] ?? '');
+    $old['email']  = strtolower(sanitize($_POST['email'] ?? ''));
     $old['phone']  = sanitize($_POST['phone'] ?? '');
     $old['city']   = sanitize($_POST['city'] ?? '');
     $old['bioEn']  = trim((string)($_POST['bio_en'] ?? ''));
@@ -78,7 +78,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if (!$portOk) {
             $errCode = 'portfolio';
         } else {
-            $stmt = getDB()->prepare('SELECT 1 FROM users WHERE email = :e LIMIT 1');
+            $stmt = getDB()->prepare('SELECT 1 FROM users WHERE LOWER(TRIM(email)) = :e LIMIT 1');
             $stmt->execute([':e' => $old['email']]);
             if ($stmt->fetchColumn()) {
                 $errCode = 'exists';

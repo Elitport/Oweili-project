@@ -8,7 +8,7 @@ $old = ['first' => '', 'last' => '', 'email' => '', 'phone' => ''];
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $old['first'] = sanitize($_POST['first_name'] ?? '');
     $old['last']  = sanitize($_POST['last_name'] ?? '');
-    $old['email'] = sanitize($_POST['email'] ?? '');
+    $old['email'] = strtolower(sanitize($_POST['email'] ?? ''));
     $old['phone'] = sanitize($_POST['phone'] ?? '');
     $pass    = (string) ($_POST['password'] ?? '');
     $confirm = (string) ($_POST['confirm'] ?? '');
@@ -29,7 +29,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } elseif ($pass !== $confirm) {
         $errCode = 'mismatch';
     } else {
-        $stmt = getDB()->prepare('SELECT 1 FROM users WHERE email = :e LIMIT 1');
+        $stmt = getDB()->prepare('SELECT 1 FROM users WHERE LOWER(TRIM(email)) = :e LIMIT 1');
         $stmt->execute([':e' => $old['email']]);
         if ($stmt->fetchColumn()) {
             $errCode = 'exists';
