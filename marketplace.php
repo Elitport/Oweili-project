@@ -165,7 +165,7 @@ foreach ($artworks as $aw) {
     .mp-card:nth-child(n+5){animation-delay:.16s}
     .mp-card:hover{transform:translateY(-6px);}
     .mp-card .aw-img{background:var(--color-surface);}
-    .mp-card .aw-img img{object-fit:cover;background:var(--color-surface);transition:transform .6s cubic-bezier(.22,1,.36,1);}
+    .mp-card .aw-img img{width:100%;height:100%;object-fit:cover;background:var(--color-surface);transition:transform .6s cubic-bezier(.22,1,.36,1);}
     .mp-card:hover .aw-img img{transform:scale(1.03);}
     .mp-card .aw-body{gap:6px;padding:var(--space-sm) var(--space-sm) var(--space-sm);}
     .mp-card .aw-title{font-size:15px;line-height:1.4;margin:0;}
@@ -366,6 +366,18 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
 <script>
 const LANG = <?= json_encode($lang) ?>;
 const ARTWORKS = <?= json_encode($modalData, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>;
+
+/* Debug: log any artwork image that fails to load (remove after diagnosing) */
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.aw-img img').forEach(function(img){
+    img.addEventListener('error', function(){
+      console.warn('[Oweili] img failed:', img.src, 'retry:', img.dataset.retry||'0');
+    });
+    img.addEventListener('load', function(){
+      if(img.naturalWidth===0) console.warn('[Oweili] img loaded but empty:', img.src);
+    });
+  });
+});
 
 /* ---- Details modal ---- */
 function esc(s){ return String(s==null?'':s); }

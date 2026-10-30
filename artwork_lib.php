@@ -272,8 +272,9 @@ function owImgSrc(?string $u): string {
 function owArtImgHtml(string $src, string $alt, bool $eager = false): string {
     $ph = '<div class="aw-img-noimg"' . ($src !== '' ? ' hidden' : '') . ' aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>';
     if ($src === '') return $ph;
-    $retry = "if(!this.dataset.retry){this.dataset.retry=1;this.src=this.src+(this.src.indexOf('?')<0?'?':'&')+'r=1';return;}"
-           . "this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false";
+    $retry = "var i=this;"
+           . "if(!i.dataset.retry){i.dataset.retry=1;var s=i.src+(i.src.indexOf('?')<0?'?':'&')+'r=1';setTimeout(function(){i.src=s;},50);return;}"
+           . "i.hidden=true;if(i.nextElementSibling)i.nextElementSibling.hidden=false";
     return '<img fetchpriority="' . ($eager ? 'high' : 'auto') . '" decoding="async" src="' . e($src) . '" alt="' . e($alt) . '" onerror="' . e($retry) . '">' . $ph;
 }
 
