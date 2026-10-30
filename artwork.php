@@ -73,7 +73,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
 </style>
 </head>
 <body>
-<div class="bg-wrap"><video class="bg-video" autoplay loop muted playsinline preload="none" src="<?= owBase() ?>bg.mp4"></video></div>
+<div class="bg-wrap"><video class="bg-video" autoplay loop muted playsinline preload="none" data-src="<?= owBase() ?>bg.mp4"></video></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="aw-page">

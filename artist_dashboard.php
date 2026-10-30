@@ -222,7 +222,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
 <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
 </head>
 <body>
-<div class="bg-wrap"><video class="bg-video" id="vid" autoplay loop muted playsinline src="<?= owBase() ?>bg.mp4"></video></div>
+<div class="bg-wrap"><video preload="none" class="bg-video" id="vid" autoplay loop muted playsinline data-src="<?= owBase() ?>bg.mp4"></video></div>
 <div class="overlay"></div>
 
 <!-- NAV (shared brand navbar) -->

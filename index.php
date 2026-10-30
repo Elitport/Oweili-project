@@ -87,7 +87,7 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 </head>
 <body>
 <div class="hero-bg" aria-hidden="true">
-  <video id="vid" autoplay loop muted playsinline preload="auto" src="<?= owBase() ?>bg.mp4"></video>
+  <video id="vid" class="bg-now" autoplay loop muted playsinline preload="auto" data-src="<?= owBase() ?>bg.mp4"></video>
   <div class="hero-shade"></div>
 </div>
 

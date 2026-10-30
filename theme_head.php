@@ -22,6 +22,8 @@ if (!function_exists('owThemeButton')) {
 if (!defined('OW_THEME_HEAD')):
     define('OW_THEME_HEAD', true);
 ?>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script>
 (function(){
   var d = document.documentElement, KEY = 'theme';
@@ -76,9 +78,35 @@ if (!defined('OW_THEME_HEAD')):
   });
   /* back / forward buttons can show a saved copy of the page: never leave it faded */
   window.addEventListener('pageshow', reset);
+  /* Background video (about 3MB). Phones on a slow connection or with Data Saver,
+     and visitors who ask for less motion, never download it (the soft page
+     colour shows instead). On other pages than the homepage it only starts
+     after the page itself has loaded (data-src), so it never slows the page. */
+  var lite = false;
+  try {
+    var nc = navigator.connection || {};
+    lite = !!nc.saveData || /(^|-)(2g|3g)$/.test(nc.effectiveType || '') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+  if (lite) d.classList.add('ow-lite');
+  document.addEventListener('DOMContentLoaded', function(){
+    if (lite) { document.querySelectorAll('video.bg-video, #vid').forEach(function(v){ if (v.getAttribute('src')) { v.removeAttribute('src'); v.load(); } }); return; }
+    /* the homepage video is the hero: it starts straight away (class bg-now) */
+    document.querySelectorAll('video.bg-now[data-src]').forEach(function(v){
+      v.src = v.getAttribute('data-src'); v.removeAttribute('data-src');
+      var p = v.play && v.play(); if (p && p.catch) p.catch(function(){});
+    });
+  });
+  window.addEventListener('load', function(){
+    if (lite) return;
+    document.querySelectorAll('video[data-src]').forEach(function(v){
+      v.src = v.getAttribute('data-src'); v.removeAttribute('data-src');
+      var p = v.play && v.play(); if (p && p.catch) p.catch(function(){});
+    });
+  });
   /* background video: fade it in on every page as soon as it can play
      (also when the browser already had it ready from an earlier visit) */
   document.addEventListener('DOMContentLoaded', function(){
+    if (lite) return;
     document.querySelectorAll('video.bg-video').forEach(function(v){
       var on = function(){ v.classList.add('on'); };
       if (v.readyState >= 3) on();
