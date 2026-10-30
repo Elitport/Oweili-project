@@ -25,7 +25,7 @@ function owImgFail(int $code): void { http_response_code($code); header('Cache-C
 function owImgSend(string $path, string $type, int $maxAge = 31536000): void {
     header('Content-Type: ' . $type);
     header('Content-Length: ' . filesize($path));
-    header('Cache-Control: public, max-age=' . $maxAge . ($maxAge > 86400 ? ', immutable' : ''));
+    header('Cache-Control: public, max-age=' . $maxAge . ($maxAge > 86400 ? ', immutable' : '') . ', no-transform');   // CDNs must not re-shrink or convert it
     header('Last-Modified: ' . gmdate('D, d M Y H:i:s', (int) filemtime($path)) . ' GMT');
     header('X-Content-Type-Options: nosniff');
     readfile($path);

@@ -35,7 +35,8 @@ try {
         $live[$r['type']] = [
             'title_en'  => (string) $r['title_en'],
             'title_ar'  => (string) ($r['title_ar'] ?: $r['title_en']),
-            'image'     => owImgSized(owImgSrc($r['image_url']), 800),
+            'image'     => ($eBig = owImgSized($eOrig = owImgSrc($r['image_url']), 800)),
+            'image_fb'  => $eOrig === '' ? '' : owImgFallbacks($eOrig, $eBig),
             'artist_en' => (string) ($r['artist_en'] ?: $r['artist_ar']),
             'artist_ar' => (string) ($r['artist_ar'] ?: $r['artist_en']),
         ];

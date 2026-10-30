@@ -95,7 +95,7 @@
     var a = s.type ? LIVE[s.type] : null, img = a ? safeImg(a.image) : '';
     var inner;
     if (a && img) {
-      inner = '<a class="live-card" href="' + esc(href) + '"><span class="live-img"><img src="' + esc(img) + '" alt="' + esc(a.title_en + ' · ' + a.title_ar) + '" loading="lazy"></span>' +
+      inner = '<a class="live-card" href="' + esc(href) + '"><span class="live-img"><img src="' + esc(img) + '" alt="' + esc(a.title_en + ' · ' + a.title_ar) + '" loading="lazy" data-fb="' + esc(String(a.image_fb || '').split('|').filter(safeImg).join('|')) + '" onerror="var l=(this.dataset.fb||\'\').split(\'|\').filter(Boolean);if(l.length){this.dataset.fb=l.slice(1).join(\'|\');this.src=l[0];}else{this.onerror=null;this.style.visibility=\'hidden\';}"></span>' +
         '<span class="live-txt"><span class="live-kick">' + bi('Newest in our Gallery', 'الأحدث في معرضنا') + '</span>' +
         '<span class="live-title">' + bi(a.title_en, a.title_ar) + '</span>' +
         '<span class="live-by">' + bi('by ' + a.artist_en, 'بواسطة ' + a.artist_ar) + '</span></span></a>';

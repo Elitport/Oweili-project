@@ -27,3 +27,16 @@ Options -Indexes
     Deny from all
   </IfModule>
 </FilesMatch>
+
+# Pictures: CDNs and "mobile optimisation" must send them exactly as they are
+# (no re-shrinking or format change for phones). Pages: never kept in the
+# server's page cache, so phones always get the current page, never an old copy.
+<IfModule mod_headers.c>
+  <FilesMatch "(?i)\.(jpe?g|png|webp|gif)$">
+    Header merge Cache-Control "no-transform"
+  </FilesMatch>
+  <FilesMatch "(?i)\.php$">
+    Header set X-LiteSpeed-Cache-Control "no-cache"
+    Header merge Cache-Control "no-transform"
+  </FilesMatch>
+</IfModule>

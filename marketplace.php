@@ -98,7 +98,8 @@ foreach ($artworks as $aw) {
         'artist_ar' => $aw['artist_ar'],
         'artist_id' => (int) $aw['artist_id'],
         'price'     => (float) $aw['price'],
-        'image'     => owImgSized($mpImg((string) $aw['image_url']), 1600),   // details window: a large copy, not the camera original
+        'image'     => ($mBig = owImgSized($mOrig = $mpImg((string) $aw['image_url']), 1600)),   // details window: a large copy, not the camera original
+        'image_fb'  => $mOrig === '' ? [] : array_values(array_unique(array_filter([owImgSized($mOrig, 800), owImgSized($mOrig, 400), owImgSized($mOrig, 800, false), $mOrig], fn($u) => $u !== '' && $u !== $mBig))),
         'status'    => $aw['status'],
         'journey'   => owHasJourney($mpStages[(int) $aw['id']] ?? []),
     ];
@@ -204,6 +205,9 @@ foreach ($artworks as $aw) {
     .m-interest [hidden]{display:none !important;}
     .mi-trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
     #mi-ok{margin-top:var(--space-sm);}
+    .modal-noimg{display:flex;align-items:center;justify-content:center;color:var(--color-light);background:var(--color-surface-2);}
+    .modal-noimg[hidden]{display:none;}
+    .modal-noimg svg{width:56px;height:56px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
     .modal-close{float:right;width:40px;height:40px;border-radius:var(--radius-btn);background:none;border:1px solid var(--color-border-strong);font-size:22px;cursor:pointer;color:var(--color-dark);line-height:1;}
     .modal-close:hover{background:var(--color-hover-light);}
     [dir="rtl"] .modal-close{float:left;}
@@ -350,7 +354,8 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   <div class="modal">
     <div class="modal-body">
       <button class="modal-close" onclick="closeModal()" aria-label="<?= $ar ? 'إغلاق' : 'Close' ?>">&times;</button>
-      <img id="m-img" class="modal-img" src="" alt="" onerror="this.hidden=true">
+      <img id="m-img" class="modal-img" src="" alt="" onerror="modalImgFailed(this)">
+      <div class="modal-img modal-noimg" id="m-noimg" hidden aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>
       <h2 id="m-title-en"></h2>
       <span class="human-badge" id="m-verified" hidden><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
       <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
@@ -399,7 +404,9 @@ function openModal(id){
   const a = ARTWORKS[id];
   if(!a) return;
   const mImg = document.getElementById('m-img');
+  mImg.dataset.fb = (a.image_fb || []).join('|');
   mImg.hidden = !a.image;
+  document.getElementById('m-noimg').hidden = !!a.image;
   if (a.image) mImg.src = a.image;
   document.getElementById('m-img').alt = a.title_en + ' · ' + a.title_ar;
   document.getElementById('m-title-en').textContent = a.title_en;
@@ -461,6 +468,12 @@ function sendInterest(ev){
     })
     .catch(() => { showInterestError('other'); btn.disabled = false; });
   return false;
+}
+/* The big picture failed: try the next copy, then the original, then show the drawing */
+function modalImgFailed(img){
+  const l = (img.dataset.fb || '').split('|').filter(Boolean);
+  if (l.length) { img.dataset.fb = l.slice(1).join('|'); img.src = l[0]; return; }
+  img.hidden = true; document.getElementById('m-noimg').hidden = false;
 }
 function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });

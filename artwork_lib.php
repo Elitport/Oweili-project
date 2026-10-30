@@ -269,19 +269,73 @@ function owImgSrc(?string $u): string {
 
 /* The address of a smaller copy of one of our uploaded photos ($w pixels wide: 400, 800
    or 1600). When the copy already exists it is linked directly as a normal picture file
-   (fast, nothing for the server to do); otherwise img.php makes it on first view.
-   Photos on other sites and anything else are returned as is. */
-function owImgSized(string $src, int $w): string {
+   (fast, nothing for the server to do). When it does not exist yet, img.php makes it on
+   first view, and the copy is also made in the background right after the page is sent
+   (owMakeQueuedThumbs). Photos on other sites and anything else are returned as is.
+   $direct = false always gives the img.php address (used as a fallback). */
+function owImgSized(string $src, int $w, bool $direct = true): string {
     $base = owBase();
     if ($src === '' || strpos($src, $base . 'uploads/') !== 0) return $src;
     $rel = rawurldecode(substr($src, strlen($base)));
     if (preg_match('#^uploads/(consents|thumbs)/#', $rel)) return $src;
+    $viaPhp = $base . 'img.php?' . http_build_query(['f' => $rel, 'w' => $w]);
+    if (!$direct) return $viaPhp;
     $real = owThumbSource($rel);
-    if ($real !== '' && is_file($copy = owThumbFile($rel, $w, $real))) {
-        return $base . 'uploads/thumbs/' . basename($copy);
-    }
-    return $base . 'img.php?' . http_build_query(['f' => $rel, 'w' => $w]);
+    if ($real === '') return $viaPhp;
+    if (is_file($copy = owThumbFile($rel, $w, $real))) return $base . 'uploads/thumbs/' . basename($copy);
+    owQueueThumb($rel, $w);
+    return $viaPhp;
 }
+
+/* Copies a page needed but did not have yet: made after the page has been sent,
+   so the next visitor (and the next phone) gets plain picture files. */
+function owQueueThumb(string $rel, int $w): void {
+    static $started = false;
+    $GLOBALS['ow_thumb_queue'][$rel . '|' . $w] = [$rel, $w];
+    if ($started) return;
+    $started = true;
+    register_shutdown_function('owMakeQueuedThumbs');
+}
+function owMakeQueuedThumbs(): void {
+    $queue = $GLOBALS['ow_thumb_queue'] ?? [];
+    if (!$queue) return;
+    /* only when the server can finish sending the page first, so no visitor ever waits */
+    if (function_exists('litespeed_finish_request')) litespeed_finish_request();
+    elseif (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+    else return;
+    ignore_user_abort(true);
+    @set_time_limit(60);
+    $stop = microtime(true) + 45;
+    foreach ($queue as [$rel, $w]) {
+        if (microtime(true) > $stop) break;
+        owMakeThumb($rel, $w);
+    }
+}
+
+/* The pictures to try, in order, when one fails to load: the 400 copy, the same
+   copy made fresh by img.php, then the original photo. */
+function owImgFallbacks(string $src, string $tried): string {
+    $list = [];
+    foreach ([owImgSized($src, 400), owImgSized($src, 400, false), $src] as $u) {
+        if ($u !== '' && $u !== $tried && !in_array($u, $list, true)) $list[] = $u;
+    }
+    return implode('|', $list);
+}
+
+/* The two attributes that give any <img> of an uploaded photo its fallbacks */
+function owImgFallbackAttrs(string $src, string $tried): string {
+    return ' data-fb="' . e(owImgFallbacks($src, $tried)) . '" onerror="' . e(OW_IMG_ONERROR) . '"';
+}
+
+/* The drawn picture shown when no photo can be loaded at all */
+function owImgPlaceholder(bool $hidden = true): string {
+    return '<div class="aw-img-noimg"' . ($hidden ? ' hidden' : '') . ' aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>';
+}
+
+/* Runs when a picture fails: try the next address; when none is left, show the drawing */
+const OW_IMG_ONERROR = "var l=(this.dataset.fb||'').split('|').filter(Boolean);"
+    . "if(l.length){this.removeAttribute('srcset');this.dataset.fb=l.slice(1).join('|');this.src=l[0];return;}"
+    . "this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false";
 
 /* The artwork picture for a card: a copy sized for the screen (phones cannot cope with a
    page of full-size camera photos), with a drawn placeholder that takes its place if
@@ -289,15 +343,13 @@ function owImgSized(string $src, int $w): string {
    $eager: the first cards on screen load straight away; cards further down wait (lazy).
    If the sized copy fails, the original photo is tried once before the placeholder shows. */
 function owArtImgHtml(string $src, string $alt, bool $eager = false): string {
-    $ph = '<div class="aw-img-noimg"' . ($src !== '' ? ' hidden' : '') . ' aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>';
+    $ph = owImgPlaceholder($src !== '');
     if ($src === '') return $ph;
     $small  = owImgSized($src, 400);
     $medium = owImgSized($src, 800);
     $set    = $medium !== $src ? ' srcset="' . e($small) . ' 400w, ' . e($medium) . ' 800w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"' : '';
-    $retry  = "if(!this.dataset.retry){this.dataset.retry=1;this.removeAttribute('srcset');this.src=this.dataset.full;return;}"
-            . "this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false";
     return '<img ' . ($eager ? 'fetchpriority="high"' : 'loading="lazy"') . ' decoding="async" src="' . e($medium) . '"' . $set
-         . ' data-full="' . e($src) . '" alt="' . e($alt) . '" onerror="' . e($retry) . '">' . $ph;
+         . ' data-full="' . e($src) . '" alt="' . e($alt) . '"' . owImgFallbackAttrs($src, $medium) . '>' . $ph;
 }
 
 function owBi(string $en, string $ar, string $tag = 'span'): string {
@@ -397,7 +449,9 @@ function owStagesHtml(array $stages, string $mode = 'strip'): string {
                 . ($mode === 'strip' ? '' : '<span class="stage-note">' . owBi($mEn, $mAr) . '</span>') . '</div>';
             continue;
         }
-        $img = '<span class="stage-img"><img loading="lazy" decoding="async" src="' . e(owImgSized(owBase() . ltrim((string) $row['photo_path'], '/'), 400)) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '"></span>';
+        $sp  = owBase() . ltrim((string) $row['photo_path'], '/');
+        $s4  = owImgSized($sp, 400);
+        $img = '<span class="stage-img"><img loading="lazy" decoding="async" src="' . e($s4) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '"' . owImgFallbackAttrs($sp, $s4) . '></span>';
         $cap = '<span class="stage-label">' . $stg . '%</span>';
         if ($mode === 'journey') {
             [$dEn, $dAr] = owDateBi($row['taken_at']);
