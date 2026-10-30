@@ -25,8 +25,8 @@ require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languag
 <style>
 /* Homepage — one screen. The headline is the first thing to notice, the two
    buttons are the action (rule 30). Colors, fonts and buttons come from oweili.css. */
-html, body { height: 100%; }
-body { overflow-x: hidden; }
+html, body { height: 100%; margin: 0; }
+body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 100svh; }
 
 /* full-screen video with a soft dark shade so the text stays readable */
 .hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
