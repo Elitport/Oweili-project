@@ -127,94 +127,6 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
         exit;
     }
 
-    /* --- Art styles CRUD --- */
-    if ($action === 'style_add' || $action === 'style_edit' || $action === 'style_delete') {
-        $sid     = (int) ($_POST['id'] ?? 0);
-        $titleEn = sanitize($_POST['title_en'] ?? '');
-        $titleAr = sanitize($_POST['title_ar'] ?? '');
-        $descEn  = trim((string) ($_POST['description_en'] ?? ''));
-        $descAr  = trim((string) ($_POST['description_ar'] ?? ''));
-        $tag     = sanitize($_POST['tag'] ?? 'Traditional');
-        $simg    = sanitize($_POST['image_url'] ?? '');
-        try {
-            if ($action === 'style_add') {
-                getDB()->prepare(
-                    'INSERT INTO art_styles (title_en,title_ar,description_en,description_ar,tag,image_url,sort_order)
-                     VALUES (:te,:ta,:de,:da,:tag,:img,
-                        (SELECT COALESCE(MAX(sort_order),0)+1 FROM (SELECT * FROM art_styles) x))'
-                )->execute([':te'=>$titleEn, ':ta'=>$titleAr, ':de'=>$descEn, ':da'=>$descAr, ':tag'=>$tag, ':img'=>$simg]);
-            } elseif ($action === 'style_edit' && $sid > 0) {
-                getDB()->prepare(
-                    'UPDATE art_styles SET title_en=:te,title_ar=:ta,description_en=:de,description_ar=:da,tag=:tag,image_url=:img WHERE id=:id'
-                )->execute([':te'=>$titleEn, ':ta'=>$titleAr, ':de'=>$descEn, ':da'=>$descAr, ':tag'=>$tag, ':img'=>$simg, ':id'=>$sid]);
-            } elseif ($action === 'style_delete' && $sid > 0) {
-                getDB()->prepare('DELETE FROM art_styles WHERE id=:id')->execute([':id'=>$sid]);
-            }
-        } catch (\Throwable $e) {
-            error_log('admin styles: ' . $e->getMessage());
-        }
-        header('Location: admin.php?ok=1#styles');
-        exit;
-    }
-
-    /* --- Events CRUD --- */
-    if ($action === 'event_add' || $action === 'event_delete') {
-        $eid = (int) ($_POST['id'] ?? 0);
-        try {
-            if ($action === 'event_add') {
-                getDB()->prepare(
-                    'INSERT INTO events (title_en,title_ar,description_en,description_ar,city,event_date,is_free,image_url,contact_link)
-                     VALUES (:te,:ta,:de,:da,:city,:dt,:free,:img,:link)'
-                )->execute([
-                    ':te'=>sanitize($_POST['title_en'] ?? ''), ':ta'=>sanitize($_POST['title_ar'] ?? ''),
-                    ':de'=>trim((string)($_POST['description_en'] ?? '')), ':da'=>trim((string)($_POST['description_ar'] ?? '')),
-                    ':city'=>sanitize($_POST['city'] ?? ''),
-                    ':dt'=>($_POST['event_date'] ?? '') !== '' ? $_POST['event_date'] : null,
-                    ':free'=>(int)($_POST['is_free'] ?? 1) === 1 ? 1 : 0,
-                    ':img'=>sanitize($_POST['image_url'] ?? ''), ':link'=>sanitize($_POST['contact_link'] ?? ''),
-                ]);
-            } elseif ($action === 'event_delete' && $eid > 0) {
-                getDB()->prepare('DELETE FROM events WHERE id=:id')->execute([':id'=>$eid]);
-            }
-        } catch (\Throwable $e) {
-            error_log('admin events: ' . $e->getMessage());
-            $_SESSION['admin_err'] = 'Events error: ' . $e->getMessage();
-            header('Location: admin.php?err=1#events');
-            exit;
-        }
-        header('Location: admin.php?ok=1#events');
-        exit;
-    }
-
-    /* --- Training CRUD --- */
-    if ($action === 'training_add' || $action === 'training_delete') {
-        $tid = (int) ($_POST['id'] ?? 0);
-        try {
-            if ($action === 'training_add') {
-                getDB()->prepare(
-                    'INSERT INTO training (title_en,title_ar,description_en,description_ar,city,price,course_date,image_url,contact_link)
-                     VALUES (:te,:ta,:de,:da,:city,:price,:dt,:img,:link)'
-                )->execute([
-                    ':te'=>sanitize($_POST['title_en'] ?? ''), ':ta'=>sanitize($_POST['title_ar'] ?? ''),
-                    ':de'=>trim((string)($_POST['description_en'] ?? '')), ':da'=>trim((string)($_POST['description_ar'] ?? '')),
-                    ':city'=>sanitize($_POST['city'] ?? ''),
-                    ':price'=>(float)($_POST['price'] ?? 0),
-                    ':dt'=>($_POST['course_date'] ?? '') !== '' ? $_POST['course_date'] : null,
-                    ':img'=>sanitize($_POST['image_url'] ?? ''), ':link'=>sanitize($_POST['contact_link'] ?? ''),
-                ]);
-            } elseif ($action === 'training_delete' && $tid > 0) {
-                getDB()->prepare('DELETE FROM training WHERE id=:id')->execute([':id'=>$tid]);
-            }
-        } catch (\Throwable $e) {
-            error_log('admin training: ' . $e->getMessage());
-            $_SESSION['admin_err'] = 'Training error: ' . $e->getMessage();
-            header('Location: admin.php?err=1#training');
-            exit;
-        }
-        header('Location: admin.php?ok=1#training');
-        exit;
-    }
-
     /* --- Change a user's role --- */
     if ($action === 'set_role' && $uid > 0) {
         $newRole = $_POST['role'] ?? '';
@@ -321,45 +233,12 @@ function fmtDateTime(?string $v): string {
     return $v ? date('Y-m-d H:i', strtotime($v)) : 'N/A';
 }
 
-/* ---- Load art styles (only when authed) ---- */
-$styles = [];
-$stylesTableMissing = false;
-if ($isAdmin) {
-    try {
-        $styles = getDB()->query('SELECT * FROM art_styles ORDER BY sort_order ASC, id ASC')->fetchAll();
-    } catch (\Throwable $e) {
-        $stylesTableMissing = true;
-    }
-}
-
 /* ---- Load "I'm Interested" inquiries, newest first (only when authed) ---- */
 $inquiries = [];
 if ($isAdmin) {
     try { $inquiries = owListInquiries(); } catch (\Throwable $e) { error_log('admin inquiries: ' . $e->getMessage()); }
 }
 
-/* ---- Load events (only when authed) ---- */
-$events = [];
-$eventsTableMissing = false;
-if ($isAdmin) {
-    try {
-        $events = getDB()->query('SELECT * FROM events ORDER BY (event_date IS NULL), event_date ASC, id DESC')->fetchAll();
-    } catch (\Throwable $e) {
-        $eventsTableMissing = true;
-    }
-}
-
-/* ---- Load training (only when authed) ---- */
-$training = [];
-$trainingTableMissing = false;
-if ($isAdmin) {
-    try {
-        $training = getDB()->query('SELECT * FROM training ORDER BY (course_date IS NULL), course_date ASC, id DESC')->fetchAll();
-    } catch (\Throwable $e) {
-        $trainingTableMissing = true;
-    }
-}
-$STYLE_TAGS = ['Traditional', 'Digital', 'Mixed Media'];
 
 /* ---- Overview numbers and every artwork (with its status) ---- */
 $overview = $isAdmin ? owAdminOverview() : [];
@@ -532,10 +411,9 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)"><?= owBi('Buyers', 'المشترون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
     <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)">Pending Artworks <span class="pill count"><?= count($pendingArt) ?></span></button>
     <button class="tab tab-btn" data-tab="artworks" onclick="showTab('artworks',this)"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
+    <a class="tab" href="admin_articles.php"><?= owBi('Articles & events', 'المقالات والملتقيات') ?></a>
+    <a class="tab" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
     <button class="tab tab-btn" data-tab="inquiries" onclick="showTab('inquiries',this)">Inquiries <span class="pill count"><?= count($inquiries) ?></span></button>
-    <button class="tab tab-btn" data-tab="styles" onclick="showTab('styles',this)">Art Styles <span class="pill count"><?= count($styles) ?></span></button>
-    <button class="tab tab-btn" data-tab="events" onclick="showTab('events',this)">Events <span class="pill count"><?= count($events) ?></span></button>
-    <button class="tab tab-btn" data-tab="training" onclick="showTab('training',this)">Training <span class="pill count"><?= count($training) ?></span></button>
   </div>
 
   <!-- ===== TAB: ARTISTS ===== -->
@@ -793,213 +671,9 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   </div>
   </div>
 
-  <!-- ===== TAB: ART STYLES ===== -->
-  <div class="tab-panel" id="tab-styles">
-    <?php if ($stylesTableMissing): ?>
-      <div class="card"><div class="empty">The <code>art_styles</code> table does not exist yet. Run <code>styles_setup.sql</code> in phpMyAdmin.</div></div>
-    <?php else: ?>
-    <div class="card" style="margin-bottom:20px;">
-      <div class="sec-head"><h2>Add New Style</h2></div>
-      <form method="post" action="admin.php#styles">
-        <?= csrfField() ?>
-        <input type="hidden" name="action" value="style_add">
-        <div class="grid2">
-          <div class="field"><label>Title (English)</label><input type="text" name="title_en" required></div>
-          <div class="field"><label>Title (Arabic)</label><input type="text" name="title_ar" dir="rtl"></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>Description (English)</label><textarea name="description_en"></textarea></div>
-          <div class="field"><label>Description (Arabic)</label><textarea name="description_ar" dir="rtl"></textarea></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>Tag</label>
-            <select name="tag"><?php foreach ($STYLE_TAGS as $t): ?><option value="<?= e($t) ?>"><?= e($t) ?></option><?php endforeach; ?></select>
-          </div>
-          <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" placeholder="https://…"></div>
-        </div>
-        <button type="submit" class="btn btn-accent">Add Style</button>
-      </form>
-    </div>
-
-    <div class="card">
-      <div class="sec-head"><h2>Art Styles <span class="count"><?= count($styles) ?></span></h2></div>
-      <?php if (!$styles): ?>
-        <div class="empty">No styles yet. Add your first one above.</div>
-      <?php else: ?>
-        <?php foreach ($styles as $s): ?>
-          <div class="style-item">
-            <div class="style-thumb" <?= $s['image_url'] ? 'style="background-image:url(\'' . e($s['image_url']) . '\');"' : '' ?>><?= $s['image_url'] ? '' : '🎨' ?></div>
-            <div class="style-body">
-              <h3><?= e($s['title_en'] ?: 'N/A') ?></h3>
-              <?php if (!empty($s['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($s['title_ar']) ?></div><?php endif; ?>
-              <?php if (!empty($s['description_en'])): ?><p class="style-desc"><?= e($s['description_en']) ?></p><?php endif; ?>
-              <span class="tag-pill"><?= e($s['tag']) ?></span>
-
-              <div class="edit-form" id="style-edit-<?= (int)$s['id'] ?>">
-                <form method="post" action="admin.php#styles">
-                  <?= csrfField() ?>
-                  <input type="hidden" name="action" value="style_edit">
-                  <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
-                  <div class="grid2">
-                    <div class="field"><label>Title (English)</label><input type="text" name="title_en" value="<?= e($s['title_en']) ?>" required></div>
-                    <div class="field"><label>Title (Arabic)</label><input type="text" name="title_ar" dir="rtl" value="<?= e($s['title_ar']) ?>"></div>
-                  </div>
-                  <div class="grid2">
-                    <div class="field"><label>Description (English)</label><textarea name="description_en"><?= e($s['description_en']) ?></textarea></div>
-                    <div class="field"><label>Description (Arabic)</label><textarea name="description_ar" dir="rtl"><?= e($s['description_ar']) ?></textarea></div>
-                  </div>
-                  <div class="grid2">
-                    <div class="field"><label>Tag</label>
-                      <select name="tag"><?php foreach ($STYLE_TAGS as $t): ?><option value="<?= e($t) ?>" <?= $s['tag']===$t?'selected':'' ?>><?= e($t) ?></option><?php endforeach; ?></select>
-                    </div>
-                    <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" value="<?= e($s['image_url']) ?>"></div>
-                  </div>
-                  <button type="submit" class="btn btn-accent btn-sm">Save Changes</button>
-                  <button type="button" class="btn btn-ghost btn-sm" onclick="toggleStyleEdit(<?= (int)$s['id'] ?>)">Cancel</button>
-                </form>
-              </div>
-            </div>
-            <div class="acts" style="flex-direction:column;">
-              <button type="button" class="btn btn-ghost btn-sm" onclick="toggleStyleEdit(<?= (int)$s['id'] ?>)">Edit</button>
-              <form method="post" action="admin.php#styles" onsubmit="return confirm('Delete this style?');" style="margin:0;">
-                <?= csrfField() ?>
-                <input type="hidden" name="action" value="style_delete">
-                <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-              </form>
-            </div>
-          </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
-    </div>
-    <?php endif; ?>
-  </div>
-
-  <!-- ===== TAB: EVENTS ===== -->
-  <div class="tab-panel" id="tab-events">
-    <?php if ($eventsTableMissing): ?>
-      <div class="card"><div class="empty">The <code>events</code> table does not exist yet. Run <code>discover_setup.sql</code> in phpMyAdmin.</div></div>
-    <?php else: ?>
-    <div class="card" style="margin-bottom:20px;">
-      <div class="sec-head"><h2>Add New Event</h2></div>
-      <form method="post" action="admin.php#events">
-        <?= csrfField() ?>
-        <input type="hidden" name="action" value="event_add">
-        <div class="grid2">
-          <div class="field"><label>Title (English)</label><input type="text" name="title_en" required></div>
-          <div class="field"><label>Title (Arabic)</label><input type="text" name="title_ar" dir="rtl"></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>Description (English)</label><textarea name="description_en"></textarea></div>
-          <div class="field"><label>Description (Arabic)</label><textarea name="description_ar" dir="rtl"></textarea></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>City</label><input type="text" name="city" placeholder="Riyadh"></div>
-          <div class="field"><label>Date</label><input type="date" name="event_date"></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>Entry</label>
-            <select name="is_free"><option value="1">Free</option><option value="0">Paid</option></select>
-          </div>
-          <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" placeholder="https://…"></div>
-        </div>
-        <div class="field"><label>Contact / Details Link</label><input type="text" name="contact_link" dir="ltr" placeholder="https://… or mailto:…"></div>
-        <button type="submit" class="btn btn-accent">Add Event</button>
-      </form>
-    </div>
-
-    <div class="card">
-      <div class="sec-head"><h2>Events <span class="count"><?= count($events) ?></span></h2></div>
-      <?php if (!$events): ?>
-        <div class="empty">No events yet. Add your first one above.</div>
-      <?php else: ?>
-        <?php foreach ($events as $ev): ?>
-          <div class="style-item">
-            <div class="style-thumb" <?= $ev['image_url'] ? 'style="background-image:url(\'' . e($ev['image_url']) . '\');"' : '' ?>><?= $ev['image_url'] ? '' : '📅' ?></div>
-            <div class="style-body">
-              <h3><?= e($ev['title_en'] ?: 'N/A') ?></h3>
-              <?php if (!empty($ev['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($ev['title_ar']) ?></div><?php endif; ?>
-              <?php if (!empty($ev['description_en'])): ?><p class="style-desc"><?= e($ev['description_en']) ?></p><?php endif; ?>
-              <span class="tag-pill"><?= e($ev['city'] ?: '—') ?></span>
-              <?php if (!empty($ev['event_date'])): ?><span class="tag-pill"><?= e(date('Y-m-d', strtotime($ev['event_date']))) ?></span><?php endif; ?>
-              <span class="tag-pill"><?= ((int)$ev['is_free'] === 1) ? 'Free' : 'Paid' ?></span>
-            </div>
-            <div class="acts" style="flex-direction:column;">
-              <form method="post" action="admin.php#events" onsubmit="return confirm('Delete this event?');" style="margin:0;">
-                <?= csrfField() ?>
-                <input type="hidden" name="action" value="event_delete">
-                <input type="hidden" name="id" value="<?= (int)$ev['id'] ?>">
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-              </form>
-            </div>
-          </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
-    </div>
-    <?php endif; ?>
-  </div>
-
-  <!-- ===== TAB: TRAINING ===== -->
-  <div class="tab-panel" id="tab-training">
-    <?php if ($trainingTableMissing): ?>
-      <div class="card"><div class="empty">The <code>training</code> table does not exist yet. Run <code>discover_setup.sql</code> in phpMyAdmin.</div></div>
-    <?php else: ?>
-    <div class="card" style="margin-bottom:20px;">
-      <div class="sec-head"><h2>Add New Training</h2></div>
-      <form method="post" action="admin.php#training">
-        <?= csrfField() ?>
-        <input type="hidden" name="action" value="training_add">
-        <div class="grid2">
-          <div class="field"><label>Title (English)</label><input type="text" name="title_en" required></div>
-          <div class="field"><label>Title (Arabic)</label><input type="text" name="title_ar" dir="rtl"></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>Description (English)</label><textarea name="description_en"></textarea></div>
-          <div class="field"><label>Description (Arabic)</label><textarea name="description_ar" dir="rtl"></textarea></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>City</label><input type="text" name="city" placeholder="Riyadh"></div>
-          <div class="field"><label>Price (SAR)</label><input type="number" name="price" min="0" step="0.01" value="0"></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label>Date</label><input type="date" name="course_date"></div>
-          <div class="field"><label>Image URL</label><input type="text" name="image_url" dir="ltr" placeholder="https://…"></div>
-        </div>
-        <div class="field"><label>Contact / Details Link</label><input type="text" name="contact_link" dir="ltr" placeholder="https://… or mailto:…"></div>
-        <button type="submit" class="btn btn-accent">Add Training</button>
-      </form>
-    </div>
-
-    <div class="card">
-      <div class="sec-head"><h2>Training <span class="count"><?= count($training) ?></span></h2></div>
-      <?php if (!$training): ?>
-        <div class="empty">No training listed yet. Add your first one above.</div>
-      <?php else: ?>
-        <?php foreach ($training as $tr): ?>
-          <div class="style-item">
-            <div class="style-thumb" <?= $tr['image_url'] ? 'style="background-image:url(\'' . e($tr['image_url']) . '\');"' : '' ?>><?= $tr['image_url'] ? '' : '🎓' ?></div>
-            <div class="style-body">
-              <h3><?= e($tr['title_en'] ?: 'N/A') ?></h3>
-              <?php if (!empty($tr['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($tr['title_ar']) ?></div><?php endif; ?>
-              <?php if (!empty($tr['description_en'])): ?><p class="style-desc"><?= e($tr['description_en']) ?></p><?php endif; ?>
-              <span class="tag-pill"><?= e($tr['city'] ?: '—') ?></span>
-              <?php if (!empty($tr['course_date'])): ?><span class="tag-pill"><?= e(date('Y-m-d', strtotime($tr['course_date']))) ?></span><?php endif; ?>
-              <span class="tag-pill"><?= ((float)$tr['price'] > 0) ? ('SAR ' . rtrim(rtrim(number_format((float)$tr['price'], 2), '0'), '.')) : 'Free' ?></span>
-            </div>
-            <div class="acts" style="flex-direction:column;">
-              <form method="post" action="admin.php#training" onsubmit="return confirm('Delete this training?');" style="margin:0;">
-                <?= csrfField() ?>
-                <input type="hidden" name="action" value="training_delete">
-                <input type="hidden" name="id" value="<?= (int)$tr['id'] ?>">
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-              </form>
-            </div>
-          </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
-    </div>
-    <?php endif; ?>
-  </div>
+  <!-- Art Styles, Events and Training tabs were removed (31 Oct 2026): nothing on the site reads
+       those old tables any more. Art styles come from assets/js/art_styles.js, events are
+       Art Events articles (admin_articles.php), institutes and courses are in admin_institutes.php -->
 
   <script>
   /* search boxes: hide rows that do not match */
@@ -1012,7 +686,6 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       });
     });
   });
-  function toggleStyleEdit(id){ var el=document.getElementById('style-edit-'+id); if(el) el.classList.toggle('open'); }
   function showTab(name, btn){
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -1023,7 +696,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   // Restore the tab from the URL hash (e.g. after approving an artwork).
   (function(){
     var h=(location.hash||'').replace('#','');
-    if(['pending','collectors','artists','styles','events','training','artworks','inquiries'].indexOf(h)>=0){
+    if(['pending','collectors','artists','artworks','inquiries'].indexOf(h)>=0){
       var btn=document.querySelector('.tab-btn[data-tab="'+h+'"]');
       showTab(h,btn);
     }

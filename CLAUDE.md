@@ -91,7 +91,7 @@
 - community.php — Community page: real counts and the newest artworks (see Features)
 - chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
-- events.php — old events page (no longer in the menu; its events live in the old `events` table — move them into Art Events articles)
+- events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). Its old events were moved into Art Events articles on 31 Oct 2026 (the old `events` rows are kept)
 - training.php — Art Institutes: Upcoming Workshops on top, then the institutes directory
 - articles_list.php — all published articles of one type (?type=event / artist_spotlight / art_education)
 - article.php — one article (article.php?slug=...)
@@ -135,6 +135,12 @@
 - Artwork page (artwork.php?id=N): the link to share. Big photo, titles, artist, type, "✦ A Real Touch" badge, price, description, Creation Journey, heart, "I’m Interested" (opens the artwork's window in the Gallery) and "See more in the Gallery". The preview shows the artwork photo. The Gallery window has a "Share this artwork" link (phone share sheet, or copies the link)
 - marketplace.php?show=N opens that artwork's window even when it is not on the current Gallery page. Fixed on the way: links from Community, the Buyer dashboard and sign-in only opened the window when the artwork happened to be on the first page
 - Files: seo_lib.php, sitemap.php, robots.txt, artwork.php, assets/img/share.jpg, .htaccess, marketplace.php, community.php, collector_dashboard.php, and every public page head. Tables read: artworks, users, articles
+
+### Clean-up (31 Oct 2026)
+- Old events moved into Art Events articles (published, with their date, city, details link and free/paid line), once, by a temporary page that made a full database backup first and was removed straight after. The old `events` rows are kept. events.php now redirects to Art Events
+- Admin panel: the old Art Styles, Events and Training tabs were removed, because nothing on the site reads those tables any more (styles come from assets/js/art_styles.js, events are articles, institutes and courses are in admin_institutes.php). The tables themselves are kept. Shortcut tabs to Articles & events and Institutes took their place
+- uploads/deploy_test/ (a test file from 30 Oct) deleted on the server
+- Kept on purpose: Photo check, Email check and Error log (useful admin tools, linked from Settings). config_setup.php was not touched (owner's rule; it switches itself off and waits for the password change)
 
 ### Speed on phones
 - Measured on the live site with a phone on a slow connection: pages show their first content in about 1 to 1.5 seconds and weigh about 90 to 220 KB (pictures sized for the screen, files compressed and kept for 7 days, Gallery pictures below the first 4 load only when scrolled to)
