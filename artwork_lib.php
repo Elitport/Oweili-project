@@ -274,7 +274,7 @@ function owArtImgHtml(string $src, string $alt, bool $eager = false): string {
     if ($src === '') return $ph;
     $retry = "if(!this.dataset.retry){this.dataset.retry=1;this.src=this.src+(this.src.indexOf('?')<0?'?':'&')+'r=1';return;}"
            . "this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false";
-    return '<img ' . ($eager ? 'fetchpriority="high"' : 'loading="lazy"') . ' decoding="async" src="' . e($src) . '" alt="' . e($alt) . '" onerror="' . e($retry) . '">' . $ph;
+    return '<img fetchpriority="' . ($eager ? 'high' : 'auto') . '" decoding="async" src="' . e($src) . '" alt="' . e($alt) . '" onerror="' . e($retry) . '">' . $ph;
 }
 
 function owBi(string $en, string $ar, string $tag = 'span'): string {
