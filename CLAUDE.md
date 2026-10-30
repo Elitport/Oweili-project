@@ -121,7 +121,7 @@
 - Photo lock: in edit_artwork.php, artworks with stage photos cannot change their main photo (blocked on the server too). A bilingual note explains why. Title, description, price, type and status can still be edited. Descriptions are optional when editing, like in the upload
 - Files: upload_artwork.php, artwork_lib.php, artist_dashboard.php, edit_artwork.php (drafts are sent back to the upload flow), admin.php + subadmin_dashboard.php (drafts hidden from the review list), art_types.php (added mixed_media, digital_art, islamic_geometric), assets/css/nav.css
 - Tables: artworks (new column is_draft), artwork_stages, artwork_colors — all created by database_update.sql. Until that file is run, the upload page shows a friendly "being set up" message and every other page keeps working
-- Hosting needs: PHP upload_max_filesize and post_max_size of at least 10M on Hostinger
+- Hosting needs: PHP upload_max_filesize and post_max_size of at least 10M on Hostinger (now 64M / 128M through .user.ini)
 
 ### Gallery redesign (marketplace.php) — live (approved by the owner)
 - What it does: only approved works that are available or at auction, by artists who are not banned (no drafts). Search box (titles in both languages), 6 category pills: All / Traditional / Digital / Islamic Heritage / Contemporary / Photography («الكل / تقليدي / رقمي / تراث إسلامي / معاصر / تصوير»), a small Status row (All / Available / Auction) and a Sort menu: Newest First (default) / Price: Low to High / Price: High to Low
@@ -303,6 +303,7 @@
 - mail_check.php — "Email check" button in admin.php (admin.php?mail_check=1, admin password needed; opening the file directly shows nothing). Shows the mailbox settings (never the password), whether the password-reset columns exist, and a "Send test" box that shows the mail server's exact answer. Tables read: users (column list only)
 - email_test.php — admins only (signed in on admin.php; everyone else gets 404, so it cannot send spam). (1) Signs in to the mailbox from config.php on ports 465 and 587 without sending anything and shows the mail server's answer ("authentication failed" = the mailbox does not exist or its password is wrong). (2) "Send test" calls sendEmail() from config.php directly and shows what it returned plus any PHP error or warning. The password is never shown. Tables: none
 - smtp_test.php — talks to the mail server step by step (greeting, sign-in, MAIL FROM, RCPT, DATA), prints every answer and sends one test email to contact@elitport.com. Reads the mailbox and password from config.php (never typed in the file, never printed). Run it without a browser: Hostinger SSH `php ~/public_html/smtp_test.php`, or once from hPanel → Advanced → Cron Jobs. In a browser only an admin signed in on admin.php can open it (others get 404). Tables: none
+- .user.ini — PHP settings for the website, read by Hostinger's PHP from public_html: upload_max_filesize 64M and post_max_size 128M (bigger artist photos and videos). Takes up to 5 minutes to apply after a deploy. Blocked from visitors by .htaccess (all dot files). If hPanel → Advanced → PHP Configuration shows smaller numbers, set the same values there too
 - index.html — tiny forwarding file only: sends old links and bookmarks to index.php. Do not put content in it
 
 ## Database
