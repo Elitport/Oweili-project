@@ -1,7 +1,7 @@
 <?php
 /* =====================================================================
  *  img.php — a smaller copy of an uploaded photo, sized for the screen
- *  img.php?f=uploads/artworks/x.jpg&w=800
+ *  img.php?f=uploads/artworks/x.jpg&w=800   (?src= works the same)
  *  Phones cannot cope with a page full of full-size camera photos
  *  (often 4000x3000 and several MB each), so cards ask for a copy that
  *  is only as wide as they need. Each copy is made once and kept in
@@ -16,7 +16,8 @@
  * ===================================================================== */
 $WIDTHS = [400, 800, 1600];
 
-$f = isset($_GET['f']) && is_string($_GET['f']) ? $_GET['f'] : '';
+$f = $_GET['f'] ?? $_GET['src'] ?? '';                 // ?src= works too, for hand-typed tests
+$f = is_string($f) ? $f : '';
 $w = (int) ($_GET['w'] ?? 0);
 
 function owImgFail(int $code): void { http_response_code($code); header('Cache-Control: no-store'); exit; }
