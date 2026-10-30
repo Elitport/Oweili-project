@@ -121,7 +121,7 @@
 - Sign up / sign in / confirm email / forgot password: all already in English and Arabic. New: the confirmation email is in both languages, the language the visitor signed up in is saved, at most 5 new accounts per hour from one address (3 per browser session) for buyers and artists, the welcome email sends buyers to their dashboard, and sign-in returns to the page that asked for it (only our own pages, never another site)
 - Account safety: changing the password needs the current one, signs out every other phone and computer and sends a notice email. Changing the email needs the password, sends a confirmation link to the new address and a notice to the old one. A password reset by email also signs out every device
 - Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
-- Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql, db_update.php (temporary)
+- Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
 ### 3-stage artwork upload (proof of process) — built, needs database_update.sql
@@ -335,7 +335,7 @@
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
 - database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Already in place on the live database (checked 30 Oct 2026)
-- dashboards_update.sql — the dashboards and Bashro parts (permanent IDs, dates, request status, favorites, activity log, empty shipping and payout tables). Safe to run more than once
+- dashboards_update.sql — the dashboards and Bashro parts (permanent IDs, dates, request status, favorites, activity log, empty shipping and payout tables). Safe to run more than once. Already in place on the live database (30 Oct 2026)
 
 ## Design System
 - Style: Luxury white minimal
