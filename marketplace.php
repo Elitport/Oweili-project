@@ -452,6 +452,8 @@ function openModal(id){
   document.getElementById('m-verified').hidden = !a.journey;
   document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });
   resetInterest(id);
+  /* one view for the artist's numbers (counted once a day per visitor) */
+  try { const vf = new FormData(); vf.append('artwork_id', id); navigator.sendBeacon ? navigator.sendBeacon('view.php', vf) : fetch('view.php', {method:'POST', body:vf, credentials:'same-origin', keepalive:true}); } catch (e) {}
   const mf = document.getElementById('m-fav');
   if (mf && window.owFavSync) { mf.dataset.fav = id; owFavSync(id, owFavHas(id)); }
   document.getElementById('modalBg').classList.add('open');

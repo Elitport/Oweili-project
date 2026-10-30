@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/platform_lib.php';
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $uid = (int) $_SESSION['user_id'];
@@ -22,14 +23,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $bioAr  = trim((string) ($_POST['bio_ar'] ?? ''));
     $city   = sanitize($_POST['city'] ?? '');
     $phone  = sanitize($_POST['phone'] ?? '');
-    $ig     = sanitize($_POST['instagram'] ?? '');
-    $tw     = sanitize($_POST['twitter'] ?? '');
-    $web    = sanitize($_POST['website'] ?? '');
+    /* links: only real web addresses (a bare @name becomes the full address) */
+    [$ig, $igOk]   = owSafeLink((string) ($_POST['instagram'] ?? ''), 'instagram');
+    [$tw, $twOk]   = owSafeLink((string) ($_POST['twitter'] ?? ''), 'twitter');
+    [$web, $webOk] = owSafeLink((string) ($_POST['website'] ?? ''), 'web');
+    $country = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>"]/u', ' ', (string) ($_POST['country'] ?? ''))), 0, 80);
+    $styleChoices = owStyleChoices();
+    $styles = array_slice(array_values(array_filter((array) ($_POST['art_styles'] ?? []), fn($x) => is_string($x) && isset($styleChoices[$x]))), 0, 8);
 
     $hasPhoto = !empty($_FILES['profile_picture']['name']);
 
     if ($nameEn === '') {
         $err = 'name';
+    } elseif (!$igOk || !$twOk || !$webOk) {
+        $err = 'link';
     } elseif ($phone !== '' && !preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $phone)) {
         $err = 'phone';
     } elseif ($hasPhoto && !validateUpload($_FILES['profile_picture'])['ok']) {
@@ -64,6 +71,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             ':id' => $uid,
         ]);
 
+        if (owHasColumn('users', 'country')) {
+            getDB()->prepare('UPDATE users SET country = :c, art_styles = :s WHERE id = :id')
+                   ->execute([':c' => $country !== '' ? $country : null, ':s' => $styles ? implode(',', $styles) : null, ':id' => $uid]);
+        }
+        owLog('profile_update', 'user', $uid, '', ['type' => owActorType($u['role'] ?? ''), 'id' => $uid]);
         $dash = dashboardUrl($u['role'] ?? '');
         $sep  = strpos($dash, '?') !== false ? '&' : '?';
         header('Location: ' . $dash . $sep . 'saved=1');
@@ -91,6 +103,12 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
 .avatar-row > div:last-child{flex:1;min-width:0;}
 .avatar-row input[type=file]{width:100%;}
 .avatar-prev{width:84px;height:84px;border-radius:50%;background-size:cover;background-position:center;background-color:var(--color-artist);display:flex;align-items:center;justify-content:center;color:var(--color-on-primary);font-size:30px;font-weight:700;flex-shrink:0;}
+.style-pick{border:0;padding:0;margin:0 0 var(--space-sm);}
+.style-pick legend{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-bottom:6px;}
+.style-chips{display:flex;flex-wrap:wrap;gap:6px;max-height:220px;overflow-y:auto;padding:2px;}
+.style-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border-strong);border-radius:var(--radius-pill);font-size:var(--fs-caption);font-weight:600;cursor:pointer;background:var(--color-surface);}
+.style-chip input{margin:0;}
+.style-chip:has(input:checked){background:var(--color-dark);border-color:var(--color-dark);color:var(--color-on-dark);}
 .actions{display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-top:var(--space-xs);}
 @media(max-width:768px){.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
 </style>
@@ -110,8 +128,8 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
   <div class="card">
     <?php if ($err): ?>
       <div class="err-box" id="err"
-           data-en="<?= $err==='name' ? 'Please enter your name.' : ($err==='phone' ? 'Please enter a valid phone number.' : 'Profile picture must be a JPG or PNG under 5 MB.') ?>"
-           data-ar="<?= $err==='name' ? 'يرجى إدخال اسمك.' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت.') ?>">
+           data-en="<?= $err==='name' ? 'Please enter your name.' : ($err==='phone' ? 'Please enter a valid phone number.' : ($err==='link' ? 'Please check your links. Use a full web address, like https://instagram.com/yourname.' : 'Profile picture must be a JPG or PNG under 5 MB.')) ?>"
+           data-ar="<?= $err==='name' ? 'يرجى إدخال اسمك.' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح.' : ($err==='link' ? 'يرجى مراجعة الروابط. استخدم عنواناً كاملاً مثل https://instagram.com/yourname.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت.')) ?>">
       </div>
     <?php endif; ?>
 
@@ -139,6 +157,20 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
         <div class="field"><label id="t-l-city">City</label><input type="text" name="city" value="<?= $val('city') ?>"></div>
         <div class="field"><label id="t-l-phone">Phone number</label><input type="tel" name="phone" dir="ltr" value="<?= $val('phone') ?>"></div>
       </div>
+
+      <?php if (owHasColumn('users', 'country')): $myStyles = array_filter(explode(',', (string) ($u['art_styles'] ?? ''))); ?>
+      <div class="field"><label for="p-country"><?= owBi('Country', 'الدولة') ?></label>
+        <input id="p-country" type="text" name="country" maxlength="80" list="countries" autocomplete="country-name" value="<?= $val('country') ?>">
+        <datalist id="countries"><?php foreach (OW_COUNTRIES as $cEn => $cAr): ?><option value="<?= e($cEn) ?>"><?= e($cAr) ?></option><?php endforeach; ?></datalist></div>
+      <?php if (($u['role'] ?? '') === 'artist'): ?>
+      <fieldset class="field style-pick"><legend><?= owBi('My art styles (up to 8)', 'أساليبي الفنية (حتى 8)') ?></legend>
+        <div class="style-chips">
+        <?php foreach (owStyleChoices() as $sid => $sl): ?>
+          <label class="style-chip"><input type="checkbox" name="art_styles[]" value="<?= e($sid) ?>"<?= in_array($sid, $myStyles, true) ? ' checked' : '' ?>><span><?= owBi($sl['en'], $sl['ar']) ?></span></label>
+        <?php endforeach; ?>
+        </div></fieldset>
+      <?php endif; ?>
+      <?php endif; ?>
 
       <div class="field"><label id="t-l-ben">Bio (English)</label><textarea name="bio_en"><?= $val('bio_en') ?></textarea></div>
       <div class="field"><label id="t-l-bar">Bio (Arabic)</label><textarea name="bio_ar" dir="rtl"><?= $val('bio_ar') ?></textarea></div>

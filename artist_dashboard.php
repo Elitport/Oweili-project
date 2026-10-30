@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 /* ---------------------------------------------------------------------
  *  Check 1 — Session check.
@@ -52,6 +53,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             owDeleteAllStageFiles($artId);
             getDB()->prepare('DELETE FROM artworks WHERE id = :id AND artist_id = :uid')
                 ->execute([':id' => $artId, ':uid' => $viewerId]);
+            owLog('artwork_delete', 'artwork', $artId, '', ['type' => 'artist', 'id' => $viewerId]);
             // best-effort remove the file
             $path = __DIR__ . '/' . ltrim((string) $row['image_url'], '/');
             if ($row['image_url'] && strpos($row['image_url'], 'uploads/artworks/') === 0 && is_file($path)) {
@@ -154,6 +156,8 @@ $web = $artist['website']   ?? '';
 /* Artist dashboard / public profile — layout only; cards, buttons, stats, tables,
    artwork cards and stage squares come from oweili.css (role color: artist pink) */
 .page{position:relative;z-index:10;}
+.p-styles{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}.p-styles .type-pill{text-decoration:none;}
+.aw-reason{font-size:var(--fs-caption);color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),.3);border-radius:var(--radius-input);padding:6px 10px;margin:6px 0 0;}
 .section-title{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin:var(--space-xl) 0 var(--space-sm);}
 .section-title:first-child{margin-top:0;}
 /* PROFILE HEADER */
@@ -235,8 +239,12 @@ $web = $artist['website']   ?? '';
       <?php if ($artist['artist_ar'] !== '' && $artist['artist_ar'] !== $artist['artist_en']): ?>
         <div class="name-ar" dir="rtl"><?= e($artist['artist_ar']) ?></div>
       <?php endif; ?>
-      <?php if (!empty($artist['city'])): ?>
-        <div class="city">📍 <?= e($artist['city']) ?></div>
+      <?php if (!empty($artist['city']) || !empty($artist['country'])): ?>
+        <div class="city">📍 <?= e(implode(', ', array_filter([(string) ($artist['city'] ?? ''), (string) ($artist['country'] ?? '')]))) ?></div>
+      <?php endif; ?>
+      <?php $pStyles = array_filter(explode(',', (string) ($artist['art_styles'] ?? '')), fn($x) => isset($ART_TYPES[$x]));
+      if ($pStyles): ?>
+        <div class="p-styles"><?php foreach ($pStyles as $ps): ?><a class="type-pill" href="explore.php#<?= e($ps) ?>"><?= owBi($ART_TYPES[$ps]['en'], $ART_TYPES[$ps]['ar']) ?></a><?php endforeach; ?></div>
       <?php endif; ?>
       <?php if (!empty($artist['bio_en'])): ?>
         <p class="bio"><?= e($artist['bio_en']) ?></p>
@@ -254,6 +262,7 @@ $web = $artist['website']   ?? '';
 
     <div class="head-actions">
       <?php if ($isOwner): ?>
+        <a class="btn btn-primary" href="artist_studio.php"><?= owBi('My Studio', 'مرسمي') ?></a>
         <a class="btn btn-secondary" href="edit_profile.php" id="t-edit">Edit Profile</a>
       <?php endif; ?>
       <?php if ($ig || $tw || $web): ?>
@@ -315,7 +324,9 @@ $web = $artist['website']   ?? '';
       <article class="aw-card">
         <div class="aw-img">
           <?= owArtImgHtml(owImgSrc($aw['image_url']), $aw['title_en'] . ($aw['title_ar'] !== '' ? ' · ' . $aw['title_ar'] : ''), ($awNo = ($awNo ?? 0) + 1) <= 4) ?>
-          <?php if ($isOwner && (int) $aw['is_approved'] === 0): ?>
+          <?php if ($isOwner && (int) $aw['is_approved'] === 0 && !empty($aw['rejected_at'])): ?>
+          <span class="aw-status aw-review badge" data-status="rejected">Not approved</span>
+          <?php elseif ($isOwner && (int) $aw['is_approved'] === 0): ?>
           <span class="aw-status aw-review badge" data-status="review">In review</span>
           <?php else: ?>
           <span class="aw-status badge" data-status="<?= e($st) ?>"><?= e(ucfirst($st)) ?></span>
@@ -334,6 +345,9 @@ $web = $artist['website']   ?? '';
           </details>
           <?php endif; ?>
           <div class="aw-price"><?= number_format((float) $aw['price']) ?> <span class="sar">SAR</span></div>
+          <?php if ($isOwner && (int) $aw['is_approved'] === 0 && !empty($aw['rejected_at'])): ?>
+          <p class="aw-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e((string) ($aw['rejected_reason'] ?? '')) ?></p>
+          <?php endif; ?>
           <?php if ($isOwner): ?>
           <div class="art-actions">
             <a class="btn btn-ghost btn-sm" href="edit_artwork.php?id=<?= (int) $aw['id'] ?>" data-t="edit">Edit</a>
@@ -400,7 +414,7 @@ const T={
     finEmpty:'No sales yet. Your sold artworks will appear here.',finHArt:'Artwork',finHDate:'Sale Date',finHPrice:'Price',saved:'Profile updated successfully.',
     edit:'Edit Profile',empty:'No artworks yet. Start by uploading your first piece.',
     abstract:'Abstract',landscape:'Landscape',portrait:'Portrait',other:'Other',
-    cardEdit:'Edit',cardDelete:'Delete',
+    cardEdit:'Edit',cardDelete:'Delete',rejected:'Not approved',
     available:'Available',sold:'Sold',auction:'Auction',sar:'SAR',
     nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
@@ -411,7 +425,7 @@ const T={
     finEmpty:'لا توجد مبيعات بعد. ستظهر أعمالك المباعة هنا.',finHArt:'العمل الفني',finHDate:'تاريخ البيع',finHPrice:'السعر',saved:'تم تحديث الملف الشخصي بنجاح.',
     edit:'تعديل الملف الشخصي',empty:'لا توجد أعمال بعد. ابدأ برفع عملك الأول.',
     abstract:'تجريدي',landscape:'طبيعي',portrait:'بورتريه',other:'أخرى',
-    cardEdit:'تعديل',cardDelete:'حذف',
+    cardEdit:'تعديل',cardDelete:'حذف',rejected:'لم تتم الموافقة',
     available:'متاح',sold:'مباع',auction:'مزاد',sar:'ر.س',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}

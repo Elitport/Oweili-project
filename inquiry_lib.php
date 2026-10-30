@@ -76,6 +76,7 @@ function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
     }
 
     $host = preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com';
+    owNotifyArtistOfInterest($aw, $host);
     $body = "New interest in an artwork on Oweili\r\n"
           . "اهتمام جديد بعمل فني على أويلي\r\n\r\n"
           . 'Artwork / العمل: ' . $aw['title_en'] . ' · ' . $aw['title_ar'] . "\r\n"
@@ -105,4 +106,27 @@ function owListInquiries(int $limit = 500): array {
     $st->bindValue(':lim', $limit, PDO::PARAM_INT);
     $st->execute();
     return $st->fetchAll();
+}
+
+/* Tells the artist that someone is interested, without any buyer details
+   (Oweili is the middle party). Only when the artist kept the
+   "Tell me when someone is interested" choice on (My Studio → Account). */
+function owNotifyArtistOfInterest(array $aw, string $host): void {
+    try {
+        $hasPref = function_exists('owHasColumn') && owHasColumn('users', 'notify_inquiries');
+        $st = getDB()->prepare('SELECT email' . ($hasPref ? ', notify_inquiries' : '') . ' FROM users WHERE id = :id AND role = \'artist\' LIMIT 1');
+        $st->execute([':id' => (int) $aw['artist_id']]);
+        $a = $st->fetch();
+        if (!$a || ($hasPref && (int) $a['notify_inquiries'] !== 1) || !filter_var($a['email'], FILTER_VALIDATE_EMAIL)) return;
+        $body = "Good news: someone is interested in your artwork \"" . $aw['title_en'] . "\" on Oweili.\r\n"
+              . "Our team will talk to them and keep you posted. Buyer details stay with Oweili.\r\n"
+              . "See your numbers: https://$host/artist_studio.php\r\n\r\n"
+              . "خبر جميل: هناك من يهتم بعملك «" . $aw['title_ar'] . "» في أويلي.\r\n"
+              . "سيتواصل فريقنا معه ويطلعك على المستجدات. تبقى بيانات المشتري لدى أويلي.\r\n"
+              . "شاهد أرقامك: https://$host/artist_studio.php\r\n\r\n"
+              . "To stop these emails: My Studio → Account. لإيقاف هذه الرسائل: مرسمي ← الحساب.\r\n";
+        if (!owSendMail((string) $a['email'], 'Someone loves your work · هناك من أعجبه عملك', $body)) {
+            error_log('inquiry: notice to the artist failed for artwork ' . (int) $aw['id']);
+        }
+    } catch (Throwable $e) { error_log('owNotifyArtistOfInterest: ' . $e->getMessage()); }
 }

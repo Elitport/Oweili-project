@@ -100,6 +100,8 @@
 - register.php / register_artist.php / register_collector.php — Sign up flows
 - login.php / logout.php / verify.php / forgot.php — Auth
 - edit_profile.php / edit_artwork.php — Self-service editing
+- artist_studio.php — My Studio, the artist's private area (see Features)
+- view.php — counts artwork views (Gallery window)
 - artist_dashboard.php — Artist control panel ("Start New Artwork" button + drafts in progress); with ?id=N it is the artist's public profile, open to everyone
 - upload_artwork.php — 3-stage proof-of-process upload (see Features below)
 - artwork_lib.php — shared helpers for the upload: color list, art type pictures, photo checks and saving
@@ -123,6 +125,15 @@
 - Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
+
+### Artist dashboard upgrades — Phase 2 of 4 built
+- My Studio (artist_studio.php, «مرسمي»): the artist's private area, linked from their dashboard ("My Studio" button). 4 number boxes (Artworks, Views, Favorites, Interested buyers) and 4 tabs: My artworks (every work with its status: Draft / In review / In the Gallery / Not approved + the reason / Sold, and its views, favorites and "I'm Interested" count, never buyer names, phones or emails), Account (email choices, email, password), Activity (what they did and when), Sales & payouts (sold works, sales total, payouts list; structure only until payments open in Sprint 4)
+- A work that was not approved shows the reason on My Studio and on the dashboard card. When the artist edits it, it goes back to review (reason cleared)
+- Views: counted when a visitor opens the artwork window in the Gallery, once per visitor per artwork per day, never the artist's own looks (view.php)
+- Interest notice: when someone presses "I'm Interested", the artist gets a short bilingual email that someone is interested, with no buyer details (Oweili is the middle party). They can turn it off in My Studio → Account
+- Profile (edit_profile.php): photo, name, bio EN/AR, city, phone, social links (as before) plus country and art styles (up to 8 of the 50 styles; shown on the public profile with links to Explore Art Styles). Social links must now be real web addresses (http/https); "@name" becomes the full Instagram or X address. Before, any text was saved and shown as a link
+- Activity log: artwork sent for review, edited, deleted, profile and email-choice changes
+- Files: artist_studio.php, view.php, artist_dashboard.php, edit_profile.php, edit_artwork.php, upload_artwork.php, inquiry_lib.php (owNotifyArtistOfInterest), marketplace.php (view count), platform_lib.php (owSafeLink, owStyleChoices, action words), account_lib.php. Tables: users (country, art_styles, notify_inquiries, notify_news), artworks (view_count, rejected_reason, rejected_at), favorites, artwork_inquiries, payouts, activity_log (no database change needed)
 
 ### 3-stage artwork upload (proof of process) — built, needs database_update.sql
 - What it does: artists start a new artwork from their dashboard and go through 5 steps: 1 titles (Arabic + English required), 2 photo at 25% (required), 3 photo at 50% (optional, can skip), 4 photo at 100% (required) + colors used + art type (all 50 encyclopedia styles as guided cards with their drawn picture, under 6 group labels: Traditional, Digital, Islamic & Arab Heritage, Contemporary, Nature & Portrait, Photography), 5 price in SAR + the 15% commission note, then "Submit for Review"

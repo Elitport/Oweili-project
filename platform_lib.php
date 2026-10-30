@@ -122,6 +122,21 @@ const OW_ACTION_WORDS = [
     'favorite_remove' => ['Removed an artwork from favorites', 'أزال عملاً من المفضلة'],
     'inquiry_sent'    => ['Sent an "I’m Interested" request', 'أرسل طلب «أنا مهتم»'],
     'verify_resend'   => ['Asked for a new confirmation email', 'طلب رسالة تأكيد جديدة'],
+    'notify_update'   => ['Changed the email choices', 'غيّر اختيارات الرسائل'],
+    'artwork_submit'  => ['Sent an artwork for review', 'أرسل عملاً للمراجعة'],
+    'artwork_edit'    => ['Edited an artwork', 'عدّل عملاً'],
+    'artwork_delete'  => ['Deleted an artwork', 'حذف عملاً'],
+    'artwork_approve' => ['Approved an artwork', 'وافق على عمل'],
+    'artwork_reject'  => ['Did not approve an artwork', 'لم يوافق على عمل'],
+    'artwork_sold'    => ['Marked an artwork as sold', 'علّم عملاً كمباع'],
+    'user_approve'    => ['Approved an artist', 'وافق على فنان'],
+    'user_suspend'    => ['Suspended an account', 'أوقف حساباً'],
+    'user_unsuspend'  => ['Lifted a suspension', 'ألغى إيقاف حساب'],
+    'inquiry_status'  => ['Changed a request status', 'غيّر حالة طلب'],
+    'inquiry_note'    => ['Wrote a private note on a request', 'كتب ملاحظة خاصة على طلب'],
+    'institute_save'  => ['Saved an institute', 'حفظ معهداً'],
+    'course_save'     => ['Saved a course', 'حفظ دورة'],
+    'admin_login'     => ['Admin signed in', 'دخول الإدارة'],
 ];
 
 /* ---------------------------------------------------------------------
@@ -222,4 +237,25 @@ function owVerifyEmailBody(string $verifyUrl, bool $artist = false): string {
          . "—\r\n\r\n"
          . "أهلاً بك في أويلي!\r\n\r\nيرجى تأكيد بريدك الإلكتروني عبر هذا الرابط:\r\n" . $verifyUrl . "\r\n\r\n"
          . "يعمل الرابط لمدة 24 ساعة." . ($artist ? " بعدها يراجع فريقنا أعمالك قبل ظهور ملفك." : '') . "\r\n";
+}
+
+/* A social or website link that is safe to show as a link: only http(s).
+   "@name" or "name" becomes the full Instagram / X address.
+   Returns [link, ok]: ok = false when it is not a link we can use. */
+function owSafeLink(string $v, string $kind = 'web'): array {
+    $v = trim($v);
+    if ($v === '') return ['', true];
+    $handle = ltrim($v, '@');
+    if ($kind !== 'web' && preg_match('/^[A-Za-z0-9._]{1,30}$/', $handle)) {
+        return [($kind === 'instagram' ? 'https://instagram.com/' : 'https://x.com/') . $handle, true];
+    }
+    if (!preg_match('#^https?://#i', $v) && preg_match('#^[a-z0-9][a-z0-9.\-]*\.[a-z]{2,}(/.*)?$#i', $v)) $v = 'https://' . $v;
+    $ok = (bool) preg_match('#^https?://[^\s"\'<>]+$#i', $v) && filter_var($v, FILTER_VALIDATE_URL) && strlen($v) <= 255;
+    return [$ok ? $v : '', $ok];
+}
+
+/* The 50 art styles an artist can pick for their profile (no old types) */
+function owStyleChoices(): array {
+    $all = require __DIR__ . '/art_types.php';
+    return array_filter($all, fn($t) => empty($t['legacy']));
 }

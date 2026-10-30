@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $viewerId  = (int) $_SESSION['user_id'];
@@ -71,6 +72,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $soldSql = $status === 'sold'
                 ? 'sold_at = COALESCE(sold_at, NOW())'
                 : 'sold_at = NULL';
+            /* a work that was not approved goes back to review once the artist edits it */
+            if (owHasColumn('artworks', 'rejected_at')) $soldSql .= ', rejected_at = NULL, rejected_reason = NULL';
             $upd = getDB()->prepare(
                 'UPDATE artworks
                  SET title_en=:ten, title_ar=:tar, description_en=:den, description_ar=:dar,
@@ -82,6 +85,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 ':price' => (float) $price, ':type' => $type, ':status' => $status,
                 ':img' => $imageUrl, ':id' => $artId, ':uid' => $viewerId,
             ]);
+            owLog('artwork_edit', 'artwork', $artId, '', ['type' => 'artist', 'id' => $viewerId]);
             header('Location: artist_dashboard.php?id=' . $viewerId);
             exit;
         }

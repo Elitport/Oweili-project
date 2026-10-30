@@ -9,6 +9,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
+require_once __DIR__ . '/platform_lib.php';
 
 /* ---- Access: logged-in artists only ---- */
 if (!isLoggedIn()) {
@@ -150,6 +151,7 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                              SET price = :p, image_url = :img, status = "available", is_approved = 0, is_draft = 0
                            WHERE id = :id AND artist_id = :uid AND is_draft = 1')
                ->execute([':p' => (float) $raw, ':img' => $stages[100]['photo_path'], ':id' => $draft['id'], ':uid' => $uid]);
+            owLog('artwork_submit', 'artwork', (int) $draft['id'], '', ['type' => 'artist', 'id' => $uid]);
             header('Location: upload_artwork.php?done=1');
             exit;
         }
