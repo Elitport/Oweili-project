@@ -61,8 +61,7 @@ $owSafeImg = 'owImgSrc';   // artwork_lib.php: cleans up saved picture paths
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Community · Oweili</title>
-<meta name="description" content="Art grows when artists meet. Share your work, learn from each other, and make friends who get it. الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Community', 'ar' => 'المجتمع', 'desc_en' => 'Meet the artists of Oweili and the newest works made by human hands.', 'desc_ar' => 'تعرّف على فناني أويلي وأحدث الأعمال المصنوعة بأيدٍ بشرية.', 'path' => 'community.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -166,7 +165,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
       $img = $owSafeImg((string) $aw['image_url']);
       $tEn = (string) $aw['title_en']; $tAr = (string) ($aw['title_ar'] ?: $aw['title_en']);
       $nEn = (string) ($aw['artist_en'] ?: $aw['artist_ar']); $nAr = (string) ($aw['artist_ar'] ?: $aw['artist_en']); ?>
-    <a class="inspo-card" href="marketplace.php#artwork-<?= (int) $aw['id'] ?>">
+    <a class="inspo-card" href="marketplace.php?show=<?= (int) $aw['id'] ?>#artwork-<?= (int) $aw['id'] ?>">
       <div class="inspo-img"><?php if ($img !== ''): $i8 = owImgSized($img, 800); ?><img src="<?= e($i8) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>" loading="lazy" decoding="async"<?= owImgFallbackAttrs($img, $i8) ?>><?= owImgPlaceholder() ?><?php endif; ?></div>
       <div class="inspo-body">
         <h4><?= owBi($tEn, $tAr) ?></h4>

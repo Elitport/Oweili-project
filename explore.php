@@ -51,8 +51,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Explore Art Styles · Oweili</title>
-<meta name="description" content="Fifty art styles, fifty human stories. Learn the story behind every style. Know what you are looking at. خمسون أسلوباً وخمسون قصة إنسانية. تعرّف على قصة كل أسلوب. اعرف ما تراه.">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Explore Art Styles', 'ar' => 'استكشف أساليب الرسم', 'desc_en' => 'Fifty art styles, fifty human stories. Learn the story behind every style.', 'desc_ar' => 'خمسون أسلوباً وخمسون قصة إنسانية. تعرّف على قصة كل أسلوب.', 'path' => 'explore.php']); ?>
 <meta property="og:title" content="Explore Art Styles · استكشف أساليب الرسم · Oweili">
 <meta property="og:description" content="Learn the story behind every style. Know what you are looking at.">
 <meta property="og:type" content="website">

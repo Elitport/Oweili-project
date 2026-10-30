@@ -109,7 +109,7 @@ $okEn  = $okCode ? $OK[$okCode]['en'] : '';      $okAr  = $okCode ? $OK[$okCode]
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reset Password · Oweili</title>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Reset Password', 'ar' => 'إعادة تعيين كلمة المرور', 'desc_en' => 'Forgot your password? We will send you a link.', 'desc_ar' => 'نسيت كلمة المرور؟ سنرسل لك رابطاً.', 'path' => 'forgot.php', 'noindex' => true]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

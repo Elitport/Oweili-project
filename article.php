@@ -38,16 +38,10 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($titleEn) ?></title>
-<?php if ($a): ?>
-<meta name="description" content="<?= e(owExcerpt((string) $a['body_en'], 150) . ' · ' . owExcerpt((string) $a['body_ar'], 150)) ?>">
-<meta property="og:title" content="<?= e($a['title_en'] . ' · ' . $a['title_ar']) ?>">
-<meta property="og:description" content="<?= e(owExcerpt((string) $a['body_en'], 200)) ?>">
-<meta property="og:type" content="article">
-<?php if ($cover): ?><meta property="og:image" content="https://oweili.com/<?= e($cover) ?>"><?php endif; ?>
-<?php else: ?>
-<meta name="robots" content="noindex">
-<?php endif; ?>
+<?php require_once __DIR__ . '/seo_lib.php';
+if ($a) owSeo(['en' => (string) $a['title_en'], 'ar' => (string) $a['title_ar'], 'desc_en' => owExcerpt((string) $a['body_en'], 150), 'desc_ar' => owExcerpt((string) $a['body_ar'], 150),
+               'image' => (string) ($cover ?? ''), 'path' => 'article.php?slug=' . rawurlencode((string) $a['slug']), 'type' => 'article']);
+else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود', 'path' => 'articles_list.php', 'noindex' => true]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">

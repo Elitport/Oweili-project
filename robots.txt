@@ -1,0 +1,23 @@
+# Oweili · oweili.com — real art, made by real human hands
+User-agent: *
+Allow: /
+# private areas and tools (they need a sign-in anyway)
+Disallow: /admin
+Disallow: /admin.php
+Disallow: /admin_
+Disallow: /subadmin_dashboard.php
+Disallow: /collector_dashboard.php
+Disallow: /artist_studio.php
+Disallow: /edit_profile.php
+Disallow: /edit_artwork.php
+Disallow: /upload_artwork.php
+Disallow: /verify.php
+Disallow: /forgot.php
+Disallow: /logout.php
+Disallow: /inquire.php
+Disallow: /favorite.php
+Disallow: /view.php
+Disallow: /bashro_api.php
+Disallow: /uploads/consents/
+
+Sitemap: https://oweili.com/sitemap.xml

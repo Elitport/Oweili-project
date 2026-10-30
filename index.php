@@ -14,8 +14,7 @@ require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languag
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oweili · Everything here started with human hands</title>
-<meta name="description" content="Every piece here was made by real hands. And you can see how. كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Everything here started with human hands', 'ar' => 'كل ما تراه هنا بدأ بيدٍ حقيقية', 'desc_en' => 'Oweili is the home of real human art. See how every piece was made, then make it yours.', 'desc_ar' => 'أويلي بيت الفن البشري الحقيقي. شاهد كيف صُنعت كل قطعة، ثم اقتنها.', 'path' => '']); ?>
 <meta property="og:title" content="Oweili · Everything here started with human hands · كل ما تراه هنا، بدأ بيدٍ حقيقية">
 <meta property="og:description" content="Every piece here was made by real hands. And you can see how.">
 <meta property="og:type" content="website">

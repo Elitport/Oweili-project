@@ -149,7 +149,15 @@ $web = $artist['website']   ?? '';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= $artist ? e($artist['artist_en']) . ' · ' : '' ?>Artist Profile · Oweili</title>
+<?php require_once __DIR__ . '/seo_lib.php';
+$seoImg = '';
+foreach ($artworks as $sa) { if ((int) $sa['is_approved'] === 1 && ($si = owImgSrc((string) $sa['image_url'])) !== '') { $seoImg = owImgSized($si, 800); break; } }
+if ($seoImg === '' && $artist && ($pp = owImgSrc((string) ($artist['profile_picture'] ?? ''))) !== '') $seoImg = $pp;
+owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $artist['artist_ar'] . '، فنان في أويلي',
+                 'desc_en' => trim(mb_substr((string) ($artist['bio_en'] ?: 'Original works made by human hands.'), 0, 150)),
+                 'desc_ar' => trim(mb_substr((string) ($artist['bio_ar'] ?: 'أعمال أصلية مصنوعة بأيدٍ بشرية.'), 0, 150)),
+                 'image' => $seoImg, 'path' => 'artist_dashboard.php?id=' . (int) $profileId, 'type' => 'profile', 'noindex' => !$hasId]
+              : ['en' => 'Artist not found', 'ar' => 'الفنان غير موجود', 'path' => 'marketplace.php', 'noindex' => true]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

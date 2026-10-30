@@ -190,8 +190,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Artist Sign-up · Oweili</title>
-<meta name="description" content="We are glad you are here. Our team reviews every profile by hand. سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join as an Artist', 'ar' => 'انضم كفنان', 'desc_en' => 'Show your work and the journey behind it. Joining is free.', 'desc_ar' => 'اعرض أعمالك ورحلتها. الانضمام مجاني.', 'path' => 'register_artist.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

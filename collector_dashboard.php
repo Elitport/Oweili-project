@@ -269,7 +269,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
         </div>
         <div class="req-side">
           <span class="st-pill st-<?= e($st) ?>"><?= owBi(OW_INQUIRY_STATUS[$st][0], OW_INQUIRY_STATUS[$st][1]) ?></span>
-          <?php if ($r['aid'] && (int) $r['visible'] === 1): ?><a class="btn btn-ghost btn-sm" href="marketplace.php#artwork-<?= (int) $r['aid'] ?>"><?= owBi('See the artwork', 'شاهد العمل') ?></a><?php endif; ?>
+          <?php if ($r['aid'] && (int) $r['visible'] === 1): ?><a class="btn btn-ghost btn-sm" href="marketplace.php?show=<?= (int) $r['aid'] ?>#artwork-<?= (int) $r['aid'] ?>"><?= owBi('See the artwork', 'شاهد العمل') ?></a><?php endif; ?>
         </div>
       </div>
     <?php endforeach; ?>
@@ -299,7 +299,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
           <?php if ($tl): ?><span class="type-pill"><?= owBi($tl['en'], $tl['ar']) ?></span><?php endif; ?>
           <div class="aw-price"><?= number_format((float) $f['price']) ?> <?= owBi('SAR', 'ر.س') ?></div>
           <?php if ((int) $f['visible'] === 1): ?>
-            <a class="btn btn-dark btn-block btn-sm" href="marketplace.php#artwork-<?= $fid ?>"><?= owBi('See the Story', 'شاهد القصة') ?></a>
+            <a class="btn btn-dark btn-block btn-sm" href="marketplace.php?show=<?= $fid ?>#artwork-<?= $fid ?>"><?= owBi('See the Story', 'شاهد القصة') ?></a>
           <?php else: ?>
             <span class="fav-gone"><?= owBi('No longer available', 'لم يعد متاحاً') ?></span>
           <?php endif; ?>

@@ -17,7 +17,12 @@ Options -Indexes
   RewriteRule ^uploads/consents/ - [F,L]
   # The old, unused app sources and database notes are never public
   RewriteRule ^(resha-app|supabase)(/|$) - [F,L]
+  # The list of pages for search engines is made fresh by sitemap.php
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
 </IfModule>
+
+# A friendly page in English and Arabic for any address that does not exist
+ErrorDocument 404 /404.php
 
 # Logs, backups and leftover copies of files (error_log, *.log, *.bak, *~ ...)
 <FilesMatch "(?i)(^error_log$|\.(log|bak|old|orig|save|swp|tmp|gz|zip|tar)$|~$)">

@@ -10,6 +10,7 @@ require_once __DIR__ . '/legal_lib.php';
 $C = OW_LEGAL_CONTACT;
 
 owLegalPage([
+    'path' => 'privacy.php',
     'title_en' => 'Privacy Policy', 'title_ar' => 'سياسة الخصوصية',
     'lead_en' => 'Your trust matters more to us than anything. Here is, in plain words, what we keep about you and why.',
     'lead_ar' => 'ثقتك أهم ما لدينا. هنا نشرح بكلمات بسيطة ما نحفظه عنك ولماذا.',

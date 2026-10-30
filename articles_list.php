@@ -56,8 +56,7 @@ $titleAr = $tAr . ' · أويلي';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($titleEn) ?></title>
-<meta name="description" content="<?= e($PAGE[$type]['sub'][0] . ' ' . $PAGE[$type]['sub'][1]) ?>">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => $tEn, 'ar' => $tAr, 'desc_en' => $PAGE[$type]['sub'][0], 'desc_ar' => $PAGE[$type]['sub'][1], 'path' => 'articles_list.php?type=' . $type]); ?>
 <meta property="og:title" content="<?= e($tEn . ' · ' . $tAr . ' · Oweili') ?>">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>

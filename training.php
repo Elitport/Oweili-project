@@ -64,8 +64,7 @@ $cityLabel = function (array $i): array {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Art Institutes · Oweili</title>
-<meta name="description" content="Find the right place to learn art, close to home. اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Art Institutes', 'ar' => 'المعاهد الفنية', 'desc_en' => 'Find the right place to learn art, close to home.', 'desc_ar' => 'اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.', 'path' => 'training.php']); ?>
 <meta property="og:title" content="Art Institutes · المعاهد الفنية · Oweili">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>

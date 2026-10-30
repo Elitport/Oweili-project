@@ -77,7 +77,7 @@ $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign In · Oweili</title>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Sign In', 'ar' => 'تسجيل الدخول', 'desc_en' => 'Welcome back to Oweili.', 'desc_ar' => 'أهلاً بعودتك إلى أويلي.', 'path' => 'login.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

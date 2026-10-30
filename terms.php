@@ -10,6 +10,7 @@ require_once __DIR__ . '/legal_lib.php';
 $C = OW_LEGAL_CONTACT;
 
 owLegalPage([
+    'path' => 'terms.php',
     'title_en' => 'Terms of Use', 'title_ar' => 'شروط الاستخدام',
     'lead_en' => 'The simple rules that keep Oweili a trusted home for real, human-made art.',
     'lead_ar' => 'القواعد البسيطة التي تجعل أويلي بيتاً موثوقاً للفن الحقيقي المصنوع بأيدٍ بشرية.',

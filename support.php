@@ -4,8 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Support · Oweili</title>
-<meta name="description" content="Got a question? Just ask. A real person on our team will help you. لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Support', 'ar' => 'الدعم', 'desc_en' => 'Questions about buying, selling or joining Oweili? The answers are here.', 'desc_ar' => 'أسئلة عن الشراء أو البيع أو الانضمام إلى أويلي؟ الإجابات هنا.', 'path' => 'support.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

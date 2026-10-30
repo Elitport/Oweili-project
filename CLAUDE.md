@@ -128,6 +128,17 @@
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
+### Google and sharing
+- robots.txt: search engines may read every public page; private areas (admin, dashboards, studio, edit pages, account links, the Bashro connection, consent proofs) are kept out. Names the sitemap
+- sitemap.xml (made fresh by sitemap.php, through .htaccess): the main pages, the article lists, published articles, every artwork visitors can see (artwork.php?id=N) and every approved artist's profile, with the date each last changed. Never drafts, hidden or suspended accounts
+- Every public page now has a title and description in both languages and link previews (WhatsApp, X, Facebook, LinkedIn: title, description, picture), from one helper: owSeo() in seo_lib.php. New public pages should use it. Pages without their own picture use assets/img/share.jpg (the logo mark, OWEILI and the tagline in both languages, 1200×630)
+- Artwork page (artwork.php?id=N): the link to share. Big photo, titles, artist, type, "✦ A Real Touch" badge, price, description, Creation Journey, heart, "I’m Interested" (opens the artwork's window in the Gallery) and "See more in the Gallery". The preview shows the artwork photo. The Gallery window has a "Share this artwork" link (phone share sheet, or copies the link)
+- marketplace.php?show=N opens that artwork's window even when it is not on the current Gallery page. Fixed on the way: links from Community, the Buyer dashboard and sign-in only opened the window when the artwork happened to be on the first page
+- Files: seo_lib.php, sitemap.php, robots.txt, artwork.php, assets/img/share.jpg, .htaccess, marketplace.php, community.php, collector_dashboard.php, and every public page head. Tables read: artworks, users, articles
+
+### Friendly 404 page
+- 404.php: "This page has wandered off" / «هذه الصفحة غير موجودة», a short line, "Back to the Gallery" and "Home" buttons, in English and Arabic. Used for every missing address (.htaccess ErrorDocument) and by artwork.php for works that are not in the Gallery. Works from any address depth (it sets a base address so its links never break). Tables: none
+
 ### Privacy Policy and Terms of Use — DRAFT, under review
 - privacy.php («سياسة الخصوصية») and terms.php («شروط الاستخدام»): full pages in English and Arabic, written to fit the Saudi Personal Data Protection Law (PDPL). Both show a "Draft, under review" banner on top. A list of sections at the top jumps to each part
 - Privacy: who we are, Oweili as the middle party (buyer details never go to artists), what we collect (names, phones, emails, passwords as one-way codes, profile and artwork photos with GPS removed, requests, favorites, activity with a monthly one-way address code, consent records, browser storage), why, who can see it (public profile, team, Hostinger, Bashro, authorities), how long we keep it, PDPL rights, how to delete (email from the account address, done within 30 days), security, under-18s, changes
@@ -360,6 +371,7 @@
 - email_test.php and smtp_test.php — removed (test pages are no longer needed; the Email check in admin.php covers it)
 - .user.ini — PHP settings for the website, read by Hostinger's PHP from public_html: upload_max_filesize 64M and post_max_size 128M (bigger artist photos and videos), and errors hidden from visitors (display_errors Off, log_errors On). Takes up to 5 minutes to apply after a deploy. Blocked from visitors by .htaccess (all dot files). If hPanel → Advanced → PHP Configuration shows smaller numbers, set the same values there too
 - .backups/ — database backups made on the server (for example .backups/db-u405344949_contact-20261030-200442.sql.gz, the full backup made before the 30 Oct database check). Visitors get 403 (.htaccess blocks every dot folder, and the folder has its own deny file); deploys keep it (.gitignore). To download: hPanel → Files → File Manager → public_html → turn on "Show hidden files" → .backups → right-click the file → Download. To restore: phpMyAdmin → the database → Import → choose the .sql.gz file (it re-creates every table with its rows)
+- robots.txt / sitemap.php / seo_lib.php / 404.php — see "Google and sharing" and "Friendly 404 page" under Features
 - index.html — tiny forwarding file only: sends old links and bookmarks to index.php. Do not put content in it
 
 ## Database

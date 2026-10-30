@@ -80,8 +80,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collector Sign-up · Oweili</title>
-<meta name="description" content="Welcome. Real art made by real hands is waiting for you. أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join as a Buyer', 'ar' => 'انضم كمشترٍ', 'desc_en' => 'Welcome. Real art made by real hands is waiting for you.', 'desc_ar' => 'أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.', 'path' => 'register_collector.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

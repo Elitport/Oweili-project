@@ -37,8 +37,7 @@ function owLegalPage(array $meta, array $sections): void {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($meta['title_en'] . ' · ' . $meta['title_ar'] . ' · Oweili') ?></title>
-<meta name="description" content="<?= e($meta['desc_en'] . ' ' . $meta['desc_ar']) ?>">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => $meta['title_en'], 'ar' => $meta['title_ar'], 'desc_en' => $meta['desc_en'], 'desc_ar' => $meta['desc_ar'], 'path' => $meta['path']]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <?php if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'ar'], true)): ?><script>try { localStorage.setItem('lang', <?= json_encode($_GET['lang']) ?>); } catch (e) {}</script><?php endif; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">

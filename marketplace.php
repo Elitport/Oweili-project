@@ -91,8 +91,20 @@ $stmt->execute();
 $artworks = $stmt->fetchAll();
 $filtered = $cat !== 'all' || $initType !== '' || $status !== 'all' || $q !== '';
 
+/* A shared link (artwork.php, Community) can ask for one artwork's window with ?show=N,
+   even when that artwork is not on this page: it is added to the window data only */
+$modalArtworks = $artworks;
+$showId = (int) $getStr('show');
+if ($showId > 0 && !in_array($showId, array_map(fn($r) => (int) $r['id'], $artworks), true)) {
+    $one = getDB()->prepare("SELECT a.id, a.title_en, a.title_ar, a.description_en, a.description_ar, a.price, a.type, a.status, a.image_url, a.artist_id,
+                                    " . owArtistNameSql('u') . " FROM artworks a JOIN users u ON u.id = a.artist_id
+                             WHERE a.id = :id AND a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0" . owNotDraftSql('a'));
+    $one->execute([':id' => $showId]);
+    if ($row = $one->fetch()) $modalArtworks[] = $row;
+}
+
 /* Creation Journey: stage photos + colors, only for the approved artworks on this page */
-$pageIds  = array_map(fn($r) => (int) $r['id'], $artworks);
+$pageIds  = array_map(fn($r) => (int) $r['id'], $modalArtworks);
 $mpStages = owGetStagesFor($pageIds);
 $mpColors = owGetColorsFor($pageIds);
 
@@ -101,7 +113,7 @@ $mpImg = 'owImgSrc';
 
 /* Data for the details modal (escaped on output via JSON flags) */
 $modalData = [];
-foreach ($artworks as $aw) {
+foreach ($modalArtworks as $aw) {
     $modalData[(int) $aw['id']] = [
         'title_en'  => $aw['title_en'],
         'title_ar'  => $aw['title_ar'],
@@ -123,8 +135,7 @@ foreach ($artworks as $aw) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $ar ? 'المعرض · أويلي' : 'The Gallery · Oweili' ?></title>
-  <meta name="description" content="<?= $ar ? 'أعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية.' : 'Original works by real artists, from Saudi Arabia and all over the world. Every piece has a story.' ?>">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'The Gallery', 'ar' => 'المعرض', 'desc_en' => 'Original works by real artists, from Saudi Arabia and all over the world. Every piece has a story.', 'desc_ar' => 'أعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية.', 'path' => 'marketplace.php' . ($ar ? '?lang=ar' : '')]); ?>
   <script>
   /* Honor the site-wide saved language. This page switches language via a
      server reload (?lang=), so if the visitor previously chose Arabic on
@@ -215,6 +226,7 @@ foreach ($artworks as $aw) {
     .mi-form{margin-top:var(--space-sm);display:grid;gap:var(--space-xs);}
     .mi-form .field{margin:0;}
     .mi-note{font-size:var(--fs-caption);color:var(--color-body);}
+    .m-share{display:inline-block;margin:var(--space-xs) 0;font-size:var(--fs-caption);font-weight:700;color:var(--color-accent);}
     .m-price-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-sm);margin-top:var(--space-sm);}
     .modal-body .m-price-row .m-price{margin-top:0;}
     .m-interest [hidden]{display:none !important;}
@@ -383,6 +395,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       <div class="m-price-row"><div class="m-price" id="m-price"></div>
         <?php if ($showFav): ?><button type="button" class="fav-btn fav-inline" id="m-fav" data-fav="" aria-pressed="false" aria-label="<?= e($favLbl['on']) ?>"><?= MP_HEART ?></button><?php endif; ?>
       </div>
+      <a class="m-share" id="m-share" href="#" onclick="return shareArtwork(this)"><?= $ar ? 'شارك هذا العمل' : 'Share this artwork' ?></a>
       <!-- I'm Interested: name, phone, email → inquire.php -->
       <div class="m-interest">
         <button type="button" class="btn btn-primary btn-block" id="mi-open" onclick="openInterest()"><?= $ar ? 'أنا مهتم' : 'I’m Interested' ?></button>
@@ -403,7 +416,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         </form>
         <div class="ok-box" id="mi-ok" role="status" hidden><?= $ar ? 'شكراً! سنتواصل معك قريباً.' : 'Thank you! We will contact you soon.' ?></div>
       </div>
-      <?php foreach ($artworks as $aw):
+      <?php foreach ($modalArtworks as $aw):
         $jid = (int) $aw['id'];
         $jh  = owJourneyHtml($mpStages[$jid] ?? [], $mpColors[$jid] ?? [], (string) $aw['type'], $ART_TYPES);
         if ($jh === '') continue; ?>
@@ -419,7 +432,7 @@ window.OW_FAV = {
   buyer: <?= $isBuyer ? 'true' : 'false' ?>, csrf: <?= json_encode(csrfToken()) ?>,
   ids: <?= json_encode(array_map('strval', array_keys($favIds))) ?>,
   labels: <?= json_encode($favLbl, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>,
-  login: function(id){ location.href = 'login.php?next=' + encodeURIComponent('marketplace.php' + (LANG === 'ar' ? '?lang=ar' : '') + '#artwork-' + id); }
+  login: function(id){ location.href = 'login.php?next=' + encodeURIComponent('marketplace.php?show=' + id + (LANG === 'ar' ? '&lang=ar' : '') + '#artwork-' + id); }
 };
 </script>
 <script src="<?= owAsset('assets/js/favorites.js') ?>"></script>
@@ -452,6 +465,7 @@ function openModal(id){
   document.getElementById('m-verified').hidden = !a.journey;
   document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });
   resetInterest(id);
+  document.getElementById('m-share').dataset.id = id;
   /* one view for the artist's numbers (counted once a day per visitor) */
   try { const vf = new FormData(); vf.append('artwork_id', id); navigator.sendBeacon ? navigator.sendBeacon('view.php', vf) : fetch('view.php', {method:'POST', body:vf, credentials:'same-origin', keepalive:true}); } catch (e) {}
   const mf = document.getElementById('m-fav');
@@ -508,6 +522,15 @@ function modalImgFailed(img){
   const l = (img.dataset.fb || '').split('|').filter(Boolean);
   if (l.length) { img.dataset.fb = l.slice(1).join('|'); img.src = l[0]; return; }
   img.hidden = true; document.getElementById('m-noimg').hidden = false;
+}
+/* Share: the artwork's own page, so WhatsApp and X show its photo and title */
+function shareArtwork(el){
+  const url = location.origin + '/artwork.php?id=' + el.dataset.id + (LANG === 'ar' ? '&lang=ar' : '');
+  const a = ARTWORKS[el.dataset.id] || {};
+  if (navigator.share) { navigator.share({title: LANG === 'ar' ? a.title_ar : a.title_en, url: url}).catch(function(){}); return false; }
+  const done = function(){ el.textContent = LANG === 'ar' ? 'تم نسخ الرابط' : 'Link copied'; };
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function(){ location.href = url; }); else location.href = url;
+  return false;
 }
 function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
