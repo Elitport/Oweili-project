@@ -58,6 +58,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                         @unlink($old);
                     }
                     $imageUrl = 'uploads/artworks/' . $fname;
+                    owMakeCardThumbs($imageUrl);   // phone-sized copies, ready for the Gallery
                 } else {
                     $err = 'image';
                 }

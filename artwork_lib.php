@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/ow_paths.php';   // owBase(): web address of the site's folder
+require_once __DIR__ . '/img_lib.php';    // small phone-friendly copies of photos
 /* =====================================================================
  *  artwork_lib.php — shared helpers for the 3-stage proof-of-process upload
  *  Used by: upload_artwork.php, artist_dashboard.php, edit_artwork.php,
@@ -138,7 +139,9 @@ function owDeleteAllStageFiles(int $artworkId): void {
  *  rotation and strips hidden data such as GPS location (privacy / PDPL).
  * ------------------------------------------------------------------- */
 function owStoreStagePhoto(array $file): array {
-    return owStoreImage($file, OW_STAGE_DIR);
+    $r = owStoreImage($file, OW_STAGE_DIR);
+    if ($r['ok']) owMakeCardThumbs($r['path']);   // phone-sized copies ready before anyone opens the Gallery
+    return $r;
 }
 
 function owStoreImage(array $file, string $relDir): array {
@@ -265,12 +268,18 @@ function owImgSrc(?string $u): string {
 }
 
 /* The address of a smaller copy of one of our uploaded photos ($w pixels wide: 400, 800
-   or 1600), made by img.php. Photos on other sites and anything else are returned as is. */
+   or 1600). When the copy already exists it is linked directly as a normal picture file
+   (fast, nothing for the server to do); otherwise img.php makes it on first view.
+   Photos on other sites and anything else are returned as is. */
 function owImgSized(string $src, int $w): string {
     $base = owBase();
     if ($src === '' || strpos($src, $base . 'uploads/') !== 0) return $src;
-    $rel = substr($src, strlen($base));
+    $rel = rawurldecode(substr($src, strlen($base)));
     if (preg_match('#^uploads/(consents|thumbs)/#', $rel)) return $src;
+    $real = owThumbSource($rel);
+    if ($real !== '' && is_file($copy = owThumbFile($rel, $w, $real))) {
+        return $base . 'uploads/thumbs/' . basename($copy);
+    }
     return $base . 'img.php?' . http_build_query(['f' => $rel, 'w' => $w]);
 }
 
