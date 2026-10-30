@@ -608,6 +608,13 @@ DO NOT:
 - If any problem is found, fix it before saving
 - Report what was checked and what was fixed
 
+### 27b. Test Level by Risk (standing rule, owner's choice)
+- Choose how much to test by how risky the change is, and always say which level was used and why
+- Low risk = quick checks only: text and wording, static pages, menus, the styles of a single page, sitemap / robots, cleaning up files on the server. Quick checks mean: the project's wording / lint checks, every link on the changed pages, and screenshots at phone and desktop width in English and Arabic. No full test run
+- Core = full test run: login and accounts, payments, uploads, saving data, the shared layout or shared code used by many pages (for example nav.php, footer.php, theme_head.php, oweili.css, artwork_lib.php, config-related code), and anything a customer pays for or downloads
+- A small fix after a full run: rerun only the checks that fix can affect, and explain why the rest are not affected
+- Never run two heavy test runs at the same time. After each run, close the test browsers and test servers and delete the temporary test folders
+
 ### 28. Security Review
 - Run a security check on every PHP file before upload:
   - No SQL injection risks — always use prepared statements
