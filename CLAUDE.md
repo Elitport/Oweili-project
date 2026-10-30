@@ -62,7 +62,7 @@
 - Local artist photos: never published without a saved consent record
 
 ## Database Tables Needed (not yet built — need approval before creating)
-- The SQL for all of these is ready in database_update.sql (also adds the 'institute' role to users). It has NOT been run yet — the owner runs it in phpMyAdmin after a backup
+- Done on the live database (checked 30 Oct 2026): all 8 tables, artworks.is_draft and the 'institute' role are in place. A safe re-run on 30 Oct found everything already there and changed nothing. database_update.sql stays in the project as the record (safe to run more than once)
 - artwork_stages: the 3 stage photos per artwork (25%, 50%, 100%) with dates
 - artwork_colors: colors used in each artwork
 - institutes: name in Arabic and English, city, description, logo, contact, owner account
@@ -305,6 +305,7 @@
 - email_test.php — admins only (signed in on admin.php; everyone else gets 404, so it cannot send spam). (1) Signs in to the mailbox from config.php on ports 465 and 587 without sending anything and shows the mail server's answer ("authentication failed" = the mailbox does not exist or its password is wrong). (2) "Send test" calls sendEmail() from config.php directly and shows what it returned plus any PHP error or warning. The password is never shown. Tables: none
 - smtp_test.php — talks to the mail server step by step (greeting, sign-in, MAIL FROM, RCPT, DATA), prints every answer and sends one test email to contact@elitport.com. Reads the mailbox and password from config.php (never typed in the file, never printed). Run it without a browser: Hostinger SSH `php ~/public_html/smtp_test.php`, or once from hPanel → Advanced → Cron Jobs. In a browser only an admin signed in on admin.php can open it (others get 404). Tables: none
 - .user.ini — PHP settings for the website, read by Hostinger's PHP from public_html: upload_max_filesize 64M and post_max_size 128M (bigger artist photos and videos). Takes up to 5 minutes to apply after a deploy. Blocked from visitors by .htaccess (all dot files). If hPanel → Advanced → PHP Configuration shows smaller numbers, set the same values there too
+- .backups/ — database backups made on the server (for example .backups/db-u405344949_contact-20261030-200442.sql.gz, the full backup made before the 30 Oct database check). Visitors get 403 (.htaccess blocks every dot folder, and the folder has its own deny file); deploys keep it (.gitignore). To download: hPanel → Files → File Manager → public_html → turn on "Show hidden files" → .backups → right-click the file → Download. To restore: phpMyAdmin → the database → Import → choose the .sql.gz file (it re-creates every table with its rows)
 - index.html — tiny forwarding file only: sends old links and bookmarks to index.php. Do not put content in it
 
 ## Database
@@ -316,7 +317,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
-- database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Not run yet
+- database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Already in place on the live database (checked 30 Oct 2026)
 
 ## Design System
 - Style: Luxury white minimal
