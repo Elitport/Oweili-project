@@ -227,15 +227,15 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
   </div>
 
   <?php if (!$verified): ?>
-  <div class="alert-error bd-verify" role="status">
+  <div class="alert alert-error bd-verify" role="status">
     <span><?= owBi('Please confirm your email address. We sent you a link when you joined.', 'يرجى تأكيد بريدك الإلكتروني. أرسلنا لك رابطاً عند التسجيل.') ?></span>
     <form method="post" action="<?= e($tabLink($tab)) ?>"><?= csrfField() ?><input type="hidden" name="do" value="resend">
       <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send the link again', 'أرسل الرابط مجدداً') ?></button></form>
   </div>
   <?php endif; ?>
 
-  <?php if ($done): ?><div class="alert-ok" role="status" style="margin-top:var(--space-md)"><?= owBi($done[0], $done[1]) ?></div><?php endif; ?>
-  <?php if ($err !== ''): $m = OW_ACCOUNT_ERR[$err] ?? OW_ACCOUNT_ERR['server']; ?><div class="alert-error" role="alert" style="margin-top:var(--space-md)"><?= owBi($m[0], $m[1]) ?></div><?php endif; ?>
+  <?php if ($done): ?><div class="alert alert-ok" role="status" style="margin-top:var(--space-md)"><?= owBi($done[0], $done[1]) ?></div><?php endif; ?>
+  <?php if ($err !== ''): $m = OW_ACCOUNT_ERR[$err] ?? OW_ACCOUNT_ERR['server']; ?><div class="alert alert-error" role="alert" style="margin-top:var(--space-md)"><?= owBi($m[0], $m[1]) ?></div><?php endif; ?>
 
   <div class="stat-grid bd-stats">
     <a class="stat-card" href="<?= e($tabLink('requests')) ?>"><span class="stat-num"><?= count($requests) ?></span><span class="stat-lbl"><?= owBi('My requests', 'طلباتي') ?></span></a>
