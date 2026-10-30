@@ -264,18 +264,31 @@ function owImgSrc(?string $u): string {
     return owBase() . $u;
 }
 
-/* The artwork picture for a card: the photo, with a drawn placeholder that takes its
-   place if the photo is missing or fails to load (no broken "?" picture).
-   $eager: the first cards on screen load straight away instead of waiting (lazy loading
-   is for cards further down). A photo that fails once (a weak phone connection) is
-   tried one more time before the placeholder shows. */
+/* The address of a smaller copy of one of our uploaded photos ($w pixels wide: 400, 800
+   or 1600), made by img.php. Photos on other sites and anything else are returned as is. */
+function owImgSized(string $src, int $w): string {
+    $base = owBase();
+    if ($src === '' || strpos($src, $base . 'uploads/') !== 0) return $src;
+    $rel = substr($src, strlen($base));
+    if (preg_match('#^uploads/(consents|thumbs)/#', $rel)) return $src;
+    return $base . 'img.php?' . http_build_query(['f' => $rel, 'w' => $w]);
+}
+
+/* The artwork picture for a card: a copy sized for the screen (phones cannot cope with a
+   page of full-size camera photos), with a drawn placeholder that takes its place if
+   the photo is missing or fails to load (no broken "?" picture).
+   $eager: the first cards on screen load straight away; cards further down wait (lazy).
+   If the sized copy fails, the original photo is tried once before the placeholder shows. */
 function owArtImgHtml(string $src, string $alt, bool $eager = false): string {
     $ph = '<div class="aw-img-noimg"' . ($src !== '' ? ' hidden' : '') . ' aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>';
     if ($src === '') return $ph;
-    $retry = "var i=this;"
-           . "if(!i.dataset.retry){i.dataset.retry=1;var s=i.src+(i.src.indexOf('?')<0?'?':'&')+'r=1';setTimeout(function(){i.src=s;},50);return;}"
-           . "i.hidden=true;if(i.nextElementSibling)i.nextElementSibling.hidden=false";
-    return '<img fetchpriority="' . ($eager ? 'high' : 'auto') . '" decoding="async" src="' . e($src) . '" alt="' . e($alt) . '" onerror="' . e($retry) . '">' . $ph;
+    $small  = owImgSized($src, 400);
+    $medium = owImgSized($src, 800);
+    $set    = $medium !== $src ? ' srcset="' . e($small) . ' 400w, ' . e($medium) . ' 800w" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"' : '';
+    $retry  = "if(!this.dataset.retry){this.dataset.retry=1;this.removeAttribute('srcset');this.src=this.dataset.full;return;}"
+            . "this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false";
+    return '<img ' . ($eager ? 'fetchpriority="high"' : 'loading="lazy"') . ' decoding="async" src="' . e($medium) . '"' . $set
+         . ' data-full="' . e($src) . '" alt="' . e($alt) . '" onerror="' . e($retry) . '">' . $ph;
 }
 
 function owBi(string $en, string $ar, string $tag = 'span'): string {
@@ -375,7 +388,7 @@ function owStagesHtml(array $stages, string $mode = 'strip'): string {
                 . ($mode === 'strip' ? '' : '<span class="stage-note">' . owBi($mEn, $mAr) . '</span>') . '</div>';
             continue;
         }
-        $img = '<span class="stage-img"><img loading="lazy" src="' . e(owBase() . ltrim((string) $row['photo_path'], '/')) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '"></span>';
+        $img = '<span class="stage-img"><img loading="lazy" decoding="async" src="' . e(owImgSized(owBase() . ltrim((string) $row['photo_path'], '/'), 400)) . '" alt="' . e($lEn . ' (' . $stg . '%) · ' . $lAr) . '"></span>';
         $cap = '<span class="stage-label">' . $stg . '%</span>';
         if ($mode === 'journey') {
             [$dEn, $dAr] = owDateBi($row['taken_at']);

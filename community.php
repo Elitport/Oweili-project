@@ -167,7 +167,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
       $tEn = (string) $aw['title_en']; $tAr = (string) ($aw['title_ar'] ?: $aw['title_en']);
       $nEn = (string) ($aw['artist_en'] ?: $aw['artist_ar']); $nAr = (string) ($aw['artist_ar'] ?: $aw['artist_en']); ?>
     <a class="inspo-card" href="marketplace.php#artwork-<?= (int) $aw['id'] ?>">
-      <div class="inspo-img"><?php if ($img !== ''): ?><img src="<?= e($img) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>" loading="lazy" onerror="this.remove()"><?php endif; ?></div>
+      <div class="inspo-img"><?php if ($img !== ''): ?><img src="<?= e(owImgSized($img, 800)) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>" loading="lazy" decoding="async" data-full="<?= e($img) ?>" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src=this.dataset.full;}else{this.remove();}"><?php endif; ?></div>
       <div class="inspo-body">
         <h4><?= owBi($tEn, $tAr) ?></h4>
         <p><?= owBi('by ' . $nEn, 'بواسطة ' . $nAr) ?></p>

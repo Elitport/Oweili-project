@@ -86,7 +86,8 @@
   }
   function list(items, tag) { return '<' + tag + ' class="m-list">' + items + '</' + tag + '>'; }
   /* only show a picture from our own uploads folder (or a full https address) */
-  function safeImg(u) { u = String(u || ''); return /^(https:\/\/|\/?uploads\/)[^"'<>\s]*$/.test(u) && u.indexOf('..') === -1 ? u : ''; }
+  /* pictures only from our own site (uploads/ or the img.php resizer) or a full https address */
+  function safeImg(u) { u = String(u || ''); return /^(https:\/\/|\/(?!\/)|uploads\/)[^"'<>\s]*$/.test(u) && u.indexOf('..') === -1 ? u : ''; }
   function liveHtml(s) {
     var en = s.en, ar = s.ar;
     var href = s.type ? 'marketplace.php?type=' + encodeURIComponent(s.type) : 'marketplace.php';

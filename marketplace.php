@@ -98,7 +98,7 @@ foreach ($artworks as $aw) {
         'artist_ar' => $aw['artist_ar'],
         'artist_id' => (int) $aw['artist_id'],
         'price'     => (float) $aw['price'],
-        'image'     => $mpImg((string) $aw['image_url']),
+        'image'     => owImgSized($mpImg((string) $aw['image_url']), 1600),   // details window: a large copy, not the camera original
         'status'    => $aw['status'],
         'journey'   => owHasJourney($mpStages[(int) $aw['id']] ?? []),
     ];

@@ -127,7 +127,7 @@ $memberSince = !empty($me['created_at']) ? date('Y', strtotime($me['created_at']
         <?php foreach ($purchases as $p): ?>
           <tr>
             <td><div class="pur-art">
-              <?php if (($pImg = owImgSrc($p['image_url'] ?? '')) !== ''): ?><img class="pur-thumb" src="<?= e($pImg) ?>" alt="<?= e(($p['title_en'] ?? '') . ' · ' . ($p['title_ar'] ?? '')) ?>"><?php endif; ?>
+              <?php if (($pImg = owImgSrc($p['image_url'] ?? '')) !== ''): ?><img class="pur-thumb" loading="lazy" src="<?= e(owImgSized($pImg, 400)) ?>" alt="<?= e(($p['title_en'] ?? '') . ' · ' . ($p['title_ar'] ?? '')) ?>"><?php endif; ?>
               <div>
                 <strong><?= e($p['title_en'] ?: ($p['title_ar'] ?: '—')) ?></strong>
                 <?php if (!empty($p['title_ar'])): ?><div class="title-ar" dir="rtl"><?= e($p['title_ar']) ?></div><?php endif; ?>
