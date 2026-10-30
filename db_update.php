@@ -149,6 +149,30 @@ if ($step === 'update') {
     $say('UPDATE OK');
     exit;
 }
+/* ---------------- files: read only — what is in uploads/ (names, sizes, dates) ---------------- */
+if ($step === 'files') {
+    $base = __DIR__ . '/uploads';
+    $say('uploads/ exists: ' . (is_dir($base) ? 'yes, made ' . gmdate('Y-m-d H:i', (int) filectime($base)) . ' UTC' : 'no'));
+    if (is_dir($base)) {
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS));
+        $rows = [];
+        foreach ($it as $f) {
+            if (!$f->isFile()) continue;
+            $rel = substr($f->getPathname(), strlen(__DIR__) + 1);
+            if (strpos($rel, 'uploads/consents/') === 0) { $rel = 'uploads/consents/(private file)'; }
+            $rows[] = [$f->getMTime(), $rel, $f->getSize()];
+        }
+        usort($rows, fn($a, $b) => $b[0] <=> $a[0]);
+        $say(count($rows) . ' files in uploads/ (newest first, up to 60):');
+        foreach (array_slice($rows, 0, 60) as [$t, $r, $z]) $say('  ' . gmdate('Y-m-d H:i', $t) . ' UTC  ' . str_pad((string) $z, 9, ' ', STR_PAD_LEFT) . '  ' . $r);
+    }
+    foreach ($db->query('SELECT id, image_url, created_at FROM artworks ORDER BY id') as $a) {
+        $rel = ltrim((string) $a['image_url'], '/');
+        $say("artwork {$a['id']} (saved {$a['created_at']}): $rel -> " . ($rel !== '' && is_file(__DIR__ . '/' . $rel) ? 'file present' : 'FILE MISSING'));
+    }
+    exit;
+}
+
 /* ---------------- cleanup_test: removes only the live test buyer made for the Phase 1 check ---------------- */
 if ($step === 'cleanup_test') {
     $email = 'contact+oweili-qa@elitport.com';
