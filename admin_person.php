@@ -115,7 +115,7 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
     <div class="acts">
       <?php if ($p['role'] === 'artist'): ?>
         <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="back" value="person"><input type="hidden" name="user_id" value="<?= (int) $p['id'] ?>">
-          <?php if ((int) $p['is_approved'] === 1): ?><button class="btn btn-ghost btn-sm" name="action" value="unapprove">Unapprove</button><?php else: ?><button class="btn btn-accent btn-sm" name="action" value="approve">Approve</button><?php endif; ?></form>
+          <?php if ((int) $p['is_approved'] === 1): ?><button class="btn btn-ghost btn-sm" name="action" value="unapprove"><?= owBi('Set back to pending', 'إعادة إلى الانتظار') ?></button><?php else: ?><button class="btn btn-accent btn-sm" name="action" value="approve"><?= owBi('Approve', 'موافقة') ?></button><?php endif; ?></form>
       <?php endif; ?>
       <form method="post" action="admin.php"<?= (int) $p['is_banned'] === 1 ? '' : ' onsubmit="return confirm(\'Suspend this account?\');"' ?>><?= csrfField() ?><input type="hidden" name="back" value="person"><input type="hidden" name="user_id" value="<?= (int) $p['id'] ?>">
         <?php if ((int) $p['is_banned'] === 1): ?><button class="btn btn-ghost btn-sm" name="action" value="unban"><?= owBi('Lift suspension', 'إلغاء الإيقاف') ?></button><?php else: ?><button class="btn btn-danger btn-sm" name="action" value="ban"><?= owBi('Suspend', 'إيقاف') ?></button><?php endif; ?></form>
@@ -127,7 +127,7 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
     <?php if (!$works): ?><p class="mini"><?= owBi('None yet.', 'لا شيء بعد.') ?></p><?php else: ?>
     <div style="overflow-x:auto"><table class="table"><thead><tr><th><?= owBi('Artwork', 'العمل') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th><?= owBi('Price', 'السعر') ?></th><th><?= owBi('Views', 'المشاهدات') ?></th><th><?= owBi('Added', 'أُضيف') ?></th></tr></thead><tbody>
     <?php foreach ($works as $w): $aw = $ART_W[$w['state']] ?? $ART_W['pending']; ?>
-      <tr><td><?= e($w['title_en'] ?: $w['title_ar']) ?></td><td><?= owBi($aw[0], $aw[1]) ?></td><td><?= number_format((float) $w['price']) ?> SAR</td><td><?= (int) $w['views'] ?></td><td class="mini"><?= $d($w['created_at']) ?></td></tr>
+      <tr><td><?= e($w['title_en'] ?: $w['title_ar']) ?></td><td><?= owBi($aw[0], $aw[1]) ?></td><td><?= number_format((float) $w['price']) ?> <?= owBi('SAR', 'ر.س') ?></td><td><?= (int) $w['views'] ?></td><td class="mini"><?= $d($w['created_at']) ?></td></tr>
     <?php endforeach; ?></tbody></table></div><?php endif; ?>
   </div>
   <div class="card"><h2><?= owBi('Interest in their works', 'الاهتمام بأعماله') ?> (<?= count($received) ?>)</h2><?php $inqTable($received, true); ?></div>

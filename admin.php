@@ -237,7 +237,7 @@ function isOnline(?string $lastActive): bool {
     return $lastActive !== null && strtotime($lastActive) >= (time() - 15 * 60);
 }
 function fmtDateTime(?string $v): string {
-    return $v ? date('Y-m-d H:i', strtotime($v)) : 'N/A';
+    return $v ? date('Y-m-d H:i', strtotime($v)) : '—';
 }
 
 /* ---- Load "I'm Interested" inquiries, newest first (only when authed) ---- */
@@ -299,6 +299,22 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 .top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:var(--space-sm);margin-bottom:var(--space-md);}
 .top h1{font-size:var(--fs-section);margin:0;}
 .top-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;}
+/* staff bar (top corner) and the grouped tools row */
+.adm-bar{position:sticky;top:0;z-index:50;height:64px;display:flex;align-items:center;justify-content:space-between;gap:var(--space-sm);padding:0 var(--space-lg);background:rgba(var(--rgb-surface),.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--color-border);}
+.adm-brand{display:inline-flex;align-items:center;gap:8px;font-weight:700;letter-spacing:3px;color:var(--color-dark);text-decoration:none;font-size:16px;}
+.adm-brand-sub{letter-spacing:0;font-weight:600;font-size:var(--fs-caption);color:var(--color-body);padding-inline-start:8px;border-inline-start:1px solid var(--color-border-strong);}
+.adm-corner{display:flex;align-items:center;gap:var(--space-xs);}
+.adm-sep{width:1px;height:24px;background:var(--color-border-strong);margin:0 4px;}
+.adm-tools{display:flex;flex-wrap:wrap;gap:var(--space-sm) var(--space-md);align-items:center;padding:var(--space-sm);margin:0 0 var(--space-md);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-card);}
+.adm-group{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;}
+.adm-group + .adm-group{padding-inline-start:var(--space-md);border-inline-start:1px solid var(--color-border);}
+.adm-glabel{font-size:var(--fs-min);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--color-body);margin-inline-end:2px;}
+@media(max-width:700px){.adm-bar{padding:0 var(--space-sm);}.adm-brand-sub{display:none;}.adm-corner{gap:6px;}.adm-sep{display:none;}
+  .adm-brand .adm-word{display:none;}
+  .adm-tools{flex-direction:column;align-items:stretch;}
+  .adm-group{display:grid;grid-template-columns:1fr 1fr;}
+  .adm-group .adm-glabel{grid-column:1 / -1;}
+  .adm-group + .adm-group{padding-inline-start:0;border-inline-start:0;padding-top:var(--space-sm);border-top:1px solid var(--color-border);}}
 .stat-grid{margin-bottom:var(--space-lg);}
 .pill.on{background:rgba(var(--rgb-accent),0.1);color:var(--color-accent-dark);}
 .pill.off{background:rgba(var(--rgb-ink),0.06);color:var(--color-dark);}
@@ -366,10 +382,18 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
 </head>
 <body class="staff-page">
+<!-- Staff bar: brand on one side; language, dark mode and Log out in the corner, apart from the tools (like the site menu) -->
+<header class="adm-bar">
+  <a class="adm-brand" href="admin.php" aria-label="Oweili admin · إدارة أويلي"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><g style="fill:var(--color-primary)"><path d="M11 1A10 10 0 0 0 1 11h10z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z"/><path d="M1 13a10 10 0 0 0 10 10V13z"/><path d="M13 13v10a10 10 0 0 0 10-10z"/></g></svg><span class="adm-word">OWEILI</span> <span class="adm-brand-sub"><?= owBi('Admin', 'الإدارة') ?></span></a>
+  <div class="adm-corner">
+    <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button>
+    <?php owThemeButton('btn btn-ghost btn-sm'); ?>
+    <?php if ($isAdmin): ?><span class="adm-sep" aria-hidden="true"></span><a class="btn btn-secondary btn-sm" href="admin.php?logout=1"><?= owBi('Log out', 'تسجيل الخروج') ?></a><?php endif; ?>
+  </div>
+</header>
 <div class="wrap">
 <?php if (!$isAdmin): ?>
 
-  <div style="max-width:380px;margin:6vh auto 0;text-align:right;"><button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?></div>
   <form class="card login-card" method="post" action="admin.php">
     <h1>Admin Login</h1>
     <?php if ($loginError): ?><div class="err"><?= e($loginError) ?></div><?php endif; ?>
@@ -387,17 +411,24 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <h1>Admin Dashboard</h1>
       <div class="sub">Manage artists, buyers, artworks and requests.</div>
     </div>
-    <div class="top-actions">
-      <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?>
-      <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
-      <a class="btn btn-dark btn-sm" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
-      <a class="btn btn-ghost btn-sm" href="admin.php?settings=1"><?= owBi('Settings', 'الإعدادات') ?></a>
-      <a class="btn btn-ghost btn-sm" href="admin.php?photo_check=1">Photo check</a>
-      <a class="btn btn-ghost btn-sm" href="admin.php?mail_check=1">Email check</a>
-      <a class="btn btn-ghost btn-sm" href="admin.php?error_log=1">Error log</a>
-      <a class="btn btn-ghost btn-sm" href="admin.php?logout=1">Log out</a>
-    </div>
   </div>
+  <nav class="adm-tools" aria-label="Admin tools · أدوات الإدارة">
+    <div class="adm-group">
+      <span class="adm-glabel"><?= owBi('Content', 'المحتوى') ?></span>
+      <a class="btn btn-dark btn-sm" href="admin_articles.php"><?= owBi('Articles', 'المقالات') ?></a>
+      <a class="btn btn-dark btn-sm" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
+    </div>
+    <div class="adm-group">
+      <span class="adm-glabel"><?= owBi('Checks', 'الفحوصات') ?></span>
+      <a class="btn btn-secondary btn-sm" href="admin.php?photo_check=1"><?= owBi('Photo check', 'فحص الصور') ?></a>
+      <a class="btn btn-secondary btn-sm" href="admin.php?mail_check=1"><?= owBi('Email check', 'فحص البريد') ?></a>
+      <a class="btn btn-secondary btn-sm" href="admin.php?error_log=1"><?= owBi('Error log', 'سجل الأخطاء') ?></a>
+    </div>
+    <div class="adm-group">
+      <span class="adm-glabel"><?= owBi('Site', 'الموقع') ?></span>
+      <a class="btn btn-secondary btn-sm" href="admin.php?settings=1"><?= owBi('Settings', 'الإعدادات') ?></a>
+    </div>
+  </nav>
   <div class="stat-grid ov-grid">
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['artists'] ?></span><span class="stat-lbl"><?= owBi('Artists', 'الفنانون') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['buyers'] ?></span><span class="stat-lbl"><?= owBi('Buyers', 'المشترون') ?></span></div>
@@ -450,7 +481,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
               <span class="acard-photo"><?= e(mb_strtoupper(mb_substr($a['full_name_en'] ?: 'A',0,1))) ?></span>
             <?php endif; ?>
             <div class="acard-id">
-              <div class="nm"><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e($a['full_name_en'] ?: 'N/A') ?></div>
+              <div class="nm"><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e($a['full_name_en'] ?: '—') ?></div>
               <?php if (!empty($a['artist_name'])): ?><div class="an"><?= e($a['artist_name']) ?></div><?php endif; ?>
               <?php if (!empty($a['full_name_ar'])): ?><div class="an" dir="rtl"><?= e($a['full_name_ar']) ?></div><?php endif; ?>
             </div>
@@ -466,9 +497,9 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 
           <div class="acard-info">
             <div>✉️ <?= e($a['email']) ?></div>
-            <div dir="ltr">📞 <?= e($a['phone'] ?: 'N/A') ?></div>
-            <div>📍 <?= e($a['city'] ?: 'N/A') ?></div>
-            <div><b>Reg:</b> <?= e($a['created_at'] ? date('Y-m-d', strtotime($a['created_at'])) : 'N/A') ?> · <b>Login:</b> <?= e(fmtDateTime($a['last_login_at'] ?? null)) ?></div>
+            <div dir="ltr">📞 <?= e($a['phone'] ?: '—') ?></div>
+            <div>📍 <?= e($a['city'] ?: '—') ?></div>
+            <div><b><?= owBi('Joined:', 'انضم:') ?></b> <?= e($a['created_at'] ? date('Y-m-d', strtotime($a['created_at'])) : '—') ?> · <b><?= owBi('Last sign-in:', 'آخر دخول:') ?></b> <?= e(fmtDateTime($a['last_login_at'] ?? null)) ?></div>
           </div>
 
           <div class="acard-media">
@@ -526,14 +557,14 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
         <?php foreach ($collectors as $c): $on = isOnline($c['last_active'] ?? null); ?>
           <tr>
             <td>
-              <strong><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e($c['full_name_en'] ?: 'N/A') ?></strong>
+              <strong><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e($c['full_name_en'] ?: '—') ?></strong>
               <?php if (!empty($c['full_name_ar'])): ?><div class="name-ar" dir="rtl"><?= e($c['full_name_ar']) ?></div><?php endif; ?>
             </td>
             <td><?= e($c['email']) ?></td>
-            <td dir="ltr"><?= e($c['phone'] ?: 'N/A') ?></td>
-            <td><?= e($c['city'] ?: 'N/A') ?></td>
+            <td dir="ltr"><?= e($c['phone'] ?: '—') ?></td>
+            <td><?= e($c['city'] ?: '—') ?></td>
             <td>
-              <div class="mini">Reg: <?= e($c['created_at'] ? date('Y-m-d', strtotime($c['created_at'])) : 'N/A') ?></div>
+              <div class="mini"><?= owBi('Joined:', 'انضم:') ?> <?= e($c['created_at'] ? date('Y-m-d', strtotime($c['created_at'])) : '—') ?></div>
               <div class="mini">Login: <?= e(fmtDateTime($c['last_login_at'] ?? null)) ?></div>
             </td>
             <td><span class="pill <?= $c['is_verified'] ? 'on' : 'off' ?>"><?= $c['is_verified'] ? 'Verified' : 'Unverified' ?></span></td>
@@ -584,7 +615,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
                 <?php if (!empty($q['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($q['title_ar']) ?></div><?php endif; ?>
                 <div class="mini">#<?= (int) $q['artwork_id'] ?></div>
               <?php else: ?>
-                <span class="mini">Deleted artwork #<?= (int) $q['artwork_id'] ?></span>
+                <span class="mini"><?= owBi('Deleted artwork', 'عمل محذوف') ?> #<?= (int) $q['artwork_id'] ?></span>
               <?php endif; ?>
             </td>
             <td><?php if (!empty($q['artist_id'])): ?><a href="admin.php?person=<?= (int) $q['artist_id'] ?>"><?= e($q['artist_en']) ?></a><?php else: ?><?= e($q['artist_en']) ?><?php endif; ?></td>
@@ -624,8 +655,8 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php if (!empty($art['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($art['title_ar']) ?></div><?php endif; ?>
             <div class="art-info">
               <?= e($art['artist_name'] ?: 'Unknown artist') ?> ·
-              <?= e(ucfirst((string)$art['type'])) ?> ·
-              <?= $art['price'] !== null ? e(number_format((float)$art['price'])) . ' SAR' : 'N/A' ?>
+              <?php $tl = $ART_TYPES[(string) $art['type']] ?? null; ?><?= $tl ? owBi($tl['en'], $tl['ar']) : e(ucfirst((string) $art['type'])) ?> ·
+              <?= $art['price'] !== null ? e(number_format((float)$art['price'])) . ' ' . owBi('SAR', 'ر.س') : '—' ?>
             </div>
           </div>
           <div class="acts">
@@ -691,7 +722,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
         <tr>
           <td><strong><?= e($w['title_en'] ?: $w['title_ar']) ?></strong><?php if (!empty($w['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($w['title_ar']) ?></div><?php endif; ?><div class="mini">#<?= (int) $w['id'] ?> · <?= e(date('Y-m-d', strtotime($w['created_at']))) ?></div></td>
           <td><a href="admin.php?person=<?= (int) $w['artist_id'] ?>"><?= e($w['artist_en']) ?></a></td>
-          <td><?= number_format((float) $w['price']) ?> SAR</td>
+          <td><?= number_format((float) $w['price']) ?> <?= owBi('SAR', 'ر.س') ?></td>
           <td><span class="pill <?= $stw === 'approved' ? 'on' : ($stw === 'rejected' ? 'ban' : 'off') ?>"><?= owBi($ART_STATE[$stw][0], $ART_STATE[$stw][1]) ?></span><?php if ($stw === 'rejected' && $w['reason']): ?><div class="mini"><?= e($w['reason']) ?></div><?php endif; ?></td>
           <td><?= (int) $w['views'] ?></td>
           <td><div class="acts">
@@ -784,7 +815,7 @@ const ADICT = {
   "Traditional":"تقليدي","Digital":"رقمي","Mixed Media":"وسائط مختلطة",
   "Artist":"الفنان","Contact":"التواصل","City":"المدينة","Verification":"التحقق",
   "Verified":"موثّق","Unverified":"غير موثّق","Approved":"معتمد","Pending":"معلّق","Status":"الحالة","Actions":"إجراءات",
-  "Name":"الاسم","Email":"البريد الإلكتروني","Phone":"الهاتف","Date":"التاريخ",
+  "Name":"الاسم","Email":"البريد الإلكتروني","Phone":"الهاتف","Date":"التاريخ","Price":"السعر","Login:":"آخر دخول:","Online":"متصل","Offline":"غير متصل",
   "No artist accounts yet.":"لا توجد حسابات فنانين بعد.","No collector accounts yet.":"لا يوجد مقتنون بعد.",
   "Nothing pending — all caught up. 🎉":"لا يوجد معلّق — كل شيء محدّث. 🎉",
   "New uploads waiting for approval before they appear in the gallery.":"أعمال جديدة بانتظار الموافقة قبل ظهورها في المعرض.",

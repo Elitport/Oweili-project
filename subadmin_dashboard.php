@@ -136,7 +136,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
             <?php if (!empty($art['title_ar'])): ?><div class="name-ar" dir="rtl"><?= e($art['title_ar']) ?></div><?php endif; ?>
             <div class="art-info">
               <?= e($art['artist_name'] ?: 'Unknown artist') ?> ·
-              <?= e(ucfirst((string)$art['type'])) ?> ·
+              <?php $tl = $ART_TYPES[(string) $art['type']] ?? null; ?><?= $tl ? owBi($tl['en'], $tl['ar']) : e(ucfirst((string) $art['type'])) ?> ·
               <?= $art['price'] !== null ? e(number_format((float)$art['price'])) . ' SAR' : 'N/A' ?>
             </div>
           </div>
