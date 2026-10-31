@@ -138,6 +138,8 @@ const OW_ACTION_WORDS = [
     'institute_save'  => ['Saved an institute', 'حفظ معهداً'],
     'course_save'     => ['Saved a course', 'حفظ دورة'],
     'admin_login'     => ['Admin signed in', 'دخول الإدارة'],
+    'photo_change'    => ['Changed the photo of a live artwork', 'غيّر صورة عمل معروض'],
+    'photo_ok'        => ['Checked a changed photo: looks fine', 'راجع صورة متغيّرة: جيدة'],
 ];
 
 /* ---------------------------------------------------------------------

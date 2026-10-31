@@ -5,6 +5,8 @@
  *  for any missing address, and by pages such as artwork.php when what
  *  was asked for is not there. Tables: none
  * ===================================================================== */
+/* the session must start before anything is sent (the menu shows the signed-in person) */
+if (!function_exists('currentUser')) require_once __DIR__ . '/config.php';
 if (!function_exists('owAsset')) require_once __DIR__ . '/ow_paths.php';
 if (!function_exists('owBi'))    require_once __DIR__ . '/artwork_lib.php';
 if (!function_exists('owSeo'))   require_once __DIR__ . '/seo_lib.php';

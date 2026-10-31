@@ -128,6 +128,15 @@
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
+### "Photo changed, needs a look" (live artworks)
+- When an artist changes the photo of an artwork that is live in the Gallery (approved, in edit_artwork.php; only artworks without stage photos can change their photo), the artwork stays live and:
+  - an email goes to contact@elitport.com right away with the old and new photo side by side and a link to the admin panel
+  - the admin panel shows it: an overview box "Photo changed, needs a look" and a "Photo changes" tab (admin.php#photos) with Before / Now photos, "Looks fine" and "Hide artwork…" (a reason is required)
+  - "Looks fine" closes it and deletes the kept old photo. "Hide artwork" takes it out of the Gallery (not approved, with the reason) and the artist gets an email with the reason and sees it in My Studio; editing it sends it back to review
+- The old photo is kept on the server until then, so the two can be compared. Works that are not live (in review or not approved) change their photo as before and go through the normal review
+- No database change: the list is kept in the activity log (photo_change, closed by photo_ok or the hide)
+- Files: edit_artwork.php, admin_lib.php (owPhotoChanged, owPhotoChangesPending, owPhotoOk), admin.php, platform_lib.php. Tables: artworks, activity_log
+
 ### Google and sharing
 - robots.txt: search engines may read every public page; private areas (admin, dashboards, studio, edit pages, account links, the Bashro connection, consent proofs) are kept out. Names the sitemap
 - sitemap.xml (made fresh by sitemap.php, through .htaccess): the main pages, the article lists, published articles, every artwork visitors can see (artwork.php?id=N) and every approved artist's profile, with the date each last changed. Never drafts, hidden or suspended accounts

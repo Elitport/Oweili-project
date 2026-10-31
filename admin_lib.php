@@ -103,3 +103,75 @@ function owAdminOverview(): array {
         'week'       => $one('SELECT COUNT(*) FROM users WHERE created_at >= (NOW() - INTERVAL 7 DAY)'),
     ];
 }
+
+/* ---------------------------------------------------------------------
+ *  "Photo changed, needs a look"
+ *  When an artist swaps the photo of an artwork that is live in the
+ *  Gallery, it stays live, the old photo is kept for comparison, the
+ *  team gets an email with both photos, and the admin panel lists it
+ *  until the admin presses "Looks fine" or hides the artwork (with a
+ *  reason the artist is told). The list lives in the activity log
+ *  (action photo_change, closed by photo_ok or artwork_reject), so no
+ *  database change was needed.
+ * ------------------------------------------------------------------- */
+
+/* Called by edit_artwork.php right after a live artwork's photo was replaced */
+function owPhotoChanged(array $aw, string $oldPath, string $newPath, int $artistId): void {
+    owLog('photo_change', 'artwork', (int) $aw['id'], json_encode(['old' => $oldPath, 'new' => $newPath], JSON_UNESCAPED_SLASHES),
+          ['type' => 'artist', 'id' => $artistId]);
+    $host = preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com';
+    $h = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
+    $img = function (string $p) use ($host, $h): string {
+        $src = owImgSrc($p);
+        if ($src === '') return '<p>(no photo)</p>';
+        $url = preg_match('#^https?://#', $src) ? $src : 'https://' . $host . '/' . ltrim($src, '/');
+        return '<a href="' . $h($url) . '"><img src="' . $h($url) . '" alt="" width="260" style="max-width:260px;border:1px solid #E2E8F0;border-radius:8px"></a>';
+    };
+    $name = '';
+    try { $st = getDB()->prepare('SELECT ' . owArtistNameSql('u') . ' FROM users u WHERE u.id = :id'); $st->execute([':id' => $artistId]); $name = (string) ($st->fetch()['artist_en'] ?? ''); } catch (Throwable $e) {}
+    $body = '<div style="font-family:Arial,sans-serif;color:#23314A;font-size:15px;line-height:1.6">'
+          . '<p><b>Photo changed on a live artwork · تغيّرت صورة عمل معروض</b></p>'
+          . '<p>' . $h($aw['title_en']) . ' · ' . $h($aw['title_ar']) . '<br>Artist / الفنان: ' . $h($name) . '</p>'
+          . '<p>The artwork stays in the Gallery. If the new photo is not acceptable, hide it from the admin panel; the artist is told why.<br>'
+          . 'يبقى العمل في المعرض. إن لم تكن الصورة الجديدة مقبولة، أخفِه من لوحة الإدارة وسيُبلَّغ الفنان بالسبب.</p>'
+          . '<table cellpadding="6"><tr><td><b>Before · قبل</b><br>' . $img($oldPath) . '</td><td><b>Now · الآن</b><br>' . $img($newPath) . '</td></tr></table>'
+          . '<p><a href="https://' . $host . '/admin.php#photos">Open the admin panel · افتح لوحة الإدارة</a></p></div>';
+    if (!owSendMail(OW_INQUIRY_TO_ADMIN, 'Photo changed: ' . $aw['title_en'] . ' · تغيّرت صورة عمل', $body, true)) {
+        error_log('photo change: email to the team failed for artwork ' . (int) $aw['id']);   // still listed in admin
+    }
+}
+const OW_INQUIRY_TO_ADMIN = 'contact@elitport.com';
+
+/* Live photo changes still waiting for a look (newest change per artwork) */
+function owPhotoChangesPending(): array {
+    if (!owHasTable('activity_log')) return [];
+    try {
+        return getDB()->query(
+            "SELECT l.id AS log_id, l.target_id AS artwork_id, l.details, l.created_at, a.title_en, a.title_ar, a.image_url, a.artist_id,
+                    " . owArtistNameSql('u') . ", " . owArtworkStatusSql('a') . " AS state
+             FROM activity_log l
+             JOIN artworks a ON a.id = l.target_id
+             JOIN users u ON u.id = a.artist_id
+             WHERE l.action = 'photo_change' AND l.target_type = 'artwork'
+               AND NOT EXISTS (SELECT 1 FROM activity_log r WHERE r.target_type = 'artwork' AND r.target_id = l.target_id
+                               AND r.id > l.id AND r.action IN ('photo_change', 'photo_ok', 'artwork_reject', 'artwork_delete'))
+             ORDER BY l.id DESC")->fetchAll();
+    } catch (Throwable $e) { error_log('owPhotoChangesPending: ' . $e->getMessage()); return []; }
+}
+
+/* "Looks fine": closes it, and the kept old photo is deleted (no longer needed) */
+function owPhotoOk(int $artworkId): bool {
+    foreach (owPhotoChangesPending() as $p) {
+        if ((int) $p['artwork_id'] !== $artworkId) continue;
+        $d = json_decode((string) $p['details'], true) ?: [];
+        owLog('photo_ok', 'artwork', $artworkId, '', owStaffActor());
+        $old = ltrim((string) ($d['old'] ?? ''), '/');
+        if ($old !== '' && strpos($old, 'uploads/artworks/') === 0 && strpos($old, '..') === false) {
+            $still = getDB()->prepare('SELECT COUNT(*) FROM artworks WHERE image_url = :p OR image_url = :p2');
+            $still->execute([':p' => $old, ':p2' => '/' . $old]);
+            if ((int) $still->fetchColumn() === 0 && is_file(__DIR__ . '/' . $old)) @unlink(__DIR__ . '/' . $old);
+        }
+        return true;
+    }
+    return false;
+}

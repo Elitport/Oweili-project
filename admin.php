@@ -109,7 +109,14 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
                 }
             }
         }
-        header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#' . (($_POST['back'] ?? '') === 'artworks' ? 'artworks' : 'pending'));
+        header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#' . (in_array($_POST['back'] ?? '', ['artworks', 'photos'], true) ? $_POST['back'] : 'pending'));
+        exit;
+    }
+
+    /* --- "Photo changed, needs a look": the new photo is fine --- */
+    if ($action === 'photo_ok') {
+        owPhotoOk((int) ($_POST['artwork_id'] ?? 0));
+        header('Location: admin.php?ok=1#photos');
         exit;
     }
 
@@ -253,6 +260,7 @@ if ($isAdmin) {
              WHERE 1" . owNotDraftSql('a') . " ORDER BY a.created_at DESC, a.id DESC LIMIT 1000")->fetchAll();
     } catch (Throwable $e) { error_log('admin all artworks: ' . $e->getMessage()); }
 }
+$photoChanges = $isAdmin ? owPhotoChangesPending() : [];
 $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'قيد المراجعة'], 'approved' => ['In the Gallery', 'في المعرض'],
               'rejected' => ['Not approved', 'لم تتم الموافقة'], 'sold' => ['Sold', 'مباع']];
 ?>
@@ -275,6 +283,12 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 .inq-edit form{display:grid;gap:6px;min-width:220px;}
 .inq-edit select{min-height:40px;}
 .acard-head{flex-wrap:wrap;}
+.pc-list{display:grid;gap:var(--space-md);}
+.pc-item{border:1px solid var(--color-border);border-radius:var(--radius-card);padding:var(--space-sm);}
+.pc-photos{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);margin:var(--space-sm) 0;}
+.pc-photos figure{margin:0;}
+.pc-photos figcaption{font-size:var(--fs-label);font-weight:700;margin-bottom:4px;}
+.pc-photos img{width:100%;aspect-ratio:4/3;object-fit:contain;background:var(--color-frame);border:1px solid var(--color-border);border-radius:var(--radius-input);display:block;}
 .acard-view{margin-inline-start:auto;align-self:flex-start;white-space:normal;max-width:100%;}
 /* Admin panel — staff layout only; buttons, tabs, tables, cards, forms and stat cards come from oweili.css (role color: admin dark) */
 .wrap{max-width:1100px;margin:0 auto;padding:var(--space-lg);}
@@ -391,6 +405,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['inquiries'] ?></span><span class="stat-lbl"><?= owBi('Interest requests (' . (int) $overview['new_inq'] . ' new)', 'طلبات الاهتمام (' . (int) $overview['new_inq'] . ' جديد)') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['week'] ?></span><span class="stat-lbl"><?= owBi('New sign-ups this week', 'تسجيلات هذا الأسبوع') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= count($pendingArt) ?></span><span class="stat-lbl"><?= owBi('Waiting for review', 'بانتظار المراجعة') ?></span></div>
+    <?php if ($photoChanges): ?><a class="stat-card" href="#photos" onclick="showTab('photos',document.querySelector('.tab-btn[data-tab=photos]'));return false;" style="text-decoration:none"><span class="stat-num"><?= count($photoChanges) ?></span><span class="stat-lbl"><?= owBi('Photo changed, needs a look', 'صورة تغيّرت، تحتاج نظرة') ?></span></a><?php endif; ?>
     <div class="stat-card"><span class="stat-num"><span class="online-dot on" aria-hidden="true"></span> <?= (int) $onlineCount ?></span><span class="stat-lbl">Online Now</span></div>
   </div>
   </div>
@@ -410,6 +425,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <button class="tab tab-btn active" data-tab="artists" onclick="showTab('artists',this)">Artists <span class="pill count"><?= count($artists) ?></span></button>
     <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)"><?= owBi('Buyers', 'المشترون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
     <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)">Pending Artworks <span class="pill count"><?= count($pendingArt) ?></span></button>
+    <button class="tab tab-btn" data-tab="photos" onclick="showTab('photos',this)"><?= owBi('Photo changes', 'تغيير الصور') ?> <span class="pill count"><?= count($photoChanges) ?></span></button>
     <button class="tab tab-btn" data-tab="artworks" onclick="showTab('artworks',this)"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
     <a class="tab" href="admin_articles.php"><?= owBi('Articles & events', 'المقالات والملتقيات') ?></a>
     <a class="tab" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
@@ -633,6 +649,35 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   </div>
   </div>
 
+  <!-- ===== TAB: PHOTO CHANGES (a live artwork got a new photo) ===== -->
+  <div class="tab-panel" id="tab-photos">
+  <div class="card" id="photos">
+    <div class="sub" style="margin:0 0 var(--space-sm)"><?= owBi('An artist changed the photo of an artwork that is live in the Gallery. It stays live. Compare the photos, then press “Looks fine”, or hide the artwork and tell the artist why.', 'غيّر فنان صورة عمل معروض في المعرض. يبقى العمل معروضاً. قارن الصورتين ثم اضغط «تبدو جيدة»، أو أخفِ العمل وأخبر الفنان بالسبب.') ?></div>
+    <?php if (!$photoChanges): ?><div class="empty"><?= owBi('No photo changes waiting. All caught up.', 'لا تغييرات صور بانتظارك.') ?></div><?php else: ?>
+    <div class="pc-list">
+    <?php foreach ($photoChanges as $pc): $pd = json_decode((string) $pc['details'], true) ?: []; $aid = (int) $pc['artwork_id'];
+      $oldSrc = owImgSrc((string) ($pd['old'] ?? '')); $newSrc = owImgSrc((string) $pc['image_url']); ?>
+      <div class="pc-item">
+        <div class="pc-head"><strong><?= e($pc['title_en'] ?: $pc['title_ar']) ?></strong> <span class="name-ar" dir="rtl"><?= e($pc['title_ar']) ?></span>
+          <div class="mini"><a href="admin.php?person=<?= (int) $pc['artist_id'] ?>"><?= e($pc['artist_en']) ?></a> · <?= owBi('changed', 'تغيّرت') ?> <?= e(fmtDateTime($pc['created_at'])) ?> · <a href="artwork.php?id=<?= $aid ?>" target="_blank" rel="noopener"><?= owBi('See it live', 'شاهده معروضاً') ?> ↗</a></div></div>
+        <div class="pc-photos">
+          <figure><figcaption><?= owBi('Before', 'قبل') ?></figcaption><?php if ($oldSrc !== ''): ?><a href="<?= e($oldSrc) ?>" target="_blank" rel="noopener"><img loading="lazy" src="<?= e($oldSrc) ?>" alt="Before · قبل"></a><?php else: ?><div class="empty">—</div><?php endif; ?></figure>
+          <figure><figcaption><?= owBi('Now', 'الآن') ?></figcaption><?php if ($newSrc !== ''): ?><a href="<?= e($newSrc) ?>" target="_blank" rel="noopener"><img loading="lazy" src="<?= e($newSrc) ?>" alt="Now · الآن"></a><?php else: ?><div class="empty">—</div><?php endif; ?></figure>
+        </div>
+        <div class="acts">
+          <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= $aid ?>"><button class="btn btn-accent btn-sm" name="action" value="photo_ok"><?= owBi('Looks fine', 'تبدو جيدة') ?></button></form>
+          <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Hide artwork…', 'إخفاء العمل…') ?></summary>
+            <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= $aid ?>"><input type="hidden" name="back" value="photos">
+              <div class="field"><label for="ph-<?= $aid ?>"><?= owBi('Reason (the artist sees it)', 'السبب (يراه الفنان)') ?></label><textarea id="ph-<?= $aid ?>" name="reason" required maxlength="500" rows="2"></textarea></div>
+              <button class="btn btn-danger btn-sm" name="action" value="reject_art"><?= owBi('Hide and tell the artist', 'أخفِه وأبلغ الفنان') ?></button></form></details>
+        </div>
+      </div>
+    <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+  </div>
+  </div>
+
   <!-- ===== TAB: ALL ARTWORKS ===== -->
   <div class="tab-panel" id="tab-artworks">
   <div class="card">
@@ -696,7 +741,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   // Restore the tab from the URL hash (e.g. after approving an artwork).
   (function(){
     var h=(location.hash||'').replace('#','');
-    if(['pending','collectors','artists','artworks','inquiries'].indexOf(h)>=0){
+    if(['pending','collectors','artists','artworks','inquiries','photos'].indexOf(h)>=0){
       var btn=document.querySelector('.tab-btn[data-tab="'+h+'"]');
       showTab(h,btn);
     }

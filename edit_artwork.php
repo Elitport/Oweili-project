@@ -2,6 +2,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
+require_once __DIR__ . '/admin_lib.php';     // owPhotoChanged(): the team is told when a live artwork's photo changes
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $viewerId  = (int) $_SESSION['user_id'];
@@ -42,6 +43,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $err = 'required';
     } else {
         $imageUrl = $aw['image_url'];
+        /* live in the Gallery right now? Then a new photo stays live, but the team is told
+           and the old photo is kept so they can compare (admin.php → Photo changes) */
+        $isLive = (int) $aw['is_approved'] === 1 && (int) ($aw['is_draft'] ?? 0) === 0;
+        $photoChanged = false;
 
         // Optional image replacement — never for 3-stage artworks (checked here on the server too).
         if (!$photoLocked && !empty($_FILES['image']['name'])) {
@@ -53,12 +58,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
                 $fname = safeUploadName($check['ext']);
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $dir . $fname)) {
-                    // remove the old file if it was a local upload
+                    // remove the old file if it was a local upload (kept for a live artwork, see above)
                     $old = __DIR__ . '/' . ltrim((string) $aw['image_url'], '/');
-                    if ($aw['image_url'] && strpos($aw['image_url'], 'uploads/artworks/') === 0 && is_file($old)) {
+                    if (!$isLive && $aw['image_url'] && strpos($aw['image_url'], 'uploads/artworks/') === 0 && is_file($old)) {
                         @unlink($old);
                     }
                     $imageUrl = 'uploads/artworks/' . $fname;
+                    $photoChanged = true;
                     owMakeCardThumbs($imageUrl);   // phone-sized copies, ready for the Gallery
                 } else {
                     $err = 'image';
@@ -86,6 +92,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 ':img' => $imageUrl, ':id' => $artId, ':uid' => $viewerId,
             ]);
             owLog('artwork_edit', 'artwork', $artId, '', ['type' => 'artist', 'id' => $viewerId]);
+            if ($photoChanged && $isLive) owPhotoChanged($aw, (string) $aw['image_url'], $imageUrl, $viewerId);
             header('Location: artist_dashboard.php?id=' . $viewerId);
             exit;
         }

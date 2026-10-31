@@ -42,6 +42,13 @@ if ($step === 'status') {
     } else $say('private error log: empty');
     exit;
 }
+if ($step === 'geo') {
+    foreach (['https://ipinfo.io/json', 'http://ip-api.com/json/'] as $u) {
+        $r = @file_get_contents($u, false, stream_context_create(['http' => ['timeout' => 8]]));
+        $say($u . ' -> ' . ($r ? preg_replace('/\s+/', ' ', $r) : 'no answer'));
+    }
+    exit;
+}
 if ($step === 'mail_test') {
     $log = [];
     $ok = owSendMail('contact@elitport.com', 'Oweili email check after the password change · فحص البريد', "This is a test from Oweili after the new email password was saved. No action needed.\r\nرسالة تجريبية من أويلي بعد حفظ كلمة مرور البريد الجديدة. لا حاجة لأي إجراء.\r\n", false, $log);
