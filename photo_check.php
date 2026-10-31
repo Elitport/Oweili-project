@@ -91,7 +91,7 @@ try {
       <div class="sub"><?= owBi('Can the server make the small phone copies of artwork photos?', 'هل يستطيع الخادم صنع نسخ صغيرة من صور الأعمال للجوال؟') ?></div>
     </div>
     <div class="top-actions">
-      <?php owThemeButton('btn btn-ghost btn-sm'); ?>
+      <?php owCornerControls('tgl()'); ?>
       <a class="btn btn-dark btn-sm" href="admin.php"><?= owBi('Back to Admin', 'العودة للوحة') ?></a>
     </div>
   </div>
@@ -166,6 +166,11 @@ document.querySelectorAll('img[data-res]').forEach(function (im) {
   im.addEventListener('load', show); im.addEventListener('error', function () { out.className = 'pc-res pc-bad'; out.textContent = '✗ Photo does not load / الصورة لا تظهر'; });
   show();
 });
+</script>
+<script>
+function tgl(){ var ar = document.documentElement.getAttribute('dir') !== 'rtl'; document.documentElement.setAttribute('dir', ar ? 'rtl' : 'ltr'); document.documentElement.lang = ar ? 'ar' : 'en';
+  document.getElementById('lb').textContent = ar ? 'English' : 'العربية'; try { localStorage.setItem('lang', ar ? 'ar' : 'en'); } catch (e) {} }
+try { if (localStorage.getItem('lang') === 'ar') tgl(); } catch (e) {}
 </script>
 </body>
 </html>

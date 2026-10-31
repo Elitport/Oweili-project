@@ -5,11 +5,12 @@ require_once __DIR__ . '/platform_lib.php';
 
 $errCode = '';
 $okCode  = '';
-$old = ['first' => '', 'last' => '', 'email' => '', 'phone' => ''];
+$old = ['first' => '', 'last' => '', 'nameAr' => '', 'email' => '', 'phone' => ''];
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $old['first'] = sanitize($_POST['first_name'] ?? '');
     $old['last']  = sanitize($_POST['last_name'] ?? '');
+    $old['nameAr'] = mb_substr(sanitize($_POST['full_name_ar'] ?? ''), 0, 150);
     $old['email'] = strtolower(sanitize($_POST['email'] ?? ''));
     $old['phone'] = sanitize($_POST['phone'] ?? '');
     $pass    = (string) ($_POST['password'] ?? '');
@@ -25,6 +26,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $errCode = 'rate';
     } elseif ($old['first'] === '' || $old['email'] === '' || $old['phone'] === '') {
         $errCode = 'required';
+    } elseif (owNameProblem($old['first'], true) !== '' || owNameProblem($old['last'], false) !== '' || owNameProblem($old['nameAr'], false) !== '') {
+        $errCode = 'name_letters';
     } elseif (!filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
         $errCode = 'email';
     } elseif (!preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $old['phone'])) {
@@ -43,10 +46,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $expires = date('Y-m-d H:i:s', time() + 24 * 60 * 60);
             $withLang = owHasColumn('users', 'preferred_lang');
             getDB()->prepare(
-                'INSERT INTO users (email, password, full_name_en, phone, role, is_verified, is_approved, verification_token, verification_expires' . ($withLang ? ', preferred_lang' : '') . ')
-                 VALUES (:email,:pass,:name,:phone,"collector",0,0,:tok,:exp' . ($withLang ? ',:lang' : '') . ')'
+                'INSERT INTO users (email, password, full_name_en, full_name_ar, phone, role, is_verified, is_approved, verification_token, verification_expires' . ($withLang ? ', preferred_lang' : '') . ')
+                 VALUES (:email,:pass,:name,:nar,:phone,"collector",0,0,:tok,:exp' . ($withLang ? ',:lang' : '') . ')'
             )->execute([
-                ':email' => $old['email'], ':pass' => hashPassword($pass), ':name' => $fullName,
+                ':email' => $old['email'], ':pass' => hashPassword($pass), ':name' => $fullName, ':nar' => ($old['nameAr'] !== '' ? $old['nameAr'] : null),
                 ':phone' => $old['phone'], ':tok' => $token, ':exp' => $expires,
             ] + ($withLang ? [':lang' => $lang] : []));
             owSignupCounted((int) getDB()->lastInsertId(), 'collector');
@@ -56,7 +59,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 error_log('register_collector: verification email failed to ' . $old['email']);
             }
             $okCode = 'check_email';
-            $old = ['first' => '', 'last' => '', 'email' => '', 'phone' => ''];
+            $old = ['first' => '', 'last' => '', 'nameAr' => '', 'email' => '', 'phone' => ''];
         }
     }
 }
@@ -64,6 +67,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 $ERR = [
     'csrf'=>['en'=>'Security check failed. Please try again.','ar'=>'فشل التحقق الأمني. حاول مرة أخرى.'],
     'rate'=>['en'=>'Too many new accounts from here. Please try again in an hour.','ar'=>'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'],
+    'name_letters'=>['en'=>'Please write your name in letters, not only numbers or symbols.','ar'=>'يرجى كتابة اسمك بالحروف، لا بالأرقام أو الرموز فقط.'],
     'required'=>['en'=>'Please fill in the required fields.','ar'=>'يرجى تعبئة الحقول المطلوبة.'],
     'email'=>['en'=>'Please enter a valid email address.','ar'=>'يرجى إدخال بريد إلكتروني صالح.'],
     'phone'=>['en'=>'Please enter a valid mobile number.','ar'=>'يرجى إدخال رقم جوال صالح.'],
@@ -105,6 +109,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <div class="field"><label id="t-l-first" for="first_name">First name</label><input type="text" id="first_name" name="first_name" required value="<?= e($old['first']) ?>"></div>
         <div class="field"><label id="t-l-last" for="last_name">Last name</label><input type="text" id="last_name" name="last_name" value="<?= e($old['last']) ?>"></div>
       </div>
+      <div class="field"><label for="full_name_ar"><?= owBi('Your name in Arabic (optional)', 'اسمك بالعربية (اختياري)') ?></label><input type="text" id="full_name_ar" name="full_name_ar" dir="rtl" maxlength="150" autocomplete="off" value="<?= e($old['nameAr']) ?>"></div>
       <div class="field"><label id="t-l-email" for="email">Email</label><input type="email" id="email" name="email" required value="<?= e($old['email']) ?>"></div>
       <div class="field"><label id="t-l-phone" for="phone">Mobile number</label><input type="tel" id="phone" name="phone" dir="ltr" required value="<?= e($old['phone']) ?>" placeholder="+966 5X XXX XXXX"></div>
       <div class="field"><label id="t-l-pass" for="password">Password</label><input type="password" id="password" name="password" required oninput="checkRules()">

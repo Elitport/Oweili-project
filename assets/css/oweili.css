@@ -469,3 +469,23 @@ a.stage:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 
 /* "By joining you agree to…" under sign-up buttons */
 .agree-note { font-size: var(--fs-caption); color: var(--color-body); margin: 0 0 var(--space-sm); line-height: 1.6; }
 .agree-note a { color: var(--color-accent); font-weight: 600; }
+
+/* ---- Language + light / dark buttons: ONE shared look on every page ----
+   Printed only by owCornerControls() / owThemeButton() in theme_head.php.
+   Same height (40px), border, corners, font and spacing everywhere, in both
+   languages and both themes. The doubled class wins over older page styles. */
+.ow-ctls { display: inline-flex; align-items: center; gap: var(--space-xs); flex-shrink: 0; }
+button.ow-ctl.ow-ctl {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+  height: 40px; min-height: 40px; margin: 0; padding: 0 12px; vertical-align: middle;
+  border: 1px solid var(--color-border-strong); border-radius: var(--radius-btn);
+  background: transparent; color: var(--color-dark);
+  font-family: var(--font-sans); font-size: 13px; font-weight: 700; line-height: 1; letter-spacing: 0; text-transform: none;
+  white-space: nowrap; cursor: pointer; box-shadow: none;
+  transition: background var(--ease), color var(--ease), border-color var(--ease);
+}
+button.ow-ctl.ow-ctl.lang-btn { min-width: 84px; }
+button.ow-ctl.ow-ctl.theme-btn { width: 40px; min-width: 40px; padding: 0; }
+button.ow-ctl.ow-ctl:hover { background: var(--color-dark); border-color: var(--color-dark); color: var(--color-on-dark); }
+button.ow-ctl.ow-ctl:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+button.ow-ctl.ow-ctl:active { transform: translateY(1px); }

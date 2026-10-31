@@ -52,7 +52,7 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
 <div class="wrap dash role-admin">
   <div class="top">
     <a class="btn btn-ghost btn-sm" href="admin.php">← <?= owBi('Back to admin', 'العودة للإدارة') ?></a>
-    <span><button class="btn btn-ghost btn-sm" onclick="tgl()" id="lb">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?></span>
+    <?php owCornerControls('tgl()'); ?>
   </div>
   <h1><?= owBi('Settings', 'الإعدادات') ?></h1>
 

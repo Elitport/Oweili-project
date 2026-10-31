@@ -93,14 +93,15 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
 <div class="wrap dash role-admin">
   <div class="top">
     <a class="btn btn-ghost btn-sm" href="admin.php#<?= $p && $p['role'] === 'collector' ? 'collectors' : 'artists' ?>">← <?= owBi('Back to admin', 'العودة للإدارة') ?></a>
-    <span><button class="btn btn-ghost btn-sm" onclick="tgl()" id="lb">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?></span>
+    <?php owCornerControls('tgl()'); ?>
   </div>
 <?php if (!$p): ?>
   <div class="card"><p><?= owBi('This account was not found.', 'لم يتم العثور على هذا الحساب.') ?></p></div>
 <?php else: $sw = $STATE_W[$p['state']] ?? $STATE_W['active']; ?>
   <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
   <div class="card">
-    <h1><?= e($p['full_name_en'] ?: $p['artist_en']) ?><?php if ($p['full_name_ar']): ?> · <span dir="rtl"><?= e($p['full_name_ar']) ?></span><?php endif; ?></h1>
+    <?php $pEn = owRealName($p['full_name_en']) ?: $p['artist_en']; $pAr = owRealName($p['full_name_ar']); ?>
+    <h1><?= e($pEn) ?><?php if ($pAr !== '' && $pAr !== $pEn): ?> · <span dir="rtl"><?= e($pAr) ?></span><?php endif; ?></h1>
     <p class="mini"><?= owBi($p['role'] === 'collector' ? 'Buyer' : ucfirst(str_replace('_', ' ', $p['role'])), ['collector' => 'مشترٍ', 'artist' => 'فنان', 'admin' => 'مدير', 'sub_admin' => 'مشرف فرعي', 'institute' => 'معهد'][$p['role']] ?? $p['role']) ?>
       · <span class="pillx"><?= owBi($sw[0], $sw[1]) ?></span> · ID <span dir="ltr"><?= e((string) ($p['public_id'] ?? $p['id'])) ?></span></p>
     <div class="kv">

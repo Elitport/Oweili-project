@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/platform_lib.php';
+require_once __DIR__ . '/approval_lib.php';   // an approved artist's public profile changes wait for the admin
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $uid = (int) $_SESSION['user_id'];
@@ -13,6 +14,9 @@ $stmt = getDB()->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
 $stmt->execute([':id' => $uid]);
 $u = $stmt->fetch();
 if (!$u) { header('Location: login.php'); exit; }
+/* An approved artist's profile is public: changes to it wait for the admin's approval */
+$holdForApproval = ($u['role'] ?? '') === 'artist' && (int) ($u['is_approved'] ?? 0) === 1 && owApprovalsReady();
+$pendingProfile  = $holdForApproval ? owPendingChange('profile', $uid) : null;
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
@@ -35,6 +39,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     if ($nameEn === '') {
         $err = 'name';
+    } elseif (owNameProblem($nameEn, true) !== '' || owNameProblem($nameAr, false) !== '') {
+        $err = 'name_letters';
     } elseif (!$igOk || !$twOk || !$webOk) {
         $err = 'link';
     } elseif ($phone !== '' && !preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $phone)) {
@@ -43,6 +49,35 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $err = 'photo';
     } else {
         $picRel = $u['profile_picture'];
+        if ($holdForApproval) {
+            /* the new photo is saved but not shown until approved (the approved one stays) */
+            $newPic = (string) ($pendingProfile['data']['profile_picture'] ?? '');
+            if ($hasPhoto) {
+                $chk = validateUpload($_FILES['profile_picture']);
+                $dir = __DIR__ . '/uploads/profiles/';
+                if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
+                $fname = safeUploadName($chk['ext']);
+                if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $dir . $fname)) $newPic = 'uploads/profiles/' . $fname;
+            }
+            $want = ['full_name_en' => $nameEn, 'full_name_ar' => $nameAr, 'artist_name' => $nameEn, 'bio_en' => $bioEn, 'bio_ar' => $bioAr,
+                     'city' => $city, 'instagram' => $ig, 'twitter' => $tw, 'website' => $web];
+            if (owHasColumn('users', 'country')) { $want['country'] = $country !== '' ? $country : null; $want['art_styles'] = $styles ? implode(',', $styles) : null; }
+            if ($newPic !== '' && $newPic !== (string) $u['profile_picture']) $want['profile_picture'] = $newPic;
+            $diff = [];
+            foreach ($want as $k => $v) if ((string) $v !== (string) ($u[$k] ?? '')) $diff[$k] = $v;
+            /* the phone number is private (never shown to visitors), so it is saved straight away */
+            getDB()->prepare('UPDATE users SET phone = :p WHERE id = :id')->execute([':p' => $phone, ':id' => $uid]);
+            $sent = false;
+            if ($diff) {
+                $sent = owSubmitChange($uid, 'profile', $uid, $diff);
+            } elseif ($pendingProfile) {
+                getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $pendingProfile['id']]);
+                if (!empty($pendingProfile['data']['profile_picture'])) owDeletePendingFile((string) $pendingProfile['data']['profile_picture']);
+            }
+            owLog('profile_update', 'user', $uid, $sent ? 'waiting' : '', ['type' => 'artist', 'id' => $uid]);
+            header('Location: artist_studio.php?done=' . ($sent ? 'waiting' : 'saved'));
+            exit;
+        }
         if ($hasPhoto) {
             $chk = validateUpload($_FILES['profile_picture']);
             $dir = __DIR__ . '/uploads/profiles/';
@@ -83,6 +118,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     }
 }
 
+/* show the waiting version in the form, so the artist keeps editing that one */
+if ($pendingProfile && ($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') $u = array_merge($u, $pendingProfile['data']);
 $val = fn($k) => e((string) ($u[$k] ?? ''));
 ?>
 <!DOCTYPE html>
@@ -109,6 +146,7 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
 .style-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-border-strong);border-radius:var(--radius-pill);font-size:var(--fs-caption);font-weight:600;cursor:pointer;background:var(--color-surface);}
 .style-chip input{margin:0;}
 .style-chip:has(input:checked){background:var(--color-dark);border-color:var(--color-dark);color:var(--color-on-dark);}
+.wait-note{font-size:15px;line-height:1.6;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.2);border-radius:var(--radius-input);padding:12px 16px;margin:0 0 var(--space-md);}
 .actions{display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-top:var(--space-xs);}
 @media(max-width:768px){.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
 </style>
@@ -128,9 +166,15 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
   <div class="card">
     <?php if ($err): ?>
       <div class="err-box" id="err"
-           data-en="<?= $err==='name' ? 'Please enter your name.' : ($err==='phone' ? 'Please enter a valid phone number.' : ($err==='link' ? 'Please check your links. Use a full web address, like https://instagram.com/yourname.' : 'Profile picture must be a JPG or PNG under 5 MB.')) ?>"
-           data-ar="<?= $err==='name' ? 'يرجى إدخال اسمك.' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح.' : ($err==='link' ? 'يرجى مراجعة الروابط. استخدم عنواناً كاملاً مثل https://instagram.com/yourname.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت.')) ?>">
+           data-en="<?= $err==='name' ? 'Please enter your name.' : ($err==='phone' ? 'Please enter a valid phone number.' : ($err==='name_letters' ? 'Please write your name in letters, not only numbers or symbols.' : ($err==='link' ? 'Please check your links. Use a full web address, like https://instagram.com/yourname.' : 'Profile picture must be a JPG or PNG under 5 MB.'))) ?>"
+           data-ar="<?= $err==='name' ? 'يرجى إدخال اسمك.' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح.' : ($err==='name_letters' ? 'يرجى كتابة الاسم بالحروف، لا بالأرقام أو الرموز فقط.' : ($err==='link' ? 'يرجى مراجعة الروابط. استخدم عنواناً كاملاً مثل https://instagram.com/yourname.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت.'))) ?>">
       </div>
+    <?php endif; ?>
+
+    <?php if ($pendingProfile): ?>
+      <div class="ok-box" role="status"><?= owBi('Your last profile changes are waiting for approval. Visitors still see your approved profile. Saving again replaces the waiting changes.', 'تعديلات ملفك الأخيرة بانتظار الموافقة. ما زال الزوار يرون ملفك المعتمد. الحفظ مرة أخرى يستبدل التعديلات المنتظرة.') ?></div>
+    <?php elseif ($holdForApproval): ?>
+      <p class="wait-note">⏳ <?= owBi('Your profile is public. Changes to your photo, names, bio, city, styles or links wait for the team’s approval before visitors see them. Your phone number is private and saves straight away.', 'ملفك ظاهر للزوار. التعديلات على الصورة أو الاسم أو النبذة أو المدينة أو الأساليب أو الروابط تنتظر موافقة الفريق قبل أن يراها الزوار. رقم هاتفك خاص ويُحفظ فوراً.') ?></p>
     <?php endif; ?>
 
     <form method="post" action="edit_profile.php" enctype="multipart/form-data">
@@ -150,7 +194,7 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
 
       <div class="grid2">
         <div class="field"><label id="t-l-nen">Artist name (English)</label><input type="text" name="full_name_en" required value="<?= $val('full_name_en') ?>"></div>
-        <div class="field"><label id="t-l-nar">Artist name (Arabic)</label><input type="text" name="full_name_ar" dir="rtl" value="<?= $val('full_name_ar') ?>"></div>
+        <div class="field"><label id="t-l-nar">Artist name (Arabic)</label><input type="text" name="full_name_ar" dir="rtl" autocomplete="off" value="<?= e(owRealName($u['full_name_ar'] ?? '')) ?>"></div>
       </div>
 
       <div class="grid2">

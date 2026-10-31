@@ -12,11 +12,20 @@
  * ===================================================================== */
 require_once __DIR__ . '/ow_paths.php';   // owAsset(): links to our CSS and JS files
 if (!function_exists('owThemeButton')) {
-    function owThemeButton(string $class = 'lang-btn'): void {
-        echo '<button type="button" class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . ' theme-btn" onclick="owToggleTheme()" title="Dark mode" aria-label="Dark mode">'
+    /* The light / dark button. One shared look on every page (.ow-ctl in oweili.css);
+       the old $class argument is ignored on purpose, so pages can never drift apart. */
+    function owThemeButton(string $class = ''): void {
+        echo '<button type="button" class="ow-ctl theme-btn" onclick="owToggleTheme()" title="Dark mode" aria-label="Dark mode">'
            . '<svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>'
            . '<svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M1.5 12H4M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>'
            . '</button>';
+    }
+    /* The language button + the light / dark button, side by side, the same on every page.
+       $onclick is the page's own language switch (tgl() on public pages, tglLang() on admin). */
+    function owCornerControls(string $onclick = 'tgl()'): void {
+        echo '<span class="ow-ctls"><button type="button" class="ow-ctl lang-btn" id="lb" onclick="' . htmlspecialchars($onclick, ENT_QUOTES, 'UTF-8') . '">العربية</button>';
+        owThemeButton();
+        echo '</span>';
     }
 }
 if (!defined('OW_THEME_HEAD')):

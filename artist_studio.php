@@ -18,6 +18,7 @@ require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/account_lib.php';
+require_once __DIR__ . '/approval_lib.php';
 
 if (!isLoggedIn()) { header('Location: login.php?next=artist_studio.php'); exit; }
 $me = currentUser();
@@ -113,10 +114,13 @@ $DONE = [
     'password' => ['Your password is changed. Other phones and computers were signed out.', 'تم تغيير كلمة المرور. وتم تسجيل الخروج من الأجهزة الأخرى.'],
     'notify'   => ['Your email choices are saved.', 'تم حفظ اختياراتك للرسائل.'],
     'resend'   => ['We sent the confirmation link again. Please check your inbox.', 'أرسلنا رابط التأكيد مرة أخرى. راجع بريدك.'],
+    'waiting'  => ['Saved. Your changes are waiting for the team’s approval. Visitors see the approved version until then.', 'تم الحفظ. تعديلاتك بانتظار موافقة الفريق. يرى الزوار النسخة المعتمدة حتى ذلك الحين.'],
+    'saved'    => ['Your changes are saved.', 'تم حفظ تعديلاتك.'],
 ];
+$myChanges = owMyChanges($uid);
 $done = $DONE[$_GET['done'] ?? ''] ?? null;
 $verified = (int) ($me['is_verified'] ?? 0) === 1;
-$name = trim((string) ($me['artist_name'] ?: $me['full_name_en'])) ?: 'Artist';
+$name = owRealName($me['artist_name']) ?: (owRealName($me['full_name_en']) ?: 'Artist');
 $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDateBi($d, $time); return owBi($en, $ar); };
 ?>
 <!DOCTYPE html>
@@ -147,6 +151,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 .w-title{font-weight:700;color:var(--color-dark);margin:0 0 4px;}
 .w-nums{display:flex;gap:var(--space-sm);flex-wrap:wrap;font-size:var(--fs-caption);color:var(--color-body);}
 .w-nums b{color:var(--color-dark);}
+.w-wait{margin-top:6px;font-size:var(--fs-caption);color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),.2);border-radius:var(--radius-input);padding:6px 10px;}
 .w-reason{margin-top:6px;font-size:var(--fs-caption);color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),.3);border-radius:var(--radius-input);padding:6px 10px;}
 .w-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
 .st-pill{display:inline-block;font-size:var(--fs-min);font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);color:var(--color-dark);background:var(--color-surface);white-space:nowrap;}
@@ -231,6 +236,11 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
           <span><b><?= number_format((int) $w['inquiries']) ?></b> <?= owBi('interested', 'مهتم') ?></span>
           <span><?= number_format((float) $w['price']) ?> <?= owBi('SAR', 'ر.س') ?></span>
         </div>
+        <?php $ch = $myChanges['artwork:' . (int) $w['id']] ?? null; if ($ch && $ch['state'] === 'pending'): ?>
+          <div class="w-wait">⏳ <?= owBi('Your changes are waiting for approval. Visitors see the approved version.', 'تعديلاتك بانتظار الموافقة. يرى الزوار النسخة المعتمدة.') ?></div>
+        <?php elseif ($ch && $ch['state'] === 'rejected'): ?>
+          <div class="w-reason"><?= owBi('Your last changes were not approved: ', 'لم تتم الموافقة على تعديلاتك الأخيرة: ') ?><?= e($ch['reason'] ?: '—') ?></div>
+        <?php endif; ?>
         <?php if ($s === 'rejected'): ?>
           <div class="w-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e((string) ($w['reason'] ?: '—')) ?> · <?= owBi('Edit it and it goes back to review.', 'عدّله ليعود إلى المراجعة.') ?></div>
         <?php endif; ?>

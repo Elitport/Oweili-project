@@ -3,6 +3,7 @@ require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/admin_lib.php';     // owPhotoChanged(): the team is told when a live artwork's photo changes
+require_once __DIR__ . '/approval_lib.php';  // changes to a live artwork wait for the admin's approval
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $viewerId  = (int) $_SESSION['user_id'];
@@ -23,6 +24,9 @@ if (!empty($aw['is_draft'])) { header('Location: upload_artwork.php?id=' . (int)
 $photoLocked = owGetStages((int) $aw['id']) !== [];
 
 $err = '';
+/* A change already waiting for the admin: show it in the form, so the artist edits that version */
+$pendingAw = (int) $aw['is_approved'] === 1 ? owPendingChange('artwork', (int) $aw['id']) : null;
+$liveAw = $aw;
 
 /* ---- Handle save ---- */
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -72,6 +76,34 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             }
         }
 
+        /* Live artwork: the new text, price, type and status wait for the admin.
+           Visitors keep seeing the approved version until then. The photo
+           (if changed) still goes live straight away with the alert, as before. */
+        if ($err === '' && $isLive && owApprovalsReady()) {
+            $want = ['title_en' => $tEn, 'title_ar' => $tAr, 'description_en' => $dEn, 'description_ar' => $dAr,
+                     'price' => (string) (float) $price, 'type' => $type, 'status' => $status];
+            $diff = [];
+            foreach ($want as $k => $v) {
+                $cur = $k === 'price' ? (string) (float) $aw['price'] : (string) ($aw[$k] ?? '');
+                if ($v !== $cur) $diff[$k] = $k === 'price' ? (float) $price : $v;
+            }
+            if ($photoChanged) {
+                getDB()->prepare('UPDATE artworks SET image_url = :img WHERE id = :id AND artist_id = :uid')
+                       ->execute([':img' => $imageUrl, ':id' => $artId, ':uid' => $viewerId]);
+                owPhotoChanged($aw, (string) $aw['image_url'], $imageUrl, $viewerId);
+            }
+            $sent = false;
+            if ($diff) {
+                $sent = owSubmitChange($viewerId, 'artwork', $artId, $diff);
+            } elseif (($pend = owPendingChange('artwork', $artId)) && (int) $pend['user_id'] === $viewerId) {
+                /* the artist put everything back as it was: nothing left to approve */
+                getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $pend['id']]);
+            }
+            owLog('artwork_edit', 'artwork', $artId, $sent ? 'waiting' : '', ['type' => 'artist', 'id' => $viewerId]);
+            header('Location: artist_studio.php?done=' . ($sent ? 'waiting' : 'saved'));
+            exit;
+        }
+
         if ($err === '') {
             // Stamp the sale date the first time an artwork becomes 'sold';
             // clear it if it's moved back to available/auction.
@@ -97,6 +129,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             exit;
         }
     }
+    $pendingAw = null;
     // On error, keep submitted values for redisplay.
     $aw = array_merge($aw, [
         'title_en' => $tEn, 'title_ar' => $tAr,
@@ -104,6 +137,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         'price' => $price, 'type' => $type ?: $aw['type'], 'status' => $status,
     ]);
 }
+if ($pendingAw) $aw = array_merge($aw, array_intersect_key($pendingAw['data'], array_flip(OW_ARTWORK_FIELDS)));
+$waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="html">
@@ -126,6 +161,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 <style>
 .lock-note{font-size:15px;line-height:1.6;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.2);border-radius:var(--radius-input);padding:12px 16px;}
 .lock-note::before{content:'🔒 ';}
+.wait-note{margin-bottom:var(--space-md);}.wait-note::before{content:'⏳ ';}
 </style>
 </head>
 <body>
@@ -144,6 +180,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
            data-en="<?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?>"
            data-ar="<?= $err === 'image' ? 'يجب أن تكون الصورة JPG/PNG/WEBP بحجم أقل من 5 ميغابايت.' : 'العنوانان مطلوبان ويجب أن يكون السعر رقماً.' ?>"
            id="errbox"><?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?></div>
+    <?php endif; ?>
+
+    <?php if ($pendingAw): ?>
+      <div class="ok-box" role="status"><?= owBi('Your last changes are waiting for approval. Visitors still see the approved version. Saving again replaces the waiting changes.', 'تعديلاتك الأخيرة بانتظار الموافقة. ما زال الزوار يرون النسخة المعتمدة. الحفظ مرة أخرى يستبدل التعديلات المنتظرة.') ?></div>
+    <?php elseif ($waitNote): ?>
+      <div class="lock-note wait-note" role="note"><?= owBi('This artwork is in the Gallery. Changes to its text, price, type or status wait for the team’s approval before visitors see them. A new photo shows straight away.', 'هذا العمل في المعرض. التعديلات على النص أو السعر أو النوع أو الحالة تنتظر موافقة الفريق قبل أن يراها الزوار. الصورة الجديدة تظهر فوراً.') ?></div>
     <?php endif; ?>
 
     <?php if (($curImg = owImgSrc($aw['image_url'])) !== ''): ?>

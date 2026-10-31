@@ -9,6 +9,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/article_lib.php';
+require_once __DIR__ . '/approval_lib.php';   // a sub-admin's "publish" waits for the admin
 
 $TYPES   = owArticleTypes();
 $METHODS = owConsentMethods();
@@ -216,6 +217,16 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             }
         }
 
+        /* Nothing goes public without the admin: a sub-admin asking to publish an
+           article that is not yet live saves it as a draft and asks the admin.
+           (The admin signed in on admin.php, or an admin account, publishes directly.) */
+        $askPublish = false;
+        $staffIsAdmin = $staff['user_id'] === null || (currentUser()['role'] ?? '') === 'admin';
+        if (!$errors && !$staffIsAdmin && $f['status'] === 'published' && !($existing && $existing['status'] === 'published') && owApprovalsReady()) {
+            $f['status'] = 'draft';
+            $askPublish = true;
+        }
+
         /* Save the photos only when everything else is right */
         $stored = [];   // new files, removed again if anything fails
         $coverPath = null; $newImagePaths = []; $proofPath = '';
@@ -291,6 +302,9 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 }
                 $db->commit();
                 foreach ($removed as $p) owDeleteArticleFile((string) $p);
+                if ($askPublish && owSubmitChange((int) $staff['user_id'], 'article', $id, ['publish' => 1])) {
+                    flash('Saved. It will be published once the admin approves it.', 'تم الحفظ. سيُنشر بعد موافقة الإدارة.');
+                } else
                 flash($f['status'] === 'published' ? 'Saved and published.' : 'Saved as a draft.',
                       $f['status'] === 'published' ? 'تم الحفظ والنشر.' : 'تم الحفظ كمسودة.');
                 header('Location: admin_articles.php?edit=' . $id);
@@ -413,7 +427,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
       <p class="sub"><?= owBi('Events, artist spotlights and art education — written by the Oweili team.', 'الملتقيات وأضواء الفنانين والتثقيف الفني — بقلم فريق أويلي.') ?></p>
     </div>
     <div class="top-links">
-      <button type="button" class="btn btn-ghost btn-sm" id="lb" onclick="tgl()">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?>
+      <?php owCornerControls('tgl()'); ?>
       <?php if ($staff['user_id'] === null || (currentUser()['role'] ?? '') === 'admin'): ?>
         <a class="btn btn-ghost btn-sm" href="admin.php"><?= owBi('Admin panel', 'لوحة الإدارة') ?></a>
       <?php else: ?>
@@ -457,6 +471,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
             <div class="row-title"><?= owBi($r['title_en'], $r['title_ar']) ?></div>
             <div class="row-meta">
               <?= $r['status'] === 'published' ? '<span class="pill pub">' . owBi('Published', 'منشور') . '</span>' : '<span class="pill draft">' . owBi('Draft', 'مسودة') . '</span>' ?>
+              <?php if ($r['status'] !== 'published' && owPendingChange('article', (int) $r['id'])): ?><span class="pill draft"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></span><?php endif; ?>
               <span><?= owBi('Created ' . $dEn, 'أُنشئ في ' . $dAr) ?></span>
             </div>
           </div>

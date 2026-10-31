@@ -40,7 +40,7 @@ if (is_file($logFile) && ($fh = @fopen($logFile, 'r'))) {
       <div class="sub"><?= owBi('Private. Visitors never see these. Newest first.', 'خاص. لا يراه الزوار أبداً. الأحدث أولاً.') ?></div>
     </div>
     <div class="top-actions">
-      <?php owThemeButton('btn btn-ghost btn-sm'); ?>
+      <?php owCornerControls('tgl()'); ?>
       <a class="btn btn-dark btn-sm" href="admin.php"><?= owBi('Back to Admin', 'العودة للوحة') ?></a>
     </div>
   </div>
@@ -52,5 +52,10 @@ if (is_file($logFile) && ($fh = @fopen($logFile, 'r'))) {
     <?php endif; ?>
   </div>
 </div>
+<script>
+function tgl(){ var ar = document.documentElement.getAttribute('dir') !== 'rtl'; document.documentElement.setAttribute('dir', ar ? 'rtl' : 'ltr'); document.documentElement.lang = ar ? 'ar' : 'en';
+  document.getElementById('lb').textContent = ar ? 'English' : 'العربية'; try { localStorage.setItem('lang', ar ? 'ar' : 'en'); } catch (e) {} }
+try { if (localStorage.getItem('lang') === 'ar') tgl(); } catch (e) {}
+</script>
 </body>
 </html>

@@ -9,7 +9,7 @@ $state = 'invalid';   // 'success' | 'invalid'
 
 if ($token !== '' && ctype_xdigit($token) && strlen($token) <= 128) {
     $stmt = getDB()->prepare(
-        'SELECT id, email, full_name_en, full_name_ar, is_verified, role
+        'SELECT id, email, full_name_en, full_name_ar, artist_name, is_verified, role
          FROM users
          WHERE verification_token = :t
            AND (verification_expires IS NULL OR verification_expires > NOW())
@@ -34,8 +34,8 @@ if ($token !== '' && ctype_xdigit($token) && strlen($token) <= 128) {
             $dashUrl   = 'https://' . $host . '/' . (($row['role'] ?? '') === 'artist' ? 'artist_dashboard.php?id=' . (int) $row['id'] : dashboardUrl($row['role'] ?? ''));
             $marketUrl = 'https://' . $host . '/marketplace.php';
             $welcome   = welcomeEmailHtml(
-                $row['full_name_en'] ?: '',
-                $row['full_name_ar'] ?: '',
+                owRealName($row['full_name_en'] ?? '') ?: (owRealName($row['artist_name'] ?? '') ?: ''),
+                owRealName($row['full_name_ar'] ?? ''),
                 $dashUrl,
                 $marketUrl
             );

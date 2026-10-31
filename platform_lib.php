@@ -140,6 +140,10 @@ const OW_ACTION_WORDS = [
     'admin_login'     => ['Admin signed in', 'دخول الإدارة'],
     'photo_change'    => ['Changed the photo of a live artwork', 'غيّر صورة عمل معروض'],
     'photo_ok'        => ['Checked a changed photo: looks fine', 'راجع صورة متغيّرة: جيدة'],
+    'change_submit'   => ['Sent changes for approval', 'أرسل تعديلات للموافقة'],
+    'change_approve'  => ['Approved changes', 'وافق على تعديلات'],
+    'change_reject'   => ['Rejected changes', 'رفض تعديلات'],
+    'user_reject'     => ['Did not approve an artist account', 'لم يوافق على حساب فنان'],
 ];
 
 /* ---------------------------------------------------------------------
@@ -261,4 +265,20 @@ function owSafeLink(string $v, string $kind = 'web'): array {
 function owStyleChoices(): array {
     $all = require __DIR__ . '/art_types.php';
     return array_filter($all, fn($t) => empty($t['legacy']));
+}
+
+/* ---------------------------------------------------------------------
+ *  Names: a real name has at least one letter (any language) and no "@".
+ *  A name made only of numbers or symbols (like "82") is never shown and
+ *  never accepted when someone types it.
+ * ------------------------------------------------------------------- */
+function owRealName(?string $name): string {
+    $name = trim((string) $name);
+    return ($name !== '' && preg_match('/\p{L}/u', $name) && strpos($name, '@') === false) ? $name : '';
+}
+/* '' when fine; otherwise an error code for a name a person typed */
+function owNameProblem(string $name, bool $required): string {
+    $name = trim($name);
+    if ($name === '') return $required ? 'name' : '';
+    return owRealName($name) === '' ? 'name_letters' : '';
 }

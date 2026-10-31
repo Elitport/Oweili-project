@@ -73,7 +73,8 @@ $stmt->execute([':id' => $profileId]);
 $artist = $stmt->fetch();
 
 /* Visitors can only see real, active artist profiles (not collectors, admins or banned accounts). */
-if ($artist && !$isOwner && (($artist['role'] ?? '') !== 'artist' || !empty($artist['is_banned']))) {
+/* A new artist's profile stays hidden until the admin approves the account. */
+if ($artist && !$isOwner && (($artist['role'] ?? '') !== 'artist' || !empty($artist['is_banned']) || (int) ($artist['is_approved'] ?? 0) !== 1)) {
     $artist = null;
 }
 if (!$artist) {

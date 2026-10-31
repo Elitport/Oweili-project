@@ -4,7 +4,7 @@
 if (!function_exists('currentUser')) { @require_once __DIR__ . '/config.php'; }
 $navUser  = function_exists('currentUser') ? currentUser() : null;
 $navIsAdmin = function_exists('isAdmin') && isAdmin();
-$navName  = $navUser ? trim((string)($navUser['full_name_en'] ?: ($navUser['full_name_ar'] ?: $navUser['email']))) : '';
+$navName  = $navUser ? (function_exists('owRealName') ? (owRealName($navUser['full_name_en']) ?: (owRealName($navUser['full_name_ar']) ?: (string) $navUser['email'])) : trim((string)($navUser['full_name_en'] ?: $navUser['email']))) : '';
 if ($navName === '') { $navName = 'Account'; }
 $navFirst = $navUser ? (explode(' ', $navName)[0]) : '';
 $navId    = $navUser ? (int) $navUser['id'] : 0;
@@ -79,8 +79,7 @@ if (!function_exists('owLogoMark')) {
       <a class="nav-btn" href="login.php" id="n-login"><span id="n-login-t">Sign In</span></a>
       <a class="nav-btn" href="register.php" id="n-reg"><span id="n-reg-t">Join Free</span></a>
     <?php endif; ?>
-    <button class="lang-btn" onclick="tgl()" id="lb">العربية</button>
-    <?php owThemeButton(); ?>
+    <?php owCornerControls('tgl()'); ?>
   </div>
   <button type="button" class="mnav-btn" id="mnav-btn" aria-expanded="false" aria-controls="mnav-panel" aria-label="Open menu" data-label-en="Open menu" data-label-ar="فتح القائمة" data-close-en="Close menu" data-close-ar="إغلاق القائمة">
     <svg class="mnav-bars" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>

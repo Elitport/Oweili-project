@@ -159,7 +159,7 @@ details > summary{cursor:pointer;font-weight:700;margin:var(--space-sm) 0;}
 <div class="wrap dash role-admin">
   <div class="top">
     <a class="btn btn-ghost btn-sm" href="admin.php">← <?= owBi('Back to admin', 'العودة للإدارة') ?></a>
-    <span><a class="btn btn-ghost btn-sm" href="training.php" target="_blank" rel="noopener"><?= owBi('See the directory', 'شاهد الدليل') ?> ↗</a> <button class="btn btn-ghost btn-sm" onclick="tgl()" id="lb">العربية</button> <?php owThemeButton('btn btn-ghost btn-sm'); ?></span>
+    <span><a class="btn btn-ghost btn-sm" href="training.php" target="_blank" rel="noopener"><?= owBi('See the directory', 'شاهد الدليل') ?> ↗</a> <?php owCornerControls('tgl()'); ?></span>
   </div>
   <h1><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></h1>
   <p class="mini"><?= owBi('Everything here appears on the Art Institutes page. Hide something instead of deleting it, so its history stays.', 'كل ما هنا يظهر في صفحة المعاهد الفنية. أخفِ العنصر بدل حذفه ليبقى تاريخه.') ?></p>

@@ -44,7 +44,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $one = fn(string $k, int $max) => mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>]/u', ' ', (string) ($_POST[$k] ?? ''))), 0, $max);
         $old = ['name' => $one('full_name', 150), 'phone' => $one('phone', 30), 'country' => $one('country', 80),
                 'city' => $one('city', 100), 'lang' => (string) ($_POST['preferred_lang'] ?? '') === 'ar' ? 'ar' : 'en'];
-        if (mb_strlen($old['name']) < 2)                                                     $err = 'name';
+        if (mb_strlen($old['name']) < 2 || owRealName($old['name']) === '')                     $err = 'name';
         elseif ($old['phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $old['phone'])) $err = 'phone';
         else {
             $set = 'full_name_en = :n, phone = :p, city = :c'; $args = [':n' => $old['name'], ':p' => $old['phone'] ?: null, ':c' => $old['city'] ?: null, ':id' => $uid];
@@ -130,7 +130,7 @@ try {
 
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $memberSince = !empty($me['created_at']) ? date('Y', strtotime($me['created_at'])) : '';
-$name   = trim((string) ($me['full_name_en'] ?: $me['full_name_ar'])) ?: 'Buyer';
+$name   = owRealName($me['full_name_en']) ?: (owRealName($me['full_name_ar']) ?: 'Buyer');
 $val    = fn(string $k, string $col) => $old[$k] ?? (string) ($me[$col] ?? '');
 $prefL  = $old['lang'] ?? ((string) ($me['preferred_lang'] ?? '') === 'ar' ? 'ar' : 'en');
 

@@ -36,12 +36,13 @@ $LIM = ['photo' => $arMb($arPhotoMax), 'video' => $arMb($arVideoMax), 'total' =>
 
 $errCode = '';
 $okCode  = '';
-$old = ['first'=>'','last'=>'','artist'=>'','email'=>'','phone'=>'','city'=>'','bioEn'=>'','bioAr'=>''];
+$old = ['first'=>'','last'=>'','nameAr'=>'','artist'=>'','email'=>'','phone'=>'','city'=>'','bioEn'=>'','bioAr'=>''];
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $old['first']  = sanitize($_POST['first_name'] ?? '');
     $old['last']   = sanitize($_POST['last_name'] ?? '');
     $old['artist'] = sanitize($_POST['artist_name'] ?? '');
+    $old['nameAr'] = mb_substr(sanitize($_POST['full_name_ar'] ?? ''), 0, 150);
     $old['email']  = strtolower(sanitize($_POST['email'] ?? ''));
     $old['phone']  = sanitize($_POST['phone'] ?? '');
     $old['city']   = sanitize($_POST['city'] ?? '');
@@ -73,6 +74,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $errCode = 'rate';
     } elseif ($old['first']==='' || $old['artist']==='' || $old['email']==='' || $old['phone']==='' || $old['city']==='') {
         $errCode = 'required';
+    } elseif (owNameProblem($old['first'], true) !== '' || owNameProblem($old['last'], false) !== '' || owNameProblem($old['artist'], true) !== '' || owNameProblem($old['nameAr'], false) !== '') {
+        $errCode = 'name_letters';
     } elseif (!filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
         $errCode = 'email';
     } elseif (!preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $old['phone'])) {
@@ -126,10 +129,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $token = bin2hex(random_bytes(32));
                 $expires = date('Y-m-d H:i:s', time() + 24*60*60);
                 getDB()->prepare(
-                    'INSERT INTO users (email,password,full_name_en,artist_name,phone,city,bio_en,bio_ar,profile_picture,art_video,role,is_verified,is_approved,verification_token,verification_expires)
-                     VALUES (:email,:pass,:name,:aname,:phone,:city,:ben,:bar,:pic,:vid,"artist",0,0,:tok,:exp)'
+                    'INSERT INTO users (email,password,full_name_en,full_name_ar,artist_name,phone,city,bio_en,bio_ar,profile_picture,art_video,role,is_verified,is_approved,verification_token,verification_expires)
+                     VALUES (:email,:pass,:name,:nar,:aname,:phone,:city,:ben,:bar,:pic,:vid,"artist",0,0,:tok,:exp)'
                 )->execute([
-                    ':email'=>$old['email'], ':pass'=>hashPassword($pass), ':name'=>$fullName, ':aname'=>$old['artist'],
+                    ':email'=>$old['email'], ':pass'=>hashPassword($pass), ':name'=>$fullName, ':nar'=>($old['nameAr'] !== '' ? $old['nameAr'] : null), ':aname'=>$old['artist'],
                     ':phone'=>$old['phone'], ':city'=>$old['city'], ':ben'=>$old['bioEn'], ':bar'=>$old['bioAr'],
                     ':pic'=>$photoRel, ':vid'=>$videoRel, ':tok'=>$token, ':exp'=>$expires,
                 ]);
@@ -157,7 +160,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     error_log('register_artist: verification email failed to ' . $old['email']);
                 }
                 $okCode = 'check_email';
-                $old = ['first'=>'','last'=>'','artist'=>'','email'=>'','phone'=>'','city'=>'','bioEn'=>'','bioAr'=>''];
+                $old = ['first'=>'','last'=>'','nameAr'=>'','artist'=>'','email'=>'','phone'=>'','city'=>'','bioEn'=>'','bioAr'=>''];
             }
         }
     }
@@ -168,6 +171,7 @@ $ERR = [
                 'ar'=>'ملفاتك أكبر من المسموح إرسالها معاً. الحد ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'يحدده الخادم') . ': الصورة حتى ' . $LIM['photo'] . ' ميغابايت، وكل صورة عمل حتى ' . $LIM['photo'] . ' ميغابايت، والفيديو حتى ' . $LIM['video'] . ' ميغابايت. يرجى اختيار ملفات أصغر أو ترك الفيديو.'],
     'csrf'=>['en'=>'This page was open for a long time, so we could not send it. Please try again. Files must stay under ' . ($LIM['total'] !== '' ? $LIM['total'] . 'MB in total' : 'the size limits shown') . '.',
              'ar'=>'بقيت الصفحة مفتوحة وقتاً طويلاً فلم نتمكن من إرسالها. حاول مرة أخرى. يجب ألا تتجاوز الملفات ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'الحدود الموضحة') . '.'],
+    'name_letters'=>['en'=>'Please write your names in letters, not only numbers or symbols.','ar'=>'يرجى كتابة الأسماء بالحروف، لا بالأرقام أو الرموز فقط.'],
     'required'=>['en'=>'Please fill in all required fields.','ar'=>'يرجى تعبئة جميع الحقول المطلوبة.'],
     'email'=>['en'=>'Please enter a valid email address.','ar'=>'يرجى إدخال بريد إلكتروني صالح.'],
     'phone'=>['en'=>'Please enter a valid mobile number.','ar'=>'يرجى إدخال رقم جوال صالح.'],
@@ -215,6 +219,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <div class="field"><label id="t-l-first">First name</label><input type="text" name="first_name" required value="<?= e($old['first']) ?>"></div>
         <div class="field"><label id="t-l-last">Last name</label><input type="text" name="last_name" value="<?= e($old['last']) ?>"></div>
       </div>
+      <div class="field"><label for="full_name_ar"><?= owBi('Your name in Arabic (optional)', 'اسمك بالعربية (اختياري)') ?></label><input type="text" id="full_name_ar" name="full_name_ar" dir="rtl" maxlength="150" autocomplete="off" value="<?= e($old['nameAr']) ?>"></div>
       <div class="field"><label id="t-l-artist">Artist name (the name people will see)</label><input type="text" name="artist_name" required value="<?= e($old['artist']) ?>"></div>
       <div class="grid2">
         <div class="field"><label id="t-l-email">Email</label><input type="email" name="email" required value="<?= e($old['email']) ?>"></div>

@@ -128,6 +128,29 @@
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
+### Nothing goes public without admin approval (needs approvals_update.sql)
+- Everything an artist adds or changes waits for the admin before visitors see it. Until then visitors see the old approved version, or nothing if it is new
+  - New artworks: wait as before (is_approved = 0)
+  - New artist accounts: the public profile (artist_dashboard.php?id=N) stays hidden (404) until the account is approved
+  - Changes to a live artwork (titles, descriptions, price, art type, for-sale status) in edit_artwork.php: kept aside; the live artwork does not change. Exception kept on purpose: a new PHOTO on a live artwork still goes live straight away and alerts the admin (see "Photo changed, needs a look")
+  - Changes to an approved artist's public profile in edit_profile.php (photo, names, bio, city, country, art styles, links): kept aside; the new photo is saved but not shown. The phone number is private, so it saves straight away
+  - Articles and events: a sub-admin pressing "Published" saves a draft and asks the admin. The admin (admin.php password or an admin account) publishes directly. Edits by the team to an already published article stay live (only the team can write articles)
+  - Changes to things that are not public yet (an artwork in review, a new account) and buyer profiles (never public) save directly
+- Admin: admin.php → "Waiting for approval" / «بانتظار الموافقة» (admin.php#pending, also the overview box): New artist accounts, Changes to live things (a table: What / Now (visitors see) / Asked for, with the new photo), and New artworks with their Proof of Process. Approve or Reject; a reject needs a reason. The artist gets an email in both languages either way (with the reason). A spotlight with photos is only published with an active photo consent
+- Artist side: the edit pages say that changes wait; while one waits, the form shows the waiting version and saving again replaces it (only one waiting change per thing). My Studio shows "waiting for approval" or the last reason a change was not approved, and a message after saving
+- Every step is in the activity log (change_submit, change_approve, change_reject, user_approve, user_reject)
+- Until approvals_update.sql has been run, everything works exactly as before and the admin list says so
+- Files: approval_lib.php (new), approvals_update.sql (new), admin.php, edit_artwork.php, edit_profile.php, admin_articles.php, artist_studio.php, artist_dashboard.php, platform_lib.php. Tables: pending_changes (new), artworks, users, articles, photo_consents, activity_log
+
+### Names exactly as typed (sign-up)
+- The "82" next to Azeem's name came from the old sign-up form's Arabic name box, not from his email. Sign-up (artist and buyer) now has its own optional "Your name in Arabic" box, saves exactly what was typed, and refuses a name made only of numbers or symbols, in both languages. Edit Profile checks the same
+- Everywhere a name is shown (menu, dashboards, admin, artist profile, welcome email), a name without letters is skipped (owRealName in platform_lib.php), so Azeem shows as "Azeem" until he types a real Arabic name. The live site had only his account, so no other account needed a fix
+- Files: register_artist.php, register_collector.php, edit_profile.php, platform_lib.php (owRealName, owNameProblem), nav.php, admin.php, admin_person.php, collector_dashboard.php, artist_studio.php, verify.php. Tables: users
+
+### One style for the language and light / dark buttons
+- Every page prints the two buttons with one helper, owCornerControls() in theme_head.php, and one style in oweili.css (.ow-ctls / .ow-ctl): both 40px tall, same border, corners, font and an 8px gap, lined up together. Used by nav.php (all public pages, sign-in, sign-up, buyer and artist pages) and every staff page (admin, sub-admin, articles, institutes, person, settings, photo check, email check, error log). The check pages can now switch to Arabic too
+- New pages must use owCornerControls(), never their own buttons
+
 ### "Photo changed, needs a look" (live artworks)
 - When an artist changes the photo of an artwork that is live in the Gallery (approved, in edit_artwork.php; only artworks without stage photos can change their photo), the artwork stays live and:
   - an email goes to contact@elitport.com right away with the old and new photo side by side and a link to the admin panel
@@ -406,6 +429,7 @@
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
 - database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Already in place on the live database (checked 30 Oct 2026)
+- approvals_update.sql — the pending_changes table for "Nothing goes public without admin approval". Only adds one table; safe to run more than once
 - dashboards_update.sql — the dashboards and Bashro parts (permanent IDs, dates, request status, favorites, activity log, empty shipping and payout tables). Safe to run more than once. Already in place on the live database (30 Oct 2026)
 
 ## Design System

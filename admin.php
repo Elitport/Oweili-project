@@ -4,6 +4,7 @@ require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/mail_lib.php';
 require_once __DIR__ . '/inquiry_lib.php';
 require_once __DIR__ . '/admin_lib.php';
+require_once __DIR__ . '/approval_lib.php';
 
 /* =====================================================================
  *  Oweili · admin.php — approve / ban artists
@@ -110,6 +111,26 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
             }
         }
         header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#' . (in_array($_POST['back'] ?? '', ['artworks', 'photos'], true) ? $_POST['back'] : 'pending'));
+        exit;
+    }
+
+    /* --- "Waiting for approval": changes, new artist accounts --- */
+    if (in_array($action, ['approve_change', 'reject_change', 'approve_account', 'reject_account'], true)) {
+        $actor = ['type' => 'admin', 'id' => null];
+        $cid = (int) ($_POST['change_id'] ?? 0);
+        $ok = match ($action) {
+            'approve_change'  => owApproveChange($cid, $actor),
+            'reject_change'   => owRejectChange($cid, (string) ($_POST['reason'] ?? ''), $actor),
+            'approve_account' => owApproveArtistAccount($uid, $actor),
+            'reject_account'  => owRejectArtistAccount($uid, (string) ($_POST['reason'] ?? ''), $actor),
+        };
+        if (!$ok) {
+            $_SESSION['admin_err'] = ($GLOBALS['OW_APPROVE_ERR'] ?? '') === 'consent'
+                ? 'This spotlight has photos but no active photo consent. Add the consent in Articles first, then approve.'
+                : (str_starts_with($action, 'reject') && trim((string) ($_POST['reason'] ?? '')) === ''
+                    ? 'Please write the reason, so the artist knows what to fix.' : 'This was already decided or no longer exists.');
+        }
+        header('Location: admin.php' . ($ok ? '?ok=1' : '') . '#pending');
         exit;
     }
 
@@ -261,6 +282,23 @@ if ($isAdmin) {
     } catch (Throwable $e) { error_log('admin all artworks: ' . $e->getMessage()); }
 }
 $photoChanges = $isAdmin ? owPhotoChangesPending() : [];
+/* "Waiting for approval": changes to public things + new artist accounts */
+$waitChanges  = $isAdmin ? owWaitingChanges() : [];
+$waitArtists  = $isAdmin ? owWaitingArtists() : [];
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists);
+$SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
+/* one value, as the admin should read it */
+$showVal = function (string $field, $v) use ($SALE_WORDS): string {
+    $ART_TYPES = $GLOBALS['ART_TYPES'] ?? [];
+    $v = (string) ($v ?? '');
+    if ($v === '') return '<span class="mini">' . owBi('(empty)', '(فارغ)') . '</span>';
+    if ($field === 'type') { $t = $ART_TYPES[$v] ?? null; return $t ? owBi($t['en'], $t['ar']) : e($v); }
+    if ($field === 'status') { $w = $SALE_WORDS[$v] ?? null; return $w ? owBi($w[0], $w[1]) : e($v); }
+    if ($field === 'price') return e(number_format((float) $v)) . ' ' . owBi('SAR', 'ر.س');
+    if ($field === 'profile_picture') { $src = owImgSrc($v); return $src !== '' ? '<a href="' . e($src) . '" target="_blank" rel="noopener"><img class="wc-pic" src="' . e($src) . '" alt="Photo · صورة"></a>' : e($v); }
+    if (in_array($field, ['instagram', 'twitter', 'website'], true)) return '<span dir="ltr">' . e($v) . '</span>';
+    return '<span dir="auto">' . nl2br(e(mb_strimwidth($v, 0, 600, '…'))) . '</span>';
+};
 $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'قيد المراجعة'], 'approved' => ['In the Gallery', 'في المعرض'],
               'rejected' => ['Not approved', 'لم تتم الموافقة'], 'sold' => ['Sold', 'مباع']];
 ?>
@@ -329,6 +367,24 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 .count{background:var(--color-dark);color:var(--color-on-dark);font-size:var(--fs-min);font-weight:700;padding:2px 9px;border-radius:var(--radius-pill);}
 .tab .count{background:rgba(var(--rgb-ink),0.07);color:var(--color-dark);}
 .tab.active .count{background:rgba(var(--rgb-surface),0.22);color:var(--color-on-dark);}
+.wc-h{font-size:18px;margin:var(--space-md) 0 var(--space-sm);display:flex;align-items:center;gap:8px;}
+.wc-list{display:flex;flex-direction:column;gap:var(--space-sm);}
+.wc-item{border:1px solid var(--color-border);border-radius:12px;padding:var(--space-sm);background:var(--color-surface);}
+.wc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-sm);margin-bottom:var(--space-xs);}
+.wc-top .pill{margin-inline-end:6px;}
+.wc-table td{vertical-align:top;word-break:break-word;}
+.wc-new{background:rgba(var(--rgb-accent),.06);}
+.wc-pic{width:72px;height:72px;object-fit:cover;border-radius:50%;border:1px solid var(--color-border);}
+.wc-lbl{display:none;font-weight:700;}
+@media(max-width:640px){
+  .wc-table thead{display:none;}
+  .wc-table tr{display:block;border-bottom:1px solid var(--color-border);padding:8px 0;}
+  .wc-table td{display:block;border:0;padding:4px 12px;}
+  .wc-table td.wc-f{font-weight:700;}
+  .wc-lbl{display:inline;}
+}
+.wc-note{margin:var(--space-xs) 0;padding:8px 12px;border-radius:var(--radius-input);background:var(--color-tint-pink);}
+.wc-item .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;margin-top:var(--space-xs);}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
 .art-list{display:flex;flex-direction:column;gap:var(--space-sm);}
@@ -386,8 +442,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 <header class="adm-bar">
   <a class="adm-brand" href="admin.php" aria-label="Oweili admin · إدارة أويلي"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><g style="fill:var(--color-primary)"><path d="M11 1A10 10 0 0 0 1 11h10z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z"/><path d="M1 13a10 10 0 0 0 10 10V13z"/><path d="M13 13v10a10 10 0 0 0 10-10z"/></g></svg><span class="adm-word">OWEILI</span> <span class="adm-brand-sub"><?= owBi('Admin', 'الإدارة') ?></span></a>
   <div class="adm-corner">
-    <button class="btn btn-ghost btn-sm lang-btn" id="lb" onclick="tglLang()">العربية</button>
-    <?php owThemeButton('btn btn-ghost btn-sm'); ?>
+    <?php owCornerControls('tglLang()'); ?>
     <?php if ($isAdmin): ?><span class="adm-sep" aria-hidden="true"></span><a class="btn btn-secondary btn-sm" href="admin.php?logout=1"><?= owBi('Log out', 'تسجيل الخروج') ?></a><?php endif; ?>
   </div>
 </header>
@@ -435,7 +490,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['artworks'] ?></span><span class="stat-lbl"><?= owBi('Artworks (' . (int) $overview['in_gallery'] . ' in the Gallery)', 'الأعمال (' . (int) $overview['in_gallery'] . ' في المعرض)') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['inquiries'] ?></span><span class="stat-lbl"><?= owBi('Interest requests (' . (int) $overview['new_inq'] . ' new)', 'طلبات الاهتمام (' . (int) $overview['new_inq'] . ' جديد)') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['week'] ?></span><span class="stat-lbl"><?= owBi('New sign-ups this week', 'تسجيلات هذا الأسبوع') ?></span></div>
-    <div class="stat-card"><span class="stat-num"><?= count($pendingArt) ?></span><span class="stat-lbl"><?= owBi('Waiting for review', 'بانتظار المراجعة') ?></span></div>
+    <a class="stat-card" href="#pending" onclick="showTab('pending',document.querySelector('.tab-btn[data-tab=pending]'));return false;" style="text-decoration:none"><span class="stat-num"><?= (int) $waitTotal ?></span><span class="stat-lbl"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></span></a>
     <?php if ($photoChanges): ?><a class="stat-card" href="#photos" onclick="showTab('photos',document.querySelector('.tab-btn[data-tab=photos]'));return false;" style="text-decoration:none"><span class="stat-num"><?= count($photoChanges) ?></span><span class="stat-lbl"><?= owBi('Photo changed, needs a look', 'صورة تغيّرت، تحتاج نظرة') ?></span></a><?php endif; ?>
     <div class="stat-card"><span class="stat-num"><span class="online-dot on" aria-hidden="true"></span> <?= (int) $onlineCount ?></span><span class="stat-lbl">Online Now</span></div>
   </div>
@@ -455,7 +510,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <div class="tabs">
     <button class="tab tab-btn active" data-tab="artists" onclick="showTab('artists',this)">Artists <span class="pill count"><?= count($artists) ?></span></button>
     <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)"><?= owBi('Buyers', 'المشترون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
-    <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)">Pending Artworks <span class="pill count"><?= count($pendingArt) ?></span></button>
+    <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?> <span class="pill count"><?= (int) $waitTotal ?></span></button>
     <button class="tab tab-btn" data-tab="photos" onclick="showTab('photos',this)"><?= owBi('Photo changes', 'تغيير الصور') ?> <span class="pill count"><?= count($photoChanges) ?></span></button>
     <button class="tab tab-btn" data-tab="artworks" onclick="showTab('artworks',this)"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
     <a class="tab" href="admin_articles.php"><?= owBi('Articles & events', 'المقالات والملتقيات') ?></a>
@@ -478,12 +533,12 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php if (!empty($a['profile_picture'])): ?>
               <a href="<?= e($a['profile_picture']) ?>" target="_blank"><span class="acard-photo" style="background-image:url('<?= e($a['profile_picture']) ?>');"></span></a>
             <?php else: ?>
-              <span class="acard-photo"><?= e(mb_strtoupper(mb_substr($a['full_name_en'] ?: 'A',0,1))) ?></span>
+              <span class="acard-photo"><?= e(mb_strtoupper(mb_substr(owRealName($a['full_name_en']) ?: 'A',0,1))) ?></span>
             <?php endif; ?>
             <div class="acard-id">
-              <div class="nm"><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e($a['full_name_en'] ?: '—') ?></div>
-              <?php if (!empty($a['artist_name'])): ?><div class="an"><?= e($a['artist_name']) ?></div><?php endif; ?>
-              <?php if (!empty($a['full_name_ar'])): ?><div class="an" dir="rtl"><?= e($a['full_name_ar']) ?></div><?php endif; ?>
+              <div class="nm"><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e(owRealName($a['full_name_en']) ?: (owRealName($a['artist_name']) ?: '—')) ?></div>
+              <?php if (owRealName($a['artist_name']) !== ''): ?><div class="an"><?= e($a['artist_name']) ?></div><?php endif; ?>
+              <?php if (owRealName($a['full_name_ar']) !== ''): ?><div class="an" dir="rtl"><?= e($a['full_name_ar']) ?></div><?php endif; ?>
             </div>
             <a class="btn btn-secondary btn-sm acard-view" href="admin.php?person=<?= (int) $a['id'] ?>"><?= owBi('View works & activity', 'الأعمال والنشاط') ?></a>
           </div>
@@ -557,8 +612,8 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
         <?php foreach ($collectors as $c): $on = isOnline($c['last_active'] ?? null); ?>
           <tr>
             <td>
-              <strong><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e($c['full_name_en'] ?: '—') ?></strong>
-              <?php if (!empty($c['full_name_ar'])): ?><div class="name-ar" dir="rtl"><?= e($c['full_name_ar']) ?></div><?php endif; ?>
+              <strong><span class="online-dot <?= $on ? 'on' : '' ?>" title="<?= $on ? 'Online' : 'Offline' ?>"></span><?= e(owRealName($c['full_name_en']) ?: '—') ?></strong>
+              <?php if (owRealName($c['full_name_ar']) !== ''): ?><div class="name-ar" dir="rtl"><?= e($c['full_name_ar']) ?></div><?php endif; ?>
             </td>
             <td><?= e($c['email']) ?></td>
             <td dir="ltr"><?= e($c['phone'] ?: '—') ?></td>
@@ -641,10 +696,82 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <div class="tab-panel" id="tab-pending">
   <div class="card" id="pending">
     <div class="sec-head">
-      <div class="sub" style="margin:0;">New uploads waiting for approval before they appear in the gallery.</div>
+      <div class="sub" style="margin:0;"><?= owBi('Everything here waits for you before visitors see it. Until you approve, visitors see the approved version, or nothing if it is new. The artist gets an email either way.', 'كل ما هنا ينتظر موافقتك قبل أن يراه الزوار. حتى توافق، يرى الزوار النسخة المعتمدة، أو لا شيء إن كان جديداً. يصل الفنانَ بريد في الحالتين.') ?></div>
     </div>
+    <?php if (!owApprovalsReady()): ?>
+      <div class="mini wc-note"><?= owBi('Changes to live artworks, profiles and articles are not held yet: the database update for approvals has not been run.', 'التعديلات على الأعمال المعروضة والملفات والمقالات لا تُحجز بعد: لم يُشغَّل تحديث قاعدة البيانات الخاص بالموافقات.') ?></div>
+    <?php endif; ?>
+    <?php if ($waitTotal === 0): ?>
+      <div class="empty"><?= owBi('Nothing waiting. All caught up.', 'لا شيء بانتظارك. كل شيء محدّث.') ?></div>
+    <?php endif; ?>
+
+    <?php if ($waitArtists): ?>
+    <h3 class="wc-h"><?= owBi('New artist accounts', 'حسابات فنانين جديدة') ?> <span class="pill count"><?= count($waitArtists) ?></span></h3>
+    <div class="wc-list">
+      <?php foreach ($waitArtists as $wa): $wn = owRealName($wa['artist_name']) ?: (owRealName($wa['full_name_en']) ?: '—'); ?>
+        <div class="wc-item">
+          <div class="wc-top">
+            <div><strong><?= e($wn) ?></strong><?php if (owRealName($wa['full_name_ar'])): ?> · <span dir="rtl"><?= e($wa['full_name_ar']) ?></span><?php endif; ?>
+              <div class="mini"><span dir="ltr"><?= e($wa['email']) ?></span><?= $wa['city'] ? ' · ' . e($wa['city']) : '' ?> · <?php [$ce, $ca] = owDateBi($wa['created_at']); ?><?= owBi($ce, $ca) ?> · <?= (int) $wa['is_verified'] ? owBi('Email confirmed', 'البريد مؤكد') : owBi('Email not confirmed', 'البريد غير مؤكد') ?></div></div>
+            <a class="btn btn-ghost btn-sm" href="admin.php?person=<?= (int) $wa['id'] ?>"><?= owBi('View', 'عرض') ?></a>
+          </div>
+          <div class="acts">
+            <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int) $wa['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="approve_account"><?= owBi('Approve', 'موافقة') ?></button></form>
+            <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Reject…', 'رفض…') ?></summary>
+                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int) $wa['id'] ?>">
+                  <div class="field"><label for="ra-<?= (int) $wa['id'] ?>"><?= owBi('Reason (the artist sees it)', 'السبب (يراه الفنان)') ?></label>
+                    <textarea id="ra-<?= (int) $wa['id'] ?>" name="reason" required maxlength="500" rows="3"></textarea></div>
+                  <button class="btn btn-danger btn-sm" name="action" value="reject_account"><?= owBi('Send to the artist', 'أرسل إلى الفنان') ?></button>
+                </form></details>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($waitChanges): ?>
+    <h3 class="wc-h"><?= owBi('Changes to live things', 'تعديلات على ما هو ظاهر') ?> <span class="pill count"><?= count($waitChanges) ?></span></h3>
+    <div class="wc-list">
+      <?php foreach ($waitChanges as $wc): $wt = $wc['target_type']; $cur = $wc['current']; $wid = (int) $wc['id'];
+        $kind = ['artwork' => ['Artwork changes', 'تعديلات على عمل'], 'profile' => ['Profile changes', 'تعديلات على ملف فنان'], 'article' => ['Publish an article', 'نشر مقال']][$wt] ?? [$wt, $wt]; ?>
+        <div class="wc-item">
+          <div class="wc-top">
+            <div><span class="pill off"><?= owBi($kind[0], $kind[1]) ?></span>
+              <strong><?php if ($wt === 'artwork'): ?><?= owBi((string) ($cur['title_en'] ?? '—'), (string) (($cur['title_ar'] ?? '') ?: ($cur['title_en'] ?? '—'))) ?><?php elseif ($wt === 'article'): ?><?= owBi((string) ($cur['title_en'] ?? '—'), (string) (($cur['title_ar'] ?? '') ?: ($cur['title_en'] ?? '—'))) ?><?php else: ?><?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?><?php endif; ?></strong>
+              <div class="mini"><?= owBi('By', 'من') ?> <?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?> · <?php [$ce, $ca] = owDateBi($wc['created_at'], true); ?><?= owBi($ce, $ca) ?></div></div>
+            <?php if ($wt === 'artwork'): ?><a class="btn btn-ghost btn-sm" href="artwork.php?id=<?= (int) $wc['target_id'] ?>" target="_blank" rel="noopener"><?= owBi('See it live', 'شاهده') ?></a>
+            <?php elseif ($wt === 'profile'): ?><a class="btn btn-ghost btn-sm" href="admin.php?person=<?= (int) $wc['target_id'] ?>"><?= owBi('View', 'عرض') ?></a>
+            <?php else: ?><a class="btn btn-ghost btn-sm" href="admin_articles.php?edit=<?= (int) $wc['target_id'] ?>"><?= owBi('Open', 'فتح') ?></a><?php endif; ?>
+          </div>
+          <?php if ($wt === 'article'): ?>
+            <p class="mini"><?= owBi('A team member asks to publish this article. It stays a draft until you approve.', 'يطلب أحد أعضاء الفريق نشر هذا المقال. يبقى مسودة حتى توافق.') ?></p>
+          <?php else: ?>
+          <div class="table-wrap"><table class="table wc-table">
+            <thead><tr><th><?= owBi('What', 'ماذا') ?></th><th><?= owBi('Now (visitors see)', 'الآن (يراه الزوار)') ?></th><th><?= owBi('Asked for', 'المطلوب') ?></th></tr></thead>
+            <tbody>
+            <?php foreach ($wc['data'] as $fk => $fv): if (!isset(OW_FIELD_WORDS[$fk])) continue; ?>
+              <tr><td class="wc-f"><?= owBi(OW_FIELD_WORDS[$fk][0], OW_FIELD_WORDS[$fk][1]) ?></td><td><span class="wc-lbl"><?= owBi('Now: ', 'الآن: ') ?></span><?= $showVal($fk, $cur[$fk] ?? '') ?></td><td class="wc-new"><span class="wc-lbl"><?= owBi('Asked for: ', 'المطلوب: ') ?></span><?= $showVal($fk, $fv) ?></td></tr>
+            <?php endforeach; ?>
+            </tbody></table></div>
+          <?php endif; ?>
+          <div class="acts">
+            <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="change_id" value="<?= $wid ?>"><button class="btn btn-accent btn-sm" name="action" value="approve_change"><?= owBi('Approve', 'موافقة') ?></button></form>
+            <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Reject…', 'رفض…') ?></summary>
+                <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="change_id" value="<?= $wid ?>">
+                  <div class="field"><label for="rc-<?= $wid ?>"><?= owBi('Reason (the artist sees it)', 'السبب (يراه الفنان)') ?></label>
+                    <textarea id="rc-<?= $wid ?>" name="reason" required maxlength="500" rows="3"></textarea></div>
+                  <button class="btn btn-danger btn-sm" name="action" value="reject_change"><?= owBi('Send to the artist', 'أرسل إلى الفنان') ?></button>
+                </form></details>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($pendingArt): ?>
+    <h3 class="wc-h"><?= owBi('New artworks', 'أعمال جديدة') ?> <span class="pill count"><?= count($pendingArt) ?></span></h3>
+    <?php endif; ?>
     <?php if (!$pendingArt): ?>
-      <div class="empty">Nothing pending — all caught up. 🎉</div>
     <?php else: ?>
       <div class="art-list">
       <?php foreach ($pendingArt as $art): ?>
