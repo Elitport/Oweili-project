@@ -129,7 +129,7 @@
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
-### Certificate of Authenticity (needs certificates_update.sql)
+### Certificate of Authenticity — live (switched on 1 Nov 2026)
 - Every approved artwork gets a digital Certificate of Authenticity with a permanent number like OW-2026-7KQ4-M9XD (no 0/O or 1/I, easy to type). It is made automatically the moment the admin (or a sub-admin) approves the artwork
 - Artist declaration: the last upload step ("Details & price") has a box the artist must tick: "I confirm this artwork is my original work, made by my own hand." / «أؤكد أن هذا العمل من إبداعي الأصلي، وقد صنعته بيدي.» The artwork cannot be sent without it (checked on the server). The date and time are saved (artworks.declared_at) and in the activity log (artwork_declare)
 - Artwork details, asked in the upload and in edit_artwork.php when missing: medium (free text, with suggestions), width × height in cm, year made, and type: "Original, one of a kind" or "Limited print" with its number (e.g. 3 of 50). Arabic digits are understood. Artworks without them (or without the declaration) are approved as before but get their certificate only once the details are added; the admin sees what is missing
@@ -139,6 +139,7 @@
 - Public verification page: oweili.com/verify (cert_verify.php, through .htaccess; verify.php stays the email-confirm page). Type a number or scan the QR code: "This certificate is real" with the photo and details, "Cancelled: this certificate is no longer valid" with the date, or "Certificate not found" for unknown or fake numbers. Small letters and spaces are fine. Buyer details are never shown. At most 30 checks a minute per visitor
 - Rights statement on the certificate, the artwork page and the verify page: "The buyer owns the physical artwork. The copyright stays with the artist." / «يملك المشتري العمل الفني نفسه، وتبقى حقوق النشر والملكية الفكرية للفنان.»
 - Where it shows: artwork page (artwork.php) shows the details, a "Certified authentic" badge with the number that opens the verify page, and the rights statement. My Studio has a "Certificates" tab (view and download, verify page) and each artwork says what it still needs for its certificate. Admin panel has a "Certificates" tab (admin.php#certs): every certificate with search, View, and "Cancel…" with a required reason; approved artworks still without a certificate and what they miss ("Make certificate" when ready). Each artwork waiting for review shows the declaration, the details and whether a certificate will be made
+- certificates_update.sql was run on the live database on 1 Nov 2026 by a temporary page (since removed), after a full backup: .backups/db-u405344949_contact-20261101-074330.sql.gz. It only added the new artwork columns and the certificates table; no other table changed
 - Never deleted: a certificate can only be cancelled (status, date, reason, who). Deleting an artwork cancels its certificate ("Artwork deleted by the artist"), so its number shows "Cancelled"
 - Ready for later (Sprint 4): certificates.owner_user_id / owner_name / owner_added_at and owSetCertificateOwner() put the buyer's name on the certificate after a sale. Not used yet. No commercial registration number, VAT or contracts yet
 - Activity log: cert_issue, cert_update, cert_cancel, cert_check (the verify page count, with the monthly one-way address code only)
@@ -445,7 +446,7 @@
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
 - database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Already in place on the live database (checked 30 Oct 2026)
-- certificates_update.sql — the Certificate of Authenticity: new artwork columns (medium, size, year, original or print, declaration time) and the certificates table. Only adds; safe to run more than once
+- certificates_update.sql — the Certificate of Authenticity: new artwork columns (medium, size, year, original or print, declaration time) and the certificates table. Only adds; safe to run more than once. Already in place on the live database (1 Nov 2026)
 - approvals_update.sql — the pending_changes table for "Nothing goes public without admin approval". Only adds one table; safe to run more than once. Already in place on the live database (31 Oct 2026)
 - dashboards_update.sql — the dashboards and Bashro parts (permanent IDs, dates, request status, favorites, activity log, empty shipping and payout tables). Safe to run more than once. Already in place on the live database (30 Oct 2026)
 
