@@ -39,3 +39,16 @@ if (!function_exists('owContactEmail')) {
         return filter_var($c, FILTER_VALIDATE_EMAIL) ? $c : OW_CONTACT_EMAIL;
     }
 }
+
+/* The company behind Oweili, shown in every email's footer. The commercial
+   registration number stays empty until it is added here (or in config.php:
+   define('OWEILI_COMPANY_CR', '…')); while it is empty, the line is left out. */
+if (!defined('OW_COMPANY_NAME')) define('OW_COMPANY_NAME', 'Elitport Limited');
+if (!defined('OW_COMPANY_CITY')) define('OW_COMPANY_CITY', 'Jeddah, Saudi Arabia');
+if (!defined('OW_COMPANY_CR'))   define('OW_COMPANY_CR', '');
+if (!function_exists('owCompanyCr')) {
+    function owCompanyCr(): string {
+        $c = defined('OWEILI_COMPANY_CR') ? trim((string) OWEILI_COMPANY_CR) : '';
+        return $c !== '' ? $c : trim((string) OW_COMPANY_CR);
+    }
+}

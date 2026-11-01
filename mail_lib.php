@@ -42,26 +42,96 @@ function owSmtpReady(): bool {
         && $pass !== '' && !preg_match('/^(your[_ -]?(smtp[_ -]?|email[_ -]?)?pass(word)?|change[_ -]?me|x{3,}|\*+)$/i', $pass);
 }
 
-/* Builds the full message (headers + body) once, for every way of sending. */
+/* ---------------------------------------------------------------------
+ *  Every email goes out the same, trusted way (owMailMessage):
+ *   - From "Oweili · أويلي" <no-reply@oweili.com>, Reply-To contact@oweili.com
+ *   - two versions in one email (multipart/alternative): plain text AND HTML,
+ *     made from whichever one the page wrote
+ *   - the same footer: Oweili, Elitport Limited, Jeddah, Saudi Arabia,
+ *     contact@oweili.com, oweili.com (+ the commercial registration number
+ *     once it is set in ow_paths.php / config.php)
+ *   - a correct Date and a unique Message-ID on oweili.com
+ * ------------------------------------------------------------------- */
+const OW_MAIL_FROM_NAME = 'Oweili · أويلي';
+
+/* The footer, as plain text and as HTML */
+function owMailFooter(): array {
+    $site = 'https://oweili.com';
+    $cr = owCompanyCr();
+    $text = "--\r\nOweili · أويلي, the home of real human art\r\n" . OW_COMPANY_NAME . ' · ' . OW_COMPANY_CITY . "\r\n"
+          . owContactEmail() . ' · ' . $site . "\r\n" . ($cr !== '' ? 'Commercial Registration No. ' . $cr . "\r\n" : '')
+          . "This is a service email from Oweili. · هذه رسالة خدمة من أويلي.";
+    $h = fn($s) => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+    $html = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:16px auto 0;font-family:Arial,sans-serif">'
+          . '<tr><td style="padding:16px 28px;border-top:1px solid #E2E8F0;font-size:12px;line-height:1.7;color:#4A5568;text-align:center">'
+          . '<strong style="color:#23314A">Oweili · أويلي</strong>, the home of real human art<br>'
+          . $h(OW_COMPANY_NAME) . ' · ' . $h(OW_COMPANY_CITY) . '<br>'
+          . '<a href="mailto:' . $h(owContactEmail()) . '" style="color:#23314A">' . $h(owContactEmail()) . '</a> · <a href="' . $site . '" style="color:#23314A">oweili.com</a>'
+          . ($cr !== '' ? '<br>Commercial Registration No. ' . $h($cr) : '')
+          . '<br>This is a service email from Oweili. · <span dir="rtl">هذه رسالة خدمة من أويلي.</span>'
+          . '</td></tr></table>';
+    return [$text, $html];
+}
+
+/* Plain text → simple HTML (links clickable, Arabic lines right to left) */
+function owMailTextToHtml(string $text): string {
+    $h = fn($s) => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+    $out = '';
+    foreach (preg_split("/(\r\n|\n){2,}/", trim($text)) as $para) {
+        $lines = array_map(function ($l) use ($h) {
+            $l = $h(rtrim($l));
+            return preg_replace('#(https?://[^\s<]+)#', '<a href="$1" style="color:#23314A;word-break:break-all">$1</a>', $l);
+        }, preg_split("/\r\n|\n/", $para));
+        $rtl = preg_match('/\p{Arabic}/u', $para) && !preg_match('/[A-Za-z]{4,}/', preg_replace('#https?://\S+#', '', $para));
+        $out .= '<p dir="' . ($rtl ? 'rtl' : 'ltr') . '" style="margin:0 0 14px;font-size:15px;line-height:1.7;color:#23314A;text-align:' . ($rtl ? 'right' : 'left') . '">' . implode('<br>', $lines) . '</p>';
+    }
+    return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>'
+         . '<body style="margin:0;padding:24px;background:#F4F6F8;font-family:Arial,sans-serif">'
+         . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #E2E8F0;border-radius:16px">'
+         . '<tr><td style="padding:24px 28px 10px"><div style="font-size:15px;font-weight:700;letter-spacing:.24em;color:#23314A">OWEILI · أويلي</div></td></tr>'
+         . '<tr><td style="padding:8px 28px 14px">' . $out . '</td></tr></table></body></html>';
+}
+
+/* HTML → plain text (keeps the words and the link addresses) */
+function owMailHtmlToText(string $html): string {
+    $t = preg_replace('#<(script|style|head)[^>]*>.*?</\1>#is', '', $html);
+    $t = preg_replace('#<a\s[^>]*href="([^"]+)"[^>]*>(.*?)</a>#is', '$2: $1', $t);
+    $t = preg_replace('#<(br|/p|/div|/tr|/h\d|/li)[^>]*>#i', "\n", $t);
+    $t = html_entity_decode(strip_tags($t), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $t = preg_replace("/[ \t]+/", ' ', $t);
+    $t = preg_replace("/\n\s*\n\s*\n+/", "\n\n", preg_replace("/ *\n */", "\n", $t));
+    return str_replace("\n", "\r\n", trim($t));
+}
+
+/* Builds the full message (headers + both versions) once, for every way of sending. */
 function owMailMessage(string $to, string $subject, string $body, bool $isHtml): array {
     $from     = owMailFrom();
-    $fromName = owMailSetting('SMTP_FROM_NAME', 'Oweili');
+    $fromName = defined('OWEILI_FROM_NAME') ? (string) OWEILI_FROM_NAME : OW_MAIL_FROM_NAME;
     $domain   = substr(strrchr($from, '@'), 1) ?: 'oweili.com';
     $enc = fn(string $s) => preg_match('/[^\x20-\x7E]/', $s) ? '=?UTF-8?B?' . base64_encode($s) . '?=' : $s;
+    [$footText, $footHtml] = owMailFooter();
+    if ($isHtml) { $html = $body; $text = owMailHtmlToText($body); }
+    else { $text = str_replace(["\r\n", "\n"], ["\n", "\r\n"], trim($body)); $html = owMailTextToHtml($body); }
+    $text .= "\r\n\r\n" . $footText;
+    $html = stripos($html, '</body>') !== false ? substr_replace($html, $footHtml, strripos($html, '</body>'), 0) : $html . $footHtml;
+    $boundary = 'ow_' . bin2hex(random_bytes(12));
+    $part = fn(string $type, string $content) => '--' . $boundary . "\r\n"
+        . 'Content-Type: ' . $type . '; charset=UTF-8' . "\r\n" . 'Content-Transfer-Encoding: quoted-printable' . "\r\n\r\n"
+        . quoted_printable_encode(str_replace(["\r\n", "\n"], ["\n", "\r\n"], $content)) . "\r\n";
     $headers = [
-        'Date: ' . date('r'),
+        'Date: ' . date(DATE_RFC2822),
         'From: ' . $enc($fromName) . ' <' . $from . '>',
-        'Reply-To: ' . owContactEmail(),          // replies reach Oweili's contact mailbox
-        'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . $domain . '>',
+        'Reply-To: Oweili <' . owContactEmail() . '>',          // replies reach Oweili's contact mailbox
+        'Message-ID: <' . bin2hex(random_bytes(16)) . '.' . time() . '@' . $domain . '>',
         'MIME-Version: 1.0',
-        'Content-Type: ' . ($isHtml ? 'text/html' : 'text/plain') . '; charset=UTF-8',
-        'Content-Transfer-Encoding: base64',
+        'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
     ];
     return [
         'from'    => $from,
         'subject' => $enc($subject),
         'headers' => $headers,
-        'body'    => rtrim(chunk_split(base64_encode($body), 76, "\r\n")),
+        'html'    => $html,
+        'body'    => $part('text/plain', $text) . $part('text/html', $html) . '--' . $boundary . "--",
     ];
 }
 
@@ -123,7 +193,7 @@ function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log
               && $cmd('DATA', [354]);
     if ($ok) {
         $data = implode("\r\n", array_merge(['To: ' . $to, 'Subject: ' . $msg['subject']], $msg['headers']))
-              . "\r\n\r\n" . $msg['body'] . "\r\n.";
+              . "\r\n\r\n" . preg_replace('/^\./m', '..', $msg['body']) . "\r\n.";   // a line that starts with "." is doubled (SMTP rule)
         $ok = $cmd($data, [250], 'Sending the message');
     }
     @fwrite($fp, "QUIT\r\n");
@@ -155,7 +225,7 @@ function owSendMail(string $to, string $subject, string $body, bool $isHtml = fa
     /* 2. The older sender in config.php, if there is one */
     if (function_exists('sendEmail')) {
         try {
-            if (sendEmail($to, $subject, $body, $isHtml)) { $log[] = 'Sent by sendEmail() in config.php'; return true; }
+            if (sendEmail($to, $subject, $msg['html'], true)) { $log[] = 'Sent by sendEmail() in config.php'; return true; }
             $log[] = 'sendEmail() in config.php also failed';
         } catch (Throwable $e) { $log[] = 'sendEmail() in config.php stopped with an error'; }
     }

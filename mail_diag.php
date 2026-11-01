@@ -63,6 +63,10 @@ if ($step === 'send') {
     $to = (string) ($_POST['to'] ?? '');
     if (!preg_match('/^[a-z0-9._\-]+@(srv\d+\.)?mail-tester\.com$/i', $to)) { echo "only mail-tester addresses\n"; exit; }
     require_once __DIR__ . '/alert_lib.php';
+    if (($_POST['kind'] ?? '') === 'verify') {
+        $log = []; $ok = owSendMail($to, 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody('https://oweili.com/verify.php?token=' . bin2hex(random_bytes(16)), true), false, $log);
+        echo 'Result: ', $ok ? 'SENT' : 'NOT SENT', "\n", implode("\n", $log), "\n"; exit;
+    }
     [$subject, $html] = owAlertEmail([['id' => 0, 'target_type' => 'artist', 'created_at' => date('Y-m-d H:i:s'),
         'details' => json_encode(['en' => 'New artist sign-up: Test Artist (Jeddah)', 'ar' => 'فنان جديد: فنان تجريبي (جدة)', 'link' => 'admin.php#pending'], JSON_UNESCAPED_UNICODE)]]);
     $log = [];
