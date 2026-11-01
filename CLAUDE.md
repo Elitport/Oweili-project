@@ -143,6 +143,7 @@
 - Compared with the EliteCV2 / ElitCV projects (elitcv.com, whose emails reach the inbox). elitcv.com sends with PHPMailer 7.0.2 (mailer.php): smtp.hostinger.com, SMTPAuth, SSL, port 465, UTF-8, From "ElitCV" <noreply@elitcv.com>, an HTML body, English-only subjects, no Reply-To. Oweili used its own hand-written SMTP code, the From name "Oweili · أويلي" and mixed English + Arabic subjects
 - Now Oweili sends the same way: PHPMailer 7.0.2 (the same files, copied to lib/PHPMailer/ with its licence) with the same settings, From "Oweili" <no-reply@oweili.com>. Kept on top (they only help): the plain-text version (AltBody), the company footer, Reply-To contact@oweili.com. The own SMTP code stays as a back-up if PHPMailer cannot send
 - Admin emails (to contact@oweili.com) now have plain English subjects like elitcv's: "Oweili - New artist sign-up: …", "Oweili - 3 updates waiting for you", "Oweili - New inquiry: …", "Oweili - Photo changed: …". Emails to artists and buyers keep their two-language subjects (brand rule)
+- Results (1 Nov 2026, temporary test page since removed): the admin alert sent with PHPMailer scored 10/10 on mail-tester (SPF, DKIM d=oweili.com and DMARC pass; not blocklisted; X-Mailer PHPMailer 7.0.2; plain text + HTML). The same email was sent to contact@oweili.com and accepted by Hostinger
 - The elitport.com project is not in the GitHub repositories this session can reach, so it was not compared
 - Files: mail_lib.php (owSendWithPhpMailer), lib/PHPMailer/ (new), alert_lib.php, admin_lib.php, inquiry_lib.php. Tables: none
 
