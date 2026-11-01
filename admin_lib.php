@@ -141,7 +141,7 @@ function owPhotoChanged(array $aw, string $oldPath, string $newPath, int $artist
           . 'يبقى العمل في المعرض. إن لم تكن الصورة الجديدة مقبولة، أخفِه من لوحة الإدارة وسيُبلَّغ الفنان بالسبب.</p>'
           . '<table cellpadding="6"><tr><td><b>Before · قبل</b><br>' . $img($oldPath) . '</td><td><b>Now · الآن</b><br>' . $img($newPath) . '</td></tr></table>'
           . '<p><a href="https://' . $host . '/admin.php#photos">Open the admin panel · افتح لوحة الإدارة</a></p></div>';
-    if (!owSendMail(OW_INQUIRY_TO_ADMIN, 'Photo changed: ' . $aw['title_en'] . ' · تغيّرت صورة عمل', $body, true)) {
+    if (!owSendMail(OW_INQUIRY_TO_ADMIN, 'Oweili - Photo changed: ' . $aw['title_en'], $body, true)) {
         error_log('photo change: email to the team failed for artwork ' . (int) $aw['id']);   // still listed in admin
     }
 }

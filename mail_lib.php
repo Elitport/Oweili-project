@@ -52,7 +52,7 @@ function owSmtpReady(): bool {
  *     once it is set in ow_paths.php / config.php)
  *   - a correct Date and a unique Message-ID on oweili.com
  * ------------------------------------------------------------------- */
-const OW_MAIL_FROM_NAME = 'Oweili · أويلي';
+const OW_MAIL_FROM_NAME = 'Oweili';   // plain letters, like "ElitCV" on elitcv.com (the site whose emails reach the inbox)
 
 /* The footer, as plain text and as HTML */
 function owMailFooter(): array {
@@ -131,6 +131,7 @@ function owMailMessage(string $to, string $subject, string $body, bool $isHtml):
         'subject' => $enc($subject),
         'headers' => $headers,
         'html'    => $html,
+        'text'    => $text,
         'body'    => $part('text/plain', $text) . $part('text/html', $html) . '--' . $boundary . "--",
     ];
 }
@@ -211,7 +212,10 @@ function owSendMail(string $to, string $subject, string $body, bool $isHtml = fa
     }
     $msg = owMailMessage($to, $subject, $body, $isHtml);
 
-    /* 1. Our own SMTP sender, with the mailbox from config.php */
+    /* 0. PHPMailer, exactly like elitcv.com (smtp.hostinger.com, SSL, port 465) */
+    if (owSmtpReady() && owSendWithPhpMailer($to, $subject, $msg, $log)) return true;
+
+    /* 1. Our own SMTP sender, with the mailbox from config.php (if PHPMailer could not send) */
     if (owSmtpReady()) {
         $host  = owMailSetting('SMTP_HOST');
         $first = (int) owMailSetting('SMTP_PORT', '465') ?: 465;
@@ -239,4 +243,48 @@ function owSendMail(string $to, string $subject, string $body, bool $isHtml = fa
     $log[] = 'PHP mail() failed too';
     error_log('Oweili mail to ' . $to . ' failed: ' . implode(' | ', $log));
     return false;
+}
+
+
+/* ---------------------------------------------------------------------
+ *  PHPMailer 7.0.2 (lib/PHPMailer, the same library and version as
+ *  elitcv.com, copied from the EliteCV2 project; MIT-style licence in
+ *  lib/PHPMailer/LICENSE). Same settings as elitcv.com's mailer.php:
+ *  smtp.hostinger.com, SMTPAuth, SSL on port 465, UTF-8, HTML body.
+ *  Oweili adds a plain-text version (AltBody), the company footer and
+ *  the Reply-To contact@oweili.com.
+ * ------------------------------------------------------------------- */
+function owSendWithPhpMailer(string $to, string $subject, array $msg, array &$log): bool {
+    $dir = __DIR__ . '/lib/PHPMailer/';
+    if (!is_file($dir . 'PHPMailer.php')) return false;
+    require_once $dir . 'Exception.php';
+    require_once $dir . 'PHPMailer.php';
+    require_once $dir . 'SMTP.php';
+    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = owMailSetting('SMTP_HOST', 'smtp.hostinger.com');
+        $mail->SMTPAuth   = true;
+        $mail->Username   = owMailSetting('SMTP_USER');
+        $mail->Password   = owMailSetting('SMTP_PASS');
+        $port             = (int) owMailSetting('SMTP_PORT', '465') ?: 465;
+        $mail->Port       = $port;
+        $mail->SMTPSecure = $port === 465 ? 'ssl' : 'tls';
+        $mail->CharSet    = 'UTF-8';
+        $mail->Timeout    = 10;
+        $mail->setFrom(owMailFrom(), defined('OWEILI_FROM_NAME') ? (string) OWEILI_FROM_NAME : OW_MAIL_FROM_NAME);
+        $mail->addReplyTo(owContactEmail(), 'Oweili');
+        $mail->addAddress($to);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $msg['html'];
+        $mail->AltBody = $msg['text'];
+        $mail->send();
+        $log[] = 'Sent with PHPMailer through ' . $mail->Host . ':' . $port;
+        return true;
+    } catch (\Throwable $e) {
+        $log[] = 'PHPMailer could not send: ' . $mail->ErrorInfo;
+        error_log('Oweili PHPMailer to ' . $to . ' failed: ' . $mail->ErrorInfo);
+        return false;
+    }
 }

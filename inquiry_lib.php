@@ -88,7 +88,7 @@ function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
           . 'Phone / الهاتف: ' . $v['phone'] . "\r\n"
           . 'Email / البريد: ' . $v['email'] . "\r\n\r\n"
           . "All inquiries: https://$host/admin.php#inquiries\r\n";
-    if (!owSendMail(OW_INQUIRY_TO, 'New inquiry: ' . $aw['title_en'], $body)) {
+    if (!owSendMail(OW_INQUIRY_TO, 'Oweili - New inquiry: ' . $aw['title_en'], $body)) {
         error_log('inquiry: email to the team failed for artwork ' . (int) $aw['id']);   // still saved; shows in admin
     }
     return true;

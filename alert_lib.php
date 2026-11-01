@@ -108,10 +108,10 @@ function owAlertEmail(array $items): array {
     $n = count($items);
     if ($n === 1) {
         $d = json_decode((string) $items[0]['details'], true) ?: [];
-        $subject = 'Oweili · ' . (string) ($d['en'] ?? 'New update');
+        $subject = 'Oweili - ' . (string) ($d['en'] ?? 'New update');
         $intro = ['There is something new for you on Oweili.', 'لديك جديد في أويلي.'];
     } else {
-        $subject = 'Oweili · ' . $n . ' updates waiting for you';
+        $subject = 'Oweili - ' . $n . ' updates waiting for you';
         $intro = [$n . ' things happened close together, so here they are in one email.', 'حدثت ' . $n . ' أمور متقاربة، فجمعناها لك في رسالة واحدة.'];
     }
     $html = '<!DOCTYPE html><html><body style="margin:0;padding:24px;background:#F4F6F8;font-family:\'DM Sans\',\'Tajawal\',Arial,sans-serif">'
