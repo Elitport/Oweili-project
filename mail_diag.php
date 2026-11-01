@@ -128,4 +128,5 @@ if ($step === 'rdap') {
     foreach ((array) ($j['events'] ?? []) as $e) echo $e['eventAction'] ?? '', ': ', $e['eventDate'] ?? '', "\n";
     exit;
 }
+if ($step === 'ver') { echo function_exists('owMailFooter') ? "NEW MAIL CODE LIVE\n" : "old\n"; exit; }
 echo "Unknown step\n";
