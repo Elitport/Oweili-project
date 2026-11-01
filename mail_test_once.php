@@ -9,6 +9,11 @@ $keyOk = is_string($_POST['key'] ?? null) && hash_equals(OW_MT_KEY_HASH, hash('s
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST' || !$keyOk) { http_response_code(404); exit; }
 header('Content-Type: text/plain; charset=UTF-8'); header('Cache-Control: no-store');
 require_once __DIR__ . '/alert_lib.php';
+if (isset($_POST['report'])) {   // read the mail-tester report for this test
+    $id = preg_replace('/[^a-z0-9\-]/i', '', (string) $_POST['report']);
+    $c = curl_init('https://www.mail-tester.com/' . $id); curl_setopt_array($c, [CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_TIMEOUT => 40, CURLOPT_USERAGENT => 'Mozilla/5.0']);
+    echo (string) curl_exec($c); exit;
+}
 $to = (string) ($_POST['to'] ?? '');
 if ($to !== owContactEmail() && !preg_match('/^test-[a-z0-9]+@srv1\.mail-tester\.com$/i', $to)) { echo "not allowed\n"; exit; }
 [$subject, $html] = owAlertEmail([['id' => 0, 'target_type' => 'artist', 'created_at' => date('Y-m-d H:i:s'),
