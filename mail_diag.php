@@ -13,6 +13,7 @@ const OW_MD_UNTIL    = 1793543877;
 const OW_MD_KEY_HASH = 'c794eb04bcc82c10eb2c39cd594138562b0572c13e01d1e6befccac69dea2935';
 if (time() > OW_MD_UNTIL) { http_response_code(404); exit; }
 require_once 'config.php';
+require_once __DIR__ . '/mail_lib.php';
 $keyOk = is_string($_POST['key'] ?? null) && hash_equals(OW_MD_KEY_HASH, hash('sha256', (string) $_POST['key']));
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST' || !$keyOk) { http_response_code(404); exit; }
 header('Content-Type: text/plain; charset=UTF-8');
@@ -72,6 +73,49 @@ if ($step === 'send') {
 if ($step === 'mt') {
     $id = preg_replace('/[^a-z0-9._\-]/i', '', (string) ($_POST['id'] ?? ''));
     echo $get('https://www.mail-tester.com/' . $id . '&format=json');
+    exit;
+}
+if ($step === 'send_self') {   // one site email to the sending mailbox itself (no-reply@oweili.com), to read how Hostinger files it
+    require_once __DIR__ . '/alert_lib.php';
+    $kind = (string) ($_POST['kind'] ?? 'alert');
+    $to = owMailSetting('SMTP_USER');
+    if ($kind === 'verify') { $ok = owSendMail($to, 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody('https://oweili.com/verify.php?token=test')); }
+    else {
+        [$subject, $html] = owAlertEmail([['id' => 0, 'target_type' => 'artist', 'created_at' => date('Y-m-d H:i:s'),
+            'details' => json_encode(['en' => 'New artist sign-up: Test Artist (Jeddah)', 'ar' => 'فنان جديد: فنان تجريبي (جدة)', 'link' => 'admin.php#pending'], JSON_UNESCAPED_UNICODE)]]);
+        $ok = owSendMail($to, $subject . ' [' . date('H:i:s') . ']', $html, true);
+    }
+    echo $ok ? "SENT to the sending mailbox\n" : "NOT SENT\n";
+    exit;
+}
+if ($step === 'imap') {   // read-only look at the sending mailbox: folders, and the filter headers of the newest messages
+    $user = owMailSetting('SMTP_USER'); $pass = owMailSetting('SMTP_PASS');
+    $fp = @stream_socket_client('ssl://imap.hostinger.com:993', $en, $es, 20);
+    if (!$fp) { echo "cannot connect: $es\n"; exit; }
+    stream_set_timeout($fp, 20);
+    $n = 0;
+    $cmd = function (string $c) use ($fp, &$n): string {
+        $tag = 'a' . (++$n); fwrite($fp, $tag . ' ' . $c . "\r\n"); $out = '';
+        while (($l = fgets($fp)) !== false) { $out .= $l; if (strpos($l, $tag . ' ') === 0) break; }
+        return $out;
+    };
+    fgets($fp);
+    $q = fn($s) => '"' . addcslashes($s, "\"\\") . '"';
+    $r = $cmd('LOGIN ' . $q($user) . ' ' . $q($pass));
+    if (strpos($r, ' OK') === false) { echo "login failed\n"; exit; }
+    echo "LIST:\n", preg_replace('/^a\d+ .*$/m', '', $cmd('LIST "" "*"'));
+    $folders = array_filter(array_map('trim', explode(',', (string) ($_POST['folders'] ?? 'INBOX,INBOX.Junk,INBOX.Spam,Junk,Spam'))));
+    foreach ($folders as $f) {
+        $sel = $cmd('EXAMINE ' . $q($f));
+        if (strpos($sel, ' OK') === false) { echo "== $f: (no such folder)\n"; continue; }
+        preg_match('/\* (\d+) EXISTS/', $sel, $m); $total = (int) ($m[1] ?? 0);
+        echo "== $f: $total message(s)\n";
+        if ($total < 1) continue;
+        $from = max(1, $total - (int) ($_POST['last'] ?? 4) + 1);
+        $h = $cmd("FETCH $from:$total (BODY.PEEK[HEADER.FIELDS (DATE FROM TO SUBJECT X-SPAM-STATUS X-SPAM-SCORE X-SPAM-FLAG X-SPAM-LEVEL X-SPAM-REPORT X-SPAMD-RESULT X-RSPAMD-SCORE X-RSPAMD-ACTION X-SPAM-CHECKER-VERSION AUTHENTICATION-RESULTS X-MAILCHANNELS-SENDERID X-FILTER X-HOSTINGER-SPAM X-SPAM-SCANNER X-VIRUS-SCANNED)])");
+        echo preg_replace('/^a\d+ .*$/m', '', $h), "\n";
+    }
+    $cmd('LOGOUT'); fclose($fp);
     exit;
 }
 echo "Unknown step\n";
