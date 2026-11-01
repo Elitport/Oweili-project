@@ -23,3 +23,19 @@ if (!function_exists('owBase')) {
         return htmlspecialchars(owBase() . $file . '?v=' . (int) @filemtime(__DIR__ . '/' . $file), ENT_QUOTES, 'UTF-8');
     }
 }
+
+/* ---------------------------------------------------------------------
+ *  Oweili's admin and contact email — ONE setting for the whole site.
+ *  Every admin email goes here, every email to artists and buyers uses it
+ *  as the reply address, and visitors see it (footer, Support, Privacy,
+ *  Terms). To change it: edit OW_CONTACT_EMAIL below, or (without a code
+ *  change) add define('OWEILI_CONTACT_EMAIL', 'new@address') to config.php.
+ *  Emails are still sent from the mailbox in config.php (no-reply@oweili.com).
+ * ------------------------------------------------------------------- */
+if (!defined('OW_CONTACT_EMAIL')) define('OW_CONTACT_EMAIL', 'contact@oweili.com');
+if (!function_exists('owContactEmail')) {
+    function owContactEmail(): string {
+        $c = defined('OWEILI_CONTACT_EMAIL') ? trim((string) OWEILI_CONTACT_EMAIL) : '';
+        return filter_var($c, FILTER_VALIDATE_EMAIL) ? $c : OW_CONTACT_EMAIL;
+    }
+}

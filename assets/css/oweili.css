@@ -428,7 +428,9 @@ a.stage:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 
 .ow-footer-social a { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border-radius: var(--radius-btn); border: 1px solid var(--color-border-strong); color: var(--color-dark); transition: background var(--ease), color var(--ease); }
 .ow-footer-social a:hover { background: var(--color-dark); color:var(--color-on-dark); }
 .ow-footer-social svg { width: 18px; height: 18px; fill: currentColor; }
-.ow-footer-copy { max-width: 1200px; margin: var(--space-md) auto 0; padding-top: var(--space-md); border-top: 1px solid var(--color-border); font-size: var(--fs-caption); color: var(--color-body); }
+.ow-footer-copy { max-width: 1200px; margin: var(--space-md) auto 0; padding-top: var(--space-md); border-top: 1px solid var(--color-border); font-size: var(--fs-caption); color: var(--color-body); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs) var(--space-sm); }
+.ow-footer-mail { color: var(--color-dark); font-weight: 600; text-decoration: none; }
+.ow-footer-mail:hover, .ow-footer-mail:focus-visible { text-decoration: underline; }
 
 /* ── 12a. BACKGROUND VIDEO WITH WHITE VEIL (bg.mp4) ── */
 .bg-wrap { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }

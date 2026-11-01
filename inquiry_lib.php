@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/ow_paths.php';   // owContactEmail()
 /* =====================================================================
  *  inquiry_lib.php — "I'm Interested" requests from the Gallery.
  *  A visitor leaves name, phone and email on an artwork; it is saved in
@@ -7,7 +8,7 @@
  *  Used by inquire.php (saving) and admin.php (Inquiries tab).
  * ===================================================================== */
 
-const OW_INQUIRY_TO = 'contact@elitport.com';   // who receives every new inquiry
+define('OW_INQUIRY_TO', owContactEmail());   // who receives every new inquiry (one setting: ow_paths.php)
 
 /* Creates the table once (safe to call every time). */
 function owEnsureInquiryTable(): void {

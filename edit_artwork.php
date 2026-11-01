@@ -152,6 +152,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                                   ':en' => $dv['edition_number'], ':es' => $dv['edition_size'], ':id' => $artId, ':uid' => $viewerId]);
             }
             owLog('artwork_edit', 'artwork', $artId, '', ['type' => 'artist', 'id' => $viewerId]);
+            if (!empty($aw['rejected_at'])) {   // a work that was not approved is back for review: tell the admin (grouped)
+                require_once __DIR__ . '/alert_lib.php';
+                owAdminAlert('artwork', 'Artwork sent back for review after changes: ' . $tEn, 'عمل أُعيد للمراجعة بعد التعديل: ' . ($tAr ?: $tEn), 'admin.php#pending');
+            }
             if ($photoChanged && $isLive) owPhotoChanged($aw, (string) $aw['image_url'], $imageUrl, $viewerId);
             header('Location: artist_dashboard.php?id=' . $viewerId);
             exit;

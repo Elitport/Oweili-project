@@ -12,7 +12,7 @@
  * ===================================================================== */
 require_once __DIR__ . '/artwork_lib.php';
 
-const OW_LEGAL_CONTACT = 'contact@elitport.com';
+define('OW_LEGAL_CONTACT', owContactEmail());   // one setting: ow_paths.php
 
 function owLegalBlock(array $paras): string {
     $out = ''; $inList = false;

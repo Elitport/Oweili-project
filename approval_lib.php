@@ -67,6 +67,17 @@ function owSubmitChange(int $userId, string $type, int $targetId, array $data): 
     getDB()->prepare('INSERT INTO pending_changes (user_id, target_type, target_id, data) VALUES (:u, :t, :i, :d)')
            ->execute([':u' => $userId, ':t' => $type, ':i' => $targetId, ':d' => json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)]);
     owLog('change_submit', $type, $targetId, implode(',', array_keys($data)), ['type' => owActorType(currentUser()['role'] ?? 'artist'), 'id' => $userId]);
+    try {   // tell the admin (grouped, see alert_lib.php)
+        require_once __DIR__ . '/alert_lib.php';
+        $q = getDB()->prepare('SELECT ' . owArtistNameSql('u') . ' FROM users u WHERE u.id = :id'); $q->execute([':id' => $userId]); $nm = $q->fetch() ?: ['artist_en' => '', 'artist_ar' => ''];
+        $what = ['artwork' => ['Artwork changes', 'تعديلات على عمل'], 'profile' => ['Profile changes', 'تعديلات على ملف'], 'article' => ['An article to publish', 'مقال للنشر']][$type] ?? ['Changes', 'تعديلات'];
+        $label = '';
+        if ($type === 'artwork' || $type === 'article') {
+            $t = getDB()->prepare('SELECT title_en FROM ' . ($type === 'artwork' ? 'artworks' : 'articles') . ' WHERE id = :id'); $t->execute([':id' => $targetId]); $label = (string) $t->fetchColumn();
+        }
+        owAdminAlert('change', $what[0] . ' waiting for approval' . ($label !== '' ? ': ' . $label : '') . ' (' . $nm['artist_en'] . ')',
+                     $what[1] . ' بانتظار الموافقة' . ($label !== '' ? ': ' . $label : '') . ' (' . $nm['artist_ar'] . ')', 'admin.php#pending');
+    } catch (Throwable $e) { error_log('change alert: ' . $e->getMessage()); }
     return true;
 }
 

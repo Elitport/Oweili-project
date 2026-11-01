@@ -49,10 +49,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 'INSERT INTO users (email, password, full_name_en, full_name_ar, phone, role, is_verified, is_approved, verification_token, verification_expires' . ($withLang ? ', preferred_lang' : '') . ')
                  VALUES (:email,:pass,:name,:nar,:phone,"collector",0,0,:tok,:exp' . ($withLang ? ',:lang' : '') . ')'
             )->execute([
-                ':email' => $old['email'], ':pass' => hashPassword($pass), ':name' => $fullName, ':nar' => ($old['nameAr'] !== '' ? $old['nameAr'] : null),
+                ':email' => $old['email'], ':pass' => hashPassword($pass), ':name' => $fullName, ':nar' => $old['nameAr'],
                 ':phone' => $old['phone'], ':tok' => $token, ':exp' => $expires,
             ] + ($withLang ? [':lang' => $lang] : []));
-            owSignupCounted((int) getDB()->lastInsertId(), 'collector');
+            $newBuyer = (int) getDB()->lastInsertId();
+            owSignupCounted($newBuyer, 'collector');
+            require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
+            owAdminAlert('buyer', 'New buyer sign-up: ' . $fullName, 'مشترٍ جديد: ' . $fullName, 'admin.php?person=' . $newBuyer);
 
             $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
             if (!owSendMail($old['email'], 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody($verifyUrl))) {

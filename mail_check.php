@@ -34,6 +34,7 @@ $checks = [
     ['Mailbox (SMTP_USER)', 'صندوق البريد', $val(owMailSetting('SMTP_USER'))],
     ['Mailbox password (SMTP_PASS)', 'كلمة مرور الصندوق', $mark(owSmtpReady(), $passSet ? (owSmtpReady() ? 'Set' : 'Looks like the sample value') : 'Missing', $passSet ? (owSmtpReady() ? 'موجودة' : 'تبدو قيمة تجريبية') : 'غير موجودة')],
     ['Emails are sent from', 'تُرسل الرسائل من', '<code>' . e(owMailFrom()) . '</code>'],
+    ['Replies and admin alerts go to', 'الردود وتنبيهات الإدارة تصل إلى', '<code>' . e(owContactEmail()) . '</code>'],
     ['Old sender in config.php', 'المرسل القديم في config.php', $mark(function_exists('sendEmail'), function_exists('sendEmail') ? 'Present (used as a backup)' : 'Not there', function_exists('sendEmail') ? 'موجود (احتياطي)' : 'غير موجود')],
     ['Secure connections (OpenSSL)', 'الاتصال الآمن (OpenSSL)', $mark(extension_loaded('openssl'), extension_loaded('openssl') ? 'Available' : 'Missing', extension_loaded('openssl') ? 'متوفر' : 'غير متوفر')],
     ['Password reset columns', 'أعمدة إعادة تعيين كلمة المرور', $mark($resetCols, $resetCols ? 'Ready' : 'Missing: run reset_setup.sql', $resetCols ? 'جاهزة' : 'غير موجودة: شغّل reset_setup.sql')],

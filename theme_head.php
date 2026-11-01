@@ -11,6 +11,20 @@
  *  - also the page transition script (fade out on link click; fade in is CSS)
  * ===================================================================== */
 require_once __DIR__ . '/ow_paths.php';   // owAsset(): links to our CSS and JS files
+/* Admin email alerts held back so they arrive grouped (alert_lib.php): when a waiting
+   group is due, it is sent after this page has been delivered (costs one file check). */
+if (!function_exists('owAlertsAfterPage')) {
+    function owAlertsAfterPage(): void {
+        if (function_exists('litespeed_finish_request')) litespeed_finish_request();
+        elseif (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+        ignore_user_abort(true);
+        if (!function_exists('getDB')) return;
+        require_once __DIR__ . '/alert_lib.php';
+        owAlertsTick();
+    }
+    $owDue = __DIR__ . '/.logs/admin_alerts_due';
+    if (is_file($owDue) && (int) @file_get_contents($owDue) <= time()) register_shutdown_function('owAlertsAfterPage');
+}
 if (!function_exists('owThemeButton')) {
     /* The light / dark button. One shared look on every page (.ow-ctl in oweili.css);
        the old $class argument is ignored on purpose, so pages can never drift apart. */

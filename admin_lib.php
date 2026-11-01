@@ -145,7 +145,7 @@ function owPhotoChanged(array $aw, string $oldPath, string $newPath, int $artist
         error_log('photo change: email to the team failed for artwork ' . (int) $aw['id']);   // still listed in admin
     }
 }
-const OW_INQUIRY_TO_ADMIN = 'contact@elitport.com';
+define('OW_INQUIRY_TO_ADMIN', owContactEmail());   // Oweili's admin address (one setting: ow_paths.php)
 
 /* Live photo changes still waiting for a look (newest change per artwork) */
 function owPhotoChangesPending(): array {

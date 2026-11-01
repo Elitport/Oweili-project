@@ -307,7 +307,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
 
   <?php $dashMsg = $isOwner ? (string) ($_SESSION['dash_msg'] ?? '') : ''; unset($_SESSION['dash_msg']);
   $DASH_MSG = ['deleted' => ['ok-box', 'The artwork is deleted. It is gone from your profile and the Gallery.', 'تم حذف العمل. لم يعد في ملفك ولا في المعرض.'],
-               'not_deleted' => ['err-box', 'We could not delete that artwork. Please try again, or write to contact@elitport.com.', 'لم نتمكن من حذف هذا العمل. حاول مرة أخرى، أو راسلنا على contact@elitport.com.'],
+               'not_deleted' => ['err-box', 'We could not delete that artwork. Please try again, or write to ' . owContactEmail() . '.', 'لم نتمكن من حذف هذا العمل. حاول مرة أخرى، أو راسلنا على ' . owContactEmail() . '.'],
                'expired' => ['err-box', 'This page was open for a long time, so nothing was changed. Please press Delete again.', 'كانت هذه الصفحة مفتوحة لوقت طويل، لذلك لم يتغير شيء. اضغط «حذف» مرة أخرى.']];
   if (isset($DASH_MSG[$dashMsg])): ?>
     <div class="<?= $DASH_MSG[$dashMsg][0] ?>" role="status" style="margin-top:var(--space-sm);"><?= owBi($DASH_MSG[$dashMsg][1], $DASH_MSG[$dashMsg][2]) ?></div>

@@ -476,7 +476,9 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 <div class="wrap">
 <?php if (!$isAdmin): ?>
 
-  <form class="card login-card" method="post" action="admin.php">
+  <?php /* after signing in, open the page an alert email pointed to (admin.php?person=N or admin.php#pending) */ ?>
+  <form class="card login-card" method="post" action="admin.php<?= isset($_GET['person']) ? '?person=' . (int) $_GET['person'] : '' ?>"
+        onsubmit="if (/^#[a-z]+$/.test(location.hash)) this.action += location.hash;">
     <h1>Admin Login</h1>
     <?php if ($loginError): ?><div class="err"><?= e($loginError) ?></div><?php endif; ?>
     <?= csrfField() ?>

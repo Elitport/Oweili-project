@@ -16,6 +16,8 @@
  *  No secrets live in this file: they stay in config.php on the server.
  * ===================================================================== */
 
+require_once __DIR__ . '/ow_paths.php';   // owContactEmail(): the one admin / contact address
+
 if (!function_exists('owMailSetting')) {
     function owMailSetting(string $name, string $default = ''): string {
         return defined($name) ? trim((string) constant($name)) : $default;
@@ -49,7 +51,7 @@ function owMailMessage(string $to, string $subject, string $body, bool $isHtml):
     $headers = [
         'Date: ' . date('r'),
         'From: ' . $enc($fromName) . ' <' . $from . '>',
-        'Reply-To: ' . $from,
+        'Reply-To: ' . owContactEmail(),          // replies reach Oweili's contact mailbox
         'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . $domain . '>',
         'MIME-Version: 1.0',
         'Content-Type: ' . ($isHtml ? 'text/html' : 'text/plain') . '; charset=UTF-8',

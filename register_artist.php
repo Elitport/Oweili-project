@@ -132,12 +132,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     'INSERT INTO users (email,password,full_name_en,full_name_ar,artist_name,phone,city,bio_en,bio_ar,profile_picture,art_video,role,is_verified,is_approved,verification_token,verification_expires)
                      VALUES (:email,:pass,:name,:nar,:aname,:phone,:city,:ben,:bar,:pic,:vid,"artist",0,0,:tok,:exp)'
                 )->execute([
-                    ':email'=>$old['email'], ':pass'=>hashPassword($pass), ':name'=>$fullName, ':nar'=>($old['nameAr'] !== '' ? $old['nameAr'] : null), ':aname'=>$old['artist'],
+                    ':email'=>$old['email'], ':pass'=>hashPassword($pass), ':name'=>$fullName, ':nar'=>$old['nameAr'], ':aname'=>$old['artist'],
                     ':phone'=>$old['phone'], ':city'=>$old['city'], ':ben'=>$old['bioEn'], ':bar'=>$old['bioAr'],
                     ':pic'=>$photoRel, ':vid'=>$videoRel, ':tok'=>$token, ':exp'=>$expires,
                 ]);
                 $newId = (int) getDB()->lastInsertId();
                 owSignupCounted($newId, 'artist');
+                require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
+                owAdminAlert('artist', 'New artist sign-up: ' . ($old['artist'] ?: $fullName) . ($old['city'] !== '' ? ' (' . $old['city'] . ')' : ''),
+                             'فنان جديد: ' . ($old['artist'] ?: $fullName) . ($old['city'] !== '' ? ' (' . $old['city'] . ')' : ''), 'admin.php#pending');
                 // Save portfolio images
                 $podir = __DIR__ . '/uploads/portfolio/'; if (!is_dir($podir)) @mkdir($podir, 0755, true);
                 $sort = 0;

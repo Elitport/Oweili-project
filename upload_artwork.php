@@ -167,6 +167,10 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 owLog('artwork_declare', 'artwork', (int) $draft['id'], OW_CERT_DECLARATION[0], ['type' => 'artist', 'id' => $uid]);
             }
             owLog('artwork_submit', 'artwork', (int) $draft['id'], '', ['type' => 'artist', 'id' => $uid]);
+            require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
+            $who = owRealName($me['artist_name'] ?? '') ?: (owRealName($me['full_name_en'] ?? '') ?: 'an artist');
+            owAdminAlert('artwork', 'New artwork waiting for approval: ' . $draft['title_en'] . ' by ' . $who,
+                         'عمل جديد بانتظار الموافقة: ' . ($draft['title_ar'] ?: $draft['title_en']) . ' للفنان ' . $who, 'admin.php#pending');
             header('Location: upload_artwork.php?done=1');
             exit;
         }

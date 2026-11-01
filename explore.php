@@ -247,7 +247,7 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
       <p class="ex-end-line"><?= owBi('Fifty styles. Fifty human stories. Every one began with a hand.', 'خمسون أسلوباً. خمسون قصة إنسانية. كلها بدأت بيد.') ?></p>
       <div class="btns">
         <a class="btn btn-dark" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
-        <a class="btn btn-secondary" href="mailto:contact@oweili.com?subject=Art%20Style%20Suggestion"><?= owBi('Suggest a Style', 'اقترح أسلوباً') ?></a>
+        <a class="btn btn-secondary" href="mailto:<?= e(owContactEmail()) ?>?subject=Art%20Style%20Suggestion"><?= owBi('Suggest a Style', 'اقترح أسلوباً') ?></a>
       </div>
     </section>
   </div>

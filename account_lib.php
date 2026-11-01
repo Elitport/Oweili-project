@@ -82,8 +82,8 @@ function owChangeEmail(array $user, string $newEmail, string $current): string {
     owLog('email_change', 'user', $uid, '', ['type' => owActorType($user['role'] ?? ''), 'id' => $uid]);
     owSendMail($newEmail, 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody('https://' . owHost() . '/verify.php?token=' . $token));
     owSendMail($old, 'Your Oweili email was changed · تم تغيير بريدك',
-        "The email address of your Oweili account was just changed. If this was not you, write to us at contact@elitport.com.\r\n\r\n"
-      . "تم تغيير البريد الإلكتروني لحسابك في أويلي الآن. إن لم تكن أنت، راسلنا على contact@elitport.com.\r\n");
+        "The email address of your Oweili account was just changed. If this was not you, write to us at " . owContactEmail() . ".\r\n\r\n"
+      . "تم تغيير البريد الإلكتروني لحسابك في أويلي الآن. إن لم تكن أنت، راسلنا على " . owContactEmail() . ".\r\n");
     return '';
 }
 
