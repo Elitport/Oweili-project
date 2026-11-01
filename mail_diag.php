@@ -51,8 +51,10 @@ if ($step === 'bl') {
 }
 if ($step === 'mt_new') {
     $h = $get('https://www.mail-tester.com/');
-    preg_match_all('/[a-z0-9._\-]+@srv1\.mail-tester\.com/i', $h, $m);
-    echo implode("\n", array_unique($m[0] ?? [])) ?: ('no address found; page length ' . strlen($h)), "\n";
+    preg_match_all('/[a-z0-9._\-]+@[a-z0-9.\-]*mail-tester\.com/i', $h, $m);
+    echo implode("\n", array_unique($m[0] ?? [])) ?: 'no address found', "\n";
+    foreach (preg_split('/\n/', strip_tags($h)) as $ln) { $ln = trim($ln); if ($ln !== '' && preg_match('/mail-tester|@|test-|send/i', $ln)) echo '  | ', substr($ln, 0, 160), "\n"; }
+    preg_match_all('/(id|data-[a-z]+|value)="([^"]{4,60})"/i', $h, $v); echo 'attrs: ', implode(' ', array_slice(array_unique($v[2]), 0, 40)), "\n";
     exit;
 }
 if ($step === 'send') {
