@@ -10,6 +10,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
+require_once __DIR__ . '/cert_lib.php';      // artwork details + the artist's declaration (Certificate of Authenticity)
 
 /* ---- Access: logged-in artists only ---- */
 if (!isLoggedIn()) {
@@ -24,6 +25,7 @@ if (!$me || ($me['role'] ?? '') !== 'artist' || !empty($me['is_banned'])) {
 $uid = (int) $me['id'];
 
 $ART_TYPES = require __DIR__ . '/art_types.php';
+$certOn    = owCertReady();   // the certificate details + declaration are asked once the database has them
 $COLORS    = owColors();
 $GROUPS    = owStyleGroups();
 $ready     = owStagesReady();
@@ -146,11 +148,24 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $error = 'incomplete';
         } elseif (!preg_match('/^\d{1,7}(\.\d{1,2})?$/', $raw) || (float) $raw < 1) {
             $error = 'price';
+        } elseif ($certOn && ($detailErr = owCertDetailsFromPost($_POST)[1]) !== '') {
+            $error = $detailErr;
+        } elseif ($certOn && empty($_POST['declare'])) {
+            $error = 'declare';     // the artwork cannot be sent without the artist's declaration
         } else {
             $db->prepare('UPDATE artworks
                              SET price = :p, image_url = :img, status = "available", is_approved = 0, is_draft = 0
                            WHERE id = :id AND artist_id = :uid AND is_draft = 1')
                ->execute([':p' => (float) $raw, ':img' => $stages[100]['photo_path'], ':id' => $draft['id'], ':uid' => $uid]);
+            if ($certOn) {
+                [$dv] = owCertDetailsFromPost($_POST);
+                $db->prepare('UPDATE artworks SET medium = :m, width_cm = :w, height_cm = :h, year_made = :y, edition_type = :t,
+                                     edition_number = :en, edition_size = :es, declared_at = NOW()
+                               WHERE id = :id AND artist_id = :uid')
+                   ->execute([':m' => $dv['medium'], ':w' => $dv['width_cm'], ':h' => $dv['height_cm'], ':y' => $dv['year_made'], ':t' => $dv['edition_type'],
+                              ':en' => $dv['edition_number'], ':es' => $dv['edition_size'], ':id' => $draft['id'], ':uid' => $uid]);
+                owLog('artwork_declare', 'artwork', (int) $draft['id'], OW_CERT_DECLARATION[0], ['type' => 'artist', 'id' => $uid]);
+            }
             owLog('artwork_submit', 'artwork', (int) $draft['id'], '', ['type' => 'artist', 'id' => $uid]);
             header('Location: upload_artwork.php?done=1');
             exit;
@@ -183,14 +198,14 @@ $ERR = [
     'need100'    => ['Please take the finished (100%) photo first.', 'يرجى التقاط صورة العمل المكتمل (100%) أولاً.'],
     'incomplete' => ['The 25% photo, the 100% photo and the art type are required before submitting.', 'صورة 25% وصورة 100% ونوع الفن مطلوبة قبل الإرسال.'],
     'price'      => ['Please enter a price of at least 1 SAR (numbers only).', 'يرجى إدخال سعر لا يقل عن 1 ريال (أرقام فقط).'],
-];
+] + owCertDetailErrors();
 if ($error === 'type' && ($_POST['action'] ?? '') === 'save_choices') {
     $ERR['type'] = ['Please choose the type of art.', 'يرجى اختيار نوع الفن.'];
 }
 
 $STEP_NAMES = [
     1 => ['Title', 'العنوان'], 2 => ['Stage 25%', 'مرحلة 25%'], 3 => ['Stage 50%', 'مرحلة 50%'],
-    4 => ['Stage 100%', 'مرحلة 100%'], 5 => ['Price', 'السعر'],
+    4 => ['Stage 100%', 'مرحلة 100%'], 5 => [$certOn ? 'Details & price' : 'Price', $certOn ? 'التفاصيل والسعر' : 'السعر'],
 ];
 
 /* Small helper: one bilingual text node (switched by nav.php's language sync) */
@@ -483,6 +498,13 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
           </div>
         </div>
         <p class="note"><?= t2('Oweili charges 15% commission on the sale price, which covers shipping and advertising. You receive 85% of your price.', 'تأخذ أويلي 15% عمولة من سعر البيع، تشمل الشحن والإعلانات. تستلم أنت 85% من سعرك.') ?></p>
+        <?php if ($certOn): $cv = fn($k) => e((string) ($_POST[$k] ?? ($draft[$k] ?? ''))); $etype = (string) ($_POST['edition_type'] ?? ($draft['edition_type'] ?? '')); ?>
+        <?php include __DIR__ . '/cert_fields.php'; ?>
+        <label class="declare">
+          <input type="checkbox" name="declare" value="1" required<?= !empty($_POST['declare']) ? ' checked' : '' ?>>
+          <span><?= t2(OW_CERT_DECLARATION[0], OW_CERT_DECLARATION[1]) ?></span>
+        </label>
+        <?php endif; ?>
         <div class="actions">
           <a class="btn btn-secondary" href="upload_artwork.php<?= $idQ ?>4"><?= t2('Back', 'رجوع') ?></a>
           <button type="submit" class="btn btn-primary btn-pink"><?= t2('Submit for Review', 'أرسل للمراجعة') ?></button>

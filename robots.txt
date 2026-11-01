@@ -12,6 +12,8 @@ Disallow: /edit_profile.php
 Disallow: /edit_artwork.php
 Disallow: /upload_artwork.php
 Disallow: /verify.php
+Disallow: /certificate.php
+Disallow: /cert_verify.php
 Disallow: /forgot.php
 Disallow: /logout.php
 Disallow: /inquire.php

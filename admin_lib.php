@@ -12,6 +12,7 @@
  * ===================================================================== */
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/mail_lib.php';
+require_once __DIR__ . '/cert_lib.php';      // the Certificate of Authenticity is made on approval
 
 /* The staff member doing it: an admin signed in on admin.php, or a sub-admin */
 function owStaffActor(): array {
@@ -41,9 +42,13 @@ function owApproveArtwork(int $id): bool {
     $st->execute([':id' => $id]);
     if ($st->rowCount() < 1) return false;
     owLog('artwork_approve', 'artwork', $id, '', owStaffActor());
+    $certNo = '';
+    try { $certNo = owIssueCertificate($id, owStaffActor()['id']); } catch (Throwable $e) { error_log('owIssueCertificate: ' . $e->getMessage()); }
     owTellArtist($id, 'Your artwork is in the Gallery · عملك في المعرض',
-        'Lovely news: "{t}" is now in the Oweili Gallery for everyone to see.',
-        'خبر جميل: عملك «{t}» صار في معرض أويلي ليراه الجميع.');
+        'Lovely news: "{t}" is now in the Oweili Gallery for everyone to see.'
+          . ($certNo !== '' ? ' Its Certificate of Authenticity (' . $certNo . ') is ready in My Studio.' : ''),
+        'خبر جميل: عملك «{t}» صار في معرض أويلي ليراه الجميع.'
+          . ($certNo !== '' ? ' شهادة الأصالة الخاصة به (' . $certNo . ') جاهزة في مرسمي.' : ''));
     return true;
 }
 
@@ -165,6 +170,7 @@ function owPhotoOk(int $artworkId): bool {
         if ((int) $p['artwork_id'] !== $artworkId) continue;
         $d = json_decode((string) $p['details'], true) ?: [];
         owLog('photo_ok', 'artwork', $artworkId, '', owStaffActor());
+        try { owRefreshCertificate($artworkId); } catch (Throwable $e) { error_log('owRefreshCertificate: ' . $e->getMessage()); }   // the certificate shows the new photo
         $old = ltrim((string) ($d['old'] ?? ''), '/');
         if ($old !== '' && strpos($old, 'uploads/artworks/') === 0 && strpos($old, '..') === false) {
             $still = getDB()->prepare('SELECT COUNT(*) FROM artworks WHERE image_url = :p OR image_url = :p2');

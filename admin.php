@@ -5,6 +5,7 @@ require_once __DIR__ . '/mail_lib.php';
 require_once __DIR__ . '/inquiry_lib.php';
 require_once __DIR__ . '/admin_lib.php';
 require_once __DIR__ . '/approval_lib.php';
+require_once __DIR__ . '/cert_lib.php';
 
 /* =====================================================================
  *  Oweili · admin.php — approve / ban artists
@@ -134,6 +135,20 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
         exit;
     }
 
+    /* --- Certificate of Authenticity: cancel (with a reason), or make one now --- */
+    if ($action === 'cert_cancel') {
+        if (!owCancelCertificate((int) ($_POST['cert_id'] ?? 0), (string) ($_POST['reason'] ?? ''), null)) {
+            $_SESSION['admin_err'] = trim((string) ($_POST['reason'] ?? '')) === '' ? 'Please write the reason for cancelling the certificate.' : 'This certificate was already cancelled.';
+        }
+        header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#certs');
+        exit;
+    }
+    if ($action === 'cert_issue') {
+        if (owIssueCertificate((int) ($_POST['artwork_id'] ?? 0)) === '') $_SESSION['admin_err'] = 'No certificate yet: the artwork must be approved and have all its details and the artist’s declaration.';
+        header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#certs');
+        exit;
+    }
+
     /* --- "Photo changed, needs a look": the new photo is fine --- */
     if ($action === 'photo_ok') {
         owPhotoOk((int) ($_POST['artwork_id'] ?? 0));
@@ -186,7 +201,7 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
 $pendingArt = [];
 if ($isAdmin) {
     $pendingArt = getDB()->query(
-        "SELECT a.id, a.title_en, a.title_ar, a.price, a.type, a.image_url, a.created_at,
+        "SELECT a.*, a.id, a.title_en, a.title_ar, a.price, a.type, a.image_url, a.created_at,
                 u.full_name_en AS artist_name
          FROM artworks a
          LEFT JOIN users u ON u.id = a.artist_id
@@ -283,6 +298,15 @@ if ($isAdmin) {
 }
 $photoChanges = $isAdmin ? owPhotoChangesPending() : [];
 /* "Waiting for approval": changes to public things + new artist accounts */
+/* Certificates of Authenticity, and approved artworks still waiting for theirs */
+$allCerts = $isAdmin ? owAllCerts() : [];
+$noCertYet = [];
+if ($isAdmin && owCertReady()) {
+    $q = getDB()->query("SELECT a.*, " . owArtistNameSql('u') . " FROM artworks a JOIN users u ON u.id = a.artist_id
+                          WHERE a.is_approved = 1" . owNotDraftSql('a') . " AND NOT EXISTS (SELECT 1 FROM certificates c WHERE c.artwork_id = a.id AND c.status = 'valid')
+                          ORDER BY a.id DESC LIMIT 200");
+    $noCertYet = $q->fetchAll();
+}
 $waitChanges  = $isAdmin ? owWaitingChanges() : [];
 $waitArtists  = $isAdmin ? owWaitingArtists() : [];
 $waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists);
@@ -295,6 +319,7 @@ $showVal = function (string $field, $v) use ($SALE_WORDS): string {
     if ($field === 'type') { $t = $ART_TYPES[$v] ?? null; return $t ? owBi($t['en'], $t['ar']) : e($v); }
     if ($field === 'status') { $w = $SALE_WORDS[$v] ?? null; return $w ? owBi($w[0], $w[1]) : e($v); }
     if ($field === 'price') return e(number_format((float) $v)) . ' ' . owBi('SAR', 'ر.س');
+    if ($field === 'edition_type') { [$a1, $a2] = owCertEdition($v); return owBi($v === 'limited' ? 'Limited print' : $a1, $v === 'limited' ? 'نسخة مطبوعة محدودة' : $a2); }
     if ($field === 'profile_picture') { $src = owImgSrc($v); return $src !== '' ? '<a href="' . e($src) . '" target="_blank" rel="noopener"><img class="wc-pic" src="' . e($src) . '" alt="Photo · صورة"></a>' : e($v); }
     if (in_array($field, ['instagram', 'twitter', 'website'], true)) return '<span dir="ltr">' . e($v) . '</span>';
     return '<span dir="auto">' . nl2br(e(mb_strimwidth($v, 0, 600, '…'))) . '</span>';
@@ -376,6 +401,8 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 .wc-new{background:rgba(var(--rgb-accent),.06);}
 .wc-pic{width:72px;height:72px;object-fit:cover;border-radius:50%;border:1px solid var(--color-border);}
 .wc-lbl{display:none;font-weight:700;}
+.art-cert{display:flex;flex-direction:column;gap:4px;margin-top:var(--space-xs);font-size:var(--fs-caption);color:var(--color-body);}
+.art-cert .warn{color:var(--color-dark);background:var(--color-tint-pink);padding:4px 8px;border-radius:var(--radius-input);}
 @media(max-width:640px){
   .wc-table thead{display:none;}
   .wc-table tr{display:block;border-bottom:1px solid var(--color-border);padding:8px 0;}
@@ -513,6 +540,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?> <span class="pill count"><?= (int) $waitTotal ?></span></button>
     <button class="tab tab-btn" data-tab="photos" onclick="showTab('photos',this)"><?= owBi('Photo changes', 'تغيير الصور') ?> <span class="pill count"><?= count($photoChanges) ?></span></button>
     <button class="tab tab-btn" data-tab="artworks" onclick="showTab('artworks',this)"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
+    <button class="tab tab-btn" data-tab="certs" onclick="showTab('certs',this)"><?= owBi('Certificates', 'الشهادات') ?> <span class="pill count"><?= count($allCerts) ?></span></button>
     <a class="tab" href="admin_articles.php"><?= owBi('Articles & events', 'المقالات والملتقيات') ?></a>
     <a class="tab" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
     <button class="tab tab-btn" data-tab="inquiries" onclick="showTab('inquiries',this)">Inquiries <span class="pill count"><?= count($inquiries) ?></span></button>
@@ -799,10 +827,72 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <form method="post" action="admin.php" onsubmit="return confirm('Reject and permanently delete this artwork?');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int)$art['id'] ?>"><button class="btn btn-danger btn-sm" name="action" value="reject_art">Reject</button></form>
             <?php endif; ?>
           </div>
+          <?php if (owCertReady()): $cm = owCertMissing($art); ?>
+          <div class="art-cert">
+            <?php if (!empty($art['declared_at'])): [$dE, $dA] = owDateBi((string) $art['declared_at'], true); ?>
+              <span>✓ <?= owBi('Artist’s declaration: “my original work, made by my own hand”, ' . $dE, 'إقرار الفنان: «عملي الأصلي، صنع يدي»، ' . $dA) ?></span>
+            <?php endif; ?>
+            <?php if ((string) ($art['medium'] ?? '') !== ''): [$sE, $sA] = owCertSize($art['width_cm'], $art['height_cm']); [$eE, $eA] = owCertEdition($art['edition_type'], $art['edition_number'], $art['edition_size']); ?>
+              <span><span dir="auto"><?= e((string) $art['medium']) ?></span> · <?= owBi($sE, $sA) ?> · <?= (int) $art['year_made'] ?> · <?= owBi($eE, $eA) ?></span>
+            <?php endif; ?>
+            <?php if ($cm): [$mE, $mA] = owCertMissingWords($cm); ?>
+              <span class="warn">⚠ <?= owBi('No certificate until the artist adds: ' . $mE . '. You can still approve it.', 'لن تصدر الشهادة حتى يضيف الفنان: ' . $mA . '. يمكنك الموافقة الآن.') ?></span>
+            <?php else: ?>
+              <span><?= owBi('A Certificate of Authenticity is made when you approve.', 'تصدر شهادة الأصالة عند موافقتك.') ?></span>
+            <?php endif; ?>
+          </div>
+          <?php endif; ?>
           <div class="art-proof"><?= owProofPanelHtml($pendingStages[(int)$art['id']] ?? [], $pendingColors[(int)$art['id']] ?? [], (string)$art['type'], $ART_TYPES) ?></div>
         </div>
       <?php endforeach; ?>
       </div>
+    <?php endif; ?>
+  </div>
+  </div>
+
+  <!-- ===== TAB: CERTIFICATES OF AUTHENTICITY ===== -->
+  <div class="tab-panel" id="tab-certs">
+  <div class="card" id="certs">
+    <div class="sub" style="margin:0 0 var(--space-sm)"><?= owBi('Every approved artwork gets a certificate with its own number. Anyone can check a number at oweili.com/verify. A cancelled certificate shows as “Cancelled” there. Certificates are never deleted.', 'يحصل كل عمل معتمد على شهادة برقم خاص. يستطيع أي شخص التحقق من الرقم في oweili.com/verify. الشهادة الملغاة تظهر هناك «ملغاة». لا تُحذف الشهادات أبداً.') ?></div>
+    <?php if (!owCertReady()): ?>
+      <div class="mini wc-note"><?= owBi('Certificates are not switched on yet: the database update for certificates has not been run.', 'الشهادات غير مفعّلة بعد: لم يُشغَّل تحديث قاعدة البيانات الخاص بها.') ?></div>
+    <?php endif; ?>
+    <?php if ($noCertYet): ?>
+      <h3 class="wc-h"><?= owBi('Approved, still without a certificate', 'معتمدة وبلا شهادة بعد') ?> <span class="pill count"><?= count($noCertYet) ?></span></h3>
+      <div class="table-wrap"><table class="table"><thead><tr><th><?= owBi('Artwork', 'العمل') ?></th><th><?= owBi('Artist', 'الفنان') ?></th><th><?= owBi('Missing', 'الناقص') ?></th><th></th></tr></thead><tbody>
+      <?php foreach ($noCertYet as $nc): $ncm = owCertMissing($nc); [$nE, $nA] = owCertMissingWords($ncm); ?>
+        <tr><td><?= owBi((string) $nc['title_en'], (string) ($nc['title_ar'] ?: $nc['title_en'])) ?></td><td><?= owBi((string) $nc['artist_en'], (string) $nc['artist_ar']) ?></td>
+          <td class="mini"><?= $ncm ? owBi($nE, $nA) : owBi('Nothing: ready', 'لا شيء: جاهز') ?></td>
+          <td><?php if (!$ncm): ?><form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $nc['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="cert_issue"><?= owBi('Make certificate', 'أصدر الشهادة') ?></button></form><?php endif; ?></td></tr>
+      <?php endforeach; ?></tbody></table></div>
+    <?php endif; ?>
+    <div class="field" style="max-width:420px;margin-top:var(--space-sm)"><label for="s-certs"><?= owBi('Search (number, artwork, artist)', 'بحث (الرقم، العمل، الفنان)') ?></label>
+      <input id="s-certs" type="search" data-search="#tab-certs .cert-rows tr" autocomplete="off"></div>
+    <?php if (!$allCerts): ?><div class="empty"><?= owBi('No certificates yet. They are made when you approve artworks.', 'لا شهادات بعد. تصدر عند موافقتك على الأعمال.') ?></div><?php else: ?>
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th><?= owBi('Number', 'الرقم') ?></th><th><?= owBi('Artwork', 'العمل') ?></th><th><?= owBi('Artist', 'الفنان') ?></th><th><?= owBi('Issued', 'صدرت') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th><?= owBi('Actions', 'إجراءات') ?></th></tr></thead>
+      <tbody class="cert-rows">
+      <?php foreach ($allCerts as $c): $cs = $c['snap']; [$ciE, $ciA] = owDateBi((string) $c['issued_at']); $ok = $c['status'] === 'valid'; ?>
+        <tr>
+          <td dir="ltr"><b><?= e($c['cert_no']) ?></b></td>
+          <td><?= owBi((string) ($cs['title_en'] ?? ''), (string) ($cs['title_ar'] ?? '')) ?></td>
+          <td><a href="admin.php?person=<?= (int) $c['artist_id'] ?>"><?= owBi((string) ($cs['artist_en'] ?? ''), (string) ($cs['artist_ar'] ?? '')) ?></a></td>
+          <td class="mini"><?= owBi($ciE, $ciA) ?></td>
+          <td><span class="pill <?= $ok ? 'on' : 'ban' ?>"><?= $ok ? owBi('Valid', 'سارية') : owBi('Cancelled', 'ملغاة') ?></span><?php if (!$ok): ?><div class="mini"><?= e((string) $c['cancel_reason']) ?></div><?php endif; ?></td>
+          <td><div class="acts">
+            <a class="btn btn-ghost btn-sm" href="certificate.php?no=<?= e(rawurlencode($c['cert_no'])) ?>"><?= owBi('View', 'عرض') ?></a>
+            <?php if ($ok): ?>
+            <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Cancel…', 'إلغاء…') ?></summary>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="cert_id" value="<?= (int) $c['id'] ?>">
+                <div class="field"><label for="cc-<?= (int) $c['id'] ?>"><?= owBi('Reason (kept on record; the artist sees it)', 'السبب (يُحفظ في السجل ويراه الفنان)') ?></label>
+                  <textarea id="cc-<?= (int) $c['id'] ?>" name="reason" required maxlength="500" rows="3"></textarea></div>
+                <button class="btn btn-danger btn-sm" name="action" value="cert_cancel"><?= owBi('Cancel this certificate', 'ألغِ هذه الشهادة') ?></button>
+              </form></details>
+            <?php endif; ?>
+          </div></td>
+        </tr>
+      <?php endforeach; ?>
+      </tbody></table></div>
     <?php endif; ?>
   </div>
   </div>
@@ -899,7 +989,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   // Restore the tab from the URL hash (e.g. after approving an artwork).
   (function(){
     var h=(location.hash||'').replace('#','');
-    if(['pending','collectors','artists','artworks','inquiries','photos'].indexOf(h)>=0){
+    if(['pending','collectors','artists','artworks','inquiries','photos','certs'].indexOf(h)>=0){
       var btn=document.querySelector('.tab-btn[data-tab="'+h+'"]');
       showTab(h,btn);
     }

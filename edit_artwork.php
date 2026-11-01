@@ -4,6 +4,7 @@ require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/admin_lib.php';     // owPhotoChanged(): the team is told when a live artwork's photo changes
 require_once __DIR__ . '/approval_lib.php';  // changes to a live artwork wait for the admin's approval
+require_once __DIR__ . '/cert_lib.php';      // details for the Certificate of Authenticity + the declaration
 
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $viewerId  = (int) $_SESSION['user_id'];
@@ -42,10 +43,25 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $type   = (isset($ART_TYPES[$pType]) && (empty($ART_TYPES[$pType]['legacy']) || $pType === (string) $aw['type'])) ? $pType : '';
     $status = in_array($_POST['status'] ?? '', ['available','sold','auction'], true) ? $_POST['status'] : $aw['status'];
 
+    /* Certificate details (asked when the database has them); the declaration only if it was never given */
+    $certOn = owCertReady();
+    [$dv, $detailErr] = $certOn ? owCertDetailsFromPost($_POST) : [[], ''];
+    $needDeclare = $certOn && empty($aw['declared_at']);
+
     // Descriptions are optional (same as the 3-stage upload); titles, type and price are required.
     if ($tEn === '' || $tAr === '' || $type === '' || !is_numeric($price) || (float) $price < 0) {
         $err = 'required';
+    } elseif ($detailErr !== '') {
+        $err = $detailErr;
+    } elseif ($needDeclare && empty($_POST['declare'])) {
+        $err = 'declare';
     } else {
+        /* the declaration is the artist's own statement, not public content: saved straight away */
+        if ($needDeclare) {
+            getDB()->prepare('UPDATE artworks SET declared_at = NOW() WHERE id = :id AND artist_id = :uid')->execute([':id' => $artId, ':uid' => $viewerId]);
+            owLog('artwork_declare', 'artwork', $artId, OW_CERT_DECLARATION[0], ['type' => 'artist', 'id' => $viewerId]);
+            $aw['declared_at'] = date('Y-m-d H:i:s');
+        }
         $imageUrl = $aw['image_url'];
         /* live in the Gallery right now? Then a new photo stays live, but the team is told
            and the old photo is kept so they can compare (admin.php → Photo changes) */
@@ -87,6 +103,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $cur = $k === 'price' ? (string) (float) $aw['price'] : (string) ($aw[$k] ?? '');
                 if ($v !== $cur) $diff[$k] = $k === 'price' ? (float) $price : $v;
             }
+            foreach ($dv as $k => $v) {   // certificate details wait for approval too
+                $same = in_array($k, ['width_cm', 'height_cm'], true) ? ((float) $v === (float) ($aw[$k] ?? 0) && $aw[$k] !== null)
+                      : ((string) ($v ?? '') === (string) ($aw[$k] ?? ''));
+                if (!$same) $diff[$k] = $v;
+            }
             if ($photoChanged) {
                 getDB()->prepare('UPDATE artworks SET image_url = :img WHERE id = :id AND artist_id = :uid')
                        ->execute([':img' => $imageUrl, ':id' => $artId, ':uid' => $viewerId]);
@@ -100,6 +121,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $pend['id']]);
             }
             owLog('artwork_edit', 'artwork', $artId, $sent ? 'waiting' : '', ['type' => 'artist', 'id' => $viewerId]);
+            if ($needDeclare) { try { owIssueCertificate($artId); } catch (Throwable $e) { error_log('owIssueCertificate: ' . $e->getMessage()); } }
             header('Location: artist_studio.php?done=' . ($sent ? 'waiting' : 'saved'));
             exit;
         }
@@ -123,6 +145,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 ':price' => (float) $price, ':type' => $type, ':status' => $status,
                 ':img' => $imageUrl, ':id' => $artId, ':uid' => $viewerId,
             ]);
+            if ($certOn) {
+                getDB()->prepare('UPDATE artworks SET medium = :m, width_cm = :w, height_cm = :h, year_made = :y, edition_type = :t,
+                                         edition_number = :en, edition_size = :es WHERE id = :id AND artist_id = :uid')
+                       ->execute([':m' => $dv['medium'], ':w' => $dv['width_cm'], ':h' => $dv['height_cm'], ':y' => $dv['year_made'], ':t' => $dv['edition_type'],
+                                  ':en' => $dv['edition_number'], ':es' => $dv['edition_size'], ':id' => $artId, ':uid' => $viewerId]);
+            }
             owLog('artwork_edit', 'artwork', $artId, '', ['type' => 'artist', 'id' => $viewerId]);
             if ($photoChanged && $isLive) owPhotoChanged($aw, (string) $aw['image_url'], $imageUrl, $viewerId);
             header('Location: artist_dashboard.php?id=' . $viewerId);
@@ -175,7 +203,9 @@ $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
     <h1 id="t-title">Edit Artwork</h1>
     <div class="sub" id="t-sub">Update the details of your artwork.</div>
 
-    <?php if ($err): ?>
+    <?php $CERT_ERR = owCertDetailErrors(); if ($err && isset($CERT_ERR[$err])): ?>
+      <div class="err-box" role="alert"><?= owBi($CERT_ERR[$err][0], $CERT_ERR[$err][1]) ?></div>
+    <?php elseif ($err): ?>
       <div class="err-box"
            data-en="<?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?>"
            data-ar="<?= $err === 'image' ? 'يجب أن تكون الصورة JPG/PNG/WEBP بحجم أقل من 5 ميغابايت.' : 'العنوانان مطلوبان ويجب أن يكون السعر رقماً.' ?>"
@@ -242,6 +272,18 @@ $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
           <input type="file" name="image" accept="image/jpeg,image/png,image/webp"></div>
         <?php endif; ?>
       </div>
+
+      <?php if (owCertReady()): $cv = fn($k) => e((string) ($_POST[$k] ?? ($aw[$k] ?? ''))); $etype = (string) ($_POST['edition_type'] ?? ($aw['edition_type'] ?? '')); ?>
+        <?php include __DIR__ . '/cert_fields.php'; ?>
+        <?php if (empty($liveAw['declared_at'])): ?>
+        <label class="declare">
+          <input type="checkbox" name="declare" value="1" required<?= !empty($_POST['declare']) ? ' checked' : '' ?>>
+          <span><?= owBi(OW_CERT_DECLARATION[0], OW_CERT_DECLARATION[1]) ?></span>
+        </label>
+        <?php else: [$dE, $dA] = owDateBi((string) $liveAw['declared_at'], true); ?>
+        <p class="cert-hint">✓ <?= owBi('You confirmed this is your original work, made by your own hand, on ' . $dE . '.', 'أكدت أن هذا العمل من إبداعك الأصلي وصنع يدك بتاريخ ' . $dA . '.') ?></p>
+        <?php endif; ?>
+      <?php endif; ?>
 
       <div class="row">
         <button type="submit" class="btn btn-primary" id="t-save">Save Changes</button>

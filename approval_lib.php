@@ -18,6 +18,7 @@
  * ===================================================================== */
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/mail_lib.php';
+require_once __DIR__ . '/cert_lib.php';
 
 function owApprovalsReady(): bool { return owHasTable('pending_changes'); }
 
@@ -25,7 +26,8 @@ function owApprovalsReady(): bool { return owHasTable('pending_changes'); }
 const OW_PUBLIC_PROFILE_FIELDS = ['full_name_en', 'full_name_ar', 'artist_name', 'bio_en', 'bio_ar', 'city', 'country',
                                   'art_styles', 'instagram', 'twitter', 'website', 'profile_picture'];
 /* The artwork fields that wait for approval (the photo does not, see above) */
-const OW_ARTWORK_FIELDS = ['title_en', 'title_ar', 'description_en', 'description_ar', 'price', 'type', 'status'];
+const OW_ARTWORK_FIELDS = ['title_en', 'title_ar', 'description_en', 'description_ar', 'price', 'type', 'status',
+                           'medium', 'width_cm', 'height_cm', 'year_made', 'edition_type', 'edition_number', 'edition_size'];
 
 /* Field names for the admin list */
 const OW_FIELD_WORDS = [
@@ -37,6 +39,9 @@ const OW_FIELD_WORDS = [
     'city' => ['City', 'المدينة'], 'country' => ['Country', 'الدولة'], 'art_styles' => ['Art styles', 'الأساليب'],
     'instagram' => ['Instagram', 'إنستغرام'], 'twitter' => ['X', 'إكس'], 'website' => ['Website', 'الموقع'],
     'profile_picture' => ['Photo', 'الصورة'], 'publish' => ['Publish', 'النشر'],
+    'medium' => ['Medium', 'الخامة'], 'width_cm' => ['Width (cm)', 'العرض (سم)'], 'height_cm' => ['Height (cm)', 'الارتفاع (سم)'],
+    'year_made' => ['Year made', 'سنة الإنجاز'], 'edition_type' => ['Original or print', 'أصلي أم مطبوع'],
+    'edition_number' => ['Print number', 'رقم النسخة'], 'edition_size' => ['Prints in total', 'عدد النسخ'],
 ];
 
 /* The newest waiting change for one thing, or null */
@@ -132,7 +137,7 @@ function owApproveChange(int $id, array $actor): bool {
     try {
         if ($p['target_type'] === 'artwork') {
             $set = []; $args = [':id' => $tid];
-            foreach (OW_ARTWORK_FIELDS as $f) if (array_key_exists($f, $d)) { $set[] = "$f = :$f"; $args[":$f"] = $d[$f]; }
+            foreach (OW_ARTWORK_FIELDS as $f) if (array_key_exists($f, $d) && owHasColumn('artworks', $f)) { $set[] = "$f = :$f"; $args[":$f"] = $d[$f]; }
             if (array_key_exists('status', $d)) $set[] = $d['status'] === 'sold' ? 'sold_at = COALESCE(sold_at, NOW())' : 'sold_at = NULL';
             if ($set) $db->prepare('UPDATE artworks SET ' . implode(', ', $set) . ' WHERE id = :id')->execute($args);
         } elseif ($p['target_type'] === 'profile') {
@@ -167,6 +172,10 @@ function owApproveChange(int $id, array $actor): bool {
         if ($db->inTransaction()) $db->rollBack();
         error_log('owApproveChange: ' . $e->getMessage());
         return false;
+    }
+    /* the certificate follows the approved details (same number), or is made now if it was waiting for them */
+    if ($p['target_type'] === 'artwork' && function_exists('owRefreshCertificate')) {
+        try { owRefreshCertificate($tid); } catch (Throwable $e) { error_log('owRefreshCertificate: ' . $e->getMessage()); }
     }
     owLog('change_approve', $p['target_type'], $tid, '', $actor);
     [$what, $whatAr] = owChangeWords($p['target_type']);

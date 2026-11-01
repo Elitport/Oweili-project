@@ -2,6 +2,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
+require_once __DIR__ . '/cert_lib.php';      // a deleted artwork's certificate is cancelled
 
 /* ---------------------------------------------------------------------
  *  Check 1 — Session check.
@@ -69,6 +70,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             try { getDB()->prepare('DELETE FROM favorites WHERE artwork_id = :id')->execute([':id' => $artId]); } catch (Throwable $e) {}
             try { getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE target_type = 'artwork' AND target_id = :id AND status = 'pending'")
                        ->execute([':id' => $artId]); } catch (Throwable $e) {}
+            if (function_exists('owCancelCertificatesOfArtwork')) owCancelCertificatesOfArtwork($artId, 'Artwork deleted by the artist');
             owLog('artwork_delete', 'artwork', $artId, (string) $row['title_en'], ['type' => 'artist', 'id' => $viewerId]);
             $path = __DIR__ . '/' . ltrim((string) $row['image_url'], '/');
             if ($row['image_url'] && strpos($row['image_url'], 'uploads/artworks/') === 0 && is_file($path)) @unlink($path);

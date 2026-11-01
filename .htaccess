@@ -19,6 +19,9 @@ Options -Indexes
   RewriteRule ^(resha-app|supabase)(/|$) - [F,L]
   # The list of pages for search engines is made fresh by sitemap.php
   RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  # Certificate of Authenticity: the public verify page is oweili.com/verify
+  # (the QR code opens /verify?no=OW-…). verify.php stays the email-confirm page.
+  RewriteRule ^verify/?$ cert_verify.php [L,QSA]
 </IfModule>
 
 # A friendly page in English and Arabic for any address that does not exist

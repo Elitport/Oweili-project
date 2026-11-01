@@ -8,12 +8,15 @@
  *  artwork's window in the Gallery) and a way back to the Gallery.
  *  Only artworks a visitor can see in the Gallery; others get the
  *  friendly "not found" page.
- *  Tables: artworks, users, artwork_stages, artwork_colors, favorites
+ *  Also: the artwork details (medium, size, year, original or print), the
+ *  "Certified authentic" badge with its verify link, and the rights statement.
+ *  Tables: artworks, users, artwork_stages, artwork_colors, favorites, certificates
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/seo_lib.php';
+require_once __DIR__ . '/cert_lib.php';
 $ART_TYPES = require __DIR__ . '/art_types.php';
 
 $id = (int) ($_GET['id'] ?? 0);
@@ -43,6 +46,7 @@ $price   = number_format((float) $aw['price']);
 $descEn  = 'By ' . $aw['artist_en'] . ' · ' . $price . ' SAR' . ($type ? ' · ' . $type['en'] : '') . '. Made by human hands, on Oweili.';
 $descAr  = 'بواسطة ' . $aw['artist_ar'] . ' · ' . $price . ' ر.س' . ($type ? ' · ' . $type['ar'] : '') . '. صُنع بيد بشرية، في أويلي.';
 $share   = $img !== '' ? owImgSized($img, 800) : '';
+$cert = owCertForArtwork($id);
 $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwork-' . $id;
 ?>
 <!DOCTYPE html>
@@ -69,6 +73,11 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
 .aw-info .desc{color:var(--color-body);white-space:pre-line;}
 .aw-acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:center;margin-top:var(--space-md);}
 .aw-journey{grid-column:1 / -1;}
+.aw-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-xs) var(--space-sm);margin:0 0 var(--space-sm);}
+.aw-facts div{min-width:0;}
+.aw-facts dt{font-size:var(--fs-caption);font-weight:700;color:var(--color-body);}
+.aw-facts dd{margin:0;font-size:15px;color:var(--color-dark);overflow-wrap:anywhere;}
+.aw-cert{margin:0 0 var(--space-sm);}
 @media(max-width:860px){.aw-page{grid-template-columns:1fr;padding-top:calc(var(--nav-h) + var(--space-md));}}
 </style>
 </head>
@@ -93,6 +102,15 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
       <?php if ($aw['status'] === 'auction'): ?><span class="type-pill"><?= owBi('Auction', 'مزاد') ?></span><?php endif; ?>
     </div>
     <div class="price"><?= $price ?> <?= owBi('SAR', 'ر.س') ?></div>
+    <?php if (trim((string) ($aw['medium'] ?? '')) !== '' || (float) ($aw['width_cm'] ?? 0) > 0 || !empty($aw['edition_type'])): ?>
+    <dl class="aw-facts">
+      <?php if (trim((string) ($aw['medium'] ?? '')) !== ''): ?><div><dt><?= owBi('Medium', 'الخامة') ?></dt><dd dir="auto"><?= e((string) $aw['medium']) ?></dd></div><?php endif; ?>
+      <?php if ((float) ($aw['width_cm'] ?? 0) > 0): [$sE, $sA] = owCertSize($aw['width_cm'], $aw['height_cm']); ?><div><dt><?= owBi('Size', 'المقاس') ?></dt><dd><?= owBi($sE, $sA) ?></dd></div><?php endif; ?>
+      <?php if ((int) ($aw['year_made'] ?? 0) > 0): ?><div><dt><?= owBi('Year', 'السنة') ?></dt><dd><?= (int) $aw['year_made'] ?></dd></div><?php endif; ?>
+      <?php if (!empty($aw['edition_type'])): [$eE, $eA] = owCertEdition($aw['edition_type'], $aw['edition_number'], $aw['edition_size']); ?><div><dt><?= owBi('Type', 'النوع') ?></dt><dd><?= owBi($eE, $eA) ?></dd></div><?php endif; ?>
+    </dl>
+    <?php endif; ?>
+    <?php if ($cert): ?><p class="aw-cert"><?= owCertBadgeHtml($cert) ?></p><?php endif; ?>
     <?php if (trim((string) $aw['description_en']) !== '' || trim((string) $aw['description_ar']) !== ''): ?>
       <p class="desc"><span class="bi-en" lang="en"><?= e((string) ($aw['description_en'] ?: $aw['description_ar'])) ?></span><span class="bi-ar" lang="ar"><?= e((string) ($aw['description_ar'] ?: $aw['description_en'])) ?></span></p>
     <?php endif; ?>
@@ -100,6 +118,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
       <a class="btn btn-primary" href="<?= e($galleryLink) ?>"><?= owBi('I’m Interested', 'أنا مهتم') ?></a>
       <a class="btn btn-secondary" href="marketplace.php<?= $ar ? '?lang=ar' : '' ?>"><?= owBi('See more in the Gallery', 'شاهد المزيد في المعرض') ?></a>
     </div>
+    <p class="rights-note"><?= owBi(OW_CERT_RIGHTS[0], OW_CERT_RIGHTS[1]) ?></p>
   </div>
   <?php if ($journey !== ''): ?><section class="aw-journey card"><?= $journey ?></section><?php endif; ?>
 </main>

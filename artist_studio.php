@@ -19,6 +19,7 @@ require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/account_lib.php';
 require_once __DIR__ . '/approval_lib.php';
+require_once __DIR__ . '/cert_lib.php';
 
 if (!isLoggedIn()) { header('Location: login.php?next=artist_studio.php'); exit; }
 $me = currentUser();
@@ -26,7 +27,7 @@ if (!$me) { header('Location: login.php'); exit; }
 if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 $uid = (int) $me['id'];
 
-$TABS = ['works', 'account', 'activity', 'earnings'];
+$TABS = ['works', 'certs', 'account', 'activity', 'earnings'];
 $tab  = in_array($_GET['tab'] ?? '', $TABS, true) ? $_GET['tab'] : 'works';
 $tabLink = fn(string $t) => 'artist_studio.php?tab=' . $t;
 
@@ -69,7 +70,7 @@ try {
     $viewSql = owHasColumn('artworks', 'view_count') ? 'a.view_count' : '0';
     $reason  = owHasColumn('artworks', 'rejected_reason') ? 'a.rejected_reason' : 'NULL';
     $st = getDB()->prepare(
-        "SELECT a.id, a.title_en, a.title_ar, a.image_url, a.price, a.status AS sale_status, a.created_at,
+        "SELECT a.*, a.id, a.title_en, a.title_ar, a.image_url, a.price, a.status AS sale_status, a.created_at,
                 " . owArtworkStatusSql('a') . " AS state, $reason AS reason,
                 $viewSql AS views, $favSql AS favs, $inqSql AS inquiries
          FROM artworks a WHERE a.artist_id = :u ORDER BY a.created_at DESC, a.id DESC");
@@ -118,6 +119,10 @@ $DONE = [
     'saved'    => ['Your changes are saved.', 'تم حفظ تعديلاتك.'],
 ];
 $myChanges = owMyChanges($uid);
+/* Certificates of Authenticity: one per approved artwork */
+$certs = owCertsForArtist($uid);
+$certByArt = [];
+foreach ($certs as $c) if ($c['status'] === 'valid') $certByArt[(int) $c['artwork_id']] = $c;
 $done = $DONE[$_GET['done'] ?? ''] ?? null;
 $verified = (int) ($me['is_verified'] ?? 0) === 1;
 $name = owRealName($me['artist_name']) ?: (owRealName($me['full_name_en']) ?: 'Artist');
@@ -144,6 +149,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 .st-tabs{margin:var(--space-lg) 0 var(--space-md);}
 .note{font-size:var(--fs-caption);color:var(--color-body);margin:0 0 var(--space-sm);}
 .w-list{display:grid;gap:var(--space-sm);}
+.w-row > div{min-width:0;}
 .w-row{display:grid;grid-template-columns:72px 1fr auto;gap:var(--space-sm);align-items:center;padding:var(--space-sm);}
 .w-thumb{position:relative;width:72px;height:72px;border-radius:var(--radius-input);overflow:hidden;background:var(--color-frame);border:1px solid var(--color-border);}
 .w-thumb img{width:100%;height:100%;object-fit:contain;display:block;}
@@ -151,6 +157,9 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 .w-title{font-weight:700;color:var(--color-dark);margin:0 0 4px;}
 .w-nums{display:flex;gap:var(--space-sm);flex-wrap:wrap;font-size:var(--fs-caption);color:var(--color-body);}
 .w-nums b{color:var(--color-dark);}
+.w-cert{margin-top:6px;font-size:var(--fs-caption);font-weight:700;color:var(--color-dark);}
+.w-cert a{color:var(--color-accent);font-weight:700;}
+.w-wait a{font-weight:700;color:var(--color-accent);}
 .w-wait{margin-top:6px;font-size:var(--fs-caption);color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),.2);border-radius:var(--radius-input);padding:6px 10px;}
 .w-reason{margin-top:6px;font-size:var(--fs-caption);color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),.3);border-radius:var(--radius-input);padding:6px 10px;}
 .w-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
@@ -171,7 +180,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 .empty{text-align:center;padding:var(--space-xl) var(--space-md);}
 .empty p{margin:0 0 var(--space-sm);}
 @media(max-width:768px){.st-head{padding:var(--space-md);}.st-stats{grid-template-columns:repeat(2,1fr);gap:var(--space-xs);}
-  .w-row{grid-template-columns:56px 1fr;}.w-thumb{width:56px;height:56px;}.w-side{grid-column:1 / -1;flex-direction:row;justify-content:space-between;align-items:center;}}
+  .w-row{grid-template-columns:56px 1fr;}.w-thumb{width:56px;height:56px;}.w-side{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center;}}
 </style>
 </head>
 <body>
@@ -210,7 +219,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
-    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات']] as $t => $l): ?>
+    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات']] as $t => $l): ?>
       <a class="tab<?= $tab === $t ? ' active' : '' ?>" href="<?= e($tabLink($t)) ?>"<?= $tab === $t ? ' aria-current="page"' : '' ?>><?= owBi($l[0], $l[1]) ?></a>
     <?php endforeach; ?>
   </nav>
@@ -236,6 +245,11 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
           <span><b><?= number_format((int) $w['inquiries']) ?></b> <?= owBi('interested', 'مهتم') ?></span>
           <span><?= number_format((float) $w['price']) ?> <?= owBi('SAR', 'ر.س') ?></span>
         </div>
+        <?php if (isset($certByArt[(int) $w['id']])): $wc = $certByArt[(int) $w['id']]; ?>
+          <div class="w-cert">✓ <?= owBi('Certificate of Authenticity', 'شهادة أصالة') ?> <a href="certificate.php?no=<?= e(rawurlencode($wc['cert_no'])) ?>" dir="ltr"><?= e($wc['cert_no']) ?></a></div>
+        <?php elseif (owCertReady() && $s !== 'draft' && ($wm = owCertMissing($w))): [$mE, $mA] = owCertMissingWords($wm); ?>
+          <div class="w-wait"><?= owBi('For its certificate, please add: ' . $mE . '.', 'لإصدار شهادته، يرجى إضافة: ' . $mA . '.') ?> <a href="edit_artwork.php?id=<?= (int) $w['id'] ?>"><?= owBi('Add details', 'أضف التفاصيل') ?></a></div>
+        <?php endif; ?>
         <?php $ch = $myChanges['artwork:' . (int) $w['id']] ?? null; if ($ch && $ch['state'] === 'pending'): ?>
           <div class="w-wait">⏳ <?= owBi('Your changes are waiting for approval. Visitors see the approved version.', 'تعديلاتك بانتظار الموافقة. يرى الزوار النسخة المعتمدة.') ?></div>
         <?php elseif ($ch && $ch['state'] === 'rejected'): ?>
@@ -293,6 +307,30 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
       <input id="a-conf" name="confirm_password" type="password" required minlength="8" autocomplete="new-password"></div>
     <button class="btn btn-primary" type="submit"><?= owBi('Change password', 'غيّر كلمة المرور') ?></button>
   </form>
+
+<?php elseif ($tab === 'certs'): ?>
+  <p class="note"><?= owBi('Each approved artwork gets a Certificate of Authenticity with its own number. Open one to download it as a PDF, or share its verify page with a buyer.', 'يحصل كل عمل معتمد على شهادة أصالة برقم خاص. افتح الشهادة لتنزيلها بصيغة PDF، أو شارك صفحة التحقق مع المشتري.') ?></p>
+  <?php if (!owCertReady() || !$certs): ?>
+    <div class="card empty"><p><?= owBi('Your certificates will appear here once your artworks are approved.', 'ستظهر شهاداتك هنا بعد اعتماد أعمالك.') ?></p></div>
+  <?php else: ?>
+  <div class="w-list">
+    <?php foreach ($certs as $c): $cs = $c['snap']; $ci = owImgSrc((string) ($cs['image'] ?? '')); $c4 = $ci !== '' ? owImgSized($ci, 400) : ''; [$ciE, $ciA] = owDateBi((string) $c['issued_at']); $ok = $c['status'] === 'valid'; ?>
+    <div class="card w-row">
+      <div class="w-thumb"><?php if ($ci !== ''): ?><img loading="lazy" src="<?= e($c4) ?>" alt="<?= e(($cs['title_en'] ?? '') . ' · ' . ($cs['title_ar'] ?? '')) ?>"<?= owImgFallbackAttrs($ci, $c4) ?>><?= owImgPlaceholder(true) ?><?php else: ?><?= owImgPlaceholder(false) ?><?php endif; ?></div>
+      <div>
+        <p class="w-title"><?= owBi((string) ($cs['title_en'] ?? ''), (string) ($cs['title_ar'] ?? '')) ?></p>
+        <div class="w-nums"><span dir="ltr"><b><?= e($c['cert_no']) ?></b></span><span><?= owBi('Issued ' . $ciE, 'صدرت ' . $ciA) ?></span></div>
+        <?php if (!$ok): ?><div class="w-reason"><?= owBi('Cancelled by Oweili. Reason: ', 'ألغتها أويلي. السبب: ') ?><?= e((string) $c['cancel_reason']) ?></div><?php endif; ?>
+      </div>
+      <div class="w-side">
+        <span class="st-pill <?= $ok ? 's-approved' : 's-rejected' ?>"><?= $ok ? owBi('Valid', 'سارية') : owBi('Cancelled', 'ملغاة') ?></span>
+        <a class="btn btn-accent btn-sm" href="certificate.php?no=<?= e(rawurlencode($c['cert_no'])) ?>"><?= owBi('View & download', 'عرض وتنزيل') ?></a>
+        <a class="btn btn-ghost btn-sm" href="<?= e(owCertVerifyUrl((string) $c['cert_no'])) ?>"><?= owBi('Verify page', 'صفحة التحقق') ?></a>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+  <?php endif; ?>
 
 <?php elseif ($tab === 'activity'): ?>
   <div class="card">
