@@ -118,4 +118,10 @@ if ($step === 'imap') {   // read-only look at the sending mailbox: folders, and
     $cmd('LOGOUT'); fclose($fp);
     exit;
 }
+if ($step === 'rdap') {
+    $d = preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_POST['domain'] ?? 'oweili.com'));
+    $j = json_decode($get('https://rdap.org/domain/' . $d), true) ?: [];
+    foreach ((array) ($j['events'] ?? []) as $e) echo $e['eventAction'] ?? '', ': ', $e['eventDate'] ?? '', "\n";
+    exit;
+}
 echo "Unknown step\n";
