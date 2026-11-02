@@ -7,6 +7,8 @@
  *    change   changes to a live artwork, a profile or an article wait for approval
  *    artist   a new artist signed up (waits for approval)
  *    buyer    a new buyer signed up
+ *    gift     a new Oweili Gifts request (gifts.php)
+ *    commission  a new private commission request, or a buyer's answer (commission.php)
  *  Not flooded: the first alert is sent at once. Alerts that come within
  *  15 minutes of the last alert email wait and are sent together in ONE
  *  email when the 15 minutes are over (the next page anyone opens sends it,
@@ -89,7 +91,8 @@ function owAlertEmail(array $items): array {
     $host = preg_replace('/[^a-z0-9.:\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com';
     $base = 'https://' . preg_replace('/^www\./i', '', $host) . owBase();
     $kinds = ['artwork' => ['Waiting for approval', 'بانتظار الموافقة'], 'change' => ['Changes waiting for approval', 'تعديلات بانتظار الموافقة'],
-              'artist' => ['New artist sign-up', 'فنان جديد'], 'buyer' => ['New buyer sign-up', 'مشترٍ جديد']];
+              'artist' => ['New artist sign-up', 'فنان جديد'], 'buyer' => ['New buyer sign-up', 'مشترٍ جديد'],
+              'gift' => ['Gift request', 'طلب هدية'], 'commission' => ['Private commission', 'طلب عمل خاص']];
     $h = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
     $rows = '';
     foreach ($items as $it) {

@@ -117,6 +117,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
     <?php endif; ?>
     <div class="aw-acts">
       <a class="btn btn-primary" href="<?= e($galleryLink) ?>"><?= owBi('I’m Interested', 'أنا مهتم') ?></a>
+      <a class="btn btn-secondary" href="gifts.php?artwork=<?= (int) $aw['id'] ?>"><?= owBi('Give it as a gift', 'أهدِه بدل الورد') ?></a>
       <a class="btn btn-secondary" href="marketplace.php<?= $ar ? '?lang=ar' : '' ?>"><?= owBi('See more in the Gallery', 'شاهد المزيد في المعرض') ?></a>
     </div>
     <p class="rights-note"><?= owBi(OW_CERT_RIGHTS[0], OW_CERT_RIGHTS[1]) ?></p>
