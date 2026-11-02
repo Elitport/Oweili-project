@@ -10,6 +10,9 @@
  *                phones or emails: Oweili is the middle party.
  *    articles  — the artist's own articles (written in my_articles.php,
  *                published only after the admin approves)
+ *    commissions — private commissions the admin assigned to this artist
+ *                (artist_commission.php; photos only after the
+ *                confidentiality agreement)
  *    account   — email, password, notification settings
  *    activity  — what the artist did and when
  *    earnings  — sales and payouts (structure only; payments come in Sprint 4)
@@ -29,7 +32,7 @@ if (!$me) { header('Location: login.php'); exit; }
 if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 $uid = (int) $me['id'];
 
-$TABS = ['works', 'certs', 'articles', 'account', 'activity', 'earnings'];
+$TABS = ['works', 'certs', 'articles', 'commissions', 'account', 'activity', 'earnings'];
 $tab  = in_array($_GET['tab'] ?? '', $TABS, true) ? $_GET['tab'] : 'works';
 $tabLink = fn(string $t) => 'artist_studio.php?tab=' . $t;
 
@@ -221,7 +224,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
-    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'articles' => ['My articles', 'مقالاتي'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات']] as $t => $l): ?>
+    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'articles' => ['My articles', 'مقالاتي'], 'commissions' => ['Commissions', 'الأعمال الخاصة'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات']] as $t => $l): ?>
       <a class="tab<?= $tab === $t ? ' active' : '' ?>" href="<?= e($tabLink($t)) ?>"<?= $tab === $t ? ' aria-current="page"' : '' ?>><?= owBi($l[0], $l[1]) ?></a>
     <?php endforeach; ?>
   </nav>
@@ -304,6 +307,26 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
     <?php endforeach; ?>
   </div>
   <p class="note" style="margin-top:var(--space-sm)"><a href="my_articles.php"><?= owBi('Open all my articles', 'افتح كل مقالاتي') ?></a></p>
+  <?php endif; ?>
+<?php elseif ($tab === 'commissions'):
+  require_once __DIR__ . '/commission_lib.php';
+  $myC = [];
+  try { if (owCommReady()) { $q = getDB()->prepare("SELECT c.id, c.ref_no, c.subject, c.status, c.assigned_at, (SELECT COUNT(*) FROM commission_nda n WHERE n.commission_id = c.id AND n.artist_id = c.artist_id) AS nda
+                                                     FROM commissions c WHERE c.artist_id = :u AND c.status <> 'cancelled' ORDER BY c.id DESC LIMIT 100"); $q->execute([':u' => $uid]); $myC = $q->fetchAll(); } } catch (Throwable $e) { $myC = []; }
+  $cS = owCommSubjects(); ?>
+  <p class="note"><?= owBi('Private commissions the Oweili team chose you for: portraits and personal memories, painted from the buyer’s photos. Everything here is confidential.', 'أعمال خاصة اختارك لها فريق أويلي: بورتريهات وذكريات شخصية تُرسم من صور المشتري. كل ما هنا سرّي.') ?></p>
+  <?php if (!$myC): ?>
+    <div class="card empty"><p><?= owBi('No private commissions yet. When the team chooses you, you get an email.', 'لا أعمال خاصة بعد. عندما يختارك الفريق تصلك رسالة.') ?></p></div>
+  <?php else: ?>
+  <div class="w-list">
+    <?php foreach ($myC as $cm): [$ce, $ca] = owCommStatus()[$cm['status']]; ?>
+    <div class="card w-row" style="grid-template-columns:1fr auto">
+      <div><p class="w-title"><?= e($cm['ref_no']) ?> · <?= owBi($cS[$cm['subject']][0] ?? '', $cS[$cm['subject']][1] ?? '') ?></p>
+        <?php if (!(int) $cm['nda']): ?><div class="w-wait"><?= owBi('Please accept the confidentiality agreement to see the photos.', 'يرجى قبول اتفاقية السرّية لرؤية الصور.') ?></div><?php endif; ?></div>
+      <div class="w-side"><span class="st-pill"><?= owBi($ce, $ca) ?></span><a class="btn btn-accent btn-sm" href="artist_commission.php?id=<?= (int) $cm['id'] ?>"><?= owBi('Open', 'افتح') ?></a></div>
+    </div>
+    <?php endforeach; ?>
+  </div>
   <?php endif; ?>
 <?php elseif ($tab === 'account'): ?>
   <form class="card form-card" method="post" action="<?= e($tabLink('account')) ?>" novalidate>

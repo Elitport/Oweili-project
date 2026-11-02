@@ -6,3 +6,5 @@ uploads/
 .backups/
 # Private PHP error log made on the server. Hidden from visitors and kept by deploys.
 .logs/
+# Private commission photos (reference photos, drafts, finals). Never public, kept by deploys.
+.private/
