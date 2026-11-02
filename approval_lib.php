@@ -9,7 +9,8 @@
  *               instead, see owPhotoChanged in admin_lib.php)
  *    profile  — an approved artist's public profile: photo, names, bio, city,
  *               country, art styles, social links
- *    article  — a sub-admin asking to publish an article or event
+ *    article  — a sub-admin, or an artist (my_articles.php), asking to publish
+ *               an article or event
  *  New artworks and new artist accounts already wait (is_approved = 0).
  *  Every decision emails the artist and is written to the activity log.
  *  Until approvals_update.sql has been run, owApprovalsReady() is false and
@@ -94,7 +95,7 @@ function owDeletePendingFile(string $rel): void {
 function owWaitingChanges(): array {
     if (!owApprovalsReady()) return [];
     $rows = getDB()->query(
-        "SELECT p.*, " . owArtistNameSql('u') . ", u.email
+        "SELECT p.*, " . owArtistNameSql('u') . ", u.email, u.role AS asker_role
          FROM pending_changes p JOIN users u ON u.id = p.user_id
          WHERE p.status = 'pending' ORDER BY p.id DESC")->fetchAll();
     foreach ($rows as &$r) {
@@ -189,6 +190,13 @@ function owApproveChange(int $id, array $actor): bool {
         try { owRefreshCertificate($tid); } catch (Throwable $e) { error_log('owRefreshCertificate: ' . $e->getMessage()); }
     }
     owLog('change_approve', $p['target_type'], $tid, '', $actor);
+    if ($p['target_type'] === 'article' && ($art = owArticleOfArtist($tid, (int) $p['user_id']))) {
+        owTellUser((int) $p['user_id'], 'Your article is published · تم نشر مقالك',
+            'Good news: your article "' . $art['title_en'] . '" is approved and now published on Oweili. Thank you for sharing it.',
+            'خبر جميل: تمت الموافقة على مقالك «' . $art['title_ar'] . '» وهو منشور الآن في أويلي. شكراً لمشاركتك.',
+            'article.php?slug=' . rawurlencode((string) $art['slug']));
+        return true;
+    }
     [$what, $whatAr] = owChangeWords($p['target_type']);
     owTellUser((int) $p['user_id'], 'Approved · تمت الموافقة',
         "Good news: the changes to your $what are approved and now visible on Oweili.",
@@ -210,12 +218,29 @@ function owRejectChange(int $id, string $reason, array $actor): bool {
            ->execute([':r' => $reason, ':by' => $actor['id'], ':id' => $id]);
     if (!empty($d['profile_picture'])) owDeletePendingFile((string) $d['profile_picture']);
     owLog('change_reject', $p['target_type'], (int) $p['target_id'], $reason, $actor);
+    if ($p['target_type'] === 'article' && ($art = owArticleOfArtist((int) $p['target_id'], (int) $p['user_id']))) {
+        owTellUser((int) $p['user_id'], 'About your article · بخصوص مقالك',
+            'Thank you for your article "' . $art['title_en'] . "\". It was not approved yet. The reason: $reason\r\nYou can change it and send it again.",
+            'شكراً لمقالك «' . $art['title_ar'] . "». لم تتم الموافقة عليه بعد. السبب: $reason\r\nيمكنك تعديله وإرساله مرة أخرى.",
+            'my_articles.php?edit=' . (int) $p['target_id']);
+        return true;
+    }
     [$what, $whatAr] = owChangeWords($p['target_type']);
     owTellUser((int) $p['user_id'], 'About your changes · بخصوص تعديلاتك',
         "The changes to your $what were not approved. The reason: $reason\r\nVisitors still see the approved version. You can make the changes again.",
         "لم تتم الموافقة على التعديلات على {$whatAr}. السبب: $reason\r\nما زال الزوار يرون النسخة المعتمدة. يمكنك إعادة التعديل.",
         $p['target_type'] === 'artwork' ? 'artist_studio.php' : 'edit_profile.php');
     return true;
+}
+
+/* An article written by this artist (my_articles.php), or null (a team member's article) */
+function owArticleOfArtist(int $articleId, int $userId): ?array {
+    try {
+        $st = getDB()->prepare("SELECT a.title_en, a.title_ar, a.slug FROM articles a JOIN users u ON u.id = a.author_user_id
+                                WHERE a.id = :a AND a.author_user_id = :u AND u.role = 'artist'");
+        $st->execute([':a' => $articleId, ':u' => $userId]);
+        return $st->fetch() ?: null;
+    } catch (Throwable $e) { return null; }
 }
 
 function owChangeWords(string $type): array {

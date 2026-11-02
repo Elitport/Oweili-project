@@ -8,6 +8,7 @@ Disallow: /admin_
 Disallow: /subadmin_dashboard.php
 Disallow: /collector_dashboard.php
 Disallow: /artist_studio.php
+Disallow: /my_articles.php
 Disallow: /edit_profile.php
 Disallow: /edit_artwork.php
 Disallow: /upload_artwork.php

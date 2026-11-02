@@ -98,6 +98,7 @@
 - article.php — one article (article.php?slug=...)
 - admin_articles.php — team tool to write articles (sub-admins and admins only)
 - article_lib.php — shared helpers for articles, consent records and institutes
+- my_articles.php — artists write articles that wait for the admin's approval (see Features)
 - register.php / register_artist.php / register_collector.php — Sign up flows
 - login.php / logout.php / verify.php / forgot.php — Auth
 - edit_profile.php / edit_artwork.php — Self-service editing
@@ -129,6 +130,14 @@
 - Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
+
+### Artists write articles, with the admin's approval (2 Nov 2026)
+- My Studio → "My articles" tab («مقالاتي») and my_articles.php: an approved artist writes Art Events, Artist Spotlights and Art Education articles (titles and text in English and Arabic, cover + up to 6 photos, event dates and place). "Save draft" keeps it private; "Send for approval" puts it in admin.php → "Waiting for approval" (the same pending_changes path as a sub-admin's request) and sends the admin email alert
+- The admin reads it with "Preview" (article.php?slug=…&preview=1, team only, never indexed), then Approve (it is published; the artist gets "Your article is published" with the link) or Reject with a reason (the artist gets the reason and can edit and send again). Until then visitors get 404
+- A published article is locked for the artist (they write to contact@oweili.com to change it), so live text never changes without the admin. Drafts and not-approved articles can be edited or deleted. At most 40 articles per artist
+- Spotlights with photos need a photo consent (name, contact, how, date, optional private proof, a confirm box), written by the artist and checked by the admin; the existing rule still blocks publishing without it
+- Public article page: "Written by <artist>" with a link to their profile; artist events say "Shared by an Oweili artist, checked by the Oweili team"
+- No database change. Files: my_articles.php (new), artist_studio.php, approval_lib.php (owArticleOfArtist, article emails), admin.php, article.php, robots.txt. Tables: articles, article_images, photo_consents, pending_changes, activity_log
 
 ### Oweili's own email: contact@oweili.com (1 Nov 2026)
 - One setting for the whole site: OW_CONTACT_EMAIL = contact@oweili.com in ow_paths.php, read through owContactEmail(). It can also be changed without a code change by adding define('OWEILI_CONTACT_EMAIL', '…') to config.php. contact@elitport.com is no longer used anywhere on the site or in its emails

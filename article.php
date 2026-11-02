@@ -2,6 +2,9 @@
 /* =====================================================================
  *  article.php — one published article, for everyone
  *  article.php?slug=arabic-calligraphy
+ *  ?preview=1: the team (owArticleStaff) can see an article that is not
+ *  public yet (an artist's article waiting for approval), never indexed.
+ *  Articles written by an artist show "Written by <artist>" with a link.
  *  Tables: articles, article_images, photo_consents (see article_lib.php)
  * ===================================================================== */
 require_once 'config.php';
@@ -11,11 +14,19 @@ $TYPES = owArticleTypes();
 $slug  = (string) ($_GET['slug'] ?? '');
 $a = null;
 $images = [];
+$byArtist = null;
+$preview = !empty($_GET['preview']) && owArticleStaff() !== null;
 if ($slug !== '' && strlen($slug) <= 190 && preg_match('/^[a-z0-9-]+$/', $slug) && owArticlesReady()) {
     try {
-        $st = getDB()->prepare('SELECT a.* FROM articles a WHERE a.slug = :s AND ' . owArticlePublicSql('a'));
+        $st = getDB()->prepare('SELECT a.* FROM articles a WHERE a.slug = :s' . ($preview ? '' : ' AND ' . owArticlePublicSql('a')));
         $st->execute([':s' => $slug]);
         $a = $st->fetch() ?: null;
+        if ($a && $a['author_user_id']) {
+            require_once __DIR__ . '/artwork_lib.php';
+            $st = getDB()->prepare("SELECT u.id, " . owArtistNameSql('u') . " FROM users u WHERE u.id = :id AND u.role = 'artist' AND u.is_approved = 1 AND COALESCE(u.is_banned, 0) = 0");
+            $st->execute([':id' => $a['author_user_id']]);
+            $byArtist = $st->fetch() ?: null;
+        }
         if ($a) {
             $st = getDB()->prepare('SELECT image_path, alt_en, alt_ar FROM article_images WHERE article_id = :id ORDER BY sort_order, id');
             $st->execute([':id' => $a['id']]);
@@ -40,7 +51,7 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php require_once __DIR__ . '/seo_lib.php';
 if ($a) owSeo(['en' => (string) $a['title_en'], 'ar' => (string) $a['title_ar'], 'desc_en' => owExcerpt((string) $a['body_en'], 150), 'desc_ar' => owExcerpt((string) $a['body_ar'], 150),
-               'image' => (string) ($cover ?? ''), 'path' => 'article.php?slug=' . rawurlencode((string) $a['slug']), 'type' => 'article']);
+               'image' => (string) ($cover ?? ''), 'path' => 'article.php?slug=' . rawurlencode((string) $a['slug']), 'type' => 'article'] + ($preview ? ['noindex' => true] : []));
 else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود', 'path' => 'articles_list.php', 'noindex' => true]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
@@ -116,7 +127,8 @@ else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود
     <article class="card art-card">
       <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a>
       <h1><?= owBi($a['title_en'], $a['title_ar']) ?></h1>
-      <p class="art-date"><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?></p>
+      <?php if ($preview && $a['status'] !== 'published'): ?><p class="alert alert-error" role="status"><?= owBi('Preview for the team: visitors cannot see this article yet.', 'معاينة للفريق: لا يرى الزوار هذا المقال بعد.') ?></p><?php endif; ?>
+      <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <a href="artist_dashboard.php?id=<?= (int) $byArtist['id'] ?>"><?= owBi((string) $byArtist['artist_en'], (string) $byArtist['artist_ar']) ?></a><?php endif; ?></p>
 
       <?php if ($type === 'event'): [$dEn, $dAr] = owDateRangeBi($a['event_start_date'], $a['event_end_date']); ?>
         <div class="event-box">
@@ -124,7 +136,7 @@ else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود
           <?php if ($a['event_location_en'] !== '' || $a['event_location_ar'] !== ''): ?>
             <div class="event-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><?= owBi($a['event_location_en'] ?: $a['event_location_ar'], $a['event_location_ar'] ?: $a['event_location_en']) ?></div>
           <?php endif; ?>
-          <div class="event-note"><?= owBi('Added by the Oweili team', 'أضافه فريق أويلي') ?></div>
+          <div class="event-note"><?= $byArtist ? owBi('Shared by an Oweili artist, checked by the Oweili team', 'شاركه فنان من أويلي، وراجعه فريق أويلي') : owBi('Added by the Oweili team', 'أضافه فريق أويلي') ?></div>
         </div>
       <?php endif; ?>
 

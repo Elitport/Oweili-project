@@ -8,6 +8,8 @@
  *                not approved + the reason, sold) and its numbers: views,
  *                favorites, "I'm Interested" requests. Never buyer names,
  *                phones or emails: Oweili is the middle party.
+ *    articles  — the artist's own articles (written in my_articles.php,
+ *                published only after the admin approves)
  *    account   — email, password, notification settings
  *    activity  — what the artist did and when
  *    earnings  — sales and payouts (structure only; payments come in Sprint 4)
@@ -27,7 +29,7 @@ if (!$me) { header('Location: login.php'); exit; }
 if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 $uid = (int) $me['id'];
 
-$TABS = ['works', 'certs', 'account', 'activity', 'earnings'];
+$TABS = ['works', 'certs', 'articles', 'account', 'activity', 'earnings'];
 $tab  = in_array($_GET['tab'] ?? '', $TABS, true) ? $_GET['tab'] : 'works';
 $tabLink = fn(string $t) => 'artist_studio.php?tab=' . $t;
 
@@ -219,7 +221,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
-    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات']] as $t => $l): ?>
+    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'articles' => ['My articles', 'مقالاتي'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات']] as $t => $l): ?>
       <a class="tab<?= $tab === $t ? ' active' : '' ?>" href="<?= e($tabLink($t)) ?>"<?= $tab === $t ? ' aria-current="page"' : '' ?>><?= owBi($l[0], $l[1]) ?></a>
     <?php endforeach; ?>
   </nav>
@@ -273,6 +275,36 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   <p class="note" style="margin-top:var(--space-sm)"><?= owBi('To delete an artwork, open your dashboard and press Delete under it.', 'لحذف عمل، افتح لوحتك واضغط «حذف» تحته.') ?> <a href="artist_dashboard.php"><?= owBi('Open dashboard', 'افتح اللوحة') ?></a></p>
   <?php endif; ?>
 
+<?php elseif ($tab === 'articles'):
+  $myArts = [];
+  try { if (owHasTable('articles')) { $q = getDB()->prepare('SELECT id, type, slug, title_en, title_ar, status FROM articles WHERE author_user_id = :u ORDER BY updated_at DESC, id DESC LIMIT 50'); $q->execute([':u' => $uid]); $myArts = $q->fetchAll(); } } catch (Throwable $e) { $myArts = []; }
+  $aState = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approval', 'بانتظار الموافقة'], 'rejected' => ['Not approved', 'لم تتم الموافقة'], 'published' => ['Published', 'منشور']];
+  $aTypes = ['event' => ['Art Event', 'ملتقى فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان'], 'art_education' => ['Art Education', 'تثقيف فني']]; ?>
+  <p class="note"><?= owBi('Write Art Events, Artist Spotlights and Art Education articles. The Oweili team reads each one first, and we email you the result.', 'اكتب عن الملتقيات الفنية وأضواء على الفنانين والتثقيف الفني. يقرأ فريق أويلي كل مقال أولاً، ونراسلك بالنتيجة.') ?></p>
+  <div style="display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-bottom:var(--space-md)">
+    <a class="btn btn-primary" href="my_articles.php?new=event"><?= owBi('New Art Event', 'ملتقى فني جديد') ?></a>
+    <a class="btn btn-secondary" href="my_articles.php?new=artist_spotlight"><?= owBi('New Artist Spotlight', 'أضواء جديدة على فنان') ?></a>
+    <a class="btn btn-secondary" href="my_articles.php?new=art_education"><?= owBi('New Art Education article', 'مقال تثقيف فني جديد') ?></a>
+  </div>
+  <?php if (!$myArts): ?>
+    <div class="card empty"><p><?= owBi('No articles yet. Your first one starts with one of the buttons above.', 'لا مقالات بعد. يبدأ مقالك الأول بأحد الأزرار في الأعلى.') ?></p></div>
+  <?php else: ?>
+  <div class="w-list">
+    <?php foreach ($myArts as $ar): $ch = $myChanges['article:' . (int) $ar['id']] ?? null;
+      $s = $ar['status'] === 'published' ? 'published' : ($ch && $ch['state'] === 'pending' ? 'pending' : ($ch && $ch['state'] === 'rejected' ? 'rejected' : 'draft'));
+      $ty = $aTypes[$ar['type']] ?? ['Article', 'مقال']; ?>
+    <div class="card w-row" style="grid-template-columns:1fr auto">
+      <div><p class="w-title"><?= owBi((string) ($ar['title_en'] ?: $ar['title_ar']), (string) ($ar['title_ar'] ?: $ar['title_en'])) ?></p>
+        <div class="w-nums"><span><?= owBi($ty[0], $ty[1]) ?></span></div>
+        <?php if ($s === 'rejected'): ?><div class="w-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e($ch['reason'] ?: '—') ?></div><?php endif; ?></div>
+      <div class="w-side"><span class="st-pill s-<?= $s === 'published' ? 'approved' : e($s) ?>"><?= owBi($aState[$s][0], $aState[$s][1]) ?></span>
+        <?php if ($s === 'published'): ?><a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode($ar['slug'])) ?>"><?= owBi('See it', 'شاهده') ?></a>
+        <?php else: ?><a class="btn btn-accent btn-sm" href="my_articles.php?edit=<?= (int) $ar['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a><?php endif; ?></div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+  <p class="note" style="margin-top:var(--space-sm)"><a href="my_articles.php"><?= owBi('Open all my articles', 'افتح كل مقالاتي') ?></a></p>
+  <?php endif; ?>
 <?php elseif ($tab === 'account'): ?>
   <form class="card form-card" method="post" action="<?= e($tabLink('account')) ?>" novalidate>
     <?= csrfField() ?><input type="hidden" name="do" value="notify">

@@ -774,7 +774,12 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php else: ?><a class="btn btn-ghost btn-sm" href="admin_articles.php?edit=<?= (int) $wc['target_id'] ?>"><?= owBi('Open', 'فتح') ?></a><?php endif; ?>
           </div>
           <?php if ($wt === 'article'): ?>
+            <?php if (($wc['asker_role'] ?? '') === 'artist'): ?>
+            <p class="mini"><?= owBi('An artist wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب فنان هذا المقال ويطلب نشره. اقرأه أولاً عبر «معاينة». يبقى مخفياً حتى توافق.') ?>
+              <?php if (!empty($cur['slug'])): ?><a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode((string) $cur['slug'])) ?>&amp;preview=1" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a><?php endif; ?></p>
+            <?php else: ?>
             <p class="mini"><?= owBi('A team member asks to publish this article. It stays a draft until you approve.', 'يطلب أحد أعضاء الفريق نشر هذا المقال. يبقى مسودة حتى توافق.') ?></p>
+            <?php endif; ?>
           <?php else: ?>
           <div class="table-wrap"><table class="table wc-table">
             <thead><tr><th><?= owBi('What', 'ماذا') ?></th><th><?= owBi('Now (visitors see)', 'الآن (يراه الزوار)') ?></th><th><?= owBi('Asked for', 'المطلوب') ?></th></tr></thead>
