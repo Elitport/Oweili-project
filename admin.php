@@ -500,6 +500,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="adm-group">
       <span class="adm-glabel"><?= owBi('Content', 'المحتوى') ?></span>
       <a class="btn btn-dark btn-sm" href="admin_articles.php"><?= owBi('Articles', 'المقالات') ?></a>
+      <a class="btn btn-dark btn-sm" href="admin_gallery.php"><?= owBi('Gallery', 'المعرض') ?></a>
       <a class="btn btn-dark btn-sm" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
     </div>
     <div class="adm-group">

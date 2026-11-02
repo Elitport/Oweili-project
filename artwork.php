@@ -22,7 +22,8 @@ $ART_TYPES = require __DIR__ . '/art_types.php';
 $id = (int) ($_GET['id'] ?? 0);
 $aw = null;
 if ($id > 0) {
-    $st = getDB()->prepare("SELECT a.*, " . owArtistNameSql('u') . " FROM artworks a JOIN users u ON u.id = a.artist_id
+    require_once __DIR__ . '/gallery_lib.php';
+    $st = getDB()->prepare("SELECT a.*, " . owArtistNameSql('u') . ", " . owVerifiedSql('u') . " AS artist_verified FROM artworks a JOIN users u ON u.id = a.artist_id
                             WHERE a.id = :id AND a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0" . owNotDraftSql('a'));
     $st->execute([':id' => $id]);
     $aw = $st->fetch() ?: null;
@@ -95,7 +96,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
   <div class="aw-info card">
     <h1><?= owBi($tEn, $tAr) ?></h1>
     <p class="sub"><?= owBi($tAr !== $tEn ? $tAr : '', $tEn !== $tAr ? $tEn : '') ?></p>
-    <p class="by"><a href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>"><?= owBi('by ' . $aw['artist_en'], 'بواسطة ' . $aw['artist_ar']) ?></a></p>
+    <p class="by"><a href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>"><?= owBi('by ' . $aw['artist_en'], 'بواسطة ' . $aw['artist_ar']) ?></a><?php if ((int) ($aw['artist_verified'] ?? 0) === 1): ?> <?= owVerifiedBadge() ?><?php endif; ?></p>
     <div class="row">
       <?php if ($type): ?><span class="type-pill"><?= owBi($type['en'], $type['ar']) ?></span><?php endif; ?>
       <?php if (owHasJourney($stages)): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>

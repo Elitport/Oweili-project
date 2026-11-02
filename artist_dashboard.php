@@ -269,6 +269,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
       <?php if ($artist['artist_ar'] !== '' && $artist['artist_ar'] !== $artist['artist_en']): ?>
         <div class="name-ar" dir="rtl"><?= e($artist['artist_ar']) ?></div>
       <?php endif; ?>
+      <?php if ((int) ($artist['is_verified_artist'] ?? 0) === 1): require_once __DIR__ . '/gallery_lib.php'; ?><div class="p-verified"><?= owVerifiedBadge() ?></div><?php endif; ?>
       <?php if (!empty($artist['city']) || !empty($artist['country'])): ?>
         <div class="city">📍 <?= e(implode(', ', array_filter([(string) ($artist['city'] ?? ''), (string) ($artist['country'] ?? '')]))) ?></div>
       <?php endif; ?>

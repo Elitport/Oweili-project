@@ -4,10 +4,16 @@
  *  Video background (bg.mp4) with a soft dark shade, badge, headline,
  *  one-line subtitle and two buttons. Text is printed in both languages
  *  (bi-en / bi-ar); the shared menu's language switch shows the one that
- *  matches the page direction. No database tables used.
+ *  matches the page direction.
+ *  "Artist of the week" (picked by the admin in admin_gallery.php): a small
+ *  frosted card in the corner of the same screen, hidden when none is picked.
+ *  Tables read: site_settings, users, artworks (gallery_lib.php)
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languages
+require_once __DIR__ . '/gallery_lib.php';   // Artist of the week
+$aotw = null;
+try { $aotw = owArtistOfWeek(); } catch (Throwable $e) { $aotw = null; }
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -71,7 +77,21 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 .fade-3 { animation-delay: 0.35s; }
 .fade-4 { animation-delay: 0.5s; }
 
+.aotw-home { position: fixed; z-index: 3; bottom: var(--space-md); inset-inline-end: var(--space-md); display: flex; align-items: center; gap: 12px;
+  max-width: 340px; padding: 10px 16px 10px 10px; border-radius: var(--radius-card); text-decoration: none; color: inherit;
+  background: rgba(var(--rgb-surface),0.82); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--rgb-ink),0.12); box-shadow: 0 10px 30px rgba(var(--rgb-shadow),0.12); text-align: start; }
+[dir="rtl"] .aotw-home { padding: 10px 10px 10px 16px; }
+.aotw-home:hover { transform: translateY(-2px); }
+.aotw-home:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.aotw-pic { width: 64px; height: 64px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: var(--color-frame); }
+.aotw-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.aotw-k { display: block; font-size: var(--fs-min); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-body); }
+[dir="rtl"] .aotw-k { letter-spacing: 0; font-size: 13px; }
+.aotw-n { display: block; font-size: 16px; font-weight: 700; color: var(--color-dark); line-height: 1.3; }
+.aotw-go { display: block; font-size: var(--fs-caption); font-weight: 700; color: var(--color-accent); }
 @media (max-width: 768px) {
+  .aotw-home { position: static; margin: var(--space-lg) auto 0; max-width: 320px; }
   .hero h1 { font-size: 36px; }
   .hero-sub { font-size: 16px; }
 }
@@ -79,7 +99,9 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
   .hero-btns { flex-direction: column; width: 100%; max-width: 320px; }
   .hero-btns .btn { width: 100%; min-width: 0; }
 }
+@media (max-height: 640px) and (max-width: 768px) { .aotw-home { display: none; } }
 @media (prefers-reduced-motion: reduce) {
+  .aotw-home:hover { transform: none; }
   .fade { animation: none; }
   .hero-bg video { display: none; }
 }
@@ -102,6 +124,14 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
       <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
       <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
     </div>
+    <?php if ($aotw): $aImg = $aotw['art'] ? owImgSrc((string) $aotw['art']['image_url']) : ''; if ($aImg === '') $aImg = owImgSrc((string) ($aotw['profile_picture'] ?? '')); ?>
+    <a class="aotw-home fade fade-4" href="artist_dashboard.php?id=<?= (int) $aotw['id'] ?>">
+      <span class="aotw-pic"><?php if ($aImg !== ''): ?><img src="<?= e(owImgSized($aImg, 400)) ?>" alt="<?= e($aotw['artist_en'] . ' · ' . $aotw['artist_ar']) ?>"<?= owImgFallbackAttrs($aImg, owImgSized($aImg, 400)) ?>><?php endif; ?></span>
+      <span><span class="aotw-k"><?= owBi('Artist of the week', 'فنان الأسبوع') ?></span>
+        <span class="aotw-n"><?= owBi((string) $aotw['artist_en'], (string) $aotw['artist_ar']) ?><?php if ((int) $aotw['verified'] === 1): ?> <?= owVerifiedBadge(true) ?><?php endif; ?></span>
+        <span class="aotw-go"><?= owBi('Meet the artist →', 'تعرّف على الفنان ←') ?></span></span>
+    </a>
+    <?php endif; ?>
   </div>
 </main>
 

@@ -3,6 +3,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
+require_once __DIR__ . '/gallery_lib.php';   // filters, collections, Artist of the week, Verified artist
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $ART_CATS  = require __DIR__ . '/art_categories.php';
 
@@ -27,7 +28,12 @@ $SORTS   = [
     'newest'     => 'a.created_at DESC, a.id DESC',
     'price_low'  => 'a.price ASC, a.created_at DESC, a.id DESC',
     'price_high' => 'a.price DESC, a.created_at DESC, a.id DESC',
+    'popular'    => (owHasColumn('artworks', 'view_count') ? 'a.view_count DESC, ' : '') . 'a.created_at DESC, a.id DESC',
 ];
+$MEDIUMS = owMediumFilters(); $PRICES = owPriceFilters(); $SIZES = owSizeFilters(); $COLORS = owColorFamilies();
+$CITIES  = owGalleryCities();
+$hasDims = owHasColumn('artworks', 'width_cm') && owHasColumn('artworks', 'height_cm');
+$hasMed  = owHasColumn('artworks', 'medium');
 $initType = isset($ART_TYPES[$getStr('type')]) ? $getStr('type') : '';      // one exact type (links from Explore Art Styles)
 $cat      = isset($ART_CATS[$getStr('cat')]) ? $getStr('cat') : 'all';
 if ($initType !== '') {                                                      // light up the category that holds this type
@@ -38,14 +44,33 @@ $status   = in_array($getStr('status'), ['available', 'auction'], true) ? $getSt
 $sort     = isset($SORTS[$getStr('sort')]) ? $getStr('sort') : 'newest';
 $q        = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>"\'`]/u', '', $getStr('q')) ?? ''), 0, 60);
 $page     = max(1, (int) $getStr('page'));
+$medium   = $hasMed && isset($MEDIUMS[$getStr('medium')]) ? $getStr('medium') : '';
+$price    = isset($PRICES[$getStr('price')]) ? $getStr('price') : '';
+$size     = $hasDims && isset($SIZES[$getStr('size')]) ? $getStr('size') : '';
+$city     = in_array($getStr('city'), $CITIES, true) ? $getStr('city') : '';
+$color    = isset($COLORS[$getStr('color')]) ? $getStr('color') : '';
+$vonly    = $getStr('verified') === '1' && owVerifiedReady() ? '1' : '';
+$colObj   = $getStr('col') !== '' ? owCollectionBySlug($getStr('col')) : null;
+$col      = $colObj ? (string) $colObj['slug'] : '';
 
 /* A link to this page with some choices changed (defaults are left out, so links stay short) */
 function mpUrl(array $over = []): string {
-    global $lang, $cat, $initType, $status, $sort, $q;
-    $st = array_merge(['lang' => $lang, 'cat' => $cat, 'type' => $initType, 'status' => $status, 'sort' => $sort, 'q' => $q, 'page' => 1], $over);
-    $defaults = ['lang' => 'en', 'cat' => 'all', 'type' => '', 'status' => 'all', 'sort' => 'newest', 'q' => '', 'page' => 1];
+    global $lang, $cat, $initType, $status, $sort, $q, $medium, $price, $size, $city, $color, $vonly, $col;
+    $st = array_merge(['lang' => $lang, 'col' => $col, 'cat' => $cat, 'type' => $initType, 'status' => $status, 'medium' => $medium, 'price' => $price, 'size' => $size,
+                       'city' => $city, 'color' => $color, 'verified' => $vonly, 'sort' => $sort, 'q' => $q, 'page' => 1], $over);
+    $defaults = ['lang' => 'en', 'col' => '', 'cat' => 'all', 'type' => '', 'status' => 'all', 'medium' => '', 'price' => '', 'size' => '', 'city' => '', 'color' => '', 'verified' => '', 'sort' => 'newest', 'q' => '', 'page' => 1];
     foreach ($defaults as $k => $d) { if ((string) $st[$k] === (string) $d) unset($st[$k]); }
     return 'marketplace.php' . ($st ? '?' . http_build_query($st) : '');
+}
+
+/* Hidden fields that carry the current choices in a GET form (except the ones the form sets itself) */
+function mpHidden(array $skip): string {
+    global $lang, $cat, $initType, $status, $sort, $q, $medium, $price, $size, $city, $color, $vonly, $col;
+    $cur = ['lang' => $lang === 'ar' ? 'ar' : '', 'col' => $col, 'cat' => $initType === '' && $cat !== 'all' ? $cat : '', 'type' => $initType, 'status' => $status === 'all' ? '' : $status,
+            'medium' => $medium, 'price' => $price, 'size' => $size, 'city' => $city, 'color' => $color, 'verified' => $vonly, 'sort' => $sort === 'newest' ? '' : $sort, 'q' => $q];
+    $h = '';
+    foreach ($cur as $k => $v) if ($v !== '' && !in_array($k, $skip, true)) $h .= '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8') . '">';
+    return $h;
 }
 
 /* ---- One set of conditions for the count and the page: approved, for sale, artist not banned, no drafts ---- */
@@ -63,6 +88,29 @@ if ($q !== '') {
     $where .= ' AND (a.title_en LIKE :q1 OR a.title_ar LIKE :q2)';
     $params[':q1'] = $like; $params[':q2'] = $like;
 }
+if ($medium !== '') {
+    $mw = [];
+    foreach ($MEDIUMS[$medium]['words'] as $i => $w) { $mw[] = 'a.medium LIKE :md' . $i; $params[':md' . $i] = '%' . addcslashes($w, '\\%_') . '%'; }
+    $where .= ' AND (' . implode(' OR ', $mw) . ')';
+}
+if ($price !== '') {
+    if ($PRICES[$price]['min'] !== null) { $where .= ' AND a.price >= :pmin'; $params[':pmin'] = $PRICES[$price]['min']; }
+    if ($PRICES[$price]['max'] !== null) { $where .= ' AND a.price <= :pmax'; $params[':pmax'] = $PRICES[$price]['max']; }
+}
+if ($size !== '') {
+    $where .= ' AND a.width_cm IS NOT NULL AND a.height_cm IS NOT NULL';
+    if ($SIZES[$size]['min'] !== null) { $where .= ' AND GREATEST(a.width_cm, a.height_cm) >= :smin'; $params[':smin'] = $SIZES[$size]['min']; }
+    if ($SIZES[$size]['max'] !== null) { $where .= ' AND GREATEST(a.width_cm, a.height_cm) <= :smax'; $params[':smax'] = $SIZES[$size]['max']; }
+}
+if ($city !== '') { $where .= ' AND TRIM(u.city) = :city'; $params[':city'] = $city; }
+if ($color !== '' && ($cn = owColorFamilyNames($color))) {
+    $ph = [];
+    foreach ($cn as $i => $n) { $ph[] = ':cl' . $i; $params[':cl' . $i] = $n; }
+    $where .= ' AND EXISTS (SELECT 1 FROM artwork_colors ac WHERE ac.artwork_id = a.id AND ac.color_name_en IN (' . implode(',', $ph) . '))';
+}
+if ($vonly === '1') $where .= ' AND ' . owVerifiedSql('u') . ' = 1';
+if ($colObj) { [$cc, $cp] = owCollectionCondition($colObj); $where .= ' AND ' . $cc; $params += $cp; }
+$moreOn = ($medium !== '' ? 1 : 0) + ($price !== '' ? 1 : 0) + ($size !== '' ? 1 : 0) + ($city !== '' ? 1 : 0) + ($color !== '' ? 1 : 0) + ($vonly !== '' ? 1 : 0);
 
 /* ---- Pagination ---- */
 $perPage = 12;
@@ -77,7 +125,7 @@ $offset     = ($page - 1) * $perPage;
 $stmt = getDB()->prepare(
     "SELECT a.id, a.title_en, a.title_ar, a.description_en, a.description_ar,
             a.price, a.type, a.status, a.image_url, a.artist_id,
-            " . owArtistNameSql('u') . "
+            " . owArtistNameSql('u') . ", " . owVerifiedSql('u') . " AS verified
      FROM artworks a
      JOIN users u ON u.id = a.artist_id
      WHERE $where
@@ -89,7 +137,13 @@ $stmt->bindValue(':lim', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $artworks = $stmt->fetchAll();
-$filtered = $cat !== 'all' || $initType !== '' || $status !== 'all' || $q !== '';
+$filtered = $cat !== 'all' || $initType !== '' || $status !== 'all' || $q !== '' || $moreOn > 0 || $col !== '';
+/* Above the grid, on the first unfiltered page: curated collections and the Artist of the week */
+$showcase  = !$filtered && $page === 1;
+$cols      = $showcase ? owCollections() : [];
+$colCovers = $cols ? owCollectionCovers($cols) : [];
+$cols      = array_values(array_filter($cols, fn($c) => ($colCovers[(int) $c['id']]['count'] ?? 0) > 0));
+$aotw      = $showcase ? owArtistOfWeek() : null;
 
 /* A shared link (artwork.php, Community) can ask for one artwork's window with ?show=N,
    even when that artwork is not on this page: it is added to the window data only */
@@ -97,7 +151,7 @@ $modalArtworks = $artworks;
 $showId = (int) $getStr('show');
 if ($showId > 0 && !in_array($showId, array_map(fn($r) => (int) $r['id'], $artworks), true)) {
     $one = getDB()->prepare("SELECT a.id, a.title_en, a.title_ar, a.description_en, a.description_ar, a.price, a.type, a.status, a.image_url, a.artist_id,
-                                    " . owArtistNameSql('u') . " FROM artworks a JOIN users u ON u.id = a.artist_id
+                                    " . owArtistNameSql('u') . ", " . owVerifiedSql('u') . " AS verified FROM artworks a JOIN users u ON u.id = a.artist_id
                              WHERE a.id = :id AND a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0" . owNotDraftSql('a'));
     $one->execute([':id' => $showId]);
     if ($row = $one->fetch()) $modalArtworks[] = $row;
@@ -122,6 +176,7 @@ foreach ($modalArtworks as $aw) {
         'artist_en' => $aw['artist_en'],
         'artist_ar' => $aw['artist_ar'],
         'artist_id' => (int) $aw['artist_id'],
+        'verified'  => (int) ($aw['verified'] ?? 0) === 1,
         'price'     => (float) $aw['price'],
         'image'     => ($mBig = owImgSized($mOrig = $mpImg((string) $aw['image_url']), 1600)),   // details window: a large copy, not the camera original
         'image_fb'  => $mOrig === '' ? [] : array_values(array_unique(array_filter([owImgSized($mOrig, 800), owImgSized($mOrig, 400), owImgSized($mOrig, 800, false), $mOrig], fn($u) => $u !== '' && $u !== $mBig))),
@@ -239,6 +294,54 @@ foreach ($modalArtworks as $aw) {
     .modal-close:hover{background:var(--color-hover-light);}
     [dir="rtl"] .modal-close{float:left;}
 
+    /* more filters */
+    .mp-more > summary{list-style:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;width:auto;}
+    .mp-more > summary::-webkit-details-marker{display:none;}
+    .mp-more > summary svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+    .mp-n{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:var(--radius-pill);background:var(--color-dark);color:var(--color-on-dark);font-size:var(--fs-min);}
+    .mp-filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--space-sm);align-items:end;margin-top:var(--space-sm);padding:var(--space-md);border-radius:var(--radius-card);background:var(--color-surface);border:1px solid var(--color-border);}
+    .mp-filters .field{margin:0;min-width:0;}
+    .mp-filters select{width:100%;min-height:44px;}
+    .f-colors{grid-column:1 / -1;border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+    .f-colors legend{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-bottom:6px;padding:0;width:100%;}
+    .sw,.sw-any{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px 0 8px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);background:var(--color-surface);font-size:var(--fs-label);font-weight:600;color:var(--color-dark);cursor:pointer;}
+    [dir="rtl"] .sw{padding:0 8px 0 12px;}
+    .sw-any{padding:0 12px;}
+    .sw input,.sw-any input{position:absolute;opacity:0;width:1px;height:1px;}
+    .sw i{width:18px;height:18px;border-radius:50%;border:1px solid rgba(var(--rgb-ink),0.25);}
+    .sw:has(input:checked),.sw-any:has(input:checked){border-color:var(--color-dark);box-shadow:0 0 0 1px var(--color-dark) inset;}
+    .sw:has(input:focus-visible),.sw-any:has(input:focus-visible){outline:2px solid var(--color-accent);outline-offset:2px;}
+    .f-check{grid-column:1 / span 2;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--color-dark);}
+    .f-acts{grid-column:3 / -1;display:flex;gap:var(--space-xs);justify-content:flex-end;flex-wrap:wrap;}
+    /* artist of the week */
+    .aotw{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;overflow:hidden;padding:0;margin:0 0 var(--space-lg);animation:mpRise .6s .1s cubic-bezier(.22,1,.36,1) both;}
+    .aotw-art{position:relative;aspect-ratio:4/3;background:var(--color-frame);}
+    .aotw-art img{width:100%;height:100%;object-fit:cover;display:block;}
+    .aotw-txt{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:var(--space-xs);padding:var(--space-lg);}
+    .aotw-kicker,.col-kicker{font-size:var(--fs-min);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-body);}
+    [dir="rtl"] .aotw-kicker,[dir="rtl"] .col-kicker{letter-spacing:0;font-size:13px;}
+    .aotw-txt h2{font-size:var(--fs-card);margin:0;display:flex;align-items:center;gap:10px;}
+    .aotw-face{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--color-surface);box-shadow:0 2px 8px rgba(var(--rgb-shadow),.15);}
+    .aotw-city{margin:0;font-size:var(--fs-caption);color:var(--color-body);}
+    .aotw-note{margin:0 0 var(--space-xs);max-width:420px;}
+    /* collections */
+    .cols{margin:0 0 var(--space-lg);}
+    .cols-h{font-size:var(--fs-subtitle);margin:0 0 var(--space-sm);}
+    .cols-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,1fr);gap:var(--space-sm);overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;}
+    .col-card{display:flex;flex-direction:column;gap:4px;padding:var(--space-xs) var(--space-xs) var(--space-sm);text-decoration:none;color:inherit;scroll-snap-align:start;}
+    .col-pics{display:grid;gap:3px;aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:var(--color-frame);margin-bottom:6px;}
+    .col-pics.n2{grid-template-columns:1fr 1fr;}
+    .col-pics.n3{grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;}
+    .col-pics.n3 .col-pic:first-child{grid-row:1 / span 2;}
+    .col-pic{position:relative;overflow:hidden;background:var(--color-surface-2);}
+    .col-pic img{width:100%;height:100%;object-fit:cover;display:block;}
+    .col-t{font-weight:700;color:var(--color-dark);padding:0 4px;}
+    .col-n{font-size:var(--fs-caption);color:var(--color-body);padding:0 4px;}
+    .col-back{display:inline-block;margin-bottom:var(--space-xs);font-size:var(--fs-caption);font-weight:700;color:var(--color-accent);}
+    .col-kicker{display:block;margin-bottom:4px;}
+    @media(max-width:1024px){ .mp-filters{grid-template-columns:repeat(3,minmax(0,1fr));} .f-check{grid-column:1 / -1;} .f-acts{grid-column:1 / -1;justify-content:flex-start;} }
+    @media(max-width:640px){ .mp-filters{grid-template-columns:1fr 1fr;padding:var(--space-sm);} .aotw{grid-template-columns:1fr;} .aotw-txt{padding:var(--space-md);} .cols-row{grid-auto-columns:72%;} }
+
     @keyframes mpRise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
     @media (prefers-reduced-motion: reduce){ .page-header,.human-banner,.mp-tools,.mp-card,.gallery-empty,.modal{animation:none;} .mp-card:hover,.mp-card:hover .aw-img img{transform:none;} }
     @media(max-width:1024px){ .art-grid{grid-template-columns:repeat(3,1fr);} }
@@ -272,25 +375,63 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
 
 <main class="main-content">
 
+  <?php if ($colObj): ?>
+  <div class="page-header">
+    <a class="col-back" href="<?= e(mpUrl(['col' => ''])) ?>"><?= $ar ? '→ كل المعرض' : '← The whole Gallery' ?></a>
+    <span class="col-kicker"><?= $ar ? 'مجموعة مختارة' : 'Curated collection' ?></span>
+    <h1><?= e($ar ? ($colObj['title_ar'] ?: $colObj['title_en']) : ($colObj['title_en'] ?: $colObj['title_ar'])) ?></h1>
+    <?php $ci = $ar ? ($colObj['intro_ar'] ?: $colObj['intro_en']) : ($colObj['intro_en'] ?: $colObj['intro_ar']); if ($ci !== ''): ?><p><?= e($ci) ?></p><?php endif; ?>
+  </div>
+  <?php else: ?>
   <div class="page-header">
     <h1><?= $ar ? 'المعرض' : 'The Gallery' ?></h1>
     <p><?= $ar
         ? 'هنا تلتقي بأعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية، ولا تتكرر أبداً.'
         : 'Meet original works by real artists, from Saudi Arabia and all over the world. Every piece has a story. None of them repeat.' ?></p>
   </div>
+  <?php endif; ?>
 
   <!-- HUMAN-ONLY BANNER -->
   <div class="human-banner">
     <?= $ar ? 'كل عمل هنا رسمته يد إنسان، بصبر وحب' : 'Every piece here was drawn by a human hand, with patience and love.' ?>
   </div>
 
+  <?php if ($aotw): $aw0 = $aotw['art']; $aImg = $aw0 ? owImgSrc((string) $aw0['image_url']) : ''; $pImg = owImgSrc((string) ($aotw['profile_picture'] ?? ''));
+    $nEn = $ar ? $aotw['note_ar'] : $aotw['note_en']; if ($nEn === '') $nEn = $ar ? $aotw['note_en'] : $aotw['note_ar']; ?>
+  <!-- ARTIST OF THE WEEK (picked by the admin in admin_gallery.php) -->
+  <section class="aotw card" aria-label="<?= $ar ? 'فنان الأسبوع' : 'Artist of the week' ?>">
+    <div class="aotw-art"><?php if ($aImg !== ''): ?><?= owArtImgHtml($aImg, ($aw0['title_en'] ?? '') . ' · ' . ($aw0['title_ar'] ?? ''), true) ?><?php else: ?><?= owImgPlaceholder(false) ?><?php endif; ?></div>
+    <div class="aotw-txt">
+      <span class="aotw-kicker"><?= $ar ? 'فنان الأسبوع' : 'Artist of the week' ?></span>
+      <h2><?php if ($pImg !== ''): ?><img class="aotw-face" src="<?= e(owImgSized($pImg, 400)) ?>" alt="" loading="lazy" onerror="this.remove()"><?php endif; ?><?= e($ar ? $aotw['artist_ar'] : $aotw['artist_en']) ?></h2>
+      <?php if ((int) $aotw['verified'] === 1): ?><?= owVerifiedBadge() ?><?php endif; ?>
+      <?php if (trim((string) $aotw['city']) !== ''): ?><p class="aotw-city"><?= e((string) $aotw['city']) ?></p><?php endif; ?>
+      <?php if ($nEn !== ''): ?><p class="aotw-note"><?= e($nEn) ?></p><?php endif; ?>
+      <a class="btn btn-dark" href="artist_dashboard.php?id=<?= (int) $aotw['id'] ?>&amp;lang=<?= $lang ?>"><?= $ar ? 'تعرّف على أعماله' : 'Meet the artist' ?></a>
+    </div>
+  </section>
+  <?php endif; ?>
+
+  <?php if ($cols): ?>
+  <!-- CURATED COLLECTIONS (made by the admin) -->
+  <section class="cols" aria-label="<?= $ar ? 'مجموعات مختارة' : 'Curated collections' ?>">
+    <h2 class="cols-h"><?= $ar ? 'مجموعات اخترناها لك' : 'Collections we picked for you' ?></h2>
+    <div class="cols-row">
+      <?php foreach ($cols as $c): $cv = $colCovers[(int) $c['id']]; ?>
+      <a class="col-card card card-hover" href="<?= e(mpUrl(['col' => $c['slug']])) ?>">
+        <span class="col-pics n<?= min(3, count($cv['pics'])) ?>"><?php foreach (array_slice($cv['pics'], 0, 3) as $pc): $pi = owImgSrc((string) $pc['image_url']); ?><span class="col-pic"><?php if ($pi !== ''): ?><img loading="lazy" src="<?= e(owImgSized($pi, 400)) ?>" alt="<?= e($pc['title_en'] . ' · ' . $pc['title_ar']) ?>"<?= owImgFallbackAttrs($pi, owImgSized($pi, 400)) ?>><?php endif; ?></span><?php endforeach; ?></span>
+        <span class="col-t"><?= e($ar ? ($c['title_ar'] ?: $c['title_en']) : ($c['title_en'] ?: $c['title_ar'])) ?></span>
+        <span class="col-n"><?= $ar ? ($cv['count'] === 1 ? 'عمل واحد' : $cv['count'] . ' أعمال') : ($cv['count'] === 1 ? '1 artwork' : $cv['count'] . ' artworks') ?></span>
+      </a>
+      <?php endforeach; ?>
+    </div>
+  </section>
+  <?php endif; ?>
+
   <div class="mp-tools">
     <!-- SEARCH + SORT (one small form, so every choice travels together) -->
     <form class="mp-search" method="get" action="marketplace.php" role="search" id="mpForm">
-      <?php if ($ar): ?><input type="hidden" name="lang" value="ar"><?php endif; ?>
-      <?php if ($cat !== 'all' && $initType === ''): ?><input type="hidden" name="cat" value="<?= e($cat) ?>"><?php endif; ?>
-      <?php if ($initType !== ''): ?><input type="hidden" name="type" value="<?= e($initType) ?>"><?php endif; ?>
-      <?php if ($status !== 'all'): ?><input type="hidden" name="status" value="<?= e($status) ?>"><?php endif; ?>
+      <?= mpHidden(['q', 'sort']) ?>
       <input type="search" class="input" name="q" maxlength="60" value="<?= e($q) ?>"
              aria-label="<?= $ar ? 'ابحث عن عمل فني' : 'Search artworks by title' ?>"
              placeholder="<?= $ar ? 'تبحث عن شيء؟ اكتب اسم العمل…' : 'Looking for something? Type a title…' ?>">
@@ -319,12 +460,49 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       <div class="mp-sort">
         <label class="mp-label" for="mpSort"><?= $ar ? 'الترتيب' : 'Sort' ?></label>
         <select id="mpSort" name="sort" form="mpForm" onchange="this.form.submit()">
-          <?php foreach (['newest' => ['Newest First', 'الأحدث أولاً'], 'price_low' => ['Price: Low to High', 'السعر: من الأقل'], 'price_high' => ['Price: High to Low', 'السعر: من الأعلى']] as $ok => $ol): ?>
+          <?php foreach (['newest' => ['Newest First', 'الأحدث أولاً'], 'popular' => ['Most viewed', 'الأكثر مشاهدة'], 'price_low' => ['Price: Low to High', 'السعر: من الأقل'], 'price_high' => ['Price: High to Low', 'السعر: من الأعلى']] as $ok => $ol): ?>
           <option value="<?= $ok ?>"<?= $sort === $ok ? ' selected' : '' ?>><?= $ar ? $ol[1] : $ol[0] ?></option>
           <?php endforeach; ?>
         </select>
       </div>
     </div>
+
+    <!-- MORE FILTERS: style, medium, price, size, city, color, verified artists -->
+    <details class="mp-more"<?= $moreOn || $initType !== '' ? ' open' : '' ?>>
+      <summary class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg><?= $ar ? 'تصفية أدق' : 'More filters' ?><?php if ($moreOn): ?> <span class="mp-n"><?= $moreOn ?></span><?php endif; ?></summary>
+      <form class="mp-filters" method="get" action="marketplace.php">
+        <?= mpHidden(['type', 'medium', 'price', 'size', 'city', 'color', 'verified', 'cat']) ?>
+        <div class="field"><label for="f-style"><?= $ar ? 'الأسلوب' : 'Style' ?></label>
+          <select id="f-style" name="type"><option value=""><?= $ar ? 'كل الأساليب' : 'All styles' ?></option>
+            <?php foreach (owStyleGroups() as $gk => $g): $opts = array_filter($ART_TYPES, fn($t) => ($t['cat'] ?? '') === $gk && empty($t['legacy'])); if (!$opts) continue; ?>
+            <optgroup label="<?= e($ar ? $g['ar'] : $g['en']) ?>"><?php foreach ($opts as $tk => $tv): ?><option value="<?= e($tk) ?>"<?= $initType === $tk ? ' selected' : '' ?>><?= e($ar ? $tv['ar'] : $tv['en']) ?></option><?php endforeach; ?></optgroup>
+            <?php endforeach; ?>
+          </select></div>
+        <?php if ($hasMed): ?><div class="field"><label for="f-medium"><?= $ar ? 'الخامة' : 'Medium' ?></label>
+          <select id="f-medium" name="medium"><option value=""><?= $ar ? 'كل الخامات' : 'All mediums' ?></option>
+            <?php foreach ($MEDIUMS as $mk => $mv): ?><option value="<?= e($mk) ?>"<?= $medium === $mk ? ' selected' : '' ?>><?= e($ar ? $mv['ar'] : $mv['en']) ?></option><?php endforeach; ?></select></div><?php endif; ?>
+        <div class="field"><label for="f-price"><?= $ar ? 'السعر' : 'Price' ?></label>
+          <select id="f-price" name="price"><option value=""><?= $ar ? 'كل الأسعار' : 'Any price' ?></option>
+            <?php foreach ($PRICES as $pk => $pv): ?><option value="<?= e($pk) ?>"<?= $price === $pk ? ' selected' : '' ?>><?= e($ar ? $pv['ar'] : $pv['en']) ?></option><?php endforeach; ?></select></div>
+        <?php if ($hasDims): ?><div class="field"><label for="f-size"><?= $ar ? 'المقاس' : 'Size' ?></label>
+          <select id="f-size" name="size"><option value=""><?= $ar ? 'كل المقاسات' : 'Any size' ?></option>
+            <?php foreach ($SIZES as $zk => $zv): ?><option value="<?= e($zk) ?>"<?= $size === $zk ? ' selected' : '' ?>><?= e($ar ? $zv['ar'] : $zv['en']) ?></option><?php endforeach; ?></select></div><?php endif; ?>
+        <?php if ($CITIES): ?><div class="field"><label for="f-city"><?= $ar ? 'مدينة الفنان' : 'Artist’s city' ?></label>
+          <select id="f-city" name="city"><option value=""><?= $ar ? 'كل المدن' : 'All cities' ?></option>
+            <?php foreach ($CITIES as $cName): ?><option value="<?= e($cName) ?>"<?= $city === $cName ? ' selected' : '' ?>><?= e($cName) ?></option><?php endforeach; ?></select></div><?php endif; ?>
+        <fieldset class="f-colors"><legend><?= $ar ? 'اللون' : 'Color' ?></legend>
+          <label class="sw-any"><input type="radio" name="color" value=""<?= $color === '' ? ' checked' : '' ?>><span><?= $ar ? 'أي لون' : 'Any' ?></span></label>
+          <?php foreach ($COLORS as $ck2 => $cv2): ?>
+          <label class="sw" title="<?= e($ar ? $cv2['ar'] : $cv2['en']) ?>"><input type="radio" name="color" value="<?= e($ck2) ?>"<?= $color === $ck2 ? ' checked' : '' ?>><i style="background:<?= e($cv2['hex']) ?>"></i><span><?= e($ar ? $cv2['ar'] : $cv2['en']) ?></span></label>
+          <?php endforeach; ?>
+        </fieldset>
+        <?php if (owVerifiedReady()): ?><label class="f-check"><input type="checkbox" name="verified" value="1"<?= $vonly ? ' checked' : '' ?>> <span><?= $ar ? 'فنانون موثّقون فقط' : 'Verified artists only' ?></span></label><?php endif; ?>
+        <div class="f-acts">
+          <button type="submit" class="btn btn-dark"><?= $ar ? 'اعرض النتائج' : 'Show results' ?></button>
+          <?php if ($moreOn || $initType !== ''): ?><a class="btn btn-ghost" href="<?= e(mpUrl(['type' => '', 'medium' => '', 'price' => '', 'size' => '', 'city' => '', 'color' => '', 'verified' => ''])) ?>"><?= $ar ? 'امسح التصفية' : 'Clear filters' ?></a><?php endif; ?>
+        </div>
+      </form>
+    </details>
   </div>
 
   <?php if ($total > 0): ?>
@@ -343,7 +521,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         </div>
         <div class="aw-body">
           <h2 class="aw-title"><?= e($ar ? $tAr : ($tEn ?: $tAr)) ?></h2>
-          <a class="aw-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>&amp;lang=<?= $lang ?>"><?= $ar ? 'بواسطة' : 'by' ?> <?= e($ar ? $aw['artist_ar'] : $aw['artist_en']) ?></a>
+          <a class="aw-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>&amp;lang=<?= $lang ?>"><?= $ar ? 'بواسطة' : 'by' ?> <?= e($ar ? $aw['artist_ar'] : $aw['artist_en']) ?><?php if ((int) ($aw['verified'] ?? 0) === 1): ?> <?= owVerifiedBadge(true) ?><?php endif; ?></a>
           <div class="mp-meta">
             <?php if ($tlbl): ?><span class="type-pill"><?= e($ar ? $tlbl['ar'] : $tlbl['en']) ?></span><?php endif; ?>
             <?php if (owHasJourney($mpStages[$id] ?? [])): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
@@ -361,7 +539,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
     <h2><?= $ar ? 'لا أعمال هنا بعد. كن أول من يشارك عمله.' : 'No artworks here yet. Be the first to share yours.' ?></h2>
     <div class="ge-actions">
       <a class="btn btn-primary" href="register_artist.php"><?= $ar ? 'انضم كفنان' : 'Join as Artist' ?></a>
-      <?php if ($filtered): ?><a class="btn btn-secondary" href="<?= e(mpUrl(['cat' => 'all', 'type' => '', 'status' => 'all', 'q' => ''])) ?>"><?= $ar ? 'شاهد كل الأعمال' : 'See all artworks' ?></a><?php endif; ?>
+      <?php if ($filtered): ?><a class="btn btn-secondary" href="<?= e(mpUrl(['cat' => 'all', 'type' => '', 'status' => 'all', 'q' => '', 'medium' => '', 'price' => '', 'size' => '', 'city' => '', 'color' => '', 'verified' => '', 'col' => ''])) ?>"><?= $ar ? 'شاهد كل الأعمال' : 'See all artworks' ?></a><?php endif; ?>
     </div>
   </div>
   <?php endif; ?>
@@ -387,7 +565,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       <h2 id="m-title-en"></h2>
       <span class="human-badge" id="m-verified" hidden><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
       <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
-      <a class="m-artist" id="m-artist" href="#"></a>
+      <a class="m-artist" id="m-artist" href="#"></a> <span id="m-vf" hidden><?= owVerifiedBadge(true) ?></span>
       <div class="m-label" id="m-label-en-h"><?= $ar?'عن العمل (بالإنجليزية)':'About this work (English)' ?></div>
       <p id="m-desc-en"></p>
       <div class="m-label" id="m-label-ar-h"><?= $ar?'عن العمل (بالعربية)':'About this work (Arabic)' ?></div>
@@ -457,6 +635,7 @@ function openModal(id){
   const artist = document.getElementById('m-artist');
   artist.textContent = (LANG==='ar' ? 'بواسطة ' : 'by ') + (LANG==='ar' ? a.artist_ar : a.artist_en);
   artist.href = 'artist_dashboard.php?id=' + a.artist_id + '&lang=' + LANG;
+  document.getElementById('m-vf').hidden = !a.verified;
   document.getElementById('m-desc-en').textContent = esc(a.desc_en);
   document.getElementById('m-desc-ar').textContent = esc(a.desc_ar);
   document.getElementById('m-price').textContent =

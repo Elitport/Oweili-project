@@ -523,3 +523,10 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
   --cert-ink: #23314A; --cert-body: #4A5568; --cert-muted: #8FA1B1; --cert-accent: #DB8084; --cert-accent-dark: #C96A6E;
   --cert-paper: #FFFFFF; --cert-tint: rgba(219,128,132,0.07); --cert-line: rgba(35,49,74,0.18);
 }
+
+/* Verified artist badge (gallery_lib.php owVerifiedBadge), every page */
+.vf-badge{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-min);font-weight:700;color:var(--color-accent-dark);vertical-align:middle;}
+.vf-badge svg{width:16px;height:16px;fill:var(--color-accent);stroke:none;}
+.vf-badge .vf-tick{fill:none;stroke:var(--color-on-dark);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.vf-badge.sm svg{width:14px;height:14px;}
+.vf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
