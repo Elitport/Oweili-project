@@ -2,7 +2,7 @@
 /* =====================================================================
  *  article_lib.php — shared helpers for the articles system
  *  (admin_articles.php, article.php, articles_list.php) and the
- *  institutes directory (training.php).
+ *  institutes directory (institutes.php).
  *  Tables: articles, article_images, photo_consents, institutes, courses
  *  (all created by database_update.sql).
  * ===================================================================== */

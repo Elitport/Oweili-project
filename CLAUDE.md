@@ -92,7 +92,8 @@
 - chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
 - events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). The old events table was empty on the live site (checked 31 Oct 2026)
-- training.php — Art Institutes: Upcoming Workshops on top, then the institutes directory
+- institutes.php — Art Institutes («المعاهد الفنية»), its own page under the Discover menu (2 Nov 2026): Upcoming Workshops on top, then the institutes directory. No longer one of the Art Events type buttons
+- training.php — retired address: sends old links to institutes.php for good (301), keeping ?city and the language
 - articles_list.php — all published articles of one type (?type=event / artist_spotlight / art_education)
 - article.php — one article (article.php?slug=...)
 - admin_articles.php — team tool to write articles (sub-admins and admins only)
@@ -502,7 +503,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Order (owner's choice): Gallery · Explore Art Styles · Discover ↓ · Community · Support ↓ (Arabic, right to left: المعرض · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
 - Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)
 - Explore Art Styles → explore.php, no dropdown
-- Discover ↓ → Art Events / Artist Spotlights (articles_list.php?type=...) / Art Institutes (training.php). Art Education was taken out of the menu because Explore Art Styles covers it; its page (articles_list.php?type=art_education) still works and is reachable from the type buttons on the articles pages
+- Discover ↓ → Art Events / Artist Spotlights (articles_list.php?type=...) / Art Institutes (institutes.php, its own page; training.php redirects there). Art Education was taken out of the menu because Explore Art Styles covers it; its page (articles_list.php?type=art_education) still works and is reachable from the type buttons on the articles pages
 - Community → community.php (direct link, no dropdown; Meet Fellow Artists, Share Your Work and Learn Together were removed because they led nowhere specific)
 - Support ↓ → Contact Us (email) / How It Works (support.php#how) / Terms of Use (terms.php)
 - Dropdown icons: one thin outline style only (set once in nav.css on .d-icon, never filled). New icons must be outline drawings

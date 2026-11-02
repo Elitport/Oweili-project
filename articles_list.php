@@ -83,7 +83,6 @@ $titleAr = $tAr . ' · أويلي';
       <?php foreach ($TYPES as $k => [$en, $ar]): ?>
         <a class="type-pill<?= $k === $type ? ' on' : '' ?>" href="articles_list.php?type=<?= e($k) ?>"<?= $k === $type ? ' aria-current="page"' : '' ?>><?= owBi($en, $ar) ?></a>
       <?php endforeach; ?>
-      <a class="type-pill" href="training.php"><?= owBi('Art Institutes', 'المعاهد الفنية') ?></a>
     </nav>
 
     <?php if (!$items): ?>

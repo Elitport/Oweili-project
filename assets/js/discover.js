@@ -1,4 +1,4 @@
-/* discover.js — shared behaviour for articles_list.php, article.php and training.php
+/* discover.js — shared behaviour for articles_list.php, article.php and institutes.php
    - tgl(): the language button in the shared menu (nav.php) flips the page
      direction; bi-en / bi-ar texts and the page title follow it.
    - sections rise in as they scroll into view

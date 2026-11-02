@@ -16,7 +16,7 @@ if ($navPage === 'article.php') { $navType = ''; }
 $navSection = [
     'community.php' => 'community', 'marketplace.php' => 'marketplace',
     'explore.php' => 'explore', 'support.php' => 'support', 'articles_list.php' => 'discover',
-    'article.php' => 'discover', 'training.php' => 'discover', 'events.php' => 'discover',
+    'article.php' => 'discover', 'institutes.php' => 'discover', 'training.php' => 'discover', 'events.php' => 'discover',
 ][$navPage] ?? '';
 if (!function_exists('navAct')) {
 function navAct(string $section, string $page = '', string $type = ''): string {
@@ -55,7 +55,7 @@ if (!function_exists('owLogoMark')) {
       <div class="dropdown" id="dd-discover">
         <a href="articles_list.php?type=event"<?= navAct('', 'articles_list.php', 'event') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
         <a href="articles_list.php?type=artist_spotlight"<?= navAct('', 'articles_list.php', 'artist_spotlight') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
-        <a href="training.php"<?= navAct('', 'training.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
+        <a href="institutes.php"<?= navAct('', 'institutes.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
       </div>
     </div>
     <div class="nav-item"><a href="community.php" id="nav-community-link"<?= navAct('community') ?>><span id="nav-community-label">Community</span></a></div>
@@ -91,7 +91,7 @@ if (!function_exists('owLogoMark')) {
     <a class="mnav-link" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=artist_spotlight"><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
-    <a class="mnav-link mnav-sub" href="training.php"><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
+    <a class="mnav-link mnav-sub" href="institutes.php"><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
     <a class="mnav-link" href="community.php"<?= navAct('community') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
     <a class="mnav-link" href="support.php"<?= navAct('support') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Support" data-ar="الدعم">Support</span></a>
     <div class="mnav-acct">

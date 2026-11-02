@@ -31,7 +31,7 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
       <ul class="ow-footer-links">
         <li><a href="marketplace.php"><?= $owFt('Gallery', 'المعرض') ?></a></li>
         <li><a href="articles_list.php?type=event"><?= $owFt('Events', 'الملتقيات') ?></a></li>
-        <li><a href="training.php"><?= $owFt('Institutes', 'المعاهد') ?></a></li>
+        <li><a href="institutes.php"><?= $owFt('Institutes', 'المعاهد') ?></a></li>
         <li><a href="support.php"><?= $owFt('Support', 'الدعم') ?></a></li>
         <li><a href="privacy.php"><?= $owFt('Privacy', 'الخصوصية') ?></a></li>
         <li><a href="terms.php"><?= $owFt('Terms', 'الشروط') ?></a></li>

@@ -1,7 +1,7 @@
 <?php
 /* =====================================================================
  *  admin_institutes.php — team tool for the Art Institutes directory
- *  (training.php). Add and edit institutes and their courses, instead of
+ *  (institutes.php). Add and edit institutes and their courses, instead of
  *  phpMyAdmin. Only sub-admins and admins (owArticleStaff in article_lib.php).
  *  Nothing is ever deleted here: an institute or course is switched off
  *  ("Hidden"), so its history stays. Logos are re-saved like artwork
@@ -159,7 +159,7 @@ details > summary{cursor:pointer;font-weight:700;margin:var(--space-sm) 0;}
 <div class="wrap dash role-admin">
   <div class="top">
     <a class="btn btn-ghost btn-sm" href="admin.php">← <?= owBi('Back to admin', 'العودة للإدارة') ?></a>
-    <span><a class="btn btn-ghost btn-sm" href="training.php" target="_blank" rel="noopener"><?= owBi('See the directory', 'شاهد الدليل') ?> ↗</a> <?php owCornerControls('tgl()'); ?></span>
+    <span><a class="btn btn-ghost btn-sm" href="institutes.php" target="_blank" rel="noopener"><?= owBi('See the directory', 'شاهد الدليل') ?> ↗</a> <?php owCornerControls('tgl()'); ?></span>
   </div>
   <h1><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></h1>
   <p class="mini"><?= owBi('Everything here appears on the Art Institutes page. Hide something instead of deleting it, so its history stays.', 'كل ما هنا يظهر في صفحة المعاهد الفنية. أخفِ العنصر بدل حذفه ليبقى تاريخه.') ?></p>
