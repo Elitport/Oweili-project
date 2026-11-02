@@ -79,8 +79,8 @@
 - Sprint 4: payments (last — after everything else is complete)
 
 ## What NOT to build yet
-- Any payment system, checkout, orders or commission calculation
-- These wait until Sprint 4
+- Any real payment provider, checkout or live money movement
+- The orders and escrow structure exists but stays switched off (see Payments and escrow) until Sprint 4
 
 ## Pages Built
 - index.php — Homepage: one full-screen hero (see Features)
@@ -130,6 +130,24 @@
 - Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
+
+### Payments and escrow — built, SWITCHED OFF and hidden (2 Nov 2026)
+- order_lib.php: orders for artworks, gifts, commissions and course or workshop tickets (orders, order_events, order_complaints; payouts gains order_id and note). Steps: created → paid → shipped → delivered → released, or delivered → complaint → released / refunded; created → cancelled; paid → refunded. Any other jump is refused. Every change is an order_events row
+- Escrow: Oweili holds the money. It is released to the artist when the buyer presses "I received it", or 7 days after delivery with no open complaint (owOrderAutoRelease, once a day after a page is delivered). The release makes a payout row for the artist: the amount minus Oweili's commission (site_settings 'commission_rate', 15 by default, before VAT; shown, not editable on screen). Course and workshop tickets pay no artist
+- Buyer: my_orders.php ("I received it", "Something is wrong" = complaint, which holds the money and alerts the admin). Admin: admin_orders.php (Requests → Orders (off)): what is still needed, orders and their history, open complaints with "Release to the artist" / "Refund the buyer", payouts with "Mark paid" + bank reference
+- Switched on ONLY when all are true (owPaymentsOn): define('OWEILI_PAYMENT_GATEWAY', 'moyasar' | 'tap' | 'hyperpay') in config.php with a connection file written and tested for that provider (not built), the commercial registration number set (OWEILI_COMPANY_CR), and site_settings 'payments_enabled' = '1'. Until then my_orders.php answers 404, owOrderCreate refuses, and no buy button exists anywhere. Settings (admin.php?settings=1) has a "Payments and escrow" card with the checklist (CR, provider, bank account, VAT / ZATCA decision, Terms and Privacy updated by a lawyer, final switch on)
+- Files: order_lib.php, admin_orders.php, my_orders.php (new); admin_settings.php, admin.php, theme_head.php, alert_lib.php, gallery_lib.php, robots.txt. Tables: orders, order_events, order_complaints, payouts, site_settings
+
+### Private commissions (portraits and personal photos), confidential (2 Nov 2026)
+- commission.php («الأعمال الخاصة»): the buyer describes the piece (portrait, family, pet, place or memory, other; optional style, size, budget, date), adds 1 to 6 reference photos (JPG/PNG/WEBP, 10MB each; location and hidden data removed), confirms they may share them, and may agree IN WRITING that the finished piece can be shown (tick + typing their full name, saved with the date). Without that it is never shown anywhere
+- Photos live in the PRIVATE folder .private/commissions/ (outside uploads/, blocked for visitors by .htaccess plus its own deny file, files readable only by the hosting account, kept by deploys through .gitignore). They open only through commission_file.php: the admin, the buyer with their private link, or the assigned artist after accepting the confidentiality agreement. Everyone else gets 404. Never cached or indexed. Each time the artist opens a reference photo it is logged
+- The buyer gets a private link once (commission.php?ref=C-2026-XXXXXX&k=…; only its SHA-256 is stored) on the thank-you page and by email: the steps, accept the price or ask for another, approve the draft or ask for changes, see the finished piece, "I received it"
+- Steps: request → admin assigns an artist (admin_commissions.php) → the artist accepts the confidentiality agreement inside the site (6 points in both languages, tick + typed name, saved with date, time and a monthly one-way address code in commission_nda) → the artist sends a price and days → the buyer accepts → the artist sends a draft → the buyer approves (or asks for changes) → the artist sends the final photo → the buyer ("I received it") or the admin marks it delivered. The admin can cancel with a reason. Emails go to the buyer and the artist at each step, alerts to the admin. The artist never sees the buyer's name, phone or email
+- A commission is never an artwork row, so it never appears in the Gallery, a profile or the sitemap
+- Reference photos are deleted automatically 30 days after delivery (or 30 days after a cancel), once a day after any page is delivered (theme_head.php → owCommCleanup), or now by the admin. Each deletion is logged (commission_photos_deleted); drafts and finals stay for the record
+- No payment: the admin handles money by hand (private note field)
+- Artist side: My Studio → Commissions tab, artist_commission.php?id=N
+- Files: commission.php, commission_lib.php, commission_file.php, artist_commission.php, admin_commissions.php (new); artist_studio.php, admin.php, theme_head.php, alert_lib.php, marketplace.php, gifts.php, robots.txt, .gitignore (.private/). Tables: commissions, commission_files, commission_nda, users, activity_log
 
 ### Oweili Gifts: "Gift a painting instead of flowers" (2 Nov 2026)
 - gifts.php («هدايا أويلي»): occasions (wedding, graduation, new baby, Eid, Ramadan, thank you, Teacher's Day), a ready artwork from the Gallery (the 12 newest available, or the one chosen with ?artwork=N) or a custom one (what it should be + optional budget), gift wrapping, card message, delivery date (3 days to 1 year ahead), "Surprise" (the recipient never sees the price), the recipient's name, phone (optional), city and address, and the buyer's name, phone and email (filled in for a signed-in buyer)

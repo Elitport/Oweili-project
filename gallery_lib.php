@@ -17,7 +17,8 @@ require_once __DIR__ . '/artwork_lib.php';
 
 /* ---------------- Settings ---------------- */
 function owSetting(string $key, ?string $default = null): ?string {
-    static $cache = [];
+    $cache = &$GLOBALS['OW_SETTINGS_CACHE'];
+    if (!is_array($cache)) $cache = [];
     if (array_key_exists($key, $cache)) return $cache[$key] ?? $default;
     $val = null;
     try {
@@ -32,6 +33,7 @@ function owSetting(string $key, ?string $default = null): ?string {
     return $val ?? $default;
 }
 function owSetSetting(string $key, ?string $value): bool {
+    unset($GLOBALS['OW_SETTINGS_CACHE'][$key]);
     try {
         if (!owHasTable('site_settings')) return false;
         if ($value === null) { getDB()->prepare('DELETE FROM site_settings WHERE setting_key = :k')->execute([':k' => $key]); return true; }

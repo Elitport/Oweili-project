@@ -9,6 +9,10 @@ Disallow: /subadmin_dashboard.php
 Disallow: /collector_dashboard.php
 Disallow: /artist_studio.php
 Disallow: /my_articles.php
+Disallow: /my_orders.php
+Disallow: /commission_file.php
+Disallow: /artist_commission.php
+Disallow: /.private/
 Disallow: /edit_profile.php
 Disallow: /edit_artwork.php
 Disallow: /upload_artwork.php

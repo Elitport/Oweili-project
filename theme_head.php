@@ -25,6 +25,21 @@ if (!function_exists('owAlertsAfterPage')) {
     $owDue = __DIR__ . '/.logs/admin_alerts_due';
     if (is_file($owDue) && (int) @file_get_contents($owDue) <= time()) register_shutdown_function('owAlertsAfterPage');
 }
+/* Once a day, after a page is delivered: private commission reference photos
+   are deleted 30 days after delivery (commission_lib.php owCommCleanup), and
+   (only once payments are switched on) escrow releases orders 7 days after delivery */
+if (!function_exists('owCommAfterPage')) {
+    function owCommAfterPage(): void {
+        if (function_exists('litespeed_finish_request')) litespeed_finish_request();
+        elseif (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+        ignore_user_abort(true);
+        if (!function_exists('getDB')) return;
+        try { require_once __DIR__ . '/commission_lib.php'; owCommCleanupTick(); } catch (Throwable $e) { error_log('owCommAfterPage: ' . $e->getMessage()); }
+        try { require_once __DIR__ . '/order_lib.php'; owOrderAutoRelease(); } catch (Throwable $e) { error_log('owOrderAutoRelease: ' . $e->getMessage()); }   // escrow: does nothing while payments are off
+    }
+    $owCommDay = __DIR__ . '/.logs/commission_cleanup_day';
+    if (!is_file($owCommDay) || trim((string) @file_get_contents($owCommDay)) !== gmdate('Y-m-d')) register_shutdown_function('owCommAfterPage');
+}
 if (!function_exists('owThemeButton')) {
     /* The light / dark button. One shared look on every page (.ow-ctl in oweili.css);
        the old $class argument is ignored on purpose, so pages can never drift apart. */

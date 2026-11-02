@@ -76,6 +76,21 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     <p class="mini"><?= owBi('To download one: hPanel → Files → File Manager → public_html → show hidden files → .backups.', 'للتنزيل: hPanel ← الملفات ← مدير الملفات ← public_html ← إظهار الملفات المخفية ← ‎.backups') ?></p><?php endif; ?>
   </div>
 
+<?php require_once __DIR__ . '/order_lib.php'; $payMiss = owPaymentsMissing(); ?>
+  <div class="card"><h2><?= owBi('Payments and escrow', 'الدفع والضمان') ?> <?= !$payMiss ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Switched off', 'متوقف') . '</span>' ?></h2>
+    <p><?= owBi('Orders for artworks, gifts, commissions and course or workshop tickets are built, with escrow: Oweili holds the money and releases it to the artist after the buyer confirms receipt, or ' . OW_ESCROW_DAYS . ' days after delivery with no complaint, minus Oweili’s commission (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '%, before VAT). Everything stays switched off and hidden until these are ready:',
+                 'طلبات الأعمال والهدايا والأعمال الخاصة وتذاكر الدورات والورش جاهزة، مع الضمان: يحتفظ أويلي بالمال ويحوّله للفنان بعد تأكيد المشتري الاستلام، أو بعد ' . OW_ESCROW_DAYS . ' أيام من التسليم دون شكوى، مخصوماً منه عمولة أويلي (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '٪ قبل الضريبة). يبقى كل شيء متوقفاً ومخفياً حتى يجهز ما يلي:') ?></p>
+    <ul class="rows">
+      <li><span><?= owBi('Commercial registration number (in config.php: OWEILI_COMPANY_CR)', 'رقم السجل التجاري (في config.php: OWEILI_COMPANY_CR)') ?></span><?= $yes(owCompanyCr() !== '') ?></li>
+      <li><span><?= owBi('A payment provider: Moyasar, Tap or HyperPay (merchant account, keys in config.php, its connection built and tested)', 'مزوّد دفع: Moyasar أو Tap أو HyperPay (حساب تاجر، ومفاتيحه في config.php، وبناء الربط واختباره)') ?></span><?= $yes(owGatewayName() !== '') ?></li>
+      <li><span><?= owBi('A bank account for the money held and for paying artists', 'حساب بنكي للمبالغ المحفوظة ولدفع مستحقات الفنانين') ?></span><span class="mini"><?= owBi('your step', 'خطوتك') ?></span></li>
+      <li><span><?= owBi('VAT: whether Oweili is VAT-registered (ZATCA e-invoicing if yes)', 'ضريبة القيمة المضافة: هل أويلي مسجّل (والفوترة الإلكترونية من زاتكا إن كان مسجلاً)') ?></span><span class="mini"><?= owBi('your decision', 'قرارك') ?></span></li>
+      <li><span><?= owBi('Terms of Use and Privacy Policy updated for payments, refunds and escrow (reviewed by a lawyer)', 'تحديث شروط الاستخدام وسياسة الخصوصية للدفع والاسترداد والضمان (بمراجعة محامٍ)') ?></span><span class="mini"><?= owBi('your step', 'خطوتك') ?></span></li>
+      <li><span><?= owBi('Your final "switch on"', 'موافقتك النهائية بالتشغيل') ?></span><?= $yes(owSetting('payments_enabled', '0') === '1') ?></li>
+    </ul>
+    <p class="mini"><a href="admin_orders.php"><?= owBi('Orders and payouts', 'الطلبات والمدفوعات') ?></a></p>
+  </div>
+
   <div class="card"><h2><?= owBi('Bashro connection', 'الربط مع بشرو') ?> <?= $bashroOn ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('A private, read-only connection that lets Bashro read people, artworks, requests, favorites and the activity log. Nothing can be changed through it.', 'ربط خاص للقراءة فقط يسمح لبشرو بقراءة الأشخاص والأعمال والطلبات والمفضلة وسجل النشاط. لا يمكن تغيير أي شيء من خلاله.') ?></p>
     <?php if ($bashroOn): ?>
