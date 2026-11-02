@@ -32,6 +32,12 @@ function owAdminAlert(string $kind, string $en, string $ar, string $link): void 
         if (!owHasTable('activity_log')) return;
         owLog('admin_alert', $kind, null, json_encode(['en' => mb_substr($en, 0, 160), 'ar' => mb_substr($ar, 0, 160), 'link' => $link], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
               ['type' => 'system', 'id' => null]);
+        /* Bashro: approvals waiting (switched off until Bashro accepts the kind; no personal details) */
+        if (in_array($kind, ['artwork', 'change', 'artist'], true) && is_file(__DIR__ . '/bashro_send.php')) {
+            require_once __DIR__ . '/bashro_send.php';
+            $title = $kind === 'artist' ? 'New artist account waiting for approval' : trim(preg_replace(['/ by .*$/u', '/\s*\([^()]*\)\s*$/u'], '', $en));
+            owBashroApproval($kind, $title, $link, 'oweili-alert-' . (int) getDB()->lastInsertId());
+        }
         /* sent after the visitor's page has been delivered, so sign-up and upload never wait for the mail server */
         static $planned = false;
         if (!$planned) { $planned = true; register_shutdown_function('owAlertsAfterRequest'); }

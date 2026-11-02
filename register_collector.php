@@ -56,6 +56,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             owSignupCounted($newBuyer, 'collector');
             require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
             owAdminAlert('buyer', 'New buyer sign-up: ' . $fullName, 'مشترٍ جديد: ' . $fullName, 'admin.php?person=' . $newBuyer);
+            if (is_file(__DIR__ . '/bashro_send.php')) { require_once __DIR__ . '/bashro_send.php'; owBashroSignup($newBuyer, 'buyer'); }   // off until Bashro accepts sign-ups
 
             $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
             if (!owSendMail($old['email'], 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody($verifyUrl))) {

@@ -91,6 +91,22 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     <p class="mini"><a href="admin_orders.php"><?= owBi('Orders and payouts', 'الطلبات والمدفوعات') ?></a></p>
   </div>
 
+<?php require_once __DIR__ . '/bashro_send.php'; $doorOn = owBashroReady();
+  $doorLog = []; try { if (owHasTable('activity_log')) $doorLog = getDB()->query("SELECT details, created_at FROM activity_log WHERE action = 'bashro_send' ORDER BY id DESC LIMIT 8")->fetchAll(); } catch (Throwable $e) {} ?>
+  <div class="card"><h2><?= owBi('Sending to Bashro (website door)', 'الإرسال إلى بشرو (بوابة الموقع)') ?> <?= $doorOn ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Off', 'متوقف') . '</span>' ?></h2>
+    <p><?= owBi('"I’m Interested", gift and commission requests go to Bashro Sales (project 3) after the visitor’s page is delivered. Never photos, passwords, card, ID or bank numbers.', 'تذهب طلبات «أنا مهتم» والهدايا والأعمال الخاصة إلى مبيعات بشرو (المشروع 3) بعد عرض صفحة الزائر. لا صور ولا كلمات مرور ولا أرقام بطاقات أو هويات أو حسابات بنكية أبداً.') ?></p>
+    <ul class="rows">
+      <li><span><?= owBi('Requests to Sales', 'الطلبات إلى المبيعات') ?></span><?= $yes(owBashroKindOn('quote')) ?></li>
+      <li><span><?= owBi('New artist and buyer sign-ups (waits until Bashro accepts them)', 'تسجيلات الفنانين والمشترين الجدد (بانتظار قبول بشرو لها)') ?></span><?= $yes(owBashroKindOn('signup')) ?></li>
+      <li><span><?= owBi('Approvals waiting (waits until Bashro accepts them)', 'ما ينتظر الموافقة (بانتظار قبول بشرو له)') ?></span><?= $yes(owBashroKindOn('approval')) ?></li>
+    </ul>
+    <?php if (!$doorOn): ?><p class="mini"><?= owBi('Switched on by adding two lines to config.php on the server (hPanel → File Manager), with the key made in Bashro:', 'يعمل بإضافة سطرين إلى config.php على الخادم (hPanel ← مدير الملفات)، مع المفتاح الذي يُصنع في بشرو:') ?></p>
+      <pre>define('BASHRO_DOOR_SITE', '3');
+define('BASHRO_DOOR_KEY', 'the 64-character key from Bashro');</pre><?php endif; ?>
+    <?php if ($doorLog): ?><p class="mini"><?= owBi('Last answers from Bashro (202 = accepted):', 'آخر ردود بشرو (202 = مقبول):') ?></p>
+      <ul class="rows"><?php foreach ($doorLog as $dl): ?><li><span dir="ltr"><?= e((string) $dl['details']) ?></span><span class="mini"><?= e((string) $dl['created_at']) ?></span></li><?php endforeach; ?></ul><?php endif; ?>
+  </div>
+
   <div class="card"><h2><?= owBi('Bashro connection', 'الربط مع بشرو') ?> <?= $bashroOn ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('A private, read-only connection that lets Bashro read people, artworks, requests, favorites and the activity log. Nothing can be changed through it.', 'ربط خاص للقراءة فقط يسمح لبشرو بقراءة الأشخاص والأعمال والطلبات والمفضلة وسجل النشاط. لا يمكن تغيير أي شيء من خلاله.') ?></p>
     <?php if ($bashroOn): ?>

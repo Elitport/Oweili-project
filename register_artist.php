@@ -141,6 +141,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
                 owAdminAlert('artist', 'New artist sign-up: ' . ($old['artist'] ?: $fullName) . ($old['city'] !== '' ? ' (' . $old['city'] . ')' : ''),
                              'فنان جديد: ' . ($old['artist'] ?: $fullName) . ($old['city'] !== '' ? ' (' . $old['city'] . ')' : ''), 'admin.php#pending');
+                if (is_file(__DIR__ . '/bashro_send.php')) { require_once __DIR__ . '/bashro_send.php'; owBashroSignup($newId, 'artist'); }   // off until Bashro accepts sign-ups
                 // Save portfolio images
                 $podir = __DIR__ . '/uploads/portfolio/'; if (!is_dir($podir)) @mkdir($podir, 0755, true);
                 $sort = 0;

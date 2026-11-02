@@ -25,6 +25,17 @@ if (!function_exists('owAlertsAfterPage')) {
     $owDue = __DIR__ . '/.logs/admin_alerts_due';
     if (is_file($owDue) && (int) @file_get_contents($owDue) <= time()) register_shutdown_function('owAlertsAfterPage');
 }
+/* Bashro: a message that got 429 / 503 is tried again after a page is delivered (bashro_send.php) */
+if (is_file(__DIR__ . '/.logs/bashro_queue.json') && !function_exists('owBashroRetryAfterPage')) {
+    function owBashroRetryAfterPage(): void {
+        if (function_exists('litespeed_finish_request')) litespeed_finish_request();
+        elseif (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+        ignore_user_abort(true);
+        if (!function_exists('getDB')) return;
+        try { require_once __DIR__ . '/bashro_send.php'; owBashroRetryDue(); } catch (Throwable $e) { error_log('owBashroRetry: ' . $e->getMessage()); }
+    }
+    register_shutdown_function('owBashroRetryAfterPage');
+}
 /* Once a day, after a page is delivered: private commission reference photos
    are deleted 30 days after delivery (commission_lib.php owCommCleanup), and
    (only once payments are switched on) escrow releases orders 7 days after delivery */

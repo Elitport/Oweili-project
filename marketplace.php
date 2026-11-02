@@ -599,6 +599,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         <form id="mi-form" class="mi-form" hidden novalidate onsubmit="return sendInterest(event)">
           <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
           <input type="hidden" name="artwork_id" id="mi-aw" value="">
+          <input type="hidden" name="lang" value="<?= $ar ? 'ar' : 'en' ?>">
           <div class="mi-trap" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
           <div class="field"><label for="mi-name"><?= $ar ? 'الاسم الكامل' : 'Full Name' ?></label>
             <input type="text" id="mi-name" name="name" required maxlength="120" autocomplete="name" value="<?= e($pre['name']) ?>"></div>

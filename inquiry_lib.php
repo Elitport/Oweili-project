@@ -71,6 +71,10 @@ function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
            ->execute([':a' => (int) $aw['id'], ':ar' => (int) $aw['artist_id'],
                       ':n' => $v['name'], ':p' => $v['phone'], ':e' => $v['email']] + ($withBuyer ? [':b' => $buyerId] : []));
     $newId = (int) getDB()->lastInsertId();
+    try {   // Bashro Sales (only when the door key is in config.php)
+        require_once __DIR__ . '/bashro_send.php';
+        owBashroInquiry($aw, $v, (($_POST['lang'] ?? '') === 'ar') ? 'ar' : 'en');
+    } catch (Throwable $e) { error_log('bashro inquiry: ' . $e->getMessage()); }
     if (function_exists('owLog')) {
         owLog('inquiry_sent', 'inquiry', $newId, 'artwork ' . (int) $aw['id'],
               $buyerId > 0 ? ['type' => 'buyer', 'id' => $buyerId] : ['type' => 'guest', 'id' => null]);
