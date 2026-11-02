@@ -129,8 +129,7 @@ function owTellUser(int $userId, string $subject, string $en, string $ar, string
         $st = getDB()->prepare('SELECT email FROM users WHERE id = :id'); $st->execute([':id' => $userId]);
         $email = (string) $st->fetchColumn();
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) return;
-        $host = preg_replace('/[^a-z0-9.:\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com';
-        $url = $link !== '' ? "\r\nhttps://$host/$link\r\n" : "\r\n";
+        $url = $link !== '' ? "\r\nhttps://oweili.com/$link\r\n" : "\r\n";   // always the real site
         owSendMail($email, $subject, $en . $url . "\r\n" . $ar . $url);
     } catch (Throwable $e) { error_log('owTellUser: ' . $e->getMessage()); }
 }

@@ -23,7 +23,7 @@ $add = function (string $path, ?string $when = null, string $freq = 'weekly', st
 };
 foreach ([['', 'daily', '1.0'], ['marketplace.php', 'daily', '0.9'], ['explore.php', 'monthly', '0.8'], ['community.php', 'daily', '0.6'],
           ['institutes.php', 'weekly', '0.6'], ['articles_list.php?type=event', 'weekly', '0.6'], ['articles_list.php?type=artist_spotlight', 'weekly', '0.6'],
-          ['articles_list.php?type=art_education', 'monthly', '0.5'], ['support.php', 'monthly', '0.4'], ['verify', 'monthly', '0.4'], ['register_artist.php', 'monthly', '0.5'],
+          ['articles_list.php?type=art_education', 'monthly', '0.5'], ['gifts.php', 'weekly', '0.7'], ['commission.php', 'monthly', '0.6'], ['support.php', 'monthly', '0.4'], ['verify', 'monthly', '0.4'], ['register_artist.php', 'monthly', '0.5'],
           ['register_collector.php', 'monthly', '0.4'], ['privacy.php', 'yearly', '0.2'], ['terms.php', 'yearly', '0.2']] as [$p, $f, $pr]) {
     $add($p, null, $f, $pr);
 }
@@ -43,6 +43,11 @@ try {
         foreach ($st as $r) $add('article.php?slug=' . rawurlencode((string) $r['slug']), $r['updated_at'], 'monthly', '0.6');
     }
 } catch (Throwable $e) { error_log('sitemap articles: ' . $e->getMessage()); }
+
+try {   // curated collections (made by the admin); never commissions: they are not artworks
+    require_once __DIR__ . '/gallery_lib.php';
+    foreach (owCollections() as $c) $add('marketplace.php?col=' . rawurlencode((string) $c['slug']), $c['updated_at'] ?? null, 'weekly', '0.6');
+} catch (Throwable $e) { error_log('sitemap collections: ' . $e->getMessage()); }
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 foreach ($urls as $u) {

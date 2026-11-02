@@ -29,19 +29,19 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $aid = (int) ($_POST['artist_id'] ?? 0);
         $ok = $db->prepare("SELECT 1 FROM users WHERE id = :id AND role = 'artist' AND is_approved = 1 AND COALESCE(is_banned, 0) = 0"); $ok->execute([':id' => $aid]);
         if ($ok->fetchColumn()) {
-            owCommSetStatus((int) $c['id'], 'assigned', ['artist_id' => $aid, 'assigned_at' => date('Y-m-d H:i:s')], $actor, 'artist ' . $aid);
+            if (!owCommSetStatus((int) $c['id'], 'assigned', ['artist_id' => $aid, 'assigned_at' => date('Y-m-d H:i:s')], $actor, 'artist ' . $aid, [$c['status']])) { header('Location: admin_commissions.php?id=' . (int) $c['id']); exit; };
             $c['artist_id'] = $aid;
             owCommTellArtist($c, 'A private commission for you · عمل خاص لك', 'The Oweili team chose you for a private commission. Please open it, accept the confidentiality agreement, then send your price.',
                 'اختارك فريق أويلي لعمل خاص. يرجى فتحه وقبول اتفاقية السرّية ثم إرسال سعرك.');
         }
     } elseif ($do === 'delivered' && in_array($c['status'], ['final_sent', 'draft_approved'], true)) {
-        owCommSetStatus((int) $c['id'], 'delivered', ['delivered_at' => date('Y-m-d H:i:s')], $actor, 'marked delivered by the admin');
+        if (!owCommSetStatus((int) $c['id'], 'delivered', ['delivered_at' => date('Y-m-d H:i:s')], $actor, 'marked delivered by the admin', [$c['status']])) { header('Location: admin_commissions.php?id=' . (int) $c['id']); exit; };
         owCommTellBuyer($c, 'Delivered · تم التسليم', 'Your private commission is delivered. Thank you for trusting Oweili. Your reference photos will be deleted in ' . OW_COMM_KEEP_DAYS . ' days.', 'تم تسليم عملك الخاص. شكراً لثقتك بأويلي. ستُحذف صورك المرجعية بعد ' . OW_COMM_KEEP_DAYS . ' يوماً.');
     } elseif ($do === 'cancel' && !in_array($c['status'], ['delivered', 'cancelled'], true)) {
         $why = mb_substr(trim((string) ($_POST['reason'] ?? '')), 0, 500);
         if ($why === '') $errors[] = ['Please write the reason.', 'يرجى كتابة السبب.'];
         else {
-            owCommSetStatus((int) $c['id'], 'cancelled', [], $actor, $why);
+            if (!owCommSetStatus((int) $c['id'], 'cancelled', [], $actor, $why, [$c['status']])) { header('Location: admin_commissions.php?id=' . (int) $c['id']); exit; };
             owCommTellBuyer($c, 'About your private commission · بخصوص عملك الخاص', 'Your private commission was cancelled. The reason: ' . $why . "\r\nYour reference photos will be deleted in " . OW_COMM_KEEP_DAYS . ' days.', 'أُلغي عملك الخاص. السبب: ' . $why . "\r\nستُحذف صورك المرجعية بعد " . OW_COMM_KEEP_DAYS . ' يوماً.');
         }
     } elseif ($do === 'note') {

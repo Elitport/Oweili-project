@@ -19,6 +19,7 @@ header('X-Robots-Tag: noindex', false);
 if (!isLoggedIn()) { header('Location: login.php?next=' . rawurlencode('artist_commission.php?id=' . (int) ($_GET['id'] ?? 0))); exit; }
 $me = currentUser();
 if (!$me || ($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
+if (!empty($me['is_banned'])) { http_response_code(404); exit('Not found.'); }   // a suspended artist loses access to private commissions
 $uid = (int) $me['id'];
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $SUBJ = owCommSubjects();
@@ -53,7 +54,7 @@ if ($ok && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if ($price <= 0 || $price > 10000000) $errors[] = ['Please write your price in SAR.', 'يرجى كتابة سعرك بالريال.'];
         if ($days < 1 || $days > 365) $errors[] = ['Please write how many days you need (1 to 365).', 'يرجى كتابة عدد الأيام التي تحتاجها (من 1 إلى 365).'];
         if (!$errors) {
-            owCommSetStatus((int) $c['id'], 'quoted', ['quote_sar' => round($price, 2), 'quote_days' => $days, 'quote_note' => $note, 'quoted_at' => date('Y-m-d H:i:s')], $actor);
+            if (!owCommSetStatus((int) $c['id'], 'quoted', ['quote_sar' => round($price, 2), 'quote_days' => $days, 'quote_note' => $note, 'quoted_at' => date('Y-m-d H:i:s')], $actor, '', [$c['status']], $uid)) { header('Location: artist_commission.php?id=' . (int) $c['id']); exit; };
             owCommAlert($c, 'The artist sent a price: ' . number_format($price) . ' SAR', 'أرسل الفنان سعراً: ' . number_format($price) . ' ر.س');
             owCommTellBuyer($c, 'Your price is ready · سعرك جاهز', 'The artist sent the price for your private commission: ' . number_format($price) . ' SAR, ready in about ' . $days . ' days. Please accept it or ask for another price on your private page.',
                 'أرسل الفنان سعر عملك الخاص: ' . number_format($price) . ' ر.س، جاهز خلال ' . $days . ' يوماً تقريباً. يرجى الموافقة عليه أو طلب سعر آخر من صفحتك الخاصة.');
@@ -64,7 +65,7 @@ if ($ok && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if (!$r['ok']) $errors[] = owUploadErrBi($r['err'] === 'none' ? 'none' : $r['err'], 'Photo', 'الصورة');
         else {
             $to = $do === 'draft' ? 'draft_sent' : 'final_sent';
-            owCommSetStatus((int) $c['id'], $to, ['buyer_note' => ''], $actor);
+            if (!owCommSetStatus((int) $c['id'], $to, ['buyer_note' => ''], $actor, '', [$c['status']], $uid)) { header('Location: artist_commission.php?id=' . (int) $c['id']); exit; };
             if ($do === 'draft') {
                 owCommAlert($c, 'The artist sent a draft', 'أرسل الفنان مسودة');
                 owCommTellBuyer($c, 'Your draft is ready · مسودتك جاهزة', 'The artist sent a draft of your piece. Please approve it, or ask for changes, on your private page.', 'أرسل الفنان مسودة قطعتك. يرجى الموافقة عليها أو طلب تعديلات من صفحتك الخاصة.');

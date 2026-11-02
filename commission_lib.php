@@ -83,7 +83,7 @@ function owCommProtectDir(): bool {
 /* Saves one photo into the private folder (rotation fixed, hidden data such as GPS removed) */
 function owCommStore(array $file, int $commissionId, string $kind, string $by): array {
     if (!owCommProtectDir()) return ['ok' => false, 'err' => 'save'];
-    $r = owStoreImage($file, OW_COMM_DIR);
+    $r = owStoreImage($file, OW_COMM_DIR, true);   // always re-saved: GPS and other hidden data never kept
     if (!$r['ok']) return $r;
     $name = basename((string) $r['path']);
     $full = __DIR__ . '/' . OW_COMM_DIR . $name;
@@ -131,17 +131,22 @@ function owCommNdaOk(int $commissionId, int $artistId): bool {
     $st = getDB()->prepare('SELECT 1 FROM commission_nda WHERE commission_id = :c AND artist_id = :a'); $st->execute([':c' => $commissionId, ':a' => $artistId]);
     return (bool) $st->fetchColumn();
 }
-function owCommSetStatus(int $id, string $to, array $extra = [], ?array $actor = null, string $note = ''): bool {
+/* $from: the status it must still have (so two people acting at once cannot mix steps); $artistId: it must still be that artist's */
+function owCommSetStatus(int $id, string $to, array $extra = [], ?array $actor = null, string $note = '', ?array $from = null, ?int $artistId = null): bool {
     if (!isset(owCommStatus()[$to])) return false;
-    $set = ['status = :s']; $args = [':s' => $to, ':id' => $id];
+    $set = ['status = :s']; $args = [':s' => $to, ':id' => $id]; $where = 'id = :id';
     foreach ($extra as $k => $v) { $set[] = "$k = :x_$k"; $args[":x_$k"] = $v; }
-    getDB()->prepare('UPDATE commissions SET ' . implode(', ', $set) . ' WHERE id = :id')->execute($args);
+    if ($from) { $ph = []; foreach (array_values($from) as $i => $f) { $ph[] = ':f' . $i; $args[':f' . $i] = $f; } $where .= ' AND status IN (' . implode(',', $ph) . ')'; }
+    if ($artistId !== null) { $where .= ' AND artist_id = :aid'; $args[':aid'] = $artistId; }
+    $st = getDB()->prepare('UPDATE commissions SET ' . implode(', ', $set) . ' WHERE ' . $where);
+    $st->execute($args);
+    if ($st->rowCount() < 1) return false;
     owLog('commission_' . $to, 'commission', $id, $note, $actor);
     return true;
 }
 
 /* ---- Emails ---- */
-function owCommHost(): string { return preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com'; }
+function owCommHost(): string { return 'oweili.com'; }   // links in emails: always the real site, never the visitor's Host header
 /* To the buyer. The private link key is only known at the request time, so later
    emails send the buyer to the same link they got first (kept only in their email). */
 function owCommTellBuyer(array $c, string $subject, string $en, string $ar, string $link = ''): void {
@@ -174,7 +179,8 @@ function owCommCleanup(): int {
     try {
         $rows = getDB()->query("SELECT id, ref_no FROM commissions WHERE photos_deleted_at IS NULL AND (
                                    (status = 'delivered' AND delivered_at IS NOT NULL AND delivered_at < NOW() - INTERVAL " . OW_COMM_KEEP_DAYS . " DAY)
-                                OR (status = 'cancelled' AND updated_at < NOW() - INTERVAL " . OW_COMM_KEEP_DAYS . " DAY)) LIMIT 50")->fetchAll();
+                                OR (status = 'cancelled' AND EXISTS (SELECT 1 FROM activity_log l WHERE l.action = 'commission_cancelled' AND l.target_type = 'commission'
+                                                                      AND l.target_id = commissions.id AND l.created_at < NOW() - INTERVAL " . OW_COMM_KEEP_DAYS . " DAY))) LIMIT 50")->fetchAll();
         foreach ($rows as $r) {
             $files = owCommFiles((int) $r['id'], 'reference');
             foreach ($files as $f) owCommDeleteFile($f, 'auto');

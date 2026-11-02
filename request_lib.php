@@ -23,8 +23,19 @@ function owReqLimited(string $action, int $max): bool {
     $now = time();
     $key = 'ow_req_' . $action;
     $sent = array_values(array_filter((array) ($_SESSION[$key] ?? []), fn($t) => is_int($t) && $t > $now - 3600));
-    return count($sent) >= $max || owRecentCount($action, 3600) >= $max + 2;
+    if (count($sent) >= $max || owRecentCount($action, 3600) >= $max + 2) return true;
+    /* and a cap for the whole site, because a visitor's address can be faked (security review 2 Nov 2026) */
+    $site = ['gift_request' => 30, 'commission_request' => 15][$action] ?? 30;
+    try {
+        $st = getDB()->prepare('SELECT COUNT(*) FROM activity_log WHERE action = :a AND created_at > (NOW() - INTERVAL 1 HOUR)');
+        $st->execute([':a' => $action]);
+        if ((int) $st->fetchColumn() >= $site) return true;
+    } catch (Throwable $e) {}
+    return false;
 }
+
+/* The real site address for links in emails (never the Host header a visitor sent) */
+function owSiteBase(): string { return 'https://oweili.com'; }
 function owReqCounted(string $action): void {
     $key = 'ow_req_' . $action;
     $sent = array_values(array_filter((array) ($_SESSION[$key] ?? []), fn($t) => is_int($t) && $t > time() - 3600));
@@ -64,8 +75,7 @@ function owGiftOccasions(): array {
 function owReqTellBuyer(string $email, string $subject, string $en, string $ar, string $link = ''): void {
     try {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) return;
-        $host = preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com';
-        $url = $link !== '' ? "\r\nhttps://$host/$link\r\n" : "\r\n";
+        $url = $link !== '' ? "\r\n" . owSiteBase() . "/$link\r\n" : "\r\n";
         owSendMail($email, $subject, $en . $url . "\r\n" . $ar . $url);
     } catch (Throwable $e) { error_log('owReqTellBuyer: ' . $e->getMessage()); }
 }

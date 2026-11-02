@@ -94,8 +94,7 @@ function owAlertsTick(): void {
 
 /* The email: one item, or a list of items. Each item has its own button. */
 function owAlertEmail(array $items): array {
-    $host = preg_replace('/[^a-z0-9.:\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?: 'oweili.com';
-    $base = 'https://' . preg_replace('/^www\./i', '', $host) . owBase();
+    $base = 'https://oweili.com' . owBase();   // always the real site, never the visitor's Host header
     $kinds = ['artwork' => ['Waiting for approval', 'بانتظار الموافقة'], 'change' => ['Changes waiting for approval', 'تعديلات بانتظار الموافقة'],
               'artist' => ['New artist sign-up', 'فنان جديد'], 'buyer' => ['New buyer sign-up', 'مشترٍ جديد'],
               'gift' => ['Gift request', 'طلب هدية'], 'commission' => ['Private commission', 'طلب عمل خاص'], 'order' => ['Order', 'طلب شراء']];

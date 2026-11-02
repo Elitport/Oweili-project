@@ -3,7 +3,8 @@
  *  collector_dashboard.php — the Buyer dashboard («لوحة المشتري»).
  *  Inside the database the account type is still "collector".
  *  Only the signed-in buyer's OWN data, never another person's (no ?id).
- *  Tabs (?tab=):
+ *  Tabs (?tab=):   (My requests also lists the buyer's gift requests and
+ *                   private commissions, status only)
  *    requests   — every "I'm Interested" request with its status
  *    favorites  — artworks saved with the heart
  *    profile    — name, phone, country, city, preferred language
@@ -271,6 +272,36 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
           <span class="st-pill st-<?= e($st) ?>"><?= owBi(OW_INQUIRY_STATUS[$st][0], OW_INQUIRY_STATUS[$st][1]) ?></span>
           <?php if ($r['aid'] && (int) $r['visible'] === 1): ?><a class="btn btn-ghost btn-sm" href="marketplace.php?show=<?= (int) $r['aid'] ?>#artwork-<?= (int) $r['aid'] ?>"><?= owBi('See the artwork', 'شاهد العمل') ?></a><?php endif; ?>
         </div>
+      </div>
+    <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
+
+  <?php /* Gifts and private commissions this buyer sent (by account, or by the confirmed email) */
+  $myGifts = $myComms = [];
+  try {
+      $byWho = 'user_id = :u' . ($verified ? ' OR buyer_email = :e' : '');
+      $wArgs = [':u' => (int) $me['id']] + ($verified ? [':e' => strtolower(trim((string) $me['email']))] : []);
+      if (owHasTable('gift_requests')) { $q = getDB()->prepare("SELECT id, occasion, mode, delivery_date, recipient_city, status, created_at FROM gift_requests WHERE $byWho ORDER BY id DESC LIMIT 30"); $q->execute($wArgs); $myGifts = $q->fetchAll(); }
+      if (owHasTable('commissions'))   { $q = getDB()->prepare("SELECT id, ref_no, subject, status, created_at FROM commissions WHERE $byWho ORDER BY id DESC LIMIT 30"); $q->execute($wArgs); $myComms = $q->fetchAll(); }
+  } catch (Throwable $e) { $myGifts = $myComms = []; }
+  if ($myGifts || $myComms):
+      require_once __DIR__ . '/request_lib.php'; require_once __DIR__ . '/commission_lib.php';
+      $gOcc = owGiftOccasions(); $gSt = ['new' => ['New', 'جديد'], 'contacted' => ['Contacted', 'تم التواصل'], 'in_progress' => ['In progress', 'قيد التنفيذ'], 'done' => ['Done', 'تم'], 'cancelled' => ['Cancelled', 'ملغى']]; ?>
+    <h2 class="sec-h" style="font-size:var(--fs-subtitle);margin:var(--space-lg) 0 var(--space-sm)"><?= owBi('Gifts and private commissions', 'الهدايا والأعمال الخاصة') ?></h2>
+    <div class="req-list">
+    <?php foreach ($myGifts as $g): $o = $gOcc[$g['occasion']] ?? ['en' => 'Gift', 'ar' => 'هدية']; ?>
+      <div class="card req" style="grid-template-columns:1fr auto">
+        <div class="req-body"><p class="req-title"><?= owBi('Gift: ' . $o['en'], 'هدية: ' . $o['ar']) ?></p>
+          <div class="req-meta"><?= owBi('To ' . $g['recipient_city'], 'إلى ' . $g['recipient_city']) ?> · <?= owBi('Delivery', 'التوصيل') ?> <?= $fmtDate($g['delivery_date']) ?> · <?= owBi('Sent', 'أُرسل') ?> <?= $fmtDate($g['created_at']) ?></div></div>
+        <div class="req-side"><span class="st-pill"><?= owBi($gSt[$g['status']][0] ?? $g['status'], $gSt[$g['status']][1] ?? $g['status']) ?></span></div>
+      </div>
+    <?php endforeach; ?>
+    <?php foreach ($myComms as $c): $cs = owCommSubjects()[$c['subject']] ?? ['Commission', 'عمل خاص']; $cw = owCommStatus()[$c['status']] ?? [$c['status'], $c['status']]; ?>
+      <div class="card req" style="grid-template-columns:1fr auto">
+        <div class="req-body"><p class="req-title"><?= owBi('Private commission: ' . $cs[0], 'عمل خاص: ' . $cs[1]) ?> <span dir="ltr" class="req-meta"><?= e($c['ref_no']) ?></span></p>
+          <div class="req-meta"><?= owBi('Open the private link in our first email to see every step.', 'افتح الرابط الخاص في أول رسالة منا لترى كل خطوة.') ?></div></div>
+        <div class="req-side"><span class="st-pill"><?= owBi($cw[0], $cw[1]) ?></span></div>
       </div>
     <?php endforeach; ?>
     </div>

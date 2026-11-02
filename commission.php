@@ -38,30 +38,30 @@ if ($c && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $note = owReqClean('note', 1000, true);
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) { $flash = ['This page was open for a long time. Please try again.', 'كانت الصفحة مفتوحة لوقت طويل. يرجى المحاولة مرة أخرى.', true]; }
     elseif ($do === 'accept_quote' && $c['status'] === 'quoted') {
-        owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => ''], ['type' => 'guest', 'id' => null]);
+        if (!owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => ''], ['type' => 'guest', 'id' => null], '', [$c['status']])) { header('Location: ' . $selfLink); exit; };
         owCommAlert($c, 'The buyer accepted the price', 'وافق المشتري على السعر');
         owCommTellArtist($c, 'The buyer accepted your price · وافق المشتري على سعرك', 'Good news: the buyer accepted your price. You can start, then send a draft from the commission page.', 'خبر جميل: وافق المشتري على سعرك. يمكنك البدء، ثم أرسل مسودة من صفحة الطلب.');
         header('Location: ' . $selfLink . '&done=quote'); exit;
     } elseif ($do === 'other_quote' && $c['status'] === 'quoted') {
-        owCommSetStatus((int) $c['id'], 'assigned', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'asked for another price');
+        if (!owCommSetStatus((int) $c['id'], 'assigned', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'asked for another price', [$c['status']])) { header('Location: ' . $selfLink); exit; };
         owCommAlert($c, 'The buyer asked for another price', 'طلب المشتري سعراً آخر');
         owCommTellArtist($c, 'The buyer asks about the price · المشتري يسأل عن السعر', 'The buyer would like another price. Their note: ' . ($note ?: '—'), 'يرغب المشتري في سعر آخر. ملاحظته: ' . ($note ?: '—'));
         header('Location: ' . $selfLink . '&done=asked'); exit;
     } elseif ($do === 'approve_draft' && $c['status'] === 'draft_sent') {
-        owCommSetStatus((int) $c['id'], 'draft_approved', ['buyer_note' => ''], ['type' => 'guest', 'id' => null]);
+        if (!owCommSetStatus((int) $c['id'], 'draft_approved', ['buyer_note' => ''], ['type' => 'guest', 'id' => null], '', [$c['status']])) { header('Location: ' . $selfLink); exit; };
         owCommAlert($c, 'The buyer approved the draft', 'وافق المشتري على المسودة');
         owCommTellArtist($c, 'The draft is approved · تمت الموافقة على المسودة', 'The buyer approved your draft. Please finish the piece and send the final photo.', 'وافق المشتري على مسودتك. يرجى إنهاء العمل وإرسال الصورة النهائية.');
         header('Location: ' . $selfLink . '&done=draft'); exit;
     } elseif ($do === 'change_draft' && $c['status'] === 'draft_sent') {
         if (mb_strlen($note) < 3) { $flash = ['Please tell the artist what to change.', 'يرجى إخبار الفنان بما يجب تغييره.', true]; }
         else {
-            owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'changes asked');
+            if (!owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'changes asked', [$c['status']])) { header('Location: ' . $selfLink); exit; };
             owCommAlert($c, 'The buyer asked for changes to the draft', 'طلب المشتري تعديلات على المسودة');
             owCommTellArtist($c, 'Changes asked for the draft · تعديلات مطلوبة على المسودة', 'The buyer asks for changes: ' . $note, 'يطلب المشتري تعديلات: ' . $note);
             header('Location: ' . $selfLink . '&done=asked'); exit;
         }
     } elseif ($do === 'received' && $c['status'] === 'final_sent') {
-        owCommSetStatus((int) $c['id'], 'delivered', ['delivered_at' => date('Y-m-d H:i:s')], ['type' => 'guest', 'id' => null], 'buyer confirmed receipt');
+        if (!owCommSetStatus((int) $c['id'], 'delivered', ['delivered_at' => date('Y-m-d H:i:s')], ['type' => 'guest', 'id' => null], 'buyer confirmed receipt', [$c['status']])) { header('Location: ' . $selfLink); exit; };
         owCommAlert($c, 'The buyer received the commission', 'استلم المشتري العمل الخاص');
         header('Location: ' . $selfLink . '&done=received'); exit;
     }

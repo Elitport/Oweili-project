@@ -217,6 +217,8 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 }
                 $db->commit();
                 foreach ($removed as $p) owDeleteArticleFile((string) $p);
+                /* Changed after it was sent: the waiting request is withdrawn, so the admin never approves a version they did not read */
+                if (!$send && $existing) $db->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE target_type = 'article' AND target_id = :id AND status = 'pending'")->execute([':id' => $id]);
                 owLog($existing ? 'article_edit' : 'article_new', 'article', $id, $type, ['type' => 'artist', 'id' => $uid]);
                 if ($send) {
                     if (owSubmitChange($uid, 'article', $id, ['publish' => 1])) myFlash('Sent. The Oweili team will read it and email you the result. Until then, visitors do not see it.', 'تم الإرسال. سيقرؤه فريق أويلي ويراسلك بالنتيجة. حتى ذلك الحين لا يراه الزوار.');
@@ -356,7 +358,7 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
       <h2><?= owBi(($form['id'] ? 'Edit: ' : 'New: ') . $tEn, ($form['id'] ? 'تعديل: ' : 'جديد: ') . $tAr) ?></h2>
       <p class="note"><?= owBi($TYPE_HELP[$type][0], $TYPE_HELP[$type][1]) ?> <?= owBi('Please write it in English and Arabic.', 'يرجى كتابته بالإنجليزية والعربية.') ?></p>
       <?php $pc = $form['id'] ? ($changes['article:' . (int) $form['id']] ?? null) : null; if ($pc && $pc['state'] === 'pending'): ?>
-        <div class="alert alert-ok"><?= owBi('This article is waiting for approval. If you change it, press "Send for approval" again.', 'هذا المقال بانتظار الموافقة. إن عدّلته فاضغط «أرسل للموافقة» مرة أخرى.') ?></div>
+        <div class="alert alert-ok"><?= owBi('This article is waiting for approval. If you change it, press "Send for approval" again: "Save draft" takes it back from the review.', 'هذا المقال بانتظار الموافقة. إن عدّلته فاضغط «أرسل للموافقة» مرة أخرى: «احفظ كمسودة» يسحبه من المراجعة.') ?></div>
       <?php elseif ($pc && $pc['state'] === 'rejected'): ?>
         <div class="w-reason"><?= owBi('Not approved last time. The reason: ', 'لم تتم الموافقة في المرة السابقة. السبب: ') ?><?= e($pc['reason'] ?: '—') ?></div>
       <?php endif; ?>

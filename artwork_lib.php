@@ -144,7 +144,9 @@ function owStoreStagePhoto(array $file): array {
     return $r;
 }
 
-function owStoreImage(array $file, string $relDir): array {
+/* $strict: the photo MUST be re-saved (hidden data such as GPS removed); never keep the original file.
+   WEBP is saved as JPG when the server cannot write WEBP. Used for private commission photos. */
+function owStoreImage(array $file, string $relDir, bool $strict = false): array {
     if (empty($file['tmp_name']) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         return ['ok' => false, 'err' => 'none'];
     }
@@ -169,6 +171,8 @@ function owStoreImage(array $file, string $relDir): array {
         return ['ok' => false, 'err' => 'type'];
     }
     $outExt = $allowed[$mime];
+    if ($strict && $outExt === 'webp' && !function_exists('imagewebp')) $outExt = 'jpg';
+    if ($strict && !function_exists('imagecreatefromstring')) return ['ok' => false, 'err' => 'save'];
 
     // When the photo was taken: the camera's own timestamp if it looks real, else now.
     $takenAt = date('Y-m-d H:i:s');
@@ -210,7 +214,7 @@ function owStoreImage(array $file, string $relDir): array {
         }
         imagedestroy($img);
     }
-    if (!$saved) {
+    if (!$saved && !$strict) {
         $saved = move_uploaded_file($file['tmp_name'], $dest);
     }
     if (!$saved) {

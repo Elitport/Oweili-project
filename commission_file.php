@@ -22,7 +22,7 @@ $who = '';
 if (owIsAdmin()) $who = 'admin';
 elseif (isset($_GET['k'], $_GET['ref']) && (string) $_GET['ref'] === (string) $f['ref_no'] && preg_match('/^[a-f0-9]{48}$/', (string) $_GET['k'])
         && hash_equals((string) $f['access_hash'], hash('sha256', (string) $_GET['k']))) $who = 'buyer';
-elseif (isLoggedIn() && ($u = currentUser()) && ($u['role'] ?? '') === 'artist' && (int) $u['id'] === (int) $f['artist_id']
+elseif (isLoggedIn() && ($u = currentUser()) && ($u['role'] ?? '') === 'artist' && empty($u['is_banned']) && (int) $u['id'] === (int) $f['artist_id']
         && $f['status'] !== 'cancelled' && owCommNdaOk((int) $f['commission_id'], (int) $u['id'])) $who = 'artist';
 if ($who === '') $no();
 $path = __DIR__ . '/' . OW_COMM_DIR . basename((string) $f['file_name']);
