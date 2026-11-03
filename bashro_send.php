@@ -127,6 +127,17 @@ function owBashroRetryDue(): void {
     foreach ($due as $it) owBashroDeliver($it);
 }
 
+/* The admin's "Send a test to Bashro" (Settings): one clearly marked test lead, sent now, its answer returned */
+function owBashroTest(): int {
+    if (!owBashroReady()) return 0;
+    $body = json_encode(owBashroClean('quote', ['name' => 'Oweili test (please ignore)', 'email' => owContactEmail(), 'service' => 'TEST: I am interested', 'lang' => 'en',
+        'message' => 'TEST from oweili.com Settings: one test "I am Interested" to check the connection. Please ignore or delete it.']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    $status = 0;
+    try { $status = owBashroPost($body); } catch (Throwable $e) { error_log('owBashroTest: ' . $e->getMessage()); }
+    owLog('bashro_send', 'bashro', null, 'quote ' . ($status ?: 'no answer') . ' (test from Settings)', ['type' => 'admin', 'id' => null]);
+    return $status;
+}
+
 /* ---------------- What Oweili sends ---------------- */
 /* Links in the messages always point to the real site (never to whatever host a visitor sent) */
 function owBashroHost(): string { return defined('BASHRO_DOOR_LINK_BASE') ? rtrim((string) BASHRO_DOOR_LINK_BASE, '/') : 'https://oweili.com'; }

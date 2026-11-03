@@ -27,6 +27,7 @@ $c = owCommReady() ? owCommById((int) ($_GET['id'] ?? $_POST['id'] ?? 0)) : null
 if (!$c || (int) $c['artist_id'] !== $uid || $c['status'] === 'cancelled') { http_response_code(404); }
 $ok = $c && (int) $c['artist_id'] === $uid && $c['status'] !== 'cancelled';
 $nda = $ok && owCommNdaOk((int) $c['id'], $uid);
+$paid = $ok && owCommPaid((int) $c['id']);   // no photos and no work before the payment is confirmed (Admin → Mark as paid)
 $errors = []; $msg = null;
 $actor = ['type' => 'artist', 'id' => $uid];
 $txt = fn(string $k, int $max) => mb_substr(trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', (string) ($_POST[$k] ?? ''))), 0, $max);
@@ -60,7 +61,7 @@ if ($ok && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 'أرسل الفنان سعر عملك الخاص: ' . number_format($price) . ' ر.س، جاهز خلال ' . $days . ' يوماً تقريباً. يرجى الموافقة عليه أو طلب سعر آخر من صفحتك الخاصة.');
             header('Location: artist_commission.php?id=' . (int) $c['id'] . '&m=quote'); exit;
         }
-    } elseif ($nda && in_array($do, ['draft', 'final'], true) && (($do === 'draft' && $c['status'] === 'quote_accepted') || ($do === 'final' && $c['status'] === 'draft_approved'))) {
+    } elseif ($nda && $paid && in_array($do, ['draft', 'final'], true) && (($do === 'draft' && $c['status'] === 'quote_accepted') || ($do === 'final' && $c['status'] === 'draft_approved'))) {
         $r = owCommStore($_FILES['photo'] ?? [], (int) $c['id'], $do, 'artist');
         if (!$r['ok']) $errors[] = owUploadErrBi($r['err'] === 'none' ? 'none' : $r['err'], 'Photo', 'الصورة');
         else {
@@ -82,6 +83,7 @@ $MSG = ['nda' => ['Thank you. The agreement is saved. You can now see the photos
 $msg = $MSG[$_GET['m'] ?? ''] ?? null;
 $NDA = owCommNdaText();
 $files = $nda ? owCommFiles((int) $c['id']) : [];
+if (!$paid) $files = array_values(array_filter($files, fn($ff) => $ff['kind'] !== 'reference'));   // reference photos stay closed until paid
 $byKind = ['reference' => [], 'draft' => [], 'final' => []];
 foreach ($files as $ff) $byKind[$ff['kind']][] = $ff;
 ?>
@@ -160,9 +162,10 @@ foreach ($files as $ff) $byKind[$ff['kind']][] = $ff;
     </dl>
     <?php if ($c['buyer_note'] !== ''): ?><p class="w-reason"><?= owBi('The buyer’s note: ', 'ملاحظة المشتري: ') ?><?= e((string) $c['buyer_note']) ?></p><?php endif; ?>
     <h2><?= owBi('Reference photos (private)', 'الصور المرجعية (خاصة)') ?></h2>
-    <?php if ($byKind['reference']): ?><div class="pics"><?php foreach ($byKind['reference'] as $rf): ?><a href="commission_file.php?id=<?= (int) $rf['id'] ?>" target="_blank" rel="noopener noreferrer"><img src="commission_file.php?id=<?= (int) $rf['id'] ?>" alt="<?= e('Reference photo · صورة مرجعية') ?>"></a><?php endforeach; ?></div>
+    <?php if (!$paid && !$c['photos_deleted_at']): ?><p class="w-reason"><?= owBi('The photos open for you once the buyer has paid and the Oweili team confirms it. Please do not start the piece before that. You can already send your price.', 'تُفتح لك الصور بعد أن يدفع المشتري ويؤكد فريق أويلي ذلك. يرجى عدم البدء في القطعة قبل ذلك. يمكنك إرسال سعرك الآن.') ?></p>
+    <?php elseif ($byKind['reference']): ?><div class="pics"><?php foreach ($byKind['reference'] as $rf): ?><a href="commission_file.php?id=<?= (int) $rf['id'] ?>" target="_blank" rel="noopener noreferrer"><img src="commission_file.php?id=<?= (int) $rf['id'] ?>" alt="<?= e('Reference photo · صورة مرجعية') ?>"></a><?php endforeach; ?></div>
     <?php else: ?><p class="note"><?= owBi('The reference photos were deleted.', 'حُذفت الصور المرجعية.') ?></p><?php endif; ?>
-    <p class="note"><?= owBi('Please do not download or share them. They are deleted ' . OW_COMM_KEEP_DAYS . ' days after delivery.', 'يرجى عدم تنزيلها أو مشاركتها. تُحذف بعد ' . OW_COMM_KEEP_DAYS . ' يوماً من التسليم.') ?></p>
+    <?php if ($paid): ?><p class="note"><?= owBi('Please do not download or share them. They are deleted ' . OW_COMM_KEEP_DAYS . ' days after delivery.', 'يرجى عدم تنزيلها أو مشاركتها. تُحذف بعد ' . OW_COMM_KEEP_DAYS . ' يوماً من التسليم.') ?></p><?php endif; ?>
 
     <?php if ($c['status'] === 'assigned'): ?>
       <h2><?= owBi('Your price', 'سعرك') ?></h2>
@@ -175,6 +178,8 @@ foreach ($files as $ff) $byKind[$ff['kind']][] = $ff;
         <button class="btn btn-primary" type="submit"><?= owBi('Send my price', 'أرسل سعري') ?></button></form>
     <?php elseif ($c['status'] === 'quoted'): ?>
       <p><?= owBi('Your price (' . number_format((float) $c['quote_sar']) . ' SAR) is waiting for the buyer.', 'سعرك (' . number_format((float) $c['quote_sar']) . ' ر.س) بانتظار المشتري.') ?></p>
+    <?php elseif (in_array($c['status'], ['quote_accepted', 'draft_approved'], true) && !$paid): ?>
+      <p><?= owBi('The buyer accepted your price. Waiting for the payment: you will get an email when you can start.', 'وافق المشتري على سعرك. بانتظار الدفع: ستصلك رسالة عندما يمكنك البدء.') ?></p>
     <?php elseif (in_array($c['status'], ['quote_accepted', 'draft_approved'], true)): $isDraft = $c['status'] === 'quote_accepted'; ?>
       <h2><?= $isDraft ? owBi('Send a draft', 'أرسل مسودة') : owBi('Send the final photo', 'أرسل الصورة النهائية') ?></h2>
       <p class="note"><?= $isDraft ? owBi('A photo of the work in progress, so the buyer can approve or ask for changes.', 'صورة للعمل وهو قيد التنفيذ، ليوافق المشتري أو يطلب تعديلات.') : owBi('A clear photo of the finished piece. The Oweili team arranges the delivery.', 'صورة واضحة للقطعة المكتملة. يرتب فريق أويلي التسليم.') ?></p>

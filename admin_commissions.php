@@ -44,6 +44,8 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             if (!owCommSetStatus((int) $c['id'], 'cancelled', [], $actor, $why, [$c['status']])) { header('Location: admin_commissions.php?id=' . (int) $c['id']); exit; };
             owCommTellBuyer($c, 'About your private commission · بخصوص عملك الخاص', 'Your private commission was cancelled. The reason: ' . $why . "\r\nYour reference photos will be deleted in " . OW_COMM_KEEP_DAYS . ' days.', 'أُلغي عملك الخاص. السبب: ' . $why . "\r\nستُحذف صورك المرجعية بعد " . OW_COMM_KEEP_DAYS . ' يوماً.');
         }
+    } elseif ($do === 'paid') {
+        owCommMarkPaid($c, $actor, (string) ($_POST['pay_note'] ?? ''));
     } elseif ($do === 'note') {
         $db->prepare('UPDATE commissions SET admin_note = :n WHERE id = :id')->execute([':n' => mb_substr(trim((string) ($_POST['admin_note'] ?? '')), 0, 4000), ':id' => (int) $c['id']]);
     } elseif ($do === 'delete_refs') {
@@ -98,6 +100,8 @@ owAdminTop('Private commissions', 'الأعمال الخاصة', '
       <dt><?= owBi('Price', 'السعر') ?></dt><dd><?= $one['quote_sar'] !== null ? number_format((float) $one['quote_sar']) . ' SAR · ' . (int) $one['quote_days'] . ' ' . owBi('days', 'يوماً') . ($one['quote_note'] !== '' ? ' · ' . e((string) $one['quote_note']) : '') : '—' ?></dd>
       <?php if ($one['buyer_note'] !== ''): ?><dt><?= owBi('Buyer’s last note', 'آخر ملاحظة للمشتري') ?></dt><dd dir="auto"><?= e((string) $one['buyer_note']) ?></dd><?php endif; ?>
       <dt><?= owBi('Artist', 'الفنان') ?></dt><dd><?php if ($one['artist_id']): ?><a href="admin.php?person=<?= (int) $one['artist_id'] ?>">#<?= (int) $one['artist_id'] ?></a> · <?= $nda ? owBi('confidentiality accepted ' . $nda['accepted_at'] . ' (signed "' . $nda['typed_name'] . '")', 'قبل اتفاقية السرّية ' . $nda['accepted_at'] . ' (وقّع «' . $nda['typed_name'] . '»)') : owBi('has NOT accepted the confidentiality agreement yet: no photo is shown to them', 'لم يقبل اتفاقية السرّية بعد: لا تُعرض عليه أي صورة') ?><?php else: ?><?= owBi('Not chosen yet', 'لم يُختر بعد') ?><?php endif; ?></dd>
+      <?php $paidAt = owCommPaidAt((int) $one['id']); $left = owCommDaysToExpire($one); ?>
+      <dt><?= owBi('Payment', 'الدفع') ?></dt><dd><?= $paidAt ? '<span class="pillx on">' . owBi('Paid', 'مدفوع') . '</span> ' . e($paidAt) . ' · ' . owBi('the artist can see the photos and work', 'يستطيع الفنان رؤية الصور والعمل') : '<span class="pillx warn">' . owBi('Not paid yet', 'لم يُدفع بعد') . '</span> ' . owBi('the artist cannot see the reference photos or start', 'لا يستطيع الفنان رؤية الصور المرجعية أو البدء') . ($left !== null ? ' · ' . owBi('photos deleted in ' . $left . ' days if not paid', 'تُحذف الصور بعد ' . $left . ' يوماً إن لم يُدفع') : '') ?></dd>
       <dt><?= owBi('Delivered', 'التسليم') ?></dt><dd><?= e((string) ($one['delivered_at'] ?: '—')) ?><?= $one['photos_deleted_at'] ? ' · ' . owBi('reference photos deleted ' . $one['photos_deleted_at'], 'حُذفت الصور المرجعية ' . $one['photos_deleted_at']) : '' ?></dd>
     </dl>
     <?php if ($files): ?><div class="pics"><?php foreach ($files as $ff): $kw = ['reference' => ['Reference', 'مرجعية'], 'draft' => ['Draft', 'مسودة'], 'final' => ['Final', 'نهائية']][$ff['kind']]; ?>
@@ -108,6 +112,12 @@ owAdminTop('Private commissions', 'الأعمال الخاصة', '
       <form method="post" action="admin_commissions.php"><?= csrfField() ?><input type="hidden" name="do" value="assign"><input type="hidden" name="id" value="<?= (int) $one['id'] ?>">
         <select name="artist_id" aria-label="Artist · الفنان"><?php foreach ($artists as $a): ?><option value="<?= (int) $a['id'] ?>"<?= (int) $one['artist_id'] === (int) $a['id'] ? ' selected' : '' ?>><?= e($a['artist_en'] . ' · ' . $a['artist_ar'] . ($a['city'] ? ' (' . $a['city'] . ')' : '')) ?></option><?php endforeach; ?></select>
         <button class="btn btn-accent btn-sm"><?= $one['artist_id'] ? owBi('Change artist', 'غيّر الفنان') : owBi('Assign this artist', 'أسند إلى هذا الفنان') ?></button></form>
+      <?php endif; ?>
+      <?php if (!$paidAt && !in_array($one['status'], ['cancelled', 'delivered'], true)): ?>
+      <details><summary class="btn btn-accent btn-sm"><?= owBi('Mark as paid…', 'سجّل الدفع…') ?></summary>
+        <form method="post" action="admin_commissions.php" onsubmit="return confirm('The artist will see the reference photos and can start. Continue? · سيرى الفنان الصور المرجعية ويمكنه البدء. متابعة؟')"><?= csrfField() ?><input type="hidden" name="do" value="paid"><input type="hidden" name="id" value="<?= (int) $one['id'] ?>">
+          <div class="field"><label><?= owBi('Note (optional, e.g. the bank transfer reference)', 'ملاحظة (اختيارية، مثل مرجع التحويل البنكي)') ?><input name="pay_note" maxlength="300"></label></div>
+          <button class="btn btn-accent btn-sm"><?= owBi('Confirm: it is paid', 'تأكيد: تم الدفع') ?></button></form></details>
       <?php endif; ?>
       <?php if (in_array($one['status'], ['final_sent', 'draft_approved'], true)): ?>
       <form method="post" action="admin_commissions.php"><?= csrfField() ?><input type="hidden" name="do" value="delivered"><input type="hidden" name="id" value="<?= (int) $one['id'] ?>"><button class="btn btn-primary btn-sm"><?= owBi('Mark as delivered', 'سجّل التسليم') ?></button></form>

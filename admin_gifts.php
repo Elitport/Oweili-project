@@ -6,6 +6,10 @@
  *  buyer. The admin follows up by hand: status (New / Contacted / In
  *  progress / Done / Cancelled) and a private note. No payment yet.
  *  Buyer and recipient details are shown only here (admin only).
+ *  PAYMENT FIRST for custom gifts (3 Nov 2026): no work starts on a custom
+ *  artwork until the admin presses "Mark as paid" (activity log 'gift_paid',
+ *  the one record of the payment while payments are switched off); until then
+ *  the status cannot move to In progress or Done.
  *  Tables: gift_requests, artworks, users, activity_log
  * ===================================================================== */
 require_once 'config.php';
@@ -17,10 +21,22 @@ $OCC = owGiftOccasions();
 $STATUS = ['new' => ['New', 'جديد'], 'contacted' => ['Contacted', 'تم التواصل'], 'in_progress' => ['In progress', 'قيد التنفيذ'], 'done' => ['Done', 'تم'], 'cancelled' => ['Cancelled', 'ملغى']];
 $ready = owHasTable('gift_requests');
 $db = getDB();
+/* When a custom gift was marked paid (activity log 'gift_paid'), or null */
+function owGiftPaidAt(int $id): ?string {
+    $st = getDB()->prepare("SELECT MIN(created_at) FROM activity_log WHERE action = 'gift_paid' AND target_type = 'gift' AND target_id = :id");
+    $st->execute([':id' => $id]); $v = $st->fetchColumn();
+    return $v ? (string) $v : null;
+}
 if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && verifyCsrf($_POST['csrf_token'] ?? null)) {
     $id = (int) ($_POST['id'] ?? 0);
     $st = (string) ($_POST['status'] ?? '');
-    if (isset($STATUS[$st])) {
+    $g = $db->prepare('SELECT mode, status FROM gift_requests WHERE id = :id'); $g->execute([':id' => $id]); $g = $g->fetch();
+    if ($g && ($_POST['do'] ?? '') === 'paid') {
+        if ($g['mode'] === 'custom' && $g['status'] !== 'cancelled' && !owGiftPaidAt($id)) owLog('gift_paid', 'gift', $id, mb_substr(trim((string) ($_POST['pay_note'] ?? '')), 0, 300), owAdminActor());
+        header('Location: admin_gifts.php?id=' . $id . '&ok=1'); exit;
+    }
+    if ($g && $g['mode'] === 'custom' && in_array($st, ['in_progress', 'done'], true) && !owGiftPaidAt($id)) { header('Location: admin_gifts.php?id=' . $id . '&unpaid=1'); exit; }
+    if ($g && isset($STATUS[$st])) {
         $db->prepare('UPDATE gift_requests SET status = :s, admin_note = :n WHERE id = :id')
            ->execute([':s' => $st, ':n' => mb_substr(trim((string) ($_POST['admin_note'] ?? '')), 0, 4000), ':id' => $id]);
         owLog('gift_update', 'gift', $id, $st, owAdminActor());
@@ -52,6 +68,7 @@ owAdminTop('Gift requests', 'طلبات الهدايا', '
   <p class="mini"><?= owBi('From "Gift a painting instead of flowers". Call or write to the buyer, confirm the price, then arrange wrapping and delivery by hand. No payment is taken on the site yet.', 'من «أهدِ لوحة بدل الورد». اتصل بالمشتري أو راسله، أكّد السعر، ثم رتّب التغليف والتوصيل بنفسك. لا يُدفع أي مبلغ في الموقع بعد.') ?></p>
   <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The gifts table is not set up yet (night_update.sql).', 'جدول الهدايا غير مُعدّ بعد (night_update.sql).') ?></div><?php endif; ?>
   <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if (isset($_GET['unpaid'])): ?><div class="alert alert-error"><?= owBi('A custom gift can only move to In progress or Done after it is marked as paid.', 'لا ينتقل الطلب الخاص إلى «قيد التنفيذ» أو «تم» إلا بعد تسجيل الدفع.') ?></div><?php endif; ?>
 
 <?php if ($one): $o = $OCC[$one['occasion']] ?? ['en' => $one['occasion'], 'ar' => $one['occasion']]; ?>
   <div class="card">
@@ -66,6 +83,15 @@ owAdminTop('Gift requests', 'طلبات الهدايا', '
         <?php else: ?><b><?= owBi('Custom artwork', 'عمل خاص') ?></b><br><?= nl2br(e((string) $one['custom_brief'])) ?><?php endif; ?></dd>
       <?php if ($one['budget_sar'] !== null): ?><dt><?= owBi('Budget', 'الميزانية') ?></dt><dd><?= number_format((float) $one['budget_sar']) ?> SAR</dd><?php endif; ?>
       <dt><?= owBi('Wrapping', 'التغليف') ?></dt><dd><?= (int) $one['wrapping'] ? owBi('Yes', 'نعم') : owBi('No', 'لا') ?></dd>
+      <?php if ($one['mode'] === 'custom'): $gPaid = owGiftPaidAt((int) $one['id']); ?>
+      <dt><?= owBi('Payment', 'الدفع') ?></dt><dd><?= $gPaid ? '<span class="pillx on">' . owBi('Paid', 'مدفوع') . '</span> ' . e($gPaid) : '<span class="pillx warn">' . owBi('Not paid yet: no work starts on the custom artwork', 'لم يُدفع بعد: لا يبدأ العمل على القطعة الخاصة') . '</span>' ?>
+        <?php if (!$gPaid && $one['status'] !== 'cancelled'): ?>
+        <details><summary class="btn btn-accent btn-sm"><?= owBi('Mark as paid…', 'سجّل الدفع…') ?></summary>
+          <form method="post" action="admin_gifts.php"><?= csrfField() ?><input type="hidden" name="do" value="paid"><input type="hidden" name="id" value="<?= (int) $one['id'] ?>">
+            <div class="field"><label><?= owBi('Note (optional, e.g. the bank transfer reference)', 'ملاحظة (اختيارية، مثل مرجع التحويل البنكي)') ?><input name="pay_note" maxlength="300"></label></div>
+            <button class="btn btn-accent btn-sm"><?= owBi('Confirm: it is paid', 'تأكيد: تم الدفع') ?></button></form></details>
+        <?php endif; ?></dd>
+      <?php endif; ?>
       <dt><?= owBi('Surprise', 'مفاجأة') ?></dt><dd><?= (int) $one['surprise'] ? owBi('Yes: never show the price to the recipient', 'نعم: لا يُظهر السعر للمُهدى إليه أبداً') : owBi('No', 'لا') ?></dd>
       <dt><?= owBi('Card message', 'رسالة البطاقة') ?></dt><dd dir="auto"><?= $one['card_message'] !== '' ? nl2br(e((string) $one['card_message'])) : '—' ?></dd>
       <dt><?= owBi('Delivery date', 'تاريخ التوصيل') ?></dt><dd><?php [$xe, $xa] = owDateBi($one['delivery_date']); ?><?= owBi($xe, $xa) ?></dd>

@@ -28,6 +28,8 @@ const OW_COMM_DIR = '.private/commissions/';
 const OW_COMM_MAX_REFS = 6;
 const OW_COMM_KEEP_DAYS = 30;
 const OW_COMM_NDA_VERSION = '1';
+const OW_COMM_PAY_DAYS = 60;      // not paid within 60 days of the request: the reference photos are deleted
+const OW_COMM_PAY_WARN_DAYS = 7;  // the buyer is told this many days before
 
 function owCommReady(): bool { return owHasTable('commissions') && owHasTable('commission_files') && owHasTable('commission_nda'); }
 
@@ -145,6 +147,35 @@ function owCommSetStatus(int $id, string $to, array $extra = [], ?array $actor =
     return true;
 }
 
+
+/* ---- Payment (switched off on the site: the admin confirms it by hand) ---- */
+/* When the payment was confirmed (activity log 'commission_paid'), or null */
+function owCommPaidAt(int $id): ?string {
+    try {
+        $st = getDB()->prepare("SELECT MIN(created_at) FROM activity_log WHERE action = 'commission_paid' AND target_type = 'commission' AND target_id = :id");
+        $st->execute([':id' => $id]);
+        $v = $st->fetchColumn();
+        return $v ? (string) $v : null;
+    } catch (Throwable $e) { return null; }
+}
+function owCommPaid(int $id): bool { return owCommPaidAt($id) !== null; }
+/* The admin's "Mark as paid": the photos open for the assigned artist, who may now start */
+function owCommMarkPaid(array $c, array $actor, string $note = ''): bool {
+    if (in_array($c['status'], ['cancelled', 'delivered'], true) || owCommPaid((int) $c['id'])) return false;
+    owLog('commission_paid', 'commission', (int) $c['id'], mb_substr(trim($note), 0, 300), $actor);
+    owCommTellBuyer($c, 'Payment received · وصلنا الدفع', 'Thank you: we received your payment. Your artist can now start your piece.', 'شكراً لك: وصلنا الدفع. يستطيع فنانك الآن البدء في قطعتك.');
+    if (!empty($c['artist_id'])) owCommTellArtist($c, 'Payment confirmed, you can start · تم تأكيد الدفع، يمكنك البدء',
+        'The buyer has paid. The reference photos are now open for you, and you can start the piece and send a draft.',
+        'دفع المشتري. الصور المرجعية مفتوحة لك الآن، ويمكنك البدء في القطعة وإرسال مسودة.');
+    return true;
+}
+/* Days left before an unpaid request expires (null when paid, closed or photos gone) */
+function owCommDaysToExpire(array $c): ?int {
+    if (in_array($c['status'], ['cancelled', 'delivered'], true) || $c['photos_deleted_at'] || owCommPaid((int) $c['id'])) return null;
+    $left = (int) ceil((strtotime((string) $c['created_at']) + OW_COMM_PAY_DAYS * 86400 - time()) / 86400);
+    return max(0, $left);
+}
+
 /* ---- Emails ---- */
 function owCommHost(): string { return 'oweili.com'; }   // links in emails: always the real site, never the visitor's Host header
 /* To the buyer. The private link key is only known at the request time, so later
@@ -189,6 +220,37 @@ function owCommCleanup(): int {
             $n++;
         }
     } catch (Throwable $e) { error_log('owCommCleanup: ' . $e->getMessage()); }
+    $n += owCommUnpaidCleanup();
+    return $n;
+}
+/* Not paid within 60 days of the request: a warning 7 days before, then the reference photos are deleted (the request stays) */
+function owCommUnpaidCleanup(): int {
+    $n = 0;
+    $notPaid = "NOT EXISTS (SELECT 1 FROM activity_log p WHERE p.action = 'commission_paid' AND p.target_type = 'commission' AND p.target_id = commissions.id)";
+    try {
+        /* 1. the warning, once */
+        $warn = getDB()->query("SELECT * FROM commissions WHERE photos_deleted_at IS NULL AND status NOT IN ('cancelled','delivered') AND $notPaid
+                                AND created_at < NOW() - INTERVAL " . (OW_COMM_PAY_DAYS - OW_COMM_PAY_WARN_DAYS) . " DAY
+                                AND created_at >= NOW() - INTERVAL " . OW_COMM_PAY_DAYS . " DAY
+                                AND NOT EXISTS (SELECT 1 FROM activity_log w WHERE w.action = 'commission_expiry_warned' AND w.target_type = 'commission' AND w.target_id = commissions.id) LIMIT 50")->fetchAll();
+        foreach ($warn as $c) {
+            [$end, $endAr] = owDateBi(date('Y-m-d', strtotime((string) $c['created_at']) + OW_COMM_PAY_DAYS * 86400));
+            owCommTellBuyer($c, 'Your request will expire · طلبك سينتهي',
+                "Your private commission request will expire on $end because it has not been paid yet. After that date we delete your reference photos to protect your privacy. Your request itself stays, and you can send the photos again later. To keep it going, reply to this email or open your private link.",
+                "سينتهي طلب عملك الخاص في $endAr لأنه لم يُدفع بعد. بعد هذا التاريخ نحذف صورك المرجعية حفاظاً على خصوصيتك. يبقى طلبك نفسه، ويمكنك إرسال الصور مرة أخرى لاحقاً. لمتابعته رد على هذه الرسالة أو افتح رابطك الخاص.");
+            owLog('commission_expiry_warned', 'commission', (int) $c['id'], 'expires ' . $end, ['type' => 'system', 'id' => null]);
+        }
+        /* 2. after 60 days: the reference photos are deleted */
+        $old = getDB()->query("SELECT id FROM commissions WHERE photos_deleted_at IS NULL AND status NOT IN ('cancelled','delivered') AND $notPaid
+                               AND created_at < NOW() - INTERVAL " . OW_COMM_PAY_DAYS . " DAY LIMIT 50")->fetchAll();
+        foreach ($old as $r) {
+            $files = owCommFiles((int) $r['id'], 'reference');
+            foreach ($files as $f) owCommDeleteFile($f, 'unpaid');
+            getDB()->prepare('UPDATE commissions SET photos_deleted_at = NOW() WHERE id = :id')->execute([':id' => (int) $r['id']]);
+            owLog('commission_photos_deleted', 'commission', (int) $r['id'], count($files) . ' reference photo(s) deleted automatically: not paid within ' . OW_COMM_PAY_DAYS . ' days', ['type' => 'system', 'id' => null]);
+            $n++;
+        }
+    } catch (Throwable $e) { error_log('owCommUnpaidCleanup: ' . $e->getMessage()); }
     return $n;
 }
 /* Once a day, after any page has been delivered (theme_head.php) */

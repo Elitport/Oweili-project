@@ -39,8 +39,8 @@ if ($c && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) { $flash = ['This page was open for a long time. Please try again.', 'كانت الصفحة مفتوحة لوقت طويل. يرجى المحاولة مرة أخرى.', true]; }
     elseif ($do === 'accept_quote' && $c['status'] === 'quoted') {
         if (!owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => ''], ['type' => 'guest', 'id' => null], '', [$c['status']])) { header('Location: ' . $selfLink); exit; };
-        owCommAlert($c, 'The buyer accepted the price', 'وافق المشتري على السعر');
-        owCommTellArtist($c, 'The buyer accepted your price · وافق المشتري على سعرك', 'Good news: the buyer accepted your price. You can start, then send a draft from the commission page.', 'خبر جميل: وافق المشتري على سعرك. يمكنك البدء، ثم أرسل مسودة من صفحة الطلب.');
+        owCommAlert($c, 'The buyer accepted the price: arrange the payment, then press Mark as paid', 'وافق المشتري على السعر: رتّب الدفع ثم اضغط «سجّل الدفع»');
+        owCommTellArtist($c, 'The buyer accepted your price · وافق المشتري على سعرك', 'Good news: the buyer accepted your price. Please wait for the payment: you will get an email the moment you can see the photos and start.', 'خبر جميل: وافق المشتري على سعرك. يرجى انتظار الدفع: ستصلك رسالة فور أن تستطيع رؤية الصور والبدء.');
         header('Location: ' . $selfLink . '&done=quote'); exit;
     } elseif ($do === 'other_quote' && $c['status'] === 'quoted') {
         if (!owCommSetStatus((int) $c['id'], 'assigned', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'asked for another price', [$c['status']])) { header('Location: ' . $selfLink); exit; };
@@ -246,6 +246,16 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
       </ol>
       <?php endif; ?>
 
+      <?php $cPaid = owCommPaid((int) $c['id']); $cLeft = owCommDaysToExpire($c);
+      if (!$cPaid && in_array($c['status'], ['quote_accepted', 'draft_sent', 'draft_approved', 'final_sent'], true)): ?>
+        <div class="c-box">
+          <h2 style="margin-top:0"><?= owBi('Next: the payment', 'الخطوة التالية: الدفع') ?></h2>
+          <p style="margin:0"><?= owBi('The Oweili team will contact you about paying. Your artist sees your photos and starts only after the payment is confirmed.', 'سيتواصل معك فريق أويلي بخصوص الدفع. لا يرى فنانك صورك ولا يبدأ إلا بعد تأكيد الدفع.') ?></p>
+          <?php if ($cLeft !== null): ?><p class="c-note" style="margin:var(--space-xs) 0 0"><?= owBi('If it is not paid within ' . $cLeft . ' days, we delete your reference photos to protect your privacy. Your request stays.', 'إن لم يُدفع خلال ' . $cLeft . ' يوماً نحذف صورك المرجعية حفاظاً على خصوصيتك. ويبقى طلبك.') ?></p><?php endif; ?>
+        </div>
+      <?php elseif ($cPaid && $c['status'] === 'quote_accepted'): ?>
+        <div class="c-box"><p style="margin:0"><?= owBi('Payment received. Your artist is working on your piece.', 'وصلنا الدفع. فنانك يعمل على قطعتك.') ?></p></div>
+      <?php endif; ?>
       <?php if ($c['status'] === 'quoted'): ?>
         <div class="c-box">
           <h2 style="margin-top:0"><?= owBi('The price for your piece', 'سعر قطعتك') ?></h2>

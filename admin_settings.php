@@ -92,6 +92,8 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
   </div>
 
 <?php require_once __DIR__ . '/bashro_send.php'; $doorOn = owBashroReady();
+  $doorTest = null;
+  if ($doorOn && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'bashro_test' && verifyCsrf($_POST['csrf_token'] ?? null)) $doorTest = owBashroTest();
   $doorLog = []; try { if (owHasTable('activity_log')) $doorLog = getDB()->query("SELECT details, created_at FROM activity_log WHERE action = 'bashro_send' ORDER BY id DESC LIMIT 8")->fetchAll(); } catch (Throwable $e) {} ?>
   <div class="card"><h2><?= owBi('Sending to Bashro (website door)', 'الإرسال إلى بشرو (بوابة الموقع)') ?> <?= $doorOn ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('"I’m Interested", gift and commission requests go to Bashro Sales (project 3) after the visitor’s page is delivered. Never photos, passwords, card, ID or bank numbers.', 'تذهب طلبات «أنا مهتم» والهدايا والأعمال الخاصة إلى مبيعات بشرو (المشروع 3) بعد عرض صفحة الزائر. لا صور ولا كلمات مرور ولا أرقام بطاقات أو هويات أو حسابات بنكية أبداً.') ?></p>
@@ -103,6 +105,10 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     <?php if (!$doorOn): ?><p class="mini"><?= owBi('Switched on by adding two lines to config.php on the server (hPanel → File Manager), with the key made in Bashro:', 'يعمل بإضافة سطرين إلى config.php على الخادم (hPanel ← مدير الملفات)، مع المفتاح الذي يُصنع في بشرو:') ?></p>
       <pre>define('BASHRO_DOOR_SITE', '3');
 define('BASHRO_DOOR_KEY', 'the 64-character key from Bashro');</pre><?php endif; ?>
+    <?php if ($doorTest !== null): ?><div class="<?= $doorTest === 202 ? 'alert alert-ok' : 'alert alert-error' ?>" role="status"><?= $doorTest === 202 ? owBi('Bashro accepted the test (202). Look for "Oweili test (please ignore)" in Bashro Sales.', 'قبل بشرو رسالة الاختبار (202). ابحث عن «Oweili test (please ignore)» في مبيعات بشرو.')
+        : owBi('Bashro did not accept the test. Answer: ' . ($doorTest ?: 'no answer') . '. 401 = the key does not match, 403 = the website connection is off in Bashro.', 'لم يقبل بشرو رسالة الاختبار. الرد: ' . ($doorTest ?: 'لا رد') . '. 401 = المفتاح غير مطابق، 403 = ربط الموقع متوقف في بشرو.') ?></div><?php endif; ?>
+    <?php if ($doorOn): ?><form method="post" action="admin.php?settings=1" style="margin:var(--space-xs) 0"><?= csrfField() ?><input type="hidden" name="do" value="bashro_test">
+      <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send a test to Bashro', 'أرسل اختباراً إلى بشرو') ?></button></form><?php endif; ?>
     <?php if ($doorLog): ?><p class="mini"><?= owBi('Last answers from Bashro (202 = accepted):', 'آخر ردود بشرو (202 = مقبول):') ?></p>
       <ul class="rows"><?php foreach ($doorLog as $dl): ?><li><span dir="ltr"><?= e((string) $dl['details']) ?></span><span class="mini"><?= e((string) $dl['created_at']) ?></span></li><?php endforeach; ?></ul><?php endif; ?>
   </div>

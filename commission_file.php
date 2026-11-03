@@ -4,7 +4,8 @@
  *  (reference photos, drafts, finals in .private/commissions/).
  *  Allowed: the admin; the buyer with their private link (?ref=&k=); the
  *  assigned artist, signed in, AFTER accepting the confidentiality
- *  agreement (commission_nda). Everyone else: 404. Never cached, never
+ *  agreement (commission_nda) and, for reference photos, AFTER the admin
+ *  marked it paid. Everyone else: 404. Never cached, never
  *  indexed. Artists only see the files of commissions assigned to them,
  *  and never after the commission is cancelled.
  *  Tables: commission_files, commissions, commission_nda
@@ -23,7 +24,8 @@ if (owIsAdmin()) $who = 'admin';
 elseif (isset($_GET['k'], $_GET['ref']) && (string) $_GET['ref'] === (string) $f['ref_no'] && preg_match('/^[a-f0-9]{48}$/', (string) $_GET['k'])
         && hash_equals((string) $f['access_hash'], hash('sha256', (string) $_GET['k']))) $who = 'buyer';
 elseif (isLoggedIn() && ($u = currentUser()) && ($u['role'] ?? '') === 'artist' && empty($u['is_banned']) && (int) $u['id'] === (int) $f['artist_id']
-        && $f['status'] !== 'cancelled' && owCommNdaOk((int) $f['commission_id'], (int) $u['id'])) $who = 'artist';
+        && $f['status'] !== 'cancelled' && owCommNdaOk((int) $f['commission_id'], (int) $u['id'])
+        && ($f['kind'] !== 'reference' || owCommPaid((int) $f['commission_id']))) $who = 'artist';   // reference photos only after the payment is confirmed
 if ($who === '') $no();
 $path = __DIR__ . '/' . OW_COMM_DIR . basename((string) $f['file_name']);
 if (!is_file($path)) $no();
