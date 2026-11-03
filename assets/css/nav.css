@@ -54,3 +54,18 @@
 @media (max-width:560px){.topnav{padding:0 var(--space-sm);}.topnav .nav-right .nav-btn{display:none;}.mnav-acct{display:block;}.nav-logo .nav-word{font-size:16px;}}
 @media (min-width:1101px){.mnav-panel{display:none;}}
 @media (prefers-reduced-motion:reduce){.mnav-panel{transition:none;}}
+
+/* "Soon" tag next to a menu item (Auctions, until real auctions open) */
+.nav-soon{display:inline-flex;align-items:center;margin-inline-start:6px;padding:0 6px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;letter-spacing:.06em;line-height:1.5;text-transform:uppercase;color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),.5);}
+[dir="rtl"] .nav-soon{letter-spacing:0;font-size:12px;}
+/* Laptops between the phone menu (1100px) and wide screens: a slightly more compact menu, so the six items,
+   the account buttons, language and dark-mode buttons all fit on one line (Auctions was added 3 Nov 2026) */
+@media (min-width:1101px) and (max-width:1280px){
+  .topnav{padding:0 var(--space-sm);gap:var(--space-xs);}
+  .nav-item > a{padding:0 7px;letter-spacing:.01em;}
+  .nav-soon{margin-inline-start:4px;}
+  .nav-logo .nav-word{font-size:16px;}
+}
+@media (min-width:1101px) and (max-width:1200px){
+  .nav-right .nav-btn{padding-left:10px;padding-right:10px;}
+}

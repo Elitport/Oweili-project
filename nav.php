@@ -14,7 +14,7 @@ $navPage  = basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''));
 $navType  = (string) ($_GET['type'] ?? '');
 if ($navPage === 'article.php') { $navType = ''; }
 $navSection = [
-    'community.php' => 'community', 'marketplace.php' => 'marketplace',
+    'community.php' => 'community', 'marketplace.php' => 'marketplace', 'auctions.php' => 'auctions',
     'explore.php' => 'explore', 'support.php' => 'support', 'articles_list.php' => 'discover',
     'article.php' => 'discover', 'institutes.php' => 'discover', 'training.php' => 'discover', 'events.php' => 'discover',
 ][$navPage] ?? '';
@@ -49,6 +49,7 @@ if (!function_exists('owLogoMark')) {
   <a class="nav-logo" href="index.php" aria-label="Oweili · أويلي"><?php owLogoMark(); ?><span class="nav-word">OWEILI</span></a>
   <div class="nav-center" id="nav-center">
     <div class="nav-item"><a href="marketplace.php" id="nav-marketplace-link"<?= navAct('marketplace') ?>><span id="nav-marketplace-label">Gallery</span></a></div>
+    <div class="nav-item"><a href="auctions.php" id="nav-auctions-link"<?= navAct('auctions') ?>><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span><span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a></div>
     <div class="nav-item"><a href="explore.php" id="nav-explore-link"<?= navAct('explore') ?>><span id="nav-explore-label">Explore Art Styles</span></a></div>
     <div class="nav-item">
       <a href="articles_list.php?type=event"<?= navAct('discover') ?>><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
@@ -87,6 +88,7 @@ if (!function_exists('owLogoMark')) {
   </button>
   <div class="mnav-panel" id="mnav-panel">
     <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"<?= navAct('marketplace') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Gallery" data-ar="المعرض">Gallery</span></a>
+    <a class="mnav-link" href="auctions.php"<?= navAct('auctions') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span> <span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a>
     <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
     <a class="mnav-link" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>

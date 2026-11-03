@@ -46,6 +46,21 @@ if (isset($_GET['logout'])) {
    after the password changes, older admin sessions are signed out. */
 $isAdmin = !empty($_SESSION['is_admin']) && $adminSig !== '' && hash_equals($adminSig, (string) ($_SESSION['admin_sig'] ?? ''));
 
+/* ---- Auctions waiting list as a CSV file (opens in Excel; admin only) ---- */
+if ($isAdmin && isset($_GET['auctions_csv'])) {
+    require_once __DIR__ . '/auction_lib.php';
+    owLog('auction_export', 'auction_waitlist', null, owAuctionCount() . ' rows', ['type' => 'admin', 'id' => null]);
+    header('Content-Type: text/csv; charset=UTF-8');
+    header('Content-Disposition: attachment; filename="oweili-auctions-waiting-list-' . gmdate('Y-m-d') . '.csv"');
+    header('Cache-Control: private, no-store');
+    $out = fopen('php://output', 'w');
+    fwrite($out, "\xEF\xBB\xBF");   // so Excel reads Arabic names correctly
+    $cell = fn($v) => preg_match('/^[=+\-@\t\r]/', (string) $v) ? "'" . $v : (string) $v;   // never a formula
+    fputcsv($out, ['Signed up (UTC)', 'Email', 'Name', 'Language', 'Account']);
+    foreach (owAuctionList() as $r) fputcsv($out, [$r['created_at'], $cell($r['email']), $cell($r['name']), $r['lang'], $r['user_id'] ? '#' . $r['user_id'] : '']);
+    fclose($out);
+    exit;
+}
 /* ---- Photo check: can the server make the phone-sized photo copies? ---- */
 if ($isAdmin && isset($_GET['photo_check'])) {
     define('OW_ADMIN_OK', true);
@@ -553,6 +568,8 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <a class="tab" href="admin_articles.php"><?= owBi('Articles & events', 'المقالات والملتقيات') ?></a>
     <a class="tab" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
     <button class="tab tab-btn" data-tab="inquiries" onclick="showTab('inquiries',this)">Inquiries <span class="pill count"><?= count($inquiries) ?></span></button>
+    <?php require_once __DIR__ . '/auction_lib.php'; $auList = owAuctionList(); ?>
+    <button class="tab tab-btn" data-tab="auctions" onclick="showTab('auctions',this)"><?= owBi('Auctions', 'المزاد') ?> <span class="pill count"><?= count($auList) ?></span></button>
   </div>
 
   <!-- ===== TAB: ARTISTS ===== -->
@@ -941,6 +958,30 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   </div>
 
   <!-- ===== TAB: ALL ARTWORKS ===== -->
+  <!-- ===== TAB: AUCTIONS (waiting list for the first auction) ===== -->
+  <div class="tab-panel" id="tab-auctions">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:var(--space-sm);flex-wrap:wrap">
+      <div><h2 style="margin:0"><?= owBi('Auctions waiting list', 'قائمة انتظار المزاد') ?></h2>
+        <p class="mini" style="margin:4px 0 0"><?= owBi(count($auList) . ' people are waiting for the first auction. This is the real number shown on the Auctions page.', count($auList) . ' شخص بانتظار أول مزاد. هذا هو الرقم الحقيقي الظاهر في صفحة المزاد.') ?></p></div>
+      <span style="display:flex;gap:var(--space-xs);flex-wrap:wrap"><a class="btn btn-ghost btn-sm" href="auctions.php" target="_blank" rel="noopener"><?= owBi('Open the page', 'افتح الصفحة') ?> ↗</a>
+        <?php if ($auList): ?><a class="btn btn-accent btn-sm" href="admin.php?auctions_csv=1"><?= owBi('Export to CSV', 'تصدير CSV') ?></a><?php endif; ?></span>
+    </div>
+    <?php if (!owAuctionReady()): ?><p class="mini"><?= owBi('The waiting-list table is not set up yet (auctions_update.sql).', 'جدول قائمة الانتظار غير مُعدّ بعد (auctions_update.sql).') ?></p>
+    <?php elseif (!$auList): ?><p class="mini"><?= owBi('No one has signed up yet.', 'لم يسجّل أحد بعد.') ?></p>
+    <?php else: ?>
+    <div class="table-wrap" style="margin-top:var(--space-sm)"><table class="table">
+      <thead><tr><th><?= owBi('Signed up', 'تاريخ التسجيل') ?></th><th><?= owBi('Email', 'البريد') ?></th><th><?= owBi('Name', 'الاسم') ?></th><th><?= owBi('Language', 'اللغة') ?></th></tr></thead>
+      <tbody><?php foreach ($auList as $au): [$ae, $aa] = owDateBi($au['created_at'], true); ?>
+        <tr><td><?= owBi($ae, $aa) ?></td><td dir="ltr"><a href="mailto:<?= e((string) $au['email']) ?>"><?= e((string) $au['email']) ?></a></td>
+          <td dir="auto"><?= $au['name'] !== '' ? e((string) $au['name']) : '—' ?><?php if ($au['user_id']): ?> · <a href="admin.php?person=<?= (int) $au['user_id'] ?>"><?= owBi('account', 'الحساب') ?></a><?php endif; ?></td>
+          <td><?= $au['lang'] === 'ar' ? 'العربية' : 'English' ?></td></tr>
+      <?php endforeach; ?></tbody></table></div>
+    <?php endif; ?>
+    <p class="mini" style="margin-top:var(--space-sm)"><?= owBi('People who unsubscribe are deleted from the list straight away.', 'من يلغي اشتراكه يُحذف من القائمة فوراً.') ?></p>
+  </div>
+  </div>
+
   <div class="tab-panel" id="tab-artworks">
   <div class="card">
     <div class="field adm-search"><label for="s-art"><?= owBi('Search artworks (title or artist)', 'ابحث عن عمل (العنوان أو الفنان)') ?></label>

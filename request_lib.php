@@ -25,7 +25,7 @@ function owReqLimited(string $action, int $max): bool {
     $sent = array_values(array_filter((array) ($_SESSION[$key] ?? []), fn($t) => is_int($t) && $t > $now - 3600));
     if (count($sent) >= $max || owRecentCount($action, 3600) >= $max + 2) return true;
     /* and a cap for the whole site, because a visitor's address can be faked (security review 2 Nov 2026) */
-    $site = ['gift_request' => 30, 'commission_request' => 15][$action] ?? 30;
+    $site = ['gift_request' => 30, 'commission_request' => 15, 'auction_signup' => 60][$action] ?? 30;
     try {
         $st = getDB()->prepare('SELECT COUNT(*) FROM activity_log WHERE action = :a AND created_at > (NOW() - INTERVAL 1 HOUR)');
         $st->execute([':a' => $action]);

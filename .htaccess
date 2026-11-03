@@ -22,6 +22,7 @@ Options -Indexes
   # Certificate of Authenticity: the public verify page is oweili.com/verify
   # (the QR code opens /verify?no=OW-…). verify.php stays the email-confirm page.
   RewriteRule ^verify/?$ cert_verify.php [L,QSA]
+  RewriteRule ^auctions/?$ auctions.php [L,QSA]
 </IfModule>
 
 # A friendly page in English and Arabic for any address that does not exist

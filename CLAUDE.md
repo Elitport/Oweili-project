@@ -99,6 +99,7 @@
 - admin_articles.php — team tool to write articles (sub-admins and admins only)
 - article_lib.php — shared helpers for articles, consent records and institutes
 - my_articles.php — artists write articles that wait for the admin's approval (see Features)
+- auctions.php — "Oweili Auctions, Coming soon" with the real waiting-list counter and Notify me form (see Features); auction_lib.php — its shared code
 - register.php / register_artist.php / register_collector.php — Sign up flows
 - login.php / logout.php / verify.php / forgot.php — Auth
 - edit_profile.php / edit_artwork.php — Self-service editing
@@ -131,6 +132,19 @@
 - Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
+
+### Oweili Auctions: "Coming soon" teaser and waiting list (3 Nov 2026)
+- auctions.php (also oweili.com/auctions through .htaccess): «مزادات أويلي، قريباً». A navy band (the soft navy card colour in dark mode) with "Coming soon", the title, a line about rare original artworks going to auction, the LIVE counter and a framed gavel drawing; then "Be the first to know" with the Notify me form, three cards (Rare originals, See how each was made, Certified authentic) and three steps (Join the list, Meet the lots, Bid when it opens)
+- Live counter: "X people are waiting for the first auction" / «X شخص بانتظار أول مزاد» is the REAL number of rows in auction_waitlist, starting from zero; it counts up once and is checked every 30 seconds (auctions.php?count=1). Never a made-up number
+- Notify me: name (optional) and email. One row per email (the email is unique; a second sign-up with the same email changes nothing and sends nothing). Thank-you message, a confirmation email in both languages with an unsubscribe link, and a line on how the email is used. Every future email to this list must include owAuctionUnsubUrl()
+- Unsubscribe: auctions.php?leave=ID&t=TOKEN asks first (so email scanners cannot unsubscribe by opening the link), then deletes the email from the list
+- Protection: security token, hidden robot trap, 3 sign-ups per visitor per hour plus 60 an hour for the whole site (request_lib.php owReqLimited)
+- Menu: "Auctions" / «المزاد» with a small "Soon" / «قريباً» tag, right after Gallery (desktop and ☰). Between 1101 and 1280px the menu is slightly more compact so everything still fits on one line
+- Admin: admin.php → "Auctions" tab: the count, every email with its name, language and account, and "Export to CSV" (admin.php?auctions_csv=1; Arabic-safe, never a spreadsheet formula). A new sign-up joins the grouped admin email alerts (kind 'auction') and goes to Bashro Sales as a lead (kind quote, service "Oweili Auctions waiting list"; Bashro needs a name, so the part before @ is used when none is given)
+- Ready for later: owAuctionsLive() in auction_lib.php is the one switch; once a real auction page (auction_room.php) exists and site_settings 'auctions_live' = '1', this address sends visitors there. No bidding or payment now. Gallery works marked "Auction" are unchanged
+- Privacy Policy (draft): what is kept for the waiting list, that it is used only for auction news, kept until you unsubscribe, and that it goes to Bashro
+- auctions_update.sql (one new table) was run on the live database on 3 Nov 2026 by a temporary page (since removed), after a full backup
+- Files: auctions.php, auction_lib.php, auctions_update.sql (new); nav.php, assets/css/nav.css (.nav-soon, compact menu), .htaccess, admin.php, alert_lib.php, request_lib.php, sitemap.php, privacy.php. Tables: auction_waitlist (new), activity_log
 
 ### Security review of the night's work (2 Nov 2026)
 - An independent read-only review found no serious holes. Fixed: an artist's "Save draft" after "Send for approval" now withdraws the request (so the admin never approves a version they did not read); private commission photos must always be re-saved (never kept with GPS, WEBP saved as JPG if needed: owStoreImage $strict); commission steps only move from the status they were read in, and artist steps only for that artist (no mixed steps when two people act at once); a suspended artist loses access to commission photos; cancelled commissions count 30 days from the cancel itself; links in emails always use https://oweili.com, never the visitor's Host header; gift and commission forms also have a cap for the whole site per hour (30 gifts, 15 commissions), because the visitor address that config.php's clientIp() reads can be faked
@@ -535,6 +549,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Already in place on the live database (checked 30 Oct 2026)
 - certificates_update.sql — the Certificate of Authenticity: new artwork columns (medium, size, year, original or print, declaration time) and the certificates table. Only adds; safe to run more than once. Already in place on the live database (1 Nov 2026)
 - approvals_update.sql — the pending_changes table for "Nothing goes public without admin approval". Only adds one table; safe to run more than once. Already in place on the live database (31 Oct 2026)
+- auctions_update.sql — the auctions waiting list (auction_waitlist). Only adds one table; safe to run more than once. Run on the live database 3 Nov 2026 after a full backup
 - night_update.sql — collections, Artist of the week and settings (site_settings), Verified artist, gift requests, private commissions, orders and escrow (switched off). Only adds; safe to run more than once. Already in place on the live database (2 Nov 2026, full backup first: .backups/db-u405344949_contact-20261102-215015.sql.gz)
 - dashboards_update.sql — the dashboards and Bashro parts (permanent IDs, dates, request status, favorites, activity log, empty shipping and payout tables). Safe to run more than once. Already in place on the live database (30 Oct 2026)
 
@@ -557,7 +572,8 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- Order (owner's choice): Gallery · Explore Art Styles · Discover ↓ · Community · Support ↓ (Arabic, right to left: المعرض · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
+- Order (owner's choice): Gallery · Auctions (Soon) · Explore Art Styles · Discover ↓ · Community · Support ↓ (Arabic, right to left: المعرض · المزاد (قريباً) · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
+- Auctions / «المزاد» → auctions.php (oweili.com/auctions), no dropdown, with a small "Soon" / «قريباً» tag until real auctions open
 - Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)
 - Explore Art Styles → explore.php, no dropdown
 - Discover ↓ → Art Events / Artist Spotlights (articles_list.php?type=...) / Art Institutes (institutes.php, its own page; training.php redirects there). Art Education was taken out of the menu because Explore Art Styles covers it; its page (articles_list.php?type=art_education) still works and is reachable from the type buttons on the articles pages
