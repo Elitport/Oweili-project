@@ -143,7 +143,7 @@
 - Admin: admin.php → "Auctions" tab: the count, every email with its name, language and account, and "Export to CSV" (admin.php?auctions_csv=1; Arabic-safe, never a spreadsheet formula). A new sign-up joins the grouped admin email alerts (kind 'auction') and goes to Bashro Sales as a lead (kind quote, service "Oweili Auctions waiting list"; Bashro needs a name, so the part before @ is used when none is given)
 - Ready for later: owAuctionsLive() in auction_lib.php is the one switch; once a real auction page (auction_room.php) exists and site_settings 'auctions_live' = '1', this address sends visitors there. No bidding or payment now. Gallery works marked "Auction" are unchanged
 - Privacy Policy (draft): what is kept for the waiting list, that it is used only for auction news, kept until you unsubscribe, and that it goes to Bashro
-- auctions_update.sql (one new table) was run on the live database on 3 Nov 2026 by a temporary page (since removed), after a full backup
+- auctions_update.sql (one new table) was run on the live database on 3 Nov 2026 by a temporary page (since removed), after a full backup: .backups/db-u405344949_contact-20261103-050636.sql.gz
 - Files: auctions.php, auction_lib.php, auctions_update.sql (new); nav.php, assets/css/nav.css (.nav-soon, compact menu), .htaccess, admin.php, alert_lib.php, request_lib.php, sitemap.php, privacy.php. Tables: auction_waitlist (new), activity_log
 
 ### Security review of the night's work (2 Nov 2026)
