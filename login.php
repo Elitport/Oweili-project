@@ -36,7 +36,7 @@ $errCode = '';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         $errCode = 'csrf';
-    } elseif (isRateLimited()) {
+    } elseif (owLoginBlocked()) {
         $errCode = 'rate';
     } else {
         $email = strtolower(sanitize($_POST['email'] ?? ''));
@@ -48,8 +48,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $u = $stmt->fetch();
 
         if ($u && owPasswordMatches($pass, (string) $u['password'], (int) $u['id'])) {
-            recordLoginAttempt($email, true);
-            loginUser((int) $u['id']);            // regenerates session + stores token + last_login_at
+            owLoginRecord($email, true);
+            owLoginStart((int) $u['id']);            // regenerates session + stores token + last_login_at
             $role = $u['role'];
             owLog('login', 'user', (int) $u['id'], '', ['type' => owActorType($role), 'id' => (int) $u['id']]);
             /* back to the page that sent them here (e.g. the heart on an artwork), never another site */
@@ -57,7 +57,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             header('Location: ' . ($next !== '' && !in_array($role, ['admin', 'sub_admin'], true) ? $next : dashboardUrl($role)));
             exit;
         } else {
-            recordLoginAttempt($email, false);
+            owLoginRecord($email, false);
             $errCode = 'invalid';
         }
     }

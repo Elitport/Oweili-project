@@ -39,7 +39,7 @@ $key     = defined('BASHRO_API_KEY') ? (string) BASHRO_API_KEY : '';
 if (!$enabled || strlen($key) < 32) owApiOff();
 if (defined('BASHRO_API_IPS') && trim((string) BASHRO_API_IPS) !== '') {
     $ips = array_map('trim', explode(',', (string) BASHRO_API_IPS));
-    if (!in_array((string) ($_SERVER['REMOTE_ADDR'] ?? ''), $ips, true)) owApiOff();
+    if (!in_array(owVisitorIp(), $ips, true)) owApiOff();
 }
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') owApiOut(405, ['error' => 'read_only']);
 

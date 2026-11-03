@@ -11,6 +11,7 @@
  *  Tables: activity_log, favorites, users, artworks, artwork_inquiries
  * ===================================================================== */
 require_once __DIR__ . '/artwork_lib.php';
+require_once __DIR__ . '/visitor_lib.php';
 
 /* Does this table have this column? (read once per page) */
 function owHasColumn(string $table, string $col): bool {
@@ -48,7 +49,7 @@ function owPlatformReady(): bool {
 /* A one-way code of the visitor's address, new every month (never the address itself) */
 function owIpHash(): string {
     $salt = defined('ADMIN_HASH') ? (string) ADMIN_HASH : __DIR__;
-    return hash('sha256', 'oweili-log|' . gmdate('Y-m') . '|' . clientIp() . '|' . $salt);
+    return hash('sha256', 'oweili-log|' . gmdate('Y-m') . '|' . owVisitorIp() . '|' . $salt);
 }
 
 /* The account role as an activity-log actor type */

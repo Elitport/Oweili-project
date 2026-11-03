@@ -25,12 +25,17 @@ $loginError = '';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['admin_pass'])) {
     if ($adminHash === '') {
         $loginError = 'Admin password is not set up yet. Add ADMIN_HASH to config.php.';
+    } elseif (owAdminGateBlocked()) {
+        /* 5 wrong passwords in 10 minutes from one real address (visitor_lib.php) */
+        $loginError = 'Too many attempts. Please wait 10 minutes.';
     } elseif (verifyCsrf($_POST['csrf_token'] ?? null) && password_verify((string) $_POST['admin_pass'], $adminHash)) {
+        owAdminGateRecord(true);
         session_regenerate_id(true);
         $_SESSION['is_admin'] = true;
         $_SESSION['admin_sig'] = $adminSig;   // ties the login to the current password
         owLog('admin_login', null, null, '', ['type' => 'admin', 'id' => null]);
     } else {
+        if (verifyCsrf($_POST['csrf_token'] ?? null)) owAdminGateRecord(false);
         $loginError = 'Incorrect password.';
     }
 }
@@ -1066,7 +1071,7 @@ const ADICT = {
   "Error log":"سجل الأخطاء",
   "Inquiries":"طلبات الاهتمام","Artwork":"العمل الفني","Buyer":"المشتري",
   "No inquiries yet. They appear here when a visitor presses \"I'm Interested\" in the Gallery.":"لا توجد طلبات بعد. تظهر هنا عندما يضغط زائر «أنا مهتم» في المعرض.",
-  "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.",
+  "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.","Too many attempts. Please wait 10 minutes.":"محاولات كثيرة جداً. يرجى الانتظار 10 دقائق.",
   "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"أساليب الرسم",
   "Events":"الأحداث","Training":"التدريب",
   "Add New Event":"إضافة حدث جديد","Add Event":"إضافة الحدث",
