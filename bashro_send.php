@@ -34,9 +34,11 @@ const OW_BASHRO_FIELDS = [
     'approval' => ['ref' => 60, 'what' => 10, 'title' => 200, 'link' => 300],
 ];
 
+/* The two values from config.php, cleaned (a stray space, line break or capital letters never break the connection) */
+function owBashroSite(): string { return defined('BASHRO_DOOR_SITE') ? trim((string) BASHRO_DOOR_SITE) : ''; }
+function owBashroKey(): string  { return defined('BASHRO_DOOR_KEY') ? strtolower(trim((string) BASHRO_DOOR_KEY)) : ''; }
 function owBashroReady(): bool {
-    return defined('BASHRO_DOOR_SITE') && preg_match('/^\d{1,6}$/', (string) BASHRO_DOOR_SITE)
-        && defined('BASHRO_DOOR_KEY') && preg_match('/^[0-9a-f]{64}$/', (string) BASHRO_DOOR_KEY);
+    return preg_match('/^\d{1,6}$/', owBashroSite()) === 1 && preg_match('/^[0-9a-f]{64}$/', owBashroKey()) === 1;
 }
 function owBashroKindOn(string $kind): bool {
     if (!owBashroReady()) return false;
@@ -76,7 +78,7 @@ function owBashroAfterPage(): void {
 
 /* One signed POST. Returns the status number (0 = no answer). */
 function owBashroPost(string $body): int {
-    $site = (string) BASHRO_DOOR_SITE; $key = (string) BASHRO_DOOR_KEY;
+    $site = owBashroSite(); $key = owBashroKey();
     $time = (string) time(); $nonce = bin2hex(random_bytes(16));
     $sig = hash_hmac('sha256', $site . "\n" . $time . "\n" . $nonce . "\n" . $body, $key);
     $url = defined('BASHRO_DOOR_URL') ? (string) BASHRO_DOOR_URL : OW_BASHRO_DOOR;   // only for local tests
