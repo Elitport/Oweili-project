@@ -31,6 +31,22 @@ if ($step === 'send') {
     echo $status === 202 ? "ACCEPTED\n" : "NOT accepted\n";
     exit;
 }
+if ($step === 'cfg') {
+    $f = __DIR__ . '/config.php';
+    echo 'config.php loaded from this folder: ', in_array(realpath($f), array_map('realpath', get_included_files()), true) ? 'yes' : 'no', ' · size ', filesize($f), ' bytes · changed ', gmdate('Y-m-d H:i', filemtime($f)), " UTC\n";
+    echo 'opcache on: ', (function_exists('opcache_get_status') && @opcache_get_status(false)) ? 'yes' : 'no', "\n";
+    $lines = file($f, FILE_IGNORE_NEW_LINES); $closeAt = null; $returnAt = null;
+    foreach ($lines as $i => $l) { if ($closeAt === null && preg_match('/\?>/', $l)) $closeAt = $i + 1; if ($returnAt === null && preg_match('/^\s*(return|exit|die)\b/', $l)) $returnAt = $i + 1; }
+    echo 'lines: ', count($lines), ' · first "?>" at line: ', $closeAt ?? 'none', ' · first top-level return/exit at line: ', $returnAt ?? 'none', "\n";
+    foreach ($lines as $i => $l) {
+        if (stripos($l, 'BASHRO') === false) continue;
+        $mask = preg_replace("/'([0-9a-fA-F]{12,})'/", "'<key, " . "' . 'len>'", $l);
+        $mask = preg_replace_callback("/(['\"])([0-9a-fA-F]{12,})\\1/", fn($m) => $m[1] . '<' . strlen($m[2]) . ' hex characters>' . $m[1], $l);
+        $mask = preg_replace('/[^\x20-\x7E]/', '?', $mask);
+        echo 'line ', $i + 1, ': ', mb_substr($mask, 0, 160), "\n";
+    }
+    exit;
+}
 if ($step === 'ip') {
     foreach (['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CF_CONNECTING_IP', 'HTTP_X_CLIENT_IP', 'HTTP_TRUE_CLIENT_IP'] as $h) echo str_pad($h, 24), (string) ($_SERVER[$h] ?? '-'), "\n";
     echo 'clientIp() gives        ', function_exists('clientIp') ? clientIp() : '(no clientIp function)', "\n";
