@@ -80,7 +80,7 @@ $v = fn(string $k) => e((string) $f[$k]);
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
-<script src="<?= owAsset('assets/js/discover.js') ?>"></script>
+<script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
 /* Oweili Auctions (teaser) — layout only; every colour comes from oweili.css */
 .au-band{position:relative;z-index:2;margin-top:var(--nav-h);overflow:hidden;background:var(--color-accent);color:var(--color-on-dark);}

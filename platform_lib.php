@@ -14,28 +14,56 @@ require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/visitor_lib.php';
 
 /* Does this table have this column? (read once per page) */
+/* "Does this table / column exist yet?" is asked on almost every page (pages keep
+   working before a database update). On shared hosting the database's own list of
+   tables can be slow to read, so the answers are kept for 10 minutes in the private
+   file .logs/schema_cache.json (names only). After a database update, call
+   owSchemaForget() (or wait 10 minutes) so new tables and columns are seen at once. */
+const OW_SCHEMA_TTL = 600;
+function owSchemaFile(): string { return __DIR__ . '/.logs/schema_cache.json'; }
+function &owSchemaCache(): array {
+    static $c = null;
+    if ($c === null) {
+        $c = ['t' => [], 'c' => [], 'at' => 0];
+        $raw = @file_get_contents(owSchemaFile());
+        $d = $raw ? json_decode($raw, true) : null;
+        if (is_array($d) && isset($d['at']) && time() - (int) $d['at'] < OW_SCHEMA_TTL) $c = $d + ['t' => [], 'c' => []];
+        else $c['at'] = time();
+    }
+    return $c;
+}
+function owSchemaSave(): void {
+    $c = owSchemaCache();
+    $dir = dirname(owSchemaFile());
+    if (!is_dir($dir) && !@mkdir($dir, 0750, true)) return;
+    $tmp = owSchemaFile() . '.' . getmypid() . '.tmp';
+    if (@file_put_contents($tmp, json_encode($c)) !== false) @rename($tmp, owSchemaFile()); else @unlink($tmp);
+}
+function owSchemaForget(): void { @unlink(owSchemaFile()); $c = &owSchemaCache(); $c = ['t' => [], 'c' => [], 'at' => time()]; }
+
 function owHasColumn(string $table, string $col): bool {
-    static $cols = [];
-    if (!isset($cols[$table])) {
-        $cols[$table] = [];
+    $c = &owSchemaCache();
+    if (!isset($c['c'][$table])) {
         try {
             $st = getDB()->prepare('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?');
             $st->execute([$table]);
-            $cols[$table] = array_flip($st->fetchAll(PDO::FETCH_COLUMN));
-        } catch (Throwable $e) { error_log('owHasColumn: ' . $e->getMessage()); }
+            $c['c'][$table] = $st->fetchAll(PDO::FETCH_COLUMN);
+            owSchemaSave();
+        } catch (Throwable $e) { error_log('owHasColumn: ' . $e->getMessage()); return false; }
     }
-    return isset($cols[$table][$col]);
+    return in_array($col, $c['c'][$table], true);
 }
 function owHasTable(string $table): bool {
-    static $t = [];
-    if (!isset($t[$table])) {
+    $c = &owSchemaCache();
+    if (!isset($c['t'][$table])) {
         try {
             $st = getDB()->prepare('SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?');
             $st->execute([$table]);
-            $t[$table] = (bool) $st->fetchColumn();
-        } catch (Throwable $e) { $t[$table] = false; }
+            $c['t'][$table] = (bool) $st->fetchColumn();
+            owSchemaSave();
+        } catch (Throwable $e) { return false; }
     }
-    return $t[$table];
+    return $c['t'][$table];
 }
 /* true once dashboards_update.sql has been run */
 function owPlatformReady(): bool {

@@ -209,7 +209,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
 </style>
 </head>
 <body>
-<div class="bg-wrap"><video preload="none" class="bg-video" autoplay loop muted playsinline data-src="<?= owBase() ?>bg.mp4"></video></div>
+<div class="bg-wrap"></div>
 <div class="overlay"></div>
 
 <?php include __DIR__ . '/nav.php'; ?>

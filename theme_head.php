@@ -71,8 +71,15 @@ if (!function_exists('owThemeButton')) {
 if (!defined('OW_THEME_HEAD')):
     define('OW_THEME_HEAD', true);
 ?>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>html{background:#fff}html.dark-mode{background:#0F1520}</style>
+<link rel="preload" href="<?= owBase() ?>assets/fonts/dmsans-300-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<?php /* Instant page changes: Chrome, Edge and Android load a page in the background
+   when the finger or mouse comes near its link (prefetch), and get it fully ready the
+   moment it is pressed (prerender). Never for pages that change something when they
+   are opened (sign out, email links, uploads, staff pages, private files). */ ?>
+<script type="speculationrules">
+{"prefetch":[{"source":"document","eagerness":"moderate","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/logout*","/verify.php*","/forgot*","/upload_artwork*","/edit_artwork*","/edit_profile*","/my_articles*","/my_orders*","/commission_file*","/certificate*","/img*","/view*","/favorite*","/inquire*","/bashro_api*","/bashro_send*","/admin*","/subadmin_dashboard*","/artist_commission*"]}},{"not":{"href_matches":["/*\\?*leave=*","/*\\?*logout=*","/*\\?*token=*","/*\\?*k=*"]}},{"not":{"selector_matches":"[data-no-prefetch], [download], [target=_blank]"}}]}}],"prerender":[{"source":"document","eagerness":"conservative","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/logout*","/verify.php*","/forgot*","/upload_artwork*","/edit_artwork*","/edit_profile*","/my_articles*","/my_orders*","/commission_file*","/certificate*","/img*","/view*","/favorite*","/inquire*","/bashro_api*","/bashro_send*","/admin*","/subadmin_dashboard*","/artist_commission*"]}},{"not":{"href_matches":["/*\\?*leave=*","/*\\?*logout=*","/*\\?*token=*","/*\\?*k=*","/*\\?*show=*"]}},{"not":{"selector_matches":"[data-no-prefetch], [download], [target=_blank]"}}]}}]}
+</script>
 <script>
 (function(){
   var d = document.documentElement, KEY = 'theme';
@@ -102,35 +109,36 @@ if (!defined('OW_THEME_HEAD')):
 })();
 </script>
 <script>
-/* Page transitions: fade out for 0.2s when a link to another page on this site is
-   followed (the fade-in is pure CSS in oweili.css). Left alone: new-tab clicks,
-   downloads, other sites, email/phone links, jumps on the same page, and links
-   any page script already handled. Listening on window means page scripts run first. */
+/* Page changes open straight away (no fade-out wait; the soft cross-fade is CSS,
+   see @view-transition in oweili.css). Browsers without the instant loading above
+   (Firefox; Safari ignores it) get a light fallback: the page is fetched in the
+   background once the finger touches, or the mouse rests on, a link. Same rules. */
 (function(){
   var d = document.documentElement;
-  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var undo = null;
-  function reset(){ d.classList.remove('ow-leaving'); if (undo) { clearTimeout(undo); undo = null; } }
-  window.addEventListener('click', function(e){
-    if (calm || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
-    if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
-    var raw = a.getAttribute('href') || '', u;
-    if (raw.charAt(0) === '#') return;
-    try { u = new URL(a.href, location.href); } catch (x) { return; }
-    if (u.origin !== location.origin) return;
-    if (u.pathname === location.pathname && u.search === location.search && u.hash) return;
-    e.preventDefault();
-    d.classList.add('ow-leaving');
-    setTimeout(function(){ location.href = u.href; }, 200);
-    undo = setTimeout(reset, 3000);   // a link that never leaves the page (e.g. a download) shows the page again
-  });
-  /* back / forward buttons can show a saved copy of the page: never leave it faded */
-  window.addEventListener('pageshow', reset);
+  var skip = /^\/(logout|verify\.php|forgot|upload_artwork|edit_artwork|edit_profile|my_articles|my_orders|commission_file|certificate|img|view|favorite|inquire|bashro_api|bashro_send|admin|subadmin_dashboard|artist_commission)/;
+  var risky = /[?&](leave|logout|token|k)=/;
+  var native = !!(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules'));
+  var done = {}, timer = null, slow = false;
+  try { var c = navigator.connection || {}; slow = !!c.saveData || /(^|-)(2g|3g)$/.test(c.effectiveType || ''); } catch (e) {}
+  function warm(a){
+    if (native || slow || !a || a.hasAttribute('download') || a.hasAttribute('data-no-prefetch') || (a.target && a.target !== '_self')) return;
+    var u; try { u = new URL(a.href, location.href); } catch (x) { return; }
+    if (u.origin !== location.origin || skip.test(u.pathname) || risky.test(u.search)) return;
+    if (u.pathname === location.pathname && u.search === location.search) return;
+    var k = u.pathname + u.search; if (done[k]) return; done[k] = 1;
+    var l = document.createElement('link'); l.rel = 'prefetch'; l.href = k; document.head.appendChild(l);
+  }
+  function link(e){ return e.target && e.target.closest ? e.target.closest('a[href]') : null; }
+  /* photos: mark each one once it has loaded (or failed), so its soft placeholder tint goes away (oweili.css) */
+  var mark = function(e){ var t = e.target; if (t && t.tagName === 'IMG') t.classList.add('ld'); };
+  document.addEventListener('load', mark, true); document.addEventListener('error', mark, true);
+  document.addEventListener('DOMContentLoaded', function(){ document.querySelectorAll('img').forEach(function(i){ if (i.complete && i.naturalWidth) i.classList.add('ld'); }); });
+  document.addEventListener('touchstart', function(e){ warm(link(e)); }, { passive: true, capture: true });
+  document.addEventListener('mouseover', function(e){ var a = link(e); clearTimeout(timer); if (a) timer = setTimeout(function(){ warm(a); }, 65); }, { passive: true, capture: true });
   /* Background video (about 3MB). Phones on a slow connection or with Data Saver,
      and visitors who ask for less motion, never download it (the soft page
-     colour shows instead). On other pages than the homepage it only starts
-     after the page itself has loaded (data-src), so it never slows the page. */
+     colour shows instead). Only the homepage has the video (since 4 Nov 2026);
+     a video with data-src elsewhere would start only after the page has loaded. */
   var lite = false;
   try {
     var nc = navigator.connection || {};

@@ -57,7 +57,7 @@ else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
-<script src="<?= owAsset('assets/js/discover.js') ?>"></script>
+<script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
 /* One article — reading layout only; type, colors, buttons and cards come from oweili.css */
 .cover{position:relative;z-index:2;margin-top:var(--nav-h);height:clamp(220px,52vh,520px);background:var(--color-surface-2);overflow:hidden;}
@@ -95,7 +95,7 @@ else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود
 </style>
 </head>
 <body class="ow">
-<div class="bg-wrap" aria-hidden="true"><video preload="none" class="bg-video" id="vid" autoplay loop muted playsinline data-src="<?= owBase() ?>bg.mp4"></video></div>
+<div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil strong" aria-hidden="true"></div>
 
 <?php include __DIR__ . '/nav.php'; ?>

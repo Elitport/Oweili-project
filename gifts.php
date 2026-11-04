@@ -140,7 +140,7 @@ $v = fn(string $k) => e((string) $f[$k]);
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
-<script src="<?= owAsset('assets/js/discover.js') ?>"></script>
+<script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
 /* Oweili Gifts — layout only; colors, buttons, fields and cards come from oweili.css */
 .g-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);margin:0 0 var(--space-xl);}
@@ -183,7 +183,7 @@ $v = fn(string $k) => e((string) $f[$k]);
 </style>
 </head>
 <body class="ow">
-<div class="bg-wrap" aria-hidden="true"><video preload="none" class="bg-video" id="vid" autoplay loop muted playsinline data-src="<?= owBase() ?>bg.mp4"></video></div>
+<div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 

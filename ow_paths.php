@@ -20,7 +20,12 @@ if (!function_exists('owBase')) {
     }
     function owAsset(string $file): string {
         $file = ltrim($file, '/');
-        return htmlspecialchars(owBase() . $file . '?v=' . (int) @filemtime(__DIR__ . '/' . $file), ENT_QUOTES, 'UTF-8');
+        /* the version is a short fingerprint of the file's CONTENT (not its date): every
+           Hostinger deploy re-copies all files with a new date, and browsers would then
+           download every file again for nothing (they are kept for a year, .htaccess) */
+        static $v = [];
+        if (!isset($v[$file])) { $h = @hash_file('crc32b', __DIR__ . '/' . $file); $v[$file] = $h !== false ? $h : '0'; }
+        return htmlspecialchars(owBase() . $file . '?v=' . $v[$file], ENT_QUOTES, 'UTF-8');
     }
 }
 

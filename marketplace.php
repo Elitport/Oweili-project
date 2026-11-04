@@ -359,7 +359,7 @@ foreach ($modalArtworks as $aw) {
 <body>
 
 <div class="bg-wrap">
-  <video preload="none" class="bg-video" autoplay loop muted playsinline data-src="<?= owBase() ?>bg.mp4"></video>
+  
 </div>
 
 <?php include 'nav.php'; ?>

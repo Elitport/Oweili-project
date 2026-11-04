@@ -28,7 +28,7 @@ $st = getDB()->prepare('SELECT * FROM orders WHERE buyer_user_id = :u ORDER BY i
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>.page{position:relative;z-index:10;}.o-card{padding:var(--space-md);margin-top:var(--space-sm);}.o-card h2{font-size:var(--fs-body);margin:0 0 4px;}.acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-top:var(--space-sm);}.acts form{margin:0;}.pillx{font-size:var(--fs-min);font-weight:700;padding:2px 10px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);}</style>
 </head><body>
-<div class="bg-wrap"><video preload="none" class="bg-video" autoplay loop muted playsinline data-src="<?= owBase() ?>bg.mp4"></video></div><div class="overlay"></div>
+<div class="bg-wrap"></div><div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="page dash role-collector dash-wrap">
   <div class="card o-card"><h1 style="font-size:var(--fs-section);margin:0"><?= owBi('My orders', 'طلباتي') ?></h1>

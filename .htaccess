@@ -55,10 +55,48 @@ ErrorDocument 404 /404.php
 # server's page cache, so phones always get the current page, never an old copy.
 <IfModule mod_headers.c>
   <FilesMatch "(?i)\.(jpe?g|png|webp|gif)$">
-    Header merge Cache-Control "no-transform"
+    Header set Cache-Control "public, max-age=31536000, no-transform"
   </FilesMatch>
   <FilesMatch "(?i)\.php$">
     Header set X-LiteSpeed-Cache-Control "no-cache"
     Header merge Cache-Control "no-transform"
   </FilesMatch>
 </IfModule>
+
+# Browser caching (4 Nov 2026): style files and scripts are always linked with a
+# version number (owAsset(): ?v=<last change>), so the browser may keep them for a
+# year; a changed file gets a new number and is loaded fresh. Fonts never change
+# (a new font gets a new file name). Photos have random names, so they never change
+# either. The homepage video has no number, so it is kept for 30 days.
+<IfModule mod_headers.c>
+  <FilesMatch "(?i)\.(css|js|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "(?i)\.mp4$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 30 days"
+</IfModule>
+
+# Text files are sent compressed (Hostinger's CDN already does this; this is the
+# fallback for the server itself). Pictures, fonts and video are already compressed.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/javascript text/javascript application/json application/xml image/svg+xml
+</IfModule>
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+</IfModule>
+
+# Hostinger's page cache (LiteSpeed) stays OFF for pages on purpose: every page
+# carries a personal security token and the signed-in person's name, so a saved
+# copy could show one visitor's page to another. Files above are cached instead.

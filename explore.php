@@ -59,7 +59,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
-<script src="<?= owAsset('assets/js/discover.js') ?>"></script>
+<script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <script>window.OW_LIVE = <?= json_encode((object) $live, $jsonFlags) ?>;</script>
 <script defer src="<?= owAsset('assets/js/art_styles.js') ?>"></script>
 <script defer src="<?= owAsset('assets/js/art_covers.js') ?>"></script>

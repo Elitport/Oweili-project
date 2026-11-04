@@ -60,7 +60,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
 <?php if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'ar'], true)): ?><script>try { localStorage.setItem('lang', <?= json_encode($_GET['lang']) ?>); } catch (e) {}</script><?php endif; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
-<?php if ($big !== ''): ?><link rel="preload" as="image" href="<?= e($big) ?>"><?php endif; ?>
+<?php if ($big !== ''): $pmid = owImgSized($img, 800); ?><link rel="preload" as="image" href="<?= e($big) ?>"<?= $pmid !== $img && $pmid !== $big ? ' imagesrcset="' . e($pmid) . ' 800w, ' . e($big) . ' 1600w" imagesizes="(max-width: 860px) 100vw, 55vw"' : '' ?>><?php endif; ?>
 <style>
 .aw-page{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-lg)) var(--space-sm) var(--space-2xl);display:grid;grid-template-columns:1.2fr 1fr;gap:var(--space-lg);align-items:start;}
 .aw-photo{position:relative;border-radius:var(--radius-card);overflow:hidden;background:var(--color-frame);border:1px solid var(--color-border);aspect-ratio:4/3;}
@@ -83,13 +83,14 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
 </style>
 </head>
 <body>
-<div class="bg-wrap"><video class="bg-video" autoplay loop muted playsinline preload="none" data-src="<?= owBase() ?>bg.mp4"></video></div>
+<div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="aw-page">
   <div class="aw-photo">
     <?php if ($img !== ''): ?>
-      <img src="<?= e($big) ?>" alt="<?= e($tEn . ' · ' . $tAr) ?>" fetchpriority="high" decoding="async"<?= owImgFallbackAttrs($img, $big) ?>><?= owImgPlaceholder(true) ?>
+      <?php $mid = owImgSized($img, 800); /* phones pick the 800 copy when it is enough for their screen */ ?>
+      <img src="<?= e($big) ?>"<?= $mid !== $img && $mid !== $big ? ' srcset="' . e($mid) . ' 800w, ' . e($big) . ' 1600w" sizes="(max-width: 860px) 100vw, 55vw"' : '' ?> alt="<?= e($tEn . ' · ' . $tAr) ?>" fetchpriority="high" decoding="async"<?= owImgFallbackAttrs($img, $big) ?>><?= owImgPlaceholder(true) ?>
     <?php else: ?><?= owImgPlaceholder(false) ?><?php endif; ?>
     <?php if ($showFav): ?><button type="button" class="fav-btn" data-fav="<?= $id ?>" aria-pressed="<?= $faved ? 'true' : 'false' ?>" aria-label="<?= $faved ? 'Remove from favorites · أزل من المفضلة' : 'Save to favorites · احفظ في المفضلة' ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg></button><?php endif; ?>
   </div>

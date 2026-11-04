@@ -173,7 +173,7 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
-<script src="<?= owAsset('assets/js/discover.js') ?>"></script>
+<script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
 /* Private commissions — layout only; colors, buttons, fields and cards come from oweili.css */
 .c-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);margin:0 0 var(--space-xl);}
@@ -212,7 +212,7 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
 </style>
 </head>
 <body class="ow">
-<div class="bg-wrap" aria-hidden="true"><video preload="none" class="bg-video" id="vid" autoplay loop muted playsinline data-src="<?= owBase() ?>bg.mp4"></video></div>
+<div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main>
