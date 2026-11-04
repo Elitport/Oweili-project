@@ -113,7 +113,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "John Singer Sargent",
-     "American, 1856–1925",
+     "American, born in Florence, 1856–1925",
      "His quick travel watercolors catch sunlight in a few sure strokes."
     ],
     [
@@ -220,7 +220,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "جون سنجر سارجنت",
-     "أمريكي، 1856–1925",
+     "أمريكي مولود في فلورنسا، 1856–1925",
      "تلتقط ألوانه المائية في أسفاره ضوء الشمس ببضع ضربات واثقة."
     ],
     [
@@ -578,7 +578,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "John Singer Sargent",
-     "American, 1856–1925",
+     "American, born in Florence, 1856–1925",
      "Later in life, he drew hundreds of quick, elegant charcoal portraits."
     ],
     [
@@ -684,7 +684,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "جون سنجر سارجنت",
-     "أمريكي، 1856–1925",
+     "أمريكي مولود في فلورنسا، 1856–1925",
      "رسم في سنواته الأخيرة مئات الوجوه السريعة الأنيقة بالفحم."
     ],
     [
@@ -9101,7 +9101,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "John Singer Sargent",
-     "American, 1856–1925",
+     "American, born in Florence, 1856–1925",
      "His fast, confident brushwork made his sitters feel alive."
     ],
     [
@@ -9213,7 +9213,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "جون سينجر سارجنت",
-     "أمريكي، 1856–1925",
+     "أمريكي مولود في فلورنسا، 1856–1925",
      "جعلت ضرباته السريعة الواثقة شخوصه تنبض بالحياة."
     ],
     [
@@ -9546,7 +9546,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "John James Audubon",
-     "French-American, 1785–1851",
+     "American, born in Haiti, 1785–1851",
      "His Birds of America painted birds at life size in their habitats."
     ],
     [
@@ -9653,7 +9653,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "جون جيمس أودوبون",
-     "فرنسي أمريكي، 1785–1851",
+     "أمريكي مولود في هايتي، 1785–1851",
      "رسم في كتابه طيور أمريكا الطيور بحجمها الحقيقي في بيئاتها."
     ],
     [
@@ -9757,7 +9757,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "Ivan Aivazovsky",
-     "Russian, 1817–1900",
+     "Russian, of Armenian descent, 1817–1900",
      "He painted thousands of seas, many glowing with moonlight or storm."
     ],
     [
@@ -9860,7 +9860,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "إيفان أيفازوفسكي",
-     "روسي، 1817–1900",
+     "روسي من أصل أرمني، 1817–1900",
      "رسم آلاف البحار، كثير منها يتوهج بضوء القمر أو العاصفة."
     ],
     [
