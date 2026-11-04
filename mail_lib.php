@@ -58,13 +58,13 @@ const OW_MAIL_FROM_NAME = 'Oweili';   // plain letters, like "ElitCV" on elitcv.
 function owMailFooter(): array {
     $site = 'https://oweili.com';
     $cr = owCompanyCr();
-    $text = "--\r\nOweili · أويلي, the home of real human art\r\n" . OW_COMPANY_NAME . ' · ' . OW_COMPANY_CITY . "\r\n"
+    $text = "--\r\nOweili · أويلي, the home of real art · بيت الفن الأصيل\r\n" . OW_COMPANY_NAME . ' · ' . OW_COMPANY_CITY . "\r\n"
           . owContactEmail() . ' · ' . $site . "\r\n" . ($cr !== '' ? 'Commercial Registration No. ' . $cr . "\r\n" : '')
           . "This is a service email from Oweili. · هذه رسالة خدمة من أويلي.";
     $h = fn($s) => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
     $html = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:16px auto 0;font-family:Arial,sans-serif">'
           . '<tr><td style="padding:16px 28px;border-top:1px solid #E2E8F0;font-size:12px;line-height:1.7;color:#4A5568;text-align:center">'
-          . '<strong style="color:#23314A">Oweili · أويلي</strong>, the home of real human art<br>'
+          . '<strong style="color:#23314A">Oweili · أويلي</strong>, the home of real art · بيت الفن الأصيل<br>'
           . $h(OW_COMPANY_NAME) . ' · ' . $h(OW_COMPANY_CITY) . '<br>'
           . '<a href="mailto:' . $h(owContactEmail()) . '" style="color:#23314A">' . $h(owContactEmail()) . '</a> · <a href="' . $site . '" style="color:#23314A">oweili.com</a>'
           . ($cr !== '' ? '<br>Commercial Registration No. ' . $h($cr) : '')

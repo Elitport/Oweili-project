@@ -46,6 +46,6 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
       </div>
     <?php endif; ?>
   </div>
-  <div class="ow-footer-copy"><span><?= $owFt('© ' . date('Y') . ' Oweili — Real art by real human hands', '© ' . date('Y') . ' أويلي — فن حقيقي بأيدي بشرية حقيقية') ?></span>
+  <div class="ow-footer-copy"><span><?= $owFt('© ' . date('Y') . ' Oweili · The home of real art', '© ' . date('Y') . ' أويلي · بيت الفن الأصيل') ?></span>
     <a class="ow-footer-mail" href="mailto:<?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?>" dir="ltr"><?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?></a></div>
 </footer>

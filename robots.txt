@@ -1,4 +1,4 @@
-# Oweili · oweili.com — real art, made by real human hands
+# Oweili · oweili.com — the home of real art
 User-agent: *
 Allow: /
 # private areas and tools (they need a sign-in anyway)

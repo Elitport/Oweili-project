@@ -1,7 +1,7 @@
 <?php
 /* =====================================================================
  *  terms.php — Terms of Use («شروط الاستخدام»), DRAFT under review.
- *  Covers: Oweili as the middle party, accounts, human-made art only,
+ *  Covers: Oweili as the middle party, accounts, handmade art only,
  *  proof of process, artwork rights, the 15% commission, conduct,
  *  removal, liability, Saudi law. Layout: legal_lib.php. Tables: none
  * ===================================================================== */
@@ -12,10 +12,10 @@ $C = OW_LEGAL_CONTACT;
 owLegalPage([
     'path' => 'terms.php',
     'title_en' => 'Terms of Use', 'title_ar' => 'شروط الاستخدام',
-    'lead_en' => 'The simple rules that keep Oweili a trusted home for real, human-made art.',
-    'lead_ar' => 'القواعد البسيطة التي تجعل أويلي بيتاً موثوقاً للفن الحقيقي المصنوع بأيدٍ بشرية.',
-    'desc_en' => 'The rules for artists, buyers and visitors on Oweili, the gallery of human-made art.',
-    'desc_ar' => 'القواعد للفنانين والمشترين والزوار في أويلي، معرض الفن المصنوع بأيدٍ بشرية.',
+    'lead_en' => 'The simple rules that keep Oweili a trusted home for real, handmade art.',
+    'lead_ar' => 'القواعد البسيطة التي تجعل أويلي بيتاً موثوقاً للفن الأصيل المصنوع باليد.',
+    'desc_en' => 'The rules for artists, buyers and visitors on Oweili, the gallery of handmade art.',
+    'desc_ar' => 'القواعد للفنانين والمشترين والزوار في أويلي، معرض الفن الأصيل المصنوع باليد.',
     'updated_en' => '31 October 2026 (draft)', 'updated_ar' => '31 أكتوبر 2026 (مسودة)',
     'other' => ['privacy.php', 'Privacy Policy', 'سياسة الخصوصية'],
 ], [
@@ -46,14 +46,14 @@ owLegalPage([
         '- احفظ كلمة مرورك سراً. وأنت مسؤول عما يحدث في حسابك.',
         '- شخص واحد، حساب واحد. ويسجّل الفنان باسمه هو، لا عن غيره.',
     ]],
-    ['human', 'Human-made art only', 'فن بشري فقط', [
-        'Oweili is the home of real human art. Every artwork must be made by the artist’s own hands.',
+    ['handmade', 'Handmade art only', 'فن مصنوع باليد فقط', [
+        'Oweili is the home of real art. Every artwork must be made by the artist’s own hands.',
         '- Work made by machines that create images on their own is not allowed, in any part of the artwork.',
         '- The 25%, 50% and 100% photos must be real photos of your real artwork, taken through the Oweili website camera, at the time they say.',
         '- Do not upload work by another person, copies, prints sold as originals, or photos found online.',
         'Every artwork is reviewed by our team before it appears in the Gallery. We may ask questions or more photos, and we may decline a work and tell you why.',
     ], [
-        'أويلي بيت الفن البشري الحقيقي. ويجب أن يكون كل عمل من صنع يد الفنان نفسه.',
+        'أويلي بيت الفن الأصيل. ويجب أن يكون كل عمل من صنع يد الفنان نفسه.',
         '- لا يُسمح بالأعمال التي تصنعها الآلات التي تولّد الصور بنفسها، في أي جزء من العمل.',
         '- يجب أن تكون صور 25% و50% و100% صوراً حقيقية لعملك الحقيقي، ملتقطة عبر كاميرا موقع أويلي، وفي الوقت الذي تشير إليه.',
         '- لا ترفع أعمال غيرك، أو نسخاً، أو مطبوعات تُباع كأصلية، أو صوراً من الإنترنت.',

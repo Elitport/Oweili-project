@@ -3,7 +3,7 @@
  *  - draws the grid of style cards from art_styles.js (the one data source)
  *  - the filter bar (All + 6 categories, each with its count)
  *  - the style window (a <dialog>) with 10 parts: name, essence, story,
- *    techniques, signs of a human hand, tools, difficulty and time, famous
+ *    techniques, signs of a real hand, tools, difficulty and time, famous
  *    artists, the collector's guide, and the latest artwork of this type
  *    from the Gallery (window.OW_LIVE, filled by explore.php from the database)
  *  - every text is printed in both languages (bi-en / bi-ar); the page
@@ -140,9 +140,9 @@
       '<p class="m-kicker">' + bi(en.feel, ar.feel) + '</p>' +
       '<h2 class="m-title" id="m-title">' + bi(en.name, ar.name) + '</h2>' +
       '<p class="m-essence">' + bi(en.essence, ar.essence) + '</p>' +
-      section('The Human Story', 'الحكاية الإنسانية', '<div class="m-story">' + story + '</div>') +
+      section('The Story Behind It', 'حكاية الأسلوب', '<div class="m-story">' + story + '</div>') +
       section('Key Techniques', 'التقنيات الأساسية', '<p class="m-hint">' + bi('Hover or tap a technique to learn more.', 'مرّر أو اضغط على التقنية لتعرف أكثر.') + '</p><div class="tchips">' + tech + '</div><p class="tdesc" aria-live="polite"></p>') +
-      section('Signs of a Human Hand', 'علامات اليد البشرية', list(signs, 'ol'), 'm-signs') +
+      section('Signs of a Real Hand', 'علامات اليد الحقيقية', list(signs, 'ol'), 'm-signs') +
       section('Tools & Materials', 'الأدوات والخامات', list(tools, 'ul'), 'm-tools') +
       section('Difficulty & Time', 'الصعوبة والوقت', facts, 'm-facts') +
       section('Famous Artists', 'فنانون صنعوا هذا الأسلوب', list(artists, 'ul'), 'm-artists') +

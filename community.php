@@ -61,7 +61,7 @@ $owSafeImg = 'owImgSrc';   // artwork_lib.php: cleans up saved picture paths
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Community', 'ar' => 'المجتمع', 'desc_en' => 'Meet the artists of Oweili and the newest works made by human hands.', 'desc_ar' => 'تعرّف على فناني أويلي وأحدث الأعمال المصنوعة بأيدٍ بشرية.', 'path' => 'community.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Community', 'ar' => 'المجتمع', 'desc_en' => 'Meet the artists of Oweili and the newest works made by hand.', 'desc_ar' => 'تعرّف على فناني أويلي وأحدث الأعمال المصنوعة باليد.', 'path' => 'community.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

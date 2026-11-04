@@ -20,8 +20,8 @@ try { $aotw = owArtistOfWeek(); } catch (Throwable $e) { $aotw = null; }
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Everything here started with human hands', 'ar' => 'كل ما تراه هنا بدأ بيدٍ حقيقية', 'desc_en' => 'Oweili is the home of real human art. See how every piece was made, then make it yours.', 'desc_ar' => 'أويلي بيت الفن البشري الحقيقي. شاهد كيف صُنعت كل قطعة، ثم اقتنها.', 'path' => '']); ?>
-<meta property="og:title" content="Oweili · Everything here started with human hands · كل ما تراه هنا، بدأ بيدٍ حقيقية">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Everything here started with real hands', 'ar' => 'كل ما تراه هنا بدأ بيدٍ حقيقية', 'desc_en' => 'Oweili is the home of real art. See how every piece was made, then make it yours.', 'desc_ar' => 'أويلي بيت الفن الأصيل. شاهد كيف صُنعت كل قطعة، ثم اقتنها.', 'path' => '']); ?>
+<meta property="og:title" content="Oweili · Everything here started with real hands · كل ما تراه هنا، بدأ بيدٍ حقيقية">
 <meta property="og:description" content="Every piece here was made by real hands. And you can see how.">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
@@ -118,7 +118,7 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 <main class="hero">
   <div class="hero-inner">
     <span class="hero-badge fade fade-1"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
-    <h1 class="fade fade-2"><?= owBi('Everything here started with human hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
+    <h1 class="fade fade-2"><?= owBi('Everything here started with real hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
     <p class="hero-sub fade fade-3"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
     <div class="hero-btns fade fade-4">
       <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
@@ -142,7 +142,7 @@ function tgl(){
   var h = document.documentElement, ar = h.getAttribute('dir') !== 'rtl';
   h.setAttribute('dir', ar ? 'rtl' : 'ltr');
   h.setAttribute('lang', ar ? 'ar' : 'en');
-  document.title = ar ? 'أويلي · كل ما تراه هنا، بدأ بيدٍ حقيقية' : 'Oweili · Everything here started with human hands';
+  document.title = ar ? 'أويلي · كل ما تراه هنا، بدأ بيدٍ حقيقية' : 'Oweili · Everything here started with real hands';
   try { localStorage.setItem('lang', ar ? 'ar' : 'en'); } catch (e) {}
 }
 if (document.documentElement.getAttribute('dir') === 'rtl') { document.title = 'أويلي · كل ما تراه هنا، بدأ بيدٍ حقيقية'; }

@@ -199,8 +199,8 @@ body.cert-page{background:var(--color-surface-2);min-height:100vh;margin:0;}
 
     <footer class="c-foot">
       <div class="c-qr"><?= $qr ?><div class="how"><b>Scan to verify</b> · <span lang="ar">امسح للتحقق</span><br>or open · أو افتح<br><span class="url" dir="ltr"><?= e(preg_replace('#^https://#', '', $verify)) ?></span></div></div>
-      <div class="c-issued">Issued by <b>Oweili</b>, the home of real human art, on <b><?= e($issEn) ?></b><br>
-        <span lang="ar" dir="rtl">صادرة عن <b>أويلي</b>، بيت الفن البشري الحقيقي، بتاريخ <b><?= e($issAr) ?></b></span></div>
+      <div class="c-issued">Issued by <b>Oweili</b>, the home of real art, on <b><?= e($issEn) ?></b><br>
+        <span lang="ar" dir="rtl">صادرة عن <b>أويلي</b>، بيت الفن الأصيل، بتاريخ <b><?= e($issAr) ?></b></span></div>
       <div class="c-seal" aria-hidden="true"><?= $mark ?>OWEILI<br>AUTHENTIC<br>أصلي</div>
     </footer>
   </div>

@@ -485,11 +485,11 @@ function owStagesHtml(array $stages, string $mode = 'strip'): string {
     return $h . '</div>';
 }
 
-/* Buyer view: "Creation Journey — Proof of Human Art". Empty string if no journey. */
+/* Buyer view: "Creation Journey · Proof It Was Made by Hand". Empty string if no journey. */
 function owJourneyHtml(array $stages, array $colors, string $type, array $artTypes): string {
     if (!owHasJourney($stages)) return '';
     return '<section class="pj" aria-label="Creation Journey · رحلة الإبداع">'
-       . '<h3 class="pj-title">' . owBi('Creation Journey — Proof of Human Art', 'رحلة الإبداع — دليل الفن البشري') . '</h3>'
+       . '<h3 class="pj-title">' . owBi('Creation Journey · Proof It Was Made by Hand', 'رحلة الإبداع · دليل الصنع اليدوي') . '</h3>'
        . owStagesHtml($stages, 'journey') . owMetaHtml($type, $colors, $artTypes) . '</section>';
 }
 

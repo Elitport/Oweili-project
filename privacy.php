@@ -20,11 +20,11 @@ owLegalPage([
     'other' => ['terms.php', 'Terms of Use', 'شروط الاستخدام'],
 ], [
     ['who', 'Who we are', 'من نحن', [
-        'Oweili (oweili.com) is an online gallery for real, human-made art, founded in Saudi Arabia and open to the world.',
+        'Oweili (oweili.com) is an online gallery for real, handmade art, founded in Saudi Arabia and open to the world.',
         'Oweili is the party responsible for your personal data under the Saudi Personal Data Protection Law (PDPL) and its regulations.',
         "You can reach us about anything in this policy at $C.",
     ], [
-        'أويلي (oweili.com) معرض إلكتروني للفن الحقيقي المصنوع بأيدٍ بشرية، انطلق من المملكة العربية السعودية ومفتوح للعالم.',
+        'أويلي (oweili.com) معرض إلكتروني للفن الأصيل المصنوع باليد، انطلق من المملكة العربية السعودية ومفتوح للعالم.',
         'أويلي هو الجهة المسؤولة عن بياناتك الشخصية وفق نظام حماية البيانات الشخصية السعودي ولوائحه.',
         "يمكنك التواصل معنا بخصوص أي شيء في هذه السياسة على $C.",
     ]],
@@ -65,7 +65,7 @@ owLegalPage([
     ['why', 'Why we use it', 'لماذا نستخدمها', [
         '- To run your account and let you sign in safely.',
         '- To show artworks and the creation journey in the Gallery.',
-        '- To review every artwork and keep Oweili for human-made art only.',
+        '- To review every artwork and keep Oweili for handmade art only.',
         '- To contact you about an artwork you asked about, and to tell an artist that someone is interested.',
         '- To send account emails, such as confirming your email or resetting your password.',
         '- To keep the site safe: limits on sign-ups and sign-ins, and the activity log.',
@@ -74,7 +74,7 @@ owLegalPage([
     ], [
         '- لتشغيل حسابك وتمكينك من الدخول بأمان.',
         '- لعرض الأعمال ورحلة الإبداع في المعرض.',
-        '- لمراجعة كل عمل والحفاظ على أويلي للفن البشري فقط.',
+        '- لمراجعة كل عمل والحفاظ على أويلي للفن المصنوع باليد فقط.',
         '- للتواصل معك بخصوص عمل سألت عنه، ولإخبار الفنان أن هناك من يهتم.',
         '- لإرسال رسائل الحساب، مثل تأكيد البريد أو إعادة تعيين كلمة المرور.',
         '- لحماية الموقع: حدود على التسجيل والدخول، وسجل النشاط.',

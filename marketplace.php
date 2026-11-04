@@ -397,9 +397,9 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   </div>
   <?php endif; ?>
 
-  <!-- HUMAN-ONLY BANNER -->
+  <!-- HANDMADE-ONLY BANNER -->
   <div class="human-banner">
-    <?= $ar ? 'كل عمل هنا رسمته يد إنسان، بصبر وحب' : 'Every piece here was drawn by a human hand, with patience and love.' ?>
+    <?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love.' ?>
   </div>
 
   <?php if ($aotw): $aw0 = $aotw['art']; $aImg = $aw0 ? owImgSrc((string) $aw0['image_url']) : ''; $pImg = owImgSrc((string) ($aotw['profile_picture'] ?? ''));

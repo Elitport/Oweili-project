@@ -133,7 +133,7 @@ window.OW_ART_STYLES = [
    "feel": "حالم",
    "essence": "صبغة يحملها الماء، والضوء ينبع من الورق نفسه.",
    "story": [
-    "الألوان المائية من أقدم طرق الرسم عند البشر. رسم فنانو الصين بالحبر والألوان المخففة على الحرير والورق قرونًا طويلة. واستعملها كذلك رسامون في فارس والهند.",
+    "الألوان المائية من أقدم طرق الرسم في التاريخ. رسم فنانو الصين بالحبر والألوان المخففة على الحرير والورق قرونًا طويلة. واستعملها كذلك رسامون في فارس والهند.",
     "في أوروبا رسم ألبرشت دورر بها العشب وأرنبًا صغيرًا نحو عام 1500. ثم حمل الرسامون البريطانيون علب ألوانهم الصغيرة إلى الطبيعة. وحوّل تيرنر السماء كلها إلى نور خالص. وجعلها وينسلو هومر وجون سنجر سارجنت أكثر جرأة وحيوية.",
     "اليوم يحافظ عليها فنانون في كل مكان، من جدة إلى طوكيو. سرّها الثقة. فالماء يتحرك وحده. يوجّهه الفنان ثم يتركه. والخطأ لا يُخفى، بل يُبنى فوقه."
    ],
@@ -492,7 +492,7 @@ window.OW_ART_STYLES = [
    "feel": "Raw",
    "essence": "Burnt wood on paper, the most direct line from hand to surface.",
    "story": [
-    "Charcoal is humanity’s first drawing tool. Artists in the Chauvet Cave in France drew with it over 30,000 years ago.",
+    "Charcoal is one of the oldest drawing tools we know. Artists in the Chauvet Cave in France drew with it over 30,000 years ago.",
     "For centuries, painters used it for quick sketches, then brushed it away. Renaissance masters drew whole compositions in charcoal before painting. In the 1800s, Odilon Redon made charcoal the final work. His dark drawings, called noirs, feel like dreams.",
     "Today, William Kentridge films his charcoal drawings as he changes them. Charcoal is honest. It smudges, breaks and stains the fingers. Every mark shows the pressure and speed of the hand."
    ],
@@ -598,7 +598,7 @@ window.OW_ART_STYLES = [
    "feel": "خام",
    "essence": "خشب محروق على ورق، أقصر طريق بين اليد والسطح.",
    "story": [
-    "الفحم أول أداة رسم عرفها الإنسان. رسم به فنانو كهف شوفيه في فرنسا قبل أكثر من 30 ألف سنة.",
+    "الفحم من أقدم أدوات الرسم التي نعرفها. رسم به فنانو كهف شوفيه في فرنسا قبل أكثر من 30 ألف سنة.",
     "ظل الرسامون قرونًا يستعملونه للمسودات السريعة ثم يمسحونه. ورسم به فنانو عصر النهضة تكوينات كاملة قبل التلوين. وفي القرن التاسع عشر جعله أوديلون رودون عملًا نهائيًا. رسومه السوداء تبدو كالأحلام.",
     "واليوم يصوّر ويليام كنتريدج رسومه بالفحم وهو يغيّرها، فيصنع منها أفلامًا. الفحم صادق. يتلطخ وينكسر ويترك أثره على الأصابع. كل خط يكشف ضغط اليد وسرعتها."
    ],
@@ -946,7 +946,7 @@ window.OW_ART_STYLES = [
    "feel": "Precise",
    "essence": "Line in its purest form, where every stroke is final.",
    "story": [
-    "Ink has carried human thought for thousands of years. In China and Japan, ink painting grew beside poetry and calligraphy. Arab calligraphers made their own inks with great care.",
+    "Ink has carried ideas for thousands of years. In China and Japan, ink painting grew beside poetry and calligraphy. Arab calligraphers made their own inks with great care.",
     "Sesshū painted whole mountains in a few strokes. In Europe, Dürer and Rembrandt filled sketchbooks with pen drawings. Hokusai’s Manga books gathered thousands of lively drawings of daily life. Later, Aubrey Beardsley made black and white illustration an art of its own.",
     "Today, illustrators and comic artists worldwide still reach for pen and ink. Ink forgives nothing. Once it touches the paper, it stays. That is why a confident ink line feels so alive."
    ],
@@ -1057,7 +1057,7 @@ window.OW_ART_STYLES = [
    "feel": "دقيق",
    "essence": "الخط في أنقى صوره، حيث كل ضربة نهائية.",
    "story": [
-    "حمل الحبر أفكار البشر آلاف السنين. في الصين واليابان نما الرسم بالحبر إلى جانب الشعر والخط. وصنع الخطاطون العرب أحبارهم بعناية كبيرة.",
+    "حمل الحبر الأفكار آلاف السنين. في الصين واليابان نما الرسم بالحبر إلى جانب الشعر والخط. وصنع الخطاطون العرب أحبارهم بعناية كبيرة.",
     "رسم سيسشو جبالًا كاملة ببضع ضربات. وفي أوروبا ملأ دورر ورامبرانت دفاترهما برسوم القلم. وجمعت كتب هوكوساي آلاف الرسوم الحية للحياة اليومية. ثم جعل أوبري بيردسلي الرسم بالأبيض والأسود فنًا قائمًا بذاته.",
     "واليوم ما زال الرسامون وفنانو القصص المصورة حول العالم يمسكون القلم والحبر. الحبر لا يغفر. ما إن يلمس الورق حتى يبقى. لذلك يبدو خط الحبر الواثق حيًا."
    ],
@@ -2164,7 +2164,7 @@ window.OW_ART_STYLES = [
     [
      "José Clemente Orozco",
      "Mexican, 1883–1949",
-     "His dramatic frescoes carry deep feeling about human struggle."
+     "His dramatic frescoes carry deep feeling about the struggles of ordinary people."
     ]
    ],
    "guide": [
@@ -2266,7 +2266,7 @@ window.OW_ART_STYLES = [
     [
      "خوسيه كليمنتي أوروزكو",
      "مكسيكي، 1883–1949",
-     "جدارياته الدرامية تحمل شعوراً عميقاً بكفاح الإنسان."
+     "جدارياته الدرامية تحمل شعوراً عميقاً بكفاح الناس."
     ]
    ],
    "guide": [
@@ -2579,7 +2579,7 @@ window.OW_ART_STYLES = [
     [
      "Lynda Benglis",
      "American, born 1941",
-     "Her early poured wax paintings pushed encaustic into sculpture."
+     "Her early layered wax paintings pushed encaustic into sculpture."
     ],
     [
      "Joanne Mattera",
@@ -2681,7 +2681,7 @@ window.OW_ART_STYLES = [
     [
      "ليندا بنغليس",
      "أمريكية، مواليد 1941",
-     "لوحاتها المبكرة بالشمع المصبوب دفعت الإنكوستيك نحو النحت."
+     "لوحاتها المبكرة بطبقات الشمع دفعت الإنكوستيك نحو النحت."
     ],
     [
      "جوان ماتيرا",
@@ -3434,7 +3434,7 @@ window.OW_ART_STYLES = [
     "Working files with many layers, including the first rough sketch.",
     "A time-lapse recording that shows every stroke being drawn.",
     "Lines with natural pressure, tapering at the start and the end.",
-    "Small wobbles and corrections that a steady but human hand leaves.",
+    "Small wobbles and corrections that a steady but real hand leaves.",
     "A personal style that stays consistent across years of work."
    ],
    "tools": [
@@ -3532,7 +3532,7 @@ window.OW_ART_STYLES = [
     "ملفات عمل بطبقات كثيرة، ومعها الاسكتش الأول الخشن.",
     "تسجيل مُسرّع يُظهر رسم كل خط.",
     "خطوط بضغط طبيعي، تدقّ في بدايتها ونهايتها.",
-    "اهتزازات وتصحيحات صغيرة تتركها يد ثابتة لكنها بشرية.",
+    "اهتزازات وتصحيحات صغيرة تتركها يد ثابتة لكنها حقيقية.",
     "أسلوب شخصي يبقى ثابتاً عبر سنوات من العمل."
    ],
    "tools": [
@@ -3604,7 +3604,7 @@ window.OW_ART_STYLES = [
    "story": [
     "Digital painting borrows everything from oil and watercolor: light, color, edges and mood. Only the canvas has changed.",
     "It grew up in film and video games in the 1990s. Artists there painted the first look of new worlds. Craig Mullins showed it could feel as rich as a classical canvas.",
-    "Today painters work on large tablets and print their work on fine art paper. A strong digital painting still needs a human eye. Choosing what to show is the art."
+    "Today painters work on large tablets and print their work on fine art paper. A strong digital painting still needs an artist’s eye. Choosing what to show is the art."
    ],
    "tech": [
     [
@@ -3702,7 +3702,7 @@ window.OW_ART_STYLES = [
    "story": [
     "يستعير الرسم الرقمي كل شيء من الزيت والألوان المائية: الضوء واللون والحواف والإحساس. وحده القماش تغيّر.",
     "نشأ في السينما وألعاب الفيديو في التسعينيات. هناك رسم الفنانون أول صورة لعوالم جديدة. وأثبت كريغ مولينز أنه قد يكون غنياً كلوحة كلاسيكية.",
-    "اليوم يرسم الفنانون على ألواح كبيرة ويطبعون أعمالهم على ورق فني. واللوحة الرقمية القوية تحتاج دائماً إلى عين إنسان. فاختيار ما يُظهَر هو الفن."
+    "اليوم يرسم الفنانون على ألواح كبيرة ويطبعون أعمالهم على ورق فني. واللوحة الرقمية القوية تحتاج دائماً إلى عين فنان. فاختيار ما يُظهَر هو الفن."
    ],
    "tech": [
     [
@@ -3877,7 +3877,7 @@ window.OW_ART_STYLES = [
     [
      "Michelangelo",
      "Italian, 1475–1564",
-     "His study of the human body still guides every figure sculptor."
+     "His study of the body still guides every figure sculptor."
     ],
     [
      "Auguste Rodin",
@@ -3979,7 +3979,7 @@ window.OW_ART_STYLES = [
     [
      "مايكل أنجلو",
      "إيطالي، 1475–1564",
-     "ما زالت دراسته لجسد الإنسان تهدي كل نحّات للأشكال البشرية."
+     "ما زالت دراسته للجسد ترشد كل نحّات يجسّد الأشخاص."
     ],
     [
      "أوغست رودان",
@@ -4429,7 +4429,7 @@ window.OW_ART_STYLES = [
    "essence": "Imagining new worlds before anyone builds them.",
    "story": [
     "Concept art is the first picture of a world that does not exist yet. Films and games start here.",
-    "In the 1970s, Ralph McQuarrie painted the look of Star Wars with gouache and brushes. Syd Mead drew the future cities of Blade Runner. Moebius dreamed up whole planets in ink.",
+    "In the 1970s, Ralph McQuarrie painted the look of Star Wars with gouache and brushes. Later, Syd Mead drew the future cities of Blade Runner (1982). Moebius dreamed up whole planets in ink.",
     "Today most concept artists paint digitally, often in hours, not weeks. The goal is the same. Solve a design problem and spark the imagination of a whole team."
    ],
    "tech": [
@@ -4532,7 +4532,7 @@ window.OW_ART_STYLES = [
    "essence": "تخيّل عوالم جديدة قبل أن يبنيها أحد.",
    "story": [
     "فن المفاهيم هو الصورة الأولى لعالم لم يوجد بعد. ومنه تبدأ الأفلام والألعاب.",
-    "في السبعينيات رسم رالف مكواري ملامح حرب النجوم بالغواش والفرشاة. ورسم سيد ميد مدن المستقبل في بليد رانر. وتخيّل موبيوس كواكب كاملة بالحبر.",
+    "في السبعينيات رسم رالف مكواري ملامح حرب النجوم بالغواش والفرشاة. ثم رسم سيد ميد مدن المستقبل في بليد رانر (1982). وتخيّل موبيوس كواكب كاملة بالحبر.",
     "اليوم يرسم معظم فناني المفاهيم رقمياً، غالباً في ساعات لا أسابيع. والهدف لم يتغير. حلّ مسألة تصميم وإشعال خيال فريق كامل."
    ],
    "tech": [
@@ -4642,7 +4642,7 @@ window.OW_ART_STYLES = [
    "story": [
     "In generative art, the artist writes a set of rules, often as code. The rules draw, and the artist decides what stays.",
     "It began in the 1960s. Georg Nees, Frieder Nake and Vera Molnár wrote programs that guided pen plotters across paper. Molnár had already explored rule-based drawing by hand.",
-    "Today artists write their own code and draw with pen plotters on fine paper. Every rule, every color and every chosen result comes from a human mind."
+    "Today artists write their own code and draw with pen plotters on fine paper. Every rule, every color and every chosen result comes from the artist’s mind."
    ],
    "tech": [
     [
@@ -4745,7 +4745,7 @@ window.OW_ART_STYLES = [
    "story": [
     "في الفن التوليدي يكتب الفنان مجموعة قواعد، غالباً على شكل شيفرة. القواعد ترسم، والفنان يقرر ما يبقى.",
     "بدأ في الستينيات. كتب غيورغ نيس وفريدر ناكه وفيرا مولنار برامج توجّه أقلام الراسمات على الورق. وكانت مولنار قد جرّبت الرسم بالقواعد يدوياً من قبل.",
-    "اليوم يكتب الفنانون شيفرتهم بأنفسهم ويرسمون بالراسمات على ورق فاخر. وكل قاعدة وكل لون وكل نتيجة مختارة تأتي من عقل إنسان."
+    "اليوم يكتب الفنانون شيفرتهم بأنفسهم ويرسمون بالراسمات على ورق فاخر. وكل قاعدة وكل لون وكل نتيجة مختارة تأتي من عقل الفنان."
    ],
    "tech": [
     [
@@ -4850,9 +4850,9 @@ window.OW_ART_STYLES = [
   "en": {
    "name": "NFT Art",
    "feel": "Modern",
-   "essence": "A digital certificate of ownership for a human-made digital artwork.",
+   "essence": "A digital certificate of ownership for a digital artwork made by an artist.",
    "story": [
-    "An NFT is a digital certificate. It records who owns a digital artwork. The art itself is still made by a human artist.",
+    "An NFT is a digital certificate. It records who owns a digital artwork. The art itself is still made by an artist.",
     "Kevin McCoy minted the first known NFT artwork, Quantum, in 2014. Years later, digital artists began using certificates to sign and sell their files.",
     "Today an NFT is simply one way to prove ownership. What matters most is still the artwork, the artist and their story."
    ],
@@ -4943,9 +4943,9 @@ window.OW_ART_STYLES = [
   "ar": {
    "name": "فن الرموز غير القابلة للاستبدال",
    "feel": "حديث",
-   "essence": "شهادة ملكية رقمية لعمل فني رقمي صنعه إنسان.",
+   "essence": "شهادة ملكية رقمية لعمل فني رقمي صنعه فنان.",
    "story": [
-    "الرمز غير القابل للاستبدال شهادة رقمية. يسجّل من يملك العمل الفني الرقمي. والعمل نفسه يصنعه دائماً فنان إنسان.",
+    "الرمز غير القابل للاستبدال شهادة رقمية. يسجّل من يملك العمل الفني الرقمي. والعمل نفسه يصنعه دائماً فنان.",
     "سكّ كيفن مكوي أول عمل فني معروف من هذا النوع، كوانتم، عام 2014. وبعد سنوات بدأ الفنانون الرقميون يوقّعون ملفاتهم ويبيعونها بشهادات.",
     "اليوم هذه الشهادة مجرد طريقة لإثبات الملكية. ويبقى الأهم هو العمل الفني والفنان وقصته."
    ],
@@ -6524,7 +6524,7 @@ window.OW_ART_STYLES = [
    "feel": "متألق",
    "essence": "آلاف القطع المقصوصة باليد تحوّل الجدران نوراً.",
    "story": [
-    "غطّى البنّاؤون المسلمون الأوائل الجدران بفسيفساء الزجاج والذهب. فتتلألأ قبة الصخرة في القدس بالأغصان والجواهر. ويُظهر الجامع الأموي بدمشق أشجاراً وأنهاراً وقصوراً، بلا بشر.",
+    "غطّى البنّاؤون المسلمون الأوائل الجدران بفسيفساء الزجاج والذهب. فتتلألأ قبة الصخرة في القدس بالأغصان والجواهر. ويُظهر الجامع الأموي بدمشق أشجاراً وأنهاراً وقصوراً، بلا أشخاص.",
     "ثم قصّ الأساتذة المغاربة البلاط المزجج نجوماً من الزليج. ورصّ الحرفيون الفرس قطع البلاط الملوّن في القباب والبوابات. وما زالت مساجد تبريز وأصفهان وسمرقند تتوهّج بها.",
     "واليوم ما زال معلّمو الزليج في فاس يقصّون كل قطعة باليد. ويحفظ صنّاع البلاط في إيران الأنماط القديمة. ويحمل فنانون جدد الفسيفساء إلى البيوت والمعارض والأماكن العامة حول العالم."
    ],
@@ -7040,7 +7040,7 @@ window.OW_ART_STYLES = [
     [
      "رون ميويك",
      "أسترالي، مواليد 1958",
-     "ينحت البشر بأحجام مدهشة، وكل تجعيدة في مكانها."
+     "ينحت الأشخاص بأحجام مدهشة، وكل تجعيدة في مكانها."
     ]
    ],
    "guide": [
@@ -8901,7 +8901,7 @@ window.OW_ART_STYLES = [
    "feel": "هادئ",
    "essence": "الأرض والبحر كما تراهما عين فنان صبور.",
    "story": [
-    "رسم الإنسان الأرض منذ آلاف السنين. وجعل أساتذة الصين الجبال والأنهار قلب الرسم. ودعت لفائفهم العين إلى التجوّل ببطء.",
+    "رُسمت الأرض منذ آلاف السنين. وجعل أساتذة الصين الجبال والأنهار قلب الرسم. ودعت لفائفهم العين إلى التجوّل ببطء.",
     "في أوروبا صار المنظر الطبيعي موضوعاً مستقلاً في القرن السابع عشر. رسم كونستابل حقول إنجلترا بطقسها الصادق. ومنح تيرنر وهوكوساي البحر قوته الكاملة.",
     "اليوم ما زال الفنانون يحملون حواملهم إلى الخارج ليرسموا من الواقع. ويرسم كثيرون الصحارى والجبال والسواحل في العالم العربي. وكل مشهد يحمل لحظة ضوء حقيقية."
    ],
@@ -9014,7 +9014,7 @@ window.OW_ART_STYLES = [
    "feel": "Intimate",
    "essence": "A real face, painted by someone who truly looked.",
    "story": [
-    "Portraits are among the oldest human images. Painters in Roman Egypt made lifelike faces in the Fayum portraits. Persian and Mughal painters drew courtiers with fine brushes.",
+    "Portraits are among the oldest images we have. Painters in Roman Egypt made lifelike faces in the Fayum portraits. Persian and Mughal painters drew courtiers with fine brushes.",
     "In Europe, Rembrandt and Vermeer gave ordinary faces deep feeling. Later, photography freed painters to look further. They painted character, not only likeness.",
     "Today, many artists paint from life sittings. They study one face for hours. Arab painters like Mahmoud Saïd made portraits full of warmth and place."
    ],
@@ -9126,7 +9126,7 @@ window.OW_ART_STYLES = [
    "feel": "حميم",
    "essence": "وجه حقيقي رسمه من أطال النظر إليه.",
    "story": [
-    "البورتريه من أقدم الصور عند الإنسان. رسم فنانو مصر الرومانية وجوهاً نابضة في بورتريهات الفيوم. ورسم فنانو فارس والهند المغولية رجال البلاط بفرش دقيقة.",
+    "البورتريه من أقدم الصور التي نعرفها. رسم فنانو مصر الرومانية وجوهاً نابضة في بورتريهات الفيوم. ورسم فنانو فارس والهند المغولية رجال البلاط بفرش دقيقة.",
     "في أوروبا منح رامبرانت وفيرمير الوجوه العادية مشاعر عميقة. ثم حرّر التصوير الرسامين لينظروا أبعد. فرسموا الشخصية لا الشبه فقط.",
     "اليوم يرسم كثير من الفنانين من جلسات حية. يدرسون وجهاً واحداً لساعات. ورسم فنانون عرب مثل محمود سعيد بورتريهات مليئة بالدفء والمكان."
    ],
@@ -10116,7 +10116,7 @@ window.OW_ART_STYLES = [
    "feel": "Reflective",
    "essence": "A photograph made as art, from one artist’s clear vision.",
    "story": [
-    "Photography rests on an old idea. Ibn al-Haytham explained how light forms images in a dark chamber. Cameras finally captured those images in the 1830s.",
+    "Photography rests on an old idea. Ibn al-Haytham explained how light forms images in a dark chamber. Cameras finally captured those images in the 1820s.",
     "Alfred Stieglitz fought for photography to hang in galleries. Ansel Adams planned every print with great care. Photographers became artists with a voice of their own.",
     "Today, fine art photographers work in limited, signed editions. Many print by hand in darkrooms or studios. Each image carries a personal way of seeing."
    ],
@@ -10223,7 +10223,7 @@ window.OW_ART_STYLES = [
    "feel": "متأمل",
    "essence": "صورة صُنعت فناً، من رؤية فنان واضحة.",
    "story": [
-    "يقوم التصوير على فكرة قديمة. شرح ابن الهيثم كيف يكوّن الضوء صورة في غرفة مظلمة. ثم التقطت الكاميرات هذه الصور أخيراً في ثلاثينيات القرن التاسع عشر.",
+    "يقوم التصوير على فكرة قديمة. شرح ابن الهيثم كيف يكوّن الضوء صورة في غرفة مظلمة. ثم التقطت الكاميرات هذه الصور أخيراً في عشرينيات القرن التاسع عشر.",
     "ناضل ألفريد ستيغليتز ليُعلَّق التصوير في صالات العرض. وخطط أنسل آدامز لكل مطبوعة بعناية كبيرة. فصار المصورون فنانين لهم صوتهم الخاص.",
     "اليوم يعمل مصورو الفن في إصدارات محدودة موقّعة. ويطبع كثير منهم بأيديهم في غرف مظلمة أو استوديوهات. وكل صورة تحمل طريقة رؤية شخصية."
    ],

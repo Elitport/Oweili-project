@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join Oweili', 'ar' => 'انضم إلى أويلي', 'desc_en' => 'Join free as an artist or a buyer. Real art, made by real human hands.', 'desc_ar' => 'انضم مجاناً كفنان أو مشترٍ. فن حقيقي بأيدٍ بشرية حقيقية.', 'path' => 'register.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join Oweili', 'ar' => 'انضم إلى أويلي', 'desc_en' => 'Join free as an artist or a buyer. Real art, made by real hands.', 'desc_ar' => 'انضم مجاناً كفنان أو مشترٍ. فن أصيل بأيدٍ حقيقية.', 'path' => 'register.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

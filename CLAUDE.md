@@ -4,7 +4,7 @@
 - Name: Oweili (أويلي)
 - Domain: oweili.com
 - Founded: Saudi Arabia, open to the world
-- Mission: The home of real human art — where artists prove their work is handmade, and buyers purchase with full confidence
+- Mission: The home of real art («بيت الفن الأصيل») — where artists prove their work is handmade, and buyers purchase with full confidence
 - Stack: PHP, MySQL, HTML, CSS, JavaScript
 - Hosting: Hostinger — auto-deploy from GitHub main branch (now active)
 
@@ -144,6 +144,11 @@
 - Photos: a soft tinted placeholder fills each photo frame until the photo has loaded (theme_head.php marks loaded images .ld; oweili.css). Frames already keep their size, so nothing jumps. The artwork page lets phones pick the 800 copy (srcset and the matching preload) instead of always the 1600 one
 - Database: "does this table / column exist" answers are kept 10 minutes in .logs/schema_cache.json (owHasTable / owHasColumn in platform_lib.php; owSchemaForget() clears it, use it after a database update). Gallery 16 → 10 queries, artwork page 11 → 7. Indexes were already right; no database change
 - Files: theme_head.php, assets/css/oweili.css, assets/fonts/ (new), .htaccess, ow_paths.php (owAsset), platform_lib.php, artwork.php, articles_list.php, explore.php, gifts.php, institutes.php, article.php, commission.php, auctions.php, and the 26 pages that had the video. Tables: none
+
+### Words and facts check (4 Nov 2026)
+- "Human" removed from every page, email and title (see Brand Style "Site words"): homepage headline and titles, footer, email footer (mail_lib.php), certificate, Gallery banner, artwork and profile descriptions, sign-up, Community, Explore (the end line, "The Story Behind It", "Signs of a Real Hand"), Terms (section "Handmade art only", anchor #handmade), Privacy, robots.txt, 14 lines of the style texts in art_styles.js
+- Explore Art Styles facts: all 253 famous artists and the 50 style stories checked against Britannica, Wikipedia and museum sites (through search results; this environment cannot open those sites directly). Fixed: charcoal is "one of the oldest" drawing tools (the Blombos ochre drawing is older), the first camera photograph dates from the 1820s (Niépce, about 1826–27), Syd Mead's Blade Runner work is 1982 (not the 1970s), Lynda Benglis's early wax works were brushed in layers (her poured works were latex)
+- Files: index.php, footer.php, mail_lib.php, certificate.php, marketplace.php, artwork.php, artwork_lib.php, artist_dashboard.php, register.php, community.php, explore.php, terms.php, privacy.php, robots.txt, assets/js/explore.js, assets/js/art_styles.js. Tables: none
 
 ### Real visitor address for every limit (3 Nov 2026)
 - config.php's clientIp() believes the X-Forwarded-For header, which any visitor can fake (checked on the live server), so limits could be dodged. config.php is NOT changed: our own visitor_lib.php has owVisitorIp(), which reads only REMOTE_ADDR (the real address on Hostinger, checked on the live server). Nothing in the project calls clientIp() any more; new code must use owVisitorIp()
@@ -395,7 +400,7 @@
 - Removed on the way: a leftover debug block in marketplace.php that logged failed pictures to the browser console
 
 ### Creation Journey (marketplace) — built, needs database_update.sql
-- What it does: in the artwork details window, buyers see "Creation Journey — Proof of Human Art" / «رحلة الإبداع — دليل الفن البشري» with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
+- What it does: in the artwork details window, buyers see "Creation Journey · Proof It Was Made by Hand" / «رحلة الإبداع · دليل الصنع اليدوي» (renamed 4 Nov 2026) with the stage photos in order (25% The Beginning, 50% Taking Shape if uploaded, 100% The Finished Piece), the date each was taken, the colors used and the art type
 - The "✦ A Real Touch" / «✦ لمسة حقيقية» badge sits under the title (the same badge as everywhere else) — only on artworks that have the 25% and 100% photos
 - Old artworks without stage photos show exactly as before (no journey, no badge)
 - Every card in the marketplace grid also shows the "✦ A Real Touch" / «✦ لمسة حقيقية» badge when the artwork has the 25% and 100% photos
@@ -417,7 +422,7 @@
 
 
 ### Homepage (index.php) — one screen
-- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "✦ A Real Touch" / «✦ لمسة حقيقية»; headline "Everything here started with human hands" / «كل ما تراه هنا، بدأ بيدٍ حقيقية» in one dark color (56px desktop, 36px phone, weight 300); subtitle "Every piece here was made by real hands. And you can see how." / «كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.» (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
+- What it does: a single full-screen hero over the background video (bg.mp4, covers 100% of the screen) with a soft dark shade rgba(0,0,0,0.15) on top. Badge "✦ A Real Touch" / «✦ لمسة حقيقية»; headline "Everything here started with real hands" (was "…human hands" until 4 Nov 2026) / «كل ما تراه هنا، بدأ بيدٍ حقيقية» in one dark color (56px desktop, 36px phone, weight 300); subtitle "Every piece here was made by real hands. And you can see how." / «كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.» (18px, max 520px); two buttons "Explore Gallery" (marketplace.php) and "Join as Artist" (register_artist.php). No other sections, no footer, no scrolling, no dashes
 - The badge, headline, subtitle and buttons fade in gently (CSS only; turned off for visitors who reduce motion)
 - Removed on purpose (owner's request): "Art You Can Trust" steps, "Latest Verified Artworks", the Join cards and the Discover cards
 - Files: index.php, assets/css/oweili.css, nav.css. Tables: none
@@ -472,8 +477,8 @@
 - Files: training.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: institutes, courses
 
 ### Explore Art Styles (explore.php) — art encyclopedia of 50 styles, live (approved by the owner)
-- What it does: "Explore Art Styles" / «استكشف أساليب الرسم». Filter pills with counts: All 50 / Traditional 15 / Digital 8 / Islamic & Arab Heritage 7 / Contemporary 10 / Nature & Portrait 6 / Photography 4 (navy when active). Equal square cards (4 columns desktop, 3 tablet, 2 phone): a drawn cover, the style name and one feeling word. Hover: lift + thin pink border. Closing line: "Fifty styles. Fifty human stories. Every one began with a hand." / «خمسون أسلوباً. خمسون قصة إنسانية. كلها بدأت بيد.»
-- The window (max 760px, full screen on phones; close top right, top left in Arabic, Escape or tap outside) has 10 parts: name + feeling, one-line essence, The Human Story (3 paragraphs), Key Techniques (hover or tap explains), Signs of a Human Hand (numbered), Tools & Materials, Difficulty & Time (Beginner / Intermediate / Advanced, time for one artwork, who it suits), Famous Artists (name, nationality, dates, contribution), Collector's Guide (3 tips), From Our Gallery
+- What it does: "Explore Art Styles" / «استكشف أساليب الرسم». Filter pills with counts: All 50 / Traditional 15 / Digital 8 / Islamic & Arab Heritage 7 / Contemporary 10 / Nature & Portrait 6 / Photography 4 (navy when active). Equal square cards (4 columns desktop, 3 tablet, 2 phone): a drawn cover, the style name and one feeling word. Hover: lift + thin pink border. Closing line: "Fifty styles. Fifty stories. Every one began with a hand." / «خمسون أسلوباً. خمسون حكاية. كلها بدأت بيد.»
+- The window (max 760px, full screen on phones; close top right, top left in Arabic, Escape or tap outside) has 10 parts: name + feeling, one-line essence, The Story Behind It («حكاية الأسلوب», 3 paragraphs), Key Techniques (hover or tap explains), Signs of a Real Hand («علامات اليد الحقيقية», numbered), Tools & Materials, Difficulty & Time (Beginner / Intermediate / Advanced, time for one artwork, who it suits), Famous Artists (name, nationality, dates, contribution), Collector's Guide (3 tips), From Our Gallery
 - From Our Gallery: the newest approved, for-sale artwork of that type by an artist who is not banned (one prepared database read in explore.php; pictures only from uploads/ or https). If there is none yet: the drawing, an invitation to artists, and the pink button. Button: "See [style] in Gallery" → marketplace.php?type=…. Styles with no Gallery type yet open the whole Gallery
 - Gallery types: every style is now its own Gallery type (type = style id), so every "See [style] in Gallery" button opens exactly that style. Artworks saved under the old shared types (photography, digital_art, 3d, mixed_media, vector_art, sculpture, other) still show in the Gallery, but not in a style window
 - Shared links open a style directly: explore.php#calligraphy. Unknown links are ignored
@@ -706,6 +711,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Voice: confident, warm, bilingual, open to the world — proudly Saudi-born
 - Always use "Oweili" not "Resha Art" (old name)
 - Tagline concept: human hands, real art, trusted platform
+- Site words (owner, 4 Nov 2026): visitor text, emails and page titles never use "human", "humans", «بشر», «بشري» or «إنسان». The tagline is "the home of real art" / «بيت الفن الأصيل» (footer, email footer, certificate). Say "real hands", "made by hand", "handmade", "an artist's own hand" instead. («بشرة» = skin and «بشرو» = Bashro are other words and stay.) Code names such as .human-badge stay, visitors never see them
 
 ### 10. Outreach Composer
 - When writing emails or messages to artists or galleries, keep the tone professional but warm
