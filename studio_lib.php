@@ -23,11 +23,10 @@
  *                                  so it also stays still on iPhone
  *
  *  Where they are used: homepage (behind the video), Join as an artist,
- *  Gifts, Explore Art Styles, the 404 page and the empty Gallery. Still to
- *  come when the owner sends the files: "hand on the palette" → Commissions,
- *  "woman looking at framed paintings" → Art Events / Discover,
- *  "studio table with brushes" → Support. Add them to OW_STUDIO with the
- *  same file names (keys palette-hand, gallery-visit, studio-table).
+ *  Gifts, Explore Art Styles, the 404 page and the empty Gallery; "hand on the
+ *  palette" → Commissions, "woman looking at framed paintings" → Art Events,
+ *  Artist Spotlights, Art Education, articles and Institutes, "studio table
+ *  with brushes" → Support.
  * ===================================================================== */
 require_once __DIR__ . '/ow_paths.php';
 
@@ -50,8 +49,8 @@ const OW_STUDIO = [
     'paint-cloth'   => [[480, 720], [1280], [9, 16], [16, 9],
         'A paint-splattered cloth with bowls of colour and brushes',
         'قماش مرشوش بالألوان مع أوعية الألوان والفُرَش'],
-    // waiting for the owner's files (they show by themselves once the files are in assets/img/studio/)
-    'palette-hand'  => [[480, 720], [1280, 1920], [9, 16], [16, 9],
+    // the owner's last 3 photos (5 Nov 2026); palette-hand is cut so the painting of roses never shows
+    'palette-hand'  => [[480, 720], [1100], [9, 16], [16, 9],
         'A hand holding a paint palette in a studio',
         'يد تمسك لوحة الألوان داخل مرسم'],
     'gallery-visit' => [[480, 720], [1280, 1920], [9, 16], [16, 9],

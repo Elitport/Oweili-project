@@ -586,7 +586,11 @@ html.dark-mode { --studio-glass: rgba(15,21,32,0.74); --studio-glass-edge: rgba(
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .ow-backdrop ~ * :is(.d-head, .page-header) { background: var(--color-surface); } }
 /* small controls and cards that sit straight on a photo get a solid enough face (filter buttons, cards in dark mode) */
 .ow-backdrop ~ * .pill-f:not(.on) { background: var(--studio-glass); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-color: var(--studio-glass-edge); }
-html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ * .auth-card, .ow-backdrop ~ .auth-card) { background: rgba(15,21,32,0.88); }
+html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ * .auth-card, .ow-backdrop ~ .auth-card, .ow-backdrop ~ * .contact-card) { background: rgba(15,21,32,0.88); }
+/* section headings that sit straight on a photo (Support "Get in Touch", Institutes "Upcoming Workshops") get a small frosted card too */
+.ow-backdrop ~ * :is(.section-title, .ws-head) { width: fit-content; max-width: 100%; background: var(--studio-glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15);
+  border: 1px solid var(--studio-glass-edge); border-radius: var(--radius-card); padding: 12px 20px; box-shadow: 0 10px 30px rgba(var(--rgb-shadow),0.12); }
+.ow-backdrop ~ * .ws-head { margin-left: auto; margin-right: auto; padding: 20px 24px; }
 .ow-backdrop ~ .overlay, .ow-backdrop ~ .veil, .ow-backdrop ~ .bg-wrap { display: none; }   /* one veil only */
 /* text that sits straight on the photo gets a soft halo in the page colour, so it reads clearly */
 .ow-backdrop ~ * :is(h1, h2, h3, p, li, label, legend, dt, dd, small) { text-shadow: var(--studio-glow); }

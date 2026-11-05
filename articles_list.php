@@ -68,7 +68,7 @@ $titleAr = $tAr . ' · أويلي';
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 </head>
 <body class="ow">
-<?= owStudioBackdrop(...($items ? ['gallery-visit'] : ['paint-cloth'])) ?>
+<?= owStudioBackdrop('gallery-visit') ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 

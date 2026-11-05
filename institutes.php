@@ -128,7 +128,7 @@ details[open] .when-closed{display:none;}
 </style>
 </head>
 <body class="ow">
-<?= owStudioBackdrop(...($institutes ? ['gallery-visit'] : ['paint-cloth'])) ?>
+<?= owStudioBackdrop('gallery-visit') ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 
