@@ -17,7 +17,7 @@
  *  Never used on private pages (dashboards, studio, admin, edit pages,
  *  private commission links, certificates, staff previews): they keep
  *  "no-store". Safety: every page carries a short code of the visitor's
- *  sign-in state (owStateCode); a page shown from a kept copy asks
+ *  sign-in (owStateCode: account + that sign-in's own code + admin); a page shown from a kept copy asks
  *  auth_state.php and reloads if the visitor signed in or out since.
  * ===================================================================== */
 
@@ -30,12 +30,15 @@ function owPublicPage(): void {
     header_remove('Expires');
 }
 
-/* A short one-way code of "who is signed in, in which browser session".
-   It changes when the visitor signs in, signs out, or the admin signs in. */
+/* A short one-way code of "who is signed in, with which sign-in". It changes
+   when the visitor signs in (new sign-in code), signs out, or the admin signs in
+   or out. It does not use the browser session's number: for visitors who are not
+   signed in the live server starts a fresh session on almost every page, which
+   would make every kept copy look out of date. */
 function owStateCode(): string {
-    $sid = session_status() === PHP_SESSION_ACTIVE ? session_id() : '';
     $uid = (int) ($_SESSION['user_id'] ?? 0);
-    $adm = !empty($_SESSION['is_admin']) ? 1 : 0;
+    $tok = $uid ? (string) ($_SESSION['session_token'] ?? '') : '';
+    $adm = !empty($_SESSION['is_admin']) ? (string) ($_SESSION['admin_sig'] ?? '1') : '';
     $salt = defined('ADMIN_HASH') ? (string) ADMIN_HASH : __DIR__;
-    return substr(hash('sha256', 'ow-state|' . $sid . '|' . $uid . '|' . $adm . '|' . $salt), 0, 16);
+    return substr(hash('sha256', 'ow-state|' . $uid . '|' . $tok . '|' . $adm . '|' . $salt), 0, 16);
 }
