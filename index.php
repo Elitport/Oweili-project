@@ -1,7 +1,10 @@
 <?php
 /* =====================================================================
  *  index.php — Oweili homepage: one full-screen hero, nothing else.
- *  Video background (bg.mp4) with a soft dark shade, badge, headline,
+ *  Background: a real Pexels video of a hand painting (assets/video/: hero-wide.mp4 for
+ *  computers and tablets, hero-tall.mp4 for phones), full colour, no veil over it. A still
+ *  frame of the same video shows at once (and alone on slow connections, Data Saver or
+ *  reduced motion). The text sits on a small frosted-glass card so it reads clearly. Badge, headline,
  *  one-line subtitle and two buttons. Text is printed in both languages
  *  (bi-en / bi-ar); the shared menu's language switch shows the one that
  *  matches the page direction.
@@ -34,12 +37,12 @@ try { $aotw = owArtistOfWeek(); } catch (Throwable $e) { $aotw = null; }
 html, body { height: 100%; margin: 0; }
 body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 100svh; }
 
-/* full-screen video with a soft dark shade so the text stays readable */
+/* full-screen video in its real colours (no veil); its still frame shows first */
 .hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
 .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; }
 .hero-bg video.on { opacity: 1; }
-.hero-shade { position: absolute; inset: 0; background: var(--hero-shade); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
-.hero-bg video.on + .hero-shade { opacity: 1; }
+.hero-still, .hero-still img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-still img { object-fit: cover; display: block; }
 
 .hero {
   position: relative; z-index: 2;
@@ -49,6 +52,13 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
   text-align: center;
 }
 .hero-inner { max-width: 880px; display: flex; flex-direction: column; align-items: center; }
+/* the text sits on a small frosted-glass card, so the video keeps its strong colours */
+.hero-card { display: flex; flex-direction: column; align-items: center; padding: var(--space-lg) var(--space-lg) var(--space-md);
+  border-radius: var(--radius-card); background: rgba(var(--rgb-surface),0.74); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(var(--rgb-surface),0.55); box-shadow: 0 12px 40px rgba(var(--rgb-shadow),0.18); }
+.hero-card .hero-badge { background: transparent; }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .hero-card { background: rgba(var(--rgb-surface),0.92); } }
+@media (max-width: 420px) { .hero-card { padding: var(--space-md) var(--space-sm); } }
 
 .hero-badge {
   display: inline-flex; align-items: center; gap: var(--space-xs);
@@ -106,20 +116,27 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 </head>
 <body>
 <div class="hero-bg" aria-hidden="true">
-  <video id="vid" class="bg-now" autoplay loop muted playsinline preload="auto" data-src="<?= owBase() ?>bg.mp4"></video>
-  <div class="hero-shade"></div>
+  <?php $hb = owBase() . 'assets/img/hero/'; ?>
+  <picture class="hero-still">
+    <source media="(max-width: 640px)" type="image/avif" srcset="<?= $hb ?>hero-tall.avif"><source media="(max-width: 640px)" type="image/webp" srcset="<?= $hb ?>hero-tall.webp"><source media="(max-width: 640px)" srcset="<?= $hb ?>hero-tall.jpg">
+    <source type="image/avif" srcset="<?= $hb ?>hero-wide.avif"><source type="image/webp" srcset="<?= $hb ?>hero-wide.webp">
+    <img src="<?= $hb ?>hero-wide.jpg" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="async">
+  </picture>
+  <video id="vid" class="bg-now" autoplay loop muted playsinline preload="none" data-src="<?= owBase() ?>assets/video/hero-wide.mp4" data-src-phone="<?= owBase() ?>assets/video/hero-tall.mp4"></video>
 </div>
 
 <?php include __DIR__ . '/nav.php'; ?>
 
 <main class="hero">
   <div class="hero-inner">
-    <span class="hero-badge fade fade-1"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
-    <h1 class="fade fade-2"><?= owBi('Everything here started with real hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
-    <p class="hero-sub fade fade-3"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
-    <div class="hero-btns fade fade-4">
-      <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
-      <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
+    <div class="hero-card">
+      <span class="hero-badge fade fade-1"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
+      <h1 class="fade fade-2"><?= owBi('Everything here started with real hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
+      <p class="hero-sub fade fade-3"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
+      <div class="hero-btns fade fade-4">
+        <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
+        <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
+      </div>
     </div>
     <?php if ($aotw): $aImg = $aotw['art'] ? owImgSrc((string) $aotw['art']['image_url']) : ''; if ($aImg === '') $aImg = owImgSrc((string) ($aotw['profile_picture'] ?? '')); ?>
     <a class="aotw-home fade fade-4" href="artist_dashboard.php?id=<?= (int) $aotw['id'] ?>">

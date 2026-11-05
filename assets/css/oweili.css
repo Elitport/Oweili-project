@@ -577,7 +577,16 @@ html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.82), rgba(15,21,
 .ow-studio, .ow-studio img { display: block; width: 100%; height: 100%; }
 .ow-studio img { object-fit: cover; background: rgba(var(--rgb-accent),0.07); }
 .ow-backdrop { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: -1; overflow: hidden; pointer-events: none; }
-.ow-backdrop::after { content: ""; position: absolute; inset: 0; background: var(--studio-veil); }
+/* no veil over the photo (owner, 5 Nov 2026): the photo keeps its real, strong colours.
+   Text stays readable where it sits: page headings get a small frosted-glass card, cards are solid */
+:root { --studio-glass: rgba(255,255,255,0.78); --studio-glass-edge: rgba(255,255,255,0.6); }
+html.dark-mode { --studio-glass: rgba(15,21,32,0.74); --studio-glass-edge: rgba(143,161,177,0.22); }
+.ow-backdrop ~ * :is(.d-head, .page-header) { background: var(--studio-glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15);
+  border: 1px solid var(--studio-glass-edge); border-radius: var(--radius-card); padding: clamp(20px, 4vw, 40px); box-shadow: 0 10px 30px rgba(var(--rgb-shadow),0.12); }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .ow-backdrop ~ * :is(.d-head, .page-header) { background: var(--color-surface); } }
+/* small controls and cards that sit straight on a photo get a solid enough face (filter buttons, cards in dark mode) */
+.ow-backdrop ~ * .pill-f:not(.on) { background: var(--studio-glass); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-color: var(--studio-glass-edge); }
+html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ * .auth-card, .ow-backdrop ~ .auth-card) { background: rgba(15,21,32,0.88); }
 .ow-backdrop ~ .overlay, .ow-backdrop ~ .veil, .ow-backdrop ~ .bg-wrap { display: none; }   /* one veil only */
 /* text that sits straight on the photo gets a soft halo in the page colour, so it reads clearly */
 .ow-backdrop ~ * :is(h1, h2, h3, p, li, label, legend, dt, dd, small) { text-shadow: var(--studio-glow); }

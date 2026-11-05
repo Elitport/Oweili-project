@@ -279,7 +279,9 @@ if (!defined('OW_THEME_HEAD')):
     if (lite) { document.querySelectorAll('video.bg-video, #vid').forEach(function(v){ if (v.getAttribute('src')) { v.removeAttribute('src'); v.load(); } }); return; }
     /* the homepage video is the hero: it starts straight away (class bg-now) */
     document.querySelectorAll('video.bg-now[data-src]').forEach(function(v){
-      v.src = v.getAttribute('data-src'); v.removeAttribute('data-src');
+      /* phones get the tall (vertical) copy, computers and tablets the wide one */
+      var ph = v.getAttribute('data-src-phone'), useP = ph && matchMedia('(max-width: 640px)').matches;
+      v.src = useP ? ph : v.getAttribute('data-src'); v.removeAttribute('data-src');
       var p = v.play && v.play(); if (p && p.catch) p.catch(function(){});
     });
   });
