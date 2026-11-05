@@ -1,7 +1,11 @@
 <?php
 /* =====================================================================
  *  index.php — Oweili homepage: one full-screen hero, nothing else.
- *  Background: a real Pexels video of a hand painting (assets/video/: hero-wide.mp4 for
+ *  Background: two real Pexels videos, one after the other with a soft cross-fade, looping:
+ *  the blue hand painting dots, then the pink brush (assets/video/: hero-wide.mp4 /
+ *  hero-pink-wide.mp4 for computers and tablets, hero-tall.mp4 / hero-pink-tall.mp4 for phones).
+ *  Only the first video loads at the start; the second loads in the background after the page
+ *  has shown. The first video (assets/video/: hero-wide.mp4 for
  *  computers and tablets, hero-tall.mp4 for phones), full colour, no veil over it. A still
  *  frame of the same video shows at once (and alone on slow connections, Data Saver or
  *  reduced motion). The text sits on a small frosted-glass card so it reads clearly. Badge, headline,
@@ -41,6 +45,7 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 .hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
 .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; }
 .hero-bg video.on { opacity: 1; }
+.hero-bg #vid2 { transition: opacity 1.2s ease; }   /* the soft cross-fade between the two videos */
 .hero-still, .hero-still img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .hero-still img { object-fit: cover; display: block; }
 
@@ -122,7 +127,8 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
     <source type="image/avif" srcset="<?= $hb ?>hero-wide.avif"><source type="image/webp" srcset="<?= $hb ?>hero-wide.webp">
     <img src="<?= $hb ?>hero-wide.jpg" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="async">
   </picture>
-  <video id="vid" class="bg-now" autoplay loop muted playsinline preload="none" data-src="<?= owBase() ?>assets/video/hero-wide.mp4" data-src-phone="<?= owBase() ?>assets/video/hero-tall.mp4"></video>
+  <video id="vid" class="bg-now" autoplay muted playsinline preload="none" data-src="<?= owBase() ?>assets/video/hero-wide.mp4" data-src-phone="<?= owBase() ?>assets/video/hero-tall.mp4"></video>
+  <video id="vid2" muted playsinline preload="none" data-later="<?= owBase() ?>assets/video/hero-pink-wide.mp4" data-later-phone="<?= owBase() ?>assets/video/hero-pink-tall.mp4"></video>
 </div>
 
 <?php include __DIR__ . '/nav.php'; ?>
@@ -161,15 +167,40 @@ function tgl(){
 }
 if (document.documentElement.getAttribute('dir') === 'rtl') { document.title = 'أويلي · كل ما تراه هنا، بدأ بيدٍ حقيقية'; }
 
-/* The video (and its shade) fade in once it can play */
+/* Two videos in turn, with a soft cross-fade, looping: blue (hand painting dots), then pink
+   (the brush). The first fades in over its still frame as soon as it can play. The second is
+   loaded only after the page has shown, in the background; until it is ready the first just
+   loops. Slow connections, Data Saver and reduced motion get the still frame only. */
 (function(){
-  var v = document.getElementById('vid');
-  if (!v) return;
-  var on = function(){ v.classList.add('on'); };
-  if (v.readyState >= 3) on();   /* already ready (e.g. saved in the browser) */
-  v.addEventListener('canplay', on, { once: true });
-  v.addEventListener('playing', on, { once: true });
-  var p = v.play(); if (p && p.catch) p.catch(function(){});
+  var a = document.getElementById('vid'), b = document.getElementById('vid2');
+  if (!a) return;
+  var FADE = 1.2, bReady = false, onB = false;
+  var on = function(){ a.classList.add('on'); };
+  if (a.readyState >= 3) on();   /* already ready (e.g. saved in the browser) */
+  a.addEventListener('canplay', on, { once: true });
+  a.addEventListener('playing', on, { once: true });
+  var p = a.play(); if (p && p.catch) p.catch(function(){});
+  var lite = document.documentElement.classList.contains('ow-lite');
+  try { lite = lite || matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  function play(v){ var q = v.play(); if (q && q.catch) q.catch(function(){}); }
+  function toB(){ if (onB || !bReady) return; onB = true; b.currentTime = 0; play(b); b.classList.add('on'); }
+  function toA(){ if (!onB) return; onB = false; a.currentTime = 0; play(a); b.classList.remove('on'); }
+  a.addEventListener('timeupdate', function(){ if (!onB && a.duration && a.currentTime >= a.duration - FADE) toB(); });
+  a.addEventListener('ended', function(){ if (!bReady) { a.currentTime = 0; play(a); } });
+  if (b) {
+    b.addEventListener('timeupdate', function(){ if (onB && b.duration && b.currentTime >= b.duration - FADE) toA(); });
+    b.addEventListener('ended', function(){ if (onB) toA(); });
+    b.addEventListener('canplaythrough', function(){ bReady = true; }, { once: true });
+  }
+  if (!b || lite) return;
+  /* the second video: only once the page has shown, when the browser is idle */
+  window.addEventListener('load', function(){
+    var go = function(){
+      var ph = b.getAttribute('data-later-phone'), useP = ph && matchMedia('(max-width: 640px)').matches;
+      b.src = useP ? ph : b.getAttribute('data-later'); b.preload = 'auto'; b.load();
+    };
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+  });
 })();
 </script>
 </body>
