@@ -32,6 +32,11 @@ function owSetting(string $key, ?string $default = null): ?string {
     $cache[$key] = $val;
     return $val ?? $default;
 }
+/* Auctions page switch (owner, 5 Nov 2026): hidden from visitors until the admin
+   turns it on in Admin → Settings. Off = no menu item, no sitemap entry, and
+   auctions.php answers "page not found" to everyone except a signed-in admin.
+   The page, its code, the auction_waitlist table and the sign-ups are all kept. */
+function owAuctionsPageOn(): bool { return owSetting('auctions_page_on', '0') === '1'; }
 function owSetSetting(string $key, ?string $value): bool {
     unset($GLOBALS['OW_SETTINGS_CACHE'][$key]);
     try {

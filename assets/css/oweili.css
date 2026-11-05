@@ -552,3 +552,21 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
 .vf-badge .vf-tick{fill:none;stroke:var(--color-on-dark);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 .vf-badge.sm svg{width:14px;height:14px;}
 .vf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* ── Studio mood photos (studio_lib.php, 5 Nov 2026) ── mood only, never shown as artworks.
+   .ow-photo-head: a page header with the photo behind it and a soft veil, so the text
+   stays readable (white veil in light mode, navy veil in dark mode).
+   .ow-card-photo: a soft photo strip at the top of a card (sign-up, 404, empty Gallery). */
+:root { --studio-veil: linear-gradient(rgba(255,255,255,0.80), rgba(255,255,255,0.88)); }
+html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.72), rgba(15,21,32,0.84)); }
+.ow-studio, .ow-studio img { display: block; width: 100%; height: 100%; }
+.ow-studio img { object-fit: cover; background: rgba(var(--rgb-accent),0.07); }
+.ow-photo-head { position: relative; isolation: isolate; overflow: hidden; max-width: none; border-radius: var(--radius-card);
+  border: 1px solid var(--color-border); padding: clamp(40px, 7vw, 88px) clamp(20px, 5vw, 56px); }
+.ow-photo-head > .ow-studio { position: absolute; inset: 0; z-index: -2; }
+.ow-photo-head::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--studio-veil); }
+.ow-photo-head > :not(.ow-studio) { position: relative; max-width: 720px; margin-left: auto; margin-right: auto; }
+.ow-card-photo { height: 180px; margin: 0 0 var(--space-md); border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border); position: relative; }
+.ow-card-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(var(--rgb-accent),0.10)); pointer-events: none; }
+html.dark-mode .ow-card-photo .ow-studio img { filter: brightness(0.85); }
+@media (min-width: 641px) { .ow-card-photo { height: 220px; } }

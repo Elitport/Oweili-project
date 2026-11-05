@@ -7,7 +7,7 @@
  * ===================================================================== */
 /* the session must start before anything is sent (the menu shows the signed-in person) */
 if (!function_exists('currentUser')) require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 if (!function_exists('owAsset')) require_once __DIR__ . '/ow_paths.php';
 if (!function_exists('owBi'))    require_once __DIR__ . '/artwork_lib.php';
 if (!function_exists('owSeo'))   require_once __DIR__ . '/seo_lib.php';
@@ -38,6 +38,7 @@ $ar404 = ($_GET['lang'] ?? '') === 'ar';
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="nf">
   <div class="card">
+    <div class="ow-card-photo"><?= owStudioPhoto('paint-cloth', true, 'ow-studio', '(min-width: 640px) 560px, 100vw') ?></div>
     <p class="num" aria-hidden="true">404</p>
     <h1><?= owBi('This page has wandered off', 'هذه الصفحة غير موجودة') ?></h1>
     <p><?= owBi('The page you looked for is not here. The art is still waiting for you in the Gallery.', 'الصفحة التي تبحث عنها ليست هنا. والفن ما زال بانتظارك في المعرض.') ?></p>

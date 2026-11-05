@@ -1,6 +1,6 @@
 <?php
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/mail_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 
@@ -215,6 +215,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
 <div class="auth-wrap">
   <div class="auth-card wide">
+    <div class="ow-card-photo"><?= owStudioPhoto('brushes-jars', true, 'ow-studio', '(min-width: 760px) 720px, 100vw') ?></div>
     <div class="auth-head"><h1 id="t-title">Join as an Artist</h1><p id="t-sub">We are glad you are here. Our team reviews every profile by hand.</p></div>
     <div class="err-box" id="err" data-en="<?= e($errEn) ?>" data-ar="<?= e($errAr) ?>" style="display:<?= $errCode?'block':'none' ?>;"><?= e($errEn) ?></div>
     <div class="ok-box" id="ok" data-en="<?= e($okEn) ?>" data-ar="<?= e($okAr) ?>" style="display:<?= $okCode?'block':'none' ?>;"><?= e($okEn) ?></div>

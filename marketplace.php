@@ -1,7 +1,7 @@
 <?php
 // marketplace.php — Oweili · The Gallery (live, database-driven; file name kept as marketplace.php)
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/gallery_lib.php';   // filters, collections, Artist of the week, Verified artist
@@ -259,6 +259,7 @@ foreach ($modalArtworks as $aw) {
     /* empty state */
     .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);animation:mpRise .15s ease-out both;}
     .gallery-empty svg{width:48px;height:48px;fill:none;stroke:var(--color-light);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:var(--space-sm);}
+    .gallery-empty .ge-photo{max-width:560px;margin:0 auto var(--space-md);}
     .gallery-empty h2{font-size:var(--fs-subtitle);margin:0 0 var(--space-md);}
     .gallery-empty .ge-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);justify-content:center;}
 
@@ -472,7 +473,8 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
     <div class="mp-row">
       <div class="st-pills">
         <span class="mp-label"><?= $ar ? 'الحالة' : 'Status' ?></span>
-        <?php foreach (['all' => ['All', 'الكل'], 'available' => ['Available', 'متاح'], 'auction' => ['Auction', 'مزاد']] as $sk => $sl): ?>
+        <?php $stOpts = ['all' => ['All', 'الكل'], 'available' => ['Available', 'متاح']]; if (owAuctionsPageOn() || $status === 'auction') $stOpts['auction'] = ['Auction', 'مزاد'];   /* the Auction filter shows only while the Auctions page is switched on */ ?>
+        <?php foreach ($stOpts as $sk => $sl): ?>
         <a class="st-pill<?= $status === $sk ? ' active' : '' ?>" href="<?= e(mpUrl(['status' => $sk])) ?>"<?= $status === $sk ? ' aria-current="page"' : '' ?>><?= $ar ? $sl[1] : $sl[0] ?></a>
         <?php endforeach; ?>
       </div>
@@ -554,7 +556,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   <?php else: ?>
   <!-- EMPTY STATE -->
   <div class="card gallery-empty">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg>
+    <?php if (owStudioHas('paint-cloth')): ?><div class="ow-card-photo ge-photo"><?= owStudioPhoto('paint-cloth', false, 'ow-studio', '(min-width: 760px) 720px, 100vw') ?></div><?php else: ?><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg><?php endif; ?>
     <h2><?= $ar ? 'لا أعمال هنا بعد. كن أول من يشارك عمله.' : 'No artworks here yet. Be the first to share yours.' ?></h2>
     <div class="ge-actions">
       <a class="btn btn-primary" href="register_artist.php"><?= $ar ? 'انضم كفنان' : 'Join as Artist' ?></a>

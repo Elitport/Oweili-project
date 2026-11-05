@@ -94,7 +94,23 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
 <?php require_once __DIR__ . '/bashro_send.php'; $doorOn = owBashroReady();
   $doorTest = null;
   if ($doorOn && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'bashro_test' && verifyCsrf($_POST['csrf_token'] ?? null)) $doorTest = owBashroTest();
+  /* Auctions page switch (owner, 5 Nov 2026): one click to show or hide oweili.com/auctions */
+  require_once __DIR__ . '/gallery_lib.php';
+  $aucMsg = '';
+  if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'auctions_page' && verifyCsrf($_POST['csrf_token'] ?? null)) {
+      $want = ($_POST['on'] ?? '') === '1' ? '1' : '0';
+      if (owSetSetting('auctions_page_on', $want)) { owLog('setting_change', null, null, 'auctions_page_on=' . $want, ['type' => 'admin', 'id' => null]); $aucMsg = $want; }
+  }
+  $aucOn = owAuctionsPageOn();
   $doorLog = []; try { if (owHasTable('activity_log')) $doorLog = getDB()->query("SELECT details, created_at FROM activity_log WHERE action = 'bashro_send' ORDER BY id DESC LIMIT 8")->fetchAll(); } catch (Throwable $e) {} ?>
+  <div class="card" id="auctions-switch"><h2><?= owBi('Auctions page', 'صفحة المزاد') ?> <?= $aucOn ? '<span class="pillx ok">' . owBi('Shown', 'ظاهرة') . '</span>' : '<span class="pillx no">' . owBi('Hidden', 'مخفية') . '</span>' ?></h2>
+    <p><?= $aucOn ? owBi('Visitors can open oweili.com/auctions, and it is in the menu (Collect → Auctions) and the sitemap.', 'يستطيع الزوار فتح oweili.com/auctions، وهي في القائمة (اقتنِ ← المزاد) وفي خريطة الموقع.')
+                  : owBi('Hidden: not in the menu or the sitemap, and visitors who open oweili.com/auctions see "page not found". You can still preview it. The waiting list and its sign-ups are kept, and the unsubscribe links in its emails still work.', 'مخفية: ليست في القائمة ولا في خريطة الموقع، ومن يفتح oweili.com/auctions يرى «الصفحة غير موجودة». تستطيع معاينتها. قائمة الانتظار وتسجيلاتها محفوظة، وروابط إلغاء الاشتراك في رسائلها تعمل.') ?></p>
+    <?php if ($aucMsg !== ''): ?><div class="alert alert-ok" role="status"><?= $aucMsg === '1' ? owBi('The Auctions page is shown again.', 'صفحة المزاد ظاهرة الآن.') : owBi('The Auctions page is hidden.', 'صفحة المزاد مخفية الآن.') ?></div><?php endif; ?>
+    <form method="post" action="admin.php?settings=1#auctions-switch" style="display:flex;gap:var(--space-xs);flex-wrap:wrap"><?= csrfField() ?><input type="hidden" name="do" value="auctions_page"><input type="hidden" name="on" value="<?= $aucOn ? '0' : '1' ?>">
+      <button class="btn <?= $aucOn ? 'btn-secondary' : 'btn-primary' ?> btn-sm" type="submit"><?= $aucOn ? owBi('Hide the Auctions page', 'إخفاء صفحة المزاد') : owBi('Show the Auctions page', 'إظهار صفحة المزاد') ?></button>
+      <a class="btn btn-ghost btn-sm" href="auctions.php" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a></form>
+  </div>
   <div class="card"><h2><?= owBi('Sending to Bashro (website door)', 'الإرسال إلى بشرو (بوابة الموقع)') ?> <?= $doorOn ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('"I’m Interested", gift and commission requests go to Bashro Sales (project 3) after the visitor’s page is delivered. Never photos, passwords, card, ID or bank numbers.', 'تذهب طلبات «أنا مهتم» والهدايا والأعمال الخاصة إلى مبيعات بشرو (المشروع 3) بعد عرض صفحة الزائر. لا صور ولا كلمات مرور ولا أرقام بطاقات أو هويات أو حسابات بنكية أبداً.') ?></p>
     <ul class="rows">

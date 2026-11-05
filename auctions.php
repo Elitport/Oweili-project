@@ -14,7 +14,18 @@
  *  Tables: auction_waitlist, activity_log, users
  * ===================================================================== */
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+require_once __DIR__ . '/gallery_lib.php';
+require_once __DIR__ . '/admin_shell.php';
+/* Hidden from visitors (owner, 5 Nov 2026) until switched on in Admin → Settings: everyone
+   gets the normal "page not found", except a signed-in admin (preview). Unsubscribe links
+   (?leave=) from earlier confirmation emails keep working, so people can always leave the list. */
+$owAucPreview = false;
+if (!owAuctionsPageOn() && !isset($_GET['leave']) && !isset($_POST['leave'])) {
+    if (!owIsAdmin()) { require_once __DIR__ . '/page_cache.php'; http_response_code(404); require __DIR__ . '/404.php'; exit; }
+    $owAucPreview = true;   // the admin's preview: never kept by the browser (no-store stays)
+} else {
+    require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+}
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/request_lib.php';
 require_once __DIR__ . '/auction_lib.php';
@@ -159,6 +170,9 @@ html.dark-mode .au-band{background:var(--color-surface-2);color:var(--color-dark
 </section>
 
 <main class="au-main">
+<?php if ($owAucPreview): ?>
+  <div class="alert alert-error" role="status" style="max-width:1100px;margin:0 auto var(--space-md);"><?= owBi('Preview for the admin only. Visitors see "page not found" until you switch this page on in Admin → Settings.', 'معاينة للمدير فقط. يرى الزوار «الصفحة غير موجودة» حتى تُفعّل هذه الصفحة من الإدارة ← الإعدادات.') ?></div>
+<?php endif; ?>
   <div class="card au-join reveal" id="join">
     <div>
       <h2><?= owBi('Be the first to know', 'كن أول من يعرف') ?></h2>

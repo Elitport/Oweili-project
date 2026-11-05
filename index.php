@@ -10,7 +10,7 @@
  *  Tables read: site_settings, users, artworks (gallery_lib.php)
  * ===================================================================== */
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languages
 require_once __DIR__ . '/gallery_lib.php';   // Artist of the week
 $aotw = null;
@@ -38,6 +38,10 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 .hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
 .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; }
 .hero-bg video.on { opacity: 1; }
+/* the studio photo shows at once (and alone on slow connections); the video fades in over it */
+.hero-bg .hero-ph { position: absolute; inset: 0; }
+.hero-bg .hero-ph img { object-position: 62% 50%; }
+.hero-ph-veil { position: absolute; inset: 0; background: var(--studio-veil); }
 .hero-shade { position: absolute; inset: 0; background: var(--hero-shade); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
 .hero-bg video.on + .hero-shade { opacity: 1; }
 
@@ -106,6 +110,7 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 </head>
 <body>
 <div class="hero-bg" aria-hidden="true">
+  <?= owStudioPhoto('home-painting', true, 'ow-studio hero-ph', '100vw') ?><div class="hero-ph-veil"></div>
   <video id="vid" class="bg-now" autoplay loop muted playsinline preload="auto" data-src="<?= owBase() ?>bg.mp4"></video>
   <div class="hero-shade"></div>
 </div>

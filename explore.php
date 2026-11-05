@@ -9,7 +9,7 @@
  *  read below uses a prepared statement.
  * ===================================================================== */
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languages
 
 /* Newest approved artwork per Gallery type, for "From Our Gallery" in each style window.
@@ -234,7 +234,8 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
 
 <main>
   <div class="d-wrap">
-    <header class="d-head ex-head reveal">
+    <header class="d-head ex-head ow-photo-head reveal">
+      <?= owStudioPhoto('paint-buckets', true) ?>
       <h1><?= owBi('Explore Art Styles', 'استكشف أساليب الرسم') ?></h1>
       <p><?= owBi('Learn the story behind every style. Know what you are looking at.', 'تعرّف على قصة كل أسلوب. اعرف ما تراه.') ?></p>
     </header>

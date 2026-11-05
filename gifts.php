@@ -15,7 +15,7 @@
  *  Tables: gift_requests (night_update.sql), artworks, users, activity_log
  * ===================================================================== */
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/request_lib.php';
 require_once __DIR__ . '/inquiry_lib.php';   // owInquiryArtwork: only artworks visitors can see
@@ -190,7 +190,8 @@ $v = fn(string $k) => e((string) $f[$k]);
 
 <main>
   <div class="d-wrap">
-    <header class="d-head reveal">
+    <header class="d-head ow-photo-head reveal">
+      <?= owStudioPhoto('pink-palette', true) ?>
       <span class="d-badge"><i aria-hidden="true"></i><?= owBi('Oweili Gifts', 'هدايا أويلي') ?></span>
       <h1><?= owBi('Give a gift that lasts', 'أهدِ ما يبقى') ?></h1>
       <p><?= owBi('A handmade artwork stays on the wall for years, and the memory stays with it. Choose a piece, and we wrap it and deliver it with your card.', 'عمل فني مصنوع باليد يبقى على الجدار سنوات، وتبقى معه الذكرى. اختر قطعة، ونحن نغلّفها ونوصلها مع بطاقتك.') ?></p>

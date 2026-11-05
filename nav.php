@@ -7,6 +7,9 @@ $navIsAdmin = function_exists('isAdmin') && isAdmin();
 $navName  = $navUser ? (function_exists('owRealName') ? (owRealName($navUser['full_name_en']) ?: (owRealName($navUser['full_name_ar']) ?: (string) $navUser['email'])) : trim((string)($navUser['full_name_en'] ?: $navUser['email']))) : '';
 if ($navName === '') { $navName = 'Account'; }
 $navFirst = $navUser ? (explode(' ', $navName)[0]) : '';
+/* Auctions stays out of the menu until the admin switches the page on (gallery_lib.php) */
+$owAucOn = false;
+try { if (function_exists('getDB')) { require_once __DIR__ . '/gallery_lib.php'; $owAucOn = owAuctionsPageOn(); } } catch (Throwable $e) { $owAucOn = false; }
 $navId    = $navUser ? (int) $navUser['id'] : 0;
 
 /* Which menu item is the current page (pink underline) */
@@ -54,7 +57,7 @@ if (!function_exists('owLogoMark')) {
       <div class="dropdown" id="dd-collect">
         <a href="gifts.php"<?= navAct('', 'gifts.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a>
         <a href="commission.php"<?= navAct('', 'commission.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span class="nav-i18n" data-en="Commissions" data-ar="طلب لوحة خاصة">Commissions</span></a>
-        <a href="auctions.php" id="nav-auctions-link"<?= navAct('', 'auctions.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6M11 7l6 6M13 5l-7 7 3 3 7-7M8 14l-5 5"/><path d="M3 21h9"/></svg><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span><span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a>
+        <?php if ($owAucOn): ?>        <a href="auctions.php" id="nav-auctions-link"<?= navAct('', 'auctions.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6M11 7l6 6M13 5l-7 7 3 3 7-7M8 14l-5 5"/><path d="M3 21h9"/></svg><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span><span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a><?php endif; ?>
       </div>
     </div>
     <div class="nav-item"><a href="explore.php" id="nav-explore-link"<?= navAct('explore') ?>><span id="nav-explore-label">Explore Art Styles</span></a></div>
@@ -98,7 +101,7 @@ if (!function_exists('owLogoMark')) {
     <a class="mnav-link" href="gifts.php"<?= navAct('collect') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Collect" data-ar="اقتنِ">Collect</span></a>
     <a class="mnav-link mnav-sub" href="gifts.php"><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a>
     <a class="mnav-link mnav-sub" href="commission.php"><span class="nav-i18n" data-en="Commissions" data-ar="طلب لوحة خاصة">Commissions</span></a>
-    <a class="mnav-link mnav-sub" href="auctions.php"><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span> <span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a>
+<?php if ($owAucOn): ?>    <a class="mnav-link mnav-sub" href="auctions.php"><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span> <span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a><?php endif; ?>
     <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
     <a class="mnav-link" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Discover" data-ar="اكتشف">Discover</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
