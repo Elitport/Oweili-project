@@ -68,13 +68,27 @@ function owCertDetailsFromPost(array $p): array {
     $v = ['medium' => $medium, 'width_cm' => $w, 'height_cm' => $h, 'year_made' => $y, 'edition_type' => $type,
           'edition_number' => $type === 'limited' ? $en : '', 'edition_size' => $type === 'limited' ? $es : ''];
     $isSize = fn($x) => preg_match('/^\d{1,5}(\.\d)?$/', $x) && (float) $x >= 0.5 && (float) $x <= 99999;
+    /* the standard sizes (size_lib.php, 5 Nov 2026): the form sends a size from the list and
+       its orientation; width and height come from it */
+    $sz = null; $szErr = '';
+    if (array_key_exists('size_code', $p)) {
+        require_once __DIR__ . '/size_lib.php';
+        [$sz, $szErr] = owSizeFromPost($p, true);
+        $v['size_code'] = (string) ($p['size_code'] ?? ''); $v['orientation'] = (string) ($p['orientation'] ?? '');
+        if ($sz) { $w = (string) $sz['width_cm']; $h = (string) $sz['height_cm']; $v['width_cm'] = $w; $v['height_cm'] = $h; }
+    }
     if ($medium === '' || mb_strlen($medium) < 2) return [$v, 'medium'];
+    if ($szErr !== '') return [$v, $szErr];
     if (!$isSize($w) || !$isSize($h)) return [$v, 'dims'];
     if (!preg_match('/^\d{4}$/', $y) || (int) $y < 1900 || (int) $y > (int) date('Y')) return [$v, 'year'];
     if ($type === '') return [$v, 'edition'];
     if ($type === 'limited' && (!ctype_digit($en) || !ctype_digit($es) || (int) $en < 1 || (int) $es < 2 || (int) $en > (int) $es || (int) $es > 100000)) return [$v, 'edition_no'];
     $v['width_cm'] = (float) $w; $v['height_cm'] = (float) $h; $v['year_made'] = (int) $y;
     $v['edition_number'] = $type === 'limited' ? (int) $en : null; $v['edition_size'] = $type === 'limited' ? (int) $es : null;
+    unset($v['size_code'], $v['orientation']);
+    if ($sz && function_exists('owHasColumn') && owHasColumn('artworks', 'size_code')) {
+        $v['size_code'] = $sz['size_code']; $v['size_category'] = $sz['size_category']; $v['orientation'] = $sz['orientation'];
+    }
     return [$v, ''];
 }
 
@@ -83,6 +97,8 @@ function owCertDetailErrors(): array {
     return [
         'medium'     => ['Please write the medium, for example "Oil on canvas".', 'يرجى كتابة الخامة، مثل «زيت على قماش».'],
         'dims'       => ['Please write the width and height in centimetres (numbers only).', 'يرجى كتابة العرض والارتفاع بالسنتيمتر (أرقام فقط).'],
+        'size'       => ['Please choose a size from the list.', 'يرجى اختيار مقاس من القائمة.'],
+        'orientation'=> ['Please choose portrait or landscape for this size.', 'يرجى اختيار طولي أو عرضي لهذا المقاس.'],
         'year'       => ['Please write the year the artwork was made (for example ' . date('Y') . ').', 'يرجى كتابة سنة إنجاز العمل (مثل ' . date('Y') . ').'],
         'edition'    => ['Please choose: original, one of a kind, or limited print.', 'يرجى الاختيار: عمل أصلي فريد، أو نسخة مطبوعة محدودة.'],
         'edition_no' => ['For a limited print, write its number and the total, for example 3 of 50.', 'للنسخة المحدودة، اكتب رقمها والعدد الكلي، مثل 3 من 50.'],
@@ -111,6 +127,13 @@ function owCertMissingWords(array $miss): array {
 }
 
 /* "60 × 80 cm" */
+/* Saves the standard size of an artwork (only when the database has the columns) */
+function owSaveArtworkSize(int $artworkId, array $dv, int $artistId): void {
+    if (!isset($dv['size_code']) || !owHasColumn('artworks', 'size_code')) return;
+    getDB()->prepare('UPDATE artworks SET size_code = :c, size_category = :g, orientation = :o WHERE id = :id AND artist_id = :uid')
+           ->execute([':c' => $dv['size_code'], ':g' => $dv['size_category'], ':o' => $dv['orientation'], ':id' => $artworkId, ':uid' => $artistId]);
+}
+
 function owCertSize($w, $h): array {
     $f = fn($x) => rtrim(rtrim(number_format((float) $x, 1, '.', ''), '0'), '.');
     return [$f($w) . ' × ' . $f($h) . ' cm', $f($w) . ' × ' . $f($h) . ' سم'];

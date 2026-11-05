@@ -48,6 +48,11 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $f['artwork_id'] = (int) ($_POST['artwork_id'] ?? 0);
         $f['custom_brief'] = owReqClean('custom_brief', 2000, true);
         $f['budget_sar'] = owReqClean('budget_sar', 12);
+        /* custom gifts: the size from the standard list (size_lib.php) */
+        require_once __DIR__ . '/size_lib.php';
+        [$gsz, $gszErr] = $f['mode'] === 'custom' ? owSizeFromPost($_POST, false) : [null, ''];
+        $f['size_code'] = (string) ($_POST['size_code'] ?? ''); $f['orientation'] = (string) ($_POST['orientation'] ?? '');
+        if ($gszErr !== '') $errors[] = owSizeErrors()[$gszErr];
         $f['wrapping'] = !empty($_POST['wrapping']);
         $f['surprise'] = !empty($_POST['surprise']);
         $f['card_message'] = owReqClean('card_message', 300, true);
@@ -92,6 +97,10 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                                   ':dd' => $f['delivery_date'], ':s' => $f['surprise'] ? 1 : 0, ':rn' => $f['recipient_name'], ':rp' => $f['recipient_phone'],
                                   ':rc' => $f['recipient_city'], ':ra' => $f['recipient_address'], ':bn' => $f['buyer_name'], ':be' => $f['buyer_email'], ':bp' => $f['buyer_phone'], ':l' => $lang]);
                 $gid = (int) getDB()->lastInsertId();
+                if ($gsz && owHasColumn('gift_requests', 'size_code')) {
+                    getDB()->prepare('UPDATE gift_requests SET size_code = :c, size_category = :g, orientation = :o WHERE id = :id')
+                           ->execute([':c' => $gsz['size_code'], ':g' => $gsz['size_category'], ':o' => $gsz['orientation'], ':id' => $gid]);
+                }
                 owLog('gift_request', 'gift', $gid, $f['occasion'] . ' ' . $f['mode'], $buyer ? ['type' => 'buyer', 'id' => (int) $buyer['id']] : ['type' => 'guest', 'id' => null]);
                 owReqCounted('gift_request');
                 [$oEn, $oAr] = [$OCC[$f['occasion']]['en'], $OCC[$f['occasion']]['ar']];
@@ -132,7 +141,7 @@ if (!$choices && ($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') $f['mode'] = 
 $v = fn(string $k) => e((string) $f[$k]);
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="Oweili Gifts · Give a gift that lasts" data-title-ar="هدايا أويلي · أهدِ ما يبقى">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Oweili Gifts · Give a gift that lasts" data-title-ar="هدايا أويلي · أهدِ ما يبقى">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -184,14 +193,14 @@ $v = fn(string $k) => e((string) $f[$k]);
 </style>
 </head>
 <body class="ow">
+<?= owStudioBackdrop('pink-palette') ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 
 <main>
   <div class="d-wrap">
-    <header class="d-head ow-photo-head reveal">
-      <?= owStudioPhoto('pink-palette', true) ?>
+    <header class="d-head reveal">
       <span class="d-badge"><i aria-hidden="true"></i><?= owBi('Oweili Gifts', 'هدايا أويلي') ?></span>
       <h1><?= owBi('Give a gift that lasts', 'أهدِ ما يبقى') ?></h1>
       <p><?= owBi('A handmade artwork stays on the wall for years, and the memory stays with it. Choose a piece, and we wrap it and deliver it with your card.', 'عمل فني مصنوع باليد يبقى على الجدار سنوات، وتبقى معه الذكرى. اختر قطعة، ونحن نغلّفها ونوصلها مع بطاقتك.') ?></p>
@@ -247,7 +256,8 @@ $v = fn(string $k) => e((string) $f[$k]);
       </div>
       <div id="g-custom"<?= $f['mode'] === 'custom' ? '' : ' hidden' ?>>
         <div class="field"><label for="g-brief"><?= owBi('What should it be?', 'كيف تتخيّله؟') ?></label>
-          <textarea id="g-brief" name="custom_brief" rows="4" maxlength="2000" dir="auto" placeholder="<?= e('A calm desert landscape in blue, about 50 × 70 cm · منظر صحراوي هادئ بالأزرق، نحو 50 × 70 سم') ?>"><?= $v('custom_brief') ?></textarea></div>
+          <textarea id="g-brief" name="custom_brief" rows="4" maxlength="2000" dir="auto" placeholder="<?= e('A calm desert landscape in blue · منظر صحراوي هادئ بالأزرق') ?>"><?= $v('custom_brief') ?></textarea></div>
+        <?php require_once __DIR__ . '/size_lib.php'; echo owSizeSelect((string) ($f['size_code'] ?? ''), (string) ($f['orientation'] ?? ''), true, 'g-size'); ?>
         <div class="field"><label for="g-budget"><?= owBi('Budget in SAR (optional)', 'الميزانية بالريال (اختياري)') ?></label>
           <input id="g-budget" name="budget_sar" inputmode="decimal" dir="ltr" maxlength="12" value="<?= $v('budget_sar') ?>"></div>
         <?php if (is_file(__DIR__ . '/commission.php')): ?>

@@ -41,7 +41,7 @@ $checks = [
 ];
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -101,7 +101,7 @@ $checks = [
 <script>
 function tgl(){ var ar = document.documentElement.getAttribute('dir') !== 'rtl'; document.documentElement.setAttribute('dir', ar ? 'rtl' : 'ltr'); document.documentElement.lang = ar ? 'ar' : 'en';
   document.getElementById('lb').textContent = ar ? 'English' : 'العربية'; try { localStorage.setItem('lang', ar ? 'ar' : 'en'); } catch (e) {} }
-try { if (localStorage.getItem('lang') === 'ar') tgl(); } catch (e) {}
+try { if ((localStorage.getItem('lang') === 'ar') !== (document.documentElement.getAttribute('dir') === 'rtl')) tgl(); } catch (e) {}
 </script>
 </body>
 </html>

@@ -17,7 +17,7 @@ $aotw = null;
 try { $aotw = owArtistOfWeek(); } catch (Throwable $e) { $aotw = null; }
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

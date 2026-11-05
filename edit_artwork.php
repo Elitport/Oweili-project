@@ -150,6 +150,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                                          edition_number = :en, edition_size = :es WHERE id = :id AND artist_id = :uid')
                        ->execute([':m' => $dv['medium'], ':w' => $dv['width_cm'], ':h' => $dv['height_cm'], ':y' => $dv['year_made'], ':t' => $dv['edition_type'],
                                   ':en' => $dv['edition_number'], ':es' => $dv['edition_size'], ':id' => $artId, ':uid' => $viewerId]);
+                owSaveArtworkSize($artId, $dv, $viewerId);   // the standard size (size_lib.php)
             }
             owLog('artwork_edit', 'artwork', $artId, '', ['type' => 'artist', 'id' => $viewerId]);
             if (!empty($aw['rejected_at'])) {   // a work that was not approved is back for review: tell the admin (grouped)
@@ -173,7 +174,7 @@ if ($pendingAw) $aw = array_merge($aw, array_intersect_key($pendingAw['data'], a
 $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(true); ?> id="html">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

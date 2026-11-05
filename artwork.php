@@ -31,7 +31,8 @@ if ($id > 0) {
 }
 if (!$aw) { http_response_code(404); require __DIR__ . '/404.php'; exit; }
 
-$ar   = ($_GET['lang'] ?? '') === 'ar';
+require_once __DIR__ . '/lang_lib.php';
+$ar   = owIsAr();
 $img  = owImgSrc((string) $aw['image_url']);
 $big  = $img !== '' ? owImgSized($img, 1600) : '';
 $tEn  = (string) ($aw['title_en'] ?: $aw['title_ar']);
@@ -52,7 +53,7 @@ $cert = owCertForArtwork($id);
 $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwork-' . $id;
 ?>
 <!DOCTYPE html>
-<html lang="<?= $ar ? 'ar' : 'en' ?>" dir="<?= $ar ? 'rtl' : 'ltr' ?>">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,7 +109,9 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
     <?php if (trim((string) ($aw['medium'] ?? '')) !== '' || (float) ($aw['width_cm'] ?? 0) > 0 || !empty($aw['edition_type'])): ?>
     <dl class="aw-facts">
       <?php if (trim((string) ($aw['medium'] ?? '')) !== ''): ?><div><dt><?= owBi('Medium', 'الخامة') ?></dt><dd dir="auto"><?= e((string) $aw['medium']) ?></dd></div><?php endif; ?>
-      <?php if ((float) ($aw['width_cm'] ?? 0) > 0): [$sE, $sA] = owCertSize($aw['width_cm'], $aw['height_cm']); ?><div><dt><?= owBi('Size', 'المقاس') ?></dt><dd><?= owBi($sE, $sA) ?></dd></div><?php endif; ?>
+      <?php if ((float) ($aw['width_cm'] ?? 0) > 0): [$sE, $sA] = owCertSize($aw['width_cm'], $aw['height_cm']);
+        if (!empty($aw['size_code'])) { require_once __DIR__ . '/size_lib.php'; $sc = owSizeCheck((string) $aw['size_code'], (string) ($aw['orientation'] ?? ''));
+          if ($sc) { $sE .= ' · ' . owSizeGroups()[$sc[1]][0] . ' · ' . preg_replace('/ \(.*\)$/', '', owSizeOrientations()[$sc[2]][0]); $sA .= ' · ' . owSizeGroups()[$sc[1]][1] . ' · ' . owSizeOrientations()[$sc[2]][1]; } } ?><div><dt><?= owBi('Size', 'المقاس') ?></dt><dd><?= owBi($sE, $sA) ?></dd></div><?php endif; ?>
       <?php if ((int) ($aw['year_made'] ?? 0) > 0): ?><div><dt><?= owBi('Year', 'السنة') ?></dt><dd><?= (int) $aw['year_made'] ?></dd></div><?php endif; ?>
       <?php if (!empty($aw['edition_type'])): [$eE, $eA] = owCertEdition($aw['edition_type'], $aw['edition_number'], $aw['edition_size']); ?><div><dt><?= owBi('Type', 'النوع') ?></dt><dd><?= owBi($eE, $eA) ?></dd></div><?php endif; ?>
     </dl>

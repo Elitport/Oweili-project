@@ -164,6 +164,7 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                                WHERE id = :id AND artist_id = :uid')
                    ->execute([':m' => $dv['medium'], ':w' => $dv['width_cm'], ':h' => $dv['height_cm'], ':y' => $dv['year_made'], ':t' => $dv['edition_type'],
                               ':en' => $dv['edition_number'], ':es' => $dv['edition_size'], ':id' => $draft['id'], ':uid' => $uid]);
+                owSaveArtworkSize((int) $draft['id'], $dv, $uid);   // the standard size (size_lib.php)
                 owLog('artwork_declare', 'artwork', (int) $draft['id'], OW_CERT_DECLARATION[0], ['type' => 'artist', 'id' => $uid]);
             }
             owLog('artwork_submit', 'artwork', (int) $draft['id'], '', ['type' => 'artist', 'id' => $uid]);
@@ -250,7 +251,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(true); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

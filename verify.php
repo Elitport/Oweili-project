@@ -115,7 +115,7 @@ HTML;
 }
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(true); ?> id="html">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

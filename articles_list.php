@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
 /* =====================================================================
  *  articles_list.php — all published articles of one type, for everyone
  *  ?type=event | artist_spotlight | art_education
@@ -53,7 +54,7 @@ $titleEn = $tEn . ' · Oweili';
 $titleAr = $tAr . ' · أويلي';
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="<?= e($titleEn) ?>" data-title-ar="<?= e($titleAr) ?>">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="<?= e($titleEn) ?>" data-title-ar="<?= e($titleAr) ?>">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,6 +68,7 @@ $titleAr = $tAr . ' · أويلي';
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 </head>
 <body class="ow">
+<?= owStudioBackdrop(...($items ? ['gallery-visit'] : ['paint-cloth'])) ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 

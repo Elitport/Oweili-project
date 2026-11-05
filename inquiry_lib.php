@@ -45,7 +45,7 @@ function owCheckInquiry(array $in): array {
 function owInquiryArtwork(int $id): ?array {
     if ($id <= 0) return null;
     $st = getDB()->prepare(
-        "SELECT a.id, a.artist_id, a.title_en, a.title_ar, a.price, " . owArtistNameSql('u') . "
+        "SELECT a.id, a.artist_id, a.title_en, a.title_ar, a.price, " . (function_exists('owHasColumn') && owHasColumn('artworks', 'size_code') ? "a.size_code, a.orientation, " : "") . owArtistNameSql('u') . "
          FROM artworks a JOIN users u ON u.id = a.artist_id
          WHERE a.id = :id AND a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_banned = 0"
          . owNotDraftSql('a') . ' LIMIT 1'

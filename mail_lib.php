@@ -114,6 +114,7 @@ function owMailMessage(string $to, string $subject, string $body, bool $isHtml):
     else { $text = str_replace(["\r\n", "\n"], ["\n", "\r\n"], trim($body)); $html = owMailTextToHtml($body); }
     $text .= "\r\n\r\n" . $footText;
     $html = stripos($html, '</body>') !== false ? substr_replace($html, $footHtml, strripos($html, '</body>'), 0) : $html . $footHtml;
+    $text = owMailLangLinks($to, $text); $html = owMailLangLinks($to, $html);   // Arabic readers: links open the site in Arabic
     $boundary = 'ow_' . bin2hex(random_bytes(12));
     $part = fn(string $type, string $content) => '--' . $boundary . "\r\n"
         . 'Content-Type: ' . $type . '; charset=UTF-8' . "\r\n" . 'Content-Transfer-Encoding: quoted-printable' . "\r\n\r\n"
@@ -201,6 +202,39 @@ function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log
     fclose($fp);
     if ($ok) $log[] = "Sent through $host:$port";
     return $ok;
+}
+
+/* Links in an email open the site in the reader's language: the account's saved
+   language when the address belongs to an account, otherwise the language of the
+   visitor who caused the email (a sign-up, a gift or a commission request).
+   Oweili's own address (admin alerts) is left as it is. Adds lang=ar only. */
+function owMailLangLinks(string $to, string $body): string {
+    require_once __DIR__ . '/lang_lib.php';
+    if (strcasecmp($to, function_exists('owContactEmail') ? owContactEmail() : '') === 0) return $body;
+    static $seen = [];
+    $key = strtolower($to);
+    $lang = $seen[$key] ?? null;
+    if ($lang === null) try {
+        if (function_exists('getDB') && function_exists('owHasColumn') && owHasColumn('users', 'preferred_lang')) {
+            $st = getDB()->prepare('SELECT preferred_lang FROM users WHERE email = ? LIMIT 1');
+            $st->execute([mb_strtolower(trim($to))]);
+            $v = $st->fetchColumn();
+            if ($v === 'ar' || $v === 'en') $lang = $v;
+        }
+    } catch (Throwable $e) { $lang = null; }
+    if ($lang === null) $lang = owLang();
+    $seen[$key] = $lang;
+    if ($lang !== 'ar') return $body;
+    return preg_replace_callback('#https://(?:www\.)?oweili\.com(/[^\s"\'<>]*)?#', function ($m) {
+        $u = $m[0];
+        if (preg_match('#\.(jpe?g|png|webp|avif|gif|svg|css|js|pdf)(\?|$)#i', $u)) return $u;   // pictures and files stay as they are
+        $tail = '';
+        if (preg_match('#[.,;:!?)]+$#', $u, $t)) { $tail = $t[0]; $u = substr($u, 0, -strlen($tail)); }
+        if (strpos($u, '&amp;') !== false || strpos($u, '?') !== false && preg_match('#&amp;#', $u)) {
+            return (preg_match('/[?&](amp;)?lang=/', $u) ? $u : $u . (strpos($u, '?') === false ? '?' : '&amp;') . 'lang=ar') . $tail;
+        }
+        return owLangUrl($u, 'ar') . $tail;
+    }, $body);
 }
 
 function owSendMail(string $to, string $subject, string $body, bool $isHtml = false, ?array &$log = null): bool {

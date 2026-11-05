@@ -48,7 +48,7 @@ try {
 $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="Explore Art Styles · Oweili" data-title-ar="استكشف أساليب الرسم · أويلي">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Explore Art Styles · Oweili" data-title-ar="استكشف أساليب الرسم · أويلي">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,13 +229,13 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
 </style>
 </head>
 <body class="ow">
+<?= owStudioBackdrop('paint-buckets') ?>
 
 <?php include __DIR__ . '/nav.php'; ?>
 
 <main>
   <div class="d-wrap">
-    <header class="d-head ex-head ow-photo-head reveal">
-      <?= owStudioPhoto('paint-buckets', true) ?>
+    <header class="d-head ex-head reveal">
       <h1><?= owBi('Explore Art Styles', 'استكشف أساليب الرسم') ?></h1>
       <p><?= owBi('Learn the story behind every style. Know what you are looking at.', 'تعرّف على قصة كل أسلوب. اعرف ما تراه.') ?></p>
     </header>

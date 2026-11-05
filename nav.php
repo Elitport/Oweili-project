@@ -40,11 +40,7 @@ if (!function_exists('owLogoMark')) {
     }
 }
 ?>
-<script>
-/* Apply the saved language direction as early as possible to avoid a flash
-   of the wrong direction before the page's own script runs. */
-(function(){try{var l=localStorage.getItem('lang');if(l==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}}catch(e){}})();
-</script>
+<?php /* the language is decided by the server (lang_lib.php); no early switch here any more */ ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">

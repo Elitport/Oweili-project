@@ -29,11 +29,12 @@ function owLegalBlock(array $paras): string {
 }
 
 function owLegalPage(array $meta, array $sections): void {
-    $ar = ($_GET['lang'] ?? '') === 'ar';
+    require_once __DIR__ . '/lang_lib.php';
+    $ar = owIsAr();
     $other = $meta['other'];   // [file, EN title, AR title]
     ?>
 <!DOCTYPE html>
-<html lang="<?= $ar ? 'ar' : 'en' ?>" dir="<?= $ar ? 'rtl' : 'ltr' ?>">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

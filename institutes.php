@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
 /* =====================================================================
  *  institutes.php: Art Institutes, for everyone. Its own page under the
  *  Discover menu (moved out of the Art Events pages on 2 Nov 2026; the old
@@ -63,7 +64,7 @@ $cityLabel = function (array $i): array {
 };
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="Art Institutes · Oweili" data-title-ar="المعاهد الفنية · أويلي">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Art Institutes · Oweili" data-title-ar="المعاهد الفنية · أويلي">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -127,6 +128,7 @@ details[open] .when-closed{display:none;}
 </style>
 </head>
 <body class="ow">
+<?= owStudioBackdrop(...($institutes ? ['gallery-visit'] : ['paint-cloth'])) ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 

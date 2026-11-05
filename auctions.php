@@ -81,7 +81,7 @@ $count = owAuctionCount();
 $v = fn(string $k) => e((string) $f[$k]);
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="Oweili Auctions, Coming soon" data-title-ar="مزادات أويلي، قريباً">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Oweili Auctions, Coming soon" data-title-ar="مزادات أويلي، قريباً">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -8,7 +8,8 @@ require_once __DIR__ . '/gallery_lib.php';   // filters, collections, Artist of 
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $ART_CATS  = require __DIR__ . '/art_categories.php';
 
-$lang = isset($_GET['lang']) && $_GET['lang'] === 'ar' ? 'ar' : 'en';
+require_once __DIR__ . '/lang_lib.php';
+$lang = owLang();
 $ar   = $lang === 'ar';
 
 /* Who is looking: a signed-in buyer gets hearts that save, and the
@@ -31,9 +32,9 @@ $SORTS   = [
     'price_high' => 'a.price DESC, a.created_at DESC, a.id DESC',
     'popular'    => (owHasColumn('artworks', 'view_count') ? 'a.view_count DESC, ' : '') . 'a.created_at DESC, a.id DESC',
 ];
-$MEDIUMS = owMediumFilters(); $PRICES = owPriceFilters(); $SIZES = owSizeFilters(); $COLORS = owColorFamilies();
+$MEDIUMS = owMediumFilters(); $PRICES = owPriceFilters(); $SIZES = owSizeFilters(); $ORIENTS = owOrientFilters(); $COLORS = owColorFamilies();
 $CITIES  = owGalleryCities();
-$hasDims = owHasColumn('artworks', 'width_cm') && owHasColumn('artworks', 'height_cm');
+$hasDims = owHasColumn('artworks', 'size_category') && owHasColumn('artworks', 'orientation');   // the standard sizes (size_lib.php)
 $hasMed  = owHasColumn('artworks', 'medium');
 $initType = isset($ART_TYPES[$getStr('type')]) ? $getStr('type') : '';      // one exact type (links from Explore Art Styles)
 $cat      = isset($ART_CATS[$getStr('cat')]) ? $getStr('cat') : 'all';
@@ -47,7 +48,9 @@ $q        = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>"\'`]/u', '', $getStr(
 $page     = max(1, (int) $getStr('page'));
 $medium   = $hasMed && isset($MEDIUMS[$getStr('medium')]) ? $getStr('medium') : '';
 $price    = isset($PRICES[$getStr('price')]) ? $getStr('price') : '';
-$size     = $hasDims && isset($SIZES[$getStr('size')]) ? $getStr('size') : '';
+$sizeIn   = ['small' => 's', 'medium' => 'm', 'large' => 'l'][$getStr('size')] ?? $getStr('size');   // older links keep working
+$size     = $hasDims && isset($SIZES[$sizeIn]) ? $sizeIn : '';
+$orient   = $hasDims && isset($ORIENTS[$getStr('orient')]) ? $getStr('orient') : '';
 $city     = in_array($getStr('city'), $CITIES, true) ? $getStr('city') : '';
 $color    = isset($COLORS[$getStr('color')]) ? $getStr('color') : '';
 $vonly    = $getStr('verified') === '1' && owVerifiedReady() ? '1' : '';
@@ -56,19 +59,19 @@ $col      = $colObj ? (string) $colObj['slug'] : '';
 
 /* A link to this page with some choices changed (defaults are left out, so links stay short) */
 function mpUrl(array $over = []): string {
-    global $lang, $cat, $initType, $status, $sort, $q, $medium, $price, $size, $city, $color, $vonly, $col;
-    $st = array_merge(['lang' => $lang, 'col' => $col, 'cat' => $cat, 'type' => $initType, 'status' => $status, 'medium' => $medium, 'price' => $price, 'size' => $size,
+    global $lang, $cat, $initType, $status, $sort, $q, $medium, $price, $size, $orient, $city, $color, $vonly, $col;
+    $st = array_merge(['lang' => $lang, 'col' => $col, 'cat' => $cat, 'type' => $initType, 'status' => $status, 'medium' => $medium, 'price' => $price, 'size' => $size, 'orient' => $orient,
                        'city' => $city, 'color' => $color, 'verified' => $vonly, 'sort' => $sort, 'q' => $q, 'page' => 1], $over);
-    $defaults = ['lang' => 'en', 'col' => '', 'cat' => 'all', 'type' => '', 'status' => 'all', 'medium' => '', 'price' => '', 'size' => '', 'city' => '', 'color' => '', 'verified' => '', 'sort' => 'newest', 'q' => '', 'page' => 1];
+    $defaults = ['lang' => 'en', 'col' => '', 'cat' => 'all', 'type' => '', 'status' => 'all', 'medium' => '', 'price' => '', 'size' => '', 'orient' => '', 'city' => '', 'color' => '', 'verified' => '', 'sort' => 'newest', 'q' => '', 'page' => 1];
     foreach ($defaults as $k => $d) { if ((string) $st[$k] === (string) $d) unset($st[$k]); }
     return 'marketplace.php' . ($st ? '?' . http_build_query($st) : '');
 }
 
 /* Hidden fields that carry the current choices in a GET form (except the ones the form sets itself) */
 function mpHidden(array $skip): string {
-    global $lang, $cat, $initType, $status, $sort, $q, $medium, $price, $size, $city, $color, $vonly, $col;
+    global $lang, $cat, $initType, $status, $sort, $q, $medium, $price, $size, $orient, $city, $color, $vonly, $col;
     $cur = ['lang' => $lang === 'ar' ? 'ar' : '', 'col' => $col, 'cat' => $initType === '' && $cat !== 'all' ? $cat : '', 'type' => $initType, 'status' => $status === 'all' ? '' : $status,
-            'medium' => $medium, 'price' => $price, 'size' => $size, 'city' => $city, 'color' => $color, 'verified' => $vonly, 'sort' => $sort === 'newest' ? '' : $sort, 'q' => $q];
+            'medium' => $medium, 'price' => $price, 'size' => $size, 'orient' => $orient, 'city' => $city, 'color' => $color, 'verified' => $vonly, 'sort' => $sort === 'newest' ? '' : $sort, 'q' => $q];
     $h = '';
     foreach ($cur as $k => $v) if ($v !== '' && !in_array($k, $skip, true)) $h .= '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8') . '">';
     return $h;
@@ -99,10 +102,9 @@ if ($price !== '') {
     if ($PRICES[$price]['max'] !== null) { $where .= ' AND a.price <= :pmax'; $params[':pmax'] = $PRICES[$price]['max']; }
 }
 if ($size !== '') {
-    $where .= ' AND a.width_cm IS NOT NULL AND a.height_cm IS NOT NULL';
-    if ($SIZES[$size]['min'] !== null) { $where .= ' AND GREATEST(a.width_cm, a.height_cm) >= :smin'; $params[':smin'] = $SIZES[$size]['min']; }
-    if ($SIZES[$size]['max'] !== null) { $where .= ' AND GREATEST(a.width_cm, a.height_cm) <= :smax'; $params[':smax'] = $SIZES[$size]['max']; }
+    $where .= ' AND a.size_category = :scat'; $params[':scat'] = $size;
 }
+if ($orient !== '') { $where .= ' AND a.orientation = :orient'; $params[':orient'] = $orient; }
 if ($city !== '') { $where .= ' AND TRIM(u.city) = :city'; $params[':city'] = $city; }
 if ($color !== '' && ($cn = owColorFamilyNames($color))) {
     $ph = [];
@@ -111,7 +113,7 @@ if ($color !== '' && ($cn = owColorFamilyNames($color))) {
 }
 if ($vonly === '1') $where .= ' AND ' . owVerifiedSql('u') . ' = 1';
 if ($colObj) { [$cc, $cp] = owCollectionCondition($colObj); $where .= ' AND ' . $cc; $params += $cp; }
-$moreOn = ($medium !== '' ? 1 : 0) + ($price !== '' ? 1 : 0) + ($size !== '' ? 1 : 0) + ($city !== '' ? 1 : 0) + ($color !== '' ? 1 : 0) + ($vonly !== '' ? 1 : 0);
+$moreOn = ($medium !== '' ? 1 : 0) + ($price !== '' ? 1 : 0) + ($size !== '' ? 1 : 0) + ($orient !== '' ? 1 : 0) + ($city !== '' ? 1 : 0) + ($color !== '' ? 1 : 0) + ($vonly !== '' ? 1 : 0);
 
 /* ---- Pagination ---- */
 $perPage = 12;
@@ -187,24 +189,11 @@ foreach ($modalArtworks as $aw) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="<?= $lang ?>" dir="<?= $ar ? 'rtl' : 'ltr' ?>">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'The Gallery', 'ar' => 'المعرض', 'desc_en' => 'Original works by real artists, from Saudi Arabia and all over the world. Every piece has a story.', 'desc_ar' => 'أعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية.', 'path' => 'marketplace.php' . ($ar ? '?lang=ar' : '')]); ?>
-  <script>
-  /* Honor the site-wide saved language. This page switches language via a
-     server reload (?lang=), so if the visitor previously chose Arabic on
-     another page, redirect to the Arabic version before rendering. */
-  (function(){
-    var KEY='lang';
-    var params=new URLSearchParams(location.search);
-    var urlLang=params.get('lang');
-    var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
-    if(urlLang){ try{ localStorage.setItem(KEY, urlLang==='ar'?'ar':'en'); }catch(e){} }
-    else if(saved==='ar'){ params.set('lang','ar'); location.replace(location.pathname+'?'+params.toString()+location.hash); }
-  })();
-  </script>
   <?php include __DIR__ . '/theme_head.php'; ?>
   <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
   <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
@@ -259,7 +248,6 @@ foreach ($modalArtworks as $aw) {
     /* empty state */
     .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);animation:mpRise .15s ease-out both;}
     .gallery-empty svg{width:48px;height:48px;fill:none;stroke:var(--color-light);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:var(--space-sm);}
-    .gallery-empty .ge-photo{max-width:560px;margin:0 auto var(--space-md);}
     .gallery-empty h2{font-size:var(--fs-subtitle);margin:0 0 var(--space-md);}
     .gallery-empty .ge-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);justify-content:center;}
 
@@ -359,6 +347,7 @@ foreach ($modalArtworks as $aw) {
   </style>
 </head>
 <body>
+<?php if (!$artworks) echo owStudioBackdrop('paint-cloth'); ?>
 
 <div class="bg-wrap">
   
@@ -488,11 +477,11 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       </div>
     </div>
 
-    <!-- MORE FILTERS: style, medium, price, size, city, color, verified artists -->
+    <!-- MORE FILTERS: style, medium, price, size, orientation, city, color, verified artists -->
     <details class="mp-more"<?= $moreOn || $initType !== '' ? ' open' : '' ?>>
       <summary class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg><?= $ar ? 'تصفية أدق' : 'More filters' ?><?php if ($moreOn): ?> <span class="mp-n"><?= $moreOn ?></span><?php endif; ?></summary>
       <form class="mp-filters" method="get" action="marketplace.php">
-        <?= mpHidden(['type', 'medium', 'price', 'size', 'city', 'color', 'verified', 'cat']) ?>
+        <?= mpHidden(['type', 'medium', 'price', 'size', 'orient', 'city', 'color', 'verified', 'cat']) ?>
         <div class="field"><label for="f-style"><?= $ar ? 'الأسلوب' : 'Style' ?></label>
           <select id="f-style" name="type"><option value=""><?= $ar ? 'كل الأساليب' : 'All styles' ?></option>
             <?php foreach (owStyleGroups() as $gk => $g): $opts = array_filter($ART_TYPES, fn($t) => ($t['cat'] ?? '') === $gk && empty($t['legacy'])); if (!$opts) continue; ?>
@@ -507,7 +496,10 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
             <?php foreach ($PRICES as $pk => $pv): ?><option value="<?= e($pk) ?>"<?= $price === $pk ? ' selected' : '' ?>><?= e($ar ? $pv['ar'] : $pv['en']) ?></option><?php endforeach; ?></select></div>
         <?php if ($hasDims): ?><div class="field"><label for="f-size"><?= $ar ? 'المقاس' : 'Size' ?></label>
           <select id="f-size" name="size"><option value=""><?= $ar ? 'كل المقاسات' : 'Any size' ?></option>
-            <?php foreach ($SIZES as $zk => $zv): ?><option value="<?= e($zk) ?>"<?= $size === $zk ? ' selected' : '' ?>><?= e($ar ? $zv['ar'] : $zv['en']) ?></option><?php endforeach; ?></select></div><?php endif; ?>
+            <?php foreach ($SIZES as $zk => $zv): ?><option value="<?= e($zk) ?>"<?= $size === $zk ? ' selected' : '' ?>><?= e($ar ? $zv['ar'] : $zv['en']) ?></option><?php endforeach; ?></select></div>
+        <div class="field"><label for="f-orient"><?= $ar ? 'الاتجاه' : 'Orientation' ?></label>
+          <select id="f-orient" name="orient"><option value=""><?= $ar ? 'كل الاتجاهات' : 'Any orientation' ?></option>
+            <?php foreach ($ORIENTS as $ok => $ov): ?><option value="<?= e($ok) ?>"<?= $orient === $ok ? ' selected' : '' ?>><?= e($ar ? $ov['ar'] : $ov['en']) ?></option><?php endforeach; ?></select></div><?php endif; ?>
         <?php if ($CITIES): ?><div class="field"><label for="f-city"><?= $ar ? 'مدينة الفنان' : 'Artist’s city' ?></label>
           <select id="f-city" name="city"><option value=""><?= $ar ? 'كل المدن' : 'All cities' ?></option>
             <?php foreach ($CITIES as $cName): ?><option value="<?= e($cName) ?>"<?= $city === $cName ? ' selected' : '' ?>><?= e($cName) ?></option><?php endforeach; ?></select></div><?php endif; ?>
@@ -520,7 +512,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         <?php if (owVerifiedReady()): ?><label class="f-check"><input type="checkbox" name="verified" value="1"<?= $vonly ? ' checked' : '' ?>> <span><?= $ar ? 'فنانون موثّقون فقط' : 'Verified artists only' ?></span></label><?php endif; ?>
         <div class="f-acts">
           <button type="submit" class="btn btn-dark"><?= $ar ? 'اعرض النتائج' : 'Show results' ?></button>
-          <?php if ($moreOn || $initType !== ''): ?><a class="btn btn-ghost" href="<?= e(mpUrl(['type' => '', 'medium' => '', 'price' => '', 'size' => '', 'city' => '', 'color' => '', 'verified' => ''])) ?>"><?= $ar ? 'امسح التصفية' : 'Clear filters' ?></a><?php endif; ?>
+          <?php if ($moreOn || $initType !== ''): ?><a class="btn btn-ghost" href="<?= e(mpUrl(['type' => '', 'medium' => '', 'price' => '', 'size' => '', 'orient' => '', 'city' => '', 'color' => '', 'verified' => ''])) ?>"><?= $ar ? 'امسح التصفية' : 'Clear filters' ?></a><?php endif; ?>
         </div>
       </form>
     </details>
@@ -556,11 +548,11 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   <?php else: ?>
   <!-- EMPTY STATE -->
   <div class="card gallery-empty">
-    <?php if (owStudioHas('paint-cloth')): ?><div class="ow-card-photo ge-photo"><?= owStudioPhoto('paint-cloth', false, 'ow-studio', '(min-width: 760px) 720px, 100vw') ?></div><?php else: ?><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg><?php endif; ?>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg>
     <h2><?= $ar ? 'لا أعمال هنا بعد. كن أول من يشارك عمله.' : 'No artworks here yet. Be the first to share yours.' ?></h2>
     <div class="ge-actions">
       <a class="btn btn-primary" href="register_artist.php"><?= $ar ? 'انضم كفنان' : 'Join as Artist' ?></a>
-      <?php if ($filtered): ?><a class="btn btn-secondary" href="<?= e(mpUrl(['cat' => 'all', 'type' => '', 'status' => 'all', 'q' => '', 'medium' => '', 'price' => '', 'size' => '', 'city' => '', 'color' => '', 'verified' => '', 'col' => ''])) ?>"><?= $ar ? 'شاهد كل الأعمال' : 'See all artworks' ?></a><?php endif; ?>
+      <?php if ($filtered): ?><a class="btn btn-secondary" href="<?= e(mpUrl(['cat' => 'all', 'type' => '', 'status' => 'all', 'q' => '', 'medium' => '', 'price' => '', 'size' => '', 'orient' => '', 'city' => '', 'color' => '', 'verified' => '', 'col' => ''])) ?>"><?= $ar ? 'شاهد كل الأعمال' : 'See all artworks' ?></a><?php endif; ?>
     </div>
   </div>
   <?php endif; ?>

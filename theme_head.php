@@ -63,7 +63,8 @@ if (!function_exists('owThemeButton')) {
     /* The language button + the light / dark button, side by side, the same on every page.
        $onclick is the page's own language switch (tgl() on public pages, tglLang() on admin). */
     function owCornerControls(string $onclick = 'tgl()'): void {
-        echo '<span class="ow-ctls"><button type="button" class="ow-ctl lang-btn" id="lb" onclick="' . htmlspecialchars($onclick, ENT_QUOTES, 'UTF-8') . '">العربية</button>';
+        require_once __DIR__ . '/lang_lib.php';
+        echo '<span class="ow-ctls"><button type="button" class="ow-ctl lang-btn" id="lb" onclick="' . htmlspecialchars($onclick, ENT_QUOTES, 'UTF-8') . '">' . (owIsAr() ? 'English' : 'العربية') . '</button>';
         owThemeButton();
         echo '</span>';
     }
@@ -71,8 +72,46 @@ if (!function_exists('owThemeButton')) {
 if (!defined('OW_THEME_HEAD')):
     define('OW_THEME_HEAD', true);
 ?>
-<style>html{background:#fff}html.dark-mode{background:#0F1520}</style>
+<style>html{background:#fff}html.dark-mode{background:#0F1520}html.ow-wait body{visibility:hidden;animation:owShow 0s 1.5s forwards}@keyframes owShow{to{visibility:visible}}</style>
 <?php require_once __DIR__ . '/page_cache.php'; ?>
+<?php require_once __DIR__ . '/lang_lib.php'; ?>
+<script>
+/* The language (lang_lib.php): the server already sent this page in the saved
+   language. Here the browser only (1) remembers a new choice when the language
+   button is pressed (cookie ow_lang, read by the server, + localStorage for the
+   pages' own scripts), and (2) reloads a kept copy made in the other language
+   (Back button, early loading, a page prepared in the background). */
+(function(){
+  var d = document.documentElement, L = <?= json_encode(owLang()) ?>;
+  window.OW_LANG = L;
+  var url = /[?&]lang=(ar|en)(&|#|$)/.test(location.search);
+  function ck(){ var m = document.cookie.match(/(?:^|;\s*)ow_lang=(ar|en)/); return m ? m[1] : null; }
+  function setCk(l){ try { document.cookie = 'ow_lang=' + l + ';path=/;max-age=31536000;samesite=lax' + (location.protocol === 'https:' ? ';secure' : ''); } catch (e) {} }
+  function setLs(l){ try { localStorage.setItem('lang', l); } catch (e) {} }
+  function stale(){ var c = ck(); return !!c && c !== window.OW_LANG && !url; }
+  function again(){
+    var k = 'ow_lang_rl', now = Date.now(), last = 0;
+    try { last = +sessionStorage.getItem(k) || 0; sessionStorage.setItem(k, String(now)); } catch (e) {}
+    if (now - last < 5000) return false;   // never a reload loop
+    d.classList.add('ow-wait'); location.reload(); return true;
+  }
+  var c = ck();
+  if (!c) {
+    /* visitors from before 5 Nov 2026 kept their choice only in this browser */
+    var ls = null; try { ls = localStorage.getItem('lang'); } catch (e) {}
+    if ((ls === 'ar' || ls === 'en') && ls !== L && !url) { setCk(ls); if (!document.prerendering && again()) return; }
+    else setCk(L);
+  } else if (stale() && !document.prerendering) { if (again()) return; }
+  setLs(window.OW_LANG);
+  if (document.prerendering) document.addEventListener('prerenderingchange', function(){ if (stale()) again(); }, { once: true });
+  window.addEventListener('pageshow', function(e){ if (e.persisted && stale()) again(); });
+  new MutationObserver(function(){
+    var l = (d.getAttribute('lang') === 'ar' || d.getAttribute('dir') === 'rtl') ? 'ar' : 'en';
+    if (l !== window.OW_LANG) { window.OW_LANG = l; setCk(l); setLs(l); }
+  }).observe(d, { attributes: true, attributeFilter: ['lang', 'dir'] });
+  document.addEventListener('DOMContentLoaded', function(){ d.classList.remove('ow-wait'); });
+})();
+</script>
 <script>window.OW_STATE = <?= json_encode(owStateCode()) ?>; window.OW_STATE_AT = <?= (int) round(microtime(true) * 1000) ?>; window.OW_PRIVATE = <?= defined('OW_PUBLIC_PAGE') ? 'false' : 'true' ?>;</script>
 <link rel="preload" href="<?= owBase() ?>assets/fonts/dmsans-300-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <?php /* Instant page changes: Chrome, Edge and Android load a page in the background

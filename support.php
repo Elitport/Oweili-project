@@ -1,6 +1,6 @@
-<?php require_once 'config.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage(); ?>
+<?php require_once 'config.php'; require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage(); ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(true); ?> id="html">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +52,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 </style>
 </head>
 <body>
+<?= owStudioBackdrop('studio-table') ?>
 <div class="bg-wrap">
   
 </div>

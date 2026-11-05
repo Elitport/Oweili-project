@@ -15,6 +15,12 @@
  *
  *    owStudioPhoto($key, $eager)   the <picture> (lazy unless $eager)
  *    owStudioHas($key)             true when the files exist
+ *    owStudioBackdrop(...$keys)    the photo as the background of the WHOLE
+ *                                  page (the first key whose files exist):
+ *                                  a still layer behind everything with a soft
+ *                                  veil (light and dark mode). It is a fixed
+ *                                  layer, not background-attachment: fixed,
+ *                                  so it also stays still on iPhone
  *
  *  Where they are used: homepage (behind the video), Join as an artist,
  *  Gifts, Explore Art Styles, the 404 page and the empty Gallery. Still to
@@ -26,22 +32,34 @@
 require_once __DIR__ . '/ow_paths.php';
 
 const OW_STUDIO = [
-    // key => [tall widths, wide widths, tall w/h, wide w/h, alt EN, alt AR]
+    // key => [phone widths, computer widths, phone w/h, computer w/h, alt EN, alt AR]
+    // home-painting: the homepage photo behind the video. The others fill the WHOLE page
+    // behind everything (owStudioBackdrop): 9:16 for phones, 16:9 for computers.
     'home-painting' => [[640, 960], [1333], [2, 3], [16, 9],
         'An artist painting a sunny landscape on an easel outdoors',
         'فنانة ترسم منظراً طبيعياً مشمساً على حامل لوحات في الهواء الطلق'],
-    'brushes-jars'  => [[640], [1280], [4, 3], [12, 5],
+    'brushes-jars'  => [[480, 720], [1280], [9, 16], [16, 9],
         'Well-used paint brushes standing in glass jars in a studio',
         'فُرَش رسم مستعملة في برطمانات زجاجية داخل مرسم'],
-    'pink-palette'  => [[640], [1280], [4, 3], [12, 5],
+    'pink-palette'  => [[480, 632], [1280, 1500], [9, 16], [16, 9],
         'A wooden palette with pink and orange paint beside paint brushes',
         'لوحة ألوان خشبية بألوان وردية وبرتقالية بجانب فُرَش الرسم'],
-    'paint-buckets' => [[640], [1280], [4, 3], [12, 5],
+    'paint-buckets' => [[480, 632], [1280, 1920], [9, 16], [16, 9],
         'A hand dipping a brush into buckets of colourful paint, seen from above',
         'يد تغمس فرشاة في علب ألوان زاهية، من الأعلى'],
-    'paint-cloth'   => [[640], [1280], [4, 3], [12, 5],
+    'paint-cloth'   => [[480, 720], [1280], [9, 16], [16, 9],
         'A paint-splattered cloth with bowls of colour and brushes',
         'قماش مرشوش بالألوان مع أوعية الألوان والفُرَش'],
+    // waiting for the owner's files (they show by themselves once the files are in assets/img/studio/)
+    'palette-hand'  => [[480, 720], [1280, 1920], [9, 16], [16, 9],
+        'A hand holding a paint palette in a studio',
+        'يد تمسك لوحة الألوان داخل مرسم'],
+    'gallery-visit' => [[480, 720], [1280, 1920], [9, 16], [16, 9],
+        'A woman looking at framed paintings in a gallery',
+        'امرأة تتأمل لوحات مؤطرة في معرض'],
+    'studio-table'  => [[480, 720], [1280, 1920], [9, 16], [16, 9],
+        'A studio table with brushes and paints',
+        'طاولة مرسم عليها فُرَش وألوان'],
 ];
 
 function owStudioFile(string $key, string $var, int $w, string $ext): string {
@@ -75,4 +93,16 @@ function owStudioPhoto(string $key, bool $eager = false, string $class = 'ow-stu
         . ($eager ? ' fetchpriority="high"' : ' loading="lazy"')
         . ' alt="' . htmlspecialchars($altEn . ' · ' . $altAr, ENT_QUOTES, 'UTF-8') . '">';
     return $h . '</picture>';
+}
+
+/* The photo behind the whole page (5 Nov 2026). Printed right after <body>.
+   Phones load a 480 / 720 wide copy (AVIF 13 to 68 KB), computers 1280+.
+   The body becomes see-through so the layer shows behind every section. */
+function owStudioBackdrop(string ...$keys): string {
+    foreach ($keys as $k) {
+        if (!owStudioHas($k)) continue;
+        return '<style>html body{background:transparent!important}</style><div class="ow-backdrop">'
+             . owStudioPhoto($k, true, 'ow-studio', '100vw') . '</div>';
+    }
+    return '';
 }

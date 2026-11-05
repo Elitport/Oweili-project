@@ -195,7 +195,7 @@ $errEn = $errCode ? $ERR[$errCode]['en'] : ''; $errAr = $errCode ? $ERR[$errCode
 $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] : '';
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="html">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(true); ?> id="html">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -209,13 +209,13 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 </style>
 </head>
 <body>
+<?= owStudioBackdrop('brushes-jars') ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . "/nav.php"; ?>
 
 <div class="auth-wrap">
   <div class="auth-card wide">
-    <div class="ow-card-photo"><?= owStudioPhoto('brushes-jars', true, 'ow-studio', '(min-width: 760px) 720px, 100vw') ?></div>
     <div class="auth-head"><h1 id="t-title">Join as an Artist</h1><p id="t-sub">We are glad you are here. Our team reviews every profile by hand.</p></div>
     <div class="err-box" id="err" data-en="<?= e($errEn) ?>" data-ar="<?= e($errAr) ?>" style="display:<?= $errCode?'block':'none' ?>;"><?= e($errEn) ?></div>
     <div class="ok-box" id="ok" data-en="<?= e($okEn) ?>" data-ar="<?= e($okAr) ?>" style="display:<?= $okCode?'block':'none' ?>;"><?= e($okEn) ?></div>

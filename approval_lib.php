@@ -28,7 +28,7 @@ const OW_PUBLIC_PROFILE_FIELDS = ['full_name_en', 'full_name_ar', 'artist_name',
                                   'art_styles', 'instagram', 'twitter', 'website', 'profile_picture'];
 /* The artwork fields that wait for approval (the photo does not, see above) */
 const OW_ARTWORK_FIELDS = ['title_en', 'title_ar', 'description_en', 'description_ar', 'price', 'type', 'status',
-                           'medium', 'width_cm', 'height_cm', 'year_made', 'edition_type', 'edition_number', 'edition_size'];
+                           'medium', 'width_cm', 'height_cm', 'size_code', 'size_category', 'orientation', 'year_made', 'edition_type', 'edition_number', 'edition_size'];
 
 /* Field names for the admin list */
 const OW_FIELD_WORDS = [
@@ -41,6 +41,7 @@ const OW_FIELD_WORDS = [
     'instagram' => ['Instagram', 'إنستغرام'], 'twitter' => ['X', 'إكس'], 'website' => ['Website', 'الموقع'],
     'profile_picture' => ['Photo', 'الصورة'], 'publish' => ['Publish', 'النشر'],
     'medium' => ['Medium', 'الخامة'], 'width_cm' => ['Width (cm)', 'العرض (سم)'], 'height_cm' => ['Height (cm)', 'الارتفاع (سم)'],
+    'size_code' => ['Size', 'المقاس'], 'size_category' => ['Size group', 'فئة المقاس'], 'orientation' => ['Orientation', 'الاتجاه'],
     'year_made' => ['Year made', 'سنة الإنجاز'], 'edition_type' => ['Original or print', 'أصلي أم مطبوع'],
     'edition_number' => ['Print number', 'رقم النسخة'], 'edition_size' => ['Prints in total', 'عدد النسخ'],
 ];

@@ -1,7 +1,7 @@
 <?php
 /* =====================================================================
  *  cert_fields.php — the artwork details every Certificate of Authenticity
- *  needs: medium, size, year and type (original or limited print).
+ *  needs: medium, size (from the standard list, size_lib.php), year and type (original or limited print).
  *  Shared by upload_artwork.php (last step) and edit_artwork.php.
  *  Expects: $cv (fn(field) → escaped current value) and $etype.
  *  Tables: none (the pages save the values in artworks)
@@ -9,6 +9,11 @@
 if (!isset($cv, $etype)) return;
 /* 60.0 → 60, 60.5 stays (whole numbers are never cut) */
 $cfNum = fn(string $x) => preg_match('/^\d+\.\d+$/', $x) ? rtrim(rtrim($x, '0'), '.') : $x;
+/* the size comes from the standard list (size_lib.php); an older artwork with a free
+   width × height shows the closest standard size, ready to confirm */
+require_once __DIR__ . '/size_lib.php';
+$cfSize = html_entity_decode($cv('size_code'), ENT_QUOTES, 'UTF-8'); $cfOrient = html_entity_decode($cv('orientation'), ENT_QUOTES, 'UTF-8');
+if ($cfSize === '' && (float) $cv('width_cm') > 0 && (float) $cv('height_cm') > 0 && ($cfN = owSizeNearest((float) $cv('width_cm'), (float) $cv('height_cm')))) { $cfSize = $cfN[0]; $cfOrient = $cfN[2]; }
 ?>
 <fieldset class="cert-fields">
   <legend><?= owBi('Details for the Certificate of Authenticity', 'تفاصيل شهادة الأصالة') ?></legend>
@@ -23,11 +28,8 @@ $cfNum = fn(string $x) => preg_match('/^\d+\.\d+$/', $x) ? rtrim(rtrim($x, '0'),
       <option value="زيت على قماش"><option value="أكريليك على قماش"><option value="ألوان مائية على ورق"><option value="حبر على ورق">
     </datalist>
   </div>
-  <div class="cf-row">
-    <div class="field"><label for="cf-w"><?= owBi('Width (cm)', 'العرض (سم)') ?></label>
-      <input id="cf-w" name="width_cm" type="text" inputmode="decimal" dir="ltr" maxlength="7" required pattern="[0-9٠-٩]+([.,٫][0-9٠-٩])?" value="<?= $cfNum($cv('width_cm')) ?>"></div>
-    <div class="field"><label for="cf-h"><?= owBi('Height (cm)', 'الارتفاع (سم)') ?></label>
-      <input id="cf-h" name="height_cm" type="text" inputmode="decimal" dir="ltr" maxlength="7" required pattern="[0-9٠-٩]+([.,٫][0-9٠-٩])?" value="<?= $cfNum($cv('height_cm')) ?>"></div>
+  <?= owSizeSelect($cfSize, $cfOrient, false, 'cf-size') ?>
+  <div class="cf-row cf-one">
     <div class="field"><label for="cf-y"><?= owBi('Year made', 'سنة الإنجاز') ?></label>
       <input id="cf-y" name="year_made" type="text" inputmode="numeric" dir="ltr" maxlength="4" required pattern="[0-9٠-٩]{4}" placeholder="<?= date('Y') ?>" value="<?= $cv('year_made') ?>"></div>
   </div>

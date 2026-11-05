@@ -142,23 +142,33 @@ function owBashroTest(): int {
 /* Links in the messages always point to the real site (never to whatever host a visitor sent) */
 function owBashroHost(): string { return defined('BASHRO_DOOR_LINK_BASE') ? rtrim((string) BASHRO_DOOR_LINK_BASE, '/') : 'https://oweili.com'; }
 
+/* The standard size for Sales and pricing (size_lib.php): ". Size: 50 × 70 cm, Medium (m), portrait" */
+function owBashroSizeText(array $row): string {
+    if (empty($row['size_code'])) return '';
+    require_once __DIR__ . '/size_lib.php';
+    $c = owSizeCheck((string) $row['size_code'], (string) ($row['orientation'] ?? ''));
+    if (!$c) return '';
+    return '. Size: ' . $c[3] . ' × ' . $c[4] . ' cm, ' . owSizeGroups()[$c[1]][0] . ' (' . $c[1] . '), ' . $c[2];
+}
+
 /* "I'm Interested" → Sales */
 function owBashroInquiry(array $aw, array $buyer, string $lang = 'en'): void {
     owBashroQueue('quote', ['name' => $buyer['name'] ?? '', 'email' => $buyer['email'] ?? '', 'phone' => $buyer['phone'] ?? '',
         'service' => (string) $aw['title_en'], 'lang' => $lang,
-        'message' => 'Interested in: ' . $aw['title_en'] . ' by ' . ($aw['artist_en'] ?? '') . ', ' . number_format((float) $aw['price']) . ' SAR, '
+        'message' => 'Interested in: ' . $aw['title_en'] . ' by ' . ($aw['artist_en'] ?? '') . ', ' . number_format((float) $aw['price']) . ' SAR' . owBashroSizeText($aw) . ', '
                    . owBashroHost() . '/artwork.php?id=' . (int) $aw['id']]);
 }
 /* Oweili Gifts request → Sales (the recipient's city only, never their address or phone) */
 function owBashroGift(int $giftId): void {
     if (!owBashroKindOn('quote')) return;
     try {
-        $st = getDB()->prepare('SELECT g.*, a.title_en, a.price FROM gift_requests g LEFT JOIN artworks a ON a.id = g.artwork_id WHERE g.id = :id');
+        $st = getDB()->prepare('SELECT g.*, a.title_en, a.price' . (owHasColumn('artworks', 'size_code') ? ', a.size_code AS aw_size_code, a.orientation AS aw_orientation' : '') . ' FROM gift_requests g LEFT JOIN artworks a ON a.id = g.artwork_id WHERE g.id = :id');
         $st->execute([':id' => $giftId]); $g = $st->fetch();
         if (!$g) return;
         require_once __DIR__ . '/request_lib.php';
         $occ = owGiftOccasions()[$g['occasion']]['en'] ?? $g['occasion'];
         $what = $g['mode'] === 'ready' ? 'ready artwork "' . $g['title_en'] . '" (' . number_format((float) $g['price']) . ' SAR)' : 'custom artwork' . ($g['budget_sar'] !== null ? ', budget ' . number_format((float) $g['budget_sar']) . ' SAR' : '') . ': ' . rtrim(mb_substr((string) $g['custom_brief'], 0, 1500), '. ');
+        $what .= $g['mode'] === 'ready' ? owBashroSizeText(['size_code' => $g['aw_size_code'] ?? '', 'orientation' => $g['aw_orientation'] ?? '']) : owBashroSizeText($g);
         owBashroQueue('quote', ['name' => $g['buyer_name'], 'email' => $g['buyer_email'], 'phone' => $g['buyer_phone'], 'service' => 'Oweili Gift: ' . $occ, 'city' => $g['recipient_city'], 'lang' => $g['lang'],
             'message' => 'Gift request #' . (int) $g['id'] . ' (' . $occ . '): ' . $what . '. Delivery ' . $g['delivery_date'] . ' to ' . $g['recipient_city']
                        . '. Wrapping: ' . ((int) $g['wrapping'] ? 'yes' : 'no') . '. Surprise (hide the price): ' . ((int) $g['surprise'] ? 'yes' : 'no')
@@ -174,7 +184,7 @@ function owBashroCommission(int $cid): void {
         $subj = owCommSubjects()[$c['subject']][0] ?? $c['subject'];
         owBashroQueue('quote', ['name' => $c['buyer_name'], 'email' => $c['buyer_email'], 'phone' => $c['buyer_phone'], 'service' => 'Private commission: ' . $subj, 'lang' => $c['lang'],
             'message' => 'Private commission ' . $c['ref_no'] . ' (' . $subj . '): ' . rtrim(mb_substr((string) $c['brief'], 0, 2500), '. ')
-                       . ($c['budget_sar'] !== null ? '. Budget ' . number_format((float) $c['budget_sar']) . ' SAR' : '') . ($c['wanted_by'] ? '. Needed by ' . $c['wanted_by'] : '')
+                       . owBashroSizeText($c) . ($c['budget_sar'] !== null ? '. Budget ' . number_format((float) $c['budget_sar']) . ' SAR' : '') . ($c['wanted_by'] ? '. Needed by ' . $c['wanted_by'] : '')
                        . '. Photos stay on Oweili (private). Details for the team: ' . owBashroHost() . '/admin_commissions.php?id=' . (int) $c['id']]);
     } catch (Throwable $e) { error_log('owBashroCommission: ' . $e->getMessage()); }
 }

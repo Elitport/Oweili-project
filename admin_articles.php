@@ -18,7 +18,7 @@ $staff   = owArticleStaff();
 /* ---- Staff only ---- */
 if (!$staff) {
     http_response_code(403);
-    ?><!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    ?><!DOCTYPE html><html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php include __DIR__ . '/theme_head.php'; ?>
     <title>Staff only · Oweili</title><meta name="robots" content="noindex"><link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
     <script>try{if(localStorage.getItem('lang')==='ar'){document.documentElement.dir='rtl';document.documentElement.lang='ar';}}catch(e){}</script>
@@ -355,7 +355,7 @@ unset($_SESSION['art_flash']);
 $v = fn(string $k) => e((string) ($form[$k] ?? ''));
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

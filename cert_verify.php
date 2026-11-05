@@ -39,7 +39,7 @@ if ($state === 'valid') {   // link to the artwork page while it is in the Galle
 if (!headers_sent()) header('Cache-Control: no-store');
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

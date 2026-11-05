@@ -89,11 +89,17 @@ function owPriceFilters(): array {
 }
 /* Size by the longest side (cm) */
 function owSizeFilters(): array {
+    /* the 5 standard size groups (size_lib.php, 5 Nov 2026) */
     return [
-        'small'  => ['en' => 'Small (up to 40 cm)',   'ar' => 'صغير (حتى 40 سم)',    'min' => null, 'max' => 40],
-        'medium' => ['en' => 'Medium (40 to 100 cm)', 'ar' => 'متوسط (40 إلى 100 سم)', 'min' => 40.01, 'max' => 100],
-        'large'  => ['en' => 'Large (over 100 cm)',   'ar' => 'كبير (أكثر من 100 سم)', 'min' => 100.01, 'max' => null],
+        'xs' => ['en' => 'Extra small (20 to 30 cm)',  'ar' => 'صغير جداً (20 إلى 30 سم)'],
+        's'  => ['en' => 'Small (30 to 40 cm)',         'ar' => 'صغير (30 إلى 40 سم)'],
+        'm'  => ['en' => 'Medium (40 to 70 cm)',        'ar' => 'متوسط (40 إلى 70 سم)'],
+        'l'  => ['en' => 'Large (60 to 120 cm)',        'ar' => 'كبير (60 إلى 120 سم)'],
+        'xl' => ['en' => 'Extra large (100 to 180 cm)', 'ar' => 'كبير جداً (100 إلى 180 سم)'],
     ];
+}
+function owOrientFilters(): array {
+    return ['portrait' => ['en' => 'Portrait (tall)', 'ar' => 'طولي'], 'landscape' => ['en' => 'Landscape (wide)', 'ar' => 'عرضي'], 'square' => ['en' => 'Square', 'ar' => 'مربع']];
 }
 /* Color families, built from the paint list the artists pick in the upload */
 function owColorFamilies(): array {

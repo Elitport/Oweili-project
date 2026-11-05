@@ -275,7 +275,7 @@ $stateOf = function (array $a) use ($changes): string {
 $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approval', 'بانتظار الموافقة'], 'rejected' => ['Not approved', 'لم تتم الموافقة'], 'published' => ['Published', 'منشور']];
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

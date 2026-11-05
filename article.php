@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
 /* =====================================================================
  *  article.php — one published article, for everyone
  *  article.php?slug=arabic-calligraphy
@@ -46,7 +47,7 @@ $titleEn = $a ? $a['title_en'] . ' · Oweili' : 'Article not found · Oweili';
 $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موجود · أويلي';
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="<?= e($titleEn) ?>" data-title-ar="<?= e($titleAr) ?>">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="<?= e($titleEn) ?>" data-title-ar="<?= e($titleAr) ?>">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -96,6 +97,7 @@ else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود
 </style>
 </head>
 <body class="ow">
+<?= owStudioBackdrop('gallery-visit') ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil strong" aria-hidden="true"></div>
 

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
 /* =====================================================================
  *  commission.php — private commissions («الأعمال الخاصة»): a portrait or a
  *  personal memory painted from the buyer's own photos, in full confidence.
@@ -87,7 +88,12 @@ if (!$c && $ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST
         $f['subject'] = (string) ($_POST['subject'] ?? '');
         $f['brief'] = owReqClean('brief', 3000, true);
         $f['art_style'] = (string) ($_POST['art_style'] ?? '');
-        $f['size_note'] = owReqClean('size_note', 120);
+        /* the size comes from the standard list (size_lib.php); the words are kept in size_note too */
+        require_once __DIR__ . '/size_lib.php';
+        [$sz, $szErr] = owSizeFromPost($_POST, false);
+        $f['size_code'] = (string) ($_POST['size_code'] ?? ''); $f['orientation'] = (string) ($_POST['orientation'] ?? '');
+        if ($szErr !== '') $errors[] = owSizeErrors()[$szErr];
+        $f['size_note'] = $sz ? mb_substr(implode(' · ', owSizeLabel($sz['size_code'], $sz['orientation'])), 0, 120) : '';
         $f['budget_sar'] = owReqClean('budget_sar', 12);
         $f['wanted_by'] = owReqClean('wanted_by', 10);
         $f['may_show'] = !empty($_POST['may_show']);
@@ -131,6 +137,10 @@ if (!$c && $ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST
                               ':l' => ($_POST['lang'] ?? '') === 'ar' ? 'ar' : 'en', ':s' => $f['subject'], ':br' => $f['brief'], ':st' => $f['art_style'], ':sz' => $f['size_note'], ':bg' => $budget, ':wb' => $wanted,
                               ':ms' => $f['may_show'] ? 1 : 0, ':mt' => $f['may_show'] ? 'I agree that Oweili and the artist may show the finished artwork in public. Signed: ' . $f['may_show_name'] : '', ':ma' => $f['may_show'] ? date('Y-m-d H:i:s') : null]);
                 $cid = (int) $db->lastInsertId();
+                if ($sz && owHasColumn('commissions', 'size_code')) {
+                    $db->prepare('UPDATE commissions SET size_code = :c, size_category = :g, orientation = :o WHERE id = :id')
+                       ->execute([':c' => $sz['size_code'], ':g' => $sz['size_category'], ':o' => $sz['orientation'], ':id' => $cid]);
+                }
                 foreach ($photos as $i => $p) {
                     $r = owCommStore($p, $cid, 'reference', 'buyer');
                     if (!$r['ok']) throw new DomainException(json_encode(owUploadErrBi($r['err'], 'Photo ' . ($i + 1), 'الصورة ' . ($i + 1))));
@@ -164,7 +174,7 @@ $DONE = ['quote' => ['Thank you. The artist is starting your piece.', 'شكرا�
 if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['done']] + [2 => false];
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="Private commissions · Oweili" data-title-ar="الأعمال الخاصة · أويلي">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Private commissions · Oweili" data-title-ar="الأعمال الخاصة · أويلي">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -213,6 +223,7 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
 </style>
 </head>
 <body class="ow">
+<?= owStudioBackdrop('palette-hand') ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
@@ -335,8 +346,8 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
       </div>
       <div class="field"><label for="c-brief"><?= owBi('Tell us about it', 'حدّثنا عنه') ?></label>
         <textarea id="c-brief" name="brief" rows="4" maxlength="3000" required dir="auto" placeholder="<?= e('My grandmother in her garden, warm colors, for her 80th birthday · جدّتي في حديقتها، بألوان دافئة، لعيد ميلادها الثمانين') ?>"><?= $v('brief') ?></textarea></div>
+      <?php require_once __DIR__ . '/size_lib.php'; echo owSizeSelect((string) ($f['size_code'] ?? ''), (string) ($f['orientation'] ?? ''), true, 'c-size'); ?>
       <div class="c-two">
-        <div class="field"><label for="c-size"><?= owBi('Size (optional)', 'المقاس (اختياري)') ?></label><input id="c-size" name="size_note" maxlength="120" dir="auto" value="<?= $v('size_note') ?>" placeholder="50 × 70 cm"></div>
         <div class="field"><label for="c-budget"><?= owBi('Budget in SAR (optional)', 'الميزانية بالريال (اختياري)') ?></label><input id="c-budget" name="budget_sar" inputmode="decimal" maxlength="12" dir="ltr" value="<?= $v('budget_sar') ?>"></div>
         <div class="field"><label for="c-when"><?= owBi('Needed by (optional)', 'مطلوب قبل (اختياري)') ?></label><input id="c-when" type="date" name="wanted_by" min="<?= date('Y-m-d', strtotime('+7 days')) ?>" value="<?= $v('wanted_by') ?>"></div>
       </div>

@@ -15,7 +15,7 @@ require_once __DIR__ . '/platform_lib.php';
 $staff = owArticleStaff();
 if (!$staff) {
     http_response_code(403); ?>
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><?php include __DIR__ . '/theme_head.php'; ?>
+<!DOCTYPE html><html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><?php include __DIR__ . '/theme_head.php'; ?>
 <title>Staff only · Oweili</title><meta name="robots" content="noindex"><link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>"></head>
 <body><div style="max-width:480px;margin:15vh auto;padding:24px" class="card"><h1><?= owBi('Staff only', 'للفريق فقط') ?></h1><p><a class="btn btn-primary" href="admin.php"><?= owBi('Sign in', 'تسجيل الدخول') ?></a></p></div></body></html>
 <?php exit; }
@@ -130,7 +130,7 @@ $courseForm = function (int $iid, array $c) use ($val): void { ?>
 <?php };
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -188,7 +188,7 @@ details > summary{cursor:pointer;font-weight:700;margin:var(--space-sm) 0;}
 <script>
 function tgl(){ var ar = document.documentElement.getAttribute('dir') !== 'rtl'; document.documentElement.setAttribute('dir', ar ? 'rtl' : 'ltr'); document.documentElement.lang = ar ? 'ar' : 'en';
   document.getElementById('lb').textContent = ar ? 'English' : 'العربية'; try { localStorage.setItem('lang', ar ? 'ar' : 'en'); } catch (e) {} }
-try { if (localStorage.getItem('lang') === 'ar') tgl(); } catch (e) {}
+try { if ((localStorage.getItem('lang') === 'ar') !== (document.documentElement.getAttribute('dir') === 'rtl')) tgl(); } catch (e) {}
 </script>
 </body>
 </html>

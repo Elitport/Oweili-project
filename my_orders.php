@@ -22,7 +22,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && verifyCsrf($_POST['csrf_
 $st = getDB()->prepare('SELECT * FROM orders WHERE buyer_user_id = :u ORDER BY id DESC LIMIT 100'); $st->execute([':u' => $uid]); $orders = $st->fetchAll();
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex">
 <title>My orders · طلباتي · Oweili</title>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">

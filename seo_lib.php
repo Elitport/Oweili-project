@@ -25,10 +25,13 @@ function owSeo(array $o): void {
     $h = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
     $en = trim((string) ($o['en'] ?? 'Oweili'));
     $ar = trim((string) ($o['ar'] ?? 'أويلي'));
-    $title = $en . ' · ' . $ar . ' | Oweili';
+    require_once __DIR__ . '/lang_lib.php';
+    $isAr = owIsAr();   // the page language is decided on the server (lang_lib.php)
+    $title = $isAr ? $ar . ' | أويلي' : $en . ' · ' . $ar . ' | Oweili';
     $dEn = trim((string) ($o['desc_en'] ?? ''));
     $dAr = trim((string) ($o['desc_ar'] ?? ''));
     $desc = trim($dEn . ' ' . $dAr);
+    if (owIsAr() && $dAr !== '') $desc = trim($dAr . ' ' . $dEn);
     $path = (string) ($o['path'] ?? '');
     $url  = owAbsUrl($path);
     $img  = (string) ($o['image'] ?? '');
@@ -46,7 +49,8 @@ function owSeo(array $o): void {
     echo '<meta property="og:url" content="' . $h($url) . "\">\n";
     echo '<meta property="og:image" content="' . $h($img) . "\">\n";
     echo '<meta property="og:image:alt" content="' . $h($en . ' · ' . $ar) . "\">\n";
-    echo "<meta property=\"og:locale\" content=\"en_US\">\n<meta property=\"og:locale:alternate\" content=\"ar_SA\">\n";
+    echo $isAr ? "<meta property=\"og:locale\" content=\"ar_SA\">\n<meta property=\"og:locale:alternate\" content=\"en_US\">\n"
+               : "<meta property=\"og:locale\" content=\"en_US\">\n<meta property=\"og:locale:alternate\" content=\"ar_SA\">\n";
     echo "<meta name=\"twitter:card\" content=\"summary_large_image\">\n";
     echo '<meta name="twitter:title" content="' . $h($en . ' · ' . $ar) . "\">\n";
     if ($desc !== '') echo '<meta name="twitter:description" content="' . $h(mb_substr($dEn !== '' ? $dEn : $dAr, 0, 200)) . "\">\n";

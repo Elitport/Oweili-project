@@ -66,7 +66,7 @@
   --nav-bg: rgba(255,255,255,0.82);
   --veil: linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.8) 55%, rgba(255,255,255,0.92) 100%);
   --veil-strong: rgba(255,255,255,0.93);
-  --hero-shade: rgba(0,0,0,0.15);
+  --hero-shade: radial-gradient(ellipse 75% 60% at 50% 52%, rgba(255,255,255,0.72), rgba(255,255,255,0.34));   /* soft veil: the text stays readable over the video (5 Nov 2026) */
 
   /* role accent colors (dashboards) */
   --color-artist: #DB8084;
@@ -155,7 +155,7 @@ html.dark-mode {
   --nav-bg: rgba(15,21,32,0.88);
   --veil: rgba(15,21,32,0.6);
   --veil-strong: rgba(15,21,32,0.9);
-  --hero-shade: rgba(15,21,32,0.6);
+  --hero-shade: radial-gradient(ellipse 75% 60% at 50% 52%, rgba(15,21,32,0.80), rgba(15,21,32,0.55));
   --shadow-card: 0 4px 24px rgba(0,0,0,0.35);
   --shadow-card-hover: 0 16px 40px rgba(0,0,0,0.5);
   --color-collector: #8FA1B1;
@@ -524,6 +524,11 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
 .cf-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-sm); }
 .cf-row.cf-edition { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .cf-row[hidden] { display: none; }
+.cf-row.cf-one { grid-template-columns: minmax(0, 220px); }
+/* standard sizes (size_lib.php): one list + orientation */
+.sz-pick .sz-hint { margin: 4px 0 0; font-size: var(--fs-caption); color: var(--color-body); }
+.sz-pick .sz-orient[hidden] { display: none; }
+.sz-pick .cf-choice label:has(input:disabled) { opacity: .45; }
 .cf-label { display: block; font-size: var(--fs-label); font-weight: 700; color: var(--color-dark); margin-bottom: 6px; }
 .cf-choice { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
 .cf-choice label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-input); cursor: pointer; font-size: 15px; color: var(--color-dark); }
@@ -554,19 +559,15 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
 .vf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 
 /* ── Studio mood photos (studio_lib.php, 5 Nov 2026) ── mood only, never shown as artworks.
-   .ow-photo-head: a page header with the photo behind it and a soft veil, so the text
-   stays readable (white veil in light mode, navy veil in dark mode).
-   .ow-card-photo: a soft photo strip at the top of a card (sign-up, 404, empty Gallery). */
-:root { --studio-veil: linear-gradient(rgba(255,255,255,0.80), rgba(255,255,255,0.88)); }
-html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.72), rgba(15,21,32,0.84)); }
+   .ow-backdrop: the photo is the background of the WHOLE page, behind all content. It is a
+   still layer (position: fixed), not background-attachment: fixed, which iPhones ignore; 100lvh
+   keeps it covering the screen while the iPhone address bar shows or hides, with no jump.
+   The veil keeps every text, card and button easy to read (white in light mode, navy in dark). */
+:root { --studio-veil: linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.84)); }
+html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.78), rgba(15,21,32,0.88)); }
 .ow-studio, .ow-studio img { display: block; width: 100%; height: 100%; }
 .ow-studio img { object-fit: cover; background: rgba(var(--rgb-accent),0.07); }
-.ow-photo-head { position: relative; isolation: isolate; overflow: hidden; max-width: none; border-radius: var(--radius-card);
-  border: 1px solid var(--color-border); padding: clamp(40px, 7vw, 88px) clamp(20px, 5vw, 56px); }
-.ow-photo-head > .ow-studio { position: absolute; inset: 0; z-index: -2; }
-.ow-photo-head::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--studio-veil); }
-.ow-photo-head > :not(.ow-studio) { position: relative; max-width: 720px; margin-left: auto; margin-right: auto; }
-.ow-card-photo { height: 180px; margin: 0 0 var(--space-md); border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border); position: relative; }
-.ow-card-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(var(--rgb-accent),0.10)); pointer-events: none; }
-html.dark-mode .ow-card-photo .ow-studio img { filter: brightness(0.85); }
-@media (min-width: 641px) { .ow-card-photo { height: 220px; } }
+.ow-backdrop { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: -1; overflow: hidden; pointer-events: none; }
+.ow-backdrop::after { content: ""; position: absolute; inset: 0; background: var(--studio-veil); }
+.ow-backdrop ~ .overlay, .ow-backdrop ~ .veil, .ow-backdrop ~ .bg-wrap { display: none; }   /* one veil only */
+@media print { .ow-backdrop { display: none; } }

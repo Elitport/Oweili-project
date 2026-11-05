@@ -12,10 +12,11 @@ if (!function_exists('owAsset')) require_once __DIR__ . '/ow_paths.php';
 if (!function_exists('owBi'))    require_once __DIR__ . '/artwork_lib.php';
 if (!function_exists('owSeo'))   require_once __DIR__ . '/seo_lib.php';
 if (!headers_sent()) { http_response_code(404); header('Cache-Control: no-store'); }
-$ar404 = ($_GET['lang'] ?? '') === 'ar';
+require_once __DIR__ . '/lang_lib.php';
+$ar404 = owIsAr();
 ?>
 <!DOCTYPE html>
-<html lang="<?= $ar404 ? 'ar' : 'en' ?>" dir="<?= $ar404 ? 'rtl' : 'ltr' ?>">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,12 +34,12 @@ $ar404 = ($_GET['lang'] ?? '') === 'ar';
 </style>
 </head>
 <body>
+<?= owStudioBackdrop('paint-cloth') ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="nf">
   <div class="card">
-    <div class="ow-card-photo"><?= owStudioPhoto('paint-cloth', true, 'ow-studio', '(min-width: 640px) 560px, 100vw') ?></div>
     <p class="num" aria-hidden="true">404</p>
     <h1><?= owBi('This page has wandered off', 'هذه الصفحة غير موجودة') ?></h1>
     <p><?= owBi('The page you looked for is not here. The art is still waiting for you in the Gallery.', 'الصفحة التي تبحث عنها ليست هنا. والفن ما زال بانتظارك في المعرض.') ?></p>
