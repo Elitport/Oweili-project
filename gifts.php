@@ -1,7 +1,7 @@
 <?php
 /* =====================================================================
- *  gifts.php — Oweili Gifts: "Gift a painting instead of flowers"
- *  («أهدِ لوحة بدل الورد»). For everyone (guests and buyers).
+ *  gifts.php — Oweili Gifts: "Give a gift that lasts"
+ *  («أهدِ ما يبقى»). For everyone (guests and buyers).
  *  The buyer picks an occasion (wedding, graduation, new baby, Eid,
  *  Ramadan, thank you, Teacher's Day), a ready artwork from the Gallery or
  *  a custom one, gift wrapping, a card message, the delivery date, the
@@ -132,11 +132,11 @@ if (!$choices && ($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') $f['mode'] = 
 $v = fn(string $k) => e((string) $f[$k]);
 ?>
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-title-en="Oweili Gifts · Gift a painting instead of flowers" data-title-ar="هدايا أويلي · أهدِ لوحة بدل الورد">
+<html lang="en" dir="ltr" data-title-en="Oweili Gifts · Give a gift that lasts" data-title-ar="هدايا أويلي · أهدِ ما يبقى">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Oweili Gifts: gift a painting instead of flowers', 'ar' => 'هدايا أويلي: أهدِ لوحة بدل الورد', 'desc_en' => 'Flowers fade. A painting stays. Choose an original artwork for a wedding, graduation, new baby or Eid, and we wrap and deliver it.', 'desc_ar' => 'الورد يذبل، واللوحة تبقى. اختر عملاً أصلياً لزواج أو تخرّج أو مولود أو عيد، ونحن نغلّفه ونوصله.', 'path' => 'gifts.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Oweili Gifts: give a gift that lasts', 'ar' => 'هدايا أويلي: أهدِ ما يبقى', 'desc_en' => 'A handmade artwork stays for years. Choose an original piece for a wedding, graduation, new baby or Eid, and we wrap and deliver it.', 'desc_ar' => 'عمل فني مصنوع باليد يبقى سنوات. اختر عملاً أصلياً لزواج أو تخرّج أو مولود أو عيد، ونحن نغلّفه ونوصله.', 'path' => 'gifts.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
@@ -192,8 +192,8 @@ $v = fn(string $k) => e((string) $f[$k]);
   <div class="d-wrap">
     <header class="d-head reveal">
       <span class="d-badge"><i aria-hidden="true"></i><?= owBi('Oweili Gifts', 'هدايا أويلي') ?></span>
-      <h1><?= owBi('Gift a painting instead of flowers', 'أهدِ لوحة بدل الورد') ?></h1>
-      <p><?= owBi('Flowers fade in a week. A painting stays for a lifetime. Choose a piece, and we wrap it and deliver it with your card.', 'الورد يذبل في أسبوع، واللوحة تبقى العمر كله. اختر قطعة، ونحن نغلّفها ونوصلها مع بطاقتك.') ?></p>
+      <h1><?= owBi('Give a gift that lasts', 'أهدِ ما يبقى') ?></h1>
+      <p><?= owBi('A handmade artwork stays on the wall for years, and the memory stays with it. Choose a piece, and we wrap it and deliver it with your card.', 'عمل فني مصنوع باليد يبقى على الجدار سنوات، وتبقى معه الذكرى. اختر قطعة، ونحن نغلّفها ونوصلها مع بطاقتك.') ?></p>
     </header>
 
 <?php if ($done): ?>

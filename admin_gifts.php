@@ -65,7 +65,7 @@ owAdminTop('Gift requests', 'طلبات الهدايا', '
 ', '<a class="btn btn-ghost btn-sm" href="gifts.php" target="_blank" rel="noopener">' . owBi('Open the Gifts page', 'افتح صفحة الهدايا') . ' ↗</a>');
 ?>
   <h1><?= owBi('Gift requests', 'طلبات الهدايا') ?></h1>
-  <p class="mini"><?= owBi('From "Gift a painting instead of flowers". Call or write to the buyer, confirm the price, then arrange wrapping and delivery by hand. No payment is taken on the site yet.', 'من «أهدِ لوحة بدل الورد». اتصل بالمشتري أو راسله، أكّد السعر، ثم رتّب التغليف والتوصيل بنفسك. لا يُدفع أي مبلغ في الموقع بعد.') ?></p>
+  <p class="mini"><?= owBi('From "Give a gift that lasts". Call or write to the buyer, confirm the price, then arrange wrapping and delivery by hand. No payment is taken on the site yet.', 'من «أهدِ ما يبقى». اتصل بالمشتري أو راسله، أكّد السعر، ثم رتّب التغليف والتوصيل بنفسك. لا يُدفع أي مبلغ في الموقع بعد.') ?></p>
   <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The gifts table is not set up yet (night_update.sql).', 'جدول الهدايا غير مُعدّ بعد (night_update.sql).') ?></div><?php endif; ?>
   <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
   <?php if (isset($_GET['unpaid'])): ?><div class="alert alert-error"><?= owBi('A custom gift can only move to In progress or Done after it is marked as paid.', 'لا ينتقل الطلب الخاص إلى «قيد التنفيذ» أو «تم» إلا بعد تسجيل الدفع.') ?></div><?php endif; ?>

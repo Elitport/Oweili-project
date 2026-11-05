@@ -222,11 +222,11 @@
 - Artist side: My Studio → Commissions tab, artist_commission.php?id=N
 - Files: commission.php, commission_lib.php, commission_file.php, artist_commission.php, admin_commissions.php (new); artist_studio.php, admin.php, theme_head.php, alert_lib.php, marketplace.php, gifts.php, robots.txt, .gitignore (.private/). Tables: commissions, commission_files, commission_nda, users, activity_log
 
-### Oweili Gifts: "Gift a painting instead of flowers" (2 Nov 2026)
+### Oweili Gifts: "Give a gift that lasts" / «أهدِ ما يبقى» (2 Nov 2026; tagline changed 5 Nov 2026)
 - gifts.php («هدايا أويلي»): occasions (wedding, graduation, new baby, Eid, Ramadan, thank you, Teacher's Day), a ready artwork from the Gallery (the 12 newest available, or the one chosen with ?artwork=N) or a custom one (what it should be + optional budget), gift wrapping, card message, delivery date (3 days to 1 year ahead), "Surprise" (the recipient never sees the price), the recipient's name, phone (optional), city and address, and the buyer's name, phone and email (filled in for a signed-in buyer)
 - For now it is a request: saved in gift_requests, an email alert to the admin (alert kind 'gift', grouped like the others), a "we received your request" email to the buyer in both languages, and the admin follows up by hand in admin_gifts.php (Requests → Gifts): every detail, status New / Contacted / In progress / Done / Cancelled and a private note. No payment
 - Safety: security token, hidden robot trap, at most 3 requests per visitor per hour, only artworks a visitor can see in the Gallery. Buyer and recipient details are shown only to the admin
-- Links: the main menu (Collect → Gifts), Gallery top ("Gift a painting instead of flowers" card, first page), "Give it as a gift" in the artwork window and on the artwork page, the footer (Gifts / الهدايا)
+- Links: the main menu (Collect → Gifts), Gallery top ("Give a gift that lasts" card, first page), "Give it as a gift" in the artwork window and on the artwork page, the footer (Gifts / الهدايا)
 - Buyers see their gift requests (and private commissions, status only) in the Buyer dashboard → My requests
 - Files: gifts.php, admin_gifts.php, request_lib.php (new); collector_dashboard.php, sitemap.php, marketplace.php, artwork.php, footer.php, admin.php, alert_lib.php. Tables: gift_requests, artworks, users, activity_log
 
@@ -721,6 +721,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Voice: confident, warm, bilingual, open to the world — proudly Saudi-born
 - Always use "Oweili" not "Resha Art" (old name)
 - Tagline concept: human hands, real art, trusted platform
+- No flowers (owner, 5 Nov 2026): Oweili never compares itself with flower shops. No "flower", "flowers", "bouquet", «ورد», «زهور», «باقة», «بدل الورد» anywhere (pages, emails, titles, descriptions, style texts). Gifts tagline: "Give a gift that lasts" / «أهدِ ما يبقى»; the message is a handmade artwork that stays for years. «اللازورد» (lapis) and «وردي» (pink) are other words
 - Site words (owner, 4 Nov 2026): visitor text, emails and page titles never use "human", "humans", «بشر», «بشري» or «إنسان». The tagline is "the home of real art" / «بيت الفن الأصيل» (footer, email footer, certificate). Say "real hands", "made by hand", "handmade", "an artist's own hand" instead. («بشرة» = skin and «بشرو» = Bashro are other words and stay.) Code names such as .human-badge stay, visitors never see them
 
 ### 10. Outreach Composer

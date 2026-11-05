@@ -439,7 +439,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
   <!-- GIFTS + PRIVATE COMMISSIONS -->
   <div class="mp-promos">
     <a class="card card-hover mp-promo" href="gifts.php"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg>
-      <span><b><?= $ar ? 'أهدِ لوحة بدل الورد' : 'Gift a painting instead of flowers' ?></b><?= $ar ? 'زواج، تخرّج، مولود، عيد. نغلّفها ونوصلها.' : 'Weddings, graduations, new babies, Eid. We wrap and deliver.' ?></span></a>
+      <span><b><?= $ar ? 'أهدِ ما يبقى' : 'Give a gift that lasts' ?></b><?= $ar ? 'زواج، تخرّج، مولود، عيد. نغلّفها ونوصلها.' : 'Weddings, graduations, new babies, Eid. We wrap and deliver.' ?></span></a>
     <?php if (is_file(__DIR__ . '/commission.php')): ?>
     <a class="card card-hover mp-promo" href="commission.php"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/><path d="M17 3l1 1.5L20 5l-1.5 1L18 8l-1-2-2-.5 2-1z"/></svg>
       <span><b><?= $ar ? 'عمل خاص من صورتك' : 'A private commission from your photo' ?></b><?= $ar ? 'بورتريه أو ذكرى، يرسمها فنان. صورك تبقى سرّية.' : 'A portrait or a memory, painted by an artist. Your photos stay confidential.' ?></span></a>
@@ -593,7 +593,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         <?php if ($showFav): ?><button type="button" class="fav-btn fav-inline" id="m-fav" data-fav="" aria-pressed="false" aria-label="<?= e($favLbl['on']) ?>"><?= MP_HEART ?></button><?php endif; ?>
       </div>
       <a class="m-share" id="m-share" href="#" onclick="return shareArtwork(this)"><?= $ar ? 'شارك هذا العمل' : 'Share this artwork' ?></a>
-      <a class="m-share m-gift" id="m-gift" href="gifts.php"><?= $ar ? 'أهدِه بدل الورد' : 'Give it as a gift' ?></a>
+      <a class="m-share m-gift" id="m-gift" href="gifts.php"><?= $ar ? 'قدّمه هدية' : 'Give it as a gift' ?></a>
       <!-- I'm Interested: name, phone, email → inquire.php -->
       <div class="m-interest">
         <button type="button" class="btn btn-primary btn-block" id="mi-open" onclick="openInterest()"><?= $ar ? 'أنا مهتم' : 'I’m Interested' ?></button>
