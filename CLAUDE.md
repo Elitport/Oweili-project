@@ -721,7 +721,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Voice: confident, warm, bilingual, open to the world — proudly Saudi-born
 - Always use "Oweili" not "Resha Art" (old name)
 - Tagline concept: human hands, real art, trusted platform
-- No flowers (owner, 5 Nov 2026): Oweili never compares itself with flower shops. No "flower", "flowers", "bouquet", «ورد», «زهور», «باقة», «بدل الورد» anywhere (pages, emails, titles, descriptions, style texts). Gifts tagline: "Give a gift that lasts" / «أهدِ ما يبقى»; the message is a handmade artwork that stays for years. «اللازورد» (lapis) and «وردي» (pink) are other words
+- No flowers in marketing (owner, 5 Nov 2026): Oweili never compares itself with flower shops. No "flower", "flowers", "bouquet", «ورد», «زهور», «باقة», «بدل الورد» in OUR OWN marketing text: Gifts, buttons, banners, emails, page titles and descriptions. The rule does NOT apply to Explore Art Styles (art_styles.js): those are historical facts about artists and stay accurate (e.g. Ai Weiwei's work is really titled "Sunflower Seeds", Nolde painted flowers, Rory McEwen painted single flowers). Gifts tagline: "Give a gift that lasts" / «أهدِ ما يبقى»; the message is a handmade artwork that stays for years. «اللازورد» (lapis) and «وردي» (pink) are other words
 - Site words (owner, 4 Nov 2026): visitor text, emails and page titles never use "human", "humans", «بشر», «بشري» or «إنسان». The tagline is "the home of real art" / «بيت الفن الأصيل» (footer, email footer, certificate). Say "real hands", "made by hand", "handmade", "an artist's own hand" instead. («بشرة» = skin and «بشرو» = Bashro are other words and stay.) Code names such as .human-badge stay, visitors never see them
 
 ### 10. Outreach Composer

@@ -119,7 +119,7 @@ window.OW_ART_STYLES = [
     [
      "Emil Nolde",
      "German, 1867–1956",
-     "He soaked paper with deep, glowing color, especially gardens and seas."
+     "He soaked paper with deep, glowing color, especially flowers and seas."
     ]
    ],
    "guide": [
@@ -226,7 +226,7 @@ window.OW_ART_STYLES = [
     [
      "إميل نولده",
      "ألماني، 1867–1956",
-     "أشبع الورق بألوان عميقة متوهجة، خاصة الحدائق والبحار."
+     "أشبع الورق بألوان عميقة متوهجة، خاصة الزهور والبحار."
     ]
    ],
    "guide": [
@@ -246,7 +246,7 @@ window.OW_ART_STYLES = [
    "feel": "Timeless",
    "essence": "Slow-drying color with a deep glow, built in patient layers.",
    "story": [
-    "Oil paint is older than many think. Painters in the Bamiyan caves of Afghanistan used oil binders around the 600s. But it truly took off in Flanders in the 1400s.",
+    "Oil paint is older than many think. Painters in the Bamiyan caves of Afghanistan used oil binders around the 600s. But it truly flowered in Flanders in the 1400s.",
     "Jan van Eyck’s glowing layers showed what oil could do. Leonardo, Rembrandt and Vermeer built light and shadow with it. One portrait could take months of thin, slow layers.",
     "Oil dries slowly, so the artist can return again and again. Today, painters from Cairo to Jeddah still love its depth. Mahmoud Saïd and Safeya Binzagr painted their own worlds in oil. The surface remembers every decision."
    ],
@@ -1038,7 +1038,7 @@ window.OW_ART_STYLES = [
     [
      "Qi Baishi",
      "Chinese, 1864–1957",
-     "He painted shrimp, birds and plants in fresh, playful ink strokes."
+     "He painted shrimp, birds and flowers in fresh, playful ink strokes."
     ],
     [
      "Aubrey Beardsley",
@@ -1149,7 +1149,7 @@ window.OW_ART_STYLES = [
     [
      "تشي بايشي",
      "صيني، 1864–1957",
-     "رسم الروبيان والطيور والنباتات بضربات حبر منعشة مرحة."
+     "رسم الروبيان والطيور والزهور بضربات حبر منعشة مرحة."
     ],
     [
      "أوبري بيردسلي",
@@ -2789,7 +2789,7 @@ window.OW_ART_STYLES = [
     [
      "Qi Baishi",
      "Chinese, 1864–1957",
-     "He painted shrimp, plants and insects with joyful, lively ink."
+     "He painted shrimp, flowers and insects with joyful, lively ink."
     ],
     [
      "Xu Beihong",
@@ -2901,7 +2901,7 @@ window.OW_ART_STYLES = [
     [
      "تشي بايشي",
      "صيني، 1864–1957",
-     "رسم الروبيان والنباتات والحشرات بحبر مرح نابض بالحياة."
+     "رسم الروبيان والزهور والحشرات بحبر مرح نابض بالحياة."
     ],
     [
      "شو بيهونغ",
@@ -5499,7 +5499,7 @@ window.OW_ART_STYLES = [
   "level": "advanced",
   "en": {
    "name": "Islamic Ornamental Art",
-   "feel": "Lively",
+   "feel": "Blooming",
    "essence": "Endless vines and blossoms that make every surface sing.",
    "story": [
     "Islamic ornament grew from the vine and the leaf. Artists turned living plants into endless, flowing patterns. Westerners later called it arabesque, and Persian and Turkish masters call it islimi.",
@@ -5610,8 +5610,8 @@ window.OW_ART_STYLES = [
   },
   "ar": {
    "name": "الزخرفة الإسلامية",
-   "feel": "نابض",
-   "essence": "أغصان ونباتات لا تنتهي تجعل كل سطح يغنّي.",
+   "feel": "مزهر",
+   "essence": "أغصان وأزهار لا تنتهي تجعل كل سطح يغنّي.",
    "story": [
     "نشأت الزخرفة الإسلامية من الغصن والورقة. فحوّل الفنانون النبات الحي إلى أنماط منسابة بلا نهاية. وسمّاها الغرب لاحقاً الأرابيسك، ويسمّيها الأساتذة الفرس والأتراك الإسليمي.",
     "حفر الصنّاع العباسيون أنماطاً جريئة في جدران الجص بسامرّاء. ونقشتها القاهرة المملوكية في الخشب والحجر. ورسم المذهّبون العثمانيون والفرس حواشي ذهبية حول النصوص المقدسة تُسمّى التذهيب.",
@@ -5793,7 +5793,7 @@ window.OW_ART_STYLES = [
      "Holds the thickened water for ebru."
     ],
     [
-     "Horsehair brushes and thin twigs",
+     "Horsehair and rose-stem brushes",
      "Sprinkle colour onto the water for marbling."
     ]
    ],
@@ -5818,7 +5818,7 @@ window.OW_ART_STYLES = [
     [
      "Necmeddin Okyay",
      "Turkish, 1883–1976",
-     "A master of ebru who created delicate plant patterns on water."
+     "A master of ebru who created flower patterns on water."
     ],
     [
      "Shahzia Sikander",
@@ -5900,7 +5900,7 @@ window.OW_ART_STYLES = [
      "يحمل الماء المُكثَّف لفن الإبرو."
     ],
     [
-     "فُرَش شعر الخيل وأغصان رفيعة",
+     "فُرَش شعر الخيل وعيدان الورد",
      "تنثر اللون على الماء في الإبرو."
     ]
    ],
@@ -5925,7 +5925,7 @@ window.OW_ART_STYLES = [
     [
      "نجم الدين أوقياي",
      "تركي، 1883–1976",
-     "أستاذ في الإبرو ابتكر أنماطاً نباتية رقيقة على الماء."
+     "أستاذ في الإبرو ابتكر أنماط الأزهار على الماء."
     ],
     [
      "شازيا سيكاندر",
@@ -8434,7 +8434,7 @@ window.OW_ART_STYLES = [
     [
      "Ai Weiwei",
      "Chinese, born 1957",
-     "His millions of hand-painted porcelain seeds filled Tate Modern in 2010."
+     "His hand-painted porcelain sunflower seeds filled Tate Modern in 2010."
     ],
     [
      "Ahmed Mater",
@@ -9337,7 +9337,7 @@ window.OW_ART_STYLES = [
     [
      "Rory McEwen",
      "Scottish, 1932–1982",
-     "He painted single blooms and leaves on vellum with fresh, modern grace."
+     "He painted single flowers and leaves on vellum with fresh, modern grace."
     ]
    ],
    "guide": [
@@ -9444,7 +9444,7 @@ window.OW_ART_STYLES = [
     [
      "روري ماك إيوين",
      "اسكتلندي، 1932–1982",
-     "رسم براعم وأوراقاً مفردة على الرق برشاقة حديثة."
+     "رسم زهوراً وأوراقاً مفردة على الرق برشاقة حديثة."
     ]
    ],
    "guide": [
