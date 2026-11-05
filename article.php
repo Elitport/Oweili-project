@@ -8,6 +8,7 @@
  *  Tables: articles, article_images, photo_consents (see article_lib.php)
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; if (empty($_GET['preview'])) owPublicPage();   // staff previews stay private
 require_once __DIR__ . '/article_lib.php';
 
 $TYPES = owArticleTypes();

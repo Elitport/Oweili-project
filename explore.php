@@ -9,6 +9,7 @@
  *  read below uses a prepared statement.
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languages
 
 /* Newest approved artwork per Gallery type, for "From Our Gallery" in each style window.

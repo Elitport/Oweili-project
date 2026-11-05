@@ -14,6 +14,7 @@
  *  Tables: auction_waitlist, activity_log, users
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/request_lib.php';
 require_once __DIR__ . '/auction_lib.php';

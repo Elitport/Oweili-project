@@ -10,6 +10,7 @@
  *  Tables read: site_settings, users, artworks (gallery_lib.php)
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';   // owBi(): one text in both languages
 require_once __DIR__ . '/gallery_lib.php';   // Artist of the week
 $aotw = null;
@@ -69,13 +70,9 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 .hero-btns { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; }
 .hero-btns .btn { min-width: 200px; }
 
-/* gentle fade-in, CSS only: badge, then headline, subtitle and buttons */
-@keyframes ow-fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.fade { animation: ow-fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) both; }
-.fade-1 { animation-delay: 0.05s; }
-.fade-2 { animation-delay: 0.2s; }
-.fade-3 { animation-delay: 0.35s; }
-.fade-4 { animation-delay: 0.5s; }
+/* one very quick soft fade (0.15 s), everything at once: nothing starts hidden or waits */
+@keyframes ow-fadeUp {from{opacity:.7}to{opacity:1}}
+.fade { animation:ow-fadeUp .15s ease-out both; }
 
 .aotw-home { position: fixed; z-index: 3; bottom: var(--space-md); inset-inline-end: var(--space-md); display: flex; align-items: center; gap: 12px;
   max-width: 340px; padding: 10px 16px 10px 10px; border-radius: var(--radius-card); text-decoration: none; color: inherit;

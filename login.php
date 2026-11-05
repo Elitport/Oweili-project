@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/platform_lib.php';
 
 /* Checks a password and quietly upgrades old saves.
@@ -90,7 +91,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .row-between{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:12px;}
 .remember{display:flex;align-items:center;gap:7px;color:var(--color-body);cursor:pointer;}
 .remember input{width:15px;height:15px;accent-color:var(--color-primary);cursor:pointer;}
-@keyframes riseUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes riseUp {from{opacity:.7}to{opacity:1}}
 </style>
 </head>
 <body>

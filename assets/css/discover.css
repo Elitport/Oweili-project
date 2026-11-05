@@ -39,8 +39,9 @@ main { position: relative; z-index: 2; }
 .d-empty .btn { margin-top: var(--space-md); }
 
 /* gentle rise-in (only with JavaScript on, so nothing is ever hidden without it) */
-.js .reveal { opacity: 0; transform: translateY(18px); }
-.js .reveal.in { animation: ow-riseUp 0.8s cubic-bezier(0.22,1,0.36,1) both; }
+/* sections show at once (4 Nov 2026): no hidden start, no rising in */
+.js .reveal { opacity: 1; transform: none; }
+.js .reveal.in { animation: none; }
 
 @media (max-width: 1024px) { .a-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) { .d-wrap { padding: calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl); } .a-grid { gap: var(--space-sm); } }

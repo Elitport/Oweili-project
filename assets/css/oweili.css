@@ -473,9 +473,9 @@ a.stage:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 
 .tag-red  { background: var(--color-tint-pink); color: var(--color-dark); border: 1px solid rgba(var(--rgb-primary),0.25); }
 .tag-dark { background: rgba(var(--rgb-ink),0.06); color: var(--color-dark); border: 1px solid var(--color-border); }
 
-@keyframes ow-riseUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ow-riseUp {from{opacity:.7}to{opacity:1}}
 @keyframes ow-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
-.animate-rise { animation: ow-riseUp 0.9s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-rise { animation:ow-riseUp .15s ease-out both; }
 
 @media (max-width: 1024px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) {

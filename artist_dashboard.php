@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; if (isset($_GET['id']) && (int) $_GET['id'] !== (int) ($_SESSION['user_id'] ?? 0)) owPublicPage();   // the public profile only, never the artist's own panel
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/cert_lib.php';      // a deleted artwork's certificate is cancelled

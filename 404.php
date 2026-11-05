@@ -7,6 +7,7 @@
  * ===================================================================== */
 /* the session must start before anything is sent (the menu shows the signed-in person) */
 if (!function_exists('currentUser')) require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 if (!function_exists('owAsset')) require_once __DIR__ . '/ow_paths.php';
 if (!function_exists('owBi'))    require_once __DIR__ . '/artwork_lib.php';
 if (!function_exists('owSeo'))   require_once __DIR__ . '/seo_lib.php';

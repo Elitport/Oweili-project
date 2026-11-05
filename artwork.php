@@ -13,6 +13,7 @@
  *  Tables: artworks, users, artwork_stages, artwork_colors, favorites, certificates
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/seo_lib.php';

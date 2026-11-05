@@ -6,6 +6,7 @@
  *  removal, liability, Saudi law. Layout: legal_lib.php. Tables: none
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/legal_lib.php';
 $C = OW_LEGAL_CONTACT;
 

@@ -15,6 +15,7 @@
  *  Tables: commissions, commission_files, users, activity_log
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; if (!isset($_GET['ref']) && !isset($_GET['k']) && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') owPublicPage();   // the buyer's private link stays private
 require_once __DIR__ . '/commission_lib.php';
 require_once __DIR__ . '/request_lib.php';
 $ART_TYPES = require __DIR__ . '/art_types.php';

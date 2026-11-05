@@ -72,13 +72,15 @@ if (!defined('OW_THEME_HEAD')):
     define('OW_THEME_HEAD', true);
 ?>
 <style>html{background:#fff}html.dark-mode{background:#0F1520}</style>
+<?php require_once __DIR__ . '/page_cache.php'; ?>
+<script>window.OW_STATE = <?= json_encode(owStateCode()) ?>; window.OW_STATE_AT = <?= (int) round(microtime(true) * 1000) ?>; window.OW_PRIVATE = <?= defined('OW_PUBLIC_PAGE') ? 'false' : 'true' ?>;</script>
 <link rel="preload" href="<?= owBase() ?>assets/fonts/dmsans-300-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <?php /* Instant page changes: Chrome, Edge and Android load a page in the background
    when the finger or mouse comes near its link (prefetch), and get it fully ready the
    moment it is pressed (prerender). Never for pages that change something when they
    are opened (sign out, email links, uploads, staff pages, private files). */ ?>
 <script type="speculationrules">
-{"prefetch":[{"source":"document","eagerness":"moderate","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/logout*","/verify.php*","/forgot*","/upload_artwork*","/edit_artwork*","/edit_profile*","/my_articles*","/my_orders*","/commission_file*","/certificate*","/img*","/view*","/favorite*","/inquire*","/bashro_api*","/bashro_send*","/admin*","/subadmin_dashboard*","/artist_commission*"]}},{"not":{"href_matches":["/*\\?*leave=*","/*\\?*logout=*","/*\\?*token=*","/*\\?*k=*"]}},{"not":{"selector_matches":"[data-no-prefetch], [download], [target=_blank]"}}]}}],"prerender":[{"source":"document","eagerness":"conservative","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/logout*","/verify.php*","/forgot*","/upload_artwork*","/edit_artwork*","/edit_profile*","/my_articles*","/my_orders*","/commission_file*","/certificate*","/img*","/view*","/favorite*","/inquire*","/bashro_api*","/bashro_send*","/admin*","/subadmin_dashboard*","/artist_commission*"]}},{"not":{"href_matches":["/*\\?*leave=*","/*\\?*logout=*","/*\\?*token=*","/*\\?*k=*","/*\\?*show=*"]}},{"not":{"selector_matches":"[data-no-prefetch], [download], [target=_blank]"}}]}}]}
+{"prefetch":[{"source":"document","eagerness":"moderate","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/logout*","/verify.php*","/forgot*","/upload_artwork*","/edit_artwork*","/edit_profile*","/my_articles*","/my_orders*","/commission_file*","/certificate*","/img*","/view*","/favorite*","/inquire*","/bashro_api*","/bashro_send*","/admin*","/subadmin_dashboard*","/artist_commission*","/auth_state*"]}},{"not":{"href_matches":["/*\\?*leave=*","/*\\?*logout=*","/*\\?*token=*","/*\\?*k=*"]}},{"not":{"selector_matches":"[data-no-prefetch], [download], [target=_blank]"}}]}}],"prerender":[{"source":"document","eagerness":"conservative","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/logout*","/verify.php*","/forgot*","/upload_artwork*","/edit_artwork*","/edit_profile*","/my_articles*","/my_orders*","/commission_file*","/certificate*","/img*","/view*","/favorite*","/inquire*","/bashro_api*","/bashro_send*","/admin*","/subadmin_dashboard*","/artist_commission*","/auth_state*"]}},{"not":{"href_matches":["/*\\?*leave=*","/*\\?*logout=*","/*\\?*token=*","/*\\?*k=*","/*\\?*show=*"]}},{"not":{"selector_matches":"[data-no-prefetch], [download], [target=_blank]"}}]}}]}
 </script>
 <script>
 (function(){
@@ -111,23 +113,40 @@ if (!defined('OW_THEME_HEAD')):
 <script>
 /* Page changes open straight away (no fade-out wait; the soft cross-fade is CSS,
    see @view-transition in oweili.css). Browsers without the instant loading above
-   (Firefox; Safari ignores it) get a light fallback: the page is fetched in the
-   background once the finger touches, or the mouse rests on, a link. Same rules. */
+   (Safari on iPhone and Mac, Firefox) get their own early load: the moment a
+   finger touches a link (or the mouse rests on it), that page is fetched with
+   X-Ow-Prefetch: 1. The server answers public pages with a 10-second copy
+   (page_cache.php), so the tap a moment later opens it at once. Only PUBLIC
+   pages are ever fetched early (the list below), never pages that change
+   something when opened (Log out, email links, uploads, staff pages). */
 (function(){
   var d = document.documentElement;
-  var skip = /^\/(logout|verify\.php|forgot|upload_artwork|edit_artwork|edit_profile|my_articles|my_orders|commission_file|certificate|img|view|favorite|inquire|bashro_api|bashro_send|admin|subadmin_dashboard|artist_commission)/;
-  var risky = /[?&](leave|logout|token|k)=/;
+  var skip = /^\/(logout|verify\.php|forgot|upload_artwork|edit_artwork|edit_profile|my_articles|my_orders|commission_file|certificate|img|view|favorite|inquire|bashro_api|bashro_send|admin|subadmin_dashboard|artist_commission|auth_state)/;
+  var risky = /[?&](leave|logout|token|k|ref|preview)=/;
+  var pub = /^\/(|index\.php|marketplace\.php|explore\.php|community\.php|gifts\.php|auctions(\.php)?|support\.php|institutes\.php|articles_list\.php|article\.php|artwork\.php|artist_dashboard\.php|login\.php|register(_artist|_collector)?\.php|privacy\.php|terms\.php|cert_verify\.php|verify|commission\.php)$/;
   var native = !!(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules'));
-  var done = {}, timer = null, slow = false;
+  var done = {}, count = 0, timer = null, slow = false;
   try { var c = navigator.connection || {}; slow = !!c.saveData || /(^|-)(2g|3g)$/.test(c.effectiveType || ''); } catch (e) {}
   function warm(a){
-    if (native || slow || !a || a.hasAttribute('download') || a.hasAttribute('data-no-prefetch') || (a.target && a.target !== '_self')) return;
+    if (native || slow || count >= 8 || !a || !window.fetch || a.hasAttribute('download') || a.hasAttribute('data-no-prefetch') || (a.target && a.target !== '_self')) return;
     var u; try { u = new URL(a.href, location.href); } catch (x) { return; }
-    if (u.origin !== location.origin || skip.test(u.pathname) || risky.test(u.search)) return;
+    if (u.origin !== location.origin || skip.test(u.pathname) || risky.test(u.search) || !pub.test(u.pathname)) return;
+    if (u.pathname === '/artist_dashboard.php' && !/[?&]id=\d/.test(u.search)) return;   // only public profiles
     if (u.pathname === location.pathname && u.search === location.search) return;
-    var k = u.pathname + u.search; if (done[k]) return; done[k] = 1;
-    var l = document.createElement('link'); l.rel = 'prefetch'; l.href = k; document.head.appendChild(l);
+    var k = u.pathname + u.search; if (done[k]) return; done[k] = 1; count++;
+    try { fetch(k, { credentials: 'same-origin', headers: { 'X-Ow-Prefetch': '1' } }).catch(function(){}); } catch (x) {}
   }
+  /* Safety for kept copies (Back button, early loads): if the visitor signed in or
+     out since this page was made, reload it, so nobody sees another sign-in state */
+  var made = window.OW_STATE_AT || 0;
+  function check(){
+    if (!window.OW_STATE || !window.fetch) return;
+    fetch('/auth_state.php', { credentials: 'same-origin', cache: 'no-store' }).then(function(r){ return r.json(); })
+      .then(function(j){ if (j && j.s && j.s !== window.OW_STATE) location.reload(); }).catch(function(){});
+  }
+  /* private pages (dashboards, studio, admin, private links) are always made fresh, never shown from a kept copy */
+  window.addEventListener('pageshow', function(e){ if (!e.persisted) return; if (window.OW_PRIVATE) { location.reload(); return; } check(); });
+  document.addEventListener('DOMContentLoaded', function(){ if (made && Date.now() - made > 3000) check(); });
   function link(e){ return e.target && e.target.closest ? e.target.closest('a[href]') : null; }
   /* photos: mark each one once it has loaded (or failed), so its soft placeholder tint goes away (oweili.css) */
   var mark = function(e){ var t = e.target; if (t && t.tagName === 'IMG') t.classList.add('ld'); };

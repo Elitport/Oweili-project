@@ -129,7 +129,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .v-icon.ok{background:rgba(var(--rgb-accent),0.12);border:1px solid rgba(var(--rgb-accent),0.3);}
 .v-icon.bad{background:rgba(var(--rgb-primary),0.1);border:1px solid rgba(var(--rgb-primary),0.25);}
 .redir-note{margin-top:16px;font-size:12px;color:var(--color-body);}
-@keyframes riseUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes riseUp {from{opacity:.7}to{opacity:1}}
 </style>
 </head>
 <body>

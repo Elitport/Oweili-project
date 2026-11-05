@@ -1,6 +1,7 @@
 <?php
 // marketplace.php — Oweili · The Gallery (live, database-driven; file name kept as marketplace.php)
 require_once 'config.php';
+require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/gallery_lib.php';   // filters, collections, Artist of the week, Verified artist
@@ -210,13 +211,13 @@ foreach ($modalArtworks as $aw) {
   <style>
     /* Gallery (marketplace.php) layout only — colors, type sizes and buttons come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
-    .page-header{margin-bottom:var(--space-md);animation:mpRise .6s cubic-bezier(.22,1,.36,1) both;}
+    .page-header{margin-bottom:var(--space-md);animation:mpRise .15s ease-out both;}
     .page-header h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
     .page-header p{font-size:var(--fs-body);max-width:600px;margin:0;}
-    .human-banner{text-align:center;margin:0 0 var(--space-lg);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-card);font-size:var(--fs-body);font-weight:600;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.15);animation:mpRise .6s .08s cubic-bezier(.22,1,.36,1) both;}
+    .human-banner{text-align:center;margin:0 0 var(--space-lg);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-card);font-size:var(--fs-body);font-weight:600;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.15);animation:mpRise .15s ease-out both;}
 
     /* filters: search, 6 category pills, then a small row with status and sort */
-    .mp-tools{display:flex;flex-direction:column;gap:var(--space-sm);margin-bottom:var(--space-md);animation:mpRise .6s .14s cubic-bezier(.22,1,.36,1) both;}
+    .mp-tools{display:flex;flex-direction:column;gap:var(--space-sm);margin-bottom:var(--space-md);animation:mpRise .15s ease-out both;}
     .mp-search{display:flex;gap:var(--space-xs);max-width:460px;}
     .mp-search .input{flex:1;min-width:0;}
     .cat-pills{display:flex;flex-wrap:wrap;gap:var(--space-xs);}
@@ -240,7 +241,7 @@ foreach ($modalArtworks as $aw) {
 
     /* artwork cards */
     .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);}
-    .mp-card{border-radius:16px;animation:mpRise .5s cubic-bezier(.22,1,.36,1) both;}
+    .mp-card{border-radius:16px;animation:mpRise .15s ease-out both;}
     .mp-card:nth-child(2){animation-delay:.04s}.mp-card:nth-child(3){animation-delay:.08s}.mp-card:nth-child(4){animation-delay:.12s}
     .mp-card:nth-child(n+5){animation-delay:.16s}
     .mp-card:hover{transform:translateY(-6px);}
@@ -256,7 +257,7 @@ foreach ($modalArtworks as $aw) {
     .mp-card .btn{margin-top:var(--space-xs);border-radius:8px;}
 
     /* empty state */
-    .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);animation:mpRise .5s cubic-bezier(.22,1,.36,1) both;}
+    .gallery-empty{text-align:center;padding:var(--space-2xl) var(--space-lg);animation:mpRise .15s ease-out both;}
     .gallery-empty svg{width:48px;height:48px;fill:none;stroke:var(--color-light);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:var(--space-sm);}
     .gallery-empty h2{font-size:var(--fs-subtitle);margin:0 0 var(--space-md);}
     .gallery-empty .ge-actions{display:flex;flex-wrap:wrap;gap:var(--space-xs);justify-content:center;}
@@ -314,7 +315,7 @@ foreach ($modalArtworks as $aw) {
     .f-check{grid-column:1 / span 2;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--color-dark);}
     .f-acts{grid-column:3 / -1;display:flex;gap:var(--space-xs);justify-content:flex-end;flex-wrap:wrap;}
     /* artist of the week */
-    .aotw{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;overflow:hidden;padding:0;margin:0 0 var(--space-lg);animation:mpRise .6s .1s cubic-bezier(.22,1,.36,1) both;}
+    .aotw{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;overflow:hidden;padding:0;margin:0 0 var(--space-lg);animation:mpRise .15s ease-out both;}
     .aotw-art{position:relative;aspect-ratio:4/3;background:var(--color-frame);}
     .aotw-art img{width:100%;height:100%;object-fit:cover;display:block;}
     .aotw-txt{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:var(--space-xs);padding:var(--space-lg);}
@@ -348,7 +349,7 @@ foreach ($modalArtworks as $aw) {
     .mp-promo svg{width:40px;height:40px;flex-shrink:0;padding:8px;border-radius:12px;background:var(--color-tint-pink);fill:none;stroke:var(--color-dark);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
     .m-gift{margin-inline-start:var(--space-sm);}
     @media(max-width:640px){ .mp-promos{grid-template-columns:1fr;} }
-    @keyframes mpRise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+    @keyframes mpRise {from{opacity:.7}to{opacity:1}}
     @media (prefers-reduced-motion: reduce){ .page-header,.human-banner,.mp-tools,.mp-card,.gallery-empty,.modal{animation:none;} .mp-card:hover,.mp-card:hover .aw-img img{transform:none;} }
     @media(max-width:1024px){ .art-grid{grid-template-columns:repeat(3,1fr);} }
     @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} .mp-search{max-width:none;} }
