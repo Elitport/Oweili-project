@@ -54,7 +54,7 @@ ErrorDocument 404 /404.php
 # (no re-shrinking or format change for phones). Pages: never kept in the
 # server's page cache, so phones always get the current page, never an old copy.
 <IfModule mod_headers.c>
-  <FilesMatch "(?i)\.(jpe?g|png|webp|gif)$">
+  <FilesMatch "(?i)\.(jpe?g|png|webp|gif|avif)$">
     Header set Cache-Control "public, max-age=31536000, no-transform"
   </FilesMatch>
   <FilesMatch "(?i)\.php$">
@@ -85,6 +85,7 @@ ErrorDocument 404 /404.php
   ExpiresByType image/jpeg "access plus 1 year"
   ExpiresByType image/png "access plus 1 year"
   ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
   ExpiresByType video/mp4 "access plus 30 days"
 </IfModule>
 
@@ -95,6 +96,8 @@ ErrorDocument 404 /404.php
 </IfModule>
 <IfModule mod_mime.c>
   AddType font/woff2 .woff2
+  AddType image/avif .avif
+  AddType image/webp .webp
 </IfModule>
 
 # Hostinger's page cache (LiteSpeed) stays OFF for pages on purpose: every page
