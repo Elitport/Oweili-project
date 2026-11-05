@@ -27,7 +27,7 @@ function owSeo(array $o): void {
     $ar = trim((string) ($o['ar'] ?? 'أويلي'));
     require_once __DIR__ . '/lang_lib.php';
     $isAr = owIsAr();   // the page language is decided on the server (lang_lib.php)
-    $title = $isAr ? $ar . ' | أويلي' : $en . ' · ' . $ar . ' | Oweili';
+    $title = $isAr ? $ar . ' | أويلي' : $en . ' | Oweili';   // one language per page (owner, 5 Nov 2026)
     $dEn = trim((string) ($o['desc_en'] ?? ''));
     $dAr = trim((string) ($o['desc_ar'] ?? ''));
     $desc = trim($dEn . ' ' . $dAr);

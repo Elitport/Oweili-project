@@ -1,7 +1,8 @@
 <?php
 /* =====================================================================
  *  index.php — Oweili homepage: one full-screen hero, nothing else.
- *  Video background (bg.mp4) with a soft dark shade, badge, headline,
+ *  The studio photo of a hand painting a landscape fills the screen (owner,
+ *  5 Nov 2026: no video), with a soft veil; badge, headline,
  *  one-line subtitle and two buttons. Text is printed in both languages
  *  (bi-en / bi-ar); the shared menu's language switch shows the one that
  *  matches the page direction.
@@ -34,16 +35,12 @@ try { $aotw = owArtistOfWeek(); } catch (Throwable $e) { $aotw = null; }
 html, body { height: 100%; margin: 0; }
 body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 100svh; }
 
-/* full-screen video with a soft dark shade so the text stays readable */
-.hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
-.hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.6s ease; }
-.hero-bg video.on { opacity: 1; }
-/* the studio photo shows at once (and alone on slow connections); the video fades in over it */
-.hero-bg .hero-ph { position: absolute; inset: 0; }
-.hero-bg .hero-ph img { object-position: 62% 50%; }
-.hero-ph-veil { position: absolute; inset: 0; background: var(--studio-veil); }
-.hero-shade { position: absolute; inset: 0; background: var(--hero-shade); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
-.hero-bg video.on + .hero-shade { opacity: 1; }
+/* the studio photo (hand painting a landscape) fills the whole screen behind everything
+   (owStudioBackdrop, studio_lib.php); its veil keeps the text readable */
+.ow-backdrop .ow-studio img { object-position: 62% 50%; }
+/* homepage: more of the photo shows at the edges, the veil is strongest behind the text */
+html:not(.dark-mode) .ow-backdrop::after { background: radial-gradient(ellipse 70% 42% at 50% 47%, rgba(255,255,255,0.86), rgba(255,255,255,0.68) 60%, rgba(255,255,255,0.30)); }
+html.dark-mode .ow-backdrop::after { background: radial-gradient(ellipse 70% 42% at 50% 47%, rgba(15,21,32,0.86), rgba(15,21,32,0.70) 60%, rgba(15,21,32,0.40)); }
 
 .hero {
   position: relative; z-index: 2;
@@ -64,7 +61,7 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 [dir="rtl"] .hero-badge { letter-spacing: 0; font-size: 13px; }
 
 .hero h1 {
-  font-size: 56px; font-weight: 300; letter-spacing: -0.02em; line-height: 1.1;
+  font-size: 56px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.1;
   color: var(--color-dark); margin: 0 0 var(--space-md);
 }
 [dir="rtl"] .hero h1 { letter-spacing: 0; line-height: 1.3; }
@@ -104,16 +101,11 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 @media (prefers-reduced-motion: reduce) {
   .aotw-home:hover { transform: none; }
   .fade { animation: none; }
-  .hero-bg video { display: none; }
 }
 </style>
 </head>
 <body>
-<div class="hero-bg" aria-hidden="true">
-  <?= owStudioPhoto('home-painting', true, 'ow-studio hero-ph', '100vw') ?><div class="hero-ph-veil"></div>
-  <video id="vid" class="bg-now" autoplay loop muted playsinline preload="auto" data-src="<?= owBase() ?>bg.mp4"></video>
-  <div class="hero-shade"></div>
-</div>
+<?= owStudioBackdrop('home-painting') ?>
 
 <?php include __DIR__ . '/nav.php'; ?>
 
@@ -149,16 +141,6 @@ function tgl(){
 }
 if (document.documentElement.getAttribute('dir') === 'rtl') { document.title = 'أويلي · كل ما تراه هنا، بدأ بيدٍ حقيقية'; }
 
-/* The video (and its shade) fade in once it can play */
-(function(){
-  var v = document.getElementById('vid');
-  if (!v) return;
-  var on = function(){ v.classList.add('on'); };
-  if (v.readyState >= 3) on();   /* already ready (e.g. saved in the browser) */
-  v.addEventListener('canplay', on, { once: true });
-  v.addEventListener('playing', on, { once: true });
-  var p = v.play(); if (p && p.catch) p.catch(function(){});
-})();
 </script>
 </body>
 </html>

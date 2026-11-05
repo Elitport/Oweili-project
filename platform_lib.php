@@ -251,6 +251,11 @@ const OW_COUNTRIES = [
     'France' => 'فرنسا', 'Germany' => 'ألمانيا', 'Italy' => 'إيطاليا', 'Spain' => 'إسبانيا', 'Turkey' => 'تركيا',
     'India' => 'الهند', 'Pakistan' => 'باكستان', 'Japan' => 'اليابان', 'Canada' => 'كندا', 'Australia' => 'أستراليا',
 ];
+/* "السعودية" (chosen on an Arabic page) → "Saudi Arabia", so a country is always saved the same way */
+function owCountryEn(string $c): string {
+    $en = array_search(trim($c), OW_COUNTRIES, true);
+    return $en !== false ? (string) $en : $c;
+}
 
 /* ---------------------------------------------------------------------
  *  Sign-up helpers (register_collector.php, register_artist.php)

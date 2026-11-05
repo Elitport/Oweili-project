@@ -126,12 +126,16 @@ function owSizeSelect(string $code = '', string $orient = '', bool $optional = f
     foreach (owSizeOrientations() as $o => [$en, $ar]) {
         $h .= '<label><input type="radio" name="orientation" value="' . $o . '"' . ($o === $orient ? ' checked' : '') . '> ' . $bi($en, $ar) . '</label>';
     }
-    $h .= '</div></div></div>';
+    $h .= '</div>';
+    /* why an orientation is greyed out, in the page language */
+    $h .= '<p class="sz-why" data-why="notsq" hidden>' . $bi('Square is greyed out because this size is not square. Choose portrait or landscape.', 'خيار «مربع» غير متاح لأن هذا المقاس ليس مربعاً. اختر طولي أو عرضي.') . '</p>';
+    $h .= '<p class="sz-why" data-why="sq" hidden>' . $bi('This size is square, so it can only be square.', 'هذا المقاس مربع، لذلك يكون مربعاً فقط.') . '</p>';
+    $h .= '</div></div>';
     /* square sizes are always square; the others are tall or wide */
     $h .= '<script>(function(){var b=document.currentScript.previousElementSibling,s=b.querySelector("select"),rs=b.querySelectorAll("input[name=orientation]");'
         . 'function f(){var o=s.options[s.selectedIndex],sq=o&&o.getAttribute("data-sq")==="1",none=!s.value;'
         . 'rs.forEach(function(r){var isSq=r.value==="square";r.disabled=none||(sq?!isSq:isSq);if(r.disabled)r.checked=false;if(sq&&isSq)r.checked=true;});'
-        . 'b.querySelector(".sz-orient").hidden=none;}s.addEventListener("change",f);f();})();</script>';
+        . 'b.querySelector(".sz-orient").hidden=none;b.querySelector("[data-why=notsq]").hidden=none||sq;b.querySelector("[data-why=sq]").hidden=none||!sq;}s.addEventListener("change",f);f();})();</script>';
     return $h;
 }
 

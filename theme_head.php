@@ -105,9 +105,14 @@ if (!defined('OW_THEME_HEAD')):
   setLs(window.OW_LANG);
   if (document.prerendering) document.addEventListener('prerenderingchange', function(){ if (stale()) again(); }, { once: true });
   window.addEventListener('pageshow', function(e){ if (e.persisted && stale()) again(); });
+  /* after the language button the page is fetched again, so every word comes from the server
+     in the new language (dropdowns, examples, dates). Not when the visitor has typed into a
+     form on this page: then it switches in place, so nothing typed is lost. */
+  var typed = false;
+  document.addEventListener('input', function(){ typed = true; }, true);
   new MutationObserver(function(){
     var l = (d.getAttribute('lang') === 'ar' || d.getAttribute('dir') === 'rtl') ? 'ar' : 'en';
-    if (l !== window.OW_LANG) { window.OW_LANG = l; setCk(l); setLs(l); }
+    if (l !== window.OW_LANG) { window.OW_LANG = l; setCk(l); setLs(l); if (!typed && !/[?&]lang=/.test(location.search)) location.reload(); }
   }).observe(d, { attributes: true, attributeFilter: ['lang', 'dir'] });
   document.addEventListener('DOMContentLoaded', function(){ d.classList.remove('ow-wait'); });
 })();
@@ -147,6 +152,73 @@ if (!defined('OW_THEME_HEAD')):
     sync();
     new MutationObserver(sync).observe(d, { attributes: true, attributeFilter: ['dir'] });
   });
+})();
+</script>
+<script>
+/* Dates as day / month / year (owner, 5 Nov 2026): phones and computers show a date box as
+   mm/dd/yyyy, which confuses visitors in Saudi Arabia. Every date box becomes three lists,
+   Day, Month and Year, in the page language. The real box stays (hidden) with the same name
+   and gets the date as YYYY-MM-DD, so the server reads it exactly as before. */
+(function(){
+  var MON = { en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+              ar: ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] };
+  var W = { en: ['Day', 'Month', 'Year', 'Please choose a date on or after {d}.', 'Please choose a date on or before {d}.', 'Please choose the day, the month and the year.'],
+            ar: ['اليوم', 'الشهر', 'السنة', 'يرجى اختيار تاريخ في {d} أو بعده.', 'يرجى اختيار تاريخ في {d} أو قبله.', 'يرجى اختيار اليوم والشهر والسنة.'] };
+  function lang(){ return document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en'; }
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function show(iso){ var p = iso.split('-'); return +p[2] + '/' + +p[1] + '/' + p[0]; }
+  function build(inp){
+    if (inp.dataset.owDate) return; inp.dataset.owDate = '1';
+    var now = new Date().getFullYear(), min = inp.min || '', max = inp.max || '';
+    var y0 = min ? +min.slice(0, 4) : now - 3, y1 = max ? +max.slice(0, 4) : now + 3;
+    if (!min && max) y0 = Math.min(y0, y1 - 10);
+    var box = document.createElement('div'); box.className = 'ow-date';
+    var sd = document.createElement('select'), sm = document.createElement('select'), sy = document.createElement('select');
+    [sd, sm, sy].forEach(function(s){ s.required = inp.required; box.appendChild(s); });
+    if (inp.id) { sd.id = inp.id; inp.removeAttribute('id'); }
+    function words(){
+      var L = lang(), w = W[L], keep = [sd.value, sm.value, sy.value];
+      sd.setAttribute('aria-label', w[0]); sm.setAttribute('aria-label', w[1]); sy.setAttribute('aria-label', w[2]);
+      var days = 31; if (sm.value && sy.value) days = new Date(+sy.value, +sm.value, 0).getDate(); else if (sm.value) days = new Date(2024, +sm.value, 0).getDate();
+      sd.innerHTML = '<option value="">' + w[0] + '</option>'; for (var i = 1; i <= days; i++) sd.add(new Option(String(i), pad(i)));
+      sm.innerHTML = '<option value="">' + w[1] + '</option>'; MON[L].forEach(function(m, i){ sm.add(new Option(m, pad(i + 1))); });
+      sy.innerHTML = '<option value="">' + w[2] + '</option>'; for (var y = y0; y <= y1; y++) sy.add(new Option(String(y), String(y)));
+      sd.value = +keep[0] > days ? '' : keep[0]; sm.value = keep[1]; sy.value = keep[2];
+    }
+    function sync(){
+      var w = W[lang()], v = (sd.value && sm.value && sy.value) ? sy.value + '-' + sm.value + '-' + sd.value : '', msg = '';
+      inp.value = v;
+      if (!v && (sd.value || sm.value || sy.value)) msg = w[5];
+      else if (v && min && v < min) msg = w[3].replace('{d}', show(min));
+      else if (v && max && v > max) msg = w[4].replace('{d}', show(max));
+      sd.setCustomValidity(msg);
+    }
+    var p = (inp.value || '').split('-');
+    words();
+    if (p.length === 3) { sy.value = p[0]; sm.value = p[1]; words(); sd.value = p[2]; }
+    [sm, sy].forEach(function(s){ s.addEventListener('change', function(){ words(); sync(); }); });
+    sd.addEventListener('change', sync);
+    inp.type = 'hidden'; inp.parentNode.insertBefore(box, inp.nextSibling); sync();
+    new MutationObserver(words).observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+  }
+  document.addEventListener('DOMContentLoaded', function(){ document.querySelectorAll('input[type=date]:not([data-native])').forEach(build); });
+  /* File boxes: the browser writes "Choose Files / No file chosen" in its own language.
+     Our own button and line say it in the page language instead (the real box still does the work). */
+  var FW = { en: ['Choose a file', 'Choose files', 'No file chosen', ' files chosen'], ar: ['اختر ملفاً', 'اختر الملفات', 'لم يتم اختيار ملف', ' ملفات مختارة'] };
+  function fileBox(inp){
+    if (inp.dataset.owFile || getComputedStyle(inp).display === 'none' || inp.offsetParent === null) return; inp.dataset.owFile = '1';
+    var box = document.createElement('span'), btn = document.createElement('button'), txt = document.createElement('span');
+    box.className = 'ow-file'; btn.type = 'button'; btn.className = 'btn btn-secondary btn-sm'; txt.className = 'ow-file-name';
+    function words(){ var w = FW[lang()], n = inp.files ? inp.files.length : 0;
+      btn.textContent = inp.multiple ? w[1] : w[0];
+      txt.textContent = n === 0 ? w[2] : (n === 1 ? inp.files[0].name : n + w[3]); }
+    btn.addEventListener('click', function(){ inp.click(); });
+    inp.addEventListener('change', words);
+    inp.classList.add('ow-file-input'); inp.tabIndex = -1;
+    box.appendChild(btn); box.appendChild(txt); inp.parentNode.insertBefore(box, inp.nextSibling); words();
+    new MutationObserver(words).observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+  }
+  document.addEventListener('DOMContentLoaded', function(){ document.querySelectorAll('input[type=file]:not([data-native])').forEach(fileBox); });
 })();
 </script>
 <script>

@@ -11,7 +11,7 @@ if (!isset($cv, $etype)) return;
 $cfNum = fn(string $x) => preg_match('/^\d+\.\d+$/', $x) ? rtrim(rtrim($x, '0'), '.') : $x;
 /* the size comes from the standard list (size_lib.php); an older artwork with a free
    width × height shows the closest standard size, ready to confirm */
-require_once __DIR__ . '/size_lib.php';
+require_once __DIR__ . '/size_lib.php'; require_once __DIR__ . '/lang_lib.php';
 $cfSize = html_entity_decode($cv('size_code'), ENT_QUOTES, 'UTF-8'); $cfOrient = html_entity_decode($cv('orientation'), ENT_QUOTES, 'UTF-8');
 if ($cfSize === '' && (float) $cv('width_cm') > 0 && (float) $cv('height_cm') > 0 && ($cfN = owSizeNearest((float) $cv('width_cm'), (float) $cv('height_cm')))) { $cfSize = $cfN[0]; $cfOrient = $cfN[2]; }
 ?>
@@ -23,9 +23,8 @@ if ($cfSize === '' && (float) $cv('width_cm') > 0 && (float) $cv('height_cm') > 
     <input id="cf-medium" name="medium" type="text" maxlength="150" required dir="auto" list="cf-mediums" value="<?= $cv('medium') ?>"
            placeholder="Oil on canvas · زيت على قماش">
     <datalist id="cf-mediums">
-      <option value="Oil on canvas"><option value="Acrylic on canvas"><option value="Watercolour on paper"><option value="Ink on paper">
-      <option value="Charcoal on paper"><option value="Mixed media"><option value="Digital print on paper">
-      <option value="زيت على قماش"><option value="أكريليك على قماش"><option value="ألوان مائية على ورق"><option value="حبر على ورق">
+      <?php foreach (owIsAr() ? ['زيت على قماش', 'أكريليك على قماش', 'ألوان مائية على ورق', 'حبر على ورق', 'فحم على ورق', 'وسائط مختلطة', 'طباعة رقمية على ورق']
+                               : ['Oil on canvas', 'Acrylic on canvas', 'Watercolour on paper', 'Ink on paper', 'Charcoal on paper', 'Mixed media', 'Digital print on paper'] as $cfM): ?><option value="<?= e($cfM) ?>"><?php endforeach; ?>
     </datalist>
   </div>
   <?= owSizeSelect($cfSize, $cfOrient, false, 'cf-size') ?>

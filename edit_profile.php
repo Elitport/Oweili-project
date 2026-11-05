@@ -32,6 +32,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     [$tw, $twOk]   = owSafeLink((string) ($_POST['twitter'] ?? ''), 'twitter');
     [$web, $webOk] = owSafeLink((string) ($_POST['website'] ?? ''), 'web');
     $country = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>"]/u', ' ', (string) ($_POST['country'] ?? ''))), 0, 80);
+    $country = owCountryEn($country);   // an Arabic country name from the list is saved in English, like before
     $styleChoices = owStyleChoices();
     $styles = array_slice(array_values(array_filter((array) ($_POST['art_styles'] ?? []), fn($x) => is_string($x) && isset($styleChoices[$x]))), 0, 8);
 
@@ -205,7 +206,7 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
       <?php if (owHasColumn('users', 'country')): $myStyles = array_filter(explode(',', (string) ($u['art_styles'] ?? ''))); ?>
       <div class="field"><label for="p-country"><?= owBi('Country', 'الدولة') ?></label>
         <input id="p-country" type="text" name="country" maxlength="80" list="countries" autocomplete="country-name" value="<?= $val('country') ?>">
-        <datalist id="countries"><?php foreach (OW_COUNTRIES as $cEn => $cAr): ?><option value="<?= e($cEn) ?>"><?= e($cAr) ?></option><?php endforeach; ?></datalist></div>
+        <datalist id="countries"><?php require_once __DIR__ . '/lang_lib.php'; foreach (OW_COUNTRIES as $cEn => $cAr): ?><option value="<?= e(owIsAr() ? $cAr : $cEn) ?>"><?php endforeach; ?></datalist></div>
       <?php if (($u['role'] ?? '') === 'artist'): ?>
       <fieldset class="field style-pick"><legend><?= owBi('My art styles (up to 8)', 'أساليبي الفنية (حتى 8)') ?></legend>
         <div class="style-chips">

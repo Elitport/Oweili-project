@@ -525,9 +525,16 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
 .cf-row.cf-edition { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .cf-row[hidden] { display: none; }
 .cf-row.cf-one { grid-template-columns: minmax(0, 220px); }
+/* dates as day / month / year (theme_head.php): three lists side by side */
+.ow-date { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-xs); }
+/* file boxes in the page language (theme_head.php) */
+.ow-file { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+.ow-file-name { font-size: var(--fs-caption); color: var(--color-body); overflow-wrap: anywhere; }
+.ow-file-input { position: absolute !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none; }
 /* standard sizes (size_lib.php): one list + orientation */
 .sz-pick .sz-hint { margin: 4px 0 0; font-size: var(--fs-caption); color: var(--color-body); }
-.sz-pick .sz-orient[hidden] { display: none; }
+.sz-pick .sz-orient[hidden], .sz-pick .sz-why[hidden] { display: none; }
+.sz-pick .sz-why { margin: 6px 0 0; font-size: var(--fs-caption); color: var(--color-body); }
 .sz-pick .cf-choice label:has(input:disabled) { opacity: .45; }
 .cf-label { display: block; font-size: var(--fs-label); font-weight: 700; color: var(--color-dark); margin-bottom: 6px; }
 .cf-choice { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
@@ -563,11 +570,17 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
    still layer (position: fixed), not background-attachment: fixed, which iPhones ignore; 100lvh
    keeps it covering the screen while the iPhone address bar shows or hides, with no jump.
    The veil keeps every text, card and button easy to read (white in light mode, navy in dark). */
-:root { --studio-veil: linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.84)); }
-html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.78), rgba(15,21,32,0.88)); }
+:root { --studio-veil: linear-gradient(rgba(255,255,255,0.80), rgba(255,255,255,0.88));
+  --studio-glow: 0 0 2px rgba(255,255,255,0.95), 0 0 16px rgba(255,255,255,0.9); }
+html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.82), rgba(15,21,32,0.90));
+  --studio-glow: 0 0 2px rgba(15,21,32,0.95), 0 0 16px rgba(15,21,32,0.9); }
 .ow-studio, .ow-studio img { display: block; width: 100%; height: 100%; }
 .ow-studio img { object-fit: cover; background: rgba(var(--rgb-accent),0.07); }
 .ow-backdrop { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: -1; overflow: hidden; pointer-events: none; }
 .ow-backdrop::after { content: ""; position: absolute; inset: 0; background: var(--studio-veil); }
 .ow-backdrop ~ .overlay, .ow-backdrop ~ .veil, .ow-backdrop ~ .bg-wrap { display: none; }   /* one veil only */
+/* text that sits straight on the photo gets a soft halo in the page colour, so it reads clearly */
+.ow-backdrop ~ * :is(h1, h2, h3, p, li, label, legend, dt, dd, small) { text-shadow: var(--studio-glow); }
+.ow-backdrop ~ * :is(.card, .btn, input, select, textarea) :is(h1, h2, h3, p, li, label, legend, dt, dd, small),
+.ow-backdrop ~ * :is(.btn) { text-shadow: none; }
 @media print { .ow-backdrop { display: none; } }

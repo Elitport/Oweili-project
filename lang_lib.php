@@ -68,7 +68,7 @@ function owHtmlAttrs(bool $jsText = false): void {
     $ar = owIsAr();
     echo 'lang="' . ($ar ? 'ar' : 'en') . '" dir="' . ($ar ? 'rtl' : 'ltr') . '"';
     if ($ar && $jsText) echo ' class="ow-wait"';
-    if (!$ar || !empty($GLOBALS['OW_LANG_FILTER'])) return;
+    if (!empty($GLOBALS['OW_LANG_FILTER'])) return;   // both languages: one language per page (owLangOne)
     $GLOBALS['OW_LANG_FILTER'] = ob_get_level() + 1;
     ob_start('owLangFilter');
     /* shut the buffer before any "after the page" work (theme_head.php) ends the request */
@@ -80,8 +80,45 @@ function owHtmlAttrs(bool $jsText = false): void {
 
 
 /* Arabic pages only: the page is translated before it leaves the server */
+/* "Portrait of a person · بورتريه لشخص" → only the part in the page language.
+   Texts without both languages, or without the " · " join, stay as they are. */
+function owLangPick(string $text, bool $ar): string {
+    $raw = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+    if (!preg_match('/\p{Arabic}/u', $raw) || !preg_match('/[A-Za-z]{2}/', $raw) || !preg_match('/\s·\s/u', $raw)) return $text;
+    $wrap = preg_match('/^\s*—.*—\s*$/u', $raw);
+    $parts = array_map(fn($x) => trim($x, " \t—"), preg_split('/\s+·\s+/u', $raw));
+    $isAr = fn($x) => (bool) preg_match('/\p{Arabic}/u', $x);
+    $isEn = fn($x) => (bool) preg_match('/[A-Za-z]{2}/', $x);
+    $keep = array_values(array_filter($parts, fn($x) => $x !== '' && ($ar ? $isAr($x) || !$isEn($x) : !$isAr($x))));
+    if (!$keep) return $text;
+    $out = implode(' · ', $keep);
+    if ($wrap) $out = '— ' . $out . ' —';
+    return htmlspecialchars($out, ENT_QUOTES, 'UTF-8');
+}
+
+/* Both languages: dropdown options, placeholders, list labels and hover / screen-reader
+   labels that carry both languages show only the page language (picture alt texts keep both) */
+function owLangOne(string $html, bool $ar): string {
+    $html = preg_replace_callback('#(<option\b[^>]*>)([^<]*)(</option>)#u', fn($m) => $m[1] . owLangPick($m[2], $ar) . $m[3], $html);
+    $html = preg_replace_callback('#(\s(?:placeholder|label|aria-label|title)=")([^"]*)(")#u', fn($m) => $m[1] . owLangPick($m[2], $ar) . $m[3], $html);
+    if (!$ar) {   // English pages: an English title
+        if (preg_match('/^[^>]*\bdata-title-en="([^"]*)"/', $html, $m) && $m[1] !== '') {
+            $tt = $m[1]; $html = preg_replace_callback('#<title>[^<]*</title>#', fn() => '<title>' . $tt . '</title>', $html, 1);
+        } elseif (preg_match('#<title>([^<]*)</title>#u', $html, $t) && preg_match('/\p{Arabic}/u', $t[1])) {
+            $parts = preg_split('/\s+[·|]\s+/u', html_entity_decode($t[1], ENT_QUOTES, 'UTF-8'));
+            $en = array_values(array_filter($parts, fn($x) => !preg_match('/\p{Arabic}/u', $x)));
+            if ($en) {
+                if (!preg_grep('/Oweili/', $en)) $en[] = 'Oweili';
+                $html = str_replace($t[0], '<title>' . htmlspecialchars(implode(' · ', $en), ENT_QUOTES, 'UTF-8') . '</title>', $html);
+            }
+        }
+    }
+    return $html;
+}
+
 function owLangFilter(string $html): string {
     if ($html === '') return $html;
+    if (!owIsAr()) return owLangOne($html, false);
     // the title: the Arabic one the page already carries (data-title-ar on <html>)
     if (preg_match('/^[^>]*\bdata-title-ar="([^"]*)"/', $html, $m) && $m[1] !== '') {
         $html = preg_replace('#<title>[^<]*</title>#', '<title>' . str_replace(['\\', '$'], ['\\\\', '\\$'], $m[1]) . '</title>', $html, 1);
@@ -105,7 +142,7 @@ function owLangFilter(string $html): string {
     // the menu words with their own id
     $html = preg_replace_callback('#(<(span|button|a)\b[^>]*?\sid="(' . implode('|', array_map('preg_quote', array_keys(OW_LANG_IDS))) . ')"[^>]*>)([^<]*)(</\2>)#',
         function ($m) { return $m[1] . OW_LANG_IDS[$m[3]] . $m[5]; }, $html);
-    return $html;
+    return owLangOne($html, true);
 }
 
 }

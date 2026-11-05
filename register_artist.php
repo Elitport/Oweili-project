@@ -242,7 +242,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <div class="field"><label id="t-l-port" for="f-port">Your artworks (required, up to 5 photos)</label>
         <input type="file" id="f-port" name="portfolio[]" accept="image/jpeg,image/png" multiple required data-max="<?= (int) $arPhotoMax ?>">
         <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each.</p></div>
-      <div class="field"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt">Optional / اختياري</span></label>
+      <div class="field"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt"><?= owIsAr() ? 'اختياري' : 'Optional' ?></span></label>
         <input type="file" id="f-video" name="art_video" accept="video/mp4,video/quicktime,.mp4,.mov" data-max="<?= (int) $arVideoMax ?>">
         <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to <?= e($LIM['video']) ?>MB.</p></div>
       <?php if ($LIM['total'] !== ''): ?><p class="hint" id="t-total-hint">All files together: up to <?= e($LIM['total']) ?>MB.</p><?php endif; ?>

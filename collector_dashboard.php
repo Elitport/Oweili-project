@@ -43,7 +43,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $err = 'csrf';
     } elseif ($do === 'profile') {
         $one = fn(string $k, int $max) => mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>]/u', ' ', (string) ($_POST[$k] ?? ''))), 0, $max);
-        $old = ['name' => $one('full_name', 150), 'phone' => $one('phone', 30), 'country' => $one('country', 80),
+        $old = ['name' => $one('full_name', 150), 'phone' => $one('phone', 30), 'country' => owCountryEn($one('country', 80)),
                 'city' => $one('city', 100), 'lang' => (string) ($_POST['preferred_lang'] ?? '') === 'ar' ? 'ar' : 'en'];
         if (mb_strlen($old['name']) < 2 || owRealName($old['name']) === '')                     $err = 'name';
         elseif ($old['phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $old['phone'])) $err = 'phone';
@@ -352,7 +352,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
     <div class="form-grid">
       <div class="field"><label for="p-country"><?= owBi('Country', 'الدولة') ?></label>
         <input id="p-country" name="country" type="text" maxlength="80" autocomplete="country-name" list="countries" value="<?= e($val('country', 'country')) ?>">
-        <datalist id="countries"><?php foreach (OW_COUNTRIES as $cEn => $cAr): ?><option value="<?= e($cEn) ?>"><?= e($cAr) ?></option><?php endforeach; ?></datalist></div>
+        <datalist id="countries"><?php require_once __DIR__ . '/lang_lib.php'; foreach (OW_COUNTRIES as $cEn => $cAr): ?><option value="<?= e(owIsAr() ? $cAr : $cEn) ?>"><?php endforeach; ?></datalist></div>
       <div class="field"><label for="p-city"><?= owBi('City', 'المدينة') ?></label>
         <input id="p-city" name="city" type="text" maxlength="100" autocomplete="address-level2" value="<?= e($val('city', 'city')) ?>"></div>
     </div>
