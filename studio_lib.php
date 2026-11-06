@@ -99,29 +99,16 @@ const OW_STUDIO_FOCUS = [
     'home-painting' => '62% 42%',   // the hand with the brush and the canvas
     'brushes-jars'  => '45% 45%',   // the brushes in their jars
     'paint-cloth'   => '50% 50%',
-    'pink-palette'  => '58% 45%',   // the palette and the brushes
+    'pink-palette'  => '58% 30%',   // the palette (top) and the brushes
     'paint-buckets' => '42% 40%',   // the hand dipping the brush into the buckets
     'palette-hand'  => '38% 52%',   // the hand and the palette
     'gallery-visit' => '50% 58%',   // the woman and the paintings around her
-    'studio-table'  => '55% 58%',   // the studio table with its brushes
+    'studio-table'  => '55% 75%',   // the studio table with its brushes and jars (lower part of the photo)
     'art-book'      => '50% 45%',   // the open art book and the hand turning its page
     'easels-class'  => '42% 55%',
-    'museum-walk'   => '50% 50%',   // the visitors walking down the hall between the reliefs
+    'museum-walk'   => '50% 0%',    // the arch (top of the photo) and the visitors walking under it; laptops trim only the floor
     'open-books'    => '50% 50%',   // the open pages
     'gallery-arch'  => '40% 48%',   // the visitor in the lit arch   // the row of easels with their canvases
-];
-/* Very wide screens (wider than 1600 px, owner 6 Nov 2026): the photo fits the screen height and the small
-   space left at its sides is a soft solid colour taken from the photo's own left and right edge (no blur,
-   no strips). The average colour of the outer 3% of each side of the owner's original. */
-const OW_STUDIO_EDGE = [
-    'gallery-visit' => ['#221a16', '#362a1f'],
-    'museum-walk'   => ['#36180f', '#25140f'],
-    'open-books'    => ['#606060', '#636363'],
-    'pink-palette'  => ['#b5bfbd', '#74605b'],
-    'studio-table'  => ['#dae1df', '#918a84'],
-    'easels-class'  => ['#4a646f', '#48535f'],
-    'paint-buckets' => ['#ae9993', '#7b7578'],
-    'gallery-arch'  => ['#020202', '#020202'],
 ];
 /* Where the page title card (and an empty-list card) sits on computers, so it stays away from the photo's
    main subject (owner, 6 Nov 2026): 'start' = the reading side (right in Arabic, left in English),
@@ -178,10 +165,8 @@ function owStudioBackdrop(string ...$keys): string {
         if (!owStudioHas($k)) continue;
         /* the tiny copy sits behind the photo only until it has loaded (no white flash), never as a frame */
         $t = OW_STUDIO[$k][5] ?? '';
-        $e = OW_STUDIO_EDGE[$k] ?? ['', ''];
         $vars = '--ow-pos:' . (OW_STUDIO_FOCUS[$k] ?? '50% 50%')
-              . ($t !== '' ? ';--ow-tiny:url(' . $t . ')' : '')
-              . ($e[0] !== '' ? ';--ow-edge-l:' . $e[0] . ';--ow-edge-r:' . $e[1] : '');
+              . ($t !== '' ? ';--ow-tiny:url(' . $t . ')' : '');
         $side = OW_STUDIO_SIDE[$k] ?? '';
         return '<style>html body{background:transparent!important}</style><div class="ow-backdrop" style="' . $vars . '"'
              . ($side !== '' ? ' data-side="' . $side . '"' : '') . '>'

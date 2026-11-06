@@ -607,17 +607,10 @@ html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ 
 
 /* ---------------------------------------------------------------------
    Photo pages show more of their photo (owner, 6 Nov 2026)
-   1. Very wide screens (wider than 1600 px): the photo fits the screen HEIGHT, so far more of it shows;
-      the small space left at its sides is a soft solid colour from the photo's own edge (no blur, no strips).
-      A photo wider than the screen still fills it (its sides are trimmed evenly).
+   1. Every photo fills the whole screen edge to edge on every screen size (cover; no side bands, owner 6 Nov 2026).
    2. The footer is see-through: only its words sit on a light frosted strip.
    3. Smaller title cards and empty-list cards, placed away from the photo's main subject (data-side).
    --------------------------------------------------------------------- */
-@media (min-width: 1601px) and (min-aspect-ratio: 1/1) {
-  .ow-studio { display: flex; justify-content: center; }
-  .ow-studio img { flex: none; width: auto; max-width: none; height: 100%; }
-  .ow-backdrop { background: var(--ow-tiny, none) center / auto 100% no-repeat, linear-gradient(90deg, var(--ow-edge-l, var(--color-bg)) 50%, var(--ow-edge-r, var(--color-bg)) 50%) !important; }
-}
 .ow-backdrop ~ .ow-footer, .ow-backdrop ~ * .ow-footer { background: transparent; border-top: 0; }
 .ow-backdrop ~ .ow-footer .ow-footer-in, .ow-backdrop ~ * .ow-footer .ow-footer-in { background: var(--studio-glass); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   border: 1px solid var(--studio-glass-edge); border-radius: var(--radius-card); padding: 14px 20px; }
