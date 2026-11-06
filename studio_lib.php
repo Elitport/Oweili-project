@@ -77,6 +77,15 @@ const OW_STUDIO = [
         'Easels with blank canvases ready for an art class in a studio',
         'حوامل رسم عليها لوحات بيضاء جاهزة لدرس فني في مرسم',
         'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACUDASIAAhEBAxEB/8QAGQABAQADAQAAAAAAAAAAAAAAAAYDBQcE/8QAKRAAAgEEAgECBQUAAAAAAAAAAQIDAAQRIQUSBkFREyIxcYEVFjKR8f/EABcBAQEBAQAAAAAAAAAAAAAAAAIDBAD/xAAaEQADAQEBAQAAAAAAAAAAAAAAAQIRAzFB/9oADAMBAAIRAxEAPwAvk9/b+L2nJKYWkkuJI37x6wBrQqy8a5F+W4eK8lVQ5d1IUYGjiuZC3vJfBLKGC1mklW/c9FjJOOujj2qx8f5Acfx9rbohZZrqZWCgkx52M/nVOmSn6WBkVXCEHJqf/c9lNyV/YPBMj2h6FyOwc56gADeyayzcjLDPYmRAxnZlYYx0AXI/Oc1O3U0kNzLeGOJQ0gkcAYLFJD1OceqnH9VywT02lxyXErHDNI+p07qfhtsfT21SofykKZLaDqesKMF+bGif9pTXRZ4F8nvpa/qb20zxk/wbGTs1ruCWSCS5kmSMo83dO2/qdnH2pSlUp4Z4trUb8hQmX+f13Xg5J4BC6rH99416YP3pSjRaDn3OSMs6dCSN4yckDWMn3pSlRRoZ/9k='],
+    // the owner's wide photos for Art Events and Art Education (6 Nov 2026)
+    'museum-walk' => [[640, 1280, 1920, 2000], 2000, 1331,
+        'Visitors walking through a museum hall with carved stone reliefs on red walls',
+        'زوار يتجولون في قاعة متحف بين نقوش حجرية على جدران حمراء',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCHR55dW8L3NjMFUmIsJAh4x6/lXNadd3NuJY4cJvK/vMZIzjFTxW+npoUs+JDcjhcyHA/AVkxzPLNBEwMiKyYQH73I4rmhGLvY7arnBLmZ1WuWN5ZRRxC+ju47kDGVwY2yBg/n+hrN06KzFzPc3EjPtuliCrxkcknP1GK2tavDKlzHtEMUzLIFMwcJKvPb1/xrjbq+N2VV41AjG0HFNJ30RPtdNXqaF9dwyX9wZnAIkYKMdFB46UVhNtJ9Pb0orTkRH1mS6Gjb3I8jydpYt27VY/suecKYYAAR17ZoorCrJw2Lp/vF7xUtrOd7iWONf3kZwecc5xTJ7C5ikO9GDE5IIxRRT9rLnsRGlFxuQtA+eV5FFFFaqTIcFc//2Q=='],
+    'open-books' => [[640, 1280, 1920, 2000], 2000, 1253,
+        'A stack of open books seen from the side, in black and white',
+        'كومة من الكتب المفتوحة من الجانب، بالأبيض والأسود',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAXACQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDBU63kFLq4B92UD/0Krf8ApuBJPqN4hIwYkeNsn1BZjgdOKj1OTwvHeC1Fv5gOA1xbyMQpPf3xU0GgwWkhe9vYIBHIRbPbR+bLJj+LC8gDPUmgCWzspL12NzFdX0CLuVbiFEQHsfMVh6HirJTUmXbZWmnkD/lnDBC+PzfNQ2mn2z7zb6/dBepxbOMe7c4z+NI2h6CHLy6ldtIerrEgOfXqTQAS2uuK+DommufUwRf0NFSrZaMgx/beqH/tsR+gNFAGbZ6ldTsrrPfzJnkCby8/ju4/KnOl2fm+ybifvGSUNuPqcg0UUAJ5rbs6i0kUESkhbTYC5PY/KMfXtVa6vbCK2FwdCi8ottV5rl3Zj+FFFAFIa1px5Gk2a+2ZP8aKKKAP/9k='],
 ];
 /* The part of each photo that always stays in view when the photo fills the screen (owner,
    6 Nov 2026): "x% y%" of the photo, aimed at its main subject. A phone (tall screen) keeps the
@@ -91,7 +100,9 @@ const OW_STUDIO_FOCUS = [
     'gallery-visit' => '50% 58%',   // the woman and the paintings around her
     'studio-table'  => '55% 58%',   // the studio table with its brushes
     'art-book'      => '50% 45%',   // the open art book and the hand turning its page
-    'easels-class'  => '42% 55%',   // the row of easels with their canvases
+    'easels-class'  => '42% 55%',
+    'museum-walk'   => '50% 50%',   // the visitors walking down the hall between the reliefs
+    'open-books'    => '50% 50%',   // the open pages   // the row of easels with their canvases
 ];
 /* The tiny first frames of the homepage videos (their blurred fill, index.php) */
 const OW_HERO_TINY = [

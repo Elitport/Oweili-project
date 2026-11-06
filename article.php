@@ -100,7 +100,7 @@ else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود
 </style>
 </head>
 <body class="ow">
-<?php /* plain page background for now, until the owner sends new wide photos (6 Nov 2026) */ ?>
+<?= owStudioBackdrop($type === 'art_education' ? 'open-books' : 'museum-walk') /* the owner's wide photos (6 Nov 2026): Art Education the open books, Events (and Spotlights) the museum hall */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil strong" aria-hidden="true"></div>
 
