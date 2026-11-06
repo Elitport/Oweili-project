@@ -131,12 +131,13 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 <?php /* the still frame's tiny copy fills the screen the moment the page opens (no white flash) */ ?>
 <div class="hero-bg" aria-hidden="true" style="background:url(<?= OW_HERO_TINY['blue'] ?>) 66% 50% / cover no-repeat">
   <?php $hb = owBase() . 'assets/img/hero/'; ?>
+  <?php /* version marks (owAsset): a changed file is fetched again by every browser */ ?>
   <picture class="hero-still">
-    <source type="image/avif" srcset="<?= $hb ?>hero-wide.avif"><source type="image/webp" srcset="<?= $hb ?>hero-wide.webp">
-    <img src="<?= $hb ?>hero-wide.jpg" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="sync">
+    <source type="image/avif" srcset="<?= owAsset('assets/img/hero/hero-wide.avif') ?>"><source type="image/webp" srcset="<?= owAsset('assets/img/hero/hero-wide.webp') ?>">
+    <img src="<?= owAsset('assets/img/hero/hero-wide.jpg') ?>" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="sync">
   </picture>
-  <video id="vid" class="bg-now" autoplay muted playsinline preload="none" data-src="<?= owBase() ?>assets/video/hero-wide.mp4"></video>
-  <div class="hv-pink"><video id="vid2" muted playsinline preload="none" data-later="<?= owBase() ?>assets/video/hero-pink-wide.mp4" data-later-phone="<?= owBase() ?>assets/video/hero-pink-tall.mp4"></video></div>
+  <video id="vid" class="bg-now" autoplay muted playsinline preload="none" data-src="<?= owAsset('assets/video/hero-wide.mp4') ?>"></video>
+  <div class="hv-pink"><video id="vid2" muted playsinline preload="none" data-later="<?= owAsset('assets/video/hero-pink-wide.mp4') ?>" data-later-phone="<?= owAsset('assets/video/hero-pink-tall.mp4') ?>"></video></div>
 </div>
 
 <?php include __DIR__ . '/nav.php'; ?>
