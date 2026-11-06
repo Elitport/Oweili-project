@@ -95,6 +95,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('pink-palette');   /* the pink palette, whole (owner, 6 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 

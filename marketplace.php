@@ -348,7 +348,7 @@ foreach ($modalArtworks as $aw) {
   </style>
 </head>
 <body>
-<?php if (!$artworks) echo owStudioBackdrop('paint-cloth'); ?>
+<?= owStudioBackdrop('home-painting') /* the hand painting the landscape, always (owner, 6 Nov 2026) */ ?>
 
 <div class="bg-wrap">
   

@@ -574,8 +574,15 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
   --studio-glow: 0 0 2px rgba(255,255,255,0.95), 0 0 16px rgba(255,255,255,0.9); }
 html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.82), rgba(15,21,32,0.90));
   --studio-glow: 0 0 2px rgba(15,21,32,0.95), 0 0 16px rgba(15,21,32,0.9); }
-.ow-studio, .ow-studio img { display: block; width: 100%; height: 100%; }
-.ow-studio img { object-fit: cover; background: transparent; }   /* the tiny blurred copy behind it shows until the photo is drawn (studio_lib.php) */
+/* WHOLE photos (owner, 6 Nov 2026): the photo is fitted inside the screen, never cropped or zoomed
+   (object-fit: contain), and the space around it is filled with a soft blurred copy of the same
+   photo (.ow-fill: its tiny copy, --ow-tiny, set by studio_lib.php). The fill keeps the photo's own
+   strong colours. Used by the page backdrop and the homepage videos (index.php). */
+.ow-fill { overflow: hidden; background: var(--color-bg); }
+.ow-fill::before { content: ""; position: absolute; inset: -60px; background: var(--ow-tiny) center / cover no-repeat;
+  filter: blur(28px) saturate(1.2); transform: translateZ(0); pointer-events: none; }
+.ow-studio { position: absolute; inset: 0; display: block; }
+.ow-studio img { display: block; width: 100%; height: 100%; object-fit: contain; background: transparent; }
 .ow-backdrop { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: -1; overflow: hidden; pointer-events: none; }
 /* no veil over the photo (owner, 5 Nov 2026): the photo keeps its real, strong colours.
    Text stays readable where it sits: page headings get a small frosted-glass card, cards are solid */
@@ -586,11 +593,11 @@ html.dark-mode { --studio-glass: rgba(15,21,32,0.74); --studio-glass-edge: rgba(
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .ow-backdrop ~ * :is(.d-head, .page-header) { background: var(--color-surface); } }
 /* small controls and cards that sit straight on a photo get a solid enough face (filter buttons, cards in dark mode) */
 .ow-backdrop ~ * .pill-f:not(.on) { background: var(--studio-glass); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-color: var(--studio-glass-edge); }
-html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ * .auth-card, .ow-backdrop ~ .auth-card, .ow-backdrop ~ * .contact-card) { background: rgba(15,21,32,0.88); }
+html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ * .auth-card, .ow-backdrop ~ .auth-card, .ow-backdrop ~ * .contact-card, .ow-backdrop ~ .wrap .choice) { background: rgba(15,21,32,0.88); }
 /* section headings that sit straight on a photo (Support "Get in Touch", Institutes "Upcoming Workshops") get a small frosted card too */
-.ow-backdrop ~ * :is(.section-title, .ws-head) { width: fit-content; max-width: 100%; background: var(--studio-glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15);
+.ow-backdrop ~ * :is(.section-title, .ws-head, .dir-head), .ow-backdrop ~ .wrap > .head { width: fit-content; max-width: 100%; background: var(--studio-glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15);
   border: 1px solid var(--studio-glass-edge); border-radius: var(--radius-card); padding: 12px 20px; box-shadow: 0 10px 30px rgba(var(--rgb-shadow),0.12); }
-.ow-backdrop ~ * .ws-head { margin-left: auto; margin-right: auto; padding: 20px 24px; }
+.ow-backdrop ~ * :is(.ws-head, .dir-head), .ow-backdrop ~ .wrap > .head { margin-left: auto; margin-right: auto; padding: 20px 24px; }
 .ow-backdrop ~ .overlay, .ow-backdrop ~ .veil, .ow-backdrop ~ .bg-wrap { display: none; }   /* one veil only */
 /* text that sits straight on the photo gets a soft halo in the page colour, so it reads clearly */
 .ow-backdrop ~ * :is(h1, h2, h3, p, li, label, legend, dt, dd, small) { text-shadow: var(--studio-glow); }

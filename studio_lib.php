@@ -7,11 +7,15 @@
  *  work of an Oweili artist, never in the Gallery, the sitemap or as an
  *  artwork's share picture.
  *
- *  Files: assets/img/studio/<key>-<tall|wide>-<width>.<avif|webp|jpg>
- *  (made once from the owner's originals: cropped for phone ("tall") and
- *  computer ("wide"), compressed, hidden data removed). Phones get the
- *  "tall" crop, screens over 640px the "wide" one; each browser takes the
- *  lightest format it can show (AVIF, then WebP, then JPEG).
+ *  WHOLE photos (owner, 6 Nov 2026): every photo is shown whole, in its real
+ *  shape, never cropped or zoomed. The layer is the size of the SCREEN (not
+ *  the page), the photo is fitted inside it (object-fit: contain), and the
+ *  space around it is filled with a soft blurred copy of the same photo (its
+ *  tiny copy, blurred by the browser), so the main subject is never cut.
+ *  Files: assets/img/studio/<key>-<width>.<avif|webp|jpg>, made once from the
+ *  owner's originals in their own shape (compressed, hidden data removed).
+ *  The browser picks the width it needs for the screen, and the lightest
+ *  format it can show (AVIF, then WebP, then JPEG).
  *
  *    owStudioPhoto($key, $eager)   the <picture> (lazy unless $eager)
  *    owStudioHas($key)             true when the files exist
@@ -22,115 +26,96 @@
  *                                  layer, not background-attachment: fixed,
  *                                  so it also stays still on iPhone
  *
- *  Where they are used: homepage (behind the video), Join as an artist,
- *  Gifts, Explore Art Styles, the 404 page and the empty Gallery; "hand on the
- *  palette" → Commissions, "woman looking at framed paintings" → Art Events,
- *  Artist Spotlights, Art Education, articles and Institutes, "studio table
- *  with brushes" → Support.
+ *  Where (owner, 6 Nov 2026): hand painting the landscape → Gallery; brushes
+ *  in jars → Join as an artist; hand on the palette → Commissions; paint
+ *  buckets → Explore Art Styles; woman looking at framed paintings → Art
+ *  Events, Artist Spotlights, Art Education, articles and Institutes; studio
+ *  table → Support; pink palette → Sign in and the Join pages (and Gifts);
+ *  paint-splattered cloth → the 404 page.
  * ===================================================================== */
 require_once __DIR__ . '/ow_paths.php';
 
 const OW_STUDIO = [
-    // key => [phone widths, computer widths, phone w/h, computer w/h, alt EN, alt AR]
-    // home-painting: the homepage photo behind the video. The others fill the WHOLE page
-    // behind everything (owStudioBackdrop): 9:16 for phones, 16:9 for computers.
-    'home-painting' => [[640, 960], [1333], [2, 3], [16, 9],
+    // key => [widths made, original width, original height, alt EN, alt AR, tiny copy (for the blurred fill)]
+    'home-painting' => [[480, 720, 1080], 1333, 2000,
         'An artist painting a sunny landscape on an easel outdoors',
-        'فنانة ترسم منظراً طبيعياً مشمساً على حامل لوحات في الهواء الطلق'],
-    'brushes-jars'  => [[480, 720], [1280], [9, 16], [16, 9],
+        'فنانة ترسم منظراً طبيعياً مشمساً على حامل لوحات في الهواء الطلق',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAkABgDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAYEBQf/xAApEAABAwMCBQMFAAAAAAAAAAABAgMRAAQSBSEGEzFBUWFxgQcikcHh/8QAGAEAAwEBAAAAAAAAAAAAAAAAAAIEAwH/xAAfEQACAwAABwAAAAAAAAAAAAABAgADEQQTFCExQVP/2gAMAwEAAhEDEQA/AOfwtpFrrFi4+9zUKQoJBQQB032qhRw5bo2D9wQPVJ/VY/puUOaC6gxKX1fMgVWuraYbyWYTMSRUoNoclWyalamQB12T7fDjInN95ficRH4FK1v6tDxRbtpVBiZ2WI6g0oN1wOcyJ0/D/MSC4Av2rbVlsXCjy304pTjlK+o29gasNVuHCpvFuGHCUllOIJHlR7D29q8ubWhDwUgqRj0V3mutY687YuI5k3DY7FX3J9UnsfiK2essNEK7QpxpQa5f3NheN3Ftb8qzMgpyjJUCTHbaB/aVnvNZt9S1VhpTwOnOMqSptIjAqSTHmZjfzSkWrR3Ed7QD5km4AUbgbCs1KVSZIJpsU5PgEncgbUpSurBvU//Z'],
+    'brushes-jars' => [[480, 720, 1080], 1333, 2000,
         'Well-used paint brushes standing in glass jars in a studio',
-        'فُرَش رسم مستعملة في برطمانات زجاجية داخل مرسم'],
-    'pink-palette'  => [[480, 632], [1280, 1500], [9, 16], [16, 9],
-        'A wooden palette with pink and orange paint beside paint brushes',
-        'لوحة ألوان خشبية بألوان وردية وبرتقالية بجانب فُرَش الرسم'],
-    'paint-buckets' => [[480, 632], [1280, 1920], [9, 16], [16, 9],
-        'A hand dipping a brush into buckets of colourful paint, seen from above',
-        'يد تغمس فرشاة في علب ألوان زاهية، من الأعلى'],
-    'paint-cloth'   => [[480, 720], [1280], [9, 16], [16, 9],
+        'فُرَش رسم مستعملة في برطمانات زجاجية داخل مرسم',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAkABgDASIAAhEBAxEB/8QAGgABAAMAAwAAAAAAAAAAAAAAAAQFBgECB//EACgQAAIBAwMDBAIDAAAAAAAAAAECAwAEEQUSITFBcRMiUWEVgZHR8P/EABgBAAMBAQAAAAAAAAAAAAAAAAABAgME/8QAGxEBAAIDAQEAAAAAAAAAAAAAABEhAQIxQVH/2gAMAwEAAhEDEQA/ANfcDEFR0Ax5qutdZje3FveMI5UUEt0XqcD5zxUtLiJmKLIu4EAj7PIrmlpGcO0yLtOR90rmRvafmlMPPItTNzdRR+ju6kjdy2MkCpejajfX12sBGI2xvYdl7jzxU2K1EGvG2S3VoowPTfZhmQ4Bb9c9qq7Jb2PU9lnC0ZeQRlmXIAzjJ+OKqvBLTflhHblAAXXK5c45xlQQP9xSqxtHMkk+ZdodiN3XkNnnnzSs7+rppLH2ahckDLJGoDHk43N3qSLO3vLpbu4j3TKNqnJGP480pRrxG/VFqMIi1kwIzbBIG5OTk4/ulKVRv//Z'],
+    'paint-cloth' => [[480, 720, 1080], 1499, 2000,
         'A paint-splattered cloth with bowls of colour and brushes',
-        'قماش مرشوش بالألوان مع أوعية الألوان والفُرَش'],
-    // the owner's last 3 photos (5 Nov 2026); palette-hand is cut so the painting of roses never shows
-    'palette-hand'  => [[480, 720], [1100], [9, 16], [16, 9],
+        'قماش مرشوش بالألوان مع أوعية الألوان والفُرَش',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABgDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABgAFA//EAC0QAAIBAgUDAgQHAAAAAAAAAAECAwQRAAUSITEiQXETIwYUQrFRgZGhwdHw/8QAGAEAAgMAAAAAAAAAAAAAAAAAAgQAAQP/xAAfEQACAQQCAwAAAAAAAAAAAAABAgADERIxIUEEIqH/2gAMAwEAAhEDEQA/AF6zozW6trA7WA/PBzNs5lZ7UzelToWSSSUlN15t9t/xGEBX3UZj7gU7jgD/ABxm/EFBSzUrSywo85GhC56bkjkd+MAbbPUJb3svcGzVMs9qmlmYCNtQLjWLggkMOdP9fpYQZdQZW0c9EaSRZQ5uoc9INrG4237d8WNUq06gy5+SVUNJsBxNuVWqqR1grHgLAH1Yt7AH6b+P3wWzLN2zXNYqWmWUxOpTS5AU77sNubYQTT6culkQx6YtYu03SQB3P8YKzF6Q6ooYBVaRrZLkLq4C342I84DElWC7tLQhWDHV5tZFB8rPJRxkEuQzsRZivHUPt5xY50NHU5bOjKTJPLCyu0rbFgb6fF+/jFhWgjBfbcY8psmBE//Z'],
+    'pink-palette' => [[640, 960, 1280], 1500, 1125,
+        'A wooden palette with pink and orange paint beside paint brushes',
+        'لوحة ألوان خشبية بألوان وردية وبرتقالية بجانب فُرَش الرسم',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACADASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABQAEBv/EACUQAAIBAwQCAQUAAAAAAAAAAAECAwAEEQUSIVExQXEiMmGhsf/EABgBAAMBAQAAAAAAAAAAAAAAAAACBAED/8QAHREAAgICAwEAAAAAAAAAAAAAAAECAyEiBBESMf/aAAwDAQACEQMRAD8A7MGgdcvXJmto2KtwBilYL22nlaKOUGRWK7TwSR5x3QuswGfUWNvFul2gHB5bAzjHeKS1SktWdeN5jZsczLei3RndSSp+0Hkmkop1e0Goby1s4yCfR9jHdY9Vtr+Oe2mtrciSOQES427cVgMEt80jwkIUJaS3ORl/ZAHAJA+D+qE+nkps5E1LAzeZ0+0utV0pXixIsSZO7cCfqYZ8ZP8AKrB7trPaYmhljZlQxsTkg528+D7B+e6qqH8IUxO31WKZ99y4KSrsuEI46Dj8ej1Qd/aXGn69smZnhly0TqoJdccr8jr3VVWLMR3rZ0j/2Q=='],
+    'paint-buckets' => [[640, 1280, 1920], 2000, 1125,
+        'A hand dipping a brush into buckets of colourful paint, seen from above',
+        'يد تغمس فرشاة في علب ألوان زاهية، من الأعلى',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAQFAgMG/8QAKhAAAgEDAwIGAQUAAAAAAAAAAQIDBAURABIhMVEGExQiQWFCgZGx0eH/xAAXAQADAQAAAAAAAAAAAAAAAAAAAgMB/8QAHhEBAAMBAAIDAQAAAAAAAAAAAQACAyEREjFBUfD/2gAMAwEAAhEDEQA/AONyvVsioEprtA7SgYjeIDcB350pDPUwURqqTFVAISIg/HHXkfXPGrVw8G01ekfrap45xkIExnjqOevfUK5yT+GqympoI3NEYipMnJc9O2ARgY1O2fmvZYuD34k2erluVSrysnnqm1SBhdo5x/umqK7R2qtglnjMh2suxCMbTwTn9NJ1CMtWrQU7hnUY8obhu+Rx01Qjt1PVVCpXRMrKSQAShUdj31psZZ+rwi2xNdfep2eqirGum6CSnAo5FATnLSAgHP1jP7jUqqsNYKhxTyKsQPtEh92PvWYbhPZ630kssPl59pI27VI+O3GNVvUI3uguNOIzyu45OqL+RM2llLfX7GLg1JDOssdOsgTGJFc5QnjP38a53pjLalhgMb1KsNvIyO550aNagIxCzYsL/diVsZKQLW1oWmYIVkyMdvcdF1u9tuDwS0kizGPIMgXjqO4ydGjSbBZSNgpWvZCKSXS81jMVSJDhA35DIwSeuT/XGsTeHC8zstwjALE4aM5/nRo0efqFs6vWf//Z'],
+    'palette-hand' => [[480, 720, 1080], 1503, 2000,
         'A hand holding a paint palette in a studio',
-        'يد تمسك لوحة الألوان داخل مرسم'],
-    'gallery-visit' => [[480, 720], [1280, 1920], [9, 16], [16, 9],
+        'يد تمسك لوحة الألوان داخل مرسم',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABgDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABgAFA//EACcQAAICAgAGAgEFAAAAAAAAAAECAxEABAUSEyExQQZRYTJScYHR/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EABsRAQACAgMAAAAAAAAAAAAAAAEAERIxAiFB/9oADAMBAAIRAxEAPwDlofOp1dYtxV6YNGV7ZiPfZfebmr8u0eIbKwao2Hvy/RIRf5PrAfBzwZ4nSeGWeV6sMgbkFdz5+/rvmxwfb2Ejk14dUKgt0RFPj2T9YDW4YqdRjt7MnLC8bN+kkcho3f8AmWF5ZtzahilEYQVyLIh7190SO2WQ3fU044BTuDODkx7RJJVStMVHevxm1KsPRPSlld1NiPwL80Rfi/OH162m46iuosqQw7gjzmhrk6+lHxKV7TYlaJlu2517lgP20R/ePkPkkTTEku5Hpab6mtJsO2xHzEpJUayEUVFCyAcsMbnE+qnT1VlQ0QZGqyPwPWWMuJxfJ//Z'],
+    'gallery-visit' => [[640, 1280, 1920], 2000, 1333,
         'A woman looking at framed paintings in a gallery',
-        'امرأة تتأمل لوحات مؤطرة في معرض'],
-    'studio-table'  => [[480, 720], [1280, 1920], [9, 16], [16, 9],
+        'امرأة تتأمل لوحات مؤطرة في معرض',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAQFBgID/8QAKRAAAgEDAgUCBwAAAAAAAAAAAQIDAAQRBSESExRBUTFhBiIyQnFy4f/EABcBAAMBAAAAAAAAAAAAAAAAAAABAwT/xAAcEQADAAEFAAAAAAAAAAAAAAAAAQIDERMhMVH/2gAMAwEAAhEDEQA/AMJbtcyMFjlkyfDGrKK0vmZR1MmD3Dk15aV8rGRIwxUZAOd9/ar2J55LTp7d1M8w2T6WDAbDPb0qVPkolwRrjSryGNWN7KoPdnOKq7+K9t/W6kcfvU+0utSubWWe5iaaCN+UQX+7I2x7DvXWoxpGzcChuo4WJ4TtuaOmPtGaaSVmyzsT+aVIaMB2HvSqaoloaL4ejsYHEk1wwbwBWo6nTuNXEpJHjGaUrJVNM3LHLRV6ALSytpkYuheYvjIOdh/an6jNZ3UHL5zjI80pSeSmCxSjNNoKsxZLlcE96UpS3K9Dbnw//9k='],
+    'studio-table' => [[640, 1280, 1920], 2000, 1333,
         'A studio table with brushes and paints',
-        'طاولة مرسم عليها فُرَش وألوان'],
+        'طاولة مرسم عليها فُرَش وألوان',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAMGBQEH/8QAKRAAAQMDAwMDBQEAAAAAAAAAAQIDBAARIRITMQVBYQYiMiNRgaGxcf/EABcBAAMBAAAAAAAAAAAAAAAAAAABAwT/xAAdEQACAgIDAQAAAAAAAAAAAAAAAQIRAyESMUEi/9oADAMBAAIRAxEAPwC66gsCPzzj9GsppaeoKafjn2N2Cr845FP6q+rbbYSAHXb6So2AAwfzmpeNKkdNQUuPFWyEK0tDCgRnP2xYmpy1tDS5aZZQ2W0uJcAIS4j4nt3p6jo1q2gQDYWH6/lSfVPUDceFGWl16Opa9SQkg+0Yzfsb5/yuzvULnUVRobF4+6dzeQcoQBcq8d8+KL9GovqirjOOOtcDWglCwM2UDRXn3T/VEtthZbWXS46tal2vqN+fGAMUU7aDjZreqZTEpyFDS59QrWoHgJUACL357Y81g9McfeTPZ206nFJ0t6LgEcjPn+0UUZFT0GKVx2Ol9BkzGkIVoQppo7TSkatRvfm/t+1KhlSmX2fgqLHcbtf4kAkAkfYk+M0UVlyXjxpxfpVfUmmT8qMqC4lqRtx1FCVBO4ci1r/kg0UUVrIro//Z'],
+];
+/* The tiny first frames of the homepage videos (their blurred fill, index.php) */
+const OW_HERO_TINY = [
+    'blue' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgP/xAAtEAABBAECBAUCBwAAAAAAAAABAgMEEQASIQUiQXETMVFhgQbBFCMyUpGh8f/EABcBAQADAAAAAAAAAAAAAAAAAAQCAwX/xAAgEQEAAgIBBAMAAAAAAAAAAAABAAIDESEEMbHBQXGB/9oADAMBAAIRAxEAPwDOz3i9ORJW5+YtRC7BvpR7CumahnRNgBx5NOEfqP7huCD3+4yC5HbW4l5CtYsahV6c0koI8FtLPM2dPkLsD/MQXq4td3xxKb4slMmnj3I8gh9Eh94FLugG/PUq+Ue3Qb5Qej/gYLUqVHE5shKyG1cqCE1Y9e+JR2Q/4rJ0alSSkFQ/i+222X+GsvtOSGp61LQ84QkrIoAUE0Pceu9jDdTdpUB/Jf0oWstiI8R1Ro0eVFBC+Vzw627HF0ccacQFqRoJG6QLr5yvxSMUw3EN9EEJH2zAupdbdUgpUK6VhsWS1jlis2OrpJ04fLgxjUl5xKyKV5iva8pj6jiOrbYYDhQLFkeSiRVH0wwxthbbWEE1rUowtCOJJSW7Jc1rPfric6U7NjJSsrDaylYUCQCCVH4rYYYZAqWS6cge5Oi1rao/L6luFPcUlmPNOpxabSopr4PvVHOEvhbK5K12d6P9YYZm9nZNB4NfXif/2Q==',
+    'pink' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGgAAAwADAQAAAAAAAAAAAAAAAAQFAQIDBv/EACgQAAICAgAEBAcAAAAAAAAAAAECAAMEEQUSITEyUmFxBhMiI0FRkv/EABkBAAIDAQAAAAAAAAAAAAAAAAMEAQIFBv/EAB4RAAICAgIDAAAAAAAAAAAAAAABAhEDIQQSIkFh/9oADAMBAAIRAxEAPwBe7h+NawVVC2N5ekTs4PbWdowYfo9DKGM2rGvfxEaAm12fXWQr65ieg30A94rVr6dH16PxRLahkGnUg+s35Aa+stvh2W0Cw8oB7AzkvCLbF+kDRG97lkpLVA3lxyV2eacAPMbWWsr4faqs22ZKADX4ig4fhEdeIJ/QhoIzOQ92izRV9sb7mL5PCq81yGYqzkBTrfLCErSo0HOVMbyPn1U1YtjAitApPmieQeWve2767kdIQiM5yeem/YXjxXSOiPfleIAkj1masxBWAa037CEJKQ5LR//Z',
+    'pink-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAuABgDASIAAhEBAxEB/8QAGgAAAwADAQAAAAAAAAAAAAAAAAIFAQMEBv/EACsQAAIBAwEGBQUBAAAAAAAAAAECAwAEERIFEyEiMUEUI1FxsTNSYYGh4f/EABcBAQEBAQAAAAAAAAAAAAAAAAQCAwb/xAAfEQACAgIDAAMAAAAAAAAAAAABAgADESESIkEEcbH/2gAMAwEAAhEDEQA/AJz7GV8m2k4KcEN60vhJIWUSDHtVNreXwwEL6G7E9q3c0UMMc8CGZV8wk5BP4ozdByM6AEL0UanmLlEWYg0VTvdoxBtC21ujBhzBMn+0Va2qNQl3xLXbIH5KaSK7FVYcvWum6dNMRPUr8VMtAIpGKjlYZ696eeY7tkVgCrA5PYHtWYdLF+4w1dhjyRdsQ+ZvE/Y9BRXdtCMbpsnjjGKKyY4YiLADDMzFOp0445GadYjPE8anBZdR985HxUqwl1WyE9QMVYtG5df3H/KjAqTUjOsiKYWuZCScR4B96K3wt9RuxIUD0FFIrr5LyPswe0g4E//Z',
 ];
 
-/* A tiny blurred copy of each photo (about 0.7 KB, made from the photo itself, 6 Nov 2026).
-   It is drawn the moment the page opens, so the page never shows a plain white or navy
-   frame while the real photo is still loading: no flash between pages. */
-const OW_STUDIO_TINY = [
-    'brushes-jars-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGgAAAgIDAAAAAAAAAAAAAAAAAAQDBQEGB//EACwQAAEDAwMACAcAAAAAAAAAAAEAAgMEESEFEjEGExQiQUJRYVKBkbHB0eH/xAAYAQADAQEAAAAAAAAAAAAAAAAAAQMCBP/EABcRAQEBAQAAAAAAAAAAAAAAAAABETH/2gAMAwEAAhEDEQA/ANtqx3GKIAFtlTU+uB4ZT1IJcCGtkHmFskp6Csjm28tc7gH7flc2qZhja34QhY3eyEw54yDUyypdK5zdsWDcHzD+/RO6PJ1GnT1Es26UYax+bWN+PW9ld0mhiebUXioETJiWgkeLm5x88JWh6PSUfbJpYpJg2PY15sQ7IuQOc28U7ZYOVGdfuSTVSMJ5bsGPZCkLdNvlpB9LD9IWMU1//9k=',
-    'brushes-jars-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQGAgP/xAAqEAACAQMDAQYHAAAAAAAAAAABAgMAESEEBRIxBhMyUbHBIiMzQYGy8P/EABYBAQEBAAAAAAAAAAAAAAAAAAMCAf/EABkRAAIDAQAAAAAAAAAAAAAAAAABAhESMf/aAAwDAQACEQMRAD8AXado5op4SVEfO182uBnrTcW6zPp072cRysyuM9FIsAb1GSS6t41+rxJDjqQbeX99qZ3ZNQmtPN2sVQpyzbAIFBgXReRbkhkszAqQCTgCPHQ+efWnXvxxUxtkB0WzvKzIXdhzL/EAFUe/tWZt17/T/MmkKyoImF7cWxfP4qW6NUbNrFGdPpyY0OI+qikO0qgayawA8H7sPTFFFWiTpKzHaXUsePDpfHiFIOAFmAAt3kZtRRRvokeH/9k=',
-    'pink-palette-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAUGAQT/xAArEAACAQMCAwYHAAAAAAAAAAABAgMABBEFEhNBUSExUmFxgQYVIjNCQ8H/xAAYAQEAAwEAAAAAAAAAAAAAAAADAAEEBf/EAB4RAAICAgIDAAAAAAAAAAAAAAACARETURIhAzFS/9oADAMBAAIRAxEAPwDdbu3kmQiTMZHao7MGlZuooY98j7VXnXcwGDHMVwe89aTXsUUN3Alw7SWZfDKjbSw8OaBJaVpoo6zeTEtLA+W+hZAyyIwIyDuAzRU++h6cXYx392iE/SptixUdMg4PtRSd/RizvqSutbG2u8bJws23cvMSL3bsdeRHKl178NwXYF6r8cQ5VohkevvWzl4nF4E4MiNifH6n8Q8jzrstdUhiuTdgbA+Fu4ua9HHl/KnK5oNnaU79E78imP25yU/E8QDs9KKs20LTJmMvAibed2euaKvhGg8r7P/Z',
-    'pink-palette-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAUGAwT/xAApEAACAQMDAgYCAwAAAAAAAAABAgMABBEFEiFBURMiMmFxkQYUQsHR/8QAGAEAAwEBAAAAAAAAAAAAAAAAAAEDAgT/xAAeEQACAQQDAQAAAAAAAAAAAAABAgADESEyBBIiQf/aAAwDAQACEQMRAD8Asgam9duC91NaMRggYz0HQ0w0/Xba/u3togd6luQcjaOp7VwXzxanchobmPw2A2ORx99s8ex+axUXuMG0rx2FN7tJmZ7mORYIkzPKwWMEcE/J4rrW/hjszcyER3QYxyWzeoOO/YVvq+hXkwGyZQsDZkA8zAY4pStp+xM63bNHdRLtRh6WA5Ge49v64oGDcy713LeTHX5Wqx+M0ahCRACVGOrVnGTJo0LSeYmcgluer/4Pqiigzl+COtNJa/tSxJL2bbif5YIxmoxONemUcKJ5RjpwpNFFJtY12n//2Q==',
-    'paint-buckets-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGgAAAgIDAAAAAAAAAAAAAAAAAAUBAwIEBv/EACkQAAIBAwMDAQkAAAAAAAAAAAECAwAEEQUSIQYTMUEUMlFxgZGhscH/xAAYAQADAQEAAAAAAAAAAAAAAAACAwQBBf/EAB4RAAEEAgMBAAAAAAAAAAAAAAEAAgMRBFEyQWGR/9oADAMBAAIRAxEAPwBFea2dSs3tWgSC3kIIKsWbg8ZzWrA0kUqs0b48oygkY9MGs9X04wyySW5bt7yNhTBB/tTbSHsbQSO1gkbvewfWhx3iLiEzLiEtBWspLEkRA58FlB/dFLJdBeeZ5lu49sjFhuVs4PPPFFNMl6UwgAHf1M5NKmXTxFMpXLbjMjbgrDgc/im1j0fevE0k11C0j4O0g8jzyfjVumWFxAJra6A9nbPJ8H5U1k6n0rTiIrqciUADaq7ift4+tY9ga6rtFDIXtsilz01pqyTyKElG1iMB+BzRTiXqJGlciGHBYkZPNFQmEeroDIOgv//Z',
-    'paint-buckets-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAYCBAUD/8QAKBAAAgEDBAEDBAMAAAAAAAAAAQIDAAQRBRIhMUEUUXETFSJhI4GR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAwIE/8QAIBEAAgEDBAMAAAAAAAAAAAAAAAECAzEyEhNBgSFxwf/aAAwDAQACEQMRAD8AzNV1uMXVrYXFoDKNu26RtrLzx84rlrEt9bwJE8iy2ki4O1R+R3eT807vHCs4tmtrdAoG0qwMgJ89dYxzSbNofpry606O+Z8NvVcHIBOePBNQ6er2hd1Qys/BRhvpNKlguIk9QQ/GRgcjHOO/anEK2q2TteNGF7hK8fTJ4x+z71TbQftKW80V0ZdzbW3Lgn4x4/VZKXsltqF2+nQLLCjMhjCkg+4GKtVJSk0+AnCNOKasMkrMbiJyxL7n/LPPVRADFpWAMgLDce/9oopeegXj2vgn21zPLqF+ss8jhJMKGcnaOevatXSiVgudpI/lbr+qKKzmk//Z',
-    'paint-cloth-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAUGAgME/8QAKhAAAQMDAwIEBwAAAAAAAAAAAgEDBAARIQUSMRNBIlFxkQYVMlJhgaH/xAAXAQADAQAAAAAAAAAAAAAAAAABAwQC/8QAIhEAAQMDAwUAAAAAAAAAAAAAAQACAxEhMQQSQRNRYZGh/9oADAMBAAIRAxEAPwB1rWqHHbJiGJFIQEcXfdARL2yqZ9u9SkuYUt4mgkEbo/WrZ3xfkb8ql/5V1Nix5TBJLHeAluwtrWW/b0qX0+HpzE0VfhoPXFen0iwXiuiWTN0Tm+FrHVbEb8+01kZkGMJCGpamyAtI5ALYm25xj3LbzxzRVavw/pxEpdCRlb4dWin1j8/Ejc7uuHX9VPT4fy5JUl99skJx8tqbrrfaX449qwgxlhz2ZRgiPPYQPsJewrhK06iiHKdecaiuL1VBqxqd1HlS7L2xREjSnmE1N5TJxHRJoL+EURbbv1nHpUmpje4N245V2leGFzSbqwCIJgJGTe4kuvrRSw3NVUyVuLEML+Eld5TzoogWU5rVf//Z',
-    'paint-cloth-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAQGAgMF/8QAKhAAAQMEAQIDCQAAAAAAAAAAAQIDEQAEBSESBhMxYbEUIjVBUXOBkcH/xAAWAQEBAQAAAAAAAAAAAAAAAAAFAQT/xAAiEQACAQIFBQAAAAAAAAAAAAAAAQIDEQQxNFGBEiEiMmH/2gAMAwEAAhEDEQA/AKwji2EtgqBIEyDMmDW4JEq/IMj9GlkDk4FSO7xIkGRA36xXAvbprB4xePdvr24fdSpXdBHNE7GzUSv2RTLKPtu5J1ftiLd1looQSkFIB2rR9aaw1+/e2CVcAlpuEKVMhShox9AalrJpWVsx3ipDTOm3CB70mYIA34+JOqpcKVqbatkIQkJlKy2Dw4j++VYZySrWb6nfLYRcIPD+Kt93H7FIS0yEgABWgKkupCVZq55GeKBE/LQoopKhmHy9xnpT4Afur9af6YJ7mT2dPtR5aoooWOrnyKS0q4P/2Q==',
-    'palette-hand-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAABgAEAwX/xAAqEAACAQMDAwMDBQAAAAAAAAABAgQAAxEFEiExQVETImEGM2JxgZHR4f/EABUBAQEAAAAAAAAAAAAAAAAAAAEC/8QAHBEBAAICAwEAAAAAAAAAAAAAAQARAhIhMVHw/9oADAMBAAIRAxEAPwAfCebekM8OzckuDvKsu4HHwetJdOnfUmoMRdmW4SW8Eg2F3H9v9rwtE1iSGMW1Zjgsoy7WwcheoOfI71utXWE5pVyTbthm2kG4Qig9+eSMY6UXTExE4jQTDgZwT3PFVFmlWt52TnZc8MttsEeR8VU7vkdD0hPTkKyVbnb1PuwCKQC/DLFDHHqsmQN3OO3PYUcNu9DYsyMm1tjBh3HWt0K368WZqPqBTEKlt5+4rcBR+XH8Z8UZCwE6ZrNueT7JDIvZQ7YA8VVyGqx8DK3s/oP7qqKZVn1z/9k=',
-    'palette-hand-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAUGBAH/xAAqEAACAQQAAwYHAAAAAAAAAAABAgMABBEhBRJBBhMUIjFRIzJhcoGh4f/EABYBAQEBAAAAAAAAAAAAAAAAAAIBAP/EAB0RAAIBBQEBAAAAAAAAAAAAAAACAQMREiEyUTH/2gAMAwEAAhEDEQA/AIyy4dc3VxCMle+xyMBkEGnd52Ws4URue8tyQWMcwBU4BJHMNDQpDYcbvrHuu5lJWPQVtjHt+zT5LzistpOwnlaK6UELKylFB3136ZFFsr6EmNt/TbwCWwtC9vC8Tudq6jBdfb8U2a7hXbEAfdUra2pin8TGglZnA8i+hI+XHt/Ka39s9kIPEmF5XB+Ekw8o+p6euKsv4aKfskBVQoC2Npy6ygzjrqiiq3MhTqDNcSOLWOMOwQkkqDo7PSu8AjR4OIc6K3LBkZGcHdFFFB1j/9k=',
-    'gallery-visit-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgH/xAAtEAACAQMCAgcJAAAAAAAAAAABAgMABBEFEhMVBhQhIjFRU0JhcYGCkZLB8P/EABcBAQEBAQAAAAAAAAAAAAAAAAEDAAL/xAAcEQACAgIDAAAAAAAAAAAAAAAAAQIDEWESE0H/2gAMAwEAAhEDEQA/AMnBzGV9ouJh8WNNy22qoBi6lb6jVKae0s1hmixMSMSDcRtOB5j3N4V06vBqCrHBGqbgWDF/L5VHZVPwj8LV/Xl/KirccT8Nd9zBuwM99fH7UUZHGwudO61a3Zv42RUjLoUkydwBOeypfRzSYL7Q55lLrdFzGGLEKB3T2VqrnULRreYQxoWZGUZbGMgik9Fngs7FoZIo88TcMNn2VH6oViUTp1SbF10S/VAqzwYAwP7FFW+Z2vppRRzibqkf/9k=',
-    'gallery-visit-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAUBBAYC/8QAKhAAAgEDAgQEBwAAAAAAAAAAAQIDAAQRBSEiI2FxBhUxURITFDNBkaH/xAAYAQADAQEAAAAAAAAAAAAAAAAAAwQBAv/EABgRAQEBAQEAAAAAAAAAAAAAAAEAEQIx/9oADAMBAAIRAxEAPwDE2FkbmTBzgDJp3b6RaxGOW5kVYnJUFmzuO1VtDspL1WjBdM44wpNNtW0mTyu7aVBmOLKfKyMsPfb0pS6zAwql1p9gC7Ro0iBSfiT0HT+1n760MMgwCFYAjPsa2el6IwgtZY5JFVoQZI5QWyxGSaR6zp8to5VyXyRuEIA/dA4wmk98PMywgKxHY1d1uWTy2XmPuN9+tFFTntV1d6dLJ9Hb8xvtr+elRc8xuPi770UVz1bzf//Z',
-    'studio-table-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAYDBAUBAv/EACkQAAEDAwIFAwUAAAAAAAAAAAECAxEABBIFIRMxQVFxBhRhIjKBkeH/xAAYAQACAwAAAAAAAAAAAAAAAAACAwABBP/EAB8RAAIBBAIDAAAAAAAAAAAAAAABEQIDEiEiUTFxgf/aAAwDAQACEQMRAD8AaFrbcsy0kgnNUgdDP9rtmxk0lt5RS4SSme21LtpqDTOqvuKLmXEKCkJ+OZ/MCmOyvfeBD6GwMJQQVjfvH660pSuKI6U+T9R98nk2D8mIjzRV03Yky0sUUc19FY2uxOuX2HNQaRaMFl9b4cSHBPEyBkkgnYc/FRhT7OsFFyt3huL+4oASTM7eCRWS806xrVs2VrWi2czagGCnvA6RvW2iwunr03DIhB6qJ3M/PSkXW40tmijRWuvVOoIu3kt4YJcUE7K5T5oqNfp6yK1Fw3ec/Vi4In42oo8mDCP/2Q==',
-    'studio-table-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQGBQP/xAAnEAACAQMDBAICAwAAAAAAAAABAgMABBEFEiETIjFBBoEUcSNRYf/EABYBAQEBAAAAAAAAAAAAAAAAAAECA//EAB4RAAICAgIDAAAAAAAAAAAAAAABAhEDMSEyM3Gx/9oADAMBAAIRAxEAPwCy1m46Nk0ox2KTk+PHFI2VzDcETs6/kMOYwd2BnmuHyWdIfx4p1MsEqsCA20KfGSf65xU9FdMtulxZSLEvXddikBscZGfePVZTaXJUY2XsE1vuktYZU6mN+xTzg+/1mlrrUbeC9SF7pRIsiqY/ZDcZ+vP0ahpdaupfkbIJgsGemXB7lUcEnHNKalczxw27v/JPJNJPLJxkAduAc8gZP7pTt8DVbKH5YSb+1Qk7TZzkj0eBWHpwB0+MHkdbOPqiipzaKxaHtdRV0ywZVAPVbkD/ACs7VUV7XT96hu2TyM+xRRWEfLD0/gy6s//Z',
-    'hero-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABIDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEBQb/xAAqEAACAQMEAQIFBQAAAAAAAAABAgMABBEFEiFBMRMiBhRRYXEjQoGR0f/EABcBAQEBAQAAAAAAAAAAAAAAAAQCAwX/xAAiEQABAwQABwAAAAAAAAAAAAACAAEDBBETIRQxQVFSkbH/2gAMAwEAAhEDEQA/AJBBJFe6a0ab2uHChFOSAMMzY/ofTzVjRWdn6C60XMkZaRSvCoTyRu8nv7fakqwt9SWd5nWJEKYiyNwHuJJ+nA4Hns1sxiP4h0gS3FqUckgBxhsdNjrNTVGYWZ+SukCMt9UpEs5UWRIztcBhmQeDRTY7SWONYwVwoC+B1RQ85d10MUfiym09IpPnGuI/0yuN5HIXHNNe9stCEbGQsoxC3O59o7P4zWebll0e5DggTNGiletxGT+P9qG+MsjkToRtnfnBO1PbtJ/gg5pJRFJMTk+r29MhxEAQ6bdvrrt0nt5EV0liKsMg7hyKK4cxaiSfSi1Bo/2lB7SOsceKKNw5LXMK/9k=',
-    'hero-wide' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAASACADASIAAhEBAxEB/8QAGgAAAgIDAAAAAAAAAAAAAAAAAAUDBAIGB//EACkQAAIBBAEDAgYDAAAAAAAAAAECAwAEESEFEjFBE1EGIjNTgbGRoaL/xAAWAQEBAQAAAAAAAAAAAAAAAAAEAwX/xAAjEQABAwMCBwAAAAAAAAAAAAABAAIRAxIhMTIEQVFxgdHw/9oADAMBAAIRAxEAPwBLavO/OLKgZpX+pvROd/0ad34T1kjQAK7DrXHcjYP4Gao8PJJJPHd+kqMNZOBkEfurdyUknSSJwwWQknxjBH7q4eHQ3mFF9NzZM4WdnbhrBpLZY5p1JcW0/hOrR15z5NScrPJx7xXFuFCMoWRG7HO9DxUjXdvxeJYYeu46EDqrYDj3/wBfzipuVgh5awL25PbqAxgg47VmvqOuuzBWlTptssgSuYXUsizuquwUnGAcDFbH8P742XP3Eoopx18oR2lM7wDM7YGRJo+3ypTWw1yE6jQ9FdCiih8Rtb29J1HU/dV//9k=',
-];
-
-function owStudioFile(string $key, string $var, int $w, string $ext): string {
-    return 'assets/img/studio/' . $key . '-' . $var . '-' . $w . '.' . $ext;
+function owStudioFile(string $key, int $w, string $ext): string {
+    return 'assets/img/studio/' . $key . '-' . $w . '.' . $ext;
 }
 
 function owStudioHas(string $key): bool {
-    if (!isset(OW_STUDIO[$key])) return false;
-    [$tall, $wide] = OW_STUDIO[$key];
-    return is_file(__DIR__ . '/' . owStudioFile($key, 'wide', end($wide), 'jpg'))
-        && is_file(__DIR__ . '/' . owStudioFile($key, 'tall', $tall[0], 'jpg'));
+    return isset(OW_STUDIO[$key]) && is_file(__DIR__ . '/' . owStudioFile($key, OW_STUDIO[$key][0][0], 'jpg'));
 }
 
-/* $sizesWide: how wide the photo is on a computer screen (for the browser's choice) */
-function owStudioPhoto(string $key, bool $eager = false, string $class = 'ow-studio', string $sizesWide = '(min-width: 1240px) 1200px, 100vw'): string {
+/* The whole photo, fitted inside the screen. The browser is told how wide it really shows:
+   the screen width, or less when the screen is wider than the photo's shape (sizes). */
+function owStudioPhoto(string $key, bool $eager = false, string $class = 'ow-studio'): string {
     if (!owStudioHas($key)) return '';
-    [$tall, $wide, $ta, $wa, $altEn, $altAr] = OW_STUDIO[$key];
+    [$widths, $W, $H, $altEn, $altAr] = OW_STUDIO[$key];
     $b = owBase();
-    $set = function (string $var, array $widths, string $ext) use ($key, $b): string {
-        return implode(', ', array_map(fn($w) => $b . owStudioFile($key, $var, $w, $ext) . ' ' . $w . 'w', $widths));
-    };
+    $set = fn(string $ext): string => implode(', ', array_map(fn($w) => $b . owStudioFile($key, $w, $ext) . ' ' . $w . 'w', $widths));
+    $sizes = 'min(100vw, ' . round(100 * $W / $H, 1) . 'vh)';
     $h = '<picture class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '">';
-    foreach (['avif' => 'image/avif', 'webp' => 'image/webp'] as $ext => $mime) {
-        $h .= '<source media="(min-width: 641px)" type="' . $mime . '" srcset="' . $set('wide', $wide, $ext) . '" sizes="' . $sizesWide . '">';
-        $h .= '<source type="' . $mime . '" srcset="' . $set('tall', $tall, $ext) . '" sizes="100vw">';
-    }
-    $h .= '<source media="(min-width: 641px)" srcset="' . $set('wide', $wide, 'jpg') . '" sizes="' . $sizesWide . '">';
-    $w0 = $tall[0]; $h0 = (int) round($w0 * $ta[1] / $ta[0]);
-    $h .= '<img src="' . $b . owStudioFile($key, 'tall', $w0, 'jpg') . '" srcset="' . $set('tall', $tall, 'jpg') . '" sizes="100vw"'
-        . ' width="' . $w0 . '" height="' . $h0 . '" decoding="' . ($eager ? 'sync' : 'async') . '"'
+    foreach (['avif' => 'image/avif', 'webp' => 'image/webp'] as $ext => $mime) $h .= '<source type="' . $mime . '" srcset="' . $set($ext) . '" sizes="' . $sizes . '">';
+    $h .= '<img src="' . $b . owStudioFile($key, $widths[0], 'jpg') . '" srcset="' . $set('jpg') . '" sizes="' . $sizes . '"'
+        . ' width="' . $W . '" height="' . $H . '" decoding="' . ($eager ? 'sync' : 'async') . '"'
         . ($eager ? ' fetchpriority="high"' : ' loading="lazy"')
         . ' alt="' . htmlspecialchars($altEn . ' · ' . $altAr, ENT_QUOTES, 'UTF-8') . '">';
     return $h . '</picture>';
 }
 
-/* The tiny copy as the background of the photo's frame (phones: tall, computers: wide) */
-function owStudioTinyCss(string $key, string $sel): string {
-    $t = OW_STUDIO_TINY[$key . '-tall'] ?? ''; $w = OW_STUDIO_TINY[$key . '-wide'] ?? '';
-    if ($t === '' || $w === '') return '';
-    return $sel . '{background:url(' . $t . ') center/cover no-repeat}@media(min-width:641px){' . $sel . '{background-image:url(' . $w . ')}}';
+/* The blurred fill: the photo's tiny copy as a CSS value (--ow-tiny), blurred by oweili.css */
+function owStudioTinyVar(string $key): string {
+    $t = OW_STUDIO[$key][5] ?? (OW_HERO_TINY[$key] ?? '');
+    return $t === '' ? '' : '--ow-tiny:url(' . $t . ')';
 }
 
-/* The photo behind the whole page (5 Nov 2026). Printed right after <body>.
-   Phones load a 480 / 720 wide copy (AVIF 13 to 68 KB), computers 1280+.
+/* The photo behind the whole page. Printed right after <body>. A layer the size of the screen,
+   fixed (it never grows with a long page): the blurred fill, then the whole photo on top.
    The body becomes see-through so the layer shows behind every section. */
 function owStudioBackdrop(string ...$keys): string {
     foreach ($keys as $k) {
         if (!owStudioHas($k)) continue;
-        return '<style>html body{background:transparent!important}' . owStudioTinyCss($k, '.ow-backdrop') . '</style><div class="ow-backdrop">'
-             . owStudioPhoto($k, true, 'ow-studio', '100vw') . '</div>';
+        return '<style>html body{background:transparent!important}</style><div class="ow-backdrop ow-fill" style="' . owStudioTinyVar($k) . '">'
+             . owStudioPhoto($k, true, 'ow-studio') . '</div>';
     }
     return '';
 }
