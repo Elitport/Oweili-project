@@ -72,7 +72,7 @@ $titleAr = $tAr . ' · أويلي';
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 </head>
 <body class="ow">
-<?= owStudioBackdrop('gallery-visit') ?>
+<?= owStudioBackdrop($type === 'art_education' ? 'art-book' : 'gallery-visit') /* Art Education: the art book; Events (and Spotlights): the gallery visit (owner, 6 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 

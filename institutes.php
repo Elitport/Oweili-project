@@ -128,7 +128,7 @@ details[open] .when-closed{display:none;}
 </style>
 </head>
 <body class="ow">
-<?= owStudioBackdrop('gallery-visit') ?>
+<?= owStudioBackdrop('easels-class') /* the easels ready for a class (owner, 6 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 

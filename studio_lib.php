@@ -68,6 +68,15 @@ const OW_STUDIO = [
         'A studio table with brushes and paints',
         'طاولة مرسم عليها فُرَش وألوان',
         'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAMGBQEH/8QAKRAAAQMDAwMDBQEAAAAAAAAAAQIDBAARIRITMQVBYQYiMiNRgaGxcf/EABcBAAMBAAAAAAAAAAAAAAAAAAABAwT/xAAdEQACAgIDAQAAAAAAAAAAAAAAAQIRAyESMUEi/9oADAMBAAIRAxEAPwC66gsCPzzj9GsppaeoKafjn2N2Cr845FP6q+rbbYSAHXb6So2AAwfzmpeNKkdNQUuPFWyEK0tDCgRnP2xYmpy1tDS5aZZQ2W0uJcAIS4j4nt3p6jo1q2gQDYWH6/lSfVPUDceFGWl16Opa9SQkg+0Yzfsb5/yuzvULnUVRobF4+6dzeQcoQBcq8d8+KL9GovqirjOOOtcDWglCwM2UDRXn3T/VEtthZbWXS46tal2vqN+fGAMUU7aDjZreqZTEpyFDS59QrWoHgJUACL357Y81g9McfeTPZ206nFJ0t6LgEcjPn+0UUZFT0GKVx2Ol9BkzGkIVoQppo7TSkatRvfm/t+1KhlSmX2fgqLHcbtf4kAkAkfYk+M0UVlyXjxpxfpVfUmmT8qMqC4lqRtx1FCVBO4ci1r/kg0UUVrIro//Z'],
+    // the owner's photos for Art Education and Art Institutes (6 Nov 2026)
+    'art-book' => [[480, 720, 1080], 1500, 2000,
+        'A hand turning the pages of an art book beside a glass of tea',
+        'يد تقلّب صفحات كتاب فني بجانب كوب شاي',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABgDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAUGBP/EACkQAAIBAwMCBAcAAAAAAAAAAAECAwAEERIhMQUTQVFhgSIjMjNCcpH/xAAWAQEBAQAAAAAAAAAAAAAAAAACAwH/xAAYEQEBAQEBAAAAAAAAAAAAAAABABEhAv/aAAwDAQACEQMRAD8Ay9JWKW7EUsWpMEeI3pi1q0E+lpYo4y2IzK4Gry2pIvV5ReJaSzZ+PICjCjG3HhW3qjx/fADsycfkQDjn0qZ5m+pxDOYsoTpZdiPWilxnM0MVw65dxpk/ddj/AHY+9FZuWhtG2EVthpZbiSSVk2RV+k54yfTfyqghvOnXENuhurhZbdiSiRBtQI4ydh71G28vbk1OoKnnOa1hgiiFh8ptzjk00gdq4XEKxdmC3WGJm1kmTuMTjHPA9qKSWOIINCA6fDJzRUnrWOF//9k='],
+    'easels-class' => [[640, 1280, 1920], 2000, 1297,
+        'Easels with blank canvases ready for an art class in a studio',
+        'حوامل رسم عليها لوحات بيضاء جاهزة لدرس فني في مرسم',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACUDASIAAhEBAxEB/8QAGQABAQADAQAAAAAAAAAAAAAAAAYDBQcE/8QAKRAAAgEEAgECBQUAAAAAAAAAAQIDAAQRIQUSBkFREyIxcYEVFjKR8f/EABcBAQEBAQAAAAAAAAAAAAAAAAIDBAD/xAAaEQADAQEBAQAAAAAAAAAAAAAAAQIRAzFB/9oADAMBAAIRAxEAPwAvk9/b+L2nJKYWkkuJI37x6wBrQqy8a5F+W4eK8lVQ5d1IUYGjiuZC3vJfBLKGC1mklW/c9FjJOOujj2qx8f5Acfx9rbohZZrqZWCgkx52M/nVOmSn6WBkVXCEHJqf/c9lNyV/YPBMj2h6FyOwc56gADeyayzcjLDPYmRAxnZlYYx0AXI/Oc1O3U0kNzLeGOJQ0gkcAYLFJD1OceqnH9VywT02lxyXErHDNI+p07qfhtsfT21SofykKZLaDqesKMF+bGif9pTXRZ4F8nvpa/qb20zxk/wbGTs1ruCWSCS5kmSMo83dO2/qdnH2pSlUp4Z4trUb8hQmX+f13Xg5J4BC6rH99416YP3pSjRaDn3OSMs6dCSN4yckDWMn3pSlRRoZ/9k='],
 ];
 /* The part of each photo that always stays in view when the photo fills the screen (owner,
    6 Nov 2026): "x% y%" of the photo, aimed at its main subject. A phone (tall screen) keeps the
@@ -81,6 +90,8 @@ const OW_STUDIO_FOCUS = [
     'palette-hand'  => '38% 52%',   // the hand and the palette
     'gallery-visit' => '50% 58%',   // the woman and the paintings around her
     'studio-table'  => '55% 58%',   // the studio table with its brushes
+    'art-book'      => '50% 45%',   // the open art book and the hand turning its page
+    'easels-class'  => '42% 55%',   // the row of easels with their canvases
 ];
 /* The tiny first frames of the homepage videos (their blurred fill, index.php) */
 const OW_HERO_TINY = [
