@@ -4,8 +4,8 @@
  *  Background: two real Pexels videos, one after the other with a soft cross-fade, looping:
  *  the blue hand painting dots (assets/video/hero-wide.mp4, on computers AND phones), then the
  *  pink brush (hero-pink-wide.mp4 on computers, the owner's vertical hero-pink-tall.mp4 on phones).
- *  Each frame is shown WHOLE, never zoomed (6 Nov 2026), with a soft blurred copy of the same
- *  picture filling the space around it. Only the first video loads at the start; the second loads
+ *  Both fill the whole screen edge to edge (6 Nov 2026, like the background photos), each with
+ *  its main subject kept in view. Only the first video loads at the start; the second loads
  *  in the background after the page has shown. A still frame of the first video shows at once
  *  (and alone on slow connections, Data Saver or
  *  reduced motion). The text sits on a small frosted-glass card so it reads clearly. Badge, headline,
@@ -43,14 +43,15 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 
 /* full-screen video in its real colours (no veil); its still frame shows first */
 .hero-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--color-bg); }
-/* WHOLE frames (owner, 6 Nov 2026): each video and the still frame are fitted inside the screen,
-   never zoomed (object-fit: contain); the space around them is a soft blurred copy of the same
-   picture (.ow-fill in oweili.css). Phones get the same wide blue video, fitted whole, and the
-   owner's vertical pink video as it is. Each video has its own layer with its own fill. */
-.hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 1.6s ease; }
+/* EDGE TO EDGE (owner, 6 Nov 2026): both videos and the still frame fill the whole screen, like the
+   background photos (object-fit: cover), no blurred sides. Each keeps its main subject in view:
+   the hand and brush of the blue video (right of centre), the tip of the pink brush. The blue file
+   was re-made from the owner's original with its thin black side bars trimmed off. */
+.hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 66% 50%; opacity: 0; transition: opacity 1.6s ease; }
 .hero-bg video.on { opacity: 1; }
+.hero-bg #vid2 { object-position: 38% 55%; }
 .hero-still, .hero-still img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero-still img { object-fit: contain; display: block; }
+.hero-still img { object-fit: cover; object-position: 66% 50%; display: block; }
 .hv-pink { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }   /* the soft cross-fade between the two videos */
 .hv-pink:has(video.on) { opacity: 1; }
 .hv-pink video, .hv-pink video.on { opacity: 1; transition: none; }
@@ -123,32 +124,19 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
   .fade { animation: none; }
   .hero-bg video { display: none; }
 }
-/* phones: the wide blue frame sits whole right under the menu, and a slightly more compact
-   text card sits below it, so the card does not cover the picture (the vertical pink video fills
-   the screen as it is). Only on phones tall enough for both; short phones keep the card centred */
-@media (max-width: 640px) and (min-height: 640px) {
-  .hero-bg #vid, .hero-still { top: var(--nav-h); bottom: auto; height: 56.25vw; }
-  .hero { align-items: center; padding: calc(var(--nav-h) + 56.25vw + 8px) var(--space-sm) var(--space-sm); }
-  .hero-card { padding: var(--space-sm) var(--space-sm) var(--space-sm); }
-  .hero h1 { font-size: 30px; margin-bottom: var(--space-xs); }
-  .hero-sub { font-size: 15px; margin-bottom: var(--space-sm); }
-  .hero-btns { flex-direction: row; gap: var(--space-xs); max-width: none; }
-  .hero-btns .btn { width: auto; flex: 1 1 0; min-width: 0; padding-left: 8px; padding-right: 8px; }
-}
 </style>
 </head>
 <body>
 <?php require_once __DIR__ . '/studio_lib.php'; ?>
-<?php /* the blurred fill of each video: its own tiny first frame (studio_lib.php OW_HERO_TINY); phones: the vertical pink one */ ?>
-<style>.hv-pink{<?= owStudioTinyVar('pink') ?>}@media(max-width:640px){.hv-pink{<?= owStudioTinyVar('pink-tall') ?>}}</style>
-<div class="hero-bg ow-fill" aria-hidden="true" style="<?= owStudioTinyVar('blue') ?>">
+<?php /* the still frame's tiny copy fills the screen the moment the page opens (no white flash) */ ?>
+<div class="hero-bg" aria-hidden="true" style="background:url(<?= OW_HERO_TINY['blue'] ?>) 66% 50% / cover no-repeat">
   <?php $hb = owBase() . 'assets/img/hero/'; ?>
   <picture class="hero-still">
     <source type="image/avif" srcset="<?= $hb ?>hero-wide.avif"><source type="image/webp" srcset="<?= $hb ?>hero-wide.webp">
     <img src="<?= $hb ?>hero-wide.jpg" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="sync">
   </picture>
   <video id="vid" class="bg-now" autoplay muted playsinline preload="none" data-src="<?= owBase() ?>assets/video/hero-wide.mp4"></video>
-  <div class="hv-pink ow-fill"><video id="vid2" muted playsinline preload="none" data-later="<?= owBase() ?>assets/video/hero-pink-wide.mp4" data-later-phone="<?= owBase() ?>assets/video/hero-pink-tall.mp4"></video></div>
+  <div class="hv-pink"><video id="vid2" muted playsinline preload="none" data-later="<?= owBase() ?>assets/video/hero-pink-wide.mp4" data-later-phone="<?= owBase() ?>assets/video/hero-pink-tall.mp4"></video></div>
 </div>
 
 <?php include __DIR__ . '/nav.php'; ?>
