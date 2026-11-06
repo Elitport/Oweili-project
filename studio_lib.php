@@ -110,6 +110,27 @@ const OW_STUDIO_FOCUS = [
     'open-books'    => '50% 50%',   // the open pages
     'gallery-arch'  => '40% 48%',   // the visitor in the lit arch   // the row of easels with their canvases
 ];
+/* Very wide screens (wider than 1600 px, owner 6 Nov 2026): the photo fits the screen height and the small
+   space left at its sides is a soft solid colour taken from the photo's own left and right edge (no blur,
+   no strips). The average colour of the outer 3% of each side of the owner's original. */
+const OW_STUDIO_EDGE = [
+    'gallery-visit' => ['#221a16', '#362a1f'],
+    'museum-walk'   => ['#36180f', '#25140f'],
+    'open-books'    => ['#606060', '#636363'],
+    'pink-palette'  => ['#b5bfbd', '#74605b'],
+    'studio-table'  => ['#dae1df', '#918a84'],
+    'easels-class'  => ['#4a646f', '#48535f'],
+    'paint-buckets' => ['#ae9993', '#7b7578'],
+    'gallery-arch'  => ['#020202', '#020202'],
+];
+/* Where the page title card (and an empty-list card) sits on computers, so it stays away from the photo's
+   main subject (owner, 6 Nov 2026): 'start' = the reading side (right in Arabic, left in English),
+   'left' / 'right' = that side of the screen. Not listed = the middle */
+const OW_STUDIO_SIDE = [
+    'museum-walk'   => 'start',   // the arch and the visitors are in the middle
+    'gallery-visit' => 'start',   // the woman stands in the middle
+    'pink-palette'  => 'left',    // the palette and brushes fill the right; the paper on the left is empty
+];
 /* The tiny first frames of the homepage videos (their blurred fill, index.php) */
 const OW_HERO_TINY = [
     'blue' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgH/xAAqEAACAgIABAUEAwEAAAAAAAABAgMRAAQFEiExEyJBUWEGgaGxMkJSwf/EABcBAQADAAAAAAAAAAAAAAAAAAQCAwX/xAAhEQEAAgIBAwUAAAAAAAAAAAABAAIDESEEgcESMVGhsf/aAAwDAQACEQMRAD8Azm3MX4gmyZD4kjHnu7u7B/GaqLk2+Hh5VpyLs/6HUEff/uQX1ojsLMjh0Leax/HNHuBORFiBaOx2F2AMQXo4tHPvKb4slMmrcSRLyzrsTT2spQEkC+ZifKOnb0GU5YJOHaEewdVN4EKXBUiiooEA9v3k7WjMwkiD8rtsleayD8X+MucK1pNOXZXbL+HNKfNI9+wUj0ArpXvhuqs1AHtL+k02VO8W4grLowbOqGSVgsnKOwPeqxeD6ijMKmaIK/qF6j7Xlrf1q12ROnlIHxmDl150kZTGRWFw5F3tjMuMtrROcO29DXtdjYZXK9f69b7XlMfUOpNJHBAXKAUGINhienX2wwx1h9SrBiaOI/peGnEVUx2Wk53PyfXFN/dk3Nbldm8NyrA3SsCW/QrDDIlS1i6cgeZKlmtLVH58Sto8RkSODX3G5hKKjaj5a6AEnvfe/nG5OHwSOXINn2OGGZduOZonH1+T/9k=',
@@ -157,7 +178,13 @@ function owStudioBackdrop(string ...$keys): string {
         if (!owStudioHas($k)) continue;
         /* the tiny copy sits behind the photo only until it has loaded (no white flash), never as a frame */
         $t = OW_STUDIO[$k][5] ?? '';
-        return '<style>html body{background:transparent!important}</style><div class="ow-backdrop"' . ($t !== '' ? ' style="background:url(' . $t . ') ' . (OW_STUDIO_FOCUS[$k] ?? '50% 50%') . ' / cover no-repeat"' : '') . '>'
+        $e = OW_STUDIO_EDGE[$k] ?? ['', ''];
+        $vars = '--ow-pos:' . (OW_STUDIO_FOCUS[$k] ?? '50% 50%')
+              . ($t !== '' ? ';--ow-tiny:url(' . $t . ')' : '')
+              . ($e[0] !== '' ? ';--ow-edge-l:' . $e[0] . ';--ow-edge-r:' . $e[1] : '');
+        $side = OW_STUDIO_SIDE[$k] ?? '';
+        return '<style>html body{background:transparent!important}</style><div class="ow-backdrop" style="' . $vars . '"'
+             . ($side !== '' ? ' data-side="' . $side . '"' : '') . '>'
              . owStudioPhoto($k, true, 'ow-studio') . '</div>';
     }
     return '';

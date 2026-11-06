@@ -229,7 +229,7 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
 </style>
 </head>
 <body class="ow">
-<?= owStudioBackdrop('paint-buckets') ?>
+<?= owStudioBackdrop('pink-palette') /* the palette with brushes (owner, 6 Nov 2026) */ ?>
 
 <?php include __DIR__ . '/nav.php'; ?>
 
