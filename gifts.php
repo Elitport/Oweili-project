@@ -264,7 +264,7 @@ $v = fn(string $k) => e((string) $f[$k]);
         <?php require_once __DIR__ . '/size_lib.php'; echo owSizeSelect((string) ($f['size_code'] ?? ''), (string) ($f['orientation'] ?? ''), true, 'g-size'); ?>
         <div class="field"><label for="g-budget"><?= owBi('Budget in SAR (optional)', 'الميزانية بالريال (اختياري)') ?></label>
           <input id="g-budget" name="budget_sar" inputmode="decimal" dir="ltr" maxlength="12" value="<?= $v('budget_sar') ?>"></div>
-        <?php if (is_file(__DIR__ . '/commission.php')): ?>
+        <?php if (is_file(__DIR__ . '/commission.php') && owCommissionsPageOn()): ?>
         <p class="g-note g-custom-link"><?= owBi('A portrait from a personal photo? Use a private commission: your photos stay confidential.', 'بورتريه من صورة شخصية؟ استخدم الطلب الخاص: تبقى صورك سرّية.') ?> <a href="commission.php"><?= owBi('Private commissions', 'الأعمال الخاصة') ?></a></p>
         <?php endif; ?>
       </div>

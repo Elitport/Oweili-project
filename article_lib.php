@@ -95,7 +95,14 @@ function owUniqueSlug(string $title, int $exceptId = 0): string {
    artist spotlight that has photos also needs a consent record that was
    not withdrawn (business rule: no local artist photo without consent). */
 function owArticlePublicSql(string $a = 'a'): string {
-    return "$a.status = 'published' AND ($a.type <> 'artist_spotlight'
+    /* Artist Spotlights are hidden for now, to bring back later (6 Nov 2026): while hidden, no
+       spotlight is listed, opened or in the sitemap for visitors; a signed-in admin still sees them */
+    $hide = '';
+    try {
+        require_once __DIR__ . '/gallery_lib.php'; require_once __DIR__ . '/admin_shell.php';
+        if (!owSpotlightsOn() && !owIsAdmin()) $hide = "$a.type <> 'artist_spotlight' AND ";
+    } catch (Throwable $e) {}
+    return $hide . "$a.status = 'published' AND ($a.type <> 'artist_spotlight'
         OR ($a.cover_image_path = '' AND NOT EXISTS (SELECT 1 FROM article_images ai WHERE ai.article_id = $a.id))
         OR EXISTS (SELECT 1 FROM photo_consents pc WHERE pc.article_id = $a.id AND pc.withdrawn_at IS NULL))";
 }

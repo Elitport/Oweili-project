@@ -12,6 +12,10 @@ require_once __DIR__ . '/article_lib.php';
 $TYPES = owArticleTypes();
 $type  = (string) ($_GET['type'] ?? 'event');
 if (!isset($TYPES[$type])) $type = 'event';
+/* Artist Spotlights hidden for now, to bring back later (6 Nov 2026): 404 for visitors, a preview for the admin */
+require_once __DIR__ . '/gallery_lib.php';
+$owHidPrev = $type === 'artist_spotlight' ? owHiddenPageGate('spotlights') : false;
+if (!owSpotlightsOn() && !$owHidPrev) unset($TYPES['artist_spotlight']);
 
 $PAGE = [
     'event' => [
@@ -73,6 +77,7 @@ $titleAr = $tAr . ' · أويلي';
 <div class="veil" aria-hidden="true"></div>
 
 <?php include __DIR__ . '/nav.php'; ?>
+<?php if ($owHidPrev) echo owHiddenNotice(); ?>
 
 <main>
   <div class="d-wrap">

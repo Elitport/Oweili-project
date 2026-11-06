@@ -42,12 +42,16 @@ function owAuctionsPageOn(): bool { return owSetting('auctions_page_on', '0') ==
 if (!defined('OW_HIDDEN_PARTS')) define('OW_HIDDEN_PARTS', [
     'community' => ['community_page_on', 'Community page', 'صفحة المجتمع', 'community.php'],
     'gifts'     => ['gifts_page_on', 'Gifts page', 'صفحة الهدايا', 'gifts.php'],
+    'commissions' => ['commissions_page_on', 'Commissions page (private commissions)', 'صفحة طلب لوحة خاصة (الأعمال الخاصة)', 'commission.php'],
+    'spotlights'  => ['spotlights_on', 'Artist Spotlights', 'أضواء على الفنانين', 'articles_list.php?type=artist_spotlight'],
     'workshops' => ['workshops_on', 'Upcoming workshops (the 5 "Coming soon" cards on Art Institutes)', 'ورش العمل القادمة (البطاقات الخمس «قريباً» في صفحة المعاهد الفنية)', 'institutes.php'],
 ]);
 function owPartOn(string $part): bool { $k = OW_HIDDEN_PARTS[$part][0] ?? ''; return $k !== '' && owSetting($k, '0') === '1'; }
 function owCommunityPageOn(): bool { return owPartOn('community'); }
 function owGiftsPageOn(): bool { return owPartOn('gifts'); }
 function owWorkshopsOn(): bool { return owPartOn('workshops'); }
+function owCommissionsPageOn(): bool { return owPartOn('commissions'); }
+function owSpotlightsOn(): bool { return owPartOn('spotlights'); }
 /* A hidden page answers the normal 404 to visitors; a signed-in admin sees a preview (returns true) */
 function owHiddenPageGate(string $part): bool {
     if (owPartOn($part)) return false;

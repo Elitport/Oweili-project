@@ -13,6 +13,9 @@ require_once __DIR__ . '/page_cache.php'; if (empty($_GET['preview'])) owPublicP
 require_once __DIR__ . '/article_lib.php';
 
 $TYPES = owArticleTypes();
+require_once __DIR__ . '/gallery_lib.php';
+require_once __DIR__ . '/admin_shell.php';
+if (!owSpotlightsOn() && !owIsAdmin()) unset($TYPES['artist_spotlight']);   // hidden for now (6 Nov 2026): no type button to it; visitors never reach a spotlight (404)
 $slug  = (string) ($_GET['slug'] ?? '');
 $a = null;
 $images = [];

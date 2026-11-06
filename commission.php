@@ -16,7 +16,13 @@ require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
  *  Tables: commissions, commission_files, users, activity_log
  * ===================================================================== */
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; if (!isset($_GET['ref']) && !isset($_GET['k']) && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') owPublicPage();   // the buyer's private link stays private
+/* Hidden for now, to bring back later (owner, 6 Nov 2026): the request form answers "page not found",
+   a signed-in admin sees a preview. A buyer's own private link (?ref=…&k=…, and its answers) keeps
+   working, so requests already sent can still be followed. Switch: Admin → Settings (gallery_lib.php) */
+require_once __DIR__ . '/gallery_lib.php';
+$owHidPrev = false;
+if (($_GET['ref'] ?? '') === '' && ($_POST['ref'] ?? '') === '' && ($_GET['k'] ?? '') === '' && ($_POST['k'] ?? '') === '') $owHidPrev = owHiddenPageGate('commissions');
+require_once __DIR__ . '/page_cache.php'; if (!$owHidPrev && !isset($_GET['ref']) && !isset($_GET['k']) && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') owPublicPage();   // the buyer's private link stays private
 require_once __DIR__ . '/commission_lib.php';
 require_once __DIR__ . '/request_lib.php';
 $ART_TYPES = require __DIR__ . '/art_types.php';
@@ -227,6 +233,7 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
+<?php if ($owHidPrev) echo owHiddenNotice(); ?>
 <main>
   <div class="d-wrap">
     <header class="d-head reveal">

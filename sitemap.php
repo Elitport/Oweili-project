@@ -22,15 +22,15 @@ $add = function (string $path, ?string $when = null, string $freq = 'weekly', st
     $urls[] = ['loc' => owAbsUrl($path), 'when' => $when ? gmdate('Y-m-d', strtotime($when)) : null, 'freq' => $freq, 'prio' => $prio];
 };
 foreach ([['', 'daily', '1.0'], ['marketplace.php', 'daily', '0.9'], ['explore.php', 'monthly', '0.8'],
-          ['institutes.php', 'weekly', '0.6'], ['articles_list.php?type=event', 'weekly', '0.6'], ['articles_list.php?type=artist_spotlight', 'weekly', '0.6'],
-          ['articles_list.php?type=art_education', 'monthly', '0.5'], ['commission.php', 'monthly', '0.6'], ['support.php', 'monthly', '0.4'], ['verify', 'monthly', '0.4'], ['register_artist.php', 'monthly', '0.5'],
+          ['institutes.php', 'weekly', '0.6'], ['articles_list.php?type=event', 'weekly', '0.6'],
+          ['articles_list.php?type=art_education', 'monthly', '0.5'], ['support.php', 'monthly', '0.4'], ['verify', 'monthly', '0.4'], ['register_artist.php', 'monthly', '0.5'],
           ['register_collector.php', 'monthly', '0.4'], ['privacy.php', 'yearly', '0.2'], ['terms.php', 'yearly', '0.2']] as [$p, $f, $pr]) {
     $add($p, null, $f, $pr);
 }
 /* Auctions only while the admin has the page switched on (gallery_lib.php owAuctionsPageOn) */
 try { require_once __DIR__ . '/gallery_lib.php'; if (owAuctionsPageOn()) $add('auctions', null, 'weekly', '0.7'); } catch (Throwable $e) {}
 /* Community and Gifts only while switched on (hidden for now, 6 Nov 2026) */
-try { if (owCommunityPageOn()) $add('community.php', null, 'daily', '0.6'); if (owGiftsPageOn()) $add('gifts.php', null, 'weekly', '0.7'); } catch (Throwable $e) {}
+try { if (owCommunityPageOn()) $add('community.php', null, 'daily', '0.6'); if (owGiftsPageOn()) $add('gifts.php', null, 'weekly', '0.7'); if (owCommissionsPageOn()) $add('commission.php', null, 'monthly', '0.6'); if (owSpotlightsOn()) $add('articles_list.php?type=artist_spotlight', null, 'weekly', '0.6'); } catch (Throwable $e) {}
 $db = getDB();
 try {
     $upd = owHasColumn('artworks', 'updated_at') ? 'a.updated_at' : 'a.created_at';
