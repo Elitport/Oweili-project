@@ -36,7 +36,9 @@ function owAdminAlert(string $kind, string $en, string $ar, string $link): void 
         if (in_array($kind, ['artwork', 'change', 'artist'], true) && is_file(__DIR__ . '/bashro_send.php')) {
             require_once __DIR__ . '/bashro_send.php';
             $title = $kind === 'artist' ? 'New artist account waiting for approval' : trim(preg_replace(['/ by .*$/u', '/\s*\([^()]*\)\s*$/u'], '', $en));
-            owBashroApproval($kind, $title, $link, 'oweili-alert-' . (int) getDB()->lastInsertId());
+            $type = $kind === 'artist' ? 'artist_new' : ($kind === 'artwork' ? (str_starts_with($en, 'New artwork') ? 'artwork_new' : 'artwork_changed')
+                  : (str_starts_with($en, 'Profile') ? 'profile_change' : (str_starts_with($en, 'Artwork') ? 'artwork_changed' : '')));   // articles have no Bashro type: not sent
+            if ($type !== '') owBashroApproval($type, $title, $link, 'oweili-alert-' . (int) getDB()->lastInsertId());
         }
         /* sent after the visitor's page has been delivered, so sign-up and upload never wait for the mail server */
         static $planned = false;

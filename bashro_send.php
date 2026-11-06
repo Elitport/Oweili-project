@@ -30,8 +30,9 @@ require_once __DIR__ . '/platform_lib.php';
 const OW_BASHRO_DOOR = 'https://bashro.com/in/';
 const OW_BASHRO_FIELDS = [
     'quote'    => ['name' => 120, 'email' => 160, 'phone' => 30, 'company' => 120, 'service' => 120, 'city' => 60, 'message' => 5000, 'lang' => 2],
-    'signup'   => ['role' => 10, 'name' => 120, 'email' => 160, 'phone' => 30, 'city' => 60, 'country' => 2, 'lang' => 2, 'ref' => 60],
-    'approval' => ['ref' => 60, 'what' => 10, 'title' => 200, 'link' => 300],
+    'signup'   => ['role' => 10, 'name' => 120, 'email' => 160, 'phone' => 30, 'city' => 60, 'joined' => 10],   /* door guide section 4b */
+    'approval' => ['ref' => 60, 'type' => 20, 'title' => 120, 'link' => 300],
+    'account_deleted' => ['email' => 160],
 ];
 
 /* The two values from config.php, cleaned (a stray space, line break or capital letters never break the connection) */
@@ -44,6 +45,7 @@ function owBashroKindOn(string $kind): bool {
     if (!owBashroReady()) return false;
     if ($kind === 'signup')   return defined('BASHRO_DOOR_SIGNUPS') && BASHRO_DOOR_SIGNUPS === true;
     if ($kind === 'approval') return defined('BASHRO_DOOR_APPROVALS') && BASHRO_DOOR_APPROVALS === true;
+    if ($kind === 'account_deleted') return true;   // Saudi PDPL: always told once the door is set up
     return $kind === 'quote';
 }
 /* Only the allowed fields, as plain strings within their limits; empty ones are left out */
@@ -194,14 +196,22 @@ function owBashroSignup(int $userId, string $role): void {
     try {
         $st = getDB()->prepare('SELECT * FROM users WHERE id = :id'); $st->execute([':id' => $userId]); $u = $st->fetch();
         if (!$u) return;
-        $country = strtoupper((string) ($u['country'] ?? ''));
+        $joined = substr((string) ($u['created_at'] ?? ''), 0, 10);
         owBashroQueue('signup', ['role' => $role === 'artist' ? 'artist' : 'buyer', 'name' => ($u['full_name_en'] ?: $u['full_name_ar']), 'email' => $u['email'], 'phone' => $u['phone'] ?? '',
-            'city' => $u['city'] ?? '', 'country' => preg_match('/^[A-Z]{2}$/', $country) ? $country : '', 'lang' => $u['lang'] ?? '', 'ref' => $u['public_id'] ?? ('user-' . (int) $u['id'])]);
+            'city' => $u['city'] ?? '', 'joined' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $joined) ? $joined : date('Y-m-d')]);
     } catch (Throwable $e) { error_log('owBashroSignup: ' . $e->getMessage()); }
 }
 /* Something waiting for approval → approval (OFF until Bashro accepts the kind). No personal details. */
-function owBashroApproval(string $what, string $title, string $link, string $ref): void {
+/* $type: artwork_new, artwork_changed, profile_change or artist_new (door guide section 4b) */
+function owBashroApproval(string $type, string $title, string $link, string $ref): void {
     if (!owBashroKindOn('approval')) return;
-    $what = in_array($what, ['artwork', 'change', 'artist'], true) ? $what : 'change';
-    owBashroQueue('approval', ['ref' => $ref, 'what' => $what, 'title' => $title, 'link' => owBashroHost() . '/' . ltrim($link, '/')]);
+    if (!in_array($type, ['artwork_new', 'artwork_changed', 'profile_change', 'artist_new'], true)) return;
+    $ref = preg_replace('/[^A-Za-z0-9._:-]/', '-', $ref);
+    owBashroQueue('approval', ['ref' => $ref, 'type' => $type, 'title' => $title, 'link' => owBashroHost() . '/' . ltrim($link, '/')]);
+}
+/* A person's account was deleted → Bashro removes them too (Saudi PDPL). Call it wherever an account is deleted */
+function owBashroAccountDeleted(string $email): void {
+    $email = strtolower(trim($email));
+    if ($email === '' || !owBashroKindOn('account_deleted')) return;
+    owBashroQueue('account_deleted', ['email' => $email]);
 }
