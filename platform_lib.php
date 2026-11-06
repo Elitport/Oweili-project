@@ -299,7 +299,7 @@ function owSafeLink(string $v, string $kind = 'web'): array {
 /* The 50 art styles an artist can pick for their profile (no old types) */
 function owStyleChoices(): array {
     $all = require __DIR__ . '/art_types.php';
-    return array_filter($all, fn($t) => empty($t['legacy']));
+    return array_filter($all, fn($t) => empty($t['legacy']) && empty($t['topic_only']));   // no Digital / Photography (hidden, 6 Nov 2026)
 }
 
 /* ---------------------------------------------------------------------

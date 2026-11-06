@@ -39,8 +39,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $dAr    = sanitize($_POST['desc_ar'] ?? '');
     $price  = $_POST['price'] ?? '';
     $pType  = (string) ($_POST['type'] ?? '');
-    // one of the 50 styles, or the older type this artwork already has
-    $type   = (isset($ART_TYPES[$pType]) && (empty($ART_TYPES[$pType]['legacy']) || $pType === (string) $aw['type'])) ? $pType : '';
+    // one of the 9 topics (owner, 6 Nov 2026), or the type this artwork already has
+    $type   = (owTopicOfStore($pType) !== '' || ($pType !== '' && $pType === (string) $aw['type'] && isset($ART_TYPES[$pType]))) ? $pType : '';
     $status = in_array($_POST['status'] ?? '', ['available','sold','auction'], true) ? $_POST['status'] : $aw['status'];
 
     /* Certificate details (asked when the database has them); the declaration only if it was never given */
@@ -248,15 +248,11 @@ $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
           <input type="number" name="price" min="0" step="0.01" value="<?= e($aw['price']) ?>" required></div>
         <div class="field"><label id="t-l-type">Type</label>
           <select name="type" class="type-select" required>
-            <?php if (!empty($ART_TYPES[$aw['type']]['legacy'])): $lbl = $ART_TYPES[$aw['type']]; ?>
+            <?php if (owTopicOfStore((string) $aw['type']) === '' && isset($ART_TYPES[$aw['type']])): $lbl = $ART_TYPES[$aw['type']]; /* its own earlier type stays offered */ ?>
               <option value="<?= e($aw['type']) ?>" data-en="<?= e($lbl['en']) ?>" data-ar="<?= e($lbl['ar']) ?>" selected><?= e($lbl['en']) ?></option>
             <?php endif; ?>
-            <?php foreach (owStyleGroups() as $gKey => $g): ?>
-              <optgroup label="<?= e($g['en']) ?>" data-en="<?= e($g['en']) ?>" data-ar="<?= e($g['ar']) ?>">
-              <?php foreach ($ART_TYPES as $slug => $lbl): if (($lbl['cat'] ?? '') !== $gKey || !empty($lbl['legacy'])) continue; ?>
-                <option value="<?= e($slug) ?>" data-en="<?= e($lbl['en']) ?>" data-ar="<?= e($lbl['ar']) ?>" <?= $aw['type'] === $slug ? 'selected' : '' ?>><?= e($lbl['en']) ?></option>
-              <?php endforeach; ?>
-              </optgroup>
+            <?php foreach (owArtTopics() as $tk => $tp): $slug = $tp['store']; ?>
+              <option value="<?= e($slug) ?>" data-en="<?= e($tp['en']) ?>" data-ar="<?= e($tp['ar']) ?>" <?= $aw['type'] === $slug ? 'selected' : '' ?>><?= e($tp['en']) ?></option>
             <?php endforeach; ?>
           </select></div>
       </div>

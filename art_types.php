@@ -7,7 +7,8 @@
  *  The 50 styles come from assets/js/art_styles.js (the encyclopedia), so
  *  names are never typed twice: key = style id, 'cat' = its encyclopedia
  *  group (traditional | digital | heritage | contemporary | nature | photography).
- *  Older types that some artworks still use are kept with 'legacy' => true:
+ *  The Digital and Photography styles are hidden ('legacy', 6 Nov 2026). The upload form offers the
+ *  9 topics of owArtTopics() (artwork_lib.php). Older types that some artworks still use are kept with 'legacy' => true:
  *  they still show their label, but the upload form no longer offers them.
  * ===================================================================== */
 if (!function_exists('owLoadArtTypes')) {
@@ -21,8 +22,16 @@ if (!function_exists('owLoadArtTypes')) {
             foreach (is_array($list) ? $list : [] as $s) {
                 if (!isset($s['id'], $s['cat'], $s['en']['name'], $s['ar']['name'])) continue;
                 $types[(string) $s['id']] = ['en' => (string) $s['en']['name'], 'ar' => (string) $s['ar']['name'], 'cat' => (string) $s['cat']];
+                /* Oweili is handmade art only (owner, 6 Nov 2026): Digital and Photography styles are
+                   hidden, not deleted. They keep their label for any artwork that has one */
+                if (in_array((string) $s['cat'], ['digital', 'photography'], true)) $types[(string) $s['id']]['legacy'] = true;
             }
         }
+        /* two topics of the upload form that are not an Explore style (owner, 6 Nov 2026) */
+        $types += [
+            'charcoal_pencil' => ['en' => 'Charcoal and Pencil', 'ar' => 'الفحم والرصاص',  'cat' => 'traditional', 'topic_only' => true],
+            'saudi_heritage'  => ['en' => 'Saudi Heritage',      'ar' => 'التراث السعودي', 'cat' => 'heritage',    'topic_only' => true],
+        ];
         $legacy = [
             'vector_art'  => ['en' => 'Vector Art',  'ar' => 'فن المتجهات',      'cat' => 'digital'],
             '3d'          => ['en' => '3D Art',      'ar' => 'فن ثلاثي الأبعاد', 'cat' => 'digital'],

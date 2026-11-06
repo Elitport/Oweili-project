@@ -35,17 +35,38 @@ function owColors(): array {
     ];
 }
 
-/* The 6 groups of the guided art type picker, in the same order and words as
-   Explore Art Styles. The styles in each group come from art_types.php ('cat'). */
+/* The groups of the style lists (Gallery "More filters", profile styles), in the same order and
+   words as Explore Art Styles. Digital and Photography are hidden (owner, 6 Nov 2026: handmade only). */
 function owStyleGroups(): array {
     return [
         'traditional'  => ['en' => 'Traditional',             'ar' => 'تقليدي'],
-        'digital'      => ['en' => 'Digital',                 'ar' => 'رقمي'],
         'heritage'     => ['en' => 'Islamic & Arab Heritage', 'ar' => 'تراث إسلامي وعربي'],
         'contemporary' => ['en' => 'Contemporary',            'ar' => 'معاصر'],
         'nature'       => ['en' => 'Nature & Portrait',       'ar' => 'طبيعة وبورتريه'],
-        'photography'  => ['en' => 'Photography',             'ar' => 'تصوير'],
     ];
+}
+
+/* The 9 topics (owner, 6 Nov 2026), the one list for the Gallery filter and the upload form.
+   key => en, ar, store (the art type saved for a new artwork), cover (the drawn example picture,
+   art_covers.js), types (every art type the Gallery shows under this topic) */
+function owArtTopics(): array {
+    return [
+        'oil'              => ['en' => 'Oil',                   'ar' => 'الرسم الزيتي',         'store' => 'oil',              'cover' => 'oil',              'types' => ['oil', 'tempera', 'encaustic']],
+        'acrylic'          => ['en' => 'Acrylic',               'ar' => 'الأكريليك',            'store' => 'acrylic',          'cover' => 'acrylic',          'types' => ['acrylic']],
+        'watercolor'       => ['en' => 'Watercolor',            'ar' => 'الألوان المائية',      'store' => 'watercolor',       'cover' => 'watercolor',       'types' => ['watercolor', 'gouache']],
+        'charcoal_pencil'  => ['en' => 'Charcoal and pencil',   'ar' => 'الفحم والرصاص',        'store' => 'charcoal_pencil',  'cover' => 'charcoal',         'types' => ['charcoal_pencil', 'charcoal', 'pencil', 'pastel', 'ink']],
+        'calligraphy'      => ['en' => 'Arabic calligraphy',    'ar' => 'الخط العربي',          'store' => 'calligraphy',      'cover' => 'calligraphy',      'types' => ['calligraphy', 'manuscript']],
+        'islamic_ornament' => ['en' => 'Islamic ornament',      'ar' => 'الزخرفة الإسلامية',    'store' => 'islamic_ornament', 'cover' => 'islamic_ornament', 'types' => ['islamic_ornament', 'islamic_geometric', 'islamic_mosaic']],
+        'abstract'         => ['en' => 'Abstract',              'ar' => 'الفن التجريدي',        'store' => 'abstract',         'cover' => 'abstract',         'types' => ['abstract', 'minimalism', 'expressionism']],
+        'nature'           => ['en' => 'Nature and landscapes', 'ar' => 'الطبيعة والمناظر الطبيعية', 'store' => 'landscape',        'cover' => 'landscape',        'types' => ['landscape', 'botanical', 'animal', 'marine']],
+        'saudi_heritage'   => ['en' => 'Saudi heritage',        'ar' => 'التراث السعودي',       'store' => 'saudi_heritage',   'cover' => 'textile',          'types' => ['saudi_heritage', 'textile']],
+    ];
+}
+
+/* The topic key whose saved art type is $type ('' when none) */
+function owTopicOfStore(string $type): string {
+    foreach (owArtTopics() as $k => $t) { if ($t['store'] === $type) return $k; }
+    return '';
 }
 
 /* Stage messages shown to the artist (Steps 2–4). */

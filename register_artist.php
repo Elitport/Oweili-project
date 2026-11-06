@@ -209,7 +209,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 </style>
 </head>
 <body>
-<?= owStudioBackdrop('brushes-jars') ?>
+<?= owStudioBackdrop('pink-palette') /* the pink palette with brushes, like Sign in and Join (owner, 6 Nov 2026: wide photos only) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . "/nav.php"; ?>

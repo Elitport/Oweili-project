@@ -229,7 +229,7 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
 </style>
 </head>
 <body class="ow">
-<?= owStudioBackdrop('palette-hand') ?>
+<?php /* plain page background (owner, 6 Nov 2026: tall photos are no longer used as backgrounds) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>

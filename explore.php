@@ -1,6 +1,6 @@
 <?php
 /* =====================================================================
- *  explore.php: Explore Art Styles, a calm art encyclopedia of 50 styles.
+ *  explore.php: Explore Art Styles, a calm art encyclopedia of the handmade styles (Digital and Photography hidden, 6 Nov 2026).
  *  A grid of cards (filter: All + 6 categories). A card opens a window
  *  with 10 parts, ending with the newest artwork of that type from the
  *  Gallery (or a drawing when there is none yet).
@@ -52,7 +52,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Explore Art Styles', 'ar' => 'استكشف أساليب الرسم', 'desc_en' => 'Fifty art styles, fifty stories. Learn the story behind every style.', 'desc_ar' => 'خمسون أسلوباً وخمسون حكاية. تعرّف على قصة كل أسلوب.', 'path' => 'explore.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Explore Art Styles', 'ar' => 'استكشف أساليب الرسم', 'desc_en' => 'Handmade art styles and their stories. Learn the story behind every style.', 'desc_ar' => 'أساليب الفن اليدوي وحكاياتها. تعرّف على قصة كل أسلوب.', 'path' => 'explore.php']); ?>
 <meta property="og:title" content="Explore Art Styles · استكشف أساليب الرسم · Oweili">
 <meta property="og:description" content="Learn the story behind every style. Know what you are looking at.">
 <meta property="og:type" content="website">
@@ -246,7 +246,7 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
     <noscript><p class="empty-state"><?= owBi('Please turn on JavaScript to explore the art styles.', 'يرجى تفعيل جافاسكربت لاستكشاف أساليب الرسم.') ?></p></noscript>
 
     <section class="ex-end reveal">
-      <p class="ex-end-line"><?= owBi('Fifty styles. Fifty stories. Every one began with a hand.', 'خمسون أسلوباً. خمسون حكاية. كلها بدأت بيد.') ?></p>
+      <p class="ex-end-line"><?= owBi('Every style here has a story. Every one began with a hand.', 'لكل أسلوب هنا حكاية. وكلها بدأت بيد.') ?></p>
       <div class="btns">
         <a class="btn btn-dark" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
         <a class="btn btn-secondary" href="mailto:<?= e(owContactEmail()) ?>?subject=Art%20Style%20Suggestion"><?= owBi('Suggest a Style', 'اقترح أسلوباً') ?></a>

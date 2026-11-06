@@ -82,6 +82,8 @@ $where  = "a.is_approved = 1 AND a.status IN ('available','auction') AND u.is_ba
 $params = [];
 if ($status !== 'all') { $where .= ' AND a.status = :status'; $params[':status'] = $status; }
 $typeList = $initType !== '' ? [$initType] : $ART_CATS[$cat]['types'];
+/* a style from Explore also shows the artworks saved under its topic (e.g. Pencil → "Charcoal and pencil") */
+if ($initType !== '' && $cat !== 'all' && ($tStore = owArtTopics()[$cat]['store'] ?? '') !== '' && $tStore !== $initType) $typeList[] = $tStore;
 if ($typeList) {
     $ph = [];
     foreach (array_values($typeList) as $i => $t) { $ph[] = ':t' . $i; $params[':t' . $i] = $t; }
@@ -348,7 +350,7 @@ foreach ($modalArtworks as $aw) {
   </style>
 </head>
 <body>
-<?= owStudioBackdrop('home-painting') /* the hand painting the landscape, always (owner, 6 Nov 2026) */ ?>
+<?= owStudioBackdrop('gallery-visit') /* the woman looking at the framed paintings, always (owner, 6 Nov 2026: wide photos only) */ ?>
 
 <div class="bg-wrap">
   
@@ -486,7 +488,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         <?= mpHidden(['type', 'medium', 'price', 'size', 'orient', 'city', 'color', 'verified', 'cat']) ?>
         <div class="field"><label for="f-style"><?= $ar ? 'الأسلوب' : 'Style' ?></label>
           <select id="f-style" name="type"><option value=""><?= $ar ? 'كل الأساليب' : 'All styles' ?></option>
-            <?php foreach (owStyleGroups() as $gk => $g): $opts = array_filter($ART_TYPES, fn($t) => ($t['cat'] ?? '') === $gk && empty($t['legacy'])); if (!$opts) continue; ?>
+            <?php foreach (owStyleGroups() as $gk => $g): $opts = array_filter($ART_TYPES, fn($t) => ($t['cat'] ?? '') === $gk && empty($t['legacy']) && empty($t['topic_only'])); if (!$opts) continue; ?>
             <optgroup label="<?= e($ar ? $g['ar'] : $g['en']) ?>"><?php foreach ($opts as $tk => $tv): ?><option value="<?= e($tk) ?>"<?= $initType === $tk ? ' selected' : '' ?>><?= e($ar ? $tv['ar'] : $tv['en']) ?></option><?php endforeach; ?></optgroup>
             <?php endforeach; ?>
           </select></div>

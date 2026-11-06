@@ -577,6 +577,8 @@ html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.82), rgba(15,21,
 .ow-studio { position: absolute; inset: 0; display: block; }
 .ow-studio img { display: block; width: 100%; height: 100%; object-fit: cover; background: transparent; }   /* fills the screen; its main subject is kept in view (object-position from studio_lib.php) */
 .ow-backdrop { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: -1; overflow: hidden; pointer-events: none; }
+/* phones and other tall screens (owner, 6 Nov 2026): the wide photo keeps its CENTRE in view, only its sides are trimmed */
+@media (max-aspect-ratio: 1/1) { .ow-backdrop { background-position: 50% 50% !important; } .ow-studio img { object-position: 50% 50% !important; } }
 /* no veil over the photo (owner, 5 Nov 2026): the photo keeps its real, strong colours.
    Text stays readable where it sits: page headings get a small frosted-glass card, cards are solid */
 :root { --studio-glass: rgba(255,255,255,0.78); --studio-glass-edge: rgba(255,255,255,0.6); }

@@ -27,7 +27,7 @@ $uid = (int) $me['id'];
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $certOn    = owCertReady();   // the certificate details + declaration are asked once the database has them
 $COLORS    = owColors();
-$GROUPS    = owStyleGroups();
+$TOPICS    = owArtTopics();   // the 9 topics (owner, 6 Nov 2026: handmade only)
 $ready     = owStagesReady();
 
 $error = '';                       // error code for the current step
@@ -118,7 +118,7 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $picked = array_values(array_unique(array_intersect((array) ($_POST['colors'] ?? []), array_keys($COLORS))));
         if (!isset($stages[100])) {
             $error = 'need100';
-        } elseif (!isset($ART_TYPES[$type]) || !empty($ART_TYPES[$type]['legacy'])) {   // one of the 50 styles only
+        } elseif (owTopicOfStore($type) === '') {   // one of the 9 topics only (owner, 6 Nov 2026)
             $error = 'type';
         } else {
             $db->beginTransaction();
@@ -460,20 +460,18 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
           <legend class="sub-h"><?= t2('Type of art', 'نوع الفن') ?></legend>
           <p class="sub-p"><?= t2('Choose the one closest to your work. The pictures show how each type usually looks.', 'اختر الأقرب إلى عملك. توضح الصور الشكل المعتاد لكل نوع.') ?></p>
           <?php $selType = (string) ($_POST['type'] ?? $draft['type']);
-          foreach ($GROUPS as $gKey => $g): ?>
-          <h3 class="tg-h"><?= t2($g['en'], $g['ar']) ?></h3>
+          ?>
           <div class="types">
-            <?php foreach ($ART_TYPES as $key => $tp): if (($tp['cat'] ?? '') !== $gKey || !empty($tp['legacy'])) continue; ?>
+            <?php foreach ($TOPICS as $tk => $tp): $key = $tp['store']; ?>
               <label class="type-card">
                 <input type="radio" name="type" value="<?= e($key) ?>" required<?= $selType === $key ? ' checked' : '' ?>>
                 <span>
-                  <span class="tp-art" data-style="<?= e($key) ?>" aria-hidden="true"></span>
+                  <span class="tp-art" data-style="<?= e($tp['cover']) ?>" aria-hidden="true"></span>
                   <?= t2($tp['en'], $tp['ar']) ?>
                 </span>
               </label>
             <?php endforeach; ?>
           </div>
-          <?php endforeach; ?>
         </fieldset>
 
         <div class="actions" style="margin-top:20px;">

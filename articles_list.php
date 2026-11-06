@@ -72,7 +72,7 @@ $titleAr = $tAr . ' · أويلي';
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 </head>
 <body class="ow">
-<?= owStudioBackdrop($type === 'art_education' ? 'art-book' : 'gallery-visit') /* Art Education: the art book; Events (and Spotlights): the gallery visit (owner, 6 Nov 2026) */ ?>
+<?php /* plain page background for now, until the owner sends new wide photos (6 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 
@@ -82,16 +82,11 @@ $titleAr = $tAr . ' · أويلي';
 <main>
   <div class="d-wrap">
     <header class="d-head reveal">
-      <span class="d-badge"><i aria-hidden="true"></i><?= owBi('Discover', 'اكتشف') ?></span>
       <h1><?= owBi($tEn, $tAr) ?></h1>
       <p><?= owBi($PAGE[$type]['sub'][0], $PAGE[$type]['sub'][1]) ?></p>
     </header>
 
-    <nav class="type-pills reveal" aria-label="Article types · أنواع المقالات">
-      <?php foreach ($TYPES as $k => [$en, $ar]): ?>
-        <a class="type-pill<?= $k === $type ? ' on' : '' ?>" href="articles_list.php?type=<?= e($k) ?>"<?= $k === $type ? ' aria-current="page"' : '' ?>><?= owBi($en, $ar) ?></a>
-      <?php endforeach; ?>
-    </nav>
+    <?php /* no type tabs and no Discover badge here (owner, 6 Nov 2026): Art Events and Art Education are in the top menu */ ?>
 
     <?php if (!$items): ?>
       <div class="card empty-state d-empty reveal">

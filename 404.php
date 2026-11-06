@@ -34,7 +34,7 @@ $ar404 = owIsAr();
 </style>
 </head>
 <body>
-<?= owStudioBackdrop('paint-cloth') ?>
+<?php /* plain page background for now, until the owner sends a new wide photo (6 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>

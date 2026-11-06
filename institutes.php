@@ -137,7 +137,6 @@ details[open] .when-closed{display:none;}
 <main>
   <div class="d-wrap">
     <header class="d-head reveal">
-      <span class="d-badge"><i aria-hidden="true"></i><?= owBi('Discover', 'اكتشف') ?></span>
       <h1><?= owBi('Art Institutes', 'المعاهد الفنية') ?></h1>
       <p><?= owBi('Find the right place to learn art, close to home.', 'اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.') ?></p>
     </header>

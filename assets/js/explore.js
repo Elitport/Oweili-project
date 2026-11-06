@@ -15,7 +15,10 @@
  * ===================================================================== */
 (function () {
   'use strict';
-  var STYLES = window.OW_ART_STYLES || [];
+  /* Oweili is handmade art only (owner, 6 Nov 2026): the Digital and Photography styles stay in
+     art_styles.js but are hidden here (not deleted). OW_HIDDEN_CATS is the one list. */
+  var HIDDEN_CATS = window.OW_HIDDEN_CATS || ['digital', 'photography'];
+  var STYLES = (window.OW_ART_STYLES || []).filter(function (s) { return HIDDEN_CATS.indexOf(s.cat) < 0; });
   var BY_ID = {};
   STYLES.forEach(function (s) { BY_ID[s.id] = s; });
 
@@ -23,11 +26,9 @@
   var CATS = [
     ['all', 'All', 'الكل'],
     ['traditional', 'Traditional', 'تقليدي'],
-    ['digital', 'Digital', 'رقمي'],
     ['heritage', 'Islamic & Arab Heritage', 'تراث إسلامي وعربي'],
     ['contemporary', 'Contemporary', 'معاصر'],
-    ['nature', 'Nature & Portrait', 'طبيعة وبورتريه'],
-    ['photography', 'Photography', 'تصوير']
+    ['nature', 'Nature & Portrait', 'طبيعة وبورتريه']
   ];
   var LEVELS = {
     beginner: ['Beginner', 'مبتدئ', 1],
