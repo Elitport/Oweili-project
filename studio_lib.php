@@ -7,11 +7,10 @@
  *  work of an Oweili artist, never in the Gallery, the sitemap or as an
  *  artwork's share picture.
  *
- *  WHOLE photos (owner, 6 Nov 2026): every photo is shown whole, in its real
- *  shape, never cropped or zoomed. The layer is the size of the SCREEN (not
- *  the page), the photo is fitted inside it (object-fit: contain), and the
- *  space around it is filled with a soft blurred copy of the same photo (its
- *  tiny copy, blurred by the browser), so the main subject is never cut.
+ *  FULL-SCREEN photos (owner, 6 Nov 2026, second version): every photo fills
+ *  the whole screen again (object-fit: cover), but the layer is the size of
+ *  the SCREEN, never the page, so a long page never zooms it in; and each
+ *  photo keeps its main subject in view (OW_STUDIO_FOCUS). No blurred fill.
  *  Files: assets/img/studio/<key>-<width>.<avif|webp|jpg>, made once from the
  *  owner's originals in their own shape (compressed, hidden data removed).
  *  The browser picks the width it needs for the screen, and the lightest
@@ -70,6 +69,19 @@ const OW_STUDIO = [
         'طاولة مرسم عليها فُرَش وألوان',
         'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAMGBQEH/8QAKRAAAQMDAwMDBQEAAAAAAAAAAQIDBAARIRITMQVBYQYiMiNRgaGxcf/EABcBAAMBAAAAAAAAAAAAAAAAAAABAwT/xAAdEQACAgIDAQAAAAAAAAAAAAAAAQIRAyESMUEi/9oADAMBAAIRAxEAPwC66gsCPzzj9GsppaeoKafjn2N2Cr845FP6q+rbbYSAHXb6So2AAwfzmpeNKkdNQUuPFWyEK0tDCgRnP2xYmpy1tDS5aZZQ2W0uJcAIS4j4nt3p6jo1q2gQDYWH6/lSfVPUDceFGWl16Opa9SQkg+0Yzfsb5/yuzvULnUVRobF4+6dzeQcoQBcq8d8+KL9GovqirjOOOtcDWglCwM2UDRXn3T/VEtthZbWXS46tal2vqN+fGAMUU7aDjZreqZTEpyFDS59QrWoHgJUACL357Y81g9McfeTPZ206nFJ0t6LgEcjPn+0UUZFT0GKVx2Ol9BkzGkIVoQppo7TSkatRvfm/t+1KhlSmX2fgqLHcbtf4kAkAkfYk+M0UVlyXjxpxfpVfUmmT8qMqC4lqRtx1FCVBO4ci1r/kg0UUVrIro//Z'],
 ];
+/* The part of each photo that always stays in view when the photo fills the screen (owner,
+   6 Nov 2026): "x% y%" of the photo, aimed at its main subject. A phone (tall screen) keeps the
+   middle of a wide photo around this point; a computer (wide screen) keeps the band around it. */
+const OW_STUDIO_FOCUS = [
+    'home-painting' => '62% 42%',   // the hand with the brush and the canvas
+    'brushes-jars'  => '45% 45%',   // the brushes in their jars
+    'paint-cloth'   => '50% 50%',
+    'pink-palette'  => '58% 45%',   // the palette and the brushes
+    'paint-buckets' => '42% 40%',   // the hand dipping the brush into the buckets
+    'palette-hand'  => '38% 52%',   // the hand and the palette
+    'gallery-visit' => '50% 58%',   // the woman and the paintings around her
+    'studio-table'  => '55% 58%',   // the studio table with its brushes
+];
 /* The tiny first frames of the homepage videos (their blurred fill, index.php) */
 const OW_HERO_TINY = [
     'blue' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgP/xAAtEAABBAECBAUCBwAAAAAAAAABAgMEEQASIQUiQXETMVFhgQbBFCMyUpGh8f/EABcBAQADAAAAAAAAAAAAAAAAAAQCAwX/xAAgEQEAAgIBBAMAAAAAAAAAAAABAAIDESEEMbHBQXGB/9oADAMBAAIRAxEAPwDOz3i9ORJW5+YtRC7BvpR7CumahnRNgBx5NOEfqP7huCD3+4yC5HbW4l5CtYsahV6c0koI8FtLPM2dPkLsD/MQXq4td3xxKb4slMmnj3I8gh9Eh94FLugG/PUq+Ue3Qb5Qej/gYLUqVHE5shKyG1cqCE1Y9e+JR2Q/4rJ0alSSkFQ/i+222X+GsvtOSGp61LQ84QkrIoAUE0Pceu9jDdTdpUB/Jf0oWstiI8R1Ro0eVFBC+Vzw627HF0ccacQFqRoJG6QLr5yvxSMUw3EN9EEJH2zAupdbdUgpUK6VhsWS1jlis2OrpJ04fLgxjUl5xKyKV5iva8pj6jiOrbYYDhQLFkeSiRVH0wwxthbbWEE1rUowtCOJJSW7Jc1rPfric6U7NjJSsrDaylYUCQCCVH4rYYYZAqWS6cge5Oi1rao/L6luFPcUlmPNOpxabSopr4PvVHOEvhbK5K12d6P9YYZm9nZNB4NfXif/2Q==',
@@ -92,11 +104,13 @@ function owStudioPhoto(string $key, bool $eager = false, string $class = 'ow-stu
     [$widths, $W, $H, $altEn, $altAr] = OW_STUDIO[$key];
     $b = owBase();
     $set = fn(string $ext): string => implode(', ', array_map(fn($w) => $b . owStudioFile($key, $w, $ext) . ' ' . $w . 'w', $widths));
-    $sizes = 'min(100vw, ' . round(100 * $W / $H, 1) . 'vh)';
+    /* the photo fills the screen (cover): it is as wide as the screen, or wider on a tall screen */
+    $sizes = 'max(100vw, ' . round(100 * $W / $H, 1) . 'vh)';
+    $focus = OW_STUDIO_FOCUS[$key] ?? '50% 50%';
     $h = '<picture class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '">';
     foreach (['avif' => 'image/avif', 'webp' => 'image/webp'] as $ext => $mime) $h .= '<source type="' . $mime . '" srcset="' . $set($ext) . '" sizes="' . $sizes . '">';
     $h .= '<img src="' . $b . owStudioFile($key, $widths[0], 'jpg') . '" srcset="' . $set('jpg') . '" sizes="' . $sizes . '"'
-        . ' width="' . $W . '" height="' . $H . '" decoding="' . ($eager ? 'sync' : 'async') . '"'
+        . ' width="' . $W . '" height="' . $H . '" style="object-position:' . $focus . '" decoding="' . ($eager ? 'sync' : 'async') . '"'
         . ($eager ? ' fetchpriority="high"' : ' loading="lazy"')
         . ' alt="' . htmlspecialchars($altEn . ' · ' . $altAr, ENT_QUOTES, 'UTF-8') . '">';
     return $h . '</picture>';
@@ -114,7 +128,9 @@ function owStudioTinyVar(string $key): string {
 function owStudioBackdrop(string ...$keys): string {
     foreach ($keys as $k) {
         if (!owStudioHas($k)) continue;
-        return '<style>html body{background:transparent!important}</style><div class="ow-backdrop ow-fill" style="' . owStudioTinyVar($k) . '">'
+        /* the tiny copy sits behind the photo only until it has loaded (no white flash), never as a frame */
+        $t = OW_STUDIO[$k][5] ?? '';
+        return '<style>html body{background:transparent!important}</style><div class="ow-backdrop"' . ($t !== '' ? ' style="background:url(' . $t . ') ' . (OW_STUDIO_FOCUS[$k] ?? '50% 50%') . ' / cover no-repeat"' : '') . '>'
              . owStudioPhoto($k, true, 'ow-studio') . '</div>';
     }
     return '';
