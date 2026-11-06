@@ -121,6 +121,11 @@
 
 ## Features
 
+### Footer at the bottom, dimmer photos in dark mode (6 Nov 2026, owner)
+- Footer: on every page with a background photo, short pages (Art Events, Art Education, an article that is not found) now put the footer at the bottom of the screen, like Art Institutes: the page body is a column at least one screen tall and the main part grows (body:has(> .ow-backdrop) in oweili.css). Measured on 11 photo pages at 1536 × 864 and 390 × 844: only the short pages moved; every longer page is exactly the same
+- Dark mode: the page photos and the homepage video and still frame are a little dimmer (brightness 72%, same colours). Light mode unchanged
+- Files: assets/css/oweili.css. Tables: none
+
 ### Gallery topic dropdown (6 Nov 2026)
 - Owner: the 10 topic buttons on the Gallery (All + the 9 topics) are now one dropdown list "Topic" / «الموضوع», "All" / «الكل» chosen by default, in the same centred column and at the same width as the search box. Choosing a topic opens the Gallery filtered the same way (?cat=<topic>, other choices kept); old ?cat= and ?type= links still work and show their topic in the list
 - Files: marketplace.php. Tables: none

@@ -580,6 +580,8 @@ html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.82), rgba(15,21,
   background: var(--ow-tiny, none) var(--ow-pos, 50% 50%) / cover no-repeat; }   /* the tiny copy shows until the photo has loaded (studio_lib.php sets the values) */
 /* phones and other tall screens (owner, 6 Nov 2026): the wide photo keeps its CENTRE in view, only its sides are trimmed */
 @media (max-aspect-ratio: 1/1) { .ow-backdrop { background-position: 50% 50% !important; } .ow-studio img { object-position: 50% 50% !important; } }
+/* Dark mode (owner, 6 Nov 2026): the page photos and the homepage video a little dimmer, same colours; light mode unchanged */
+html.dark-mode :is(.ow-backdrop, .hero-bg) { filter: brightness(0.72); }
 /* no veil over the photo (owner, 5 Nov 2026): the photo keeps its real, strong colours.
    Text stays readable where it sits: page headings get a small frosted-glass card, cards are solid */
 :root { --studio-glass: rgba(255,255,255,0.78); --studio-glass-edge: rgba(255,255,255,0.6); }
@@ -616,6 +618,9 @@ html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ 
   border: 1px solid var(--studio-glass-edge); border-radius: var(--radius-card); padding: 14px 20px; }
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .ow-backdrop ~ .ow-footer :is(.ow-footer-in, .ow-footer-copy), .ow-backdrop ~ * .ow-footer :is(.ow-footer-in, .ow-footer-copy) { background: var(--color-surface); } }
 .ow-backdrop ~ .ow-footer, .ow-backdrop ~ * .ow-footer { padding-top: var(--space-md); padding-bottom: var(--space-md); }
+/* Footer at the bottom of the screen on short photo pages, like Art Institutes (owner, 6 Nov 2026): the page content grows to fill the screen */
+body:has(> .ow-backdrop):has(> .ow-footer) { display: flex; flex-direction: column; min-height: 100vh; min-height: 100svh; }
+body:has(> .ow-backdrop):has(> .ow-footer) > main { flex: 1 0 auto; }
 .ow-backdrop ~ .ow-footer .ow-footer-copy, .ow-backdrop ~ * .ow-footer .ow-footer-copy { background: var(--studio-glass); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   border: 1px solid var(--studio-glass-edge); border-radius: var(--radius-card); margin-top: var(--space-xs); padding: 10px 20px; }
 /* smaller title cards */
