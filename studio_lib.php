@@ -113,11 +113,7 @@ const OW_STUDIO_FOCUS = [
 /* Where the page title card (and an empty-list card) sits on computers, so it stays away from the photo's
    main subject (owner, 6 Nov 2026): 'start' = the reading side (right in Arabic, left in English),
    'left' / 'right' = that side of the screen. Not listed = the middle */
-const OW_STUDIO_SIDE = [
-    'museum-walk'   => 'start',   // the arch and the visitors are in the middle
-    'gallery-visit' => 'start',   // the woman stands in the middle
-    'pink-palette'  => 'left',    // the palette and brushes fill the right; the paper on the left is empty
-];
+const OW_STUDIO_SIDE = [];   // none for now: every page uses the same centred column as Art Institutes (owner, 6 Nov 2026)
 /* The tiny first frames of the homepage videos (their blurred fill, index.php) */
 const OW_HERO_TINY = [
     'blue' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgH/xAAqEAACAgIABAUEAwEAAAAAAAABAgMRAAQFEiExEyJBUWEGgaGxMkJSwf/EABcBAQADAAAAAAAAAAAAAAAAAAQCAwX/xAAhEQEAAgIBAwUAAAAAAAAAAAABAAIDESEEgcESMVGhsf/aAAwDAQACEQMRAD8Azm3MX4gmyZD4kjHnu7u7B/GaqLk2+Hh5VpyLs/6HUEff/uQX1ojsLMjh0Leax/HNHuBORFiBaOx2F2AMQXo4tHPvKb4slMmrcSRLyzrsTT2spQEkC+ZifKOnb0GU5YJOHaEewdVN4EKXBUiiooEA9v3k7WjMwkiD8rtsleayD8X+MucK1pNOXZXbL+HNKfNI9+wUj0ArpXvhuqs1AHtL+k02VO8W4grLowbOqGSVgsnKOwPeqxeD6ijMKmaIK/qF6j7Xlrf1q12ROnlIHxmDl150kZTGRWFw5F3tjMuMtrROcO29DXtdjYZXK9f69b7XlMfUOpNJHBAXKAUGINhienX2wwx1h9SrBiaOI/peGnEVUx2Wk53PyfXFN/dk3Nbldm8NyrA3SsCW/QrDDIlS1i6cgeZKlmtLVH58Sto8RkSODX3G5hKKjaj5a6AEnvfe/nG5OHwSOXINn2OGGZduOZonH1+T/9k=',

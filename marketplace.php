@@ -344,6 +344,20 @@ foreach ($modalArtworks as $aw) {
     @keyframes mpRise {from{opacity:1}to{opacity:1}}
     @media (prefers-reduced-motion: reduce){ .page-header,.human-banner,.mp-tools,.mp-card,.gallery-empty,.modal{animation:none;} .mp-card:hover,.mp-card:hover .aw-img img{transform:none;} }
     @media(max-width:1024px){ .art-grid{grid-template-columns:repeat(3,1fr);} }
+    /* computers: the same centred column as Art Institutes (owner, 6 Nov 2026): the title card, the line under it,
+       the search, the topics, the sort, "More filters", the count and the empty card sit one under the other in the middle */
+    @media(min-width:769px){
+      [dir] .page-header{margin-left:auto;margin-right:auto;text-align:center;}
+      [dir] .page-header p{margin-left:auto;margin-right:auto;text-align:center;}
+      .mp-tools{max-width:420px;margin-left:auto;margin-right:auto;}
+      .mp-search{max-width:none;}
+      .cat-pills,.st-pills,.mp-row{justify-content:center;}
+      .mp-more{text-align:center;}
+      .mp-more .mp-filters{grid-template-columns:1fr 1fr;text-align:start;}
+      .mp-more .mp-filters :is(.f-check,.f-acts){grid-column:1 / -1;}
+      .mp-count{text-align:center;}
+      .gallery-empty{max-width:420px !important;}
+    }
     @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} .mp-search{max-width:none;} }
     @media(max-width:640px){ .art-grid{grid-template-columns:repeat(2,1fr);} }
     @media(max-width:420px){ .mp-card .aw-body{padding:12px;} .mp-card .btn{padding:0 8px;} .cat-pill{padding:0 14px;} }

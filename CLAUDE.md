@@ -133,6 +133,12 @@
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
 
+### One centred column on Gallery, Art Styles and Art Events, like Art Institutes (6 Nov 2026, last round)
+- Owner: the cards use the same layout as Art Institutes: the title card, the line under it and every card sit one under the other in the middle of the page, at the same width (the 420 px card column) and spacing. The side placement is off (OW_STUDIO_SIDE is empty; the CSS stays for later)
+- Gallery on computers (marketplace.php, its own styles, 769 px and wider): the title card and its line are centred; the search box, the topic filters, the status and sort row and "More filters" sit in a centred 420 px column (the open filters in 2 columns); the count and the empty card are centred too. Phones unchanged
+- Art Styles keeps its grid of style cards (centred, 960 px); Art Events centres its title card and empty card. Photos, colours, text, menu and footer unchanged
+- Files: marketplace.php, studio_lib.php. Tables: none
+
 ### Edge to edge again on every screen, tuned for laptops (6 Nov 2026, last round)
 - Owner: only laptop screens matter. The side colour fill for very wide screens was removed completely (no bands, no shading at the sides, on any screen size): every background photo fills the whole screen edge to edge (cover). OW_STUDIO_EDGE and the --ow-edge values are gone
 - Tuned for 1366 × 768, 1440 × 900 and 1536 × 864 (focus points in OW_STUDIO_FOCUS): Art Events 50% 0% (the arch at the top of the photo stays, only the floor is trimmed), Art Styles 58% 30% (the palette), Support 55% 75% (the studio table), Gallery 50% 58% (the woman and the paintings), Art Education 50% 50% (the books). The see-through footer and the smaller cards on the side stay
