@@ -37,6 +37,28 @@ function owSetting(string $key, ?string $default = null): ?string {
    auctions.php answers "page not found" to everyone except a signed-in admin.
    The page, its code, the auction_waitlist table and the sign-ups are all kept. */
 function owAuctionsPageOn(): bool { return owSetting('auctions_page_on', '0') === '1'; }
+/* Hidden for now, to bring back later (owner, 6 Nov 2026): Community, Gifts and the
+   "Coming soon" workshop cards. Missing or '0' = hidden; '1' = shown (Admin → Settings). */
+if (!defined('OW_HIDDEN_PARTS')) define('OW_HIDDEN_PARTS', [
+    'community' => ['community_page_on', 'Community page', 'صفحة المجتمع', 'community.php'],
+    'gifts'     => ['gifts_page_on', 'Gifts page', 'صفحة الهدايا', 'gifts.php'],
+    'workshops' => ['workshops_on', 'Upcoming workshops (the 5 "Coming soon" cards on Art Institutes)', 'ورش العمل القادمة (البطاقات الخمس «قريباً» في صفحة المعاهد الفنية)', 'institutes.php'],
+]);
+function owPartOn(string $part): bool { $k = OW_HIDDEN_PARTS[$part][0] ?? ''; return $k !== '' && owSetting($k, '0') === '1'; }
+function owCommunityPageOn(): bool { return owPartOn('community'); }
+function owGiftsPageOn(): bool { return owPartOn('gifts'); }
+function owWorkshopsOn(): bool { return owPartOn('workshops'); }
+/* A hidden page answers the normal 404 to visitors; a signed-in admin sees a preview (returns true) */
+function owHiddenPageGate(string $part): bool {
+    if (owPartOn($part)) return false;
+    require_once __DIR__ . '/admin_shell.php';
+    if (!owIsAdmin()) { require_once __DIR__ . '/page_cache.php'; http_response_code(404); require __DIR__ . '/404.php'; exit; }
+    return true;
+}
+/* The small notice an admin sees on the preview of a hidden page */
+function owHiddenNotice(): string {
+    return '<div class="alert alert-error" role="status" style="position:relative;z-index:5;max-width:1100px;margin:84px auto 0;">' . owBi('Preview for the admin: this page is hidden from visitors (Admin → Settings).', 'معاينة للإدارة: هذه الصفحة مخفية عن الزوار (الإدارة ← الإعدادات).') . '</div>';
+}
 function owSetSetting(string $key, ?string $value): bool {
     unset($GLOBALS['OW_SETTINGS_CACHE'][$key]);
     try {

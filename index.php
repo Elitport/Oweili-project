@@ -86,7 +86,7 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 .hero-btns .btn { min-width: 200px; }
 
 /* one very quick soft fade (0.15 s), everything at once: nothing starts hidden or waits */
-@keyframes ow-fadeUp {from{opacity:.7}to{opacity:1}}
+@keyframes ow-fadeUp {from{opacity:1}to{opacity:1}}
 .fade { animation:ow-fadeUp .15s ease-out both; }
 
 .aotw-home { position: fixed; z-index: 3; bottom: var(--space-md); inset-inline-end: var(--space-md); display: flex; align-items: center; gap: 12px;
@@ -120,12 +120,14 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/studio_lib.php'; ?>
+<style><?= owStudioTinyCss('hero', '.hero-bg') /* the still frame's tiny copy: never a plain white frame (6 Nov 2026) */ ?></style>
 <div class="hero-bg" aria-hidden="true">
   <?php $hb = owBase() . 'assets/img/hero/'; ?>
   <picture class="hero-still">
     <source media="(max-width: 640px)" type="image/avif" srcset="<?= $hb ?>hero-tall.avif"><source media="(max-width: 640px)" type="image/webp" srcset="<?= $hb ?>hero-tall.webp"><source media="(max-width: 640px)" srcset="<?= $hb ?>hero-tall.jpg">
     <source type="image/avif" srcset="<?= $hb ?>hero-wide.avif"><source type="image/webp" srcset="<?= $hb ?>hero-wide.webp">
-    <img src="<?= $hb ?>hero-wide.jpg" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="async">
+    <img src="<?= $hb ?>hero-wide.jpg" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="sync">
   </picture>
   <video id="vid" class="bg-now" autoplay muted playsinline preload="none" data-src="<?= owBase() ?>assets/video/hero-wide.mp4" data-src-phone="<?= owBase() ?>assets/video/hero-tall.mp4"></video>
   <video id="vid2" muted playsinline preload="none" data-later="<?= owBase() ?>assets/video/hero-pink-wide.mp4" data-later-phone="<?= owBase() ?>assets/video/hero-pink-tall.mp4"></video>

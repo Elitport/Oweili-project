@@ -12,7 +12,10 @@
  *  reachable, the page still shows, with friendly empty cards.
  * ===================================================================== */
 require_once 'config.php';
-require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+/* Hidden for now, to bring back later (owner, 6 Nov 2026): visitors get "page not found",
+   a signed-in admin a preview. Switch: Admin → Settings → Community page (gallery_lib.php). */
+require_once __DIR__ . '/gallery_lib.php'; $owHidPrev = owHiddenPageGate('community');
+require_once __DIR__ . '/page_cache.php'; if (!$owHidPrev) owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';   // owBi(), owNotDraftSql()
 
 /* 54 → "54+", 7 → "7" (a "+" only once the number is over 10) */
@@ -109,7 +112,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
 .inspo-body{padding:16px;}
 .inspo-body h4{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin-bottom:4px;}
 .inspo-body p{font-size:var(--fs-body);color:var(--color-body);}
-@keyframes riseUp {from{opacity:.7}to{opacity:1}}
+@keyframes riseUp {from{opacity:1}to{opacity:1}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 [dir="rtl"] .stats-row,[dir="rtl"] .community-grid,[dir="rtl"] .inspo-grid{direction:rtl;}
 [dir="rtl"] .page-header p{text-align:right;}
@@ -124,6 +127,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
 </div>
 <div class="overlay"></div>
 <?php include __DIR__ . "/nav.php"; ?>
+<?php if ($owHidPrev) echo owHiddenNotice(); ?>
 <div class="page" id="pg">
   <div class="page-header">
     <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">Artists Together</span></div>

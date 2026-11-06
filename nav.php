@@ -8,8 +8,10 @@ $navName  = $navUser ? (function_exists('owRealName') ? (owRealName($navUser['fu
 if ($navName === '') { $navName = 'Account'; }
 $navFirst = $navUser ? (explode(' ', $navName)[0]) : '';
 /* Auctions stays out of the menu until the admin switches the page on (gallery_lib.php) */
-$owAucOn = false;
-try { if (function_exists('getDB')) { require_once __DIR__ . '/gallery_lib.php'; $owAucOn = owAuctionsPageOn(); } } catch (Throwable $e) { $owAucOn = false; }
+$owAucOn = $owGiftOn = $owComOn = false;
+try { if (function_exists('getDB')) { require_once __DIR__ . '/gallery_lib.php'; $owAucOn = owAuctionsPageOn(); $owGiftOn = owGiftsPageOn(); $owComOn = owCommunityPageOn(); } } catch (Throwable $e) { $owAucOn = $owGiftOn = $owComOn = false; }
+/* Gifts and Community are hidden for now (6 Nov 2026); the Collect word then opens Commissions */
+$owCollectUrl = $owGiftOn ? 'gifts.php' : 'commission.php';
 $navId    = $navUser ? (int) $navUser['id'] : 0;
 
 /* Which menu item is the current page (pink underline) */
@@ -49,9 +51,9 @@ if (!function_exists('owLogoMark')) {
   <div class="nav-center" id="nav-center">
     <div class="nav-item"><a href="marketplace.php" id="nav-marketplace-link"<?= navAct('marketplace') ?>><span id="nav-marketplace-label">Gallery</span></a></div>
     <div class="nav-item">
-      <a href="gifts.php" id="nav-collect-link"<?= navAct('collect') ?>><span class="nav-i18n" data-en="Collect" data-ar="اقتنِ">Collect</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
+      <a href="<?= $owCollectUrl ?>" id="nav-collect-link"<?= navAct('collect') ?>><span class="nav-i18n" data-en="Collect" data-ar="اقتنِ">Collect</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-collect">
-        <a href="gifts.php"<?= navAct('', 'gifts.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a>
+<?php if ($owGiftOn): ?>        <a href="gifts.php"<?= navAct('', 'gifts.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a><?php endif; ?>
         <a href="commission.php"<?= navAct('', 'commission.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span class="nav-i18n" data-en="Commissions" data-ar="طلب لوحة خاصة">Commissions</span></a>
         <?php if ($owAucOn): ?>        <a href="auctions.php" id="nav-auctions-link"<?= navAct('', 'auctions.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6M11 7l6 6M13 5l-7 7 3 3 7-7M8 14l-5 5"/><path d="M3 21h9"/></svg><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span><span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a><?php endif; ?>
       </div>
@@ -65,7 +67,7 @@ if (!function_exists('owLogoMark')) {
         <a href="institutes.php"<?= navAct('', 'institutes.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
       </div>
     </div>
-    <div class="nav-item"><a href="community.php" id="nav-community-link"<?= navAct('community') ?>><span id="nav-community-label">Community</span></a></div>
+<?php if ($owComOn): ?>    <div class="nav-item"><a href="community.php" id="nav-community-link"<?= navAct('community') ?>><span id="nav-community-label">Community</span></a></div><?php endif; ?>
     <div class="nav-item">
       <a href="support.php" id="nav-support-link"<?= navAct('support') ?>><span id="nav-support-label">Support</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-support">
@@ -94,8 +96,8 @@ if (!function_exists('owLogoMark')) {
   </button>
   <div class="mnav-panel" id="mnav-panel">
     <a class="mnav-link" href="marketplace.php" id="mnav-marketplace"<?= navAct('marketplace') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Gallery" data-ar="المعرض">Gallery</span></a>
-    <a class="mnav-link" href="gifts.php"<?= navAct('collect') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Collect" data-ar="اقتنِ">Collect</span></a>
-    <a class="mnav-link mnav-sub" href="gifts.php"><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a>
+    <a class="mnav-link" href="<?= $owCollectUrl ?>"<?= navAct('collect') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Collect" data-ar="اقتنِ">Collect</span></a>
+<?php if ($owGiftOn): ?>    <a class="mnav-link mnav-sub" href="gifts.php"><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a><?php endif; ?>
     <a class="mnav-link mnav-sub" href="commission.php"><span class="nav-i18n" data-en="Commissions" data-ar="طلب لوحة خاصة">Commissions</span></a>
 <?php if ($owAucOn): ?>    <a class="mnav-link mnav-sub" href="auctions.php"><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span> <span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a><?php endif; ?>
     <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
@@ -103,7 +105,7 @@ if (!function_exists('owLogoMark')) {
     <a class="mnav-link mnav-sub" href="articles_list.php?type=event"><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
     <a class="mnav-link mnav-sub" href="articles_list.php?type=artist_spotlight"><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a>
     <a class="mnav-link mnav-sub" href="institutes.php"><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a>
-    <a class="mnav-link" href="community.php"<?= navAct('community') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a>
+<?php if ($owComOn): ?>    <a class="mnav-link" href="community.php"<?= navAct('community') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a><?php endif; ?>
     <a class="mnav-link" href="support.php"<?= navAct('support') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Support" data-ar="الدعم">Support</span></a>
     <div class="mnav-acct">
     <?php if ($navUser): ?>

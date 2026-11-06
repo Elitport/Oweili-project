@@ -28,7 +28,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .choice.collector .go{background:var(--color-accent);color:var(--color-on-accent);}
 .foot{margin-top:26px;font-size:13px;color:var(--color-body);}
 .foot a{color:var(--color-accent);text-decoration:none;font-weight:600;}
-@keyframes riseUp {from{opacity:.7}to{opacity:1}}
+@keyframes riseUp {from{opacity:1}to{opacity:1}}
 @media(max-width:640px){.choices{grid-template-columns:1fr;}}
 </style>
 </head>

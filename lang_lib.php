@@ -67,7 +67,7 @@ function owLangUrl(string $url, ?string $lang = null): string {
 function owHtmlAttrs(bool $jsText = false): void {
     $ar = owIsAr();
     echo 'lang="' . ($ar ? 'ar' : 'en') . '" dir="' . ($ar ? 'rtl' : 'ltr') . '"';
-    if ($ar && $jsText) echo ' class="ow-wait"';
+    if ($ar && $jsText) { echo ' class="ow-wait"'; $GLOBALS['OW_WAIT'] = true; }
     if (!empty($GLOBALS['OW_LANG_FILTER'])) return;   // both languages: one language per page (owLangOne)
     $GLOBALS['OW_LANG_FILTER'] = ob_get_level() + 1;
     ob_start('owLangFilter');
@@ -133,8 +133,14 @@ function owLangFilter(string $html): string {
         }
     }
     // the wait class needs its rule before the body is drawn
-    if (strpos(substr($html, 0, 400), 'ow-wait') !== false) {
-        $html = preg_replace('/<head>/', '<head><style>html.ow-wait body{visibility:hidden;animation:owShow 0s 1.5s forwards}@keyframes owShow{to{visibility:visible}}</style>', $html, 1);
+    if (!empty($GLOBALS['OW_WAIT']) && strpos($html, '<head>') !== false) {
+        /* No blank frame between pages (6 Nov 2026): the page is shown the moment its own words
+           script has run (the small script at the very end, not later), and Chrome / Android are
+           told not to draw the page at all before that point (blocking="render"), so the screen
+           goes straight from the old page to the finished new one */
+        $html = preg_replace('/<head>/', '<head><link rel="expect" href="#ow-ready" blocking="render"><style>html.ow-wait body{visibility:hidden;animation:owShow 0s 1.5s forwards}@keyframes owShow{to{visibility:visible}}</style>', $html, 1);
+        $end = strrpos($html, '</body>');
+        if ($end !== false) $html = substr($html, 0, $end) . '<script id="ow-ready">document.documentElement.classList.remove(\'ow-wait\')</script>' . substr($html, $end);
     }
     // every plain text with data-ar="…": the Arabic text goes in its place
     $html = preg_replace_callback('#(<([a-zA-Z][a-zA-Z0-9]*)\b[^>]*?\sdata-ar="([^"]*)"[^>]*>)([^<]*)(</\2>)#',

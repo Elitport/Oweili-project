@@ -88,7 +88,7 @@
 - explore.php — Explore Art Styles: an art encyclopedia of 50 styles with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
-- community.php — Community page: real counts and the newest artworks (see Features)
+- community.php — Community page: real counts and the newest artworks (see Features). HIDDEN FOR NOW, to bring back later (6 Nov 2026, Admin → Settings)
 - chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
 - events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). The old events table was empty on the live site (checked 31 Oct 2026)
@@ -132,6 +132,23 @@
 - Ready for Bashro (foundation): every person, artwork, request and sale has a permanent unique ID (public_id, made by the database) and created / updated dates. Status: requests have a real status column; people (active / pending / suspended) and artworks (draft / pending / approved / rejected / sold) get theirs from the existing columns (owUserStatusSql / owArtworkStatusSql in platform_lib.php), so it is never stored twice. Activity log: sign-up, email confirmed, sign in / out, profile, password, email, favorites, requests, password reset — with who, what, when and a monthly-changing one-way code of the visitor's address (never the address itself, PDPL)
 - Files: collector_dashboard.php, favorite.php, assets/js/favorites.js, platform_lib.php, account_lib.php, marketplace.php, inquire.php, inquiry_lib.php, login.php, logout.php, register_collector.php, register_artist.php, verify.php, forgot.php, assets/css/oweili.css (.fav-btn), dashboards_update.sql (run on the live database 30 Oct 2026 by a temporary page, since removed; full backup first: .backups/db-u405344949_contact-20261030-224643.sql.gz)
 - Tables: users, artworks, artwork_inquiries, purchases (new columns), favorites, activity_log, shipping_addresses and payouts (new; the last two stay empty until Sprint 4)
+
+### Hidden for now, to bring back later: Community, Gifts, Upcoming Workshops (6 Nov 2026)
+- Owner (6 Nov 2026): "We're just starting, so I want the site simpler and focused." Hidden the same way as Auctions. NOTHING deleted: the pages, the code, the tables (gift_requests, …) and every saved request stay
+- Hidden for now, to bring back later:
+  - Community page (community.php): not in the menu (desktop and ☰) or the sitemap. Visitors who open it get the normal 404 page; a signed-in admin sees a preview with a notice. chat.php sends old links to the Gallery while it is hidden (to Community again once it is shown)
+  - Gifts page (gifts.php): not in the Collect menu (the word "Collect" then opens Commissions), the footer, the sitemap, the Gallery's "Give a gift that lasts" card (the Commissions card then fills the row), the artwork window's and the artwork page's "Give it as a gift" link. Visitors get the 404 page (also ?artwork=N), the admin a preview. Admin → Gifts (admin_gifts.php) and a buyer's earlier gift requests in their dashboard stay
+  - Upcoming Workshops: the 5 "Coming soon" cards with "Notify me" (Desert Light in Watercolor, Desert Landscapes in Oil, Digital Arabic Calligraphy, Saudi Heritage Drawing, Contemporary Saudi Expression) on Art Institutes (institutes.php). Hidden from visitors; the admin still sees them with a notice. The institutes directory itself is unchanged
+- One switch each: Admin → Settings → "Hidden for now, to bring back later" (admin.php?settings=1#hidden-parts): Show / Hide and Preview, one click, logged as setting_change. site_settings keys community_page_on, gifts_page_on, workshops_on ('1' = shown; missing or '0' = hidden). Code: OW_HIDDEN_PARTS, owPartOn(), owCommunityPageOn(), owGiftsPageOn(), owWorkshopsOn(), owHiddenPageGate(), owHiddenNotice() in gallery_lib.php
+- Files: gallery_lib.php, admin_settings.php, community.php, gifts.php, chat.php, institutes.php, nav.php, footer.php, sitemap.php, marketplace.php, artwork.php. Tables: site_settings (three new settings, no structure change)
+
+### No flash between pages, found on the live site (6 Nov 2026)
+- Measured, not guessed: every frame of 8 page changes was recorded on the live site (Android and iPhone screen sizes, light and dark, English and Arabic; the recording scripts are kept outside the project), then again on the test copy after each fix
+- Cause 1 (every page with a background photo, and the homepage): the new page was drawn before its full-screen photo (or the homepage still frame) was ready, so for a few frames the page was plain white (navy in dark mode) and the photo then popped in. Fix: each photo carries a tiny blurred copy of itself (about 0.7 KB, OW_STUDIO_TINY in studio_lib.php, owStudioTinyCss()) that is drawn the moment the page opens; the real photo then sharpens on top of it. Photos at the top of a page are decoded before they are drawn (decoding="sync"). The homepage .hero-bg uses the same tiny copy of its still frame. The videos were checked: they start invisible over the still frame and fade in, so they never cause a blink
+- Cause 2 (Arabic, the 12 older pages whose words are filled in by their own script, owHtmlAttrs(true)): they were hidden until the browser said "page ready", so a phone could draw one empty frame first. Now the last thing in the page (a small script with id ow-ready, added by owLangFilter) shows the page the moment its words are in, and Chrome / Android are told not to draw it at all before that point (<link rel="expect" href="#ow-ready" blocking="render">). Fixed on the way: the server part of this never ran before (it looked for "ow-wait" in a part of the page it never sees); it now uses a flag set by owHtmlAttrs
+- Also: the small "page opening" fades from 70% to full (riseUp, mpRise, ow-riseUp, ow-fadeUp) now start at full, so content never dims while the page changes
+- Never add a full-screen picture without its tiny copy, and never hide a whole page until a script runs
+- Files: studio_lib.php, index.php, lang_lib.php, assets/css/oweili.css, register.php, verify.php, marketplace.php, forgot.php, login.php, support.php, community.php. Tables: none
 
 ### Real homepage video, photos in full colour (5 Nov 2026)
 - The old homepage video (bg.mp4) carried the Google Gemini mark, so it was AI-made: it is deleted from the project and the site. The homepage now plays a real Pexels video of a hand painting white dots on a colourful canvas (sent by the owner; Pexels licence: free for commercial use). Computers and tablets: assets/video/hero-wide.mp4 (1280×720, 1.7 MB); phones (640 px and narrower): assets/video/hero-tall.mp4 (a vertical 540×960 cut of the same video, 1.1 MB). No sound, made to start fast (index at the front), loops. The owner's second video (a vertical "brush pink" one for phones) did not arrive as a file; when it does, it replaces hero-tall.mp4 with the same name
@@ -255,7 +272,7 @@
 - Artist side: My Studio → Commissions tab, artist_commission.php?id=N
 - Files: commission.php, commission_lib.php, commission_file.php, artist_commission.php, admin_commissions.php (new); artist_studio.php, admin.php, theme_head.php, alert_lib.php, marketplace.php, gifts.php, robots.txt, .gitignore (.private/). Tables: commissions, commission_files, commission_nda, users, activity_log
 
-### Oweili Gifts: "Give a gift that lasts" / «أهدِ ما يبقى» (2 Nov 2026; tagline changed 5 Nov 2026)
+### Oweili Gifts: "Give a gift that lasts" / «أهدِ ما يبقى» (2 Nov 2026; tagline changed 5 Nov 2026) — HIDDEN FOR NOW, to bring back later (6 Nov 2026)
 - gifts.php («هدايا أويلي»): occasions (wedding, graduation, new baby, Eid, Ramadan, thank you, Teacher's Day), a ready artwork from the Gallery (the 12 newest available, or the one chosen with ?artwork=N) or a custom one (what it should be + optional budget), gift wrapping, card message, delivery date (3 days to 1 year ahead), "Surprise" (the recipient never sees the price), the recipient's name, phone (optional), city and address, and the buyer's name, phone and email (filled in for a signed-in buyer)
 - For now it is a request: saved in gift_requests, an email alert to the admin (alert kind 'gift', grouped like the others), a "we received your request" email to the buyer in both languages, and the admin follows up by hand in admin_gifts.php (Requests → Gifts): every detail, status New / Contacted / In progress / Done / Cancelled and a private note. No payment
 - Safety: security token, hidden robot trap, at most 3 requests per visitor per hour, only artworks a visitor can see in the Gallery. Buyer and recipient details are shown only to the admin
@@ -494,13 +511,13 @@
 - Visitors only see published articles; spotlights with photos also need an active consent
 - Files: articles_list.php, article.php, article_lib.php, assets/css/discover.css, assets/js/discover.js. Tables: articles, article_images, photo_consents
 
-### Upcoming Workshops (top of training.php)
+### Upcoming Workshops (top of institutes.php) — HIDDEN FOR NOW, to bring back later (6 Nov 2026)
 - What it does: "Upcoming Workshops" / «ورش العمل القادمة» with 5 planned workshops as cards in the same style as the institute cards: Desert Light in Watercolor, Desert Landscapes in Oil, Digital Arabic Calligraphy, Saudi Heritage Drawing (charcoal), Contemporary Saudi Expression (mixed media). Each shows its art type, title, a short line, "Coming Soon" / «قريباً» and a "Notify Me" / «أبلغني» button to register.php (allowed by rule 25: real planned feature with a notify button)
 - Below it, "Institutes Directory" / «دليل المعاهد» introduces the institutes list
 - Moved here from the old Studio page, which was removed from the menu and now redirects to explore.php
 - Files: training.php, studio.php (redirect), nav.php (Studio and its dropdown removed; leftover Studio menu words removed from 15 pages). Tables: none for the workshops
 
-### Community page (community.php): real numbers and real artworks
+### Community page (community.php): real numbers and real artworks — HIDDEN FOR NOW, to bring back later (6 Nov 2026)
 - Number boxes come from the database: "Artists With Us" counts artist accounts that are not banned, "Artworks in Gallery" / «عمل فني في المعرض» counts the works a visitor can see in the Gallery (approved, available or auction, finished, artist not banned) and links to marketplace.php. Over 10 shows the number with "+" (e.g. 52+), 10 or less shows the plain number. "Art Styles Covered" / «أسلوب فني موثّق» is counted from assets/js/art_styles.js (now 50) and links to explore.php. "Saudi Community" stays a label
 - Daily Inspiration / «إلهام اليوم»: the 3 newest approved, for-sale artworks by artists who are not banned (no drafts). Each shows the photo (whole artwork, never cropped), title and artist name in the page language, and opens that artwork in the Gallery (marketplace.php#artwork-N opens its details window). Pictures only from uploads/ or https
 - Fewer than 3 artworks: the empty spots say "Be the first to share your work here." / «كن أول من يشارك عمله هنا.» with a "Join as Artist" / «انضم كفنان» button to register_artist.php
@@ -649,12 +666,12 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- Order (owner's choice): Gallery · Collect ↓ · Explore Art Styles · Discover ↓ · Community · Support ↓ (Arabic, right to left: المعرض · اقتنِ · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
-- Collect ↓ / «اقتنِ» → Gifts / «هدايا» (gifts.php), Commissions / «طلب لوحة خاصة» (commission.php), and Auctions / «المزاد» (auctions.php, with a small "Soon" tag) ONLY while the Auctions page is switched on in Admin → Settings (hidden since 5 Nov 2026). The top word opens gifts.php
+- Order (owner's choice): Gallery · Collect ↓ · Explore Art Styles · Discover ↓ · Community · Support ↓ (Community and Gifts are hidden for now, to bring back later, 6 Nov 2026: while hidden the menu is Gallery · Collect ↓ (Commissions) · Explore Art Styles · Discover ↓ · Support ↓) (Arabic, right to left: المعرض · اقتنِ · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
+- Collect ↓ / «اقتنِ» → Gifts / «هدايا» (gifts.php, hidden for now: then the top word opens commission.php), Commissions / «طلب لوحة خاصة» (commission.php), and Auctions / «المزاد» (auctions.php, with a small "Soon" tag) ONLY while the Auctions page is switched on in Admin → Settings (hidden since 5 Nov 2026). The top word opens gifts.php
 - Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)
 - Explore Art Styles → explore.php, no dropdown
 - Discover ↓ → Art Events / Artist Spotlights (articles_list.php?type=...) / Art Institutes (institutes.php, its own page; training.php redirects there). Art Education was taken out of the menu because Explore Art Styles covers it; its page (articles_list.php?type=art_education) still works and is reachable from the type buttons on the articles pages
-- Community → community.php (direct link, no dropdown; Meet Fellow Artists, Share Your Work and Learn Together were removed because they led nowhere specific)
+- Community → community.php (hidden for now, to bring back later; direct link, no dropdown; Meet Fellow Artists, Share Your Work and Learn Together were removed because they led nowhere specific)
 - Support ↓ → Contact Us (email) / How It Works (support.php#how) / Terms of Use (terms.php)
 - Dropdown icons: one thin outline style only (set once in nav.css on .d-icon, never filled). New icons must be outline drawings
 

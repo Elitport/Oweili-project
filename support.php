@@ -44,7 +44,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .legal-arrow{float:right;color:var(--color-body);font-size:14px;}
 [dir="rtl"] .legal-card:hover{transform:translateX(-4px);}
 [dir="rtl"] .legal-arrow{float:left;}
-@keyframes riseUp {from{opacity:.7}to{opacity:1}}
+@keyframes riseUp {from{opacity:1}to{opacity:1}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 [dir="rtl"] .contact-grid,[dir="rtl"] .legal-grid{direction:rtl;}
 [dir="rtl"] .page-header p{text-align:right;}

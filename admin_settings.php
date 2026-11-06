@@ -111,6 +111,27 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
       <button class="btn <?= $aucOn ? 'btn-secondary' : 'btn-primary' ?> btn-sm" type="submit"><?= $aucOn ? owBi('Hide the Auctions page', 'إخفاء صفحة المزاد') : owBi('Show the Auctions page', 'إظهار صفحة المزاد') ?></button>
       <a class="btn btn-ghost btn-sm" href="auctions.php" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a></form>
   </div>
+<?php /* Hidden for now, to bring back later (owner, 6 Nov 2026): one switch each (gallery_lib.php OW_HIDDEN_PARTS) */
+  $hidMsg = [];
+  if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'part_switch' && verifyCsrf($_POST['csrf_token'] ?? null)) {
+      $part = (string) ($_POST['part'] ?? '');
+      if (isset(OW_HIDDEN_PARTS[$part])) {
+          $want = ($_POST['on'] ?? '') === '1' ? '1' : '0';
+          if (owSetSetting(OW_HIDDEN_PARTS[$part][0], $want)) { owLog('setting_change', null, null, OW_HIDDEN_PARTS[$part][0] . '=' . $want, ['type' => 'admin', 'id' => null]); $hidMsg = [$part, $want]; }
+      }
+  } ?>
+  <div class="card" id="hidden-parts"><h2><?= owBi('Hidden for now, to bring back later', 'مخفي الآن، يعود لاحقاً') ?></h2>
+    <p><?= owBi('While hidden: not in the menu, the footer, the sitemap or any link, and visitors who open the address see "page not found". You can still preview the pages. Nothing is deleted: the pages, the code, the tables and every saved request stay.', 'أثناء الإخفاء: لا تظهر في القائمة ولا في أسفل الموقع ولا في خريطة الموقع ولا في أي رابط، ومن يفتح العنوان يرى «الصفحة غير موجودة». تستطيع معاينة الصفحات. لا يُحذف شيء: الصفحات والبرمجة والجداول وكل الطلبات المحفوظة باقية.') ?></p>
+    <?php if ($hidMsg): ?><div class="alert alert-ok" role="status"><?= $hidMsg[1] === '1' ? owBi(OW_HIDDEN_PARTS[$hidMsg[0]][1] . ' is shown again.', OW_HIDDEN_PARTS[$hidMsg[0]][2] . ': ظاهرة الآن.') : owBi(OW_HIDDEN_PARTS[$hidMsg[0]][1] . ' is hidden.', OW_HIDDEN_PARTS[$hidMsg[0]][2] . ': مخفية الآن.') ?></div><?php endif; ?>
+    <ul class="rows">
+    <?php foreach (OW_HIDDEN_PARTS as $pk => [$pKey, $pEn, $pAr, $pUrl]): $pOn = owPartOn($pk); ?>
+      <li><span><?= owBi($pEn, $pAr) ?> <?= $pOn ? '<span class="pillx ok">' . owBi('Shown', 'ظاهرة') . '</span>' : '<span class="pillx no">' . owBi('Hidden', 'مخفية') . '</span>' ?></span>
+        <form method="post" action="admin.php?settings=1#hidden-parts" style="display:flex;gap:var(--space-xs);flex-wrap:wrap"><?= csrfField() ?><input type="hidden" name="do" value="part_switch"><input type="hidden" name="part" value="<?= e($pk) ?>"><input type="hidden" name="on" value="<?= $pOn ? '0' : '1' ?>">
+          <button class="btn <?= $pOn ? 'btn-secondary' : 'btn-primary' ?> btn-sm" type="submit"><?= $pOn ? owBi('Hide', 'إخفاء') : owBi('Show', 'إظهار') ?></button>
+          <a class="btn btn-ghost btn-sm" href="<?= e($pUrl) ?>" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a></form></li>
+    <?php endforeach; ?>
+    </ul>
+  </div>
   <div class="card"><h2><?= owBi('Sending to Bashro (website door)', 'الإرسال إلى بشرو (بوابة الموقع)') ?> <?= $doorOn ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('"I’m Interested", gift and commission requests go to Bashro Sales (project 3) after the visitor’s page is delivered. Never photos, passwords, card, ID or bank numbers.', 'تذهب طلبات «أنا مهتم» والهدايا والأعمال الخاصة إلى مبيعات بشرو (المشروع 3) بعد عرض صفحة الزائر. لا صور ولا كلمات مرور ولا أرقام بطاقات أو هويات أو حسابات بنكية أبداً.') ?></p>
     <ul class="rows">

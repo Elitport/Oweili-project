@@ -333,12 +333,13 @@ foreach ($modalArtworks as $aw) {
     @media(max-width:640px){ .mp-filters{grid-template-columns:1fr 1fr;padding:var(--space-sm);} .aotw{grid-template-columns:1fr;} .aotw-txt{padding:var(--space-md);} .cols-row{grid-auto-columns:72%;} }
 
     .mp-promos{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);margin:0 0 var(--space-lg);}
+    .mp-promos.one{grid-template-columns:1fr;}
     .mp-promo{display:flex;gap:var(--space-sm);align-items:center;padding:var(--space-md);text-decoration:none;color:var(--color-body);font-size:var(--fs-caption);}
     .mp-promo b{display:block;font-size:var(--fs-body);color:var(--color-dark);margin-bottom:2px;}
     .mp-promo svg{width:40px;height:40px;flex-shrink:0;padding:8px;border-radius:12px;background:var(--color-tint-pink);fill:none;stroke:var(--color-dark);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
     .m-gift{margin-inline-start:var(--space-sm);}
     @media(max-width:640px){ .mp-promos{grid-template-columns:1fr;} }
-    @keyframes mpRise {from{opacity:.7}to{opacity:1}}
+    @keyframes mpRise {from{opacity:1}to{opacity:1}}
     @media (prefers-reduced-motion: reduce){ .page-header,.human-banner,.mp-tools,.mp-card,.gallery-empty,.modal{animation:none;} .mp-card:hover,.mp-card:hover .aw-img img{transform:none;} }
     @media(max-width:1024px){ .art-grid{grid-template-columns:repeat(3,1fr);} }
     @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} .mp-search{max-width:none;} }
@@ -427,9 +428,10 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
 
   <?php if ($showcase): ?>
   <!-- GIFTS + PRIVATE COMMISSIONS -->
-  <div class="mp-promos">
-    <a class="card card-hover mp-promo" href="gifts.php"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg>
-      <span><b><?= $ar ? 'أهدِ ما يبقى' : 'Give a gift that lasts' ?></b><?= $ar ? 'زواج، تخرّج، مولود، عيد. نغلّفها ونوصلها.' : 'Weddings, graduations, new babies, Eid. We wrap and deliver.' ?></span></a>
+  <?php $mpGift = owGiftsPageOn();   /* Gifts hidden for now (6 Nov 2026): its card, the window's gift link */ ?>
+  <div class="mp-promos<?= $mpGift ? '' : ' one' ?>">
+    <?php if ($mpGift): ?><a class="card card-hover mp-promo" href="gifts.php"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg>
+      <span><b><?= $ar ? 'أهدِ ما يبقى' : 'Give a gift that lasts' ?></b><?= $ar ? 'زواج، تخرّج، مولود، عيد. نغلّفها ونوصلها.' : 'Weddings, graduations, new babies, Eid. We wrap and deliver.' ?></span></a><?php endif; ?>
     <?php if (is_file(__DIR__ . '/commission.php')): ?>
     <a class="card card-hover mp-promo" href="commission.php"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/><path d="M17 3l1 1.5L20 5l-1.5 1L18 8l-1-2-2-.5 2-1z"/></svg>
       <span><b><?= $ar ? 'عمل خاص من صورتك' : 'A private commission from your photo' ?></b><?= $ar ? 'بورتريه أو ذكرى، يرسمها فنان. صورك تبقى سرّية.' : 'A portrait or a memory, painted by an artist. Your photos stay confidential.' ?></span></a>
@@ -587,7 +589,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
         <?php if ($showFav): ?><button type="button" class="fav-btn fav-inline" id="m-fav" data-fav="" aria-pressed="false" aria-label="<?= e($favLbl['on']) ?>"><?= MP_HEART ?></button><?php endif; ?>
       </div>
       <a class="m-share" id="m-share" href="#" onclick="return shareArtwork(this)"><?= $ar ? 'شارك هذا العمل' : 'Share this artwork' ?></a>
-      <a class="m-share m-gift" id="m-gift" href="gifts.php"><?= $ar ? 'قدّمه هدية' : 'Give it as a gift' ?></a>
+      <?php if (owGiftsPageOn()): ?><a class="m-share m-gift" id="m-gift" href="gifts.php"><?= $ar ? 'قدّمه هدية' : 'Give it as a gift' ?></a><?php endif; ?>
       <!-- I'm Interested: name, phone, email → inquire.php -->
       <div class="m-interest">
         <button type="button" class="btn btn-primary btn-block" id="mi-open" onclick="openInterest()"><?= $ar ? 'أنا مهتم' : 'I’m Interested' ?></button>
@@ -660,7 +662,7 @@ function openModal(id){
   document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });
   resetInterest(id);
   document.getElementById('m-share').dataset.id = id;
-  document.getElementById('m-gift').href = 'gifts.php?artwork=' + id;
+  const mg = document.getElementById('m-gift'); if (mg) mg.href = 'gifts.php?artwork=' + id;
   /* one view for the artist's numbers (counted once a day per visitor) */
   try { const vf = new FormData(); vf.append('artwork_id', id); navigator.sendBeacon ? navigator.sendBeacon('view.php', vf) : fetch('view.php', {method:'POST', body:vf, credentials:'same-origin', keepalive:true}); } catch (e) {}
   const mf = document.getElementById('m-fav');

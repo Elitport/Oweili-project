@@ -15,7 +15,10 @@
  *  Tables: gift_requests (night_update.sql), artworks, users, activity_log
  * ===================================================================== */
 require_once 'config.php';
-require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
+/* Hidden for now, to bring back later (owner, 6 Nov 2026): visitors get "page not found",
+   a signed-in admin a preview. Switch: Admin → Settings → Gifts page (gallery_lib.php). */
+require_once __DIR__ . '/gallery_lib.php'; $owHidPrev = owHiddenPageGate('gifts');
+require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; if (!$owHidPrev) owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/request_lib.php';
 require_once __DIR__ . '/inquiry_lib.php';   // owInquiryArtwork: only artworks visitors can see
@@ -197,6 +200,7 @@ $v = fn(string $k) => e((string) $f[$k]);
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
+<?php if ($owHidPrev) echo owHiddenNotice(); ?>
 
 <main>
   <div class="d-wrap">

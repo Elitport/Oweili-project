@@ -142,8 +142,11 @@ details[open] .when-closed{display:none;}
       <p><?= owBi('Find the right place to learn art, close to home.', 'اعثر على المكان المناسب لتتعلّم الفن، قريباً منك.') ?></p>
     </header>
 
-    <!-- Upcoming Workshops (moved here from the retired Studio page). Planned, so "Coming Soon" + Notify Me (rule 25). -->
+    <?php /* Upcoming Workshops (moved here from the retired Studio page). Planned, so "Coming Soon" + Notify Me (rule 25).
+         Hidden for now, to bring back later (owner, 6 Nov 2026): Admin → Settings → Upcoming workshops. */ ?>
+    <?php require_once __DIR__ . '/gallery_lib.php'; require_once __DIR__ . '/admin_shell.php'; $wsOn = owWorkshopsOn(); if ($wsOn || owIsAdmin()): ?>
     <section class="ws" aria-labelledby="ws-h">
+      <?php if (!$wsOn): ?><div class="alert alert-error" role="status"><?= owBi('Preview for the admin: these workshop cards are hidden from visitors (Admin → Settings).', 'معاينة للإدارة: بطاقات الورش هذه مخفية عن الزوار (الإدارة ← الإعدادات).') ?></div><?php endif; ?>
       <div class="ws-head reveal">
         <h2 id="ws-h"><?= owBi('Upcoming Workshops', 'ورش العمل القادمة') ?></h2>
         <p><?= owBi('Hands-on workshops with Saudi art institutes are on their way. Be the first to know.', 'ورش عمل تطبيقية مع معاهد الفنون السعودية في الطريق. كن أول من يعرف.') ?></p>
@@ -211,6 +214,7 @@ details[open] .when-closed{display:none;}
         </article>
       </div>
     </section>
+    <?php endif; ?>
 
     <div class="dir-head reveal"><h2><?= owBi('Institutes Directory', 'دليل المعاهد') ?></h2></div>
 

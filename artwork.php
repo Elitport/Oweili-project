@@ -122,7 +122,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
     <?php endif; ?>
     <div class="aw-acts">
       <a class="btn btn-primary" href="<?= e($galleryLink) ?>"><?= owBi('I’m Interested', 'أنا مهتم') ?></a>
-      <a class="btn btn-secondary" href="gifts.php?artwork=<?= (int) $aw['id'] ?>"><?= owBi('Give it as a gift', 'قدّمه هدية') ?></a>
+      <?php require_once __DIR__ . '/gallery_lib.php'; if (owGiftsPageOn()): /* Gifts hidden for now (6 Nov 2026) */ ?><a class="btn btn-secondary" href="gifts.php?artwork=<?= (int) $aw['id'] ?>"><?= owBi('Give it as a gift', 'قدّمه هدية') ?></a><?php endif; ?>
       <a class="btn btn-secondary" href="marketplace.php<?= $ar ? '?lang=ar' : '' ?>"><?= owBi('See more in the Gallery', 'شاهد المزيد في المعرض') ?></a>
     </div>
     <p class="rights-note"><?= owBi(OW_CERT_RIGHTS[0], OW_CERT_RIGHTS[1]) ?></p>

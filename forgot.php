@@ -115,7 +115,7 @@ $okEn  = $okCode ? $OK[$okCode]['en'] : '';      $okAr  = $okCode ? $OK[$okCode]
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
-@keyframes riseUp {from{opacity:.7}to{opacity:1}}
+@keyframes riseUp {from{opacity:1}to{opacity:1}}
 </style>
 </head>
 <body>
