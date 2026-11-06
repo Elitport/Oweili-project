@@ -219,6 +219,7 @@ foreach ($modalArtworks as $aw) {
     .mp-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-sm);}
     .st-pills{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
     .mp-label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-inline-end:4px;}
+    .ow-backdrop ~ * .mp-label{display:inline-block;width:fit-content;padding:4px 12px;border-radius:var(--radius-card);background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);text-shadow:none;}
     .st-pill{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:var(--radius-pill);font-size:var(--fs-label);font-weight:600;text-decoration:none;color:var(--color-body);border:1px solid var(--color-border);background:transparent;transition:background var(--ease),color var(--ease);}
     .st-pill:hover{background:var(--color-hover-light);color:var(--color-dark);}
     .st-pill.active{color:var(--color-dark);border-color:var(--color-dark);background:var(--color-surface);}

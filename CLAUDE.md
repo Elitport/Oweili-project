@@ -124,6 +124,7 @@
 ### Gallery topic dropdown (6 Nov 2026)
 - Owner: the 10 topic buttons on the Gallery (All + the 9 topics) are now one dropdown list "Topic" / «الموضوع», "All" / «الكل» chosen by default, in the same centred column and at the same width as the search box. Choosing a topic opens the Gallery filtered the same way (?cat=<topic>, other choices kept); old ?cat= and ?type= links still work and show their topic in the list
 - Files: marketplace.php. Tables: none
+- Same day, owner: the Gallery labels «الموضوع» / «الحالة» / «الترتيب» (Topic / Status / Sort) sit on small frosted cards over the photo (the same glass as the other cards). The footer no longer repeats the top menu: the Gallery, Art Styles, Events, Institutes and Support links were removed; the logo, Privacy, Terms, the contact email and the © line stay (footer.php)
 
 ### Three dashboards + ready for Bashro — Phase 1 of 4 built: Buyer dashboard (needs dashboards_update.sql)
 - Plan (approved by the owner, 30 Oct 2026): Phase 1 Buyer dashboard + shared foundation, Phase 2 Artist dashboard upgrades, Phase 3 Admin dashboard upgrades (+ institutes tool), Phase 4 Bashro connection (read-only, secret key, off by default). After each phase: push, check the live site (phone + desktop, English + Arabic), short report with screenshots
