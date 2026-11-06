@@ -1,6 +1,6 @@
 <?php
 /* =====================================================================
- *  explore.php: Explore Art Styles, a calm art encyclopedia of the handmade styles (Digital and Photography hidden, 6 Nov 2026).
+ *  explore.php: Art Styles, a calm art encyclopedia of the handmade styles (Digital and Photography hidden, 6 Nov 2026).
  *  A grid of cards (filter: All + 6 categories). A card opens a window
  *  with 10 parts, ending with the newest artwork of that type from the
  *  Gallery (or a drawing when there is none yet).
@@ -48,12 +48,12 @@ try {
 $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
 ?>
 <!DOCTYPE html>
-<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Explore Art Styles · Oweili" data-title-ar="استكشف أساليب الرسم · أويلي">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Art Styles · Oweili" data-title-ar="أساليب الرسم · أويلي">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Explore Art Styles', 'ar' => 'استكشف أساليب الرسم', 'desc_en' => 'Handmade art styles and their stories. Learn the story behind every style.', 'desc_ar' => 'أساليب الفن اليدوي وحكاياتها. تعرّف على قصة كل أسلوب.', 'path' => 'explore.php']); ?>
-<meta property="og:title" content="Explore Art Styles · استكشف أساليب الرسم · Oweili">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Art Styles', 'ar' => 'أساليب الرسم', 'desc_en' => 'Handmade art styles and their stories. Learn the story behind every style.', 'desc_ar' => 'أساليب الفن اليدوي وحكاياتها. تعرّف على قصة كل أسلوب.', 'path' => 'explore.php']); ?>
+<meta property="og:title" content="Art Styles · أساليب الرسم · Oweili">
 <meta property="og:description" content="Learn the story behind every style. Know what you are looking at.">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
@@ -66,7 +66,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <script defer src="<?= owAsset('assets/js/art_covers.js') ?>"></script>
 <script defer src="<?= owAsset('assets/js/explore.js') ?>"></script>
 <style>
-/* Explore Art Styles — layout only. Colors, type and buttons come from oweili.css. */
+/* Art Styles — layout only. Colors, type and buttons come from oweili.css. */
 .ex-head { margin-bottom: var(--space-lg); }
 .ex-head h1 { font-weight: 300; letter-spacing: -0.02em; }
 [dir="rtl"] .ex-head h1 { letter-spacing: 0; }
@@ -236,7 +236,7 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
 <main>
   <div class="d-wrap">
     <header class="d-head ex-head reveal">
-      <h1><?= owBi('Explore Art Styles', 'استكشف أساليب الرسم') ?></h1>
+      <h1><?= owBi('Art Styles', 'أساليب الرسم') ?></h1>
       <p><?= owBi('Learn the story behind every style. Know what you are looking at.', 'تعرّف على قصة كل أسلوب. اعرف ما تراه.') ?></p>
     </header>
 

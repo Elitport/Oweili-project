@@ -455,7 +455,7 @@ const T={
     abstract:'Abstract',landscape:'Landscape',portrait:'Portrait',other:'Other',
     cardEdit:'Edit',cardDelete:'Delete',rejected:'Not approved',
     available:'Available',sold:'Sold',auction:'Auction',sar:'SAR',
-    nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+    nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',
     profileTitle:'الملف الشخصي للفنان',worksTitle:'الأعمال الفنية',uploadTitle:'عمل فني جديد',start:'ابدأ عملاً فنياً جديداً',startDesc:'اعرض الرحلة الحقيقية لعملك: صوّره عند 25% و50% و100%. يُحفظ تقدّمك بعد كل خطوة.',draftsTitle:'مسودات قيد العمل',cardContinue:'متابعة',review:'قيد المراجعة',
@@ -466,7 +466,7 @@ const T={
     abstract:'تجريدي',landscape:'طبيعي',portrait:'بورتريه',other:'أخرى',
     cardEdit:'تعديل',cardDelete:'حذف',rejected:'لم تتم الموافقة',
     available:'متاح',sold:'مباع',auction:'مزاد',sar:'ر.س',
-    nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';

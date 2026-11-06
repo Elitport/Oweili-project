@@ -1,7 +1,7 @@
 <?php
 /* =====================================================================
  *  studio.php: The Studio page is retired (owner's request).
- *  Old links and bookmarks are sent to Explore Art Styles with a
+ *  Old links and bookmarks are sent to Art Styles with a
  *  permanent redirect. The workshop ideas now live on institutes.php
  *  ("Upcoming Workshops"). Do not add content here.
  * ===================================================================== */

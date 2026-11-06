@@ -28,7 +28,7 @@
 /* The menu words that carry an id instead of data-en / data-ar (nav.php) */
 if (!defined('OW_LANG_IDS')) define('OW_LANG_IDS', [
     'nav-community-label' => 'المجتمع', 'nav-marketplace-label' => 'المعرض',
-    'nav-explore-label' => 'استكشف أساليب الرسم', 'nav-support-label' => 'الدعم',
+    'nav-explore-label' => 'أساليب الرسم', 'nav-support-label' => 'الدعم',
     'dd-sp1' => 'تواصل معنا', 'dd-sp2' => 'كيف يعمل الموقع', 'dd-sp3' => 'شروط الاستخدام',
     'n-login-t' => 'تسجيل الدخول', 'n-reg-t' => 'انضم مجاناً', 'lb' => 'English',
 ]);

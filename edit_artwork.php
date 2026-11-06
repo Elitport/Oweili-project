@@ -299,13 +299,13 @@ let L = 'en';
 
 /* Bilingual nav + labels */
 const NAV={
-  en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+  en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free',
     title:'Edit Artwork',sub:'Update the details of your artwork.',
     ten:'Title in English',tar:'Title in Arabic',den:'Description in English',dar:'Description in Arabic',
     price:'Price in SAR',type:'Type',status:'Status',img:'Replace Image (optional, JPG/PNG/WEBP, max 5MB)',
     save:'Save Changes',cancel:'Cancel'},
-  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً',
     title:'تعديل العمل الفني',sub:'حدّث تفاصيل عملك الفني.',
     ten:'العنوان بالإنجليزية',tar:'العنوان بالعربية',den:'الوصف بالإنجليزية',dar:'الوصف بالعربية',

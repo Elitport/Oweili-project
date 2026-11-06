@@ -1,5 +1,5 @@
 /* =====================================================================
- *  explore.js — Explore Art Styles (explore.php)
+ *  explore.js — Art Styles (explore.php)
  *  - draws the grid of style cards from art_styles.js (the one data source)
  *  - the filter bar (All + 6 categories, each with its count)
  *  - the style window (a <dialog>) with 10 parts: name, essence, story,

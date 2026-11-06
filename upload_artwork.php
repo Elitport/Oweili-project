@@ -520,7 +520,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 
 <script src="<?= owAsset('assets/js/art_covers.js') ?>"></script>
 <script>
-/* Draw the example picture on every art type card (same drawings as Explore Art Styles) */
+/* Draw the example picture on every art type card (same drawings as Art Styles) */
 if (window.OW_ART_COVER) document.querySelectorAll('.tp-art[data-style]').forEach(function (el) {
   el.innerHTML = window.OW_ART_COVER(el.getAttribute('data-style'), '', false);
 });
@@ -530,11 +530,11 @@ if (window.OW_ART_COVER) document.querySelectorAll('.tp-art[data-style]').forEac
    updates every .nav-i18n text. The menu's own labels are set here too. */
 var NAV_T = {
   en: {'nav-community-label':'Community','nav-marketplace-label':'Gallery',
-       'nav-explore-label':'Explore Art Styles','nav-support-label':'Support',
+       'nav-explore-label':'Art Styles','nav-support-label':'Support',
        
        'dd-sp1':'Contact Us','dd-sp2':'How It Works','dd-sp3':'Terms of Use','lb':'العربية'},
   ar: {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
-       'nav-explore-label':'استكشف أساليب الرسم','nav-support-label':'الدعم',
+       'nav-explore-label':'أساليب الرسم','nav-support-label':'الدعم',
        
        'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام','lb':'English'}
 };

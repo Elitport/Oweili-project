@@ -276,7 +276,7 @@ const T={
     pass:'Password',confirm:'Confirm password',
     rlen:'Minimum 8 characters',rupper:'At least one uppercase letter',rnum:'At least one number',rspec:'At least one special character (!@#$%^&*)',
     submit:'Send for Review',have:'Already one of us?',login:'Sign In',
-    nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+    nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',title:'انضم إلينا كفنان',sub:'سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.',
     first:'الاسم الأول',last:'اسم العائلة',artist:'اسمك الفني (الاسم الذي سيراه الناس)',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
@@ -289,7 +289,7 @@ const T={
     pass:'كلمة المرور',confirm:'تأكيد كلمة المرور',
     rlen:'الحد الأدنى 8 أحرف',rupper:'حرف كبير واحد على الأقل',rnum:'رقم واحد على الأقل',rspec:'رمز خاص واحد على الأقل (!@#$%^&*)',
     submit:'أرسل للمراجعة',have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
-    nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';

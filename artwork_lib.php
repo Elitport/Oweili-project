@@ -36,7 +36,7 @@ function owColors(): array {
 }
 
 /* The groups of the style lists (Gallery "More filters", profile styles), in the same order and
-   words as Explore Art Styles. Digital and Photography are hidden (owner, 6 Nov 2026: handmade only). */
+   words as Art Styles. Digital and Photography are hidden (owner, 6 Nov 2026: handmade only). */
 function owStyleGroups(): array {
     return [
         'traditional'  => ['en' => 'Traditional',             'ar' => 'تقليدي'],

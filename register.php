@@ -68,13 +68,13 @@ const T={
     aTitle:'I am an Artist',aDesc:'Share your work and sell it to people who care. We review every artist by hand. You will need a photo, a few artworks and a short video.',aGo:'Join as Artist',
     cTitle:'I am a Collector',cDesc:'Find art made by real hands and bring it home. Signing up takes a minute.',cGo:'Join as Collector',
     have:'Already one of us?',login:'Sign In',
-    nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+    nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',h1:'انضم إلى <em>أويلي</em>',sub:'اختر كيف تحب أن تنضم إلينا.',
     aTitle:'أنا فنان',aDesc:'شارك أعمالك وبِعها لمن يقدّرها. نراجع كل فنان بعناية. ستحتاج صورة وبعض أعمالك ومقطعاً قصيراً.',aGo:'انضم كفنان',
     cTitle:'أنا مقتنٍ',cDesc:'اعثر على فن صنعته أيدٍ حقيقية، وخذه إلى بيتك. التسجيل يستغرق دقيقة.',cGo:'انضم كمقتنٍ',
     have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
-    nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';

@@ -148,12 +148,12 @@ const T={
   en:{dir:'ltr',lb:'العربية',title:'Sign In',sub:'Welcome back to Oweili',
     email:'Email',pass:'Password',remember:'Remember me',forgot:'Forgot password?',
     submit:'Sign In',noacc:"Don't have an account?",joinlink:'Join Free',show:'SHOW',hide:'HIDE',
-    nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+    nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',title:'تسجيل الدخول',sub:'مرحباً بعودتك إلى أويلي',
     email:'البريد الإلكتروني',pass:'كلمة المرور',remember:'تذكرني',forgot:'نسيت كلمة المرور؟',
     submit:'تسجيل الدخول',noacc:'ليس لديك حساب؟',joinlink:'انضم مجاناً',show:'إظهار',hide:'إخفاء',
-    nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';

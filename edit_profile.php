@@ -247,13 +247,13 @@ const T={
     photo:'Profile picture (JPG/PNG, max 5MB)',nen:'Artist name (English)',nar:'Artist name (Arabic)',
     city:'City',phone:'Phone number',ben:'Bio (English)',bar:'Bio (Arabic)',ig:'Instagram',tw:'Twitter / X',web:'Website',
     save:'Save Changes',cancel:'Cancel',
-    nav:{community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+    nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',title:'تعديل الملف الشخصي',sub:'حدّث ملفك الشخصي العام كفنان.',
     photo:'الصورة الشخصية (JPG/PNG، بحد أقصى 5 ميجابايت)',nen:'اسم الفنان (بالإنجليزية)',nar:'اسم الفنان (بالعربية)',
     city:'المدينة',phone:'رقم الهاتف',ben:'نبذة (بالإنجليزية)',bar:'نبذة (بالعربية)',ig:'إنستغرام',tw:'تويتر / X',web:'الموقع الإلكتروني',
     save:'حفظ التغييرات',cancel:'إلغاء',
-    nav:{community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';

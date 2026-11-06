@@ -27,7 +27,7 @@
  *
  *  Where (owner, 6 Nov 2026): hand painting the landscape → Gallery; brushes
  *  in jars → Join as an artist; hand on the palette → Commissions; paint
- *  buckets → Explore Art Styles; woman looking at framed paintings → Art
+ *  buckets → Art Styles; woman looking at framed paintings → Art
  *  Events, Artist Spotlights, Art Education, articles and Institutes; studio
  *  table → Support; pink palette → Sign in and the Join pages (and Gifts);
  *  paint-splattered cloth → the 404 page.

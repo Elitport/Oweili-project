@@ -146,10 +146,10 @@ const T={
 };
 let L='en';
 const NAV={
-  en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+  en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',
     login:'Sign In',reg:'Join Free'},
-  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
     login:'تسجيل الدخول',reg:'انضم مجاناً'}
 };

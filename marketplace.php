@@ -36,7 +36,7 @@ $MEDIUMS = owMediumFilters(); $PRICES = owPriceFilters(); $SIZES = owSizeFilters
 $CITIES  = owGalleryCities();
 $hasDims = owHasColumn('artworks', 'size_category') && owHasColumn('artworks', 'orientation');   // the standard sizes (size_lib.php)
 $hasMed  = owHasColumn('artworks', 'medium');
-$initType = isset($ART_TYPES[$getStr('type')]) ? $getStr('type') : '';      // one exact type (links from Explore Art Styles)
+$initType = isset($ART_TYPES[$getStr('type')]) ? $getStr('type') : '';      // one exact type (links from Art Styles)
 $cat      = isset($ART_CATS[$getStr('cat')]) ? $getStr('cat') : 'all';
 if ($initType !== '') {                                                      // light up the category that holds this type
     $cat = 'all';
@@ -364,7 +364,7 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
 <?php if ($ar): ?>
 (function(){
   var t = {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
-    'nav-explore-label':'استكشف أساليب الرسم','nav-support-label':'الدعم',
+    'nav-explore-label':'أساليب الرسم','nav-support-label':'الدعم',
     
     'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام',
     'n-login-t':'تسجيل الدخول','n-reg-t':'انضم مجاناً','lb':'English'};

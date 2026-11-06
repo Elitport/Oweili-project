@@ -177,14 +177,14 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 let L='en';
 const MODE = <?= json_encode($mode) ?>;
 const NAV={
-  en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Explore Art Styles',support:'Support',
+  en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free',
     titleReq:'Reset password',subReq:"Enter your email and we'll send a reset link.",
     titleRes:'Set a new password',subRes:'Choose a new password for your account.',
     email:'Email',pass:'New password',conf:'Confirm password',
     r1:'Minimum 8 characters',r2:'At least one uppercase letter',r3:'At least one number',r4:'At least one special character (!@#$%^&*)',
     sendBtn:'Send Reset Link',resetBtn:'Reset Password',go:'Go to Sign In',back:'Back to Sign In'},
-  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'استكشف أساليب الرسم',support:'الدعم',
+  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً',
     titleReq:'إعادة تعيين كلمة المرور',subReq:'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.',
     titleRes:'تعيين كلمة مرور جديدة',subRes:'اختر كلمة مرور جديدة لحسابك.',

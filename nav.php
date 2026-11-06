@@ -64,7 +64,7 @@ if (!function_exists('owLogoMark')) {
       </div>
     </div>
 <?php endif; ?>
-    <div class="nav-item"><a href="explore.php" id="nav-explore-link"<?= navAct('explore') ?>><span id="nav-explore-label">Explore Art Styles</span></a></div>
+    <div class="nav-item"><a href="explore.php" id="nav-explore-link"<?= navAct('explore') ?>><span id="nav-explore-label">Art Styles</span></a></div>
     <?php /* the old Discover items, straight in the menu (owner, 6 Nov 2026) */ ?>
     <div class="nav-item"><a href="articles_list.php?type=event" id="nav-events-link"<?= navAct('art_event') ?>><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a></div>
 <?php if ($owSpotOn): ?>    <div class="nav-item"><a href="articles_list.php?type=artist_spotlight"<?= navAct('art_artist_spotlight') ?>><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a></div><?php endif; ?>
@@ -103,7 +103,7 @@ if (!function_exists('owLogoMark')) {
 <?php if ($owGiftOn): ?>    <a class="mnav-link mnav-sub" href="gifts.php"><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a><?php endif; ?>
 <?php if ($owCommOn): ?>    <a class="mnav-link mnav-sub" href="commission.php"><span class="nav-i18n" data-en="Commissions" data-ar="طلب لوحة خاصة">Commissions</span></a><?php endif; ?>
 <?php if ($owAucOn): ?>    <a class="mnav-link mnav-sub" href="auctions.php"><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span> <span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a><?php endif; ?><?php endif; /* the Collect group */ ?>
-    <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Explore Art Styles" data-ar="استكشف أساليب الرسم">Explore Art Styles</span></a>
+    <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Styles" data-ar="أساليب الرسم">Art Styles</span></a>
     <a class="mnav-link" href="articles_list.php?type=event"<?= navAct('art_event') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
 <?php if ($owSpotOn): ?>    <a class="mnav-link" href="articles_list.php?type=artist_spotlight"<?= navAct('art_artist_spotlight') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a><?php endif; ?>
     <a class="mnav-link" href="articles_list.php?type=art_education"<?= navAct('art_art_education') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a>
@@ -149,7 +149,7 @@ if (!function_exists('owLogoMark')) {
   var NAV_WORDS = {
     'nav-community-label':   ['Community', 'المجتمع'],
     'nav-marketplace-label': ['Gallery', 'المعرض'],
-    'nav-explore-label':     ['Explore Art Styles', 'استكشف أساليب الرسم'],
+    'nav-explore-label':     ['Art Styles', 'أساليب الرسم'],
     'nav-support-label':     ['Support', 'الدعم'],
     'dd-sp1': ['Contact Us', 'تواصل معنا'], 'dd-sp2': ['How It Works', 'كيف يعمل الموقع'], 'dd-sp3': ['Terms of Use', 'شروط الاستخدام'],
     'n-login-t': ['Sign In', 'تسجيل الدخول'], 'n-reg-t': ['Join Free', 'انضم مجاناً'], 'lb': ['العربية', 'English']
