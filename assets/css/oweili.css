@@ -599,3 +599,7 @@ html.dark-mode :is(.ow-backdrop ~ * .card, .ow-backdrop ~ .card, .ow-backdrop ~ 
 .ow-backdrop ~ * :is(.card, .btn, input, select, textarea) :is(h1, h2, h3, p, li, label, legend, dt, dd, small),
 .ow-backdrop ~ * :is(.btn) { text-shadow: none; }
 @media print { .ow-backdrop { display: none; } }
+/* small lines that sit straight on a photo (Gallery handmade line, Explore style count) get the frosted card too (6 Nov 2026) */
+.ow-backdrop ~ * :is(.human-banner, .sc-count) { width: fit-content; max-width: 100%; margin-left: auto; margin-right: auto; padding: 8px 18px; border-radius: var(--radius-card); background: var(--studio-glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15); color: var(--color-dark); }
+.ow-backdrop ~ * .sc-count:empty { display: none; }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .ow-backdrop ~ * :is(.human-banner, .sc-count) { background: var(--color-surface); } }
