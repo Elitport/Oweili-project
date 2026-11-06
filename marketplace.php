@@ -226,6 +226,10 @@ foreach ($modalArtworks as $aw) {
     .mp-sort select{min-height:40px;padding:0 36px 0 12px;border-radius:var(--radius-input);border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);font-size:var(--fs-label);font-weight:600;cursor:pointer;}
     [dir="rtl"] .mp-sort select{padding:0 12px 0 36px;}
     .mp-sort select:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
+    .mp-topic{display:flex;flex-direction:column;gap:6px;max-width:460px;}
+    .mp-topic select{width:100%;min-height:48px;padding:0 36px 0 12px;border-radius:var(--radius-input);border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);font-size:var(--fs-label);font-weight:600;cursor:pointer;}
+    [dir="rtl"] .mp-topic select{padding:0 12px 0 36px;}
+    .mp-topic select:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
     .type-chip{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:32px;padding:0 12px;border-radius:var(--radius-pill);font-size:var(--fs-label);font-weight:600;text-decoration:none;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.2);}
     .type-chip span{font-size:16px;line-height:1;}
     .mp-count{font-size:var(--fs-label);color:var(--color-body);margin:0 0 var(--space-sm);}
@@ -350,7 +354,7 @@ foreach ($modalArtworks as $aw) {
       [dir] .page-header{margin-left:auto;margin-right:auto;text-align:center;}
       [dir] .page-header p{margin-left:auto;margin-right:auto;text-align:center;}
       .mp-tools{max-width:420px;margin-left:auto;margin-right:auto;}
-      .mp-search{max-width:none;}
+      .mp-search,.mp-topic{max-width:none;}
       .cat-pills,.st-pills,.mp-row{justify-content:center;}
       .mp-more{text-align:center;}
       .mp-more .mp-filters{grid-template-columns:1fr 1fr;text-align:start;}
@@ -358,7 +362,7 @@ foreach ($modalArtworks as $aw) {
       .mp-count{text-align:center;}
       .gallery-empty{max-width:420px !important;}
     }
-    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} .mp-search{max-width:none;} }
+    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} .mp-search,.mp-topic{max-width:none;} }
     @media(max-width:640px){ .art-grid{grid-template-columns:repeat(2,1fr);} }
     @media(max-width:420px){ .mp-card .aw-body{padding:12px;} .mp-card .btn{padding:0 8px;} .cat-pill{padding:0 14px;} }
   </style>
@@ -465,12 +469,17 @@ function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'e
       <button type="submit" class="btn btn-secondary"><?= $ar ? 'ابحث' : 'Search' ?></button>
     </form>
 
-    <!-- 6 CATEGORIES -->
-    <nav class="cat-pills" aria-label="<?= $ar ? 'الفئات' : 'Categories' ?>">
-      <?php foreach ($ART_CATS as $ck => $cv): ?>
-      <a class="cat-pill<?= $cat === $ck ? ' active' : '' ?>" href="<?= e(mpUrl(['cat' => $ck, 'type' => ''])) ?>"<?= $cat === $ck ? ' aria-current="page"' : '' ?>><?= e($ar ? $cv['ar'] : $cv['en']) ?></a>
-      <?php endforeach; ?>
-    </nav>
+    <!-- TOPIC: one dropdown list (was 10 buttons), same filter as before -->
+    <form class="mp-topic" method="get" action="marketplace.php">
+      <?= mpHidden(['cat', 'type']) ?>
+      <label class="mp-label" for="mpTopic"><?= $ar ? 'الموضوع' : 'Topic' ?></label>
+      <select id="mpTopic" name="cat" onchange="this.form.submit()">
+        <?php foreach ($ART_CATS as $ck => $cv): ?>
+        <option value="<?= e($ck) ?>"<?= $cat === $ck ? ' selected' : '' ?>><?= e($ar ? $cv['ar'] : $cv['en']) ?></option>
+        <?php endforeach; ?>
+      </select>
+      <noscript><button type="submit" class="btn btn-secondary btn-sm"><?= $ar ? 'عرض' : 'Show' ?></button></noscript>
+    </form>
 
     <?php if ($initType !== ''): $tl = $ART_TYPES[$initType]; ?>
     <a class="type-chip" href="<?= e(mpUrl(['type' => ''])) ?>" aria-label="<?= $ar ? 'إزالة هذا الأسلوب' : 'Remove this style' ?>"><?= e($ar ? $tl['ar'] : $tl['en']) ?> <span aria-hidden="true">×</span></a>

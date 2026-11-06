@@ -121,6 +121,10 @@
 
 ## Features
 
+### Gallery topic dropdown (6 Nov 2026)
+- Owner: the 10 topic buttons on the Gallery (All + the 9 topics) are now one dropdown list "Topic" / «الموضوع», "All" / «الكل» chosen by default, in the same centred column and at the same width as the search box. Choosing a topic opens the Gallery filtered the same way (?cat=<topic>, other choices kept); old ?cat= and ?type= links still work and show their topic in the list
+- Files: marketplace.php. Tables: none
+
 ### Three dashboards + ready for Bashro — Phase 1 of 4 built: Buyer dashboard (needs dashboards_update.sql)
 - Plan (approved by the owner, 30 Oct 2026): Phase 1 Buyer dashboard + shared foundation, Phase 2 Artist dashboard upgrades, Phase 3 Admin dashboard upgrades (+ institutes tool), Phase 4 Bashro connection (read-only, secret key, off by default). After each phase: push, check the live site (phone + desktop, English + Arabic), short report with screenshots
 - Buyer dashboard (collector_dashboard.php, «لوحة المشتري»): greeting, 3 number boxes (My requests, Favorites, Member since) and 5 tabs: My requests (every "I’m Interested" request with its status New / Contacted / In progress / Closed — «جديد / تم التواصل / قيد المتابعة / مغلق»), Favorites (hearts; the heart removes), Profile (name, phone, country, city, preferred language), Email & password, Purchases (purchase history; payments come in Sprint 4). A banner asks to confirm the email, with "Send the link again" (3 per hour). Only the buyer's own data; artists and staff are sent to their own dashboard
@@ -773,6 +777,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - assets/js/art_styles.js is the single source for all art style data — never duplicate it. Pages load the file instead of copying the content
 - config.php must never be added to GitHub
 - Always confirm before making changes to database structure
+- STRICT RULE (owner, 6 Nov 2026, standing rule for every task): change ONLY what the owner asks for. Do not change anything else: no photos, colors, text, layout, menu, footer, sizes or other pages. If something else seems to need changing, ask the owner first and wait for the answer
 
 ## Design Rules (apply to every page you create or edit)
 
