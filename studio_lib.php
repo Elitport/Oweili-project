@@ -86,6 +86,11 @@ const OW_STUDIO = [
         'A stack of open books seen from the side, in black and white',
         'كومة من الكتب المفتوحة من الجانب، بالأبيض والأسود',
         'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAXACQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDBU63kFLq4B92UD/0Krf8ApuBJPqN4hIwYkeNsn1BZjgdOKj1OTwvHeC1Fv5gOA1xbyMQpPf3xU0GgwWkhe9vYIBHIRbPbR+bLJj+LC8gDPUmgCWzspL12NzFdX0CLuVbiFEQHsfMVh6HirJTUmXbZWmnkD/lnDBC+PzfNQ2mn2z7zb6/dBepxbOMe7c4z+NI2h6CHLy6ldtIerrEgOfXqTQAS2uuK+DommufUwRf0NFSrZaMgx/beqH/tsR+gNFAGbZ6ldTsrrPfzJnkCby8/ju4/KnOl2fm+ybifvGSUNuPqcg0UUAJ5rbs6i0kUESkhbTYC5PY/KMfXtVa6vbCK2FwdCi8ottV5rl3Zj+FFFAFIa1px5Gk2a+2ZP8aKKKAP/9k='],
+    // the owner's photo for the 404 page (6 Nov 2026): a visitor walking alone through a dark gallery arch
+    'gallery-arch' => [[640, 1280, 1920, 2000], 2000, 1999,
+        'A visitor walking alone through a dark gallery arch towards framed paintings, in black and white',
+        'زائر يمشي وحده عبر قوس معرض مظلم نحو لوحات مؤطرة، بالأبيض والأسود',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAkACQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzGnbTxx1pKvWtrcyx+ZFavOqA529h9KAKJGOtJT2YMWLKck/lTaACiiigCS2TzJ1X1rtNAijtYk82FyPmP+yw2jr+PSuV0doY7wS3DAKtdpBqOnzR4Eq5Ix1xigDjdcaN9Yu2hQKhk6Dpnv8ArWfXT6lZ2rCTyWUk8nnqa52WBos7gcdjQBFRRRQAUBiOhIoooAeJ5R/Gaazsx+Yk0UUAJRRRQB//2Q=='],
 ];
 /* The part of each photo that always stays in view when the photo fills the screen (owner,
    6 Nov 2026): "x% y%" of the photo, aimed at its main subject. A phone (tall screen) keeps the
@@ -102,7 +107,8 @@ const OW_STUDIO_FOCUS = [
     'art-book'      => '50% 45%',   // the open art book and the hand turning its page
     'easels-class'  => '42% 55%',
     'museum-walk'   => '50% 50%',   // the visitors walking down the hall between the reliefs
-    'open-books'    => '50% 50%',   // the open pages   // the row of easels with their canvases
+    'open-books'    => '50% 50%',   // the open pages
+    'gallery-arch'  => '40% 48%',   // the visitor in the lit arch   // the row of easels with their canvases
 ];
 /* The tiny first frames of the homepage videos (their blurred fill, index.php) */
 const OW_HERO_TINY = [

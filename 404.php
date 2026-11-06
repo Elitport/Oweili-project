@@ -31,10 +31,15 @@ $ar404 = owIsAr();
 .nf h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
 .nf p{color:var(--color-body);margin:0 0 var(--space-md);}
 .nf .acts{display:flex;gap:var(--space-xs);justify-content:center;flex-wrap:wrap;}
+/* the photo's visitor walks through the arch left of centre: the card never covers them (owner, 6 Nov 2026).
+   Wide screens: the card sits on the right side. Tall screens (phones): the card sits at the bottom */
+@media (min-aspect-ratio: 1/1) and (min-width: 900px) { .nf{justify-content:flex-end;padding-left:6vw;padding-right:6vw;} [dir="rtl"] .nf{justify-content:flex-start;} }
+@media (max-aspect-ratio: 1/1) { .nf{box-sizing:border-box;min-height:100vh;min-height:100svh;align-items:flex-end;padding-top:calc(var(--nav-h) + var(--space-sm));padding-bottom:var(--space-sm);}
+  .nf .card{padding:var(--space-md) var(--space-sm);} .nf .num{font-size:44px;margin-bottom:var(--space-xs);} .nf h1{font-size:22px;} .nf p{margin-bottom:var(--space-sm);} }
 </style>
 </head>
 <body>
-<?php /* plain page background for now, until the owner sends a new wide photo (6 Nov 2026) */ ?>
+<?= owStudioBackdrop('gallery-arch') /* the owner's photo: a visitor walking alone through a dark gallery arch (6 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
