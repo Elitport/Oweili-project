@@ -2,8 +2,8 @@
 /* =====================================================================
  *  index.php — Oweili homepage: one full-screen hero, nothing else.
  *  Background: one real Pexels video, looping, filling the whole screen (owner, 6 Nov 2026):
- *  computers get the wide blue hand painting dots (assets/video/hero-wide.mp4), phones (640 px
- *  and narrower) only the owner's tall pink brush (hero-pink-tall.mp4). A still frame of the
+ *  the wide blue hand painting dots (assets/video/hero-wide.mp4). Phones (640 px and narrower,
+ *  owner 7 Nov 2026) show it whole under the menu with the card below. A still frame of the
  *  same video shows at once
  *  (and alone on slow connections, Data Saver or
  *  reduced motion). The text sits on a small frosted-glass card so it reads clearly. Badge, headline,
@@ -49,7 +49,24 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 .hero-bg video.on { opacity: 1; }
 .hero-still, .hero-still img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .hero-still img { object-fit: cover; object-position: 66% 50%; display: block; }
-@media (max-width: 640px) { .hero-bg video, .hero-still img { object-position: 50% 50%; } }   /* phones: the tall pink brush, centred */
+/* PHONES (owner, 7 Nov 2026): the same wide blue video as computers, shown WHOLE at full screen width
+   just under the menu (16:9, no zoom, no crop), like the photo pages on phones. Its bottom fades softly
+   into a colour taken from the video's own bottom edge (#6b5551), which fills the rest of the screen,
+   and the title card sits below the video. Dark mode: the same dimming as computers (oweili.css,
+   brightness 72% on the whole layer, so the video and the colour match). Computers unchanged. */
+@media (max-width: 640px) {
+  /* the colour fills the whole page; the page may scroll a little so the card is never cut off */
+  html { background: #6b5551 !important; }
+  html.dark-mode { background: color-mix(in srgb, #6b5551 72%, #000) !important; }
+  html, body { height: auto; }
+  body { max-height: none; overflow-y: visible; background: transparent !important; }
+  .hero-bg { position: absolute; bottom: auto; height: calc(var(--nav-h) + 100vw * 9 / 16); background-color: #6b5551; }
+  .hero-bg video, .hero-still { top: var(--nav-h); bottom: auto; height: calc(100vw * 9 / 16); }
+  .hero-bg video, .hero-still img { object-position: 50% 50%; }
+  .hero-bg::after { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--nav-h) + 100vw * 9 / 16 * 0.7); height: calc(100vw * 9 / 16 * 0.3 + 1px);
+    background: linear-gradient(to bottom, rgba(107,85,81,0), #6b5551); pointer-events: none; }
+  main.hero { align-items: flex-start; min-height: 0; padding-top: calc(var(--nav-h) + 100vw * 9 / 16 + var(--space-md)); }
+}
 
 .hero {
   position: relative; z-index: 2;
@@ -125,14 +142,13 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 <?php require_once __DIR__ . '/studio_lib.php'; ?>
 <?php /* the still frame's tiny copy fills the screen the moment the page opens (no white flash) */ ?>
 <div class="hero-bg" aria-hidden="true">
-  <style>.hero-bg{background:url(<?= OW_HERO_TINY['blue'] ?>) 66% 50% / cover no-repeat}@media (max-width:640px){.hero-bg{background:url(<?= OW_HERO_TINY['pink-tall'] ?>) 50% 50% / cover no-repeat}}</style>
+  <style>.hero-bg{background:url(<?= OW_HERO_TINY['blue'] ?>) 66% 50% / cover no-repeat}@media (max-width:640px){.hero-bg{background:url(<?= OW_HERO_TINY['blue'] ?>) 50% var(--nav-h) / 100% auto no-repeat #6b5551}}</style>
   <picture class="hero-still">
-    <source media="(max-width: 640px)" type="image/avif" srcset="<?= owAsset('assets/img/hero/hero-pink-tall.avif') ?>"><source media="(max-width: 640px)" type="image/webp" srcset="<?= owAsset('assets/img/hero/hero-pink-tall.webp') ?>"><source media="(max-width: 640px)" srcset="<?= owAsset('assets/img/hero/hero-pink-tall.jpg') ?>">
     <source type="image/avif" srcset="<?= owAsset('assets/img/hero/hero-wide.avif') ?>"><source type="image/webp" srcset="<?= owAsset('assets/img/hero/hero-wide.webp') ?>">
     <img src="<?= owAsset('assets/img/hero/hero-wide.jpg') ?>" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="sync">
   </picture>
-  <?php /* one video only (owner, 6 Nov 2026): computers the wide blue hand painting dots, phones the owner's tall pink brush */ ?>
-  <video id="vid" class="bg-now" autoplay muted loop playsinline preload="none" data-src="<?= owAsset('assets/video/hero-wide.mp4') ?>" data-src-phone="<?= owAsset('assets/video/hero-pink-tall.mp4') ?>"></video>
+  <?php /* one video only: the wide blue hand painting dots, on computers and (since 7 Nov 2026) on phones too */ ?>
+  <video id="vid" class="bg-now" autoplay muted loop playsinline preload="none" data-src="<?= owAsset('assets/video/hero-wide.mp4') ?>"></video>
 </div>
 </div>
 

@@ -50,12 +50,31 @@
     return window.OW_ART_COVER ? window.OW_ART_COVER(s.id, s.en.name + ' · ' + s.ar.name, fit) : '';
   }
 
+  /* ---------- real artworks (art_photos.js): one free, credited artwork per style; the drawing stays where there is none ---------- */
+  var LIC_AR = { 'Public domain': 'ملكية عامة', 'CC0': 'CC0 (ملكية عامة)' };
+  function photo(s, big) {
+    var p = window.OW_ART_PHOTO && window.OW_ART_PHOTO[s.id];
+    if (!p) return '';
+    var b = window.OW_STYLE_IMG || '/assets/img/styles/';
+    var f = b + s.id + (big ? '' : '-s');   // cards get the small copy, the window the larger one
+    return '<picture><source type="image/webp" srcset="' + f + '.webp"><img class="' + (big ? 'm-photo' : 'sc-photo') + '" src="' + f + '.jpg" width="' + p.w + '" height="' + p.h +
+      '" alt="' + esc(p.en + ' · ' + p.ar) + '" loading="lazy" decoding="async"></picture>';
+  }
+  function credit(s) {
+    var p = window.OW_ART_PHOTO && window.OW_ART_PHOTO[s.id];
+    if (!p) return '';
+    var lic = p.licUrl ? '<a href="' + esc(p.licUrl) + '" target="_blank" rel="noopener license">' + esc(p.lic) + '</a>' : esc(p.lic);
+    var src = '<a href="' + esc(p.page) + '" target="_blank" rel="noopener">Wikimedia Commons</a>';
+    return '<p class="m-credit"><span class="bi-en" lang="en">' + esc(p.en) + (p.by ? ' · Photo: ' + esc(p.by) : '') + ' · Source: ' + src + ' · ' + lic + '</span>' +
+      '<span class="bi-ar" lang="ar">' + esc(p.ar) + (p.by ? ' · تصوير: ' + esc(p.by) : '') + ' · المصدر: ' + src + ' · ' + (LIC_AR[p.lic] ? esc(LIC_AR[p.lic]) : lic) + '</span></p>';
+  }
+
   /* ---------- grid + filter ---------- */
   var grid, filterBar, curCat = 'all';
   function drawGrid() {
     grid.innerHTML = STYLES.map(function (s) {
       return '<li class="sc-item" data-cat="' + esc(s.cat) + '"><button type="button" class="sc" data-id="' + esc(s.id) + '" aria-haspopup="dialog">' +
-        '<span class="sc-img">' + cover(s) + '</span>' +
+        '<span class="sc-img">' + (photo(s) || cover(s)) + '</span>' +
         '<span class="sc-body"><span class="sc-name">' + bi(s.en.name, s.ar.name) + '</span>' +
         '<span class="sc-feel">' + bi(s.en.feel, s.ar.feel) + '</span></span></button></li>';
     }).join('');
@@ -136,7 +155,7 @@
     }
     var guide = '';
     for (i = 0; i < en.guide.length; i++) guide += '<li>' + bi(en.guide[i], ar.guide[i]) + '</li>';
-    return '<div class="m-cover">' + cover(s, true) + '</div>' +
+    return '<div class="m-cover">' + (photo(s, true) || cover(s, true)) + '</div>' + credit(s) +
       '<div class="m-in">' +
       '<p class="m-kicker">' + bi(en.feel, ar.feel) + '</p>' +
       '<h2 class="m-title" id="m-title">' + bi(en.name, ar.name) + '</h2>' +

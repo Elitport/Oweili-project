@@ -64,6 +64,8 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <script>window.OW_LIVE = <?= json_encode((object) $live, $jsonFlags) ?>;</script>
 <script defer src="<?= owAsset('assets/js/art_styles.js') ?>"></script>
 <script defer src="<?= owAsset('assets/js/art_covers.js') ?>"></script>
+<script>window.OW_STYLE_IMG = <?= json_encode(owBase() . 'assets/img/styles/') ?>;</script>
+<script defer src="<?= owAsset('assets/js/art_photos.js') ?>"></script>
 <script defer src="<?= owAsset('assets/js/explore.js') ?>"></script>
 <style>
 /* Art Styles — layout only. Colors, type and buttons come from oweili.css. */
@@ -100,6 +102,10 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 .sc-img { flex: 1 1 auto; min-height: 0; display: block; overflow: hidden; }
 .sc-img .ill { width: 100%; height: 100%; display: block; transition: transform 0.6s ease; }
 .sc:hover .sc-img .ill { transform: scale(1.04); }
+/* a real artwork of the style (art_photos.js, owner 7 Nov 2026): fills the card; the window shows it whole with its credit */
+.sc-img picture, .m-cover picture { display: block; width: 100%; height: 100%; }
+.sc-photo { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 0.6s ease; }
+.sc:hover .sc-photo { transform: scale(1.04); }
 .sc-body { flex: 0 0 auto; display: block; padding: var(--space-sm) var(--space-xs) 18px; }
 .sc-name { display: block; font-size: 18px; font-weight: 600; line-height: 1.3; color: var(--color-dark); }
 .sc-feel { display: block; margin-top: 4px; font-size: 12px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-body); }
@@ -136,6 +142,9 @@ html.m-open { overflow: hidden; }
 .m-close svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; fill: none; }
 .m-cover { height: 300px; overflow: hidden; background: var(--color-surface-2); }  /* the whole drawing shows, centered */
 .m-cover .ill { width: 100%; height: 100%; display: block; }
+.m-photo { width: 100%; height: 100%; display: block; object-fit: contain; }
+.m-credit { margin: 0; padding: 8px 40px 0; font-size: 12px; line-height: 1.6; color: var(--color-body); }
+.m-credit a { color: inherit; }
 .m-in { padding: var(--space-lg) 40px var(--space-xl); }
 .m-kicker { margin: 0 0 var(--space-xs); font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-body); }
 .m-title { margin: 0 0 12px; font-size: 40px; font-weight: 300; letter-spacing: -0.02em; line-height: 1.2; color: var(--color-dark); }
@@ -216,6 +225,7 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
   .m-dlg { width: 100%; max-width: 100%; height: 100%; max-height: 100%; margin: 0; border: 0; border-radius: 0; }
   .m-body { height: 100%; }
   .m-cover { height: 240px; }
+  .m-credit { padding: 8px 20px 0; }
   .m-in { padding: var(--space-md) 20px var(--space-xl); }
   .m-title { font-size: 32px; }
   .m-artists .m-list, .m-tools .m-list, .facts { grid-template-columns: 1fr; }
@@ -224,7 +234,7 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
 @media (hover: none) { .ttip { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .m-dlg[open], .m-dlg::backdrop { animation: none; }
-  .sc, .sc-img .ill { transition: none; }
+  .sc, .sc-img .ill, .sc-photo { transition: none; }
 }
 </style>
 </head>
