@@ -44,12 +44,12 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Landscape_with_Rocks_by_Edgar_Degas%2C_pastel_over_monotype%2C_High_Museum_of_Art.jpg"
  },
  "gouache": {
-  "w": 568,
-  "h": 800,
-  "en": "Egon Schiele, Town on the Blue River, 1910",
-  "ar": "إيغون شيله، «مدينة على النهر الأزرق»، 1910",
+  "w": 800,
+  "h": 455,
+  "en": "Paul Sandby, Dartmouth Castle, gouache, 1794 (detail)",
+  "ar": "بول ساندبي، «قلعة دارتموث»، غواش، 1794 (جزء من اللوحة)",
   "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Stadt_am_blauen_Fluss_%281910%29.jpg"
+  "page": "https://commons.wikimedia.org/wiki/File:Paul_Sandby_-_Dartmouth_Castle_-_Google_Art_Project.jpg"
  },
  "printmaking": {
   "w": 800,
@@ -162,12 +162,13 @@ window.OW_ART_PHOTO = {
  },
  "islamic_ornament": {
   "w": 800,
-  "h": 538,
-  "en": "Arabesque plasterwork, the Alhambra, Granada, 14th century",
-  "ar": "زخارف جصية (أرابيسك)، قصر الحمراء، غرناطة، القرن الرابع عشر",
+  "h": 442,
+  "en": "Arabesque plasterwork, the Alhambra, Granada, 14th century (detail)",
+  "ar": "زخارف جصية (أرابيسك)، قصر الحمراء، غرناطة، القرن الرابع عشر (جزء)",
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:Detail_arabesque_Alhambra_Granada_Spain.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "by": "Jebulon"
  },
  "manuscript": {
   "w": 500,
@@ -229,12 +230,13 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Wassily_Kandinsky_Composition_VIII.jpg"
  },
  "pop_art": {
-  "w": 330,
-  "h": 610,
-  "en": "Stuart Davis, Lucky Strike, 1921",
-  "ar": "ستيوارت ديفيس، «لاكي سترايك»، 1921",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Davis_Stuart_Lucky_Strike_1921.jpg"
+  "w": 663,
+  "h": 800,
+  "en": "Charles Demuth, I Saw the Figure 5 in Gold, 1928",
+  "ar": "تشارلز ديموث، «رأيت الرقم 5 ذهبياً»، 1928",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:I_Saw_the_Figure_5_in_Gold_MET_DP236148.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
  "minimalism": {
   "w": 772,
@@ -261,12 +263,14 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Franz_Marc_-_Die_gro%C3%9Fen_blauen_Pferde_1911.jpg"
  },
  "conceptual": {
-  "w": 612,
+  "w": 600,
   "h": 800,
-  "en": "Marcel Duchamp, Fountain, 1917 (photograph by Alfred Stieglitz)",
-  "ar": "مارسيل دوشان، «النافورة»، 1917 (تصوير ألفريد ستيغليتز)",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Marcel_Duchamp%2C_1917%2C_Fountain%2C_photograph_by_Alfred_Stieglitz.jpg"
+  "en": "Marcel Duchamp, Bicycle Wheel, 1913 (1951 version)",
+  "ar": "مارسيل دوشان، «عجلة دراجة»، 1913 (نسخة 1951)",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Bicycle_Wheel.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Toohool"
  },
  "performance": {
   "w": 523,

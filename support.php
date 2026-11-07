@@ -73,12 +73,15 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <p id="t-c1d">Send us a message. We reply within 24 hours, usually sooner.</p>
       <span class="contact-link"><?= e(owContactEmail()) ?></span>
     </a>
+    <?php /* "Join the Community" is hidden while the Community page is hidden (owner, 8 Nov 2026); it comes back by itself with Admin → Settings → Community */
+    require_once __DIR__ . '/gallery_lib.php'; if (owCommunityPageOn()): ?>
     <a class="contact-card" href="register.php">
       <div class="contact-icon">🎨</div>
       <h3 id="t-c3">Join the Community</h3>
       <p id="t-c3d">Create your free account and meet artists who share your love of art.</p>
       <span class="contact-link" id="t-c3l">Join Free →</span>
     </a>
+    <?php endif; ?>
   </div>
 
   <p class="section-title" id="t-faq-title">Frequently Asked Questions</p>

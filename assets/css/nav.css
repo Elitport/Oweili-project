@@ -52,6 +52,9 @@
 .mnav-acct{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--color-border);}
 @media (max-width:1100px){.topnav .nav-center{display:none;}.mnav-btn{display:inline-flex;}.topnav .nav-right{margin-inline-start:auto;}}
 @media (max-width:560px){.topnav{padding:0 var(--space-sm);}.topnav .nav-right .nav-btn{display:none;}.mnav-acct{display:block;}.nav-logo .nav-word{font-size:16px;}}
+/* very small phones (iPhone SE, 320 px; owner, 8 Nov 2026): the bar was 9 px too wide, so the ☰ button touched (and went past) the screen edge.
+   Slightly tighter spaces only, so it sits 12 px inside the edge; bigger phones are unchanged */
+@media (max-width:360px){.topnav{gap:var(--space-xs);padding:0 12px;}.mnav-btn{margin-inline-start:0;}}
 @media (min-width:1101px){.mnav-panel{display:none;}}
 @media (prefers-reduced-motion:reduce){.mnav-panel{transition:none;}}
 
