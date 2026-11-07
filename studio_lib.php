@@ -136,7 +136,7 @@ function owStudioPhoto(string $key, bool $eager = false, string $class = 'ow-stu
     $b = owBase();
     $set = fn(string $ext): string => implode(', ', array_map(fn($w) => $b . owStudioFile($key, $w, $ext) . ' ' . $w . 'w', $widths));
     /* the photo fills the screen (cover): it is as wide as the screen, or wider on a tall screen */
-    $sizes = 'max(100vw, ' . round(100 * $W / $H, 1) . 'vh)';
+    $sizes = ($class === 'ow-studio' ? '(max-width: 768px) 100vw, ' : '') . 'max(100vw, ' . round(100 * $W / $H, 1) . 'vh)';
     $focus = OW_STUDIO_FOCUS[$key] ?? '50% 50%';
     $h = '<picture class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '">';
     foreach (['avif' => 'image/avif', 'webp' => 'image/webp'] as $ext => $mime) $h .= '<source type="' . $mime . '" srcset="' . $set($ext) . '" sizes="' . $sizes . '">';
@@ -156,6 +156,14 @@ function owStudioTinyVar(string $key): string {
 /* The photo behind the whole page. Printed right after <body>. A layer the size of the screen,
    fixed (it never grows with a long page): the blurred fill, then the whole photo on top.
    The body becomes see-through so the layer shows behind every section. */
+/* Phones (owner, 7 Nov 2026): the whole photo sits at the top of the page at full width and fades into this colour,
+   the average of the photo's own bottom edge, which then fills the rest of the page (oweili.css, 768 px and narrower) */
+const OW_STUDIO_UNDER = [
+    'art-book' => '#2a211b', 'brushes-jars' => '#b7ad90', 'easels-class' => '#7c9ca7', 'gallery-arch' => '#020202',
+    'gallery-visit' => '#895233', 'home-painting' => '#091b1c', 'museum-walk' => '#633f1b', 'open-books' => '#4f4f4f',
+    'paint-buckets' => '#787673', 'paint-cloth' => '#9a838f', 'palette-hand' => '#2a2629', 'pink-palette' => '#827d73',
+    'studio-table' => '#8c8572',
+];
 function owStudioBackdrop(string ...$keys): string {
     foreach ($keys as $k) {
         if (!owStudioHas($k)) continue;
@@ -164,7 +172,9 @@ function owStudioBackdrop(string ...$keys): string {
         $vars = '--ow-pos:' . (OW_STUDIO_FOCUS[$k] ?? '50% 50%')
               . ($t !== '' ? ';--ow-tiny:url(' . $t . ')' : '');
         $side = OW_STUDIO_SIDE[$k] ?? '';
-        return '<style>html body{background:transparent!important}</style><div class="ow-backdrop" style="' . $vars . '"'
+        $under = OW_STUDIO_UNDER[$k] ?? '';
+        $ratio = round(OW_STUDIO[$k][2] / OW_STUDIO[$k][1], 4);   // the photo's height for its width (phones keep the page below it)
+        return '<style>html body{background:transparent!important}:root{' . ($under !== '' ? '--ow-under:' . $under . ';' : '') . '--ow-ratio:' . $ratio . '}</style><div class="ow-backdrop" style="' . $vars . '"'
              . ($side !== '' ? ' data-side="' . $side . '"' : '') . '>'
              . owStudioPhoto($k, true, 'ow-studio') . '</div>';
     }

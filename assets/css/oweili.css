@@ -582,6 +582,22 @@ html.dark-mode { --studio-veil: linear-gradient(rgba(15,21,32,0.82), rgba(15,21,
 @media (max-aspect-ratio: 1/1) { .ow-backdrop { background-position: 50% 50% !important; } .ow-studio img { object-position: 50% 50% !important; } }
 /* Dark mode (owner, 6 Nov 2026): the page photos and the homepage video a little dimmer, same colours; light mode unchanged */
 html.dark-mode :is(.ow-backdrop, .hero-bg) { filter: brightness(0.72); }
+/* Phones (owner, 7 Nov 2026): the WHOLE photo at the top of the page, full screen width, no zoom and no crop; it fades
+   softly into a colour from its own bottom edge (--ow-under, studio_lib.php), which fills the rest of the page.
+   Dark mode: the same slight dimming, as a 28% dark layer, so the photo and the colour below dim exactly alike */
+@media (max-width: 768px) {
+  html:has(> body > .ow-backdrop) { background: var(--ow-under, #fff) !important; }
+  html.dark-mode:has(> body > .ow-backdrop) { background: color-mix(in srgb, var(--ow-under, #0F1520) 72%, #000) !important; }
+  .ow-backdrop { position: absolute; top: var(--nav-h); height: auto; background: var(--ow-tiny, none) 50% 0 / 100% auto no-repeat !important; }
+  /* the whole photo stays uncovered: it starts under the menu bar, and the page (title card first) starts under the photo */
+  body:has(> .ow-backdrop) { padding-top: calc(var(--ow-ratio, 0) * 100%); }
+  html.dark-mode .ow-backdrop { filter: none; }
+  .ow-backdrop .ow-studio { position: relative; inset: auto; z-index: 0; }
+  .ow-backdrop .ow-studio img { height: auto; object-fit: fill; }
+  .ow-backdrop::before { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 30%; z-index: 1;
+    background: linear-gradient(to bottom, transparent, var(--ow-under, transparent)); }
+  html.dark-mode .ow-backdrop::after { content: ""; position: absolute; inset: 0 0 -1px; z-index: 2; background: rgba(0,0,0,0.28); }
+}
 /* no veil over the photo (owner, 5 Nov 2026): the photo keeps its real, strong colours.
    Text stays readable where it sits: page headings get a small frosted-glass card, cards are solid */
 :root { --studio-glass: rgba(255,255,255,0.78); --studio-glass-edge: rgba(255,255,255,0.6); }
