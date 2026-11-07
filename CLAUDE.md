@@ -121,6 +121,11 @@
 
 ## Features
 
+### Gallery language button fixed (7 Nov 2026, owner)
+- Cause: the Gallery's own language button (tgl() in marketplace.php) built its address with mpUrl(), which leaves out lang=en because English is the default. Without lang= in the address the server used the saved cookie (still Arabic), so English never came. Now the chosen language is always added to the address (lang=en or lang=ar), and every other choice (topic, sort, page) is kept
+- Tested Arabic → English → Arabic on phone and laptop on every page in the menu and footer: Home, Gallery (also with filters), Art Styles, Art Events, Art Education, Art Institutes, Support, Terms, Privacy, Sign in, Join
+- Files: marketplace.php. Tables: none
+
 ### Phones: the whole background photo, then its own colour (7 Nov 2026, owner)
 - Phones and small tablets (768 px and narrower), every page with a background photo (not the homepage video): the WHOLE photo shows at full screen width just under the menu bar, with no zoom and no crop. Its bottom fades softly into a colour taken from the photo's own bottom edge (OW_STUDIO_UNDER in studio_lib.php), which fills the rest of the page. The page (title card first) starts below the photo, so nothing covers it. Dark mode: the same slight dimming, as a 28% dark layer over both the photo and the colour, so they match without a line. Phones download a copy as wide as the screen
 - Laptops and computers unchanged: every laptop page was compared pixel by pixel before and after, light and dark

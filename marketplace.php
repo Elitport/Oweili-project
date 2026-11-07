@@ -381,7 +381,7 @@ foreach ($modalArtworks as $aw) {
 <script>
 /* This page switches language with a reload (?lang=), so the shared menu's
    language button reloads too, and the menu labels are set to match. */
-function tgl(){ window.location.href = <?= json_encode(mpUrl(['lang' => $ar ? 'en' : 'ar', 'page' => $page]), JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>; }
+function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'en', 'page' => $page])) . (strpos($u, '?') === false ? '?' : '&') . 'lang=' . ($ar ? 'en' : 'ar'), JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>; }   /* the new language is always in the address, so the saved choice never overrides it */
 <?php if ($ar): ?>
 (function(){
   var t = {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
