@@ -121,6 +121,11 @@
 
 ## Features
 
+### Phones: the whole background photo, then its own colour (7 Nov 2026, owner)
+- Phones and small tablets (768 px and narrower), every page with a background photo (not the homepage video): the WHOLE photo shows at full screen width just under the menu bar, with no zoom and no crop. Its bottom fades softly into a colour taken from the photo's own bottom edge (OW_STUDIO_UNDER in studio_lib.php), which fills the rest of the page. The page (title card first) starts below the photo, so nothing covers it. Dark mode: the same slight dimming, as a 28% dark layer over both the photo and the colour, so they match without a line. Phones download a copy as wide as the screen
+- Laptops and computers unchanged: every laptop page was compared pixel by pixel before and after, light and dark
+- Files: assets/css/oweili.css, studio_lib.php (OW_STUDIO_UNDER, --ow-under and --ow-ratio printed by owStudioBackdrop, phone sizes in owStudioPhoto). Tables: none
+
 ### Footer at the bottom, dimmer photos in dark mode (6 Nov 2026, owner)
 - Footer: on every page with a background photo, short pages (Art Events, Art Education, an article that is not found) now put the footer at the bottom of the screen, like Art Institutes: the page body is a column at least one screen tall and the main part grows (body:has(> .ow-backdrop) in oweili.css). Measured on 11 photo pages at 1536 × 864 and 390 × 844: only the short pages moved; every longer page is exactly the same
 - Dark mode: the page photos and the homepage video and still frame are a little dimmer (brightness 72%, same colours). Light mode unchanged
