@@ -95,6 +95,15 @@ function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
     if (!owSendMail(OW_INQUIRY_TO, 'Oweili - New inquiry: ' . $aw['title_en'], $body)) {
         error_log('inquiry: email to the team failed for artwork ' . (int) $aw['id']);   // still saved; shows in admin
     }
+    /* a short "we received your request" email to the visitor, in both languages (owner, 8 Nov 2026) */
+    try {
+        require_once __DIR__ . '/request_lib.php';
+        $artEn = (string) ($aw['artist_en'] ?? ''); $artAr = (string) (($aw['artist_ar'] ?? '') ?: $artEn);
+        owReqTellBuyer($v['email'], 'We received your request · وصلنا طلبك',
+            'Thank you, ' . $v['name'] . '. We received your interest in "' . $aw['title_en'] . '" by ' . $artEn . '. The Oweili team will contact you soon about this artwork. Nothing is charged yet.',
+            'شكراً يا ' . $v['name'] . '. وصلنا اهتمامك بعمل «' . (($aw['title_ar'] ?? '') ?: $aw['title_en']) . '» للفنان ' . $artAr . '. سيتواصل معك فريق أويلي قريباً بخصوص هذا العمل. لا يُدفع أي مبلغ الآن.',
+            'artwork.php?id=' . (int) $aw['id']);
+    } catch (Throwable $e) { error_log('inquiry: visitor email: ' . $e->getMessage()); }
     return true;
 }
 

@@ -122,6 +122,10 @@
 
 ## Features
 
+### "I'm Interested" confirmation email, admin Delete buttons (8 Nov 2026, owner) — live 8 Nov 2026
+- After "I'm Interested" the visitor gets a short "We received your request · وصلنا طلبك" email in both languages (the same look as the other emails, owReqTellBuyer), with a link to the artwork. Sent once per saved request (inquiry_lib.php owSaveInquiry)
+- Admin → a person's page (admin.php?person=N): "Delete account" for artist and buyer accounts only (never staff), with an "Are you sure?" step. Removes the account, its artworks (photos, stage photos, colours, favorites, waiting changes), portfolio pictures, profile photo, sessions and favorites; its "I'm Interested" requests stay but lose the account link. Certificates are never deleted: they become Cancelled ("Account deleted by the Oweili team"). An account that is part of real records (gift requests, commissions, NDAs, orders, payouts, purchases, articles, photo consents, institutes, course registrations) is refused with a message: suspend it instead. Admin → Inquiries: a "Delete" button per request with an "Are you sure?" step. Both are logged (user_delete, inquiry_delete). Nothing is sent to Bashro. Files: admin_lib.php (owAdminDeleteUser, owAdminDeleteBlockers, owAdminDeleteInquiry), admin.php, admin_person.php, inquiry_lib.php. Tables: users, artworks, artwork_stages, artwork_colors, favorites, sessions, pending_changes, portfolio_images, artwork_inquiries, certificates, activity_log
+
 ### New Gallery background photo (8 Nov 2026, owner) — live 8 Nov 2026
 - Gallery (marketplace.php): the owner's black-and-white photo of a quiet gallery hall with framed photographs and a bench (gallery-hall, assets/img/studio/gallery-hall-640/1280/1920/2000 .avif/.webp/.jpg, focus 50% 50%, phone colour #404040) replaces gallery-visit. Used the same way as the other photo pages: full screen on laptops (cover, no zoom), the whole photo on top on phones fading into its own colour, the same dark-mode dimming. Nothing else changed; gallery-visit files are kept. Files: studio_lib.php, marketplace.php, assets/img/studio/. Tables: none
 

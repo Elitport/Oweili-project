@@ -120,6 +120,10 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
       <?php endif; ?>
       <form method="post" action="admin.php"<?= (int) $p['is_banned'] === 1 ? '' : ' onsubmit="return confirm(\'Suspend this account?\');"' ?>><?= csrfField() ?><input type="hidden" name="back" value="person"><input type="hidden" name="user_id" value="<?= (int) $p['id'] ?>">
         <?php if ((int) $p['is_banned'] === 1): ?><button class="btn btn-ghost btn-sm" name="action" value="unban"><?= owBi('Lift suspension', 'إلغاء الإيقاف') ?></button><?php else: ?><button class="btn btn-danger btn-sm" name="action" value="ban"><?= owBi('Suspend', 'إيقاف') ?></button><?php endif; ?></form>
+      <?php if (in_array($p['role'], ['artist', 'collector'], true)): /* delete a test or spam account (owner, 8 Nov 2026); certificates are kept as Cancelled */ ?>
+      <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.lang === 'ar' ? 'هل أنت متأكد؟ سيُحذف هذا الحساب وأعماله نهائياً. تبقى الشهادات بحالة «ملغاة».' : 'Are you sure? This account and its artworks will be deleted for good. Certificates stay as Cancelled.');"><?= csrfField() ?><input type="hidden" name="back" value="person"><input type="hidden" name="user_id" value="<?= (int) $p['id'] ?>">
+        <button class="btn btn-danger btn-sm" name="action" value="delete_user"><?= owBi('Delete account', 'حذف الحساب') ?></button></form>
+      <?php endif; ?>
     </div>
   </div>
 

@@ -190,6 +190,25 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
         exit;
     }
 
+    /* --- Delete a test or spam account / one "I'm Interested" request (owner, 8 Nov 2026; the page asks "Are you sure?" first) --- */
+    if ($action === 'delete_user' && $uid > 0) {
+        $why = owAdminDeleteUser($uid);
+        if ($why !== '') {
+            $_SESSION['admin_err'] = ['staff' => 'Staff accounts cannot be deleted here. · لا يمكن حذف حسابات الفريق من هنا.',
+                                      'linked' => 'This account is part of real records (gifts, commissions, orders, articles…), so it was not deleted. Suspend it instead. · هذا الحساب مرتبط بسجلات حقيقية، لذا لم يُحذف. أوقفه بدلاً من ذلك.',
+                                      'not_found' => 'This account no longer exists. · هذا الحساب غير موجود.'][$why] ?? 'Not deleted.';
+            header('Location: admin.php');
+            exit;
+        }
+        header('Location: admin.php?ok=1');
+        exit;
+    }
+    if ($action === 'delete_inquiry') {
+        owAdminDeleteInquiry((int) ($_POST['inquiry_id'] ?? 0));
+        header('Location: admin.php?ok=1#inquiries');
+        exit;
+    }
+
     /* --- Change a user's role --- */
     if ($action === 'set_role' && $uid > 0) {
         $newRole = $_POST['role'] ?? '';
@@ -741,7 +760,9 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
                 <select name="status" aria-label="Status"><?php foreach (OW_INQUIRY_STATUS as $sk => $sl): ?><option value="<?= $sk ?>"<?= $q['status'] === $sk ? ' selected' : '' ?>><?= e($sl[0] . ' · ' . $sl[1]) ?></option><?php endforeach; ?></select>
                 <textarea name="admin_notes" rows="2" maxlength="4000" aria-label="Private note" placeholder="Private note · ملاحظة خاصة"><?= e((string) ($q['admin_notes'] ?? '')) ?></textarea>
                 <button class="btn btn-dark btn-sm" name="action" value="inquiry_update"><?= owBi('Save', 'حفظ') ?></button>
-              </form><?php endif; ?></td>
+              </form><?php endif; ?>
+              <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.lang === 'ar' ? 'هل أنت متأكد؟ سيُحذف هذا الطلب نهائياً.' : 'Are you sure? This request will be deleted for good.');"><?= csrfField() ?><input type="hidden" name="inquiry_id" value="<?= (int) $q['id'] ?>">
+                <button class="btn btn-danger btn-sm" name="action" value="delete_inquiry"><?= owBi('Delete', 'حذف') ?></button></form></td>
           </tr>
         <?php endforeach; ?>
         </tbody>

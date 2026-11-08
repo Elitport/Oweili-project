@@ -181,3 +181,96 @@ function owPhotoOk(int $artworkId): bool {
     }
     return false;
 }
+
+/* ---------------------------------------------------------------------
+ *  Admin delete (owner, 8 Nov 2026): remove a test or spam account, or
+ *  one "I'm Interested" request. Admin only (admin.php checks), with an
+ *  "Are you sure?" step on the page. Certificates are never deleted:
+ *  the account's artworks are removed and their certificates cancelled.
+ *  An account that is part of a real record (gift, commission, order,
+ *  payout, purchase, article, consent, institute, course) is refused:
+ *  suspend it instead, so no record is broken.
+ * ------------------------------------------------------------------- */
+function owAdminDeleteBlockers(int $uid): array {
+    $checks = [
+        ['gift_requests', 'user_id', 'gift requests', 'طلبات هدايا'],
+        ['commissions', 'user_id', 'commissions (as buyer)', 'أعمال خاصة (كمشترٍ)'],
+        ['commissions', 'artist_id', 'commissions (as artist)', 'أعمال خاصة (كفنان)'],
+        ['commission_nda', 'artist_id', 'confidentiality agreements', 'اتفاقيات سرية'],
+        ['orders', 'buyer_user_id', 'orders (as buyer)', 'طلبات شراء (كمشترٍ)'],
+        ['orders', 'artist_id', 'orders (as artist)', 'طلبات شراء (كفنان)'],
+        ['payouts', 'artist_id', 'payouts', 'مدفوعات'],
+        ['purchases', 'collector_id', 'purchases', 'مشتريات'],
+        ['articles', 'author_user_id', 'articles', 'مقالات'],
+        ['photo_consents', 'recorded_by', 'photo consents', 'موافقات صور'],
+        ['institutes', 'user_id', 'institutes', 'معاهد'],
+        ['course_registrations', 'user_id', 'course registrations', 'تسجيلات دورات'],
+    ];
+    $out = [];
+    foreach ($checks as [$t, $c, $en, $ar]) {
+        try {
+            if (!owHasTable($t) || !owHasColumn($t, $c)) continue;
+            $st = getDB()->prepare("SELECT COUNT(*) FROM `$t` WHERE `$c` = :id");
+            $st->execute([':id' => $uid]);
+            if ((int) $st->fetchColumn() > 0) $out[] = [$en, $ar];
+        } catch (Throwable $e) { $out[] = [$en, $ar]; }   // when in doubt, keep the account
+    }
+    return $out;
+}
+
+/* Returns '' when deleted, or the reason it was not (an error code) */
+function owAdminDeleteUser(int $uid): string {
+    require_once __DIR__ . '/artwork_lib.php';
+    $st = getDB()->prepare('SELECT id, role, profile_picture FROM users WHERE id = :id LIMIT 1');
+    $st->execute([':id' => $uid]);
+    $u = $st->fetch();
+    if (!$u) return 'not_found';
+    if (!in_array((string) $u['role'], ['artist', 'collector'], true)) return 'staff';   // staff accounts are never deleted here
+    if (owAdminDeleteBlockers($uid)) return 'linked';
+
+    /* the account's artworks: the same tidy-up as the artist's own Delete button; certificates are cancelled, never deleted */
+    $aw = getDB()->prepare('SELECT id, image_url FROM artworks WHERE artist_id = :id');
+    $aw->execute([':id' => $uid]);
+    foreach ($aw->fetchAll() as $a) {
+        $aid = (int) $a['id'];
+        $stageFiles = array_map(fn($s) => (string) $s['photo_path'], owGetStages($aid));
+        if (function_exists('owCancelCertificatesOfArtwork')) owCancelCertificatesOfArtwork($aid, 'Account deleted by the Oweili team');
+        getDB()->prepare('DELETE FROM artworks WHERE id = :id')->execute([':id' => $aid]);
+        foreach ($stageFiles as $sf) owDeleteStageFile($sf);
+        foreach (['DELETE FROM artwork_stages WHERE artwork_id = :id', 'DELETE FROM artwork_colors WHERE artwork_id = :id', 'DELETE FROM favorites WHERE artwork_id = :id',
+                  "UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE target_type = 'artwork' AND target_id = :id AND status = 'pending'"] as $q) {
+            try { getDB()->prepare($q)->execute([':id' => $aid]); } catch (Throwable $e) {}
+        }
+        $img = (string) $a['image_url'];
+        if (strpos($img, 'uploads/artworks/') === 0 && is_file(__DIR__ . '/' . $img)) @unlink(__DIR__ . '/' . $img);
+        owLog('artwork_delete', 'artwork', $aid, 'account deleted by admin', ['type' => 'admin', 'id' => null]);
+    }
+    /* the account's own pieces */
+    try {
+        if (owHasTable('portfolio_images')) {
+            $pi = getDB()->prepare('SELECT image_url FROM portfolio_images WHERE artist_id = :id');
+            $pi->execute([':id' => $uid]);
+            foreach ($pi->fetchAll(PDO::FETCH_COLUMN) as $f) { $f = (string) $f; if (strpos($f, 'uploads/portfolio/') === 0 && is_file(__DIR__ . '/' . $f)) @unlink(__DIR__ . '/' . $f); }
+            getDB()->prepare('DELETE FROM portfolio_images WHERE artist_id = :id')->execute([':id' => $uid]);
+        }
+    } catch (Throwable $e) {}
+    foreach (['DELETE FROM favorites WHERE user_id = :id', 'DELETE FROM sessions WHERE user_id = :id',
+              "UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE user_id = :id AND status = 'pending'",
+              'UPDATE artwork_inquiries SET buyer_id = NULL WHERE buyer_id = :id'] as $q) {
+        try { getDB()->prepare($q)->execute([':id' => $uid]); } catch (Throwable $e) {}
+    }
+    $pic = (string) ($u['profile_picture'] ?? '');
+    getDB()->prepare('DELETE FROM users WHERE id = :id AND role IN (\'artist\', \'collector\')')->execute([':id' => $uid]);
+    if (strpos($pic, 'uploads/') === 0 && strpos($pic, 'uploads/consents/') !== 0 && is_file(__DIR__ . '/' . $pic)) @unlink(__DIR__ . '/' . $pic);
+    owLog('user_delete', 'user', $uid, (string) $u['role'], ['type' => 'admin', 'id' => null]);
+    return '';
+}
+
+/* One "I'm Interested" request */
+function owAdminDeleteInquiry(int $id): bool {
+    $st = getDB()->prepare('DELETE FROM artwork_inquiries WHERE id = :id');
+    $st->execute([':id' => $id]);
+    if ($st->rowCount() < 1) return false;
+    owLog('inquiry_delete', 'inquiry', $id, '', ['type' => 'admin', 'id' => null]);
+    return true;
+}
