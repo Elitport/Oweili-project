@@ -480,7 +480,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
       <?= mpHidden(['cat', 'type']) ?>
       <label class="mp-label" for="mpTopic"><?= $ar ? 'الموضوع' : 'Topic' ?></label>
       <select id="mpTopic" name="cat" onchange="this.form.submit()">
-        <?php foreach ($ART_CATS as $ck => $cv): ?>
+        <?php $mpShownTopics = owArtTopicsShown(); foreach ($ART_CATS as $ck => $cv): if ($ck !== 'all' && $ck !== $cat && !isset($mpShownTopics[$ck])) continue; /* hidden topics (owner, 8 Nov 2026) */ ?>
         <option value="<?= e($ck) ?>"<?= $cat === $ck ? ' selected' : '' ?>><?= e($ar ? $cv['ar'] : $cv['en']) ?></option>
         <?php endforeach; ?>
       </select>

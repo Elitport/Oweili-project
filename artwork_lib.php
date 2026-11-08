@@ -63,6 +63,16 @@ function owArtTopics(): array {
     ];
 }
 
+/* The topics offered to visitors and artists: while the "Other art styles" switch is off (owner, 8 Nov 2026)
+   Arabic calligraphy and Islamic ornament are left out (art_types.php OW_MORE_TOPICS). $keepStore keeps the
+   topic an artwork already has, so it keeps its label. owArtTopics() itself stays complete. */
+function owArtTopicsShown(string $keepStore = ''): array {
+    require_once __DIR__ . '/art_types.php';
+    $all = owArtTopics();
+    if (owMoreStylesOn()) return $all;
+    return array_filter($all, fn($t, $k) => !in_array($k, OW_MORE_TOPICS, true) || ($keepStore !== '' && $t['store'] === $keepStore), ARRAY_FILTER_USE_BOTH);
+}
+
 /* The topic key whose saved art type is $type ('' when none) */
 function owTopicOfStore(string $type): string {
     foreach (owArtTopics() as $k => $t) { if ($t['store'] === $type) return $k; }

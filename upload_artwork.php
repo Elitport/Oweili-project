@@ -118,7 +118,7 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $picked = array_values(array_unique(array_intersect((array) ($_POST['colors'] ?? []), array_keys($COLORS))));
         if (!isset($stages[100])) {
             $error = 'need100';
-        } elseif (owTopicOfStore($type) === '') {   // one of the 9 topics only (owner, 6 Nov 2026)
+        } elseif (owTopicOfStore($type) === '' || !isset(owArtTopicsShown((string) $draft['type'])[owTopicOfStore($type)])) {   // one of the topics offered (owner, 6 and 8 Nov 2026)
             $error = 'type';
         } else {
             $db->beginTransaction();
@@ -462,7 +462,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
           <?php $selType = (string) ($_POST['type'] ?? $draft['type']);
           ?>
           <div class="types">
-            <?php foreach ($TOPICS as $tk => $tp): $key = $tp['store']; ?>
+            <?php foreach (owArtTopicsShown((string) ($draft['type'] ?? '')) as $tk => $tp): $key = $tp['store']; /* hidden topics left out (owner, 8 Nov 2026) */ ?>
               <label class="type-card">
                 <input type="radio" name="type" value="<?= e($key) ?>" required<?= $selType === $key ? ' checked' : '' ?>>
                 <span>

@@ -24,6 +24,13 @@
   /* Colour painting styles first, then drawing (owner, 8 Nov 2026) */
   var DRAWING = ['pencil', 'charcoal', 'ink', 'chinese_ink'];
   var STYLES = (window.OW_ART_STYLES || []).filter(function (s) { return HIDDEN_CATS.indexOf(s.cat) < 0 && HIDDEN_IDS.indexOf(s.id) < 0; });
+  /* While the 15 are hidden (owner, 8 Nov 2026): Al-Qatt Al-Asiri sits under Traditional and the
+     Islamic & Arab Heritage filter is hidden; with the switch on, both go back */
+  var MORE_OFF = HIDDEN_IDS.length > 0;
+  if (MORE_OFF) STYLES = STYLES.map(function (s) {
+    if (s.cat !== 'heritage') return s;
+    var c = {}; for (var k in s) c[k] = s[k]; c.cat = 'traditional'; return c;
+  });
   STYLES = STYLES.filter(function (s) { return DRAWING.indexOf(s.id) < 0; })
     .concat(DRAWING.map(function (id) { return STYLES.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean));
   var BY_ID = {};
@@ -37,6 +44,7 @@
     ['contemporary', 'Contemporary', 'معاصر'],
     ['nature', 'Nature & Portrait', 'طبيعة وبورتريه']
   ];
+  if (MORE_OFF) CATS = CATS.filter(function (c) { return c[0] !== 'heritage'; });
   var LEVELS = {
     beginner: ['Beginner', 'مبتدئ', 1],
     intermediate: ['Intermediate', 'متوسط', 2],

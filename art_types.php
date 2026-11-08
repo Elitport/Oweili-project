@@ -19,6 +19,8 @@ if (!defined('OW_MORE_STYLES')) define('OW_MORE_STYLES', [
     'stained_glass', 'mosaic', 'islamic_mosaic', 'islamic_geometric', 'islamic_ornament', 'egyptian_linen', 'textile',
     'manuscript', 'collage', 'conceptual', 'performance', 'architectural', 'printmaking', 'ukiyo_e', 'calligraphy',
 ]);
+/* The two Gallery / upload topics that belong to the same hidden styles (owner, 8 Nov 2026), under the same switch */
+if (!defined('OW_MORE_TOPICS')) define('OW_MORE_TOPICS', ['calligraphy', 'islamic_ornament']);
 if (!function_exists('owMoreStylesOn')) {
     function owMoreStylesOn(): bool {
         static $on = null;

@@ -505,11 +505,11 @@ window.OW_ART_PHOTO = {
  },
  "abstract_expressionism": {
   "w": 800,
-  "h": 588,
-  "en": "Jackson Pollock, Number 1, 1950 (Lavender Mist), 1950",
-  "ar": "جاكسون بولوك، «رقم 1، 1950 (الضباب الخزامي)»، 1950",
+  "h": 541,
+  "en": "Wassily Kandinsky, Improvisation 28 (second version), 1912",
+  "ar": "فاسيلي كاندينسكي، «ارتجال 28» (النسخة الثانية)، 1912",
   "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Number_1%2C_1950_%28Lavender_Mist%29_by_Jackson_Pollock_%281950%29.jpg"
+  "page": "https://commons.wikimedia.org/wiki/File:Vasily_Kandinsky_Improvisation_28_%28second_version%29.jpg"
  },
  "color_field": {
   "w": 800,
