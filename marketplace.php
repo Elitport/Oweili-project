@@ -371,7 +371,7 @@ foreach ($modalArtworks as $aw) {
   </style>
 </head>
 <body>
-<?= owStudioBackdrop('gallery-visit') /* the woman looking at the framed paintings, always (owner, 6 Nov 2026: wide photos only) */ ?>
+<?= owStudioBackdrop('gallery-hall') /* the owner's gallery hall with the bench, always (owner, 8 Nov 2026) */ ?>
 
 <div class="bg-wrap">
   
