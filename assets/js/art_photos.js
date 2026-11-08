@@ -370,11 +370,11 @@ window.OW_ART_PHOTO = {
  },
  "baroque": {
   "w": 800,
-  "h": 620,
-  "en": "Willem Claesz. Heda, Still Life with a Gilt Cup, 1635",
-  "ar": "ويليم كلاس هيدا، «طبيعة صامتة مع كأس مذهّبة»، 1635",
+  "h": 660,
+  "en": "Jacob van Ruisdael, The Windmill at Wijk bij Duurstede, about 1670",
+  "ar": "ياكوب فان رويسدال، «طاحونة الهواء في فايك بي دورستيده»، نحو 1670",
   "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Stilleven_met_vergulde_bokaal_Rijksmuseum_SK-A-4830.jpeg"
+  "page": "https://commons.wikimedia.org/wiki/File:De_molen_bij_Wijk_bij_Duurstede_Rijksmuseum_SK-C-211.jpeg"
  },
  "romanticism": {
   "w": 800,
@@ -406,8 +406,8 @@ window.OW_ART_PHOTO = {
  "al_qatt_asiri": {
   "w": 600,
   "h": 800,
-  "en": "Al-Qatt Al-Asiri painted pillar, Rijal Alma village, Asir (detail)",
-  "ar": "عمود مزيّن بالقط العسيري، قرية رجال ألمع، عسير (جزء)",
+  "en": "Traditional women painters of Asir, painted pillar, Rijal Alma village (detail)",
+  "ar": "رسامات عسير التقليديات، عمود مزيّن، قرية رجال ألمع (جزء)",
   "lic": "CC BY 2.0",
   "page": "https://commons.wikimedia.org/wiki/File:Rijal_Alma_village_from_the_inside%2C_2021.jpg",
   "licUrl": "https://creativecommons.org/licenses/by/2.0/",
