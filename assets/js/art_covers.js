@@ -392,6 +392,99 @@
         '<circle cx="250" cy="96" r="18" class="pk"/><rect x="100" y="60" width="200" height="150" class="ln" stroke-width="2"/>' +
         '<rect x="140" y="40" width="200" height="150" class="ln" stroke-width="1.5" stroke-dasharray="6 4" opacity=".6"/>' +
         '<path d="M300 230 l30 30 M320 230 h14 v14" class="st pk" stroke-width="3"/>';
+    },
+    /* the 12 styles added on 8 Nov 2026 (owner) */
+    impressionism: function () {
+      var s = '';
+      for (var i = 0; i < 7; i++) s += '<path d="M' + (150 + (i % 2) * 14) + ' ' + (178 + i * 13) + ' h' + (90 - i * 9) + '" class="st pk" stroke-width="5" opacity="' + (0.85 - i * 0.09).toFixed(2) + '"/>';
+      return '<rect width="400" height="160" class="gb" opacity=".25"/><circle cx="200" cy="120" r="30" class="pk"/>' +
+        '<path d="M0 160 H400" class="ln" stroke-width="1.5" opacity=".5"/>' + s +
+        '<path d="M60 230 h40 M300 214 h50 M90 268 h30 M290 262 h40" class="st gb" stroke-width="4" opacity=".55"/>' +
+        '<path d="M70 196 l20 -30 l6 30 Z" class="ink" opacity=".7"/>';
+    },
+    pointillism: function () {
+      var d = '';
+      for (var y = 30; y < 290; y += 16) for (var x = 24; x < 390; x += 16) {
+        var dx = x - 200, dy = y - 110, c = dx * dx + dy * dy < 2300 ? 'pk' : (y > 170 ? 'gb' : (y > 150 ? 'ink' : 'gb'));
+        d += '<circle cx="' + (x + ((y / 16) % 2) * 8) + '" cy="' + y + '" r="4.5" class="' + c + '" opacity="' + (c === 'gb' && y < 150 ? '.35' : '.8') + '"/>';
+      }
+      return d;
+    },
+    cubism: function () {
+      return '<polygon points="80,250 150,60 230,120 190,270" class="gb" opacity=".55"/>' +
+        '<polygon points="170,80 300,50 330,200 220,230" class="pk" opacity=".5"/>' +
+        '<polygon points="120,140 260,150 240,260 110,230" class="ink" opacity=".3"/>' +
+        '<g class="ln" stroke-width="2.5"><polygon points="80,250 150,60 230,120 190,270"/><polygon points="170,80 300,50 330,200 220,230"/>' +
+        '<path d="M120 140 L260 150 L240 260"/></g><circle cx="215" cy="185" r="22" class="st ink" stroke-width="3"/>';
+    },
+    fauvism: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".3"/>' +
+        '<path d="M0 190 L90 90 L170 170 L250 70 L400 200 V300 H0Z" class="pk" opacity=".75"/>' +
+        '<path d="M0 230 C90 190 190 250 280 210 S380 200 400 214 V300 H0Z" class="gb" opacity=".8"/>' +
+        '<path d="M0 270 H400 V300 H0Z" class="ink" opacity=".8"/><circle cx="320" cy="64" r="26" class="pk"/>' +
+        '<path d="M60 206 v40 M64 210 c-14 -14 -14 -26 0 -34 c14 8 14 20 0 34" class="st ink" stroke-width="4"/>';
+    },
+    renaissance: function () {
+      var g = '';
+      for (var x = -200; x <= 600; x += 80) g += '<path d="M200 140 L' + x + ' 300" class="ln" stroke-width="1"/>';
+      for (var y = 170; y < 300; y += (y - 130) * 0.5) g += '<path d="M0 ' + y.toFixed(0) + ' H400" class="ln" stroke-width="1"/>';
+      return '<rect width="400" height="140" class="gb" opacity=".25"/><g opacity=".55">' + g + '</g>' +
+        '<rect x="160" y="70" width="80" height="70" class="bgk"/><rect x="160" y="70" width="80" height="70" class="ln" stroke-width="2.5"/>' +
+        '<path d="M150 70 Q200 30 250 70" class="st ink" stroke-width="3"/><path d="M180 140 v-30 a20 20 0 0 1 40 0 v30" class="ln" stroke-width="2.5"/>' +
+        '<rect x="40" y="60" width="70" height="80" class="pk" opacity=".35"/><rect x="290" y="60" width="70" height="80" class="pk" opacity=".35"/>';
+    },
+    baroque: function (u) {
+      return '<defs><radialGradient id="bq' + u + '" cx="45%" cy="40%" r="60%"><stop offset="0" class="sgb" stop-opacity=".9"/><stop offset="1" class="sink" stop-opacity="0"/></radialGradient></defs>' +
+        '<rect width="400" height="300" class="ink" opacity=".85"/><rect width="400" height="300" fill="url(#bq' + u + ')"/>' +
+        '<path d="M170 90 h60 c0 40 -18 60 -30 64 c-12 -4 -30 -24 -30 -64 Z" class="bgk" opacity=".9"/>' +
+        '<path d="M200 154 v40 M180 200 h40" class="st bgk" stroke-width="5"/>' +
+        '<ellipse cx="290" cy="210" rx="34" ry="12" class="pk" opacity=".6"/><path d="M60 236 L340 236" class="st bgk" stroke-width="2" opacity=".4"/>';
+    },
+    romanticism: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".35"/>' +
+        '<path d="M-20 120 C60 40 160 60 200 110 S330 150 420 70" class="st ink" stroke-width="22" opacity=".25"/>' +
+        '<circle cx="250" cy="150" r="46" class="pk" opacity=".75"/><path d="M0 210 L120 120 L190 190 L260 140 L400 220 V300 H0Z" class="ink" opacity=".7"/>' +
+        '<path d="M0 250 C90 230 160 262 250 244 S360 236 400 248" class="st bgk" stroke-width="3" opacity=".7"/>' +
+        '<path d="M80 60 c20 -10 40 -10 60 4" class="st bgk" stroke-width="3"/>';
+    },
+    art_nouveau: function () {
+      return '<path d="M200 290 C200 200 120 190 130 120 C140 60 220 70 210 130 C200 180 120 150 150 90" class="st pk" stroke-width="5"/>' +
+        '<path d="M200 290 C200 210 280 200 270 130 C260 70 180 80 190 140 C200 190 280 160 250 100" class="st gb" stroke-width="5"/>' +
+        '<path d="M60 40 C120 40 120 120 60 120 M340 40 C280 40 280 120 340 120" class="st ink" stroke-width="3"/>' +
+        '<rect x="30" y="20" width="340" height="260" rx="40" class="ln" stroke-width="2"/>' +
+        '<circle cx="200" cy="64" r="12" class="pk"/>';
+    },
+    ukiyo_e: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".18"/><path d="M250 210 L300 150 L350 210 Z" class="ink" opacity=".7"/>' +
+        '<path d="M282 172 L300 150 L318 172 L308 168 L300 176 L292 168 Z" class="bgk"/>' +
+        '<path d="M0 230 C40 150 110 90 180 100 C140 110 130 150 160 170 C110 170 90 200 120 230 Z" class="gb" opacity=".85"/>' +
+        '<path d="M180 100 C200 100 210 110 205 120 M160 170 c10 -6 22 -6 30 2 M120 230 c12 -8 26 -8 36 2" class="st bgk" stroke-width="4"/>' +
+        '<path d="M0 260 C80 240 160 270 240 250 S360 240 400 254 V300 H0Z" class="gb" opacity=".6"/><circle cx="90" cy="60" r="18" class="pk"/>';
+    },
+    al_qatt_asiri: function () {
+      var t = '', z = '', dm = '';
+      for (var x = 0; x < 400; x += 40) {
+        t += '<polygon points="' + x + ',110 ' + (x + 20) + ',70 ' + (x + 40) + ',110" class="' + (x % 80 ? 'pk' : 'gb') + '"/>';
+        dm += '<polygon points="' + (x + 20) + ',190 ' + (x + 36) + ',210 ' + (x + 20) + ',230 ' + (x + 4) + ',210" class="' + (x % 80 ? 'ink' : 'pk') + '" opacity=".8"/>';
+      }
+      for (var k = 0; k < 20; k++) z += (k ? ' L' : 'M') + (k * 22) + ' ' + (k % 2 ? 140 : 160);
+      return '<rect y="0" width="400" height="60" class="gb" opacity=".35"/>' + t + '<path d="M0 116 H400 M0 64 H400" class="st ink" stroke-width="3"/>' +
+        '<path d="' + z + '" class="st pk" stroke-width="6"/>' + dm + '<path d="M0 180 H400 M0 240 H400" class="st ink" stroke-width="3"/>' +
+        '<rect y="250" width="400" height="50" class="pk" opacity=".3"/>';
+    },
+    realism: function () {
+      return '<rect width="400" height="150" class="gb" opacity=".25"/>' +
+        '<path d="M0 170 C60 150 110 190 170 168 C220 150 260 120 300 150 C340 176 370 160 400 168 V300 H0Z" class="ink" opacity=".75"/>' +
+        '<path d="M0 220 C80 196 130 240 210 214 S340 200 400 222" class="st bgk" stroke-width="5" opacity=".75"/>' +
+        '<path d="M30 250 c30 -14 60 -14 90 0 M220 262 c30 -12 60 -12 90 0" class="st pk" stroke-width="4" opacity=".7"/>' +
+        '<path d="M60 70 c40 -20 80 -20 120 0 M240 50 c30 -14 60 -14 90 0" class="st ink" stroke-width="3" opacity=".4"/>';
+    },
+    post_impressionism: function () {
+      var s = '';
+      for (var r = 18; r < 120; r += 18) s += '<path d="M' + (230 - r) + ' 100 a' + r + ' ' + (r * 0.7).toFixed(0) + ' 0 1 1 ' + (r * 2) + ' 0" class="st ' + (r % 36 ? 'gb' : 'pk') + '" stroke-width="5" opacity=".7"/>';
+      return '<rect width="400" height="300" class="gb" opacity=".2"/>' + s + '<circle cx="230" cy="100" r="12" class="pk"/>' +
+        '<path d="M0 230 C90 200 180 240 270 210 S370 214 400 220 V300 H0Z" class="pk" opacity=".45"/>' +
+        '<path d="M80 290 C60 220 70 140 90 70 C110 140 120 220 100 290 Z" class="ink" opacity=".85"/>';
     }
 
   };

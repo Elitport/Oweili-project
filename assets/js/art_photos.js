@@ -327,5 +327,107 @@ window.OW_ART_PHOTO = {
   "ar": "أندريا بالاديو، «فيلا لا روتوندا»، مسقط ومقطع، 1570",
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Palladio_La_Rotonda.png"
+ },
+ "impressionism": {
+  "w": 800,
+  "h": 621,
+  "en": "Claude Monet, Impression, Sunrise, 1872",
+  "ar": "كلود مونيه، «انطباع، شروق الشمس»، 1872",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Monet_-_Impression%2C_Sunrise.jpg"
+ },
+ "pointillism": {
+  "w": 800,
+  "h": 478,
+  "en": "Paul Signac, The Port of Saint-Tropez, 1901–02 (detail)",
+  "ar": "بول سينياك، «ميناء سان تروبيه»، 1901–1902 (جزء)",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Paul_Signac_-_The_Port_of_Saint-Tropez_-_Google_Art_Project.jpg"
+ },
+ "cubism": {
+  "w": 548,
+  "h": 800,
+  "en": "Robert Delaunay, Eiffel Tower, 1911",
+  "ar": "روبير ديلوناي، «برج إيفل»، 1911",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Robert_Delaunay_-_Eiffel_Tower_-_1911_-_Solomon_R._Guggenheim_Museum.jpg"
+ },
+ "fauvism": {
+  "w": 800,
+  "h": 632,
+  "en": "André Derain, Mountains at Collioure, 1905",
+  "ar": "أندريه ديران، «جبال في كوليور»، 1905",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Montagnes_%C3%A0_Collioure%2C_par_Andr%C3%A9_Derain.jpg"
+ },
+ "renaissance": {
+  "w": 800,
+  "h": 230,
+  "en": "The Ideal City, Urbino, about 1480 (once given to Piero della Francesca)",
+  "ar": "المدينة المثالية، أوربينو، نحو 1480 (نُسبت سابقاً إلى بييرو ديلا فرانشيسكا)",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Formerly_Piero_della_Francesca_-_Ideal_City_-_Galleria_Nazionale_delle_Marche_Urbino.jpg"
+ },
+ "baroque": {
+  "w": 800,
+  "h": 620,
+  "en": "Willem Claesz. Heda, Still Life with a Gilt Cup, 1635",
+  "ar": "ويليم كلاس هيدا، «طبيعة صامتة مع كأس مذهّبة»، 1635",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Stilleven_met_vergulde_bokaal_Rijksmuseum_SK-A-4830.jpeg"
+ },
+ "romanticism": {
+  "w": 800,
+  "h": 594,
+  "en": "J. M. W. Turner, The Fighting Temeraire, 1839",
+  "ar": "ج. م. و. تيرنر، «السفينة المقاتلة تيميرير»، 1839",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:The_Fighting_Temeraire%2C_JMW_Turner%2C_National_Gallery.jpg"
+ },
+ "art_nouveau": {
+  "w": 800,
+  "h": 585,
+  "en": "Hector Guimard, Métro entrance, Porte Dauphine, Paris, about 1900",
+  "ar": "هكتور غيمار، مدخل مترو بورت دوفين، باريس، نحو 1900",
+  "lic": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Metro_station_entrance_%28%C3%A9dicule_Guimard%29_Porte_Dauphine_Paris_16e_001.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "by": "Moonik"
+ },
+ "ukiyo_e": {
+  "w": 526,
+  "h": 800,
+  "en": "Utagawa Hiroshige, Sudden Shower over Shin-Ōhashi Bridge, 1857",
+  "ar": "أوتاغاوا هيروشيغه، «مطر مفاجئ فوق جسر شين-أوهاشي»، 1857",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Ando_Hiroshige_-_Sudden_Shower_over_Shin-%C5%8Chashi_Bridge_and_Atake%2C_from_the_series_One_Hundre_-_1921.318_-_Cleveland_Museum_of_Art.tif",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "al_qatt_asiri": {
+  "w": 600,
+  "h": 800,
+  "en": "Al-Qatt Al-Asiri painted pillar, Rijal Alma village, Asir (detail)",
+  "ar": "عمود مزيّن بالقط العسيري، قرية رجال ألمع، عسير (جزء)",
+  "lic": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Rijal_Alma_village_from_the_inside%2C_2021.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/2.0/",
+  "by": "Richard Mortel"
+ },
+ "realism": {
+  "w": 800,
+  "h": 664,
+  "en": "Gustave Courbet, The Wave, 1869",
+  "ar": "غوستاف كوربيه، «الموجة»، 1869",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Gustave_Courbet_-_The_Wave_-_Google_Art_Project.jpg"
+ },
+ "post_impressionism": {
+  "w": 800,
+  "h": 646,
+  "en": "Paul Cézanne, Mont Sainte-Victoire and the Viaduct of the Arc River Valley, 1882–85",
+  "ar": "بول سيزان، «جبل سانت فيكتوار وجسر وادي آرك»، 1882–1885",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Mont_Sainte-Victoire_and_the_Viaduct_of_the_Arc_River_Valley_MET_DT889.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  }
 };

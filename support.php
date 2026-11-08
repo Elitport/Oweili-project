@@ -48,6 +48,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 [dir="rtl"] .contact-grid,[dir="rtl"] .legal-grid{direction:rtl;}
 [dir="rtl"] .page-header p{text-align:right;}
+/* only "Write to Us" shown (Community hidden, owner 8 Nov 2026): it sits in the middle column */
+@media(min-width:769px){.contact-grid.one .contact-card{grid-column:2;}}
 @media(max-width:768px){.contact-grid{grid-template-columns:1fr;}.legal-grid{grid-template-columns:1fr;}.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
 </style>
 </head>
@@ -66,7 +68,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   </div>
 
   <p class="section-title" id="t-ct-title">Get in Touch</p>
-  <div class="contact-grid">
+  <?php require_once __DIR__ . '/gallery_lib.php'; ?>
+  <div class="contact-grid<?= owCommunityPageOn() ? '' : ' one' ?>">
     <a class="contact-card" href="mailto:<?= e(owContactEmail()) ?>">
       <div class="contact-icon">✉️</div>
       <h3 id="t-c1">Write to Us</h3>

@@ -471,6 +471,9 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
              placeholder="<?= $ar ? 'تبحث عن شيء؟ اكتب اسم العمل…' : 'Looking for something? Type a title…' ?>">
       <button type="submit" class="btn btn-secondary"><?= $ar ? 'ابحث' : 'Search' ?></button>
     </form>
+    <?php if (!$ar): /* phones, English only (owner, 8 Nov 2026): the long hint was cut off, so phones get a shorter one; laptops keep theirs */ ?>
+    <script>(function(){var i=document.querySelector('#mpForm input[name="q"]');if(i&&window.matchMedia&&matchMedia('(max-width: 768px)').matches)i.placeholder='Search artworks…';})();</script>
+    <?php endif; ?>
 
     <!-- TOPIC: one dropdown list (was 10 buttons), same filter as before -->
     <form class="mp-topic" method="get" action="marketplace.php">

@@ -1,5 +1,5 @@
 /* =====================================================================
- *  art_styles.js: the single source for all art style content (50 styles).
+ *  art_styles.js: the single source for all art style content (62 styles: 50 shown, 12 hidden).
  *  Used by explore.php (cards + the style window), and read by
  *  art_types.php for the art type names. Never copy this data into a
  *  page: load this file instead.
@@ -3391,6 +3391,1926 @@ window.OW_ART_STYLES = [
   }
  },
  {
+  "id": "impressionism",
+  "cat": "traditional",
+  "type": "impressionism",
+  "level": "intermediate",
+  "en": {
+   "name": "Impressionism",
+   "feel": "Luminous",
+   "essence": "Quick strokes that catch light and air in one passing moment.",
+   "story": [
+    "Impressionism began in France in the 1870s. Young painters left the studio and worked outdoors, in front of the real scene.",
+    "In 1874 they held their own show in Paris. A critic mocked Monet’s Impression, Sunrise, and the name stuck.",
+    "They painted light on water, snow and busy streets. Their fresh color changed painting for good. Artists still paint this way today, outdoors and fast."
+   ],
+   "tech": [
+    [
+     "Broken color",
+     "Small touches of pure color placed side by side."
+    ],
+    [
+     "Painting outdoors",
+     "Working in the open air, in front of the real scene."
+    ],
+    [
+     "Wet-on-wet",
+     "New paint laid into wet paint for soft blends."
+    ],
+    [
+     "Colored shadows",
+     "Shadows painted blue or violet, never plain black."
+    ],
+    [
+     "Visible brushwork",
+     "Short, quick strokes left open on the canvas."
+    ],
+    [
+     "Series painting",
+     "The same subject painted at different hours and seasons."
+    ]
+   ],
+   "signs": [
+    "Short, quick strokes with soft ridges of paint.",
+    "Colors mixed on the canvas, not only on the palette.",
+    "Small changes where the artist chased moving light.",
+    "Canvas texture showing through thin areas."
+   ],
+   "tools": [
+    [
+     "Flat and filbert brushes",
+     "For short, broad strokes."
+    ],
+    [
+     "Oil paint in tubes",
+     "Portable color that made outdoor painting easy."
+    ],
+    [
+     "Portable easel",
+     "To set up anywhere outdoors."
+    ],
+    [
+     "Light-primed canvas",
+     "A pale base that makes colors glow."
+    ],
+    [
+     "Palette of pure colors",
+     "Bright pigments kept clean and unmixed."
+    ],
+    [
+     "Painting umbrella",
+     "To keep strong sun off the canvas."
+    ]
+   ],
+   "time": "A few hours to a few days",
+   "bestFor": "Collectors who love light, color and calm outdoor moments.",
+   "artists": [
+    [
+     "Claude Monet",
+     "French, 1840–1926",
+     "His Impression, Sunrise gave the movement its name."
+    ],
+    [
+     "Pierre-Auguste Renoir",
+     "French, 1841–1919",
+     "He painted sunny gatherings full of warm, soft color."
+    ],
+    [
+     "Camille Pissarro",
+     "Danish-French, 1830–1903",
+     "He guided younger painters and painted roads, fields and Paris streets."
+    ],
+    [
+     "Berthe Morisot",
+     "French, 1841–1895",
+     "She painted quiet daily life with light, feathery strokes."
+    ],
+    [
+     "Alfred Sisley",
+     "British, 1839–1899",
+     "Born in Paris, he painted rivers, floods and wide skies."
+    ]
+   ],
+   "guide": [
+    "Look closely: real strokes have raised edges and sometimes a stray brush hair.",
+    "Ask where it was painted. Many works are made outdoors in one sitting.",
+    "Check the back of the canvas for the date, signature and labels."
+   ]
+  },
+  "ar": {
+   "name": "الانطباعية",
+   "feel": "مضيء",
+   "essence": "ضربات سريعة تلتقط الضوء والهواء في لحظة عابرة.",
+   "story": [
+    "بدأت الانطباعية في فرنسا في سبعينيات القرن التاسع عشر. خرج رسامون شباب من المرسم ورسموا في الهواء الطلق أمام المشهد الحقيقي.",
+    "في عام 1874 أقاموا معرضهم الخاص في باريس. سخر ناقد من لوحة مونيه «انطباع، شروق الشمس»، فبقي الاسم.",
+    "رسموا الضوء على الماء والثلج والشوارع المزدحمة. وغيّرت ألوانهم المنعشة الرسم إلى الأبد. وما زال الفنانون يرسمون بهذه الطريقة اليوم، في الخارج وبسرعة."
+   ],
+   "tech": [
+    [
+     "اللون المجزّأ",
+     "لمسات صغيرة من لون نقي متجاورة."
+    ],
+    [
+     "الرسم في الهواء الطلق",
+     "العمل في الخارج أمام المشهد الحقيقي."
+    ],
+    [
+     "الرطب على الرطب",
+     "طلاء جديد يوضع فوق طلاء رطب لمزج ناعم."
+    ],
+    [
+     "الظلال الملوّنة",
+     "ظلال زرقاء أو بنفسجية، لا سوداء أبداً."
+    ],
+    [
+     "ضربات الفرشاة الظاهرة",
+     "ضربات قصيرة سريعة تُترك مكشوفة على القماش."
+    ],
+    [
+     "الرسم المتسلسل",
+     "الموضوع نفسه في ساعات وفصول مختلفة."
+    ]
+   ],
+   "signs": [
+    "ضربات قصيرة سريعة بنتوءات ناعمة من الطلاء.",
+    "ألوان ممزوجة على القماش، لا على اللوحة فقط.",
+    "تعديلات صغيرة حيث لاحق الفنان ضوءاً متحركاً.",
+    "ملمس القماش يظهر في المناطق الرقيقة."
+   ],
+   "tools": [
+    [
+     "فرش مسطحة وبيضاوية",
+     "لضربات قصيرة عريضة."
+    ],
+    [
+     "ألوان زيتية في أنابيب",
+     "ألوان سهلة الحمل جعلت الرسم في الخارج ممكناً."
+    ],
+    [
+     "حامل رسم متنقل",
+     "ليُنصب في أي مكان في الخارج."
+    ],
+    [
+     "قماش بأساس فاتح",
+     "أساس شاحب يجعل الألوان تتوهج."
+    ],
+    [
+     "لوحة ألوان نقية",
+     "أصباغ زاهية تبقى نظيفة غير ممزوجة."
+    ],
+    [
+     "مظلة الرسم",
+     "لتحجب الشمس القوية عن القماش."
+    ]
+   ],
+   "time": "من بضع ساعات إلى بضعة أيام",
+   "bestFor": "لمن يحب الضوء واللون ولحظات الهدوء في الطبيعة.",
+   "artists": [
+    [
+     "كلود مونيه",
+     "فرنسي، 1840–1926",
+     "منحت لوحته «انطباع، شروق الشمس» الحركة اسمها."
+    ],
+    [
+     "بيير أوغست رينوار",
+     "فرنسي، 1841–1919",
+     "رسم تجمعات مشمسة مليئة بألوان دافئة ناعمة."
+    ],
+    [
+     "كاميل بيسارو",
+     "دنماركي فرنسي، 1830–1903",
+     "وجّه الرسامين الشباب ورسم الطرق والحقول وشوارع باريس."
+    ],
+    [
+     "بيرت موريزو",
+     "فرنسية، 1841–1895",
+     "رسمت الحياة اليومية الهادئة بضربات خفيفة كالريش."
+    ],
+    [
+     "ألفريد سيسلي",
+     "بريطاني، 1839–1899",
+     "وُلد في باريس، ورسم الأنهار والفيضانات والسماء الواسعة."
+    ]
+   ],
+   "guide": [
+    "انظر عن قرب: للضربات الحقيقية حواف بارزة، وأحياناً شعرة فرشاة شاردة.",
+    "اسأل أين رُسم العمل. كثير من الأعمال تُرسم في الخارج في جلسة واحدة.",
+    "افحص ظهر القماش للتاريخ والتوقيع والملصقات."
+   ]
+  }
+ },
+ {
+  "id": "pointillism",
+  "cat": "traditional",
+  "type": "pointillism",
+  "level": "advanced",
+  "en": {
+   "name": "Pointillism",
+   "feel": "Precise",
+   "essence": "Tiny dots of pure color that blend in the viewer’s eye.",
+   "story": [
+    "Georges Seurat developed pointillism in Paris in the 1880s. He studied how color and light work.",
+    "Instead of mixing paint, he placed small dots side by side. From a distance, the eye joins them. His friend Paul Signac carried the method forward.",
+    "The work is slow and careful. Each dot is a choice. Today artists still use dots for glowing, shimmering color."
+   ],
+   "tech": [
+    [
+     "Dotting",
+     "Small, even dots of unmixed color."
+    ],
+    [
+     "Optical mixing",
+     "Colors blend in the eye, not on the palette."
+    ],
+    [
+     "Complementary contrast",
+     "Opposite colors placed close to make each other glow."
+    ],
+    [
+     "Painted borders",
+     "Dotted edges that frame and echo the picture."
+    ],
+    [
+     "Layered dots",
+     "Several layers of dots build depth slowly."
+    ],
+    [
+     "Mosaic strokes",
+     "Larger square dabs, as in Signac’s later work."
+    ]
+   ],
+   "signs": [
+    "Dots that differ slightly in size and shape.",
+    "Small overlaps where a dot was added later.",
+    "Raised dabs of paint you can feel in side light.",
+    "No machine-like pattern: the spacing breathes."
+   ],
+   "tools": [
+    [
+     "Small round brushes",
+     "For neat, even dots."
+    ],
+    [
+     "Oil paint",
+     "Rich color for each dot."
+    ],
+    [
+     "Color wheel",
+     "To plan which colors sit side by side."
+    ],
+    [
+     "Fine canvas",
+     "A smooth surface for small marks."
+    ],
+    [
+     "Palette of pure pigments",
+     "Colors kept clean and unmixed."
+    ],
+    [
+     "Mahlstick",
+     "A rest that steadies the hand."
+    ]
+   ],
+   "time": "Several weeks to many months",
+   "bestFor": "Collectors who enjoy patience, precision and glowing color.",
+   "artists": [
+    [
+     "Georges Seurat",
+     "French, 1859–1891",
+     "He created the method and painted A Sunday on La Grande Jatte."
+    ],
+    [
+     "Paul Signac",
+     "French, 1863–1935",
+     "He spread the style and painted bright harbors in dots."
+    ],
+    [
+     "Henri-Edmond Cross",
+     "French, 1856–1910",
+     "He painted the Mediterranean coast in luminous dots."
+    ],
+    [
+     "Théo van Rysselberghe",
+     "Belgian, 1862–1926",
+     "He brought pointillism to Belgium."
+    ],
+    [
+     "Maximilien Luce",
+     "French, 1858–1941",
+     "He painted workers and city scenes in vivid dots."
+    ]
+   ],
+   "guide": [
+    "Look closely at the dots: hand-made ones differ slightly in size.",
+    "A printed copy shows a regular grid of tiny ink dots under a magnifier.",
+    "Ask about the time it took. Real pointillist work is slow."
+   ]
+  },
+  "ar": {
+   "name": "التنقيطية",
+   "feel": "دقيق",
+   "essence": "نقاط صغيرة من لون نقي تمتزج في عين الناظر.",
+   "story": [
+    "طوّر جورج سورا التنقيطية في باريس في ثمانينيات القرن التاسع عشر. ودرس كيف يعمل اللون والضوء.",
+    "بدل أن يمزج الألوان، وضع نقاطاً صغيرة متجاورة. ومن بعيد تجمعها العين. ثم حمل صديقه بول سينياك الطريقة إلى الأمام.",
+    "العمل بطيء ودقيق. وكل نقطة اختيار. واليوم ما زال الفنانون يستخدمون النقاط لألوان متوهجة متلألئة."
+   ],
+   "tech": [
+    [
+     "التنقيط",
+     "نقاط صغيرة متساوية من لون غير ممزوج."
+    ],
+    [
+     "المزج البصري",
+     "تمتزج الألوان في العين، لا على اللوحة."
+    ],
+    [
+     "تباين الألوان المتكاملة",
+     "ألوان متقابلة متجاورة يُبرز كل منها الآخر."
+    ],
+    [
+     "الإطار المرسوم",
+     "حواف منقّطة تؤطّر الصورة وتردّدها."
+    ],
+    [
+     "طبقات النقاط",
+     "طبقات متعددة من النقاط تبني العمق ببطء."
+    ],
+    [
+     "الضربات الفسيفسائية",
+     "لمسات مربعة أكبر، كما في أعمال سينياك المتأخرة."
+    ]
+   ],
+   "signs": [
+    "نقاط تختلف قليلاً في الحجم والشكل.",
+    "تداخلات صغيرة حيث أُضيفت نقطة لاحقاً.",
+    "لمسات بارزة من الطلاء تشعر بها حين يأتي الضوء من الجانب.",
+    "لا نمط آلي: المسافات تتنفس."
+   ],
+   "tools": [
+    [
+     "فرش دائرية صغيرة",
+     "لنقاط مرتبة متساوية."
+    ],
+    [
+     "ألوان زيتية",
+     "لون غني لكل نقطة."
+    ],
+    [
+     "دائرة الألوان",
+     "لتخطيط الألوان المتجاورة."
+    ],
+    [
+     "قماش ناعم",
+     "سطح أملس للعلامات الصغيرة."
+    ],
+    [
+     "أصباغ نقية",
+     "ألوان تبقى نظيفة غير ممزوجة."
+    ],
+    [
+     "عصا الرسام",
+     "مسند يثبّت اليد."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى أشهر كثيرة",
+   "bestFor": "لمن يقدّر الصبر والدقة والألوان المتوهجة.",
+   "artists": [
+    [
+     "جورج سورا",
+     "فرنسي، 1859–1891",
+     "ابتكر الطريقة ورسم «ظهيرة الأحد في جزيرة لا غراند جات»."
+    ],
+    [
+     "بول سينياك",
+     "فرنسي، 1863–1935",
+     "نشر الأسلوب ورسم موانئ مشرقة بالنقاط."
+    ],
+    [
+     "هنري إدمون كروس",
+     "فرنسي، 1856–1910",
+     "رسم ساحل البحر المتوسط بنقاط مضيئة."
+    ],
+    [
+     "تيو فان ريسلبرغ",
+     "بلجيكي، 1862–1926",
+     "حمل التنقيطية إلى بلجيكا."
+    ],
+    [
+     "ماكسيميليان لوس",
+     "فرنسي، 1858–1941",
+     "رسم العمال ومشاهد المدينة بنقاط زاهية."
+    ]
+   ],
+   "guide": [
+    "انظر إلى النقاط عن قرب: النقاط اليدوية تختلف قليلاً في الحجم.",
+    "النسخة المطبوعة تُظهر تحت العدسة شبكة منتظمة من نقاط حبر دقيقة.",
+    "اسأل عن الوقت الذي استغرقه العمل. التنقيط الحقيقي بطيء."
+   ]
+  }
+ },
+ {
+  "id": "renaissance",
+  "cat": "traditional",
+  "type": "renaissance",
+  "level": "advanced",
+  "en": {
+   "name": "Renaissance",
+   "feel": "Harmonious",
+   "essence": "Balance, perspective and close study of nature, reborn from classical ideas.",
+   "story": [
+    "The Renaissance began in Italy in the 1400s. The word means rebirth.",
+    "Artists studied ancient Greek and Roman art. Ibn al-Haytham’s book on optics helped them think about vision. Brunelleschi showed how linear perspective works, so flat walls could look deep.",
+    "Leonardo, Michelangelo and Raphael raised painting to new heights. The ideas spread north to Flanders and Germany. Art schools still teach its methods today."
+   ],
+   "tech": [
+    [
+     "Linear perspective",
+     "Lines meeting at one point to show depth."
+    ],
+    [
+     "Sfumato",
+     "Soft, smoky blending with no hard edges."
+    ],
+    [
+     "Chiaroscuro",
+     "Strong light and shade that model form."
+    ],
+    [
+     "Fresco",
+     "Painting on fresh, wet plaster."
+    ],
+    [
+     "Oil glazing",
+     "Thin, clear layers of oil for glowing color."
+    ],
+    [
+     "Egg tempera",
+     "Pigment bound with egg yolk on wood panels."
+    ]
+   ],
+   "signs": [
+    "Faint underdrawing showing through thin paint.",
+    "Thin glazes built up slowly, layer on layer.",
+    "Changes in the design seen under the surface.",
+    "Hand-ground pigments with tiny uneven grains."
+   ],
+   "tools": [
+    [
+     "Wood panel",
+     "The usual support before canvas."
+    ],
+    [
+     "Gesso",
+     "A smooth white base of chalk and glue."
+    ],
+    [
+     "Egg tempera",
+     "Fast-drying, precise color."
+    ],
+    [
+     "Oil paint and glazes",
+     "For depth and glow."
+    ],
+    [
+     "Fine sable brushes",
+     "For tiny detail."
+    ],
+    [
+     "Compass and ruler",
+     "To plan perspective and proportion."
+    ]
+   ],
+   "time": "Several weeks to many months",
+   "bestFor": "Collectors who love balance, craft and timeless beauty.",
+   "artists": [
+    [
+     "Leonardo da Vinci",
+     "Italian, 1452–1519",
+     "Painter, inventor and scientist, he perfected soft sfumato."
+    ],
+    [
+     "Michelangelo",
+     "Italian, 1475–1564",
+     "He painted vast frescoes and carved great marble sculptures."
+    ],
+    [
+     "Raphael",
+     "Italian, 1483–1520",
+     "His calm, balanced designs became a model for centuries."
+    ],
+    [
+     "Piero della Francesca",
+     "Italian, about 1415–1492",
+     "He wrote about perspective and painted calm, ordered scenes."
+    ],
+    [
+     "Sandro Botticelli",
+     "Italian, about 1445–1510",
+     "He painted graceful, flowing lines in Florence."
+    ],
+    [
+     "Albrecht Dürer",
+     "German, 1471–1528",
+     "He carried Renaissance ideas north in paintings and prints."
+    ]
+   ],
+   "guide": [
+    "For new works in this style, ask about the panel, the ground and the glazes.",
+    "Look at the drawing: careful perspective is a sign of real skill.",
+    "For old works, ask for expert study and a clear history."
+   ]
+  },
+  "ar": {
+   "name": "عصر النهضة",
+   "feel": "متناغم",
+   "essence": "توازن ومنظور ودراسة متأنية للطبيعة، وُلدت من جديد من الأفكار الكلاسيكية.",
+   "story": [
+    "بدأ عصر النهضة في إيطاليا في القرن الخامس عشر. والكلمة تعني الولادة من جديد.",
+    "درس الفنانون الفن الإغريقي والروماني القديم. وساعدهم كتاب ابن الهيثم في البصريات على التفكير في الرؤية. وبيّن برونليسكي كيف يعمل المنظور الخطي، فبدت الجدران المسطحة عميقة.",
+    "رفع ليوناردو ومايكل أنجلو ورافائيل الرسم إلى آفاق جديدة. وانتقلت الأفكار شمالاً إلى الفلاندرز وألمانيا. وما زالت مدارس الفن تعلّم أساليبه اليوم."
+   ],
+   "tech": [
+    [
+     "المنظور الخطي",
+     "خطوط تلتقي في نقطة واحدة لتُظهر العمق."
+    ],
+    [
+     "التدرّج الضبابي",
+     "مزج ناعم كالدخان بلا حواف حادة."
+    ],
+    [
+     "الضوء والظل",
+     "ضوء وظل قويان يجسّمان الشكل."
+    ],
+    [
+     "الفريسكو",
+     "الرسم على الجص الرطب الطازج."
+    ],
+    [
+     "الطبقات الزيتية الشفافة",
+     "طبقات زيتية رقيقة صافية لتوهج اللون."
+    ],
+    [
+     "التمبرا بالبيض",
+     "صبغة تُربط بصفار البيض على ألواح الخشب."
+    ]
+   ],
+   "signs": [
+    "رسم تحضيري خفيف يظهر من تحت الطلاء الرقيق.",
+    "طبقات شفافة رقيقة تُبنى ببطء طبقة فوق طبقة.",
+    "تغييرات في التصميم تظهر تحت السطح.",
+    "أصباغ مطحونة يدوياً بحبيبات صغيرة غير متساوية."
+   ],
+   "tools": [
+    [
+     "لوح خشبي",
+     "السطح المعتاد قبل القماش."
+    ],
+    [
+     "الجيسو",
+     "أساس أبيض أملس من الطباشير والغراء."
+    ],
+    [
+     "التمبرا بالبيض",
+     "لون سريع الجفاف دقيق."
+    ],
+    [
+     "ألوان زيتية وطبقات شفافة",
+     "للعمق والتوهج."
+    ],
+    [
+     "فرش سمّور دقيقة",
+     "للتفاصيل الصغيرة."
+    ],
+    [
+     "فرجار ومسطرة",
+     "لتخطيط المنظور والنسب."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى أشهر كثيرة",
+   "bestFor": "لمن يحب التوازن والإتقان والجمال الخالد.",
+   "artists": [
+    [
+     "ليوناردو دا فينشي",
+     "إيطالي، 1452–1519",
+     "رسام ومخترع وعالم، أتقن التدرّج الضبابي الناعم."
+    ],
+    [
+     "مايكل أنجلو",
+     "إيطالي، 1475–1564",
+     "رسم جداريات ضخمة ونحت تماثيل رخامية عظيمة."
+    ],
+    [
+     "رافائيل",
+     "إيطالي، 1483–1520",
+     "صارت تكويناته الهادئة المتوازنة نموذجاً لقرون."
+    ],
+    [
+     "بييرو ديلا فرانشيسكا",
+     "إيطالي، نحو 1415–1492",
+     "كتب عن المنظور ورسم مشاهد هادئة منظمة."
+    ],
+    [
+     "ساندرو بوتيتشيلي",
+     "إيطالي، نحو 1445–1510",
+     "رسم خطوطاً رشيقة منسابة في فلورنسا."
+    ],
+    [
+     "ألبرخت دورر",
+     "ألماني، 1471–1528",
+     "حمل أفكار النهضة شمالاً في لوحاته وطبعاته."
+    ]
+   ],
+   "guide": [
+    "في الأعمال الجديدة بهذا الأسلوب، اسأل عن اللوح والأساس والطبقات الشفافة.",
+    "انظر إلى الرسم: المنظور المتقن علامة على مهارة حقيقية.",
+    "في الأعمال القديمة، اطلب دراسة خبير وتاريخاً واضحاً."
+   ]
+  }
+ },
+ {
+  "id": "baroque",
+  "cat": "traditional",
+  "type": "baroque",
+  "level": "advanced",
+  "en": {
+   "name": "Baroque",
+   "feel": "Dramatic",
+   "essence": "Drama, movement and deep contrasts of light and dark.",
+   "story": [
+    "Baroque art began in Rome around 1600. It spread across Europe for more than a century.",
+    "Caravaggio lit his scenes like a stage, with deep darkness around them. Rubens filled huge canvases with movement. In Spain, Velázquez painted with rich, loose strokes.",
+    "In the Netherlands, painters made calm still lifes and landscapes for family homes. Rembrandt mastered light and shadow. Its sense of drama still inspires painters and filmmakers."
+   ],
+   "tech": [
+    [
+     "Tenebrism",
+     "Strong light against deep darkness."
+    ],
+    [
+     "Chiaroscuro",
+     "Light and shade that give weight and form."
+    ],
+    [
+     "Diagonal composition",
+     "Slanting lines that create movement."
+    ],
+    [
+     "Glazing",
+     "Thin oil layers for depth and glow."
+    ],
+    [
+     "Impasto highlights",
+     "Thick paint where the light hits."
+    ],
+    [
+     "Trompe-l’œil",
+     "Painting that tricks the eye into seeing real objects."
+    ]
+   ],
+   "signs": [
+    "Thick highlights with raised paint texture.",
+    "A dark base showing through thin shadows.",
+    "Changes in outlines seen under the surface.",
+    "Glaze layers that glow in good light."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "Rich color for deep shadows and bright lights."
+    ],
+    [
+     "Toned canvas",
+     "A brown or red base that warms the shadows."
+    ],
+    [
+     "Hog and sable brushes",
+     "Stiff for texture, soft for blending."
+    ],
+    [
+     "Glazing medium",
+     "For thin, glowing layers."
+    ],
+    [
+     "Mahlstick",
+     "A rest that steadies the hand."
+    ],
+    [
+     "Studio easel",
+     "For large, heavy canvases."
+    ]
+   ],
+   "time": "Several weeks to several months",
+   "bestFor": "Collectors who love drama, rich color and deep atmosphere.",
+   "artists": [
+    [
+     "Caravaggio",
+     "Italian, 1571–1610",
+     "His dramatic light changed painting across Europe."
+    ],
+    [
+     "Peter Paul Rubens",
+     "Flemish, 1577–1640",
+     "He filled huge canvases with energy and movement."
+    ],
+    [
+     "Rembrandt van Rijn",
+     "Dutch, 1606–1669",
+     "He mastered light, shadow and deep feeling."
+    ],
+    [
+     "Diego Velázquez",
+     "Spanish, 1599–1660",
+     "His loose, confident brushwork amazed later painters."
+    ],
+    [
+     "Artemisia Gentileschi",
+     "Italian, 1593–about 1656",
+     "She painted powerful scenes in Caravaggio’s strong light."
+    ],
+    [
+     "Willem Claesz. Heda",
+     "Dutch, about 1594–1680",
+     "He painted quiet still lifes of silver, glass and food."
+    ]
+   ],
+   "guide": [
+    "Look at the highlights in side light: real ones stand up from the surface.",
+    "Ask about the layers. Baroque-style work is built slowly.",
+    "For old works, ask for expert study and a clear history."
+   ]
+  },
+  "ar": {
+   "name": "الباروك",
+   "feel": "درامي",
+   "essence": "دراما وحركة وتباين عميق بين الضوء والظلام.",
+   "story": [
+    "بدأ فن الباروك في روما نحو عام 1600. وانتشر في أوروبا أكثر من قرن.",
+    "أضاء كارافاجيو مشاهده كأنها على مسرح، يحيط بها ظلام عميق. وملأ روبنز لوحات ضخمة بالحركة. وفي إسبانيا رسم فيلاسكيز بضربات غنية طليقة.",
+    "وفي هولندا رسم الفنانون طبيعة صامتة ومناظر هادئة لبيوت العائلات. وأتقن رمبرانت الضوء والظل. وما زال حسّه الدرامي يُلهم الرسامين وصنّاع الأفلام."
+   ],
+   "tech": [
+    [
+     "الإضاءة المسرحية",
+     "ضوء قوي أمام ظلام عميق."
+    ],
+    [
+     "الضوء والظل",
+     "ضوء وظل يمنحان الوزن والشكل."
+    ],
+    [
+     "التكوين القُطري",
+     "خطوط مائلة تصنع الحركة."
+    ],
+    [
+     "الطبقات الشفافة",
+     "طبقات زيتية رقيقة للعمق والتوهج."
+    ],
+    [
+     "إضاءات الطلاء الكثيف",
+     "طلاء سميك حيث يسقط الضوء."
+    ],
+    [
+     "خداع البصر",
+     "رسم يخدع العين فترى أشياء حقيقية."
+    ]
+   ],
+   "signs": [
+    "إضاءات كثيفة بملمس طلاء بارز.",
+    "أساس داكن يظهر من تحت الظلال الرقيقة.",
+    "تغييرات في الحدود تظهر تحت السطح.",
+    "طبقات شفافة تتوهج في الضوء الجيد."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "لون غني للظلال العميقة والأضواء الساطعة."
+    ],
+    [
+     "قماش ملوّن الأساس",
+     "أساس بنّي أو أحمر يدفّئ الظلال."
+    ],
+    [
+     "فرش خشنة وناعمة",
+     "الخشنة للملمس، والناعمة للمزج."
+    ],
+    [
+     "وسيط الطبقات الشفافة",
+     "لطبقات رقيقة متوهجة."
+    ],
+    [
+     "عصا الرسام",
+     "مسند يثبّت اليد."
+    ],
+    [
+     "حامل رسم للمرسم",
+     "للوحات الكبيرة الثقيلة."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى عدة أشهر",
+   "bestFor": "لمن يحب الدراما والألوان الغنية والأجواء العميقة.",
+   "artists": [
+    [
+     "كارافاجيو",
+     "إيطالي، 1571–1610",
+     "غيّر ضوؤه الدرامي الرسم في أوروبا كلها."
+    ],
+    [
+     "بيتر بول روبنز",
+     "فلمنكي، 1577–1640",
+     "ملأ لوحات ضخمة بالطاقة والحركة."
+    ],
+    [
+     "رمبرانت فان راين",
+     "هولندي، 1606–1669",
+     "أتقن الضوء والظل والإحساس العميق."
+    ],
+    [
+     "دييغو فيلاسكيز",
+     "إسباني، 1599–1660",
+     "أدهشت ضرباته الطليقة الواثقة الرسامين بعده."
+    ],
+    [
+     "أرتميسيا جنتيليسكي",
+     "إيطالية، 1593–نحو 1656",
+     "رسمت مشاهد قوية بضوء كارافاجيو الساطع."
+    ],
+    [
+     "ويليم كلاس هيدا",
+     "هولندي، نحو 1594–1680",
+     "رسم طبيعة صامتة هادئة من الفضة والزجاج والطعام."
+    ]
+   ],
+   "guide": [
+    "انظر إلى الإضاءات في ضوء جانبي: الحقيقية تبرز من السطح.",
+    "اسأل عن الطبقات. العمل بأسلوب الباروك يُبنى ببطء.",
+    "في الأعمال القديمة، اطلب دراسة خبير وتاريخاً واضحاً."
+   ]
+  }
+ },
+ {
+  "id": "romanticism",
+  "cat": "traditional",
+  "type": "romanticism",
+  "level": "intermediate",
+  "en": {
+   "name": "Romanticism",
+   "feel": "Stirring",
+   "essence": "Strong emotion, wild nature and the power of imagination.",
+   "story": [
+    "Romanticism grew in Europe from the late 1700s. Artists put feeling before strict rules.",
+    "Painters showed storms, mountains and the sea as huge and powerful. Turner filled skies with light and mist. Caspar David Friedrich painted quiet, thoughtful landscapes.",
+    "In France, Delacroix used bold color and movement. He traveled to Morocco in 1832 and fell in love with its light. That sense of wonder lives on in landscape painting today."
+   ],
+   "tech": [
+    [
+     "Atmospheric light",
+     "Mist, haze and glowing skies."
+    ],
+    [
+     "Dramatic skies",
+     "Storm clouds and sunsets full of feeling."
+    ],
+    [
+     "Loose brushwork",
+     "Free strokes that show energy and movement."
+    ],
+    [
+     "Scumbling",
+     "Thin, broken layers rubbed over dry paint."
+    ],
+    [
+     "Vast scale",
+     "Nature shown huge, people shown small."
+    ],
+    [
+     "Oil sketches outdoors",
+     "Quick studies of light made in nature."
+    ]
+   ],
+   "signs": [
+    "Layered skies with soft blending and broken color.",
+    "Quick sketch marks under finished areas.",
+    "Thick paint in the brightest lights.",
+    "Scratches and scrapes used to catch sparkle."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "Rich color for skies and seas."
+    ],
+    [
+     "Watercolor and paper",
+     "For fast studies of light and weather."
+    ],
+    [
+     "Soft and stiff brushes",
+     "For blending and for texture."
+    ],
+    [
+     "Palette knife",
+     "Turner scraped paint to make light sparkle."
+    ],
+    [
+     "Sketchbook",
+     "To record nature on the spot."
+    ],
+    [
+     "Canvas",
+     "Often large, for grand views."
+    ]
+   ],
+   "time": "A few days to several months",
+   "bestFor": "Collectors who love big skies, storms and strong emotion.",
+   "artists": [
+    [
+     "J. M. W. Turner",
+     "British, 1775–1851",
+     "He turned light, steam and storm into pure color."
+    ],
+    [
+     "Caspar David Friedrich",
+     "German, 1774–1840",
+     "He painted quiet landscapes of mist, mountains and sea."
+    ],
+    [
+     "Eugène Delacroix",
+     "French, 1798–1863",
+     "His bold color and movement led French Romanticism."
+    ],
+    [
+     "John Constable",
+     "British, 1776–1837",
+     "He painted English skies and countryside with fresh truth."
+    ],
+    [
+     "Théodore Géricault",
+     "French, 1791–1824",
+     "His Raft of the Medusa stunned Paris in 1819."
+    ]
+   ],
+   "guide": [
+    "Look at the sky: real layers show depth, scratches and changes.",
+    "Ask about the size. Romantic works are often large and ambitious.",
+    "Check the surface in side light for real brush and knife marks."
+   ]
+  },
+  "ar": {
+   "name": "الرومانسية",
+   "feel": "مؤثّر",
+   "essence": "عاطفة قوية وطبيعة جامحة وقوة الخيال.",
+   "story": [
+    "نمت الرومانسية في أوروبا منذ أواخر القرن الثامن عشر. وقدّم الفنانون الإحساس على القواعد الصارمة.",
+    "رسم الفنانون العواصف والجبال والبحر ضخمة قوية. وملأ تيرنر السماء بالضوء والضباب. ورسم كاسبار دافيد فريدريش مناظر هادئة تدعو إلى التأمل.",
+    "وفي فرنسا استخدم دولاكروا اللون الجريء والحركة. وسافر إلى المغرب عام 1832 فأحب ضوءه. وما زال هذا الإحساس بالدهشة حياً في رسم المناظر اليوم."
+   ],
+   "tech": [
+    [
+     "الضوء الجوي",
+     "ضباب وغشاوة وسماء متوهجة."
+    ],
+    [
+     "السماء الدرامية",
+     "غيوم عاصفة وغروب مليء بالإحساس."
+    ],
+    [
+     "الضربات الطليقة",
+     "ضربات حرة تُظهر الطاقة والحركة."
+    ],
+    [
+     "الفرك الخفيف",
+     "طبقات رقيقة متقطعة تُفرك فوق طلاء جاف."
+    ],
+    [
+     "الحجم الهائل",
+     "الطبيعة ضخمة والناس صغار."
+    ],
+    [
+     "الدراسات الزيتية في الخارج",
+     "دراسات سريعة للضوء في الطبيعة."
+    ]
+   ],
+   "signs": [
+    "سماء متعددة الطبقات بمزج ناعم ولون متقطع.",
+    "علامات رسم سريع تحت المناطق المكتملة.",
+    "طلاء كثيف في أسطع الأضواء.",
+    "خدوش وكشط لالتقاط اللمعان."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "لون غني للسماء والبحر."
+    ],
+    [
+     "ألوان مائية وورق",
+     "لدراسات سريعة للضوء والطقس."
+    ],
+    [
+     "فرش ناعمة وخشنة",
+     "للمزج وللملمس."
+    ],
+    [
+     "سكين الرسم",
+     "كشط تيرنر الطلاء ليلمع الضوء."
+    ],
+    [
+     "كراسة الرسم",
+     "لتسجيل الطبيعة في مكانها."
+    ],
+    [
+     "القماش",
+     "كبير غالباً للمشاهد الواسعة."
+    ]
+   ],
+   "time": "من بضعة أيام إلى عدة أشهر",
+   "bestFor": "لمن يحب السماء الواسعة والعواصف والعاطفة القوية.",
+   "artists": [
+    [
+     "ج. م. و. تيرنر",
+     "بريطاني، 1775–1851",
+     "حوّل الضوء والبخار والعاصفة إلى لون خالص."
+    ],
+    [
+     "كاسبار دافيد فريدريش",
+     "ألماني، 1774–1840",
+     "رسم مناظر هادئة من الضباب والجبال والبحر."
+    ],
+    [
+     "أوجين دولاكروا",
+     "فرنسي، 1798–1863",
+     "قاد الرومانسية الفرنسية بلونه الجريء وحركته."
+    ],
+    [
+     "جون كونستابل",
+     "بريطاني، 1776–1837",
+     "رسم سماء الريف الإنجليزي وحقوله بصدق منعش."
+    ],
+    [
+     "تيودور جيريكو",
+     "فرنسي، 1791–1824",
+     "أذهلت لوحته «طوف الميدوسا» باريس عام 1819."
+    ]
+   ],
+   "guide": [
+    "انظر إلى السماء: الطبقات الحقيقية تُظهر عمقاً وخدوشاً وتعديلات.",
+    "اسأل عن المقاس. الأعمال الرومانسية كبيرة وطموحة غالباً.",
+    "افحص السطح في ضوء جانبي بحثاً عن علامات فرشاة وسكين حقيقية."
+   ]
+  }
+ },
+ {
+  "id": "art_nouveau",
+  "cat": "traditional",
+  "type": "art_nouveau",
+  "level": "intermediate",
+  "en": {
+   "name": "Art Nouveau",
+   "feel": "Flowing",
+   "essence": "Long, natural curves that join art, design and daily life.",
+   "story": [
+    "Art Nouveau means new art. It spread across Europe and America from about 1890 to 1910.",
+    "Designers took ideas from plants, waves and Japanese prints. Long whiplash curves ran through posters, glass, iron and buildings.",
+    "Hector Guimard designed the famous Paris Métro entrances. Antoni Gaudí built flowing buildings in Barcelona. Artists still love its graceful lines today."
+   ],
+   "tech": [
+    [
+     "Whiplash line",
+     "A long, curving line full of motion."
+    ],
+    [
+     "Organic forms",
+     "Shapes taken from stems, vines and waves."
+    ],
+    [
+     "Flat color areas",
+     "Clear areas of color, inspired by Japanese prints."
+    ],
+    [
+     "Decorative borders",
+     "Rich frames around posters and panels."
+    ],
+    [
+     "Lithography",
+     "Printing from stone for colorful posters."
+    ],
+    [
+     "Wrought iron",
+     "Iron bent by hand into flowing forms."
+    ]
+   ],
+   "signs": [
+    "Hand-drawn curves with tiny changes in thickness.",
+    "Pencil lines under painted designs.",
+    "In metal and wood, tool marks from hand finishing.",
+    "In prints, slight shifts between the colors."
+   ],
+   "tools": [
+    [
+     "Pen and ink",
+     "For clean, flowing outlines."
+    ],
+    [
+     "Watercolor and gouache",
+     "For flat, soft color."
+    ],
+    [
+     "Lithographic stone and crayons",
+     "For posters printed by hand."
+    ],
+    [
+     "French curves and compass",
+     "To guide smooth lines."
+    ],
+    [
+     "Metal, wood and glass",
+     "For lamps, furniture and windows."
+    ],
+    [
+     "Paper and board",
+     "For designs and finished drawings."
+    ]
+   ],
+   "time": "A few days to several weeks",
+   "bestFor": "Collectors who love graceful lines and art you can live with.",
+   "artists": [
+    [
+     "Alphonse Mucha",
+     "Czech, 1860–1939",
+     "His Paris posters set the look of the style."
+    ],
+    [
+     "Hector Guimard",
+     "French, 1867–1942",
+     "He designed the famous Paris Métro entrances."
+    ],
+    [
+     "Antoni Gaudí",
+     "Spanish, 1852–1926",
+     "He built flowing, colorful buildings in Barcelona."
+    ],
+    [
+     "Louis Comfort Tiffany",
+     "American, 1848–1933",
+     "His glass lamps and windows glow with color."
+    ],
+    [
+     "Victor Horta",
+     "Belgian, 1861–1947",
+     "His Brussels houses brought the style into architecture."
+    ],
+    [
+     "Gustav Klimt",
+     "Austrian, 1862–1918",
+     "He led the Vienna Secession with gold and rich pattern."
+    ]
+   ],
+   "guide": [
+    "Look at the curves: hand-drawn lines change slightly in thickness.",
+    "For posters, ask whether it is an original print or a later copy.",
+    "For objects, look for hand finishing and the maker’s mark."
+   ]
+  },
+  "ar": {
+   "name": "الفن الحديث (آرت نوفو)",
+   "feel": "منساب",
+   "essence": "منحنيات طبيعية طويلة تجمع الفن والتصميم والحياة اليومية.",
+   "story": [
+    "آرت نوفو تعني الفن الجديد. انتشر في أوروبا وأمريكا من نحو عام 1890 إلى 1910.",
+    "استلهم المصممون أفكارهم من النباتات والأمواج والطبعات اليابانية. وجرت منحنيات طويلة كضربة السوط في الملصقات والزجاج والحديد والمباني.",
+    "صمّم هكتور غيمار مداخل مترو باريس الشهيرة. وبنى أنطوني غاودي مباني منسابة في برشلونة. وما زال الفنانون يحبون خطوطه الرشيقة اليوم."
+   ],
+   "tech": [
+    [
+     "خط ضربة السوط",
+     "خط طويل منحنٍ مليء بالحركة."
+    ],
+    [
+     "الأشكال العضوية",
+     "أشكال من السيقان والكروم والأمواج."
+    ],
+    [
+     "مساحات اللون المسطحة",
+     "مساحات لون واضحة مستوحاة من الطبعات اليابانية."
+    ],
+    [
+     "الإطارات الزخرفية",
+     "إطارات غنية حول الملصقات والألواح."
+    ],
+    [
+     "الطباعة الحجرية",
+     "الطباعة من الحجر لملصقات ملوّنة."
+    ],
+    [
+     "الحديد المشغول",
+     "حديد يُثنى باليد في أشكال منسابة."
+    ]
+   ],
+   "signs": [
+    "منحنيات مرسومة باليد بفروق صغيرة في السُّمك.",
+    "خطوط رصاص تحت التصاميم الملوّنة.",
+    "في المعدن والخشب، آثار أدوات من التشطيب اليدوي.",
+    "في المطبوعات، انزياحات خفيفة بين الألوان."
+   ],
+   "tools": [
+    [
+     "القلم والحبر",
+     "لحدود نظيفة منسابة."
+    ],
+    [
+     "ألوان مائية وغواش",
+     "للون مسطح ناعم."
+    ],
+    [
+     "حجر الطباعة وأقلامه",
+     "لملصقات تُطبع باليد."
+    ],
+    [
+     "المنحنيات الفرنسية والفرجار",
+     "لتوجيه الخطوط الناعمة."
+    ],
+    [
+     "معدن وخشب وزجاج",
+     "للمصابيح والأثاث والنوافذ."
+    ],
+    [
+     "ورق وكرتون",
+     "للتصاميم والرسوم النهائية."
+    ]
+   ],
+   "time": "من بضعة أيام إلى عدة أسابيع",
+   "bestFor": "لمن يحب الخطوط الرشيقة وفناً يعيش معه كل يوم.",
+   "artists": [
+    [
+     "ألفونس موخا",
+     "تشيكي، 1860–1939",
+     "رسمت ملصقاته في باريس ملامح الأسلوب."
+    ],
+    [
+     "هكتور غيمار",
+     "فرنسي، 1867–1942",
+     "صمّم مداخل مترو باريس الشهيرة."
+    ],
+    [
+     "أنطوني غاودي",
+     "إسباني، 1852–1926",
+     "بنى مباني منسابة ملوّنة في برشلونة."
+    ],
+    [
+     "لويس كومفرت تيفاني",
+     "أمريكي، 1848–1933",
+     "تتوهج مصابيحه ونوافذه الزجاجية بالألوان."
+    ],
+    [
+     "فيكتور أورتا",
+     "بلجيكي، 1861–1947",
+     "أدخلت بيوته في بروكسل الأسلوب إلى العمارة."
+    ],
+    [
+     "غوستاف كليمت",
+     "نمساوي، 1862–1918",
+     "قاد انفصال فيينا بالذهب والزخارف الغنية."
+    ]
+   ],
+   "guide": [
+    "انظر إلى المنحنيات: الخطوط اليدوية يتغير سُمكها قليلاً.",
+    "في الملصقات، اسأل إن كانت طبعة أصلية أم نسخة لاحقة.",
+    "في القطع، ابحث عن التشطيب اليدوي وعلامة الصانع."
+   ]
+  }
+ },
+ {
+  "id": "ukiyo_e",
+  "cat": "traditional",
+  "type": "ukiyo_e",
+  "level": "advanced",
+  "en": {
+   "name": "Ukiyo-e (Japanese Woodblock Prints)",
+   "feel": "Graceful",
+   "essence": "Pictures of the floating world, carved in wood and printed by hand.",
+   "story": [
+    "Ukiyo-e grew in Edo, today’s Tokyo, from the 1600s. The name means pictures of the floating world.",
+    "A team made each print. The artist drew the design. A carver cut it into cherry wood blocks. A printer rubbed color onto paper by hand, one block for each color.",
+    "Hokusai and Hiroshige made famous views of Mount Fuji, rain and travel. In the 1800s these prints amazed Monet and Van Gogh. Printmakers still carve and print this way today."
+   ],
+   "tech": [
+    [
+     "Multi-block printing",
+     "One carved block for each color."
+    ],
+    [
+     "Registration marks",
+     "Small notches that line up every color exactly."
+    ],
+    [
+     "Baren rubbing",
+     "Pressing the paper onto the block with a round pad."
+    ],
+    [
+     "Bokashi",
+     "Soft color gradients wiped onto the block."
+    ],
+    [
+     "Key block",
+     "The outline block, printed first."
+    ],
+    [
+     "Blind embossing",
+     "Pressing without ink to raise a soft texture."
+    ]
+   ],
+   "signs": [
+    "Wood grain showing in flat areas of color.",
+    "Slight shifts between colors at the edges.",
+    "Soft paper fibers and gentle embossing.",
+    "Small ink differences from one print to the next."
+   ],
+   "tools": [
+    [
+     "Cherry wood blocks",
+     "Hard, fine wood for sharp carving."
+    ],
+    [
+     "Carving knives and gouges",
+     "To cut lines and clear areas."
+    ],
+    [
+     "Baren",
+     "A round pad for rubbing the paper."
+    ],
+    [
+     "Washi paper",
+     "Strong, soft Japanese paper."
+    ],
+    [
+     "Water-based pigments",
+     "Mixed with rice paste on the block."
+    ],
+    [
+     "Printing brushes",
+     "To spread color evenly."
+    ]
+   ],
+   "time": "Several weeks for one design and its blocks",
+   "bestFor": "Collectors who love clean design, nature and patient craft.",
+   "artists": [
+    [
+     "Katsushika Hokusai",
+     "Japanese, 1760–1849",
+     "His Great Wave off Kanagawa is known around the world."
+    ],
+    [
+     "Utagawa Hiroshige",
+     "Japanese, 1797–1858",
+     "He printed poetic views of rain, snow and travel."
+    ],
+    [
+     "Hishikawa Moronobu",
+     "Japanese, about 1618–1694",
+     "He helped make single-sheet prints popular."
+    ],
+    [
+     "Kitagawa Utamaro",
+     "Japanese, about 1753–1806",
+     "He was famous for elegant figure prints."
+    ],
+    [
+     "Kawase Hasui",
+     "Japanese, 1883–1957",
+     "He revived woodblock landscapes in the 20th century."
+    ]
+   ],
+   "guide": [
+    "Look for wood grain and soft paper fibers under a light.",
+    "Check the color edges: hand printing shifts slightly.",
+    "Ask about the edition and the printer. Many copies are photo prints."
+   ]
+  },
+  "ar": {
+   "name": "أوكييو-إي (الطباعة اليابانية بالخشب)",
+   "feel": "رشيق",
+   "essence": "صور «العالم العائم»، تُحفر في الخشب وتُطبع باليد.",
+   "story": [
+    "نشأ فن أوكييو-إي في إيدو، طوكيو اليوم، منذ القرن السابع عشر. والاسم يعني صور العالم العائم.",
+    "صنع كل طبعة فريق. رسم الفنان التصميم، وحفره الحفّار في ألواح من خشب الكرز. ثم فرك الطابع اللون على الورق باليد، لوحاً لكل لون.",
+    "رسم هوكوساي وهيروشيغه مناظر شهيرة لجبل فوجي والمطر والسفر. وفي القرن التاسع عشر أدهشت هذه الطبعات مونيه وفان غوخ. وما زال فنانو الطباعة يحفرون ويطبعون بهذه الطريقة اليوم."
+   ],
+   "tech": [
+    [
+     "الطباعة بألواح متعددة",
+     "لوح محفور لكل لون."
+    ],
+    [
+     "علامات المحاذاة",
+     "حزوز صغيرة تضبط كل لون في مكانه."
+    ],
+    [
+     "الفرك بالبارين",
+     "ضغط الورق على اللوح بوسادة مستديرة."
+    ],
+    [
+     "التدرّج (بوكاشي)",
+     "تدرجات لون ناعمة تُمسح على اللوح."
+    ],
+    [
+     "لوح الخطوط",
+     "لوح الحدود الذي يُطبع أولاً."
+    ],
+    [
+     "النقش البارز بلا حبر",
+     "ضغط بلا حبر يُبرز ملمساً ناعماً."
+    ]
+   ],
+   "signs": [
+    "عروق الخشب تظهر في مساحات اللون المسطحة.",
+    "انزياحات خفيفة بين الألوان عند الحواف.",
+    "ألياف ورق ناعمة ونقش بارز خفيف.",
+    "فروق حبر صغيرة من طبعة إلى أخرى."
+   ],
+   "tools": [
+    [
+     "ألواح خشب الكرز",
+     "خشب صلب ناعم للحفر الحاد."
+    ],
+    [
+     "سكاكين وأزاميل الحفر",
+     "لقطع الخطوط وتفريغ المساحات."
+    ],
+    [
+     "البارين",
+     "وسادة مستديرة لفرك الورق."
+    ],
+    [
+     "ورق واشي",
+     "ورق ياباني متين ناعم."
+    ],
+    [
+     "أصباغ مائية",
+     "تُمزج بعجينة الأرز على اللوح."
+    ],
+    [
+     "فرش الطباعة",
+     "لنشر اللون بالتساوي."
+    ]
+   ],
+   "time": "عدة أسابيع للتصميم الواحد وألواحه",
+   "bestFor": "لمن يحب التصميم النظيف والطبيعة والإتقان الصبور.",
+   "artists": [
+    [
+     "كاتسوشيكا هوكوساي",
+     "ياباني، 1760–1849",
+     "موجته العظيمة قبالة كاناغاوا معروفة في العالم كله."
+    ],
+    [
+     "أوتاغاوا هيروشيغه",
+     "ياباني، 1797–1858",
+     "طبع مناظر شاعرية للمطر والثلج والسفر."
+    ],
+    [
+     "هيشيكاوا مورونوبو",
+     "ياباني، نحو 1618–1694",
+     "ساعد في انتشار الطبعات المفردة."
+    ],
+    [
+     "كيتاغاوا أوتامارو",
+     "ياباني، نحو 1753–1806",
+     "اشتهر بطبعات أنيقة للشخصيات."
+    ],
+    [
+     "كاواسي هاسوي",
+     "ياباني، 1883–1957",
+     "أحيا طبعات المناظر الخشبية في القرن العشرين."
+    ]
+   ],
+   "guide": [
+    "ابحث عن عروق الخشب وألياف الورق الناعمة تحت الضوء.",
+    "افحص حواف الألوان: الطباعة اليدوية تنزاح قليلاً.",
+    "اسأل عن الإصدار والطابع. نسخ كثيرة طبعات تصويرية."
+   ]
+  }
+ },
+ {
+  "id": "realism",
+  "cat": "traditional",
+  "type": "realism",
+  "level": "intermediate",
+  "en": {
+   "name": "Realism",
+   "feel": "Honest",
+   "essence": "Everyday life and nature painted truthfully, without decoration.",
+   "story": [
+    "Realism began in France around 1850. Gustave Courbet led it with a bold idea: paint only what you can see.",
+    "Realists painted workers, farmers and ordinary places. Jean-François Millet showed hard work in the fields. Courbet painted waves, rocks and forests with heavy, honest paint.",
+    "The movement spread to America, Russia and beyond. It opened the way for Impressionism. Many painters today still choose daily life as their subject."
+   ],
+   "tech": [
+    [
+     "Direct observation",
+     "Painting what is really there."
+    ],
+    [
+     "Earth palette",
+     "Browns, ochres and greens from nature."
+    ],
+    [
+     "Palette knife painting",
+     "Courbet laid rock and wave textures with a knife."
+    ],
+    [
+     "Tonal modeling",
+     "Careful light and dark that give real weight."
+    ],
+    [
+     "Outdoor studies",
+     "Sketches of real places made on the spot."
+    ],
+    [
+     "Large scale",
+     "Ordinary subjects painted as big as history scenes."
+    ]
+   ],
+   "signs": [
+    "Knife and brush marks you can feel on the surface.",
+    "Careful tones built in several layers.",
+    "Small changes where the artist corrected what they saw.",
+    "A real place or subject the artist can describe."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "Earthy, solid color."
+    ],
+    [
+     "Palette knife",
+     "For texture in rocks and waves."
+    ],
+    [
+     "Bristle brushes",
+     "For firm, honest strokes."
+    ],
+    [
+     "Canvas",
+     "Often large."
+    ],
+    [
+     "Sketchbook",
+     "To study real people and places."
+    ],
+    [
+     "Field easel",
+     "For painting outdoors."
+    ]
+   ],
+   "time": "A few days to several months",
+   "bestFor": "Collectors who value truth, craft and everyday beauty.",
+   "artists": [
+    [
+     "Gustave Courbet",
+     "French, 1819–1877",
+     "He led Realism and painted the sea with a palette knife."
+    ],
+    [
+     "Jean-François Millet",
+     "French, 1814–1875",
+     "He painted farm workers with quiet dignity."
+    ],
+    [
+     "Honoré Daumier",
+     "French, 1808–1879",
+     "His prints and paintings showed city life with sharp wit."
+    ],
+    [
+     "Rosa Bonheur",
+     "French, 1822–1899",
+     "She painted animals and farm life with great accuracy."
+    ],
+    [
+     "Winslow Homer",
+     "American, 1836–1910",
+     "He painted the sea and country life with honest strength."
+    ]
+   ],
+   "guide": [
+    "Look for real texture from knife and brush in side light.",
+    "Ask where the scene is. Realists paint real places.",
+    "For old works, ask for expert study and a clear history."
+   ]
+  },
+  "ar": {
+   "name": "الواقعية",
+   "feel": "صادق",
+   "essence": "الحياة اليومية والطبيعة مرسومة بصدق، بلا تزيين.",
+   "story": [
+    "بدأت الواقعية في فرنسا نحو عام 1850. وقادها غوستاف كوربيه بفكرة جريئة: ارسم ما تراه فقط.",
+    "رسم الواقعيون العمال والمزارعين والأماكن العادية. وأظهر جان فرانسوا ميليه العمل الشاق في الحقول. ورسم كوربيه الأمواج والصخور والغابات بطلاء كثيف صادق.",
+    "انتشرت الحركة إلى أمريكا وروسيا وغيرهما. وفتحت الطريق للانطباعية. وما زال كثير من الرسامين اليوم يختارون الحياة اليومية موضوعاً."
+   ],
+   "tech": [
+    [
+     "الملاحظة المباشرة",
+     "رسم ما هو موجود حقاً."
+    ],
+    [
+     "ألوان الأرض",
+     "بنّي وأوكر وأخضر من الطبيعة."
+    ],
+    [
+     "الرسم بالسكين",
+     "وضع كوربيه ملمس الصخر والموج بالسكين."
+    ],
+    [
+     "التدرج الضوئي",
+     "ضوء وظل متأنيان يمنحان وزناً حقيقياً."
+    ],
+    [
+     "الدراسات في الخارج",
+     "رسوم لأماكن حقيقية في موقعها."
+    ],
+    [
+     "الحجم الكبير",
+     "مواضيع عادية بحجم مشاهد التاريخ."
+    ]
+   ],
+   "signs": [
+    "علامات سكين وفرشاة تشعر بها على السطح.",
+    "درجات متأنية تُبنى في عدة طبقات.",
+    "تعديلات صغيرة حيث صحّح الفنان ما رآه.",
+    "مكان أو موضوع حقيقي يستطيع الفنان وصفه."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "لون ترابي متين."
+    ],
+    [
+     "سكين الرسم",
+     "لملمس الصخور والأمواج."
+    ],
+    [
+     "فرش شعر خشنة",
+     "لضربات ثابتة صادقة."
+    ],
+    [
+     "القماش",
+     "كبير غالباً."
+    ],
+    [
+     "كراسة الرسم",
+     "لدراسة الناس والأماكن الحقيقية."
+    ],
+    [
+     "حامل رسم ميداني",
+     "للرسم في الخارج."
+    ]
+   ],
+   "time": "من بضعة أيام إلى عدة أشهر",
+   "bestFor": "لمن يقدّر الصدق والإتقان وجمال الحياة اليومية.",
+   "artists": [
+    [
+     "غوستاف كوربيه",
+     "فرنسي، 1819–1877",
+     "قاد الواقعية ورسم البحر بسكين الرسم."
+    ],
+    [
+     "جان فرانسوا ميليه",
+     "فرنسي، 1814–1875",
+     "رسم عمال الحقول بكرامة هادئة."
+    ],
+    [
+     "أونوريه دومييه",
+     "فرنسي، 1808–1879",
+     "أظهرت طبعاته ولوحاته حياة المدينة بذكاء لاذع."
+    ],
+    [
+     "روزا بونور",
+     "فرنسية، 1822–1899",
+     "رسمت الحيوانات وحياة المزرعة بدقة كبيرة."
+    ],
+    [
+     "وينسلو هومر",
+     "أمريكي، 1836–1910",
+     "رسم البحر وحياة الريف بقوة صادقة."
+    ]
+   ],
+   "guide": [
+    "ابحث عن ملمس حقيقي من السكين والفرشاة في ضوء جانبي.",
+    "اسأل أين المشهد. الواقعيون يرسمون أماكن حقيقية.",
+    "في الأعمال القديمة، اطلب دراسة خبير وتاريخاً واضحاً."
+   ]
+  }
+ },
+ {
+  "id": "post_impressionism",
+  "cat": "traditional",
+  "type": "post_impressionism",
+  "level": "intermediate",
+  "en": {
+   "name": "Post-Impressionism",
+   "feel": "Vivid",
+   "essence": "Bright color with more structure, emotion and personal vision.",
+   "story": [
+    "Post-Impressionism names the painters who came after Impressionism, from the 1880s. They kept bright color but wanted more.",
+    "Cézanne built nature from solid shapes and planes. Van Gogh used swirling strokes full of feeling. Gauguin chose flat, bold color and strong outlines.",
+    "A London show in 1910 gave the group its name. Their ideas led to Fauvism, Cubism and Expressionism. Many painters still follow their personal, expressive paths."
+   ],
+   "tech": [
+    [
+     "Constructive strokes",
+     "Cézanne’s parallel strokes that build form."
+    ],
+    [
+     "Impasto",
+     "Thick paint that holds every brush mark."
+    ],
+    [
+     "Bold outlines",
+     "Dark lines that hold areas of color."
+    ],
+    [
+     "Flat color areas",
+     "Simple shapes in strong color."
+    ],
+    [
+     "Expressive color",
+     "Color chosen for feeling, not only for truth."
+    ],
+    [
+     "Simplified forms",
+     "Nature reduced to clear, strong shapes."
+    ]
+   ],
+   "signs": [
+    "Thick, directional strokes you can feel.",
+    "Outlines that are firm but drawn by hand.",
+    "Changes where the artist rethought a shape.",
+    "Color mixed partly on the canvas."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "Thick, vivid color."
+    ],
+    [
+     "Bristle brushes",
+     "For strong, visible strokes."
+    ],
+    [
+     "Palette knife",
+     "For heavy paint."
+    ],
+    [
+     "Canvas",
+     "Often coarse and textured."
+    ],
+    [
+     "Charcoal",
+     "For the first drawing."
+    ],
+    [
+     "Outdoor easel",
+     "Many painted the landscape on the spot."
+    ]
+   ],
+   "time": "A few days to a few weeks",
+   "bestFor": "Collectors who want strong color and a personal voice.",
+   "artists": [
+    [
+     "Paul Cézanne",
+     "French, 1839–1906",
+     "His solid shapes and planes led the way to Cubism."
+    ],
+    [
+     "Vincent van Gogh",
+     "Dutch, 1853–1890",
+     "His swirling strokes poured feeling into every subject."
+    ],
+    [
+     "Paul Gauguin",
+     "French, 1848–1903",
+     "He used flat, bold color and strong outlines."
+    ],
+    [
+     "Georges Seurat",
+     "French, 1859–1891",
+     "His careful dots are part of Post-Impressionism too."
+    ],
+    [
+     "Henri de Toulouse-Lautrec",
+     "French, 1864–1901",
+     "He captured Paris nightlife in paintings and posters."
+    ]
+   ],
+   "guide": [
+    "Look for thick, directional strokes that catch the light.",
+    "Ask for the work’s history. Famous names here are often faked.",
+    "Check the canvas weave and the paint edges at the sides."
+   ]
+  },
+  "ar": {
+   "name": "ما بعد الانطباعية",
+   "feel": "نابض",
+   "essence": "ألوان زاهية مع بنية أقوى وإحساس أعمق ورؤية شخصية.",
+   "story": [
+    "ما بعد الانطباعية اسم للرسامين الذين جاؤوا بعد الانطباعية، منذ ثمانينيات القرن التاسع عشر. احتفظوا باللون الزاهي لكنهم أرادوا المزيد.",
+    "بنى سيزان الطبيعة من أشكال وسطوح متينة. واستخدم فان غوخ ضربات دوّامة مليئة بالإحساس. واختار غوغان لوناً مسطحاً جريئاً وحدوداً قوية.",
+    "منح معرض في لندن عام 1910 المجموعة اسمها. وقادت أفكارهم إلى الوحشية والتكعيبية والتعبيرية. وما زال رسامون كثيرون يسلكون طرقهم الشخصية المعبّرة."
+   ],
+   "tech": [
+    [
+     "الضربات البنّاءة",
+     "ضربات سيزان المتوازية التي تبني الشكل."
+    ],
+    [
+     "الطلاء الكثيف",
+     "طلاء سميك يحفظ كل أثر للفرشاة."
+    ],
+    [
+     "الحدود الجريئة",
+     "خطوط داكنة تحتضن مساحات اللون."
+    ],
+    [
+     "مساحات اللون المسطحة",
+     "أشكال بسيطة بلون قوي."
+    ],
+    [
+     "اللون المعبّر",
+     "لون يُختار للإحساس، لا للمطابقة فقط."
+    ],
+    [
+     "الأشكال المبسّطة",
+     "الطبيعة مختصرة في أشكال واضحة قوية."
+    ]
+   ],
+   "signs": [
+    "ضربات كثيفة باتجاه واضح تشعر بها.",
+    "حدود ثابتة لكنها مرسومة باليد.",
+    "تعديلات حيث أعاد الفنان التفكير في شكل.",
+    "لون ممزوج جزئياً على القماش."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "لون كثيف زاهٍ."
+    ],
+    [
+     "فرش شعر خشنة",
+     "لضربات قوية ظاهرة."
+    ],
+    [
+     "سكين الرسم",
+     "للطلاء الثقيل."
+    ],
+    [
+     "القماش",
+     "خشن الملمس غالباً."
+    ],
+    [
+     "الفحم",
+     "للرسم الأول."
+    ],
+    [
+     "حامل رسم للخارج",
+     "رسم كثيرون المناظر في مكانها."
+    ]
+   ],
+   "time": "من بضعة أيام إلى بضعة أسابيع",
+   "bestFor": "لمن يريد لوناً قوياً وصوتاً شخصياً.",
+   "artists": [
+    [
+     "بول سيزان",
+     "فرنسي، 1839–1906",
+     "مهدت أشكاله وسطوحه المتينة الطريق للتكعيبية."
+    ],
+    [
+     "فنسنت فان غوخ",
+     "هولندي، 1853–1890",
+     "سكبت ضرباته الدوّامة الإحساس في كل موضوع."
+    ],
+    [
+     "بول غوغان",
+     "فرنسي، 1848–1903",
+     "استخدم لوناً مسطحاً جريئاً وحدوداً قوية."
+    ],
+    [
+     "جورج سورا",
+     "فرنسي، 1859–1891",
+     "نقاطه المتأنية جزء من ما بعد الانطباعية أيضاً."
+    ],
+    [
+     "هنري دي تولوز لوتريك",
+     "فرنسي، 1864–1901",
+     "التقط حياة الليل في باريس في لوحاته وملصقاته."
+    ]
+   ],
+   "guide": [
+    "ابحث عن ضربات كثيفة موجّهة تلتقط الضوء.",
+    "اسأل عن تاريخ العمل. الأسماء الشهيرة هنا تُقلّد كثيراً.",
+    "افحص نسيج القماش وحواف الطلاء على الجوانب."
+   ]
+  }
+ },
+ {
   "id": "digital_illustration",
   "cat": "digital",
   "type": "digital_illustration",
@@ -6629,6 +8549,196 @@ window.OW_ART_STYLES = [
   }
  },
  {
+  "id": "al_qatt_asiri",
+  "cat": "heritage",
+  "type": "al_qatt_asiri",
+  "level": "intermediate",
+  "en": {
+   "name": "Al-Qatt Al-Asiri",
+   "feel": "Joyful",
+   "essence": "Bright geometric wall painting from Asir, painted by women in their homes.",
+   "story": [
+    "Al-Qatt Al-Asiri comes from the Asir region in southwest Saudi Arabia. For generations, women have painted the inside walls of their homes.",
+    "The designs are geometric: triangles, zigzags, lines and diamonds in bright bands. Painters once made colors from local plants and minerals. Each room showed a family’s care and pride.",
+    "In 2017, UNESCO added Al-Qatt Al-Asiri to its list of intangible cultural heritage. Today Saudi artists bring its patterns to canvases, murals and design."
+   ],
+   "tech": [
+    [
+     "Geometric bands",
+     "Rows of repeated shapes around the room."
+    ],
+    [
+     "Triangles and zigzags",
+     "The classic shapes of the style."
+    ],
+    [
+     "Freehand lines",
+     "Straight lines painted with a steady hand."
+    ],
+    [
+     "Bright color blocks",
+     "Red, yellow, green, blue and black side by side."
+    ],
+    [
+     "Outlining",
+     "Thin dark lines that frame each shape."
+    ],
+    [
+     "Framing openings",
+     "Borders of pattern around doors and windows."
+    ]
+   ],
+   "signs": [
+    "Lines that are straight by eye, with tiny wobbles.",
+    "Brush marks inside each colored shape.",
+    "Small, natural differences in the repeats.",
+    "Paint texture that follows the wall or canvas."
+   ],
+   "tools": [
+    [
+     "Small brushes",
+     "For fine lines and sharp corners."
+    ],
+    [
+     "Natural pigments",
+     "Traditionally made from local plants and minerals."
+    ],
+    [
+     "Modern paints",
+     "Acrylic and wall paint today."
+    ],
+    [
+     "Plaster wall",
+     "The traditional surface."
+    ],
+    [
+     "Canvas or board",
+     "For portable works today."
+    ],
+    [
+     "Pencil",
+     "For light guide marks."
+    ]
+   ],
+   "time": "A few days for a canvas, weeks for a room",
+   "bestFor": "Collectors who love Saudi heritage, pattern and bright color.",
+   "artists": [
+    [
+     "The women painters of Asir",
+     "Saudi, for generations",
+     "They kept the art alive, room by room, across the region."
+    ],
+    [
+     "Fatima Abou Gahas",
+     "Saudi, about 1920–2010",
+     "Her painted rooms made her a celebrated master of the art."
+    ],
+    [
+     "Saudi artists today",
+     "Saudi, 21st century",
+     "They carry the patterns into canvases, murals and fashion."
+    ]
+   ],
+   "guide": [
+    "Look for hand-painted lines with small, natural wobbles.",
+    "Ask about the paint and the surface, and who painted it.",
+    "Printed patterns look perfect. Real Al-Qatt shows the hand."
+   ]
+  },
+  "ar": {
+   "name": "القط العسيري",
+   "feel": "بهيج",
+   "essence": "رسم جداري هندسي زاهٍ من عسير، ترسمه النساء في بيوتهن.",
+   "story": [
+    "يأتي القط العسيري من منطقة عسير في جنوب غرب المملكة العربية السعودية. ومنذ أجيال تزيّن النساء الجدران الداخلية لبيوتهن.",
+    "التصاميم هندسية: مثلثات وخطوط متعرجة ومستقيمة ومعيّنات في أشرطة زاهية. وكانت الرسامات يصنعن الألوان من نباتات ومعادن محلية. وكانت كل غرفة تُظهر عناية الأسرة وفخرها.",
+    "في عام 2017 أدرجت اليونسكو القط العسيري في قائمة التراث الثقافي غير المادي. واليوم يحمل الفنانون السعوديون زخارفه إلى اللوحات والجداريات والتصميم."
+   ],
+   "tech": [
+    [
+     "الأشرطة الهندسية",
+     "صفوف من أشكال متكررة حول الغرفة."
+    ],
+    [
+     "المثلثات والخطوط المتعرجة",
+     "الأشكال الكلاسيكية للأسلوب."
+    ],
+    [
+     "الخطوط اليدوية",
+     "خطوط مستقيمة تُرسم بيد ثابتة."
+    ],
+    [
+     "كتل اللون الزاهية",
+     "أحمر وأصفر وأخضر وأزرق وأسود متجاورة."
+    ],
+    [
+     "التحديد",
+     "خطوط داكنة رقيقة تؤطّر كل شكل."
+    ],
+    [
+     "تأطير الفتحات",
+     "حدود من الزخارف حول الأبواب والنوافذ."
+    ]
+   ],
+   "signs": [
+    "خطوط مستقيمة بالعين، فيها تموجات صغيرة.",
+    "علامات فرشاة داخل كل شكل ملوّن.",
+    "فروق صغيرة طبيعية في التكرار.",
+    "ملمس طلاء يتبع الجدار أو القماش."
+   ],
+   "tools": [
+    [
+     "فرش صغيرة",
+     "للخطوط الدقيقة والزوايا الحادة."
+    ],
+    [
+     "أصباغ طبيعية",
+     "تُصنع تقليدياً من نباتات ومعادن محلية."
+    ],
+    [
+     "ألوان حديثة",
+     "أكريليك وطلاء جدران اليوم."
+    ],
+    [
+     "جدار الجص",
+     "السطح التقليدي."
+    ],
+    [
+     "قماش أو لوح",
+     "للأعمال المتنقلة اليوم."
+    ],
+    [
+     "قلم رصاص",
+     "لعلامات إرشادية خفيفة."
+    ]
+   ],
+   "time": "بضعة أيام للوحة، وأسابيع للغرفة",
+   "bestFor": "لمن يحب التراث السعودي والزخرفة والألوان الزاهية.",
+   "artists": [
+    [
+     "رسامات عسير",
+     "سعوديات، عبر الأجيال",
+     "حفظن الفن حياً غرفة بعد غرفة في أرجاء المنطقة."
+    ],
+    [
+     "فاطمة أبو قحاص",
+     "سعودية، نحو 1920–2010",
+     "جعلتها غرفها المزيّنة من أشهر أساتذة هذا الفن."
+    ],
+    [
+     "فنانون سعوديون اليوم",
+     "سعوديون، القرن الحادي والعشرون",
+     "يحملون الزخارف إلى اللوحات والجداريات والأزياء."
+    ]
+   ],
+   "guide": [
+    "ابحث عن خطوط مرسومة باليد فيها تموجات صغيرة طبيعية.",
+    "اسأل عن الطلاء والسطح ومن رسم العمل.",
+    "الزخارف المطبوعة تبدو كاملة. القط الحقيقي تظهر فيه اليد."
+   ]
+  }
+ },
+ {
   "id": "street_art",
   "cat": "contemporary",
   "type": "street_art",
@@ -8781,6 +10891,436 @@ window.OW_ART_STYLES = [
     "اسأل عمّا تشتريه: صور أم فيديو أم أشياء أم حق إعادة العرض.",
     "تأكد أن كل قطعة تأتي بشهادة موقّعة من الفنان.",
     "افحص أرقام الإصدار على الصور والفيديو. الإصدارات الصغيرة تحفظ قيمتها أكثر."
+   ]
+  }
+ },
+ {
+  "id": "cubism",
+  "cat": "contemporary",
+  "type": "cubism",
+  "level": "advanced",
+  "en": {
+   "name": "Cubism",
+   "feel": "Inventive",
+   "essence": "One subject seen from many sides at once, in flat, broken shapes.",
+   "story": [
+    "Cubism began in Paris around 1907. Pablo Picasso and Georges Braque worked side by side.",
+    "They broke objects into flat shapes and showed many views at once. A critic said Braque painted little cubes, and the name stayed.",
+    "Juan Gris added clear color and calm design. Robert and Sonia Delaunay filled it with bright color. Cubism opened the door to modern art and still shapes design today."
+   ],
+   "tech": [
+    [
+     "Multiple viewpoints",
+     "Front, side and top shown together."
+    ],
+    [
+     "Faceting",
+     "Forms broken into flat, angled planes."
+    ],
+    [
+     "Muted palette",
+     "Browns, greys and greens in early Cubism."
+    ],
+    [
+     "Papier collé",
+     "Pieces of paper glued into the picture."
+    ],
+    [
+     "Overlapping planes",
+     "Shapes that slide over each other to build space."
+    ],
+    [
+     "Simple geometry",
+     "Cones, cylinders and cubes as building blocks."
+    ]
+   ],
+   "signs": [
+    "Pencil lines under the paint where planes were planned.",
+    "Small shifts in angles where the artist adjusted shapes.",
+    "Brush marks that follow each flat plane.",
+    "In collage, real paper edges and traces of glue."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "For layered, solid planes."
+    ],
+    [
+     "Flat brushes",
+     "For clean, angled edges."
+    ],
+    [
+     "Charcoal",
+     "To sketch the first structure."
+    ],
+    [
+     "Ruler and set square",
+     "For straight lines when needed."
+    ],
+    [
+     "Paper and glue",
+     "For pasted paper pieces."
+    ],
+    [
+     "Canvas",
+     "A firm surface for building planes."
+    ]
+   ],
+   "time": "A few days to several weeks",
+   "bestFor": "Collectors who enjoy structure, puzzles and fresh ways of seeing.",
+   "artists": [
+    [
+     "Pablo Picasso",
+     "Spanish, 1881–1973",
+     "He co-founded Cubism and changed modern art."
+    ],
+    [
+     "Georges Braque",
+     "French, 1882–1963",
+     "He built Cubism with Picasso and made the first pasted-paper works."
+    ],
+    [
+     "Juan Gris",
+     "Spanish, 1887–1927",
+     "He gave Cubism clear color and calm, ordered design."
+    ],
+    [
+     "Fernand Léger",
+     "French, 1881–1955",
+     "His tube-like forms earned his style the nickname Tubism."
+    ],
+    [
+     "Robert Delaunay",
+     "French, 1885–1941",
+     "He painted the Eiffel Tower in bright, broken planes."
+    ],
+    [
+     "Sonia Delaunay",
+     "French, born in Ukraine, 1885–1979",
+     "She carried cubist color into painting, textiles and fashion."
+    ]
+   ],
+   "guide": [
+    "Look for planning: real works show underdrawing and changes.",
+    "Check the paint layers in light from the side.",
+    "Ask for the work’s history. Famous Cubist names are often faked."
+   ]
+  },
+  "ar": {
+   "name": "التكعيبية",
+   "feel": "مبتكر",
+   "essence": "موضوع واحد يُرى من جهات كثيرة معاً، في أشكال مسطحة مكسّرة.",
+   "story": [
+    "بدأت التكعيبية في باريس نحو عام 1907. وعمل بابلو بيكاسو وجورج براك جنباً إلى جنب.",
+    "كسّرا الأشياء إلى أشكال مسطحة وأظهرا زوايا كثيرة معاً. وقال ناقد إن براك يرسم مكعبات صغيرة، فبقي الاسم.",
+    "أضاف خوان غريس لوناً واضحاً وتصميماً هادئاً. وملأها روبير وسونيا ديلوناي بالألوان الزاهية. وفتحت التكعيبية الباب للفن الحديث، وما زالت تؤثر في التصميم اليوم."
+   ],
+   "tech": [
+    [
+     "تعدد زوايا النظر",
+     "الأمام والجانب والأعلى معاً."
+    ],
+    [
+     "التوجيه",
+     "أشكال مكسّرة إلى سطوح مسطحة مائلة."
+    ],
+    [
+     "الألوان الهادئة",
+     "بنّي ورمادي وأخضر في التكعيبية الأولى."
+    ],
+    [
+     "الورق الملصق",
+     "قطع ورق تُلصق داخل الصورة."
+    ],
+    [
+     "السطوح المتداخلة",
+     "أشكال تنزلق فوق بعضها لتبني الفراغ."
+    ],
+    [
+     "الهندسة البسيطة",
+     "مخاريط وأسطوانات ومكعبات لبنات للبناء."
+    ]
+   ],
+   "signs": [
+    "خطوط رصاص تحت الطلاء حيث خُطّطت السطوح.",
+    "تغيّرات صغيرة في الزوايا حيث عدّل الفنان الأشكال.",
+    "ضربات فرشاة تتبع كل سطح مسطح.",
+    "في الكولاج، حواف ورق حقيقية وآثار غراء."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "لسطوح متينة متراكبة."
+    ],
+    [
+     "فرش مسطحة",
+     "لحواف نظيفة مائلة."
+    ],
+    [
+     "الفحم",
+     "لرسم البنية الأولى."
+    ],
+    [
+     "مسطرة ومثلث",
+     "للخطوط المستقيمة عند الحاجة."
+    ],
+    [
+     "ورق وغراء",
+     "لقطع الورق الملصقة."
+    ],
+    [
+     "القماش",
+     "سطح متين لبناء السطوح."
+    ]
+   ],
+   "time": "من بضعة أيام إلى عدة أسابيع",
+   "bestFor": "لمن يحب البنية والألغاز وطرقاً جديدة للرؤية.",
+   "artists": [
+    [
+     "بابلو بيكاسو",
+     "إسباني، 1881–1973",
+     "شارك في تأسيس التكعيبية وغيّر الفن الحديث."
+    ],
+    [
+     "جورج براك",
+     "فرنسي، 1882–1963",
+     "بنى التكعيبية مع بيكاسو وصنع أول أعمال الورق الملصق."
+    ],
+    [
+     "خوان غريس",
+     "إسباني، 1887–1927",
+     "منح التكعيبية لوناً واضحاً وتصميماً هادئاً منظماً."
+    ],
+    [
+     "فرنان ليجيه",
+     "فرنسي، 1881–1955",
+     "أكسبت أشكاله الأنبوبية أسلوبه لقب «الأنبوبية»."
+    ],
+    [
+     "روبير ديلوناي",
+     "فرنسي، 1885–1941",
+     "رسم برج إيفل بسطوح مكسّرة زاهية."
+    ],
+    [
+     "سونيا ديلوناي",
+     "فرنسية مولودة في أوكرانيا، 1885–1979",
+     "حملت ألوان التكعيبية إلى الرسم والنسيج والأزياء."
+    ]
+   ],
+   "guide": [
+    "ابحث عن التخطيط: الأعمال الحقيقية تُظهر رسماً تحضيرياً وتعديلات.",
+    "افحص طبقات الطلاء حين يأتي الضوء من الجانب.",
+    "اسأل عن تاريخ العمل. أسماء التكعيبيين المشهورين تُقلّد كثيراً."
+   ]
+  }
+ },
+ {
+  "id": "fauvism",
+  "cat": "contemporary",
+  "type": "fauvism",
+  "level": "intermediate",
+  "en": {
+   "name": "Fauvism",
+   "feel": "Fiery",
+   "essence": "Wild, pure color used for feeling, not for real-life accuracy.",
+   "story": [
+    "Fauvism burst out in Paris in 1905. Henri Matisse and André Derain led the way.",
+    "At a show that year, a critic called them les fauves, the wild beasts. They painted pink trees and orange seas with joy.",
+    "The movement lasted only a few years. Its free color shaped Expressionism and abstract art. Painters still love its bold, happy palette."
+   ],
+   "tech": [
+    [
+     "Pure color",
+     "Paint straight from the tube, barely mixed."
+    ],
+    [
+     "Flat color areas",
+     "Large shapes filled with one bright color."
+    ],
+    [
+     "Complementary pairs",
+     "Red beside green, orange beside blue."
+    ],
+    [
+     "Loose brushwork",
+     "Quick, free strokes full of energy."
+    ],
+    [
+     "Simplified drawing",
+     "Few lines and strong outlines."
+    ],
+    [
+     "Bare canvas",
+     "Small gaps of canvas left showing."
+    ]
+   ],
+   "signs": [
+    "Free strokes with uneven edges.",
+    "Bits of bare canvas between color areas.",
+    "Bright colors laid side by side without blending.",
+    "Small corrections painted over quickly."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "Bright, strong colors."
+    ],
+    [
+     "Bristle brushes",
+     "For broad, free strokes."
+    ],
+    [
+     "Light canvas",
+     "To keep colors bright."
+    ],
+    [
+     "Palette knife",
+     "For thick touches."
+    ],
+    [
+     "Charcoal",
+     "For a quick first sketch."
+    ],
+    [
+     "Outdoor easel",
+     "Many Fauves painted in sunny southern France."
+    ]
+   ],
+   "time": "A few hours to a few days",
+   "bestFor": "Collectors who want joy, energy and fearless color.",
+   "artists": [
+    [
+     "Henri Matisse",
+     "French, 1869–1954",
+     "He led the Fauves and became a master of pure color."
+    ],
+    [
+     "André Derain",
+     "French, 1880–1954",
+     "He painted Collioure and London in blazing color."
+    ],
+    [
+     "Maurice de Vlaminck",
+     "French, 1876–1958",
+     "He painted with thick, wild strokes straight from the tube."
+    ],
+    [
+     "Raoul Dufy",
+     "French, 1877–1953",
+     "He brought Fauve color to light, joyful scenes."
+    ],
+    [
+     "Georges Braque",
+     "French, 1882–1963",
+     "He painted Fauve landscapes before helping invent Cubism."
+    ]
+   ],
+   "guide": [
+    "Look for free, confident strokes and small gaps of bare canvas.",
+    "Check the color in daylight. Real paint has depth that prints lack.",
+    "Ask for the work’s history. Fauve masters are often copied."
+   ]
+  },
+  "ar": {
+   "name": "الوحشية",
+   "feel": "متوهج",
+   "essence": "لون نقي جامح يُستخدم للإحساس، لا لمطابقة الواقع.",
+   "story": [
+    "انفجرت الوحشية في باريس عام 1905. وقادها هنري ماتيس وأندريه ديران.",
+    "في معرض ذلك العام سمّاهم ناقد «الوحوش». رسموا أشجاراً وردية وبحاراً برتقالية بفرح.",
+    "لم تدم الحركة إلا بضع سنوات. لكن لونها الحر أثّر في التعبيرية والفن التجريدي. وما زال الرسامون يحبون ألوانها الجريئة المبهجة."
+   ],
+   "tech": [
+    [
+     "اللون النقي",
+     "طلاء من الأنبوب مباشرة، بالكاد يُمزج."
+    ],
+    [
+     "مساحات اللون المسطحة",
+     "أشكال كبيرة يملؤها لون زاهٍ واحد."
+    ],
+    [
+     "الأزواج المتكاملة",
+     "أحمر بجانب أخضر، وبرتقالي بجانب أزرق."
+    ],
+    [
+     "الضربات الحرة",
+     "ضربات سريعة طليقة مليئة بالطاقة."
+    ],
+    [
+     "الرسم المبسّط",
+     "خطوط قليلة وحدود قوية."
+    ],
+    [
+     "القماش المكشوف",
+     "فراغات صغيرة يظهر فيها القماش."
+    ]
+   ],
+   "signs": [
+    "ضربات حرة بحواف غير منتظمة.",
+    "أجزاء من القماش المكشوف بين مساحات اللون.",
+    "ألوان زاهية متجاورة بلا مزج.",
+    "تصحيحات صغيرة رُسم فوقها بسرعة."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "ألوان زاهية قوية."
+    ],
+    [
+     "فرش شعر خشنة",
+     "لضربات عريضة حرة."
+    ],
+    [
+     "قماش فاتح",
+     "ليُبقي الألوان زاهية."
+    ],
+    [
+     "سكين الرسم",
+     "للمسات الكثيفة."
+    ],
+    [
+     "الفحم",
+     "لرسم أولي سريع."
+    ],
+    [
+     "حامل رسم للخارج",
+     "رسم كثير من الوحشيين في جنوب فرنسا المشمس."
+    ]
+   ],
+   "time": "من بضع ساعات إلى بضعة أيام",
+   "bestFor": "لمن يريد الفرح والطاقة واللون الجريء.",
+   "artists": [
+    [
+     "هنري ماتيس",
+     "فرنسي، 1869–1954",
+     "قاد الوحشيين وصار أستاذاً للون النقي."
+    ],
+    [
+     "أندريه ديران",
+     "فرنسي، 1880–1954",
+     "رسم كوليور ولندن بألوان ملتهبة."
+    ],
+    [
+     "موريس دي فلامينك",
+     "فرنسي، 1876–1958",
+     "رسم بضربات كثيفة جامحة من الأنبوب مباشرة."
+    ],
+    [
+     "راؤول دوفي",
+     "فرنسي، 1877–1953",
+     "حمل ألوان الوحشية إلى مشاهد خفيفة مبهجة."
+    ],
+    [
+     "جورج براك",
+     "فرنسي، 1882–1963",
+     "رسم مناظر وحشية قبل أن يشارك في ابتكار التكعيبية."
+    ]
+   ],
+   "guide": [
+    "ابحث عن ضربات حرة واثقة وفراغات صغيرة من القماش المكشوف.",
+    "افحص اللون في ضوء النهار. للطلاء الحقيقي عمق تفتقده المطبوعات.",
+    "اسأل عن تاريخ العمل. أعمال أساتذة الوحشية تُنسخ كثيراً."
    ]
   }
  },
