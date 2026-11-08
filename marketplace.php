@@ -517,7 +517,9 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
         <?= mpHidden(['type', 'medium', 'price', 'size', 'orient', 'city', 'color', 'verified', 'cat']) ?>
         <div class="field"><label for="f-style"><?= $ar ? 'الأسلوب' : 'Style' ?></label>
           <select id="f-style" name="type"><option value=""><?= $ar ? 'كل الأساليب' : 'All styles' ?></option>
-            <?php foreach (owStyleGroups() as $gk => $g): $opts = array_filter($ART_TYPES, fn($t) => ($t['cat'] ?? '') === $gk && empty($t['legacy']) && empty($t['topic_only'])); if (!$opts) continue; ?>
+            <?php /* while the 15 other styles are hidden (owner, 8 Nov 2026), Al-Qatt Al-Asiri sits under Traditional and the Heritage group is gone */
+            $mpMoreOn = owMoreStylesOn(); $mpGrp = fn($t) => (!$mpMoreOn && ($t['cat'] ?? '') === 'heritage') ? 'traditional' : ($t['cat'] ?? '');
+            foreach (owStyleGroups() as $gk => $g): if (!$mpMoreOn && $gk === 'heritage') continue; $opts = array_filter($ART_TYPES, fn($t) => $mpGrp($t) === $gk && empty($t['legacy']) && empty($t['topic_only'])); if (!$opts) continue; ?>
             <optgroup label="<?= e($ar ? $g['ar'] : $g['en']) ?>"><?php foreach ($opts as $tk => $tv): ?><option value="<?= e($tk) ?>"<?= $initType === $tk ? ' selected' : '' ?>><?= e($ar ? $tv['ar'] : $tv['en']) ?></option><?php endforeach; ?></optgroup>
             <?php endforeach; ?>
           </select></div>

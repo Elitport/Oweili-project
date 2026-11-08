@@ -40,7 +40,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $price  = $_POST['price'] ?? '';
     $pType  = (string) ($_POST['type'] ?? '');
     // one of the 9 topics (owner, 6 Nov 2026), or the type this artwork already has
-    $type   = (owTopicOfStore($pType) !== '' || ($pType !== '' && $pType === (string) $aw['type'] && isset($ART_TYPES[$pType]))) ? $pType : '';
+    $type   = ((owTopicOfStore($pType) !== '' && isset(owArtTopicsShown((string) $aw['type'])[owTopicOfStore($pType)])) || ($pType !== '' && $pType === (string) $aw['type'] && isset($ART_TYPES[$pType]))) ? $pType : '';   // hidden topics only for an artwork that already has one (owner, 8 Nov 2026)
     $status = in_array($_POST['status'] ?? '', ['available','sold','auction'], true) ? $_POST['status'] : $aw['status'];
 
     /* Certificate details (asked when the database has them); the declaration only if it was never given */
@@ -251,7 +251,7 @@ $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
             <?php if (owTopicOfStore((string) $aw['type']) === '' && isset($ART_TYPES[$aw['type']])): $lbl = $ART_TYPES[$aw['type']]; /* its own earlier type stays offered */ ?>
               <option value="<?= e($aw['type']) ?>" data-en="<?= e($lbl['en']) ?>" data-ar="<?= e($lbl['ar']) ?>" selected><?= e($lbl['en']) ?></option>
             <?php endif; ?>
-            <?php foreach (owArtTopics() as $tk => $tp): $slug = $tp['store']; ?>
+            <?php foreach (owArtTopicsShown((string) $aw['type']) as $tk => $tp): $slug = $tp['store']; /* hidden topics left out, the artwork's own kept (owner, 8 Nov 2026) */ ?>
               <option value="<?= e($slug) ?>" data-en="<?= e($tp['en']) ?>" data-ar="<?= e($tp['ar']) ?>" <?= $aw['type'] === $slug ? 'selected' : '' ?>><?= e($tp['en']) ?></option>
             <?php endforeach; ?>
           </select></div>
