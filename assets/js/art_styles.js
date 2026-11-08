@@ -8629,6 +8629,11 @@ window.OW_ART_STYLES = [
      "They kept the art alive, room by room, across the region."
     ],
     [
+     "Fatima Abou Gahas",
+     "Saudi",
+     "Her painted rooms made her a celebrated master of the art."
+    ],
+    [
      "Saudi artists today",
      "Saudi, 21st century",
      "They carry the patterns into canvases, murals and fashion."
@@ -8714,6 +8719,11 @@ window.OW_ART_STYLES = [
      "رسامات عسير",
      "سعوديات، عبر الأجيال",
      "حفظن الفن حياً غرفة بعد غرفة في أرجاء المنطقة."
+    ],
+    [
+     "فاطمة أبو قحاص",
+     "سعودية",
+     "جعلتها غرفها المزيّنة من أشهر أساتذة هذا الفن."
     ],
     [
      "فنانون سعوديون اليوم",
