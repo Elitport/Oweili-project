@@ -11,6 +11,30 @@
  *  9 topics of owArtTopics() (artwork_lib.php). Older types that some artworks still use are kept with 'legacy' => true:
  *  they still show their label, but the upload form no longer offers them.
  * ===================================================================== */
+/* Art Styles is painting and drawing only for now (owner, 8 Nov 2026). These 15 styles are hidden
+   everywhere (Art Styles, Gallery filters, artist profile, admin lists), never deleted: an artwork that
+   has one keeps its label. One switch brings them all back: Admin → Settings → "Hidden for now"
+   (site_settings more_styles_on = '1', gallery_lib.php OW_HIDDEN_PARTS 'more_styles'). */
+if (!defined('OW_MORE_STYLES')) define('OW_MORE_STYLES', [
+    'stained_glass', 'mosaic', 'islamic_mosaic', 'islamic_geometric', 'islamic_ornament', 'egyptian_linen', 'textile',
+    'manuscript', 'collage', 'conceptual', 'performance', 'architectural', 'printmaking', 'ukiyo_e', 'calligraphy',
+]);
+if (!function_exists('owMoreStylesOn')) {
+    function owMoreStylesOn(): bool {
+        static $on = null;
+        if ($on !== null) return $on;
+        if (function_exists('owSetting')) return $on = (owSetting('more_styles_on', '0') === '1');
+        $on = false;
+        try {
+            if (function_exists('getDB')) {
+                $st = getDB()->prepare('SELECT setting_value FROM site_settings WHERE setting_key = ?');
+                $st->execute(['more_styles_on']);
+                $on = ((string) $st->fetchColumn() === '1');
+            }
+        } catch (Throwable $e) { $on = false; }
+        return $on;
+    }
+}
 if (!function_exists('owLoadArtTypes')) {
     function owLoadArtTypes(): array {
         static $types = null;
@@ -25,6 +49,7 @@ if (!function_exists('owLoadArtTypes')) {
                 /* Oweili is handmade art only (owner, 6 Nov 2026): Digital and Photography styles are
                    hidden, not deleted. They keep their label for any artwork that has one */
                 if (in_array((string) $s['cat'], ['digital', 'photography'], true)) $types[(string) $s['id']]['legacy'] = true;
+                if (in_array((string) $s['id'], OW_MORE_STYLES, true) && !owMoreStylesOn()) $types[(string) $s['id']]['legacy'] = true;
             }
         }
         /* two topics of the upload form that are not an Explore style (owner, 6 Nov 2026) */

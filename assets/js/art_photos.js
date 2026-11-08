@@ -386,13 +386,11 @@ window.OW_ART_PHOTO = {
  },
  "art_nouveau": {
   "w": 800,
-  "h": 585,
-  "en": "Hector Guimard, Métro entrance, Porte Dauphine, Paris, about 1900",
-  "ar": "هكتور غيمار، مدخل مترو بورت دوفين، باريس، نحو 1900",
-  "lic": "CC BY-SA 3.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Metro_station_entrance_%28%C3%A9dicule_Guimard%29_Porte_Dauphine_Paris_16e_001.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-  "by": "Moonik"
+  "h": 794,
+  "en": "Gustav Klimt, Beech Grove I, 1902",
+  "ar": "غوستاف كليمت، «غابة الزان 1»، 1902",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_-_Beech_Grove_I_-_Google_Art_Project.jpg"
  },
  "ukiyo_e": {
   "w": 526,
@@ -429,5 +427,131 @@ window.OW_ART_PHOTO = {
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:Mont_Sainte-Victoire_and_the_Viaduct_of_the_Arc_River_Valley_MET_DT889.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "palette_knife": {
+  "w": 800,
+  "h": 554,
+  "en": "Gustave Courbet, The Source of the Loue, 1864",
+  "ar": "غوستاف كوربيه، «منبع نهر اللو»، 1864",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:The_Source_of_the_Loue_MET_DT1964.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "impasto": {
+  "w": 800,
+  "h": 567,
+  "en": "Vincent van Gogh, Wheat Field with Cypresses, 1889",
+  "ar": "فنسنت فان غوخ، «حقل قمح مع أشجار السرو»، 1889",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Wheat_Field_with_Cypresses_MET_DT1567.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "fluid_art": {
+  "w": 800,
+  "h": 533,
+  "en": "TER20, Mixed Paint, fluid acrylic, 2019 (detail)",
+  "ar": "TER20، «طلاء ممزوج»، أكريليك سائل، 2019 (جزء)",
+  "lic": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:%D0%A1%D0%BC%D0%B5%D1%88%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BA%D1%80%D0%B0%D1%81%D0%BA%D0%B0.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/4.0/"
+ },
+ "dry_brush": {
+  "w": 560,
+  "h": 800,
+  "en": "Winslow Homer, Palm Tree, Nassau, watercolour, 1898",
+  "ar": "وينسلو هومر، «نخلة، ناساو»، ألوان مائية، 1898",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Winslow_Homer_-_Palm_Tree%2C_Nassau.jpg"
+ },
+ "glazing": {
+  "w": 800,
+  "h": 667,
+  "en": "Johannes Vermeer, View of Delft, about 1660–61",
+  "ar": "يوهانس فيرمير، «منظر دلفت»، نحو 1660–1661",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_View_of_Delft_-_92_-_Mauritshuis.jpg"
+ },
+ "alla_prima": {
+  "w": 800,
+  "h": 474,
+  "en": "John Constable, Cloud Study, 1822",
+  "ar": "جون كونستابل، «دراسة سحب»، 1822",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:John_Constable_-_Cloud_Study_-_Google_Art_Project.jpg"
+ },
+ "symbolism": {
+  "w": 800,
+  "h": 693,
+  "en": "Ferdinand Hodler, Lake Thun and the Stockhorn Mountains, 1904",
+  "ar": "فرديناند هودلر، «بحيرة تون وجبال ستوكهورن»، 1904",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Hodler_-_Thunersee_mit_Stockhornkette%2C1904.jpg"
+ },
+ "luminism": {
+  "w": 800,
+  "h": 523,
+  "en": "Fitz Henry Lane, Brace's Rock, Brace's Cove, 1864",
+  "ar": "فيتز هنري لين، «صخرة بريس، خليج بريس»، 1864",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Fitz_Henry_Lane_-_Brace%27s_Rock.jpg"
+ },
+ "tonalism": {
+  "w": 800,
+  "h": 656,
+  "en": "James McNeill Whistler, Nocturne: Blue and Silver – Chelsea, 1871",
+  "ar": "جيمس ماكنيل ويسلر، «ليلية: أزرق وفضي – تشيلسي»، 1871",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:James_Abbott_McNeill_Whistler_-_Nocturne-_Blue_and_Silver_-_Chelsea_-_Google_Art_Project.jpg"
+ },
+ "abstract_expressionism": {
+  "w": 800,
+  "h": 588,
+  "en": "Jackson Pollock, Number 1, 1950 (Lavender Mist), 1950",
+  "ar": "جاكسون بولوك، «رقم 1، 1950 (الضباب الخزامي)»، 1950",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Number_1%2C_1950_%28Lavender_Mist%29_by_Jackson_Pollock_%281950%29.jpg"
+ },
+ "color_field": {
+  "w": 800,
+  "h": 628,
+  "en": "Wolfgang Hollegha, painting",
+  "ar": "فولفغانغ هوليغا، لوحة",
+  "lic": "CC BY 2.0 AT",
+  "page": "https://commons.wikimedia.org/wiki/File:Hollegha-web-1-.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/2.0/at/",
+  "by": "Dr. Apsag"
+ },
+ "op_art": {
+  "w": 800,
+  "h": 570,
+  "en": "Henrique Matos, Optical Motion, 2012",
+  "ar": "إنريكي ماتوس، «حركة بصرية»، 2012",
+  "lic": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:2012_Henrique_Matos_Optical_Motion_01.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/"
+ },
+ "futurism": {
+  "w": 800,
+  "h": 601,
+  "en": "Luigi Russolo, Dynamism of a Car, 1912–13",
+  "ar": "لويجي روسولو، «ديناميكية سيارة»، 1912–1913",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Luigi_Russolo_dynamism-of-a-car-1913.jpg"
+ },
+ "naive_art": {
+  "w": 633,
+  "h": 653,
+  "en": "Henri Rousseau, Surprised!, 1891 (detail)",
+  "ar": "هنري روسو، «مفاجأة!»، 1891 (جزء)",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Henri_Rousseau_-_Surprise%21.jpg"
+ },
+ "art_deco": {
+  "w": 402,
+  "h": 800,
+  "en": "Jean Dunand, La Chasse (The Hunt), lacquer panel, 1935 (detail)",
+  "ar": "جان دونان، «الصيد»، لوحة من اللَّك، 1935 (جزء)",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:%27La_Chasse_%28The_Hunt%29%27_by_Jean_Dunand%2C_1935%2C_Wolfsonian-FIU_Museum.jpg"
  }
 };

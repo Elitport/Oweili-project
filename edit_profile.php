@@ -35,6 +35,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $country = owCountryEn($country);   // an Arabic country name from the list is saved in English, like before
     $styleChoices = owStyleChoices();
     $styles = array_slice(array_values(array_filter((array) ($_POST['art_styles'] ?? []), fn($x) => is_string($x) && isset($styleChoices[$x]))), 0, 8);
+    /* a style the artist chose before it was hidden (owner, 8 Nov 2026) is kept, not lost on save */
+    if (!owMoreStylesOn()) $styles = array_slice(array_values(array_unique(array_merge($styles, array_intersect(explode(',', (string) ($u['art_styles'] ?? '')), OW_MORE_STYLES)))), 0, 8);
 
     $hasPhoto = !empty($_FILES['profile_picture']['name']);
 

@@ -274,7 +274,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
       <?php if (!empty($artist['city']) || !empty($artist['country'])): ?>
         <div class="city">📍 <?= e(implode(', ', array_filter([(string) ($artist['city'] ?? ''), (string) ($artist['country'] ?? '')]))) ?></div>
       <?php endif; ?>
-      <?php $pStyles = array_filter(explode(',', (string) ($artist['art_styles'] ?? '')), fn($x) => isset($ART_TYPES[$x]));
+      <?php $pStyles = array_filter(explode(',', (string) ($artist['art_styles'] ?? '')), fn($x) => isset($ART_TYPES[$x]) && (owMoreStylesOn() || !in_array($x, OW_MORE_STYLES, true)));   // the 15 hidden styles do not show (owner, 8 Nov 2026)
       if ($pStyles): ?>
         <div class="p-styles"><?php foreach ($pStyles as $ps): ?><a class="type-pill" href="explore.php#<?= e($ps) ?>"><?= owBi($ART_TYPES[$ps]['en'], $ART_TYPES[$ps]['ar']) ?></a><?php endforeach; ?></div>
       <?php endif; ?>

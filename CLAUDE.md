@@ -85,7 +85,7 @@
 ## Pages Built
 - index.php — Homepage: one full-screen hero (see Features)
 - nav.php — Shared navbar (used across all pages)
-- explore.php — Explore Art Styles: an art encyclopedia of 50 styles with a rich window for each (see Features)
+- explore.php — Art Styles: an art encyclopedia (50 styles shown: painting and drawing) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
 - community.php — Community page: real counts and the newest artworks (see Features). HIDDEN FOR NOW, to bring back later (6 Nov 2026, Admin → Settings)
@@ -115,12 +115,20 @@
 - admin_institutes.php — team tool for institutes and courses
 - bashro_api.php — the Bashro data connection (off by default)
 - bashro_send.php — sends requests to Bashro's receive-only door (needs BASHRO_DOOR_SITE / BASHRO_DOOR_KEY in config.php; see Features)
-- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the 50 style names from it
-- art_types.php — the art type list: the 50 styles (names from art_styles.js) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
+- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (77 styles, 50 shown)
+- art_types.php — the art type list: the styles (names from art_styles.js; hidden ones marked legacy, OW_MORE_STYLES) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
 
 ## Features
+
+### Art Styles: painting and drawing only, 15 hidden, 15 new colour styles (8 Nov 2026, owner) — not pushed yet, waiting for the owner's yes
+- Owner: for now Art Styles is about painting and drawing only, with the focus on colour (types, techniques, looks). Other arts come back later
+- Hidden, never deleted (one switch): Stained glass, Mosaic, Islamic mosaic, Islamic geometry, Islamic ornament, Egyptian linen, Textile, Manuscript, Collage, Conceptual, Performance, Architecture, Printmaking, Ukiyo-e, Arabic calligraphy. The list is OW_MORE_STYLES in art_types.php; while the switch is off they are marked legacy there, so they leave Art Styles (explore.php sends them to explore.js as OW_HIDDEN_STYLES), the Gallery "More filters" style list, the artist profile style choices and the public profile, and the admin collection rule list. An artwork that has one keeps its label; an artist's earlier choice is kept when they save their profile. Switch: Admin → Settings → "Hidden for now, to bring back later" → "Other art styles" (site_settings more_styles_on = '1' brings all 15 back; gallery_lib.php OW_HIDDEN_PARTS 'more_styles'). Not changed: the 9 Gallery topics and the upload form (they still include the Arabic calligraphy and Islamic ornament topics)
+- Order on Art Styles: colour painting styles first, drawing last (Pencil, Charcoal, Ink & Pen, Chinese Ink; DRAWING in explore.js)
+- 15 new colour styles, same card, window and credit line as the others: Palette Knife Painting, Impasto, Fluid / Pour Painting, Dry Brush, Glazing, Alla Prima, Symbolism, Luminism, Tonalism (Traditional), Abstract Expressionism, Colour Field, Op Art, Futurism, Naive Art, Art Deco Painting (Contemporary). Texts in art_styles.js (after Post-Impressionism and Fauvism), drawn covers in art_covers.js, free artworks with credits in art_photos.js and assets/img/styles/. Visible now: 50 styles. Each is also a Gallery type, so it shows in the Gallery's "More filters" style list, the profile style choices and the admin rule list
+- Art Nouveau picture: Gustav Klimt, Beech Grove I, 1902 (public domain) instead of the Métro entrance photo
+- Files: art_types.php, gallery_lib.php, explore.php, assets/js/explore.js, assets/js/art_styles.js, assets/js/art_covers.js, assets/js/art_photos.js, assets/img/styles/, edit_profile.php, artist_dashboard.php. Tables: site_settings (one new setting, no structure change)
 
 ### Art Styles 38 → 50, Gallery search hint on phones, Support card centred (8 Nov 2026, owner) — live 8 Nov 2026
 - Art Styles: 12 new styles with the same card, window and credit line as the others: Impressionism, Pointillism, Renaissance, Baroque, Romanticism, Art Nouveau, Ukiyo-e (Japanese woodblock prints), Realism, Post-Impressionism (Traditional, now 24), Cubism, Fauvism (Contemporary, now 12), Al-Qatt Al-Asiri (Islamic & Arab Heritage, now 8). Texts in assets/js/art_styles.js (added after the last style of each group; the existing styles are unchanged), drawn covers in assets/js/art_covers.js, free artworks with credits in assets/js/art_photos.js and assets/img/styles/. Like every style, each new one is also a Gallery type, so it shows in the Gallery's "More filters" style list, the artist profile style choices and the admin collection rule list

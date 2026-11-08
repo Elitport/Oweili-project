@@ -1,5 +1,5 @@
 /* =====================================================================
- *  art_covers.js — the drawn picture for each of the 50 art styles
+ *  art_covers.js — the drawn picture for each art style
  *  (simple SVG in the brand colors, rule 31; they follow light and dark
  *  mode through the .ill classes in oweili.css).
  *  Shared by explore.php (style cards and window) and upload_artwork.php
@@ -485,6 +485,101 @@
       return '<rect width="400" height="300" class="gb" opacity=".2"/>' + s + '<circle cx="230" cy="100" r="12" class="pk"/>' +
         '<path d="M0 230 C90 200 180 240 270 210 S370 214 400 220 V300 H0Z" class="pk" opacity=".45"/>' +
         '<path d="M80 290 C60 220 70 140 90 70 C110 140 120 220 100 290 Z" class="ink" opacity=".85"/>';
+    },
+    /* the 15 colour styles added on 8 Nov 2026 (owner) */
+    palette_knife: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".2"/>' +
+        '<polygon points="40,220 150,150 210,190 110,260" class="pk" opacity=".8"/><polygon points="170,120 300,70 340,130 220,170" class="gb" opacity=".85"/>' +
+        '<polygon points="210,200 330,170 370,240 250,270" class="ink" opacity=".7"/><polygon points="60,110 150,80 170,120 90,150" class="pk" opacity=".5"/>' +
+        '<path d="M280 40 L360 20 L366 30 L290 52 Z" class="ink"/><path d="M290 52 L250 70" class="st ink" stroke-width="5"/>';
+    },
+    impasto: function () {
+      var s = '';
+      for (var i = 0; i < 8; i++) s += '<path d="M' + (40 + i * 42) + ' 250 C' + (20 + i * 42) + ' 180 ' + (80 + i * 42) + ' 120 ' + (60 + i * 42) + ' 50" class="st ' + (i % 2 ? 'pk' : 'gb') + '" stroke-width="16" stroke-linecap="round" opacity=".8"/>' +
+        '<path d="M' + (44 + i * 42) + ' 240 C' + (26 + i * 42) + ' 180 ' + (82 + i * 42) + ' 124 ' + (64 + i * 42) + ' 60" class="st bgk" stroke-width="3" opacity=".6"/>';
+      return '<rect width="400" height="300" class="ink" opacity=".12"/>' + s;
+    },
+    fluid_art: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".35"/>' +
+        '<path d="M0 120 C80 60 140 180 220 120 S340 40 400 100 V180 C330 120 270 220 190 190 S60 140 0 200Z" class="pk" opacity=".8"/>' +
+        '<path d="M0 220 C70 170 150 260 240 220 S350 160 400 200 V300 H0Z" class="ink" opacity=".7"/>' +
+        '<circle cx="120" cy="150" r="10" class="bgk"/><circle cx="150" cy="140" r="6" class="bgk"/><circle cx="260" cy="130" r="8" class="bgk"/><circle cx="300" cy="230" r="9" class="gb"/><circle cx="90" cy="240" r="7" class="pk"/>';
+    },
+    dry_brush: function () {
+      var s = '';
+      for (var i = 0; i < 9; i++) s += '<path d="M40 ' + (90 + i * 9) + ' C140 ' + (70 + i * 9) + ' 240 ' + (110 + i * 9) + ' 360 ' + (85 + i * 9) + '" class="st ink" stroke-width="3" stroke-dasharray="' + (30 + i * 7) + ' ' + (6 + i % 3 * 5) + '" opacity="' + (0.9 - i * 0.06).toFixed(2) + '"/>';
+      return '<rect width="400" height="300" class="gb" opacity=".18"/>' + s +
+        '<path d="M60 240 C150 222 250 254 340 232" class="st pk" stroke-width="10" stroke-dasharray="40 8 12 6" opacity=".75"/>';
+    },
+    glazing: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".15"/>' +
+        '<rect x="60" y="50" width="200" height="170" rx="6" class="pk" opacity=".35"/><rect x="120" y="90" width="210" height="160" rx="6" class="gb" opacity=".45"/>' +
+        '<rect x="90" y="130" width="160" height="120" rx="6" class="ink" opacity=".25"/><circle cx="200" cy="150" r="40" class="pk" opacity=".35"/>';
+    },
+    alla_prima: function () {
+      return '<rect width="400" height="200" class="gb" opacity=".3"/>' +
+        '<path d="M60 110 c20 -40 70 -40 90 -10 c30 -30 80 -10 76 24 c30 4 30 40 -6 44 H70 c-34 0 -40 -50 -10 -58Z" class="bgk"/>' +
+        '<path d="M60 110 c20 -40 70 -40 90 -10 c30 -30 80 -10 76 24" class="st ink" stroke-width="4" opacity=".5"/>' +
+        '<path d="M0 220 C100 196 200 236 300 210 S380 206 400 212 V300 H0Z" class="pk" opacity=".55"/>' +
+        '<path d="M30 250 l60 -6 M140 262 l70 -8 M260 250 l80 -10" class="st ink" stroke-width="8" stroke-linecap="round" opacity=".55"/>';
+    },
+    abstract_expressionism: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".15"/>' +
+        '<path d="M30 230 C100 60 160 260 220 90 S330 220 370 60" class="st ink" stroke-width="10" opacity=".8"/>' +
+        '<path d="M20 120 C120 180 200 40 300 150 S380 120 390 200" class="st pk" stroke-width="6" opacity=".85"/>' +
+        '<path d="M60 60 C140 90 160 30 250 70" class="st gb" stroke-width="14" opacity=".7"/>' +
+        '<circle cx="120" cy="200" r="5" class="ink"/><circle cx="280" cy="80" r="4" class="pk"/><circle cx="330" cy="230" r="6" class="ink"/><circle cx="200" cy="250" r="3" class="pk"/>';
+    },
+    color_field: function () {
+      return '<rect width="400" height="300" class="pk" opacity=".3"/>' +
+        '<rect x="70" y="36" width="260" height="120" rx="10" class="pk" opacity=".8"/>' +
+        '<rect x="70" y="170" width="260" height="94" rx="10" class="ink" opacity=".75"/>';
+    },
+    op_art: function () {
+      var s = '';
+      for (var i = 0; i < 14; i++) s += '<path d="M0 ' + (i * 22) + ' Q100 ' + (i * 22 + (i % 2 ? 18 : -18)) + ' 200 ' + (i * 22) + ' T400 ' + (i * 22) + ' V' + (i * 22 + 11) + ' Q300 ' + (i * 22 + 11 + (i % 2 ? -18 : 18)) + ' 200 ' + (i * 22 + 11) + ' T0 ' + (i * 22 + 11) + 'Z" class="ink" opacity=".85"/>';
+      return s + '<circle cx="200" cy="150" r="54" class="pk" opacity=".55"/>';
+    },
+    futurism: function () {
+      var s = '';
+      for (var i = 0; i < 6; i++) s += '<path d="M' + (40 + i * 40) + ' 230 L' + (160 + i * 40) + ' 90" class="st ' + (i % 2 ? 'pk' : 'ink') + '" stroke-width="' + (10 - i) + '" opacity="' + (0.3 + i * 0.12).toFixed(2) + '"/>';
+      return '<rect width="400" height="300" class="gb" opacity=".2"/>' + s +
+        '<polygon points="240,190 380,120 380,150 260,210" class="pk" opacity=".8"/><polygon points="200,250 360,200 330,240 220,270" class="ink" opacity=".7"/>' +
+        '<circle cx="300" cy="200" r="22" class="st ink" stroke-width="5"/>';
+    },
+    naive_art: function () {
+      var t = '';
+      for (var i = 0; i < 6; i++) t += '<circle cx="' + (40 + i * 64) + '" cy="150" r="22" class="gb" opacity=".9"/><path d="M' + (40 + i * 64) + ' 170 v28" class="st ink" stroke-width="5"/>';
+      return '<rect width="400" height="140" class="gb" opacity=".25"/><circle cx="330" cy="54" r="24" class="pk"/>' + t +
+        '<rect y="198" width="400" height="102" class="pk" opacity=".3"/>' +
+        '<rect x="150" y="214" width="80" height="56" class="bgk"/><polygon points="140,216 190,180 240,216" class="ink" opacity=".8"/><rect x="180" y="240" width="18" height="30" class="pk"/>';
+    },
+    symbolism: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".3"/>' +
+        '<path d="M0 170 L70 110 L120 140 L180 80 L250 130 L310 96 L400 150 V190 H0Z" class="ink" opacity=".55"/>' +
+        '<rect y="190" width="400" height="110" class="gb" opacity=".5"/>' +
+        '<path d="M0 190 L70 250 L120 220 L180 280 L250 230 L310 264 L400 210" class="st ink" stroke-width="2" opacity=".35"/>' +
+        '<path d="M20 210 H380 M40 226 H360 M60 242 H340" class="st bgk" stroke-width="2" opacity=".6"/><circle cx="200" cy="56" r="18" class="pk" opacity=".7"/>';
+    },
+    luminism: function (u) {
+      return '<defs><linearGradient id="lm' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sgb" stop-opacity=".5"/><stop offset="1" class="sbg" stop-opacity="1"/></linearGradient></defs>' +
+        '<rect width="400" height="190" fill="url(#lm' + u + ')"/><circle cx="270" cy="170" r="20" class="pk" opacity=".7"/>' +
+        '<rect y="190" width="400" height="110" class="gb" opacity=".4"/><path d="M262 200 h16 M256 214 h28 M264 228 h12" class="st pk" stroke-width="3" opacity=".6"/>' +
+        '<path d="M40 190 Q80 150 130 190 Z" class="ink" opacity=".75"/><path d="M90 190 V110 M90 120 L120 180 H90" class="st ink" stroke-width="2"/>';
+    },
+    tonalism: function () {
+      return '<rect width="400" height="300" class="gb" opacity=".45"/>' +
+        '<path d="M0 190 C80 180 160 196 240 186 S360 180 400 186 V300 H0Z" class="gb" opacity=".6"/>' +
+        '<path d="M40 190 V120 C40 100 60 90 70 110 C80 90 100 100 96 124 V190" class="ink" opacity=".35"/>' +
+        '<path d="M300 190 V100 C300 80 330 70 340 96 C356 84 370 104 362 130 V190" class="ink" opacity=".3"/>' +
+        '<circle cx="200" cy="80" r="16" class="bgk" opacity=".7"/>';
+    },
+    art_deco: function () {
+      var r = '';
+      for (var i = 0; i < 9; i++) r += '<path d="M200 230 L' + (40 + i * 40) + ' 20" class="st pk" stroke-width="3" opacity=".7"/>';
+      return '<rect width="400" height="300" class="ink" opacity=".85"/>' + r +
+        '<path d="M110 230 A90 90 0 0 1 290 230 Z" class="pk"/><path d="M140 230 A60 60 0 0 1 260 230" class="st bgk" stroke-width="3"/>' +
+        '<rect x="60" y="230" width="280" height="12" class="gb"/><rect x="90" y="250" width="220" height="10" class="gb" opacity=".7"/><rect x="120" y="268" width="160" height="8" class="gb" opacity=".5"/>';
     }
 
   };

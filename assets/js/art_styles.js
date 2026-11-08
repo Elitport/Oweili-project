@@ -1,5 +1,5 @@
 /* =====================================================================
- *  art_styles.js: the single source for all art style content (62 styles: 50 shown, 12 hidden).
+ *  art_styles.js: the single source for all art style content (77 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now).
  *  Used by explore.php (cards + the style window), and read by
  *  art_types.php for the art type names. Never copy this data into a
  *  page: load this file instead.
@@ -5307,6 +5307,1726 @@ window.OW_ART_STYLES = [
     "ابحث عن ضربات كثيفة موجّهة تلتقط الضوء.",
     "اسأل عن تاريخ العمل. الأسماء الشهيرة هنا تُقلّد كثيراً.",
     "افحص نسيج القماش وحواف الطلاء على الجوانب."
+   ]
+  }
+ },
+ {
+  "id": "palette_knife",
+  "cat": "traditional",
+  "type": "palette_knife",
+  "level": "intermediate",
+  "en": {
+   "name": "Palette Knife Painting",
+   "feel": "Bold",
+   "essence": "Paint spread with a steel blade in thick, sharp-edged slabs.",
+   "story": [
+    "Painters always used the knife to mix colors on the palette.",
+    "In the 1800s, Gustave Courbet began to paint with it on the canvas itself.",
+    "Today many artists build whole paintings with knives alone. The marks look crisp and full of light."
+   ],
+   "tech": [
+    [
+     "Spreading",
+     "Laying a flat slab of paint with the side of the blade."
+    ],
+    [
+     "Scraping",
+     "Pulling paint away to show the layer below."
+    ],
+    [
+     "Edge lines",
+     "Printing thin lines with the edge of the knife."
+    ],
+    [
+     "Mixing on canvas",
+     "Two colors pushed together in one stroke."
+    ],
+    [
+     "Sgraffito",
+     "Scratching into wet paint with the tip."
+    ],
+    [
+     "Layering",
+     "Thick slabs placed over dry ones."
+    ]
+   ],
+   "signs": [
+    "Flat, shiny planes of paint with sharp edges.",
+    "Small ridges where the blade lifted off.",
+    "Colors that streak inside a single stroke.",
+    "Scratches and scrapes that differ from one area to another."
+   ],
+   "tools": [
+    [
+     "Painting knives",
+     "Flexible steel blades in many shapes."
+    ],
+    [
+     "Oil or acrylic paint",
+     "Used thick, straight from the tube."
+    ],
+    [
+     "Stiff canvas or board",
+     "A firm surface that takes pressure."
+    ],
+    [
+     "Glass or wood palette",
+     "For mixing large amounts of paint."
+    ],
+    [
+     "Rags",
+     "To wipe the blade clean between colors."
+    ],
+    [
+     "Medium for body",
+     "Paste that keeps the paint thick."
+    ]
+   ],
+   "time": "One day to a few weeks",
+   "bestFor": "Collectors who love strong texture and clean, bright color.",
+   "artists": [
+    [
+     "Gustave Courbet",
+     "French, 1819–1877",
+     "He used the knife to paint rocks, snow and sea."
+    ],
+    [
+     "Nicolas de Staël",
+     "French, born in Russia, 1914–1955",
+     "He built landscapes from broad slabs of color."
+    ],
+    [
+     "Leonid Afremov",
+     "Belarusian-Israeli, 1955–2019",
+     "His colorful city scenes were painted with the knife."
+    ]
+   ],
+   "guide": [
+    "Tilt the painting: real knife work catches the light in flat planes.",
+    "Thick paint needs months to dry. Ask when it was finished.",
+    "Hang it away from heat so the thick layers stay safe."
+   ]
+  },
+  "ar": {
+   "name": "الرسم بالسكين",
+   "feel": "جريء",
+   "essence": "طلاء يُفرد بنصل معدني في طبقات سميكة بحواف حادة.",
+   "story": [
+    "استعمل الرسامون السكين دائماً لمزج الألوان على لوح الألوان.",
+    "في القرن التاسع عشر بدأ غوستاف كوربيه يرسم بها على القماش نفسه.",
+    "واليوم يبني فنانون كثيرون لوحات كاملة بالسكين وحدها. وتبدو آثارها حادة ومليئة بالضوء."
+   ],
+   "tech": [
+    [
+     "الفرد",
+     "وضع طبقة مسطحة من الطلاء بجانب النصل."
+    ],
+    [
+     "الكشط",
+     "سحب الطلاء لإظهار الطبقة التي تحته."
+    ],
+    [
+     "خطوط الحافة",
+     "طبع خطوط رفيعة بحافة السكين."
+    ],
+    [
+     "المزج على القماش",
+     "لونان يُدفعان معاً في ضربة واحدة."
+    ],
+    [
+     "الخدش",
+     "حفر الطلاء الرطب برأس السكين."
+    ],
+    [
+     "الطبقات",
+     "طبقات سميكة فوق طبقات جافة."
+    ]
+   ],
+   "signs": [
+    "مساحات مسطحة لامعة من الطلاء بحواف حادة.",
+    "نتوءات صغيرة حيث رُفع النصل.",
+    "ألوان تتداخل داخل ضربة واحدة.",
+    "خدوش وكشط يختلف من منطقة إلى أخرى."
+   ],
+   "tools": [
+    [
+     "سكاكين الرسم",
+     "نصال معدنية مرنة بأشكال كثيرة."
+    ],
+    [
+     "ألوان زيتية أو أكريليك",
+     "تُستعمل سميكة من الأنبوب مباشرة."
+    ],
+    [
+     "قماش مشدود أو لوح صلب",
+     "سطح متين يتحمل الضغط."
+    ],
+    [
+     "لوح ألوان من زجاج أو خشب",
+     "لمزج كميات كبيرة من الطلاء."
+    ],
+    [
+     "قطع قماش",
+     "لمسح النصل بين الألوان."
+    ],
+    [
+     "معجون للتكثيف",
+     "يحفظ للطلاء سماكته."
+    ]
+   ],
+   "time": "من يوم إلى بضعة أسابيع",
+   "bestFor": "لمن يحب الملمس القوي والألوان الصافية المشرقة.",
+   "artists": [
+    [
+     "غوستاف كوربيه",
+     "فرنسي، 1819–1877",
+     "رسم بالسكين الصخور والثلج والبحر."
+    ],
+    [
+     "نيكولا دي ستال",
+     "فرنسي مولود في روسيا، 1914–1955",
+     "بنى مناظره من مساحات لونية عريضة."
+    ],
+    [
+     "ليونيد أفريموف",
+     "بيلاروسي إسرائيلي، 1955–2019",
+     "رسم مشاهد مدن ملوّنة بالسكين."
+    ]
+   ],
+   "guide": [
+    "أمِل اللوحة: عمل السكين الحقيقي يعكس الضوء في مساحات مسطحة.",
+    "الطلاء السميك يحتاج شهوراً ليجف. اسأل متى اكتملت.",
+    "علّقها بعيداً عن الحرارة لتبقى الطبقات السميكة سليمة."
+   ]
+  }
+ },
+ {
+  "id": "impasto",
+  "cat": "traditional",
+  "type": "impasto",
+  "level": "intermediate",
+  "en": {
+   "name": "Impasto",
+   "feel": "Tactile",
+   "essence": "Paint laid on so thick that every stroke stands up from the canvas.",
+   "story": [
+    "Impasto is an Italian word for paste or dough.",
+    "Rembrandt and Titian used thick paint to make light glow on the surface.",
+    "Van Gogh made it famous. His swirling ridges still look alive more than a century later."
+   ],
+   "tech": [
+    [
+     "Loaded brush",
+     "A brush full of paint, pressed onto the canvas."
+    ],
+    [
+     "Directional strokes",
+     "Ridges that follow the shape of the subject."
+    ],
+    [
+     "Highlights in relief",
+     "The thickest paint kept for the brightest spots."
+    ],
+    [
+     "Thick over thin",
+     "Thin layers first, heavy paint on top."
+    ],
+    [
+     "Knife touches",
+     "A blade used beside the brush for flat accents."
+    ],
+    [
+     "Broken edges",
+     "Strokes left open so the ridges show."
+    ]
+   ],
+   "signs": [
+    "Ridges and peaks that cast small shadows.",
+    "Brush hair marks pressed into the paint.",
+    "Strokes that change direction with the form.",
+    "Fine cracks only in the thickest areas of old works."
+   ],
+   "tools": [
+    [
+     "Stiff hog-bristle brushes",
+     "Strong enough to move heavy paint."
+    ],
+    [
+     "Oil or heavy-body acrylic",
+     "Paint thick enough to hold its shape."
+    ],
+    [
+     "Impasto medium",
+     "Thickens paint without changing its color."
+    ],
+    [
+     "Painting knife",
+     "For flat slabs and accents."
+    ],
+    [
+     "Rigid support",
+     "Canvas board or well-stretched canvas."
+    ],
+    [
+     "Plenty of paint",
+     "Impasto uses far more paint than flat work."
+    ]
+   ],
+   "time": "A few days to several months to dry",
+   "bestFor": "Collectors who want a painting that changes with the light.",
+   "artists": [
+    [
+     "Rembrandt van Rijn",
+     "Dutch, 1606–1669",
+     "He built thick highlights that seem to hold light."
+    ],
+    [
+     "Vincent van Gogh",
+     "Dutch, 1853–1890",
+     "His ridged, swirling strokes made impasto famous."
+    ],
+    [
+     "Frank Auerbach",
+     "German-born British, 1931–2024",
+     "He reworked very thick paint again and again."
+    ]
+   ],
+   "guide": [
+    "Light it from the side to see the relief.",
+    "Ask about drying time. Thick oil can stay soft inside for a long time.",
+    "Never stack or wrap it tightly. The ridges can be crushed."
+   ]
+  },
+  "ar": {
+   "name": "الإمباستو (الطلاء الكثيف)",
+   "feel": "ملموس",
+   "essence": "طلاء كثيف جداً حتى تبرز كل ضربة عن سطح القماش.",
+   "story": [
+    "إمباستو كلمة إيطالية تعني العجينة.",
+    "استعمل رامبرانت وتيتسيان الطلاء الكثيف ليتوهج الضوء على السطح.",
+    "ثم جعله فان غوخ مشهوراً. وما زالت نتوءاته الدوّارة تبدو حيّة بعد أكثر من قرن."
+   ],
+   "tech": [
+    [
+     "الفرشاة المحمّلة",
+     "فرشاة مليئة بالطلاء تُضغط على القماش."
+    ],
+    [
+     "ضربات باتجاه الشكل",
+     "نتوءات تتبع شكل الموضوع."
+    ],
+    [
+     "إضاءات بارزة",
+     "أسمك طلاء لأشد المواضع إضاءة."
+    ],
+    [
+     "الكثيف فوق الرقيق",
+     "طبقات رقيقة أولاً ثم طلاء ثقيل فوقها."
+    ],
+    [
+     "لمسات السكين",
+     "نصل بجانب الفرشاة للمسات مسطحة."
+    ],
+    [
+     "حواف مفتوحة",
+     "ضربات تُترك ظاهرة لتبقى النتوءات."
+    ]
+   ],
+   "signs": [
+    "نتوءات وقمم تلقي ظلالاً صغيرة.",
+    "آثار شعر الفرشاة مضغوطة في الطلاء.",
+    "ضربات يتغير اتجاهها مع الشكل.",
+    "تشققات دقيقة في أسمك المناطق فقط في الأعمال القديمة."
+   ],
+   "tools": [
+    [
+     "فرش شعر خشن",
+     "قوية بما يكفي لتحريك الطلاء الثقيل."
+    ],
+    [
+     "ألوان زيتية أو أكريليك كثيف",
+     "طلاء يحفظ شكله."
+    ],
+    [
+     "وسيط التكثيف",
+     "يزيد السماكة دون أن يغيّر اللون."
+    ],
+    [
+     "سكين الرسم",
+     "للمساحات المسطحة واللمسات."
+    ],
+    [
+     "سطح صلب",
+     "لوح قماش أو قماش مشدود جيداً."
+    ],
+    [
+     "طلاء وفير",
+     "الإمباستو يحتاج طلاء أكثر بكثير."
+    ]
+   ],
+   "time": "من أيام إلى عدة أشهر حتى يجف",
+   "bestFor": "لمن يريد لوحة تتغير مع تغيّر الضوء.",
+   "artists": [
+    [
+     "رامبرانت فان راين",
+     "هولندي، 1606–1669",
+     "بنى إضاءات كثيفة تبدو كأنها تحتفظ بالضوء."
+    ],
+    [
+     "فنسنت فان غوخ",
+     "هولندي، 1853–1890",
+     "جعلت ضرباته البارزة الدوّارة الإمباستو مشهوراً."
+    ],
+    [
+     "فرانك أورباخ",
+     "بريطاني مولود في ألمانيا، 1931–2024",
+     "أعاد العمل على طلاء كثيف جداً مرة بعد مرة."
+    ]
+   ],
+   "guide": [
+    "أضئها من الجانب لترى البروز.",
+    "اسأل عن مدة الجفاف. الزيت الكثيف قد يبقى طرياً من الداخل طويلاً.",
+    "لا تكدّسها ولا تلفّها بإحكام، فقد تنسحق النتوءات."
+   ]
+  }
+ },
+ {
+  "id": "fluid_art",
+  "cat": "traditional",
+  "type": "fluid_art",
+  "level": "beginner",
+  "en": {
+   "name": "Fluid / Pour Painting",
+   "feel": "Flowing",
+   "essence": "Thin paint poured and tilted so the colors flow into each other.",
+   "story": [
+    "In the 1950s, American painters began to pour paint instead of brushing it.",
+    "Helen Frankenthaler poured thin color onto raw canvas and let it soak in.",
+    "Today acrylic pouring is loved worldwide. Every pour makes its own rivers, cells and veins."
+   ],
+   "tech": [
+    [
+     "Flip cup",
+     "A cup of layered paint turned over onto the canvas."
+    ],
+    [
+     "Dirty pour",
+     "Several colors poured together from one cup."
+    ],
+    [
+     "Swipe",
+     "Pulling a thin layer across the wet paint."
+    ],
+    [
+     "Tilting",
+     "Moving the canvas so the paint travels."
+    ],
+    [
+     "Soak stain",
+     "Thin color poured onto raw canvas to sink in."
+    ],
+    [
+     "Cells",
+     "Small round openings where colors push through."
+    ]
+   ],
+   "signs": [
+    "Smooth, glossy surface with no brush marks.",
+    "Paint that runs over the edges of the canvas.",
+    "Colors that blend in soft veins and rings.",
+    "Small drips and runs on the sides and back."
+   ],
+   "tools": [
+    [
+     "Acrylic paint",
+     "Thinned to flow like cream."
+    ],
+    [
+     "Pouring medium",
+     "Keeps colors bright and stops cracking."
+    ],
+    [
+     "Cups and sticks",
+     "To mix and layer each color."
+    ],
+    [
+     "Canvas on supports",
+     "Raised so paint can drip off."
+    ],
+    [
+     "Level table",
+     "So the paint settles evenly."
+    ],
+    [
+     "Heat gun or torch",
+     "Brings cells to the surface."
+    ]
+   ],
+   "time": "A few hours to pour, several days to dry",
+   "bestFor": "Collectors who love movement, gloss and surprise.",
+   "artists": [
+    [
+     "Helen Frankenthaler",
+     "American, 1928–2011",
+     "She poured thin color onto raw canvas."
+    ],
+    [
+     "Morris Louis",
+     "American, 1912–1962",
+     "He let veils of poured color run down the canvas."
+    ],
+    [
+     "Paul Jenkins",
+     "American, 1923–2012",
+     "He guided poured paint by tilting the canvas."
+    ]
+   ],
+   "guide": [
+    "Ask what medium was used. Good mediums keep colors from cracking.",
+    "Look at the sides: real pours run over the edges.",
+    "Keep it out of hot sun. Thick acrylic can soften."
+   ]
+  },
+  "ar": {
+   "name": "الرسم بالسكب (الفن السائل)",
+   "feel": "منساب",
+   "essence": "طلاء خفيف يُسكب ويُمال القماش فتنساب الألوان بعضها في بعض.",
+   "story": [
+    "في الخمسينيات بدأ رسامون أمريكيون يسكبون الطلاء بدل الرسم بالفرشاة.",
+    "سكبت هيلين فرانكنثالر ألواناً خفيفة على قماش خام وتركتها تتشربه.",
+    "واليوم يحب الناس في العالم كله سكب الأكريليك. كل سكبة تصنع أنهارها وخلاياها وعروقها."
+   ],
+   "tech": [
+    [
+     "قلب الكوب",
+     "كوب من طبقات الألوان يُقلب على القماش."
+    ],
+    [
+     "السكب المختلط",
+     "عدة ألوان تُسكب معاً من كوب واحد."
+    ],
+    [
+     "السحب",
+     "سحب طبقة رقيقة فوق الطلاء الرطب."
+    ],
+    [
+     "الإمالة",
+     "تحريك القماش لينتقل الطلاء."
+    ],
+    [
+     "التشرّب",
+     "لون خفيف يُسكب على قماش خام ليغوص فيه."
+    ],
+    [
+     "الخلايا",
+     "فتحات دائرية صغيرة تظهر منها الألوان."
+    ]
+   ],
+   "signs": [
+    "سطح أملس لامع بلا آثار فرشاة.",
+    "طلاء يسيل على حواف القماش.",
+    "ألوان تمتزج في عروق وحلقات ناعمة.",
+    "قطرات صغيرة على الجوانب والظهر."
+   ],
+   "tools": [
+    [
+     "ألوان أكريليك",
+     "مخففة لتنساب مثل القشدة."
+    ],
+    [
+     "وسيط السكب",
+     "يحفظ الألوان زاهية ويمنع التشقق."
+    ],
+    [
+     "أكواب وأعواد",
+     "لمزج كل لون ووضعه في طبقات."
+    ],
+    [
+     "قماش مرفوع على دعامات",
+     "ليقطر الطلاء الزائد."
+    ],
+    [
+     "طاولة مستوية",
+     "ليستقر الطلاء بالتساوي."
+    ],
+    [
+     "مسدس حراري أو شعلة",
+     "يُظهر الخلايا على السطح."
+    ]
+   ],
+   "time": "ساعات للسكب وعدة أيام للجفاف",
+   "bestFor": "لمن يحب الحركة واللمعان والمفاجأة.",
+   "artists": [
+    [
+     "هيلين فرانكنثالر",
+     "أمريكية، 1928–2011",
+     "سكبت ألواناً خفيفة على قماش خام."
+    ],
+    [
+     "موريس لويس",
+     "أمريكي، 1912–1962",
+     "ترك ستائر من الألوان المسكوبة تنساب على القماش."
+    ],
+    [
+     "بول جنكنز",
+     "أمريكي، 1923–2012",
+     "وجّه الطلاء المسكوب بإمالة القماش."
+    ]
+   ],
+   "guide": [
+    "اسأل عن الوسيط المستعمل، فالوسيط الجيد يمنع تشقق الألوان.",
+    "انظر إلى الجوانب: السكب الحقيقي يسيل على الحواف.",
+    "أبعدها عن الشمس الحارة، فالأكريليك السميك قد يلين."
+   ]
+  }
+ },
+ {
+  "id": "dry_brush",
+  "cat": "traditional",
+  "type": "dry_brush",
+  "level": "intermediate",
+  "en": {
+   "name": "Dry Brush",
+   "feel": "Textured",
+   "essence": "Very little paint dragged lightly, so the surface breaks the stroke.",
+   "story": [
+    "Chinese painters called the broken stroke “flying white” more than a thousand years ago.",
+    "In Western watercolor, Winslow Homer and Andrew Wyeth made dry brush famous.",
+    "Wyeth painted grass, wood and old walls stroke by stroke. Each hair of the brush shows."
+   ],
+   "tech": [
+    [
+     "Dragging",
+     "A nearly dry brush pulled across the paper."
+    ],
+    [
+     "Splayed brush",
+     "Hairs spread apart to paint many fine lines."
+    ],
+    [
+     "Scumbling",
+     "Light, dry paint over a darker layer."
+    ],
+    [
+     "Layer building",
+     "Many dry strokes added one over another."
+    ],
+    [
+     "Flying white",
+     "Paper showing through a fast, dry stroke."
+    ],
+    [
+     "Lifting",
+     "Taking color away with a clean, damp brush."
+    ]
+   ],
+   "signs": [
+    "Broken strokes with tiny gaps of paper or canvas.",
+    "Fine parallel lines from single brush hairs.",
+    "Grainy texture that follows the surface weave.",
+    "Slow, careful detail in grass, wood or hair."
+   ],
+   "tools": [
+    [
+     "Round and fan brushes",
+     "Their hairs split into fine lines."
+    ],
+    [
+     "Watercolor, egg tempera or oil",
+     "Used with very little water."
+    ],
+    [
+     "Rough paper or textured board",
+     "Its grain breaks the stroke."
+    ],
+    [
+     "Paper towel",
+     "To dry the brush before each stroke."
+    ],
+    [
+     "Small palette",
+     "For tiny amounts of thick color."
+    ],
+    [
+     "Magnifier",
+     "For the finest details."
+    ]
+   ],
+   "time": "A few days to several weeks",
+   "bestFor": "Collectors who love quiet detail and the feel of a surface.",
+   "artists": [
+    [
+     "Andrew Wyeth",
+     "American, 1917–2009",
+     "His drybrush watercolors show every blade of grass."
+    ],
+    [
+     "Winslow Homer",
+     "American, 1836–1910",
+     "He mixed wet washes with dry, broken strokes."
+    ],
+    [
+     "Xu Beihong",
+     "Chinese, 1895–1953",
+     "His galloping horses use fast, dry ink strokes."
+    ]
+   ],
+   "guide": [
+    "Look closely for single hair lines. Prints cannot copy them.",
+    "Keep works on paper under glass, away from sun.",
+    "Ask how many layers were built. Fine detail takes time."
+   ]
+  },
+  "ar": {
+   "name": "الفرشاة الجافة",
+   "feel": "محبَّب",
+   "essence": "قليل جداً من الطلاء يُسحب بخفة فيكسر السطحُ الضربة.",
+   "story": [
+    "سمّى الرسامون الصينيون الضربة المتقطعة «الأبيض الطائر» قبل أكثر من ألف عام.",
+    "وفي الألوان المائية الغربية جعل وينسلو هومر وأندرو وايث الفرشاة الجافة مشهورة.",
+    "رسم وايث العشب والخشب والجدران القديمة ضربةً ضربة. ويظهر كل شعرة من الفرشاة."
+   ],
+   "tech": [
+    [
+     "السحب",
+     "فرشاة شبه جافة تُسحب على الورق."
+    ],
+    [
+     "الفرشاة المفرودة",
+     "شعيرات متباعدة ترسم خطوطاً دقيقة كثيرة."
+    ],
+    [
+     "الطبقة الضبابية",
+     "طلاء جاف خفيف فوق طبقة أغمق."
+    ],
+    [
+     "بناء الطبقات",
+     "ضربات جافة كثيرة واحدة فوق أخرى."
+    ],
+    [
+     "الأبيض الطائر",
+     "الورق يظهر من خلال ضربة سريعة جافة."
+    ],
+    [
+     "الرفع",
+     "إزالة اللون بفرشاة نظيفة رطبة."
+    ]
+   ],
+   "signs": [
+    "ضربات متقطعة بفراغات صغيرة من الورق أو القماش.",
+    "خطوط متوازية دقيقة من شعيرات منفردة.",
+    "ملمس محبّب يتبع نسيج السطح.",
+    "تفاصيل بطيئة دقيقة في العشب أو الخشب أو الشعر."
+   ],
+   "tools": [
+    [
+     "فرش مستديرة ومروحية",
+     "تنقسم شعيراتها إلى خطوط دقيقة."
+    ],
+    [
+     "ألوان مائية أو تمبرا أو زيت",
+     "بقليل جداً من الماء."
+    ],
+    [
+     "ورق خشن أو لوح محبّب",
+     "يكسر حبيبُه الضربة."
+    ],
+    [
+     "مناديل ورقية",
+     "لتجفيف الفرشاة قبل كل ضربة."
+    ],
+    [
+     "لوح ألوان صغير",
+     "لكميات قليلة من اللون الكثيف."
+    ],
+    [
+     "عدسة مكبّرة",
+     "لأدق التفاصيل."
+    ]
+   ],
+   "time": "من أيام إلى عدة أسابيع",
+   "bestFor": "لمن يحب التفاصيل الهادئة وإحساس السطح.",
+   "artists": [
+    [
+     "أندرو وايث",
+     "أمريكي، 1917–2009",
+     "تُظهر ألوانه المائية الجافة كل عود عشب."
+    ],
+    [
+     "وينسلو هومر",
+     "أمريكي، 1836–1910",
+     "مزج الغسلات الرطبة بضربات جافة متقطعة."
+    ],
+    [
+     "شو بيهونغ",
+     "صيني، 1895–1953",
+     "رسم خيوله الراكضة بضربات حبر سريعة جافة."
+    ]
+   ],
+   "guide": [
+    "ابحث عن خطوط الشعيرات المنفردة، فالطباعة لا تنسخها.",
+    "احفظ الأعمال الورقية خلف زجاج بعيداً عن الشمس.",
+    "اسأل عن عدد الطبقات، فالتفاصيل الدقيقة تحتاج وقتاً."
+   ]
+  }
+ },
+ {
+  "id": "glazing",
+  "cat": "traditional",
+  "type": "glazing",
+  "level": "advanced",
+  "en": {
+   "name": "Glazing",
+   "feel": "Glowing",
+   "essence": "Thin, see-through layers of color laid one over another until they glow.",
+   "story": [
+    "Flemish painters perfected glazing with oil in the 1400s.",
+    "Light passes through each clear layer and bounces back from below. That gives deep, jewel-like color.",
+    "Vermeer and Titian used it for skies, cloth and soft light. Many painters still glaze today."
+   ],
+   "tech": [
+    [
+     "Underpainting",
+     "A first layer in one color for light and shade."
+    ],
+    [
+     "Transparent glaze",
+     "Clear color thinned with oil medium."
+    ],
+    [
+     "Fat over lean",
+     "Each layer a little oilier than the one below."
+    ],
+    [
+     "Drying between layers",
+     "Every glaze dries before the next."
+    ],
+    [
+     "Scumbling",
+     "A thin, light veil over darker paint."
+    ],
+    [
+     "Final highlights",
+     "Small opaque touches at the end."
+    ]
+   ],
+   "signs": [
+    "Deep color that seems lit from inside.",
+    "Smooth surface with very few brush ridges.",
+    "Edges where the layers show slightly different hues.",
+    "Under raking light, a calm glassy shine."
+   ],
+   "tools": [
+    [
+     "Soft sable or synthetic brushes",
+     "For thin, even layers."
+    ],
+    [
+     "Transparent oil colors",
+     "Pigments light can pass through."
+    ],
+    [
+     "Glazing medium",
+     "Thins paint and keeps it glossy."
+    ],
+    [
+     "Smooth panel or fine canvas",
+     "A calm base for thin layers."
+    ],
+    [
+     "Soft fan brush",
+     "To blend away stroke marks."
+    ],
+    [
+     "Patience",
+     "Weeks of drying between layers."
+    ]
+   ],
+   "time": "Several weeks to many months",
+   "bestFor": "Collectors who love depth, calm and rich color.",
+   "artists": [
+    [
+     "Jan van Eyck",
+     "Netherlandish, about 1390–1441",
+     "He made the oil glaze famous for its jewel-like color."
+    ],
+    [
+     "Titian",
+     "Italian, about 1488–1576",
+     "He built warm, glowing color in many layers."
+    ],
+    [
+     "Johannes Vermeer",
+     "Dutch, 1632–1675",
+     "His soft daylight comes from thin, clear glazes."
+    ]
+   ],
+   "guide": [
+    "Look at it in daylight and lamplight. Glazes change beautifully.",
+    "Ask how many layers there are and how long each one dried.",
+    "Clean only with a soft, dry cloth. Never use liquids."
+   ]
+  },
+  "ar": {
+   "name": "التزجيج (الطبقات الشفافة)",
+   "feel": "متوهّج",
+   "essence": "طبقات لونية رقيقة شفافة توضع الواحدة فوق الأخرى حتى تتوهج.",
+   "story": [
+    "أتقن الرسامون الفلمنكيون التزجيج بالزيت في القرن الخامس عشر.",
+    "يعبر الضوء كل طبقة شفافة ويرتد من الأسفل، فيمنح اللون عمقاً كالجواهر.",
+    "استعمله فيرمير وتيتسيان للسماء والأقمشة والضوء الناعم. وما زال رسامون كثيرون يستعملونه."
+   ],
+   "tech": [
+    [
+     "الرسم التحضيري",
+     "طبقة أولى بلون واحد للضوء والظل."
+    ],
+    [
+     "الطبقة الشفافة",
+     "لون شفاف مخفف بوسيط زيتي."
+    ],
+    [
+     "الدسم فوق الخفيف",
+     "كل طبقة أكثر زيتاً قليلاً مما تحتها."
+    ],
+    [
+     "الجفاف بين الطبقات",
+     "كل طبقة تجف قبل التي تليها."
+    ],
+    [
+     "الغلالة",
+     "طبقة فاتحة رقيقة فوق طلاء أغمق."
+    ],
+    [
+     "الإضاءات الأخيرة",
+     "لمسات صغيرة معتمة في النهاية."
+    ]
+   ],
+   "signs": [
+    "لون عميق يبدو مضاءً من الداخل.",
+    "سطح أملس بقليل جداً من نتوءات الفرشاة.",
+    "حواف تظهر فيها الطبقات بدرجات مختلفة قليلاً.",
+    "تحت ضوء جانبي، لمعة زجاجية هادئة."
+   ],
+   "tools": [
+    [
+     "فرش ناعمة",
+     "لطبقات رقيقة متساوية."
+    ],
+    [
+     "ألوان زيتية شفافة",
+     "أصباغ يعبرها الضوء."
+    ],
+    [
+     "وسيط التزجيج",
+     "يخفف الطلاء ويحفظ لمعانه."
+    ],
+    [
+     "لوح أملس أو قماش ناعم",
+     "قاعدة هادئة للطبقات الرقيقة."
+    ],
+    [
+     "فرشاة مروحية ناعمة",
+     "لإخفاء آثار الضربات."
+    ],
+    [
+     "الصبر",
+     "أسابيع من الجفاف بين الطبقات."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى أشهر كثيرة",
+   "bestFor": "لمن يحب العمق والهدوء والألوان الغنية.",
+   "artists": [
+    [
+     "يان فان آيك",
+     "فلمنكي، نحو 1390–1441",
+     "اشتهر بتزجيج الزيت وألوانه التي تشبه الجواهر."
+    ],
+    [
+     "تيتسيان",
+     "إيطالي، نحو 1488–1576",
+     "بنى ألواناً دافئة متوهجة في طبقات كثيرة."
+    ],
+    [
+     "يوهانس فيرمير",
+     "هولندي، 1632–1675",
+     "ضوء النهار الناعم في لوحاته يأتي من طبقات رقيقة شفافة."
+    ]
+   ],
+   "guide": [
+    "انظر إليها في ضوء النهار وضوء المصباح، فالطبقات تتغير بجمال.",
+    "اسأل عن عدد الطبقات ومدة جفاف كل واحدة.",
+    "نظّفها بقطعة قماش ناعمة جافة فقط، دون أي سائل."
+   ]
+  }
+ },
+ {
+  "id": "alla_prima",
+  "cat": "traditional",
+  "type": "alla_prima",
+  "level": "intermediate",
+  "en": {
+   "name": "Alla Prima",
+   "feel": "Fresh",
+   "essence": "A painting finished wet-into-wet in one go, while all the paint is still fresh.",
+   "story": [
+    "Alla prima is Italian for “at the first attempt.”",
+    "Frans Hals painted with fast, sure strokes in the 1600s. Later, outdoor painters made it their way of working.",
+    "John Constable painted clouds this way in under an hour. The method keeps every stroke lively."
+   ],
+   "tech": [
+    [
+     "Wet-into-wet",
+     "New paint laid into paint that is still wet."
+    ],
+    [
+     "One sitting",
+     "The whole work painted in a single session."
+    ],
+    [
+     "Big shapes first",
+     "Large masses before small details."
+    ],
+    [
+     "Confident strokes",
+     "Each stroke placed once and left alone."
+    ],
+    [
+     "Thin dark, thick light",
+     "Dark areas thin, light areas thick."
+    ],
+    [
+     "Limited palette",
+     "A few colors for speed and harmony."
+    ]
+   ],
+   "signs": [
+    "Lively strokes that are not polished away.",
+    "Colors blended softly where wet paint met.",
+    "One layer of paint with no dry layers below.",
+    "Small areas of bare canvas or toned ground."
+   ],
+   "tools": [
+    [
+     "Bristle and filbert brushes",
+     "For quick, broad strokes."
+    ],
+    [
+     "Oil or acrylic paint",
+     "Oil stays wet longer for blending."
+    ],
+    [
+     "Toned panel or canvas",
+     "A mid color makes values easier."
+    ],
+    [
+     "Portable easel",
+     "For painting outdoors."
+    ],
+    [
+     "Large palette",
+     "Room to mix quickly."
+    ],
+    [
+     "Rag and solvent cup",
+     "To keep colors clean."
+    ]
+   ],
+   "time": "One to a few hours",
+   "bestFor": "Collectors who love energy, freshness and the moment.",
+   "artists": [
+    [
+     "Frans Hals",
+     "Dutch, about 1582–1666",
+     "His quick, loose strokes looked startlingly fresh."
+    ],
+    [
+     "John Constable",
+     "British, 1776–1837",
+     "He painted fast cloud studies outdoors."
+    ],
+    [
+     "Joaquín Sorolla",
+     "Spanish, 1863–1923",
+     "He caught bright Spanish sunlight in one sitting."
+    ]
+   ],
+   "guide": [
+    "Ask if it was painted from life or outdoors.",
+    "Small size is normal. One sitting means a modest canvas.",
+    "Fresh strokes are the point. Do not expect a polished finish."
+   ]
+  },
+  "ar": {
+   "name": "ألا بريما (الرسم دفعة واحدة)",
+   "feel": "طازج",
+   "essence": "لوحة تكتمل رطباً على رطب دفعة واحدة، والطلاء كله ما زال طرياً.",
+   "story": [
+    "ألا بريما عبارة إيطالية تعني «من المحاولة الأولى».",
+    "رسم فرانس هالس بضربات سريعة واثقة في القرن السابع عشر. ثم جعلها رسامو الهواء الطلق طريقتهم.",
+    "رسم جون كونستابل السحب بهذه الطريقة في أقل من ساعة. وهي تُبقي كل ضربة حيّة."
+   ],
+   "tech": [
+    [
+     "رطب على رطب",
+     "طلاء جديد يوضع في طلاء ما زال رطباً."
+    ],
+    [
+     "جلسة واحدة",
+     "العمل كله يُرسم في جلسة واحدة."
+    ],
+    [
+     "الكتل الكبيرة أولاً",
+     "المساحات الكبيرة قبل التفاصيل الصغيرة."
+    ],
+    [
+     "ضربات واثقة",
+     "كل ضربة توضع مرة واحدة وتُترك."
+    ],
+    [
+     "داكن رقيق وفاتح كثيف",
+     "المناطق الداكنة رقيقة والفاتحة كثيفة."
+    ],
+    [
+     "ألوان قليلة",
+     "ألوان محدودة للسرعة والانسجام."
+    ]
+   ],
+   "signs": [
+    "ضربات حيّة لم تُصقل.",
+    "ألوان ممتزجة بنعومة حيث التقى الطلاء الرطب.",
+    "طبقة طلاء واحدة بلا طبقات جافة تحتها.",
+    "مساحات صغيرة من القماش العاري أو الأرضية الملوّنة."
+   ],
+   "tools": [
+    [
+     "فرش خشنة وبيضاوية",
+     "لضربات سريعة عريضة."
+    ],
+    [
+     "ألوان زيتية أو أكريليك",
+     "الزيت يبقى رطباً أطول للمزج."
+    ],
+    [
+     "لوح أو قماش ملوّن الأرضية",
+     "لون متوسط يسهّل الدرجات."
+    ],
+    [
+     "حامل محمول",
+     "للرسم في الخارج."
+    ],
+    [
+     "لوح ألوان كبير",
+     "مساحة للمزج السريع."
+    ],
+    [
+     "قماش وكوب مذيب",
+     "لإبقاء الألوان نظيفة."
+    ]
+   ],
+   "time": "من ساعة إلى بضع ساعات",
+   "bestFor": "لمن يحب الحيوية والطزاجة واللحظة.",
+   "artists": [
+    [
+     "فرانس هالس",
+     "هولندي، نحو 1582–1666",
+     "بدت ضرباته السريعة الحرة طازجة على نحو مدهش."
+    ],
+    [
+     "جون كونستابل",
+     "بريطاني، 1776–1837",
+     "رسم دراسات سريعة للسحب في الهواء الطلق."
+    ],
+    [
+     "خواكين سورولا",
+     "إسباني، 1863–1923",
+     "التقط شمس إسبانيا الساطعة في جلسة واحدة."
+    ]
+   ],
+   "guide": [
+    "اسأل إن كانت رُسمت من الطبيعة أو في الهواء الطلق.",
+    "الحجم الصغير طبيعي، فالجلسة الواحدة تعني قماشاً متوسطاً.",
+    "الضربات الطازجة هي الغاية، فلا تنتظر سطحاً مصقولاً."
+   ]
+  }
+ },
+ {
+  "id": "symbolism",
+  "cat": "traditional",
+  "type": "symbolism",
+  "level": "advanced",
+  "en": {
+   "name": "Symbolism",
+   "feel": "Dreamlike",
+   "essence": "Painting ideas, moods and dreams instead of the world as it looks.",
+   "story": [
+    "Symbolism grew in France and Belgium in the 1880s.",
+    "Its painters turned away from plain description. They wanted color and form to carry feelings and ideas.",
+    "Lakes, mountains and quiet evenings became doors to a calm, inner world."
+   ],
+   "tech": [
+    [
+     "Symbolic color",
+     "Color chosen for its mood, not its truth."
+    ],
+    [
+     "Simplified forms",
+     "Shapes reduced to their calm essence."
+    ],
+    [
+     "Parallel rhythms",
+     "Repeated lines that create order and peace."
+    ],
+    [
+     "Soft edges",
+     "Forms that melt into mist and light."
+    ],
+    [
+     "Decorative line",
+     "Flowing outlines around flat areas."
+    ],
+    [
+     "Dream space",
+     "Places that feel real and unreal at once."
+    ]
+   ],
+   "signs": [
+    "Careful layers and calm, even surfaces.",
+    "Outlines drawn and redrawn by hand.",
+    "Color that shifts slowly from one tone to the next.",
+    "Small changes where the artist adjusted a contour."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "For deep, quiet color."
+    ],
+    [
+     "Pastel and charcoal",
+     "Loved by Redon for glowing dreams."
+    ],
+    [
+     "Fine round brushes",
+     "For long, flowing outlines."
+    ],
+    [
+     "Smooth canvas",
+     "A calm surface for even layers."
+    ],
+    [
+     "Sketchbook",
+     "Ideas and symbols drawn first."
+    ],
+    [
+     "Varnish",
+     "To give a soft, even glow."
+    ]
+   ],
+   "time": "Several weeks to months",
+   "bestFor": "Collectors who love calm, mystery and meaning.",
+   "artists": [
+    [
+     "Odilon Redon",
+     "French, 1840–1916",
+     "He moved from dark charcoal dreams to glowing color."
+    ],
+    [
+     "Ferdinand Hodler",
+     "Swiss, 1853–1918",
+     "His Swiss lakes and mountains repeat in calm rhythms."
+    ],
+    [
+     "Arnold Böcklin",
+     "Swiss, 1827–1901",
+     "His mysterious islands and seas inspired many painters."
+    ],
+    [
+     "Gustave Moreau",
+     "French, 1826–1898",
+     "He filled his canvases with rich, jewel-like detail."
+    ]
+   ],
+   "guide": [
+    "Ask what the work means to the artist. Symbolism invites a story.",
+    "Look at the edges. Soft transitions are slow, careful work.",
+    "Hang it where the room is calm, with soft light."
+   ]
+  },
+  "ar": {
+   "name": "الرمزية",
+   "feel": "حالم",
+   "essence": "رسم الأفكار والمشاعر والأحلام بدل العالم كما يبدو.",
+   "story": [
+    "نشأت الرمزية في فرنسا وبلجيكا في ثمانينيات القرن التاسع عشر.",
+    "ابتعد رساموها عن مجرد الوصف، وأرادوا أن يحمل اللون والشكل المشاعر والأفكار.",
+    "فصارت البحيرات والجبال والأمسيات الهادئة أبواباً إلى عالم داخلي ساكن."
+   ],
+   "tech": [
+    [
+     "اللون الرمزي",
+     "لون يُختار لشعوره لا لحقيقته."
+    ],
+    [
+     "الأشكال المبسّطة",
+     "أشكال تُختصر إلى جوهرها الهادئ."
+    ],
+    [
+     "الإيقاع المتوازي",
+     "خطوط متكررة تصنع نظاماً وسكينة."
+    ],
+    [
+     "الحواف الناعمة",
+     "أشكال تذوب في الضباب والضوء."
+    ],
+    [
+     "الخط الزخرفي",
+     "خطوط منسابة حول مساحات مسطحة."
+    ],
+    [
+     "فضاء الحلم",
+     "أماكن تبدو حقيقية وغير حقيقية معاً."
+    ]
+   ],
+   "signs": [
+    "طبقات متأنية وسطوح هادئة متساوية.",
+    "خطوط خارجية رُسمت وأعيد رسمها باليد.",
+    "لون يتدرج ببطء من درجة إلى أخرى.",
+    "تعديلات صغيرة حيث ضبط الفنان حداً."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "لألوان عميقة هادئة."
+    ],
+    [
+     "باستيل وفحم",
+     "أحبهما ريدون لأحلامه المتوهجة."
+    ],
+    [
+     "فرش مستديرة دقيقة",
+     "لخطوط طويلة منسابة."
+    ],
+    [
+     "قماش أملس",
+     "سطح هادئ لطبقات متساوية."
+    ],
+    [
+     "كراسة رسم",
+     "تُرسم فيها الأفكار والرموز أولاً."
+    ],
+    [
+     "ورنيش",
+     "يمنح توهجاً ناعماً متساوياً."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى أشهر",
+   "bestFor": "لمن يحب السكينة والغموض والمعنى.",
+   "artists": [
+    [
+     "أوديلون ريدون",
+     "فرنسي، 1840–1916",
+     "انتقل من أحلام الفحم الداكنة إلى الألوان المتوهجة."
+    ],
+    [
+     "فرديناند هودلر",
+     "سويسري، 1853–1918",
+     "تتكرر بحيراته وجباله السويسرية في إيقاع هادئ."
+    ],
+    [
+     "أرنولد بوكلين",
+     "سويسري، 1827–1901",
+     "ألهمت جزره وبحاره الغامضة رسامين كثيرين."
+    ],
+    [
+     "غوستاف مورو",
+     "فرنسي، 1826–1898",
+     "ملأ لوحاته بتفاصيل غنية كالجواهر."
+    ]
+   ],
+   "guide": [
+    "اسأل الفنان عن معنى العمل، فالرمزية تدعو إلى حكاية.",
+    "انظر إلى الحواف، فالتدرجات الناعمة عمل بطيء متأنٍ.",
+    "علّقها في مكان هادئ بضوء ناعم."
+   ]
+  }
+ },
+ {
+  "id": "luminism",
+  "cat": "traditional",
+  "type": "luminism",
+  "level": "advanced",
+  "en": {
+   "name": "Luminism",
+   "feel": "Still",
+   "essence": "Calm water and wide skies filled with clear, quiet light.",
+   "story": [
+    "Luminism is a name for American landscape painting from the 1850s to the 1870s.",
+    "The art historian John Baur gave it this name in 1954.",
+    "Its painters hid their brushstrokes. Their harbors and coasts look silent, as if time has stopped."
+   ],
+   "tech": [
+    [
+     "Hidden brushwork",
+     "Strokes smoothed away for a glassy surface."
+    ],
+    [
+     "Atmospheric light",
+     "Soft, even light across the whole scene."
+    ],
+    [
+     "Mirror-still water",
+     "Reflections painted with great care."
+    ],
+    [
+     "Low horizon",
+     "A wide sky that fills most of the canvas."
+    ],
+    [
+     "Fine detail",
+     "Rigging, rocks and shore drawn precisely."
+    ],
+    [
+     "Warm glow",
+     "Golden or pink light near the horizon."
+    ]
+   ],
+   "signs": [
+    "Very smooth paint with almost no visible strokes.",
+    "Gentle color steps across a large sky.",
+    "Thin lines of masts and ropes painted by a fine brush.",
+    "Reflections that match their objects closely."
+   ],
+   "tools": [
+    [
+     "Fine sable brushes",
+     "For smooth, invisible strokes."
+    ],
+    [
+     "Oil paint",
+     "Blends slowly into soft gradients."
+    ],
+    [
+     "Smooth canvas or panel",
+     "A surface with little texture."
+    ],
+    [
+     "Mahlstick",
+     "Steadies the hand for fine lines."
+    ],
+    [
+     "Sketches from nature",
+     "Drawn on the shore, painted in the studio."
+    ],
+    [
+     "Softening brush",
+     "To blend skies without marks."
+    ]
+   ],
+   "time": "Several weeks",
+   "bestFor": "Collectors who love calm water, light and silence.",
+   "artists": [
+    [
+     "Fitz Henry Lane",
+     "American, 1804–1865",
+     "His still harbors glow with clear evening light."
+    ],
+    [
+     "Martin Johnson Heade",
+     "American, 1819–1904",
+     "He painted salt marshes and coming storms."
+    ],
+    [
+     "John Frederick Kensett",
+     "American, 1816–1872",
+     "His quiet coasts are simple and full of air."
+    ]
+   ],
+   "guide": [
+    "Look at the sky. Smooth, even light is the heart of this style.",
+    "Use soft, warm lighting. Harsh light flattens the glow.",
+    "Ask about the place. Many works show real coasts."
+   ]
+  },
+  "ar": {
+   "name": "اللومينيزم (الضيائية)",
+   "feel": "ساكن",
+   "essence": "ماء هادئ وسماء واسعة يملؤها ضوء صافٍ ساكن.",
+   "story": [
+    "اللومينيزم اسم لرسم المناظر الأمريكي بين خمسينيات وسبعينيات القرن التاسع عشر.",
+    "أطلق عليه مؤرخ الفن جون باور هذا الاسم في عام 1954.",
+    "أخفى رساموه ضربات الفرشاة، فتبدو موانئهم وسواحلهم صامتة كأن الزمن توقف."
+   ],
+   "tech": [
+    [
+     "ضربات مخفية",
+     "ضربات تُنعَّم لسطح زجاجي."
+    ],
+    [
+     "ضوء الجو",
+     "ضوء ناعم متساوٍ على المشهد كله."
+    ],
+    [
+     "ماء كالمرآة",
+     "انعكاسات تُرسم بعناية كبيرة."
+    ],
+    [
+     "أفق منخفض",
+     "سماء واسعة تملأ معظم اللوحة."
+    ],
+    [
+     "تفاصيل دقيقة",
+     "حبال وصخور وشاطئ مرسومة بدقة."
+    ],
+    [
+     "توهج دافئ",
+     "ضوء ذهبي أو وردي قرب الأفق."
+    ]
+   ],
+   "signs": [
+    "طلاء أملس جداً بلا ضربات ظاهرة تقريباً.",
+    "تدرجات لونية لطيفة على سماء كبيرة.",
+    "خطوط رفيعة للصواري والحبال بفرشاة دقيقة.",
+    "انعكاسات تطابق أشياءها بدقة."
+   ],
+   "tools": [
+    [
+     "فرش ناعمة دقيقة",
+     "لضربات ملساء غير مرئية."
+    ],
+    [
+     "ألوان زيتية",
+     "تمتزج ببطء في تدرجات ناعمة."
+    ],
+    [
+     "قماش أملس أو لوح",
+     "سطح قليل الملمس."
+    ],
+    [
+     "عصا سند اليد",
+     "تثبّت اليد للخطوط الدقيقة."
+    ],
+    [
+     "رسوم من الطبيعة",
+     "تُرسم على الشاطئ وتُلوَّن في المرسم."
+    ],
+    [
+     "فرشاة تنعيم",
+     "لمزج السماء بلا آثار."
+    ]
+   ],
+   "time": "عدة أسابيع",
+   "bestFor": "لمن يحب الماء الهادئ والضوء والصمت.",
+   "artists": [
+    [
+     "فيتز هنري لين",
+     "أمريكي، 1804–1865",
+     "تتوهج موانئه الساكنة بضوء مسائي صافٍ."
+    ],
+    [
+     "مارتن جونسون هيد",
+     "أمريكي، 1819–1904",
+     "رسم المستنقعات المالحة والعواصف المقبلة."
+    ],
+    [
+     "جون فريدريك كنسيت",
+     "أمريكي، 1816–1872",
+     "سواحله الهادئة بسيطة ومليئة بالهواء."
+    ]
+   ],
+   "guide": [
+    "انظر إلى السماء، فالضوء الأملس المتساوي قلب هذا الأسلوب.",
+    "استعمل إضاءة دافئة ناعمة، فالضوء القاسي يطفئ التوهج.",
+    "اسأل عن المكان، فكثير من الأعمال تُظهر سواحل حقيقية."
+   ]
+  }
+ },
+ {
+  "id": "tonalism",
+  "cat": "traditional",
+  "type": "tonalism",
+  "level": "intermediate",
+  "en": {
+   "name": "Tonalism",
+   "feel": "Hushed",
+   "essence": "Soft landscapes in one main color, wrapped in mist, dusk or moonlight.",
+   "story": [
+    "Tonalism grew in America between about 1880 and 1915.",
+    "Its painters used a narrow range of close colors. Fields and rivers melt into evening haze.",
+    "James McNeill Whistler called his misty river scenes “nocturnes,” like quiet music."
+   ],
+   "tech": [
+    [
+     "Limited palette",
+     "A few close colors in one main tone."
+    ],
+    [
+     "Soft edges",
+     "Shapes that fade into the air."
+    ],
+    [
+     "Thin veils",
+     "Layers of thin color for a misty look."
+    ],
+    [
+     "Toned ground",
+     "A colored base that unifies the scene."
+    ],
+    [
+     "Evening light",
+     "Dusk, dawn or moonlight instead of noon."
+    ],
+    [
+     "Simple design",
+     "Few shapes, wide calm spaces."
+    ]
+   ],
+   "signs": [
+    "Very close colors that change gently.",
+    "Thin paint where the ground color shows through.",
+    "Soft, blurred edges made by hand, not by focus.",
+    "Small, quiet accents of light."
+   ],
+   "tools": [
+    [
+     "Soft brushes",
+     "For thin, misty layers."
+    ],
+    [
+     "Oil paint, thinned",
+     "For washes and veils."
+    ],
+    [
+     "Toned canvas or panel",
+     "Gray, brown or blue base."
+    ],
+    [
+     "Rags",
+     "To rub and soften paint."
+    ],
+    [
+     "Varnish",
+     "For a deep, even finish."
+    ],
+    [
+     "Memory sketches",
+     "Many were painted from memory, not on site."
+    ]
+   ],
+   "time": "One to several weeks",
+   "bestFor": "Collectors who love quiet, mood and evening light.",
+   "artists": [
+    [
+     "George Inness",
+     "American, 1825–1894",
+     "His late landscapes glow softly in golden haze."
+    ],
+    [
+     "James McNeill Whistler",
+     "American, 1834–1903",
+     "His Thames nocturnes are blue, misty and calm."
+    ],
+    [
+     "Dwight William Tryon",
+     "American, 1849–1925",
+     "He painted quiet fields at dawn and dusk."
+    ]
+   ],
+   "guide": [
+    "View it in soft light. Bright spotlights flatten the mood.",
+    "Look for thin layers. The ground color often shows through.",
+    "Ask about the hour it shows. Dusk and moonlight are typical."
+   ]
+  },
+  "ar": {
+   "name": "التونالية (الدرجات اللونية)",
+   "feel": "هامس",
+   "essence": "مناظر ناعمة بلون رئيسي واحد، يلفها الضباب أو الغسق أو ضوء القمر.",
+   "story": [
+    "نشأت التونالية في أمريكا بين نحو 1880 و1915.",
+    "استعمل رساموها ألواناً قليلة متقاربة، فتذوب الحقول والأنهار في ضباب المساء.",
+    "سمّى جيمس ماكنيل ويسلر مشاهد نهره الضبابية «ليليات»، مثل موسيقى هادئة."
+   ],
+   "tech": [
+    [
+     "ألوان محدودة",
+     "ألوان قليلة متقاربة في درجة رئيسية واحدة."
+    ],
+    [
+     "حواف ناعمة",
+     "أشكال تتلاشى في الهواء."
+    ],
+    [
+     "غلالات رقيقة",
+     "طبقات لون رقيقة لمظهر ضبابي."
+    ],
+    [
+     "أرضية ملوّنة",
+     "قاعدة ملوّنة توحّد المشهد."
+    ],
+    [
+     "ضوء المساء",
+     "الغسق أو الفجر أو ضوء القمر بدل الظهيرة."
+    ],
+    [
+     "تصميم بسيط",
+     "أشكال قليلة ومساحات هادئة واسعة."
+    ]
+   ],
+   "signs": [
+    "ألوان متقاربة جداً تتغير بلطف.",
+    "طلاء رقيق يظهر من خلاله لون الأرضية.",
+    "حواف ناعمة ضبابية صنعتها اليد.",
+    "لمسات ضوء صغيرة هادئة."
+   ],
+   "tools": [
+    [
+     "فرش ناعمة",
+     "لطبقات رقيقة ضبابية."
+    ],
+    [
+     "ألوان زيتية مخففة",
+     "للغسلات والغلالات."
+    ],
+    [
+     "قماش أو لوح ملوّن الأرضية",
+     "قاعدة رمادية أو بنية أو زرقاء."
+    ],
+    [
+     "قطع قماش",
+     "لفرك الطلاء وتنعيمه."
+    ],
+    [
+     "ورنيش",
+     "لسطح عميق متساوٍ."
+    ],
+    [
+     "رسوم من الذاكرة",
+     "رُسم كثير منها من الذاكرة لا في المكان."
+    ]
+   ],
+   "time": "من أسبوع إلى عدة أسابيع",
+   "bestFor": "لمن يحب الهدوء والمزاج وضوء المساء.",
+   "artists": [
+    [
+     "جورج إنيس",
+     "أمريكي، 1825–1894",
+     "تتوهج مناظره الأخيرة بنعومة في ضباب ذهبي."
+    ],
+    [
+     "جيمس ماكنيل ويسلر",
+     "أمريكي، 1834–1903",
+     "ليليات نهر التايمز عنده زرقاء ضبابية هادئة."
+    ],
+    [
+     "دوايت ويليام ترايون",
+     "أمريكي، 1849–1925",
+     "رسم الحقول الهادئة عند الفجر والغسق."
+    ]
+   ],
+   "guide": [
+    "شاهدها في ضوء ناعم، فالأضواء الساطعة تطفئ المزاج.",
+    "ابحث عن الطبقات الرقيقة، فلون الأرضية يظهر غالباً.",
+    "اسأل عن الساعة التي تصورها، فالغسق وضوء القمر معتادان."
    ]
   }
  },
@@ -11321,6 +13041,1206 @@ window.OW_ART_STYLES = [
     "ابحث عن ضربات حرة واثقة وفراغات صغيرة من القماش المكشوف.",
     "افحص اللون في ضوء النهار. للطلاء الحقيقي عمق تفتقده المطبوعات.",
     "اسأل عن تاريخ العمل. أعمال أساتذة الوحشية تُنسخ كثيراً."
+   ]
+  }
+ },
+ {
+  "id": "abstract_expressionism",
+  "cat": "contemporary",
+  "type": "abstract_expressionism",
+  "level": "intermediate",
+  "en": {
+   "name": "Abstract Expressionism",
+   "feel": "Energetic",
+   "essence": "Big gestures of color that record the artist’s movement and feeling.",
+   "story": [
+    "Abstract Expressionism began in New York in the 1940s.",
+    "Painters worked on huge canvases. They dripped, flung and swept paint with the whole arm.",
+    "It was the first American movement to lead the art world. Its energy still inspires painters everywhere."
+   ],
+   "tech": [
+    [
+     "Action painting",
+     "Paint applied with big, fast gestures."
+    ],
+    [
+     "Drip and pour",
+     "Paint dropped from a stick or can."
+    ],
+    [
+     "All-over composition",
+     "Energy spread evenly across the canvas."
+    ],
+    [
+     "Large scale",
+     "Canvases as big as a wall."
+    ],
+    [
+     "Layered gestures",
+     "New strokes over older ones."
+    ],
+    [
+     "Raw canvas",
+     "Unprimed areas left to breathe."
+    ]
+   ],
+   "signs": [
+    "Splashes, drips and arm-long strokes.",
+    "Layers of paint with different drying marks.",
+    "Paint that runs in the direction the canvas lay.",
+    "Edges of the canvas showing tape, splashes or bare cloth."
+   ],
+   "tools": [
+    [
+     "House-painting brushes",
+     "Wide brushes for big gestures."
+    ],
+    [
+     "Sticks and trowels",
+     "To drip and push paint."
+    ],
+    [
+     "Enamel, oil or acrylic",
+     "Fluid paint in large amounts."
+    ],
+    [
+     "Large canvas on the floor",
+     "To work from every side."
+    ],
+    [
+     "Cans and buckets",
+     "To hold plenty of paint."
+    ],
+    [
+     "Studio space",
+     "Room to move around the work."
+    ]
+   ],
+   "time": "A few days to several months",
+   "bestFor": "Collectors who love energy, scale and freedom.",
+   "artists": [
+    [
+     "Jackson Pollock",
+     "American, 1912–1956",
+     "He dripped paint onto canvases laid on the floor."
+    ],
+    [
+     "Willem de Kooning",
+     "Dutch-American, 1904–1997",
+     "His wild, slashing strokes defined action painting."
+    ],
+    [
+     "Lee Krasner",
+     "American, 1908–1984",
+     "She painted rhythmic, layered abstract works."
+    ],
+    [
+     "Joan Mitchell",
+     "American, 1925–1992",
+     "Her bright strokes recall landscapes and memory."
+    ]
+   ],
+   "guide": [
+    "Stand back, then come close. The work changes with distance.",
+    "Ask for photos of the work in progress. Big gestures leave a story.",
+    "Check how large it is and plan the wall first."
+   ]
+  },
+  "ar": {
+   "name": "التعبيرية التجريدية",
+   "feel": "حيوي",
+   "essence": "حركات لونية كبيرة تسجّل حركة الفنان وشعوره.",
+   "story": [
+    "بدأت التعبيرية التجريدية في نيويورك في الأربعينيات.",
+    "عمل الرسامون على لوحات ضخمة، فقطّروا الطلاء وقذفوه ومسحوه بالذراع كلها.",
+    "كانت أول حركة أمريكية تقود عالم الفن. وما زالت طاقتها تلهم الرسامين في كل مكان."
+   ],
+   "tech": [
+    [
+     "الرسم الحركي",
+     "طلاء يوضع بحركات كبيرة سريعة."
+    ],
+    [
+     "التقطير والسكب",
+     "طلاء يُسقط من عصا أو علبة."
+    ],
+    [
+     "التكوين الشامل",
+     "طاقة موزعة بالتساوي على اللوحة."
+    ],
+    [
+     "الحجم الكبير",
+     "لوحات بحجم جدار."
+    ],
+    [
+     "حركات متراكبة",
+     "ضربات جديدة فوق أخرى أقدم."
+    ],
+    [
+     "القماش الخام",
+     "مساحات غير مجهزة تُترك لتتنفس."
+    ]
+   ],
+   "signs": [
+    "رشقات وقطرات وضربات بطول الذراع.",
+    "طبقات طلاء بآثار جفاف مختلفة.",
+    "طلاء يسيل في الاتجاه الذي وُضعت فيه اللوحة.",
+    "حواف تظهر عليها أشرطة أو رشقات أو قماش عارٍ."
+   ],
+   "tools": [
+    [
+     "فرش دهان عريضة",
+     "لحركات كبيرة."
+    ],
+    [
+     "عصي وملاعق",
+     "لتقطير الطلاء ودفعه."
+    ],
+    [
+     "مينا أو زيت أو أكريليك",
+     "طلاء سائل بكميات كبيرة."
+    ],
+    [
+     "قماش كبير على الأرض",
+     "للعمل من كل الجهات."
+    ],
+    [
+     "علب ودلاء",
+     "لحمل كمية وافرة من الطلاء."
+    ],
+    [
+     "مساحة مرسم",
+     "مكان للتحرك حول العمل."
+    ]
+   ],
+   "time": "من أيام إلى عدة أشهر",
+   "bestFor": "لمن يحب الطاقة والحجم والحرية.",
+   "artists": [
+    [
+     "جاكسون بولوك",
+     "أمريكي، 1912–1956",
+     "قطّر الطلاء على لوحات ممدودة على الأرض."
+    ],
+    [
+     "ويليم دي كونينغ",
+     "هولندي أمريكي، 1904–1997",
+     "عرّفت ضرباته الجامحة الرسمَ الحركي."
+    ],
+    [
+     "لي كراسنر",
+     "أمريكية، 1908–1984",
+     "رسمت أعمالاً تجريدية متراكبة ذات إيقاع."
+    ],
+    [
+     "جوان ميتشل",
+     "أمريكية، 1925–1992",
+     "تذكّر ضرباتها الزاهية بالمناظر والذكريات."
+    ]
+   ],
+   "guide": [
+    "قف بعيداً ثم اقترب، فالعمل يتغير مع المسافة.",
+    "اطلب صوراً للعمل أثناء إنجازه، فالحركات الكبيرة تترك حكاية.",
+    "تحقق من حجمه وخطط للجدار أولاً."
+   ]
+  }
+ },
+ {
+  "id": "color_field",
+  "cat": "contemporary",
+  "type": "color_field",
+  "level": "intermediate",
+  "en": {
+   "name": "Colour Field",
+   "feel": "Meditative",
+   "essence": "Large, calm areas of color that surround the viewer.",
+   "story": [
+    "Colour Field painting grew in America in the late 1940s and 1950s.",
+    "Mark Rothko and Barnett Newman made huge canvases of few colors.",
+    "Later painters stained thin color into raw canvas. The color itself became the whole subject."
+   ],
+   "tech": [
+    [
+     "Large flat areas",
+     "Wide fields of one color."
+    ],
+    [
+     "Soft-edged blocks",
+     "Rectangles that seem to float."
+    ],
+    [
+     "Stain painting",
+     "Thin paint soaked into raw canvas."
+    ],
+    [
+     "Thin layers",
+     "Many veils that make color breathe."
+    ],
+    [
+     "Hard edges",
+     "Clean bands of color side by side."
+    ],
+    [
+     "Scale",
+     "Canvases large enough to fill your view."
+    ]
+   ],
+   "signs": [
+    "Edges that are soft, slightly uneven and brushed by hand.",
+    "Many thin layers visible at the borders.",
+    "Color stained into the canvas weave.",
+    "Small drips or traces at the sides."
+   ],
+   "tools": [
+    [
+     "Wide brushes and rollers",
+     "For broad, even color."
+    ],
+    [
+     "Thinned oil or acrylic",
+     "For layers and stains."
+    ],
+    [
+     "Raw cotton canvas",
+     "To absorb poured color."
+    ],
+    [
+     "Masking tape",
+     "For clean hard edges."
+    ],
+    [
+     "Large stretchers",
+     "To build big canvases."
+    ],
+    [
+     "Good daylight",
+     "To judge subtle color shifts."
+    ]
+   ],
+   "time": "One to several weeks",
+   "bestFor": "Collectors who want a calm, immersive presence on the wall.",
+   "artists": [
+    [
+     "Mark Rothko",
+     "American, born in present-day Latvia, 1903–1970",
+     "His glowing rectangles invite quiet looking."
+    ],
+    [
+     "Barnett Newman",
+     "American, 1905–1970",
+     "He split fields of color with thin vertical lines."
+    ],
+    [
+     "Helen Frankenthaler",
+     "American, 1928–2011",
+     "She invented soak-stain painting on raw canvas."
+    ],
+    [
+     "Kenneth Noland",
+     "American, 1924–2010",
+     "He painted targets, chevrons and stripes of pure color."
+    ]
+   ],
+   "guide": [
+    "Give it space. These works need a wall of their own.",
+    "Look at the edges up close. Hand-painted borders are never perfect.",
+    "Use soft, even light. Strong spotlights break the color."
+   ]
+  },
+  "ar": {
+   "name": "رسم حقول اللون",
+   "feel": "تأمّلي",
+   "essence": "مساحات لونية كبيرة هادئة تحيط بالمشاهد.",
+   "story": [
+    "نشأ رسم حقول اللون في أمريكا في أواخر الأربعينيات والخمسينيات.",
+    "رسم مارك روثكو وبارنت نيومان لوحات ضخمة بألوان قليلة.",
+    "ثم شرّب رسامون لاحقون ألواناً خفيفة في قماش خام، فصار اللون نفسه هو الموضوع كله."
+   ],
+   "tech": [
+    [
+     "مساحات مسطحة كبيرة",
+     "حقول واسعة بلون واحد."
+    ],
+    [
+     "كتل بحواف ناعمة",
+     "مستطيلات تبدو طافية."
+    ],
+    [
+     "رسم التشرّب",
+     "طلاء خفيف يتشربه القماش الخام."
+    ],
+    [
+     "طبقات رقيقة",
+     "غلالات كثيرة تجعل اللون يتنفس."
+    ],
+    [
+     "حواف حادة",
+     "أشرطة لونية نظيفة متجاورة."
+    ],
+    [
+     "الحجم",
+     "لوحات كبيرة تملأ نظرك."
+    ]
+   ],
+   "signs": [
+    "حواف ناعمة غير منتظمة قليلاً رُسمت باليد.",
+    "طبقات رقيقة كثيرة تظهر عند الحدود.",
+    "لون متشرب في نسيج القماش.",
+    "قطرات أو آثار صغيرة على الجوانب."
+   ],
+   "tools": [
+    [
+     "فرش عريضة وبكرات",
+     "للون عريض متساوٍ."
+    ],
+    [
+     "زيت أو أكريليك مخفف",
+     "للطبقات والتشرّب."
+    ],
+    [
+     "قماش قطني خام",
+     "يمتص اللون المسكوب."
+    ],
+    [
+     "شريط لاصق",
+     "لحواف حادة نظيفة."
+    ],
+    [
+     "إطارات شد كبيرة",
+     "لبناء لوحات كبيرة."
+    ],
+    [
+     "ضوء نهار جيد",
+     "للحكم على تغيرات اللون الدقيقة."
+    ]
+   ],
+   "time": "من أسبوع إلى عدة أسابيع",
+   "bestFor": "لمن يريد حضوراً هادئاً غامراً على الجدار.",
+   "artists": [
+    [
+     "مارك روثكو",
+     "أمريكي مولود في لاتفيا الحالية، 1903–1970",
+     "تدعو مستطيلاته المتوهجة إلى تأمل هادئ."
+    ],
+    [
+     "بارنت نيومان",
+     "أمريكي، 1905–1970",
+     "قسم حقول اللون بخطوط عمودية رفيعة."
+    ],
+    [
+     "هيلين فرانكنثالر",
+     "أمريكية، 1928–2011",
+     "ابتكرت الرسم بالتشرّب على قماش خام."
+    ],
+    [
+     "كينيث نولاند",
+     "أمريكي، 1924–2010",
+     "رسم دوائر وأسهماً وأشرطة من لون صافٍ."
+    ]
+   ],
+   "guide": [
+    "امنحها مساحة، فهذه الأعمال تحتاج جداراً خاصاً بها.",
+    "انظر إلى الحواف عن قرب، فالحدود المرسومة باليد ليست مثالية أبداً.",
+    "استعمل ضوءاً ناعماً متساوياً، فالأضواء القوية تكسر اللون."
+   ]
+  }
+ },
+ {
+  "id": "op_art",
+  "cat": "contemporary",
+  "type": "op_art",
+  "level": "advanced",
+  "en": {
+   "name": "Op Art",
+   "feel": "Vibrating",
+   "essence": "Precise patterns of color and line that seem to move and shimmer.",
+   "story": [
+    "Op Art, short for optical art, became famous in the 1960s.",
+    "In 1965 the show The Responsive Eye in New York made it a sensation.",
+    "Victor Vasarely and Bridget Riley painted grids, waves and stripes. The eye sees motion where there is none."
+   ],
+   "tech": [
+    [
+     "Moiré patterns",
+     "Overlapping lines that flicker."
+    ],
+    [
+     "Color vibration",
+     "Strong colors placed edge to edge."
+    ],
+    [
+     "Gradual change",
+     "Shapes that grow or shrink step by step."
+    ],
+    [
+     "Grids and waves",
+     "Regular patterns bent into curves."
+    ],
+    [
+     "Black and white contrast",
+     "The strongest optical effect."
+    ],
+    [
+     "Exact planning",
+     "Every line measured before painting."
+    ]
+   ],
+   "signs": [
+    "Crisp edges painted by hand, with tiny wobbles up close.",
+    "Pencil guide lines under thin paint.",
+    "Even, flat color inside each shape.",
+    "Tape lines at the borders of color areas."
+   ],
+   "tools": [
+    [
+     "Ruler, compass and curves",
+     "For exact lines."
+    ],
+    [
+     "Masking tape",
+     "For sharp edges."
+    ],
+    [
+     "Flat acrylic or gouache",
+     "For even, matte color."
+    ],
+    [
+     "Graph paper",
+     "To plan the pattern."
+    ],
+    [
+     "Fine brushes",
+     "To finish every edge."
+    ],
+    [
+     "Smooth board or canvas",
+     "A flat, even surface."
+    ]
+   ],
+   "time": "Several weeks",
+   "bestFor": "Collectors who love precision, color and a little surprise.",
+   "artists": [
+    [
+     "Victor Vasarely",
+     "Hungarian-French, 1906–1997",
+     "Often called the father of Op Art."
+    ],
+    [
+     "Bridget Riley",
+     "British, born 1931",
+     "Her black-and-white waves seem to ripple."
+    ],
+    [
+     "Carlos Cruz-Diez",
+     "Venezuelan, 1923–2019",
+     "He studied how colors change beside each other."
+    ],
+    [
+     "Jesús Rafael Soto",
+     "Venezuelan, 1923–2005",
+     "His works vibrate as you walk past them."
+    ]
+   ],
+   "guide": [
+    "Walk past it slowly. The effect should change as you move.",
+    "Look closely at the edges to see the hand-painted line.",
+    "Hang it at eye level, with even light and no glare."
+   ]
+  },
+  "ar": {
+   "name": "الفن البصري (أوب آرت)",
+   "feel": "مهتز",
+   "essence": "أنماط دقيقة من اللون والخط تبدو كأنها تتحرك وتتلألأ.",
+   "story": [
+    "اشتهر الفن البصري، أو «أوب آرت»، في الستينيات.",
+    "في عام 1965 جعله معرض «العين المستجيبة» في نيويورك حدثاً كبيراً.",
+    "رسم فيكتور فازاريلي وبريجيت رايلي شبكات وأمواجاً وأشرطة، فترى العين حركة حيث لا حركة."
+   ],
+   "tech": [
+    [
+     "أنماط التموّج",
+     "خطوط متراكبة تتراقص."
+    ],
+    [
+     "اهتزاز اللون",
+     "ألوان قوية متجاورة حداً بحد."
+    ],
+    [
+     "التدرج",
+     "أشكال تكبر أو تصغر خطوة بخطوة."
+    ],
+    [
+     "الشبكات والأمواج",
+     "أنماط منتظمة تنثني في منحنيات."
+    ],
+    [
+     "تباين الأبيض والأسود",
+     "أقوى أثر بصري."
+    ],
+    [
+     "تخطيط دقيق",
+     "كل خط يُقاس قبل الرسم."
+    ]
+   ],
+   "signs": [
+    "حواف حادة مرسومة باليد، فيها اهتزاز صغير عن قرب.",
+    "خطوط رصاص إرشادية تحت الطلاء الرقيق.",
+    "لون مسطح متساوٍ داخل كل شكل.",
+    "آثار شريط لاصق عند حدود المساحات اللونية."
+   ],
+   "tools": [
+    [
+     "مسطرة وفرجار ومنحنيات",
+     "لخطوط دقيقة."
+    ],
+    [
+     "شريط لاصق",
+     "لحواف حادة."
+    ],
+    [
+     "أكريليك أو غواش مطفأ",
+     "للون متساوٍ غير لامع."
+    ],
+    [
+     "ورق مربعات",
+     "لتخطيط النمط."
+    ],
+    [
+     "فرش دقيقة",
+     "لإنهاء كل حافة."
+    ],
+    [
+     "لوح أو قماش أملس",
+     "سطح مستوٍ متساوٍ."
+    ]
+   ],
+   "time": "عدة أسابيع",
+   "bestFor": "لمن يحب الدقة واللون وشيئاً من المفاجأة.",
+   "artists": [
+    [
+     "فيكتور فازاريلي",
+     "مجري فرنسي، 1906–1997",
+     "يُلقَّب كثيراً بأبي الفن البصري."
+    ],
+    [
+     "بريجيت رايلي",
+     "بريطانية، مولودة 1931",
+     "تبدو أمواجها بالأبيض والأسود كأنها تتموج."
+    ],
+    [
+     "كارلوس كروز-دييز",
+     "فنزويلي، 1923–2019",
+     "درس كيف تتغير الألوان بجوار بعضها."
+    ],
+    [
+     "خيسوس رافاييل سوتو",
+     "فنزويلي، 1923–2005",
+     "تهتز أعماله وأنت تمشي أمامها."
+    ]
+   ],
+   "guide": [
+    "امشِ أمامها ببطء، فالأثر يجب أن يتغير مع حركتك.",
+    "انظر إلى الحواف عن قرب لترى الخط المرسوم باليد.",
+    "علّقها بمستوى العين بضوء متساوٍ بلا انعكاس."
+   ]
+  }
+ },
+ {
+  "id": "futurism",
+  "cat": "contemporary",
+  "type": "futurism",
+  "level": "advanced",
+  "en": {
+   "name": "Futurism",
+   "feel": "Fast",
+   "essence": "Speed, machines and motion painted as lines of force.",
+   "story": [
+    "Futurism began in Italy in 1909 with a manifesto by the poet Filippo Tommaso Marinetti.",
+    "Its painters loved cars, trains, cities and electric light.",
+    "They split forms into repeated lines to show movement. Speed itself became the subject."
+   ],
+   "tech": [
+    [
+     "Lines of force",
+     "Sharp lines that show direction and energy."
+    ],
+    [
+     "Repeated forms",
+     "One shape shown many times, like a moving image."
+    ],
+    [
+     "Divisionism",
+     "Small touches of pure color side by side."
+    ],
+    [
+     "Fractured planes",
+     "Forms broken into angled pieces."
+    ],
+    [
+     "Interpenetration",
+     "Objects and space passing into each other."
+    ],
+    [
+     "Bright contrasts",
+     "Strong colors that clash for energy."
+    ]
+   ],
+   "signs": [
+    "Many angled strokes repeating in one direction.",
+    "Pencil lines of the plan under the paint.",
+    "Small touches of pure color in light areas.",
+    "Corrections where angles were moved."
+   ],
+   "tools": [
+    [
+     "Oil paint",
+     "For strong, bright color."
+    ],
+    [
+     "Flat and round brushes",
+     "For sharp lines and small touches."
+    ],
+    [
+     "Ruler and straight edges",
+     "For crisp lines of force."
+    ],
+    [
+     "Sketches of motion",
+     "Studies of speed drawn first."
+    ],
+    [
+     "Canvas",
+     "Often large, for dynamic compositions."
+    ],
+    [
+     "Charcoal",
+     "To plan the lines on the canvas."
+    ]
+   ],
+   "time": "Several weeks",
+   "bestFor": "Collectors who love energy, speed and modern design.",
+   "artists": [
+    [
+     "Umberto Boccioni",
+     "Italian, 1882–1916",
+     "He painted and sculpted the energy of the modern city."
+    ],
+    [
+     "Giacomo Balla",
+     "Italian, 1871–1958",
+     "He broke speed and light into rhythmic lines."
+    ],
+    [
+     "Luigi Russolo",
+     "Italian, 1885–1947",
+     "Painter and musician, he painted the speed of a car."
+    ],
+    [
+     "Gino Severini",
+     "Italian, 1883–1966",
+     "He brought bright color and rhythm to the movement."
+    ]
+   ],
+   "guide": [
+    "Follow the lines with your eye. They should lead you through the work.",
+    "Ask about the subject: a car, a train or a city in motion.",
+    "Bold works need room. Give it a clear wall."
+   ]
+  },
+  "ar": {
+   "name": "المستقبلية",
+   "feel": "سريع",
+   "essence": "السرعة والآلات والحركة مرسومة خطوطاً من القوة.",
+   "story": [
+    "بدأت المستقبلية في إيطاليا عام 1909 ببيان كتبه الشاعر فيليبو توماسو مارينيتي.",
+    "أحب رساموها السيارات والقطارات والمدن والضوء الكهربائي.",
+    "قسّموا الأشكال إلى خطوط متكررة ليُظهروا الحركة، فصارت السرعة نفسها هي الموضوع."
+   ],
+   "tech": [
+    [
+     "خطوط القوة",
+     "خطوط حادة تُظهر الاتجاه والطاقة."
+    ],
+    [
+     "الأشكال المتكررة",
+     "شكل واحد يظهر مرات كثيرة كصورة متحركة."
+    ],
+    [
+     "التقسيمية",
+     "لمسات صغيرة من لون نقي متجاورة."
+    ],
+    [
+     "المستويات المتكسرة",
+     "أشكال مكسورة إلى قطع مائلة."
+    ],
+    [
+     "التداخل",
+     "أشياء وفضاء يعبر بعضها في بعض."
+    ],
+    [
+     "تباينات زاهية",
+     "ألوان قوية تتصادم للطاقة."
+    ]
+   ],
+   "signs": [
+    "ضربات مائلة كثيرة تتكرر في اتجاه واحد.",
+    "خطوط رصاص للتخطيط تحت الطلاء.",
+    "لمسات صغيرة من لون نقي في المناطق الفاتحة.",
+    "تعديلات حيث نُقلت الزوايا."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية",
+     "لألوان قوية زاهية."
+    ],
+    [
+     "فرش مسطحة ومستديرة",
+     "لخطوط حادة ولمسات صغيرة."
+    ],
+    [
+     "مسطرة وحواف مستقيمة",
+     "لخطوط قوة واضحة."
+    ],
+    [
+     "رسوم للحركة",
+     "دراسات للسرعة تُرسم أولاً."
+    ],
+    [
+     "قماش",
+     "كبير غالباً لتكوينات حيوية."
+    ],
+    [
+     "فحم",
+     "لتخطيط الخطوط على القماش."
+    ]
+   ],
+   "time": "عدة أسابيع",
+   "bestFor": "لمن يحب الطاقة والسرعة والتصميم الحديث.",
+   "artists": [
+    [
+     "أومبرتو بوتشوني",
+     "إيطالي، 1882–1916",
+     "رسم ونحت طاقة المدينة الحديثة."
+    ],
+    [
+     "جاكومو بالا",
+     "إيطالي، 1871–1958",
+     "قسّم السرعة والضوء إلى خطوط ذات إيقاع."
+    ],
+    [
+     "لويجي روسولو",
+     "إيطالي، 1885–1947",
+     "رسام وموسيقي رسم سرعة سيارة."
+    ],
+    [
+     "جينو سيفيريني",
+     "إيطالي، 1883–1966",
+     "جلب إلى الحركة ألواناً زاهية وإيقاعاً."
+    ]
+   ],
+   "guide": [
+    "تابع الخطوط بعينك، فيجب أن تقودك داخل العمل.",
+    "اسأل عن الموضوع: سيارة أو قطار أو مدينة تتحرك.",
+    "الأعمال الجريئة تحتاج مساحة، فامنحها جداراً واضحاً."
+   ]
+  }
+ },
+ {
+  "id": "naive_art",
+  "cat": "contemporary",
+  "type": "naive_art",
+  "level": "beginner",
+  "en": {
+   "name": "Naive Art",
+   "feel": "Joyful",
+   "essence": "Bright, simple painting with honest charm and its own rules.",
+   "story": [
+    "Naive art is made by painters with little or no art school training.",
+    "Henri Rousseau, a French customs officer, showed his jungles in Paris from 1886.",
+    "Later, villages, markets and daily life filled naive paintings worldwide, from Croatia to Haiti."
+   ],
+   "tech": [
+    [
+     "Flat color",
+     "Bright areas with little shading."
+    ],
+    [
+     "Clear outlines",
+     "Every shape drawn plainly."
+    ],
+    [
+     "Free perspective",
+     "Size shows importance, not distance."
+    ],
+    [
+     "Patient detail",
+     "Every leaf or brick painted one by one."
+    ],
+    [
+     "Pattern and repetition",
+     "Rows of trees, houses or animals."
+    ],
+    [
+     "Storytelling",
+     "Many small scenes in one picture."
+    ]
+   ],
+   "signs": [
+    "Small, careful strokes in leaves and patterns.",
+    "Slight wobbles in lines that show a steady hand at work.",
+    "Bright, unmixed colors straight from the tube.",
+    "Personal, unusual ways of showing space."
+   ],
+   "tools": [
+    [
+     "Oil, acrylic or gouache",
+     "Bright paint in clear colors."
+    ],
+    [
+     "Fine round brushes",
+     "For many small details."
+    ],
+    [
+     "Board, canvas or glass",
+     "Croatian naive painters often used glass."
+    ],
+    [
+     "Pencil",
+     "To draw the scene first."
+    ],
+    [
+     "Small palette",
+     "A few strong colors."
+    ],
+    [
+     "Memory and daily life",
+     "The main source of subjects."
+    ]
+   ],
+   "time": "A few days to several weeks",
+   "bestFor": "Collectors who love joy, color and stories of daily life.",
+   "artists": [
+    [
+     "Henri Rousseau",
+     "French, 1844–1910",
+     "His dreamlike jungles inspired the modern painters of Paris."
+    ],
+    [
+     "Grandma Moses",
+     "American, 1860–1961",
+     "She began painting in her seventies and painted farm life."
+    ],
+    [
+     "Niko Pirosmani",
+     "Georgian, 1862–1918",
+     "He painted animals and village life on black oilcloth."
+    ],
+    [
+     "Ivan Generalić",
+     "Croatian, 1914–1992",
+     "A leader of the Hlebine school of painting on glass."
+    ]
+   ],
+   "guide": [
+    "Look at the details. Patient handwork is part of the charm.",
+    "Ask about the story. Naive works often show real places and events.",
+    "Frame it simply. Bright color needs little help."
+   ]
+  },
+  "ar": {
+   "name": "الفن الفطري",
+   "feel": "مبهج",
+   "essence": "رسم زاهٍ بسيط فيه سحر صادق وقواعده الخاصة.",
+   "story": [
+    "الفن الفطري يرسمه فنانون لم يدرسوا الفن أو درسوه قليلاً.",
+    "عرض هنري روسو، موظف الجمارك الفرنسي، أدغاله في باريس منذ 1886.",
+    "ثم ملأت القرى والأسواق والحياة اليومية لوحات الفن الفطري حول العالم، من كرواتيا إلى هايتي."
+   ],
+   "tech": [
+    [
+     "لون مسطح",
+     "مساحات زاهية بقليل من الظل."
+    ],
+    [
+     "خطوط واضحة",
+     "كل شكل يُرسم بوضوح."
+    ],
+    [
+     "منظور حر",
+     "الحجم يدل على الأهمية لا على المسافة."
+    ],
+    [
+     "تفاصيل صبورة",
+     "كل ورقة أو لبنة تُرسم وحدها."
+    ],
+    [
+     "النمط والتكرار",
+     "صفوف من الأشجار أو البيوت أو الحيوانات."
+    ],
+    [
+     "الحكاية",
+     "مشاهد صغيرة كثيرة في صورة واحدة."
+    ]
+   ],
+   "signs": [
+    "ضربات صغيرة متأنية في الأوراق والأنماط.",
+    "اهتزاز خفيف في الخطوط يُظهر يداً ثابتة تعمل.",
+    "ألوان زاهية غير ممزوجة من الأنبوب مباشرة.",
+    "طرق شخصية غير مألوفة لإظهار المكان."
+   ],
+   "tools": [
+    [
+     "زيت أو أكريليك أو غواش",
+     "طلاء زاهٍ بألوان صافية."
+    ],
+    [
+     "فرش مستديرة دقيقة",
+     "لتفاصيل صغيرة كثيرة."
+    ],
+    [
+     "لوح أو قماش أو زجاج",
+     "رسم الفطريون الكروات كثيراً على الزجاج."
+    ],
+    [
+     "قلم رصاص",
+     "لرسم المشهد أولاً."
+    ],
+    [
+     "لوح ألوان صغير",
+     "ألوان قوية قليلة."
+    ],
+    [
+     "الذاكرة والحياة اليومية",
+     "المصدر الأول للموضوعات."
+    ]
+   ],
+   "time": "من أيام إلى عدة أسابيع",
+   "bestFor": "لمن يحب البهجة واللون وحكايات الحياة اليومية.",
+   "artists": [
+    [
+     "هنري روسو",
+     "فرنسي، 1844–1910",
+     "ألهمت أدغاله الحالمة رسامي باريس المحدثين."
+    ],
+    [
+     "الجدة موزس",
+     "أمريكية، 1860–1961",
+     "بدأت الرسم في السبعينيات من عمرها ورسمت حياة المزارع."
+    ],
+    [
+     "نيكو بيروسماني",
+     "جورجي، 1862–1918",
+     "رسم الحيوانات وحياة القرية على مشمع أسود."
+    ],
+    [
+     "إيفان جينراليتش",
+     "كرواتي، 1914–1992",
+     "من رواد مدرسة هليبينه للرسم على الزجاج."
+    ]
+   ],
+   "guide": [
+    "انظر إلى التفاصيل، فالعمل اليدوي الصبور جزء من السحر.",
+    "اسأل عن الحكاية، فالأعمال الفطرية تُظهر غالباً أماكن وأحداثاً حقيقية.",
+    "أطّرها ببساطة، فالألوان الزاهية لا تحتاج إلى كثير."
+   ]
+  }
+ },
+ {
+  "id": "art_deco",
+  "cat": "contemporary",
+  "type": "art_deco",
+  "level": "intermediate",
+  "en": {
+   "name": "Art Deco Painting",
+   "feel": "Elegant",
+   "essence": "Sleek, geometric painting with polished color and the glamour of the 1920s.",
+   "story": [
+    "Art Deco takes its name from a great design fair in Paris in 1925.",
+    "Painters smoothed forms into clean curves, cones and steps. Cities, machines and travel posters shared the look.",
+    "The style loved polish, luxury and speed. Its posters and murals still feel modern."
+   ],
+   "tech": [
+    [
+     "Streamlined forms",
+     "Smooth shapes with simple curves."
+    ],
+    [
+     "Geometric order",
+     "Zigzags, sunbursts and stepped lines."
+    ],
+    [
+     "Polished surface",
+     "Smooth paint with hidden strokes."
+    ],
+    [
+     "Strong contrast",
+     "Bold light and shade on simple volumes."
+    ],
+    [
+     "Limited, rich palette",
+     "Black, gold, silver and deep color."
+    ],
+    [
+     "Poster design",
+     "Flat color and clear, graphic shapes."
+    ]
+   ],
+   "signs": [
+    "Smooth, even color with careful edges.",
+    "Pencil or tape guide lines for geometric shapes.",
+    "Metallic paint applied by hand in small areas.",
+    "Fine adjustments where curves were redrawn."
+   ],
+   "tools": [
+    [
+     "Oil paint or gouache",
+     "For smooth, even color."
+    ],
+    [
+     "Fine flat brushes",
+     "For clean edges."
+    ],
+    [
+     "Compass, rulers and French curves",
+     "For exact geometry."
+    ],
+    [
+     "Metallic paint or gold leaf",
+     "For a touch of luxury."
+    ],
+    [
+     "Smooth panel or board",
+     "A polished base."
+    ],
+    [
+     "Stencils and masks",
+     "For repeated shapes."
+    ]
+   ],
+   "time": "One to several weeks",
+   "bestFor": "Collectors who love glamour, design and clean lines.",
+   "artists": [
+    [
+     "Tamara de Lempicka",
+     "Polish, 1898–1980",
+     "Her polished, metallic style defined Art Deco painting."
+    ],
+    [
+     "Jean Dupas",
+     "French, 1882–1964",
+     "He painted grand decorative murals, including for the liner Normandie."
+    ],
+    [
+     "Cassandre",
+     "French, born in Ukraine, 1901–1968",
+     "His travel and ship posters are icons of the style."
+    ],
+    [
+     "Gerald Murphy",
+     "American, 1888–1964",
+     "He painted crisp, poster-like still lifes of everyday objects."
+    ]
+   ],
+   "guide": [
+    "Look at the edges and curves. Clean handwork takes great control.",
+    "Ask whether metallic paint or real gold leaf was used.",
+    "A simple black or gold frame suits this style."
+   ]
+  },
+  "ar": {
+   "name": "رسم آرت ديكو",
+   "feel": "أنيق",
+   "essence": "رسم هندسي انسيابي بألوان مصقولة وفخامة عشرينيات القرن العشرين.",
+   "story": [
+    "أخذ آرت ديكو اسمه من معرض تصميم كبير في باريس عام 1925.",
+    "نعّم الرسامون الأشكال إلى منحنيات ومخاريط ودرجات نظيفة، وشاركتها المدن والآلات وملصقات السفر.",
+    "أحب الأسلوب الصقل والفخامة والسرعة. وما زالت ملصقاته وجدارياته تبدو حديثة."
+   ],
+   "tech": [
+    [
+     "أشكال انسيابية",
+     "أشكال ملساء بمنحنيات بسيطة."
+    ],
+    [
+     "نظام هندسي",
+     "خطوط متعرجة وأشعة شمس ودرجات."
+    ],
+    [
+     "سطح مصقول",
+     "طلاء أملس بضربات مخفية."
+    ],
+    [
+     "تباين قوي",
+     "ضوء وظل جريئان على أحجام بسيطة."
+    ],
+    [
+     "ألوان قليلة غنية",
+     "أسود وذهبي وفضي وألوان عميقة."
+    ],
+    [
+     "تصميم الملصقات",
+     "لون مسطح وأشكال واضحة."
+    ]
+   ],
+   "signs": [
+    "لون أملس متساوٍ بحواف متقنة.",
+    "خطوط رصاص أو شريط إرشادية للأشكال الهندسية.",
+    "طلاء معدني يوضع باليد في مساحات صغيرة.",
+    "تعديلات دقيقة حيث أعيد رسم المنحنيات."
+   ],
+   "tools": [
+    [
+     "ألوان زيتية أو غواش",
+     "للون أملس متساوٍ."
+    ],
+    [
+     "فرش مسطحة دقيقة",
+     "لحواف نظيفة."
+    ],
+    [
+     "فرجار ومساطر ومنحنيات",
+     "لهندسة دقيقة."
+    ],
+    [
+     "طلاء معدني أو ورق ذهب",
+     "للمسة فخامة."
+    ],
+    [
+     "لوح أملس",
+     "قاعدة مصقولة."
+    ],
+    [
+     "قوالب وأقنعة",
+     "للأشكال المتكررة."
+    ]
+   ],
+   "time": "من أسبوع إلى عدة أسابيع",
+   "bestFor": "لمن يحب الفخامة والتصميم والخطوط النظيفة.",
+   "artists": [
+    [
+     "تمارا دي لمبيكا",
+     "بولندية، 1898–1980",
+     "عرّف أسلوبها المصقول المعدني رسمَ آرت ديكو."
+    ],
+    [
+     "جان دوباس",
+     "فرنسي، 1882–1964",
+     "رسم جداريات زخرفية كبرى، منها لسفينة نورماندي."
+    ],
+    [
+     "كاساندر",
+     "فرنسي مولود في أوكرانيا، 1901–1968",
+     "ملصقاته للسفر والسفن أيقونات للأسلوب."
+    ],
+    [
+     "جيرالد مورفي",
+     "أمريكي، 1888–1964",
+     "رسم أشياء يومية بأسلوب واضح يشبه الملصقات."
+    ]
+   ],
+   "guide": [
+    "انظر إلى الحواف والمنحنيات، فالعمل اليدوي النظيف يحتاج تحكماً كبيراً.",
+    "اسأل إن كان الطلاء معدنياً أم ورق ذهب حقيقياً.",
+    "إطار بسيط أسود أو ذهبي يناسب هذا الأسلوب."
    ]
   }
  },

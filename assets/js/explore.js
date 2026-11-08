@@ -18,7 +18,14 @@
   /* Oweili is handmade art only (owner, 6 Nov 2026): the Digital and Photography styles stay in
      art_styles.js but are hidden here (not deleted). OW_HIDDEN_CATS is the one list. */
   var HIDDEN_CATS = window.OW_HIDDEN_CATS || ['digital', 'photography'];
-  var STYLES = (window.OW_ART_STYLES || []).filter(function (s) { return HIDDEN_CATS.indexOf(s.cat) < 0; });
+  /* Painting and drawing only for now (owner, 8 Nov 2026): the 15 other styles (art_types.php OW_MORE_STYLES,
+     sent by explore.php while the Admin switch is off) are hidden too, never deleted */
+  var HIDDEN_IDS = window.OW_HIDDEN_STYLES || [];
+  /* Colour painting styles first, then drawing (owner, 8 Nov 2026) */
+  var DRAWING = ['pencil', 'charcoal', 'ink', 'chinese_ink'];
+  var STYLES = (window.OW_ART_STYLES || []).filter(function (s) { return HIDDEN_CATS.indexOf(s.cat) < 0 && HIDDEN_IDS.indexOf(s.id) < 0; });
+  STYLES = STYLES.filter(function (s) { return DRAWING.indexOf(s.id) < 0; })
+    .concat(DRAWING.map(function (id) { return STYLES.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean));
   var BY_ID = {};
   STYLES.forEach(function (s) { BY_ID[s.id] = s; });
 
