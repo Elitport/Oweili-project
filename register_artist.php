@@ -156,8 +156,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     $c = validateUpload($one); if (!$c['ok']) continue;
                     $fn = safeUploadName($c['ext']);
                     if (move_uploaded_file($one['tmp_name'], $podir . $fn)) {
-                        getDB()->prepare('INSERT INTO portfolio_images (artist_id,image_url,sort_order) VALUES (:a,:u,:s)')
-                               ->execute([':a'=>$newId, ':u'=>'uploads/portfolio/'.$fn, ':s'=>$sort++]);
+                        /* the live table is an older version that still has user_id (9 Nov 2026): fill it too */
+                        $piOld = function_exists('owHasColumn') && owHasColumn('portfolio_images', 'user_id');
+                        getDB()->prepare('INSERT INTO portfolio_images (artist_id,' . ($piOld ? 'user_id,' : '') . 'image_url,sort_order) VALUES (:a,' . ($piOld ? ':a2,' : '') . ':u,:s)')
+                               ->execute([':a'=>$newId, ':u'=>'uploads/portfolio/'.$fn, ':s'=>$sort++] + ($piOld ? [':a2'=>$newId] : []));
                     }
                 }
                 $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
