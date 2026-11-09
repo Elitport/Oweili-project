@@ -4,41 +4,70 @@
  *  It appears on all their Certificates of Authenticity. Only the artist
  *  sees this page; the signature is kept private (sig_lib.php) and never
  *  shown on a public page. Linked from Edit Profile and My Studio.
- *  Tables: users (who is signed in), activity_log
+ *  A new, changed or removed signature waits for the admin (owner, 9 Nov
+ *  2026, Admin → Waiting for approval); certificates keep the last approved
+ *  signature, or none, until then.
+ *  Tables: users (who is signed in), pending_changes, activity_log
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/sig_lib.php';
+require_once __DIR__ . '/approval_lib.php';
 
 if (!isLoggedIn()) { header('Location: login.php?next=signature.php'); exit; }
 $me = currentUser();
 if (!$me) { header('Location: login.php'); exit; }
 if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 $uid = (int) $me['id'];
+$needsOk = owApprovalsReady();   // always true on the live site; without the table it saves straight away as before
+
+/* Take a waiting signature out of the waiting profile change (other waiting profile changes stay) */
+$withdraw = function () use ($uid): void {
+    $p = owPendingChange('profile', $uid);
+    if (!$p || !array_key_exists('signature', $p['data'])) return;
+    $d = $p['data']; unset($d['signature']);
+    if ($d) getDB()->prepare('UPDATE pending_changes SET data = :d WHERE id = :id')->execute([':d' => json_encode($d, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ':id' => (int) $p['id']]);
+    else getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $p['id']]);
+};
 
 $err = ''; $done = (string) ($_GET['done'] ?? '');
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         $err = 'server';
+    } elseif (($_POST['do'] ?? '') === 'cancel') {   // take back a signature that is still waiting
+        $withdraw(); owSigRemove((string) $uid, true);
+        header('Location: signature.php?done=cancelled'); exit;
     } elseif (($_POST['do'] ?? '') === 'remove') {
-        owSigRemove((string) $uid);
+        if ($needsOk) {
+            $withdraw(); owSigRemove((string) $uid, true);
+            if (owSigExists((string) $uid)) owSubmitChange($uid, 'profile', $uid, ['signature' => 'remove']);
+        } else owSigRemove((string) $uid);
         owLog('signature_remove', 'user', $uid, '', ['type' => 'artist', 'id' => $uid]);
-        header('Location: signature.php?done=removed'); exit;
+        header('Location: signature.php?done=' . ($needsOk ? 'remove_wait' : 'removed')); exit;
     } else {
         $d = (string) ($_POST['sig_data'] ?? '');
         if (!preg_match('#^data:image/png;base64,([A-Za-z0-9+/=]+)$#', $d, $m)) {
             $err = 'empty';
         } else {
-            $err = owSigSave((string) $uid, (string) base64_decode($m[1], true));
+            $err = owSigSave((string) $uid, (string) base64_decode($m[1], true), $needsOk);
+            if ($err === '' && $needsOk && !owSubmitChange($uid, 'profile', $uid, ['signature' => 'new'])) { owSigRemove((string) $uid, true); $err = 'server'; }
             if ($err === '') {
                 owLog('signature_set', 'user', $uid, '', ['type' => 'artist', 'id' => $uid]);
-                header('Location: signature.php?done=saved'); exit;
+                header('Location: signature.php?done=' . ($needsOk ? 'wait' : 'saved')); exit;
             }
         }
     }
 }
 $have = owSigExists((string) $uid);
+$waitP = $needsOk ? owPendingChange('profile', $uid) : null;
+$waiting = $waitP && array_key_exists('signature', $waitP['data']) ? (string) $waitP['data']['signature'] : '';   // 'new', 'remove' or ''
+$lastNo = '';   // the reason, when the last signature decision was "not approved"
+if ($needsOk && $waiting === '') {
+    $q = getDB()->prepare("SELECT status, reason, data FROM pending_changes WHERE user_id = :u AND target_type = 'profile' AND target_id = :u2 AND status IN ('approved','rejected') ORDER BY id DESC LIMIT 5");
+    $q->execute([':u' => $uid, ':u2' => $uid]);
+    foreach ($q->fetchAll() as $r) { $dd = json_decode((string) $r['data'], true) ?: []; if (!array_key_exists('signature', $dd)) continue; if ($r['status'] === 'rejected') $lastNo = (string) $r['reason']; break; }
+}
 ?>
 <!DOCTYPE html>
 <html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
@@ -66,6 +95,11 @@ $have = owSigExists((string) $uid);
   <div class="card sig-card">
     <h1><?= owBi('My signature', 'توقيعي') ?></h1>
     <p><?= owBi('Draw your signature once. It appears on the Certificate of Authenticity of every artwork you sell on Oweili. Only you and the Oweili team see it.', 'ارسم توقيعك مرة واحدة. يظهر على شهادة الأصالة لكل عمل تبيعه في أويلي. لا يراه إلا أنت وفريق أويلي.') ?></p>
+    <?php if ($needsOk): ?><p class="sig-line"><?= owBi('A new or changed signature is checked by the Oweili team first. Your certificates show it once it is approved.', 'يراجع فريق أويلي التوقيع الجديد أو المعدّل أولاً، ويظهر على شهاداتك بعد الموافقة عليه.') ?></p><?php endif; ?>
+    <?php if ($done === 'wait'): ?><div class="ok-box" style="display:block"><?= owBi('Sent. Your signature is waiting for approval by the Oweili team.', 'تم الإرسال. توقيعك بانتظار موافقة فريق أويلي.') ?></div><?php endif; ?>
+    <?php if ($done === 'remove_wait'): ?><div class="ok-box" style="display:block"><?= owBi('Sent. Removing your signature is waiting for approval by the Oweili team.', 'تم الإرسال. حذف توقيعك بانتظار موافقة فريق أويلي.') ?></div><?php endif; ?>
+    <?php if ($done === 'cancelled'): ?><div class="ok-box" style="display:block"><?= owBi('Done. Nothing is waiting any more.', 'تم. لا شيء بانتظار الموافقة الآن.') ?></div><?php endif; ?>
+    <?php if ($lastNo !== ''): ?><div class="err-box" style="display:block"><?= owBi('Your last signature was not approved. The reason: ', 'لم تتم الموافقة على توقيعك الأخير. السبب: ') ?><?= e($lastNo) ?></div><?php endif; ?>
     <?php if ($done === 'saved'): ?><div class="ok-box" style="display:block"><?= owBi('Saved. Your signature is now on your certificates.', 'تم الحفظ. توقيعك الآن على شهاداتك.') ?></div><?php endif; ?>
     <?php if ($done === 'removed'): ?><div class="ok-box" style="display:block"><?= owBi('Your signature was removed.', 'تم حذف توقيعك.') ?></div><?php endif; ?>
     <?php if ($err !== ''): [$ee, $ea] = owSigError($err); ?><div class="err-box" style="display:block"><?= owBi($ee, $ea) ?></div><?php endif; ?>
@@ -80,9 +114,20 @@ $have = owSigExists((string) $uid);
         <a class="btn btn-ghost" href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a>
       </div>
     </form>
+    <?php if ($waiting !== ''): ?>
+    <div class="sig-now">
+      <p><b><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></b> <span class="pill off"><?= owBi('Not on your certificates yet', 'ليس على شهاداتك بعد') ?></span></p>
+      <?php if ($waiting === 'new' && owSigExists((string) $uid, true)): ?><img src="<?= e(owSigDataUri((string) $uid, true)) ?>" alt="Your waiting signature · توقيعك بانتظار الموافقة">
+      <?php else: ?><p class="sig-line"><?= owBi('You asked to remove your signature.', 'طلبت حذف توقيعك.') ?></p><?php endif; ?>
+      <form method="post" action="signature.php" style="margin-top:var(--space-xs)">
+        <?= csrfField() ?><input type="hidden" name="do" value="cancel">
+        <button class="btn btn-secondary btn-sm"><?= owBi('Cancel this request', 'ألغِ هذا الطلب') ?></button>
+      </form>
+    </div>
+    <?php endif; ?>
     <?php if ($have): ?>
     <div class="sig-now">
-      <p><b><?= owBi('Your signature now', 'توقيعك الحالي') ?></b></p>
+      <p><b><?= $needsOk ? owBi('On your certificates now', 'على شهاداتك الآن') : owBi('Your signature now', 'توقيعك الحالي') ?></b></p>
       <img src="<?= e(owSigDataUri((string) $uid)) ?>" alt="Your signature · توقيعك">
       <form method="post" action="signature.php" style="margin-top:var(--space-xs)" onsubmit="return confirm(document.documentElement.dir==='rtl'?'حذف التوقيع؟':'Remove your signature?');">
         <?= csrfField() ?><input type="hidden" name="do" value="remove">

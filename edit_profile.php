@@ -17,6 +17,7 @@ if (!$u) { header('Location: login.php'); exit; }
 /* An approved artist's profile is public: changes to it wait for the admin's approval */
 $holdForApproval = ($u['role'] ?? '') === 'artist' && (int) ($u['is_approved'] ?? 0) === 1 && owApprovalsReady();
 $pendingProfile  = $holdForApproval ? owPendingChange('profile', $uid) : null;
+if ($pendingProfile && array_keys($pendingProfile['data']) === ['signature']) $pendingProfile = null;   // only a certificate signature waits (signature.php), not a profile change
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
@@ -73,6 +74,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $sent = false;
             if ($diff) {
                 $sent = owSubmitChange($uid, 'profile', $uid, $diff);
+            } elseif ($pendingProfile && array_key_exists('signature', $pendingProfile['data'])) {   // the waiting signature stays waiting
+                getDB()->prepare('UPDATE pending_changes SET data = :d WHERE id = :id')->execute([':d' => json_encode(['signature' => $pendingProfile['data']['signature']]), ':id' => (int) $pendingProfile['id']]);
+                if (!empty($pendingProfile['data']['profile_picture'])) owDeletePendingFile((string) $pendingProfile['data']['profile_picture']);
             } elseif ($pendingProfile) {
                 getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $pendingProfile['id']]);
                 if (!empty($pendingProfile['data']['profile_picture'])) owDeletePendingFile((string) $pendingProfile['data']['profile_picture']);

@@ -9,6 +9,8 @@
  *               instead, see owPhotoChanged in admin_lib.php)
  *    profile  — an approved artist's public profile: photo, names, bio, city,
  *               country, art styles, social links
+ *               and the artist's certificate signature (data signature = new /
+ *               remove; the picture waits in sig_lib.php's private folder)
  *    article  — a sub-admin, or an artist (my_articles.php), asking to publish
  *               an article or event
  *  New artworks and new artist accounts already wait (is_approved = 0).
@@ -40,6 +42,7 @@ const OW_FIELD_WORDS = [
     'city' => ['City', 'المدينة'], 'country' => ['Country', 'الدولة'], 'art_styles' => ['Art styles', 'الأساليب'],
     'instagram' => ['Instagram', 'إنستغرام'], 'twitter' => ['X', 'إكس'], 'website' => ['Website', 'الموقع'],
     'profile_picture' => ['Photo', 'الصورة'], 'publish' => ['Publish', 'النشر'],
+    'signature' => ['Signature on certificates', 'التوقيع على الشهادات'],
     'medium' => ['Medium', 'الخامة'], 'width_cm' => ['Width (cm)', 'العرض (سم)'], 'height_cm' => ['Height (cm)', 'الارتفاع (سم)'],
     'size_code' => ['Size', 'المقاس'], 'size_category' => ['Size group', 'فئة المقاس'], 'orientation' => ['Orientation', 'الاتجاه'],
     'year_made' => ['Year made', 'سنة الإنجاز'], 'edition_type' => ['Original or print', 'أصلي أم مطبوع'],
@@ -62,6 +65,11 @@ function owSubmitChange(int $userId, string $type, int $targetId, array $data): 
     if (!owApprovalsReady() || !$data) return false;
     $old = owPendingChange($type, $targetId);
     if ($old) {
+        /* a waiting signature is kept when the artist sends other profile changes (and the other way round) */
+        if ($type === 'profile') {
+            if (array_key_exists('signature', $data)) $data = array_merge($old['data'], $data);
+            elseif (array_key_exists('signature', $old['data'])) $data['signature'] = $old['data']['signature'];
+        }
         getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $old['id']]);
         $oldPic = (string) ($old['data']['profile_picture'] ?? '');
         if ($oldPic !== '' && $oldPic !== (string) ($data['profile_picture'] ?? '')) owDeletePendingFile($oldPic);
@@ -73,6 +81,7 @@ function owSubmitChange(int $userId, string $type, int $targetId, array $data): 
         require_once __DIR__ . '/alert_lib.php';
         $q = getDB()->prepare('SELECT ' . owArtistNameSql('u') . ' FROM users u WHERE u.id = :id'); $q->execute([':id' => $userId]); $nm = $q->fetch() ?: ['artist_en' => '', 'artist_ar' => ''];
         $what = ['artwork' => ['Artwork changes', 'تعديلات على عمل'], 'profile' => ['Profile changes', 'تعديلات على ملف'], 'article' => ['An article to publish', 'مقال للنشر']][$type] ?? ['Changes', 'تعديلات'];
+        if ($type === 'profile' && array_keys($data) === ['signature']) $what = ['A signature for certificates', 'توقيع للشهادات'];
         $label = '';
         if ($type === 'artwork' || $type === 'article') {
             $t = getDB()->prepare('SELECT title_en FROM ' . ($type === 'artwork' ? 'artworks' : 'articles') . ' WHERE id = :id'); $t->execute([':id' => $targetId]); $label = (string) $t->fetchColumn();
@@ -180,6 +189,10 @@ function owApproveChange(int $id, array $actor): bool {
         $db->prepare("UPDATE pending_changes SET status = 'approved', decided_at = NOW(), decided_by = :by WHERE id = :id")
            ->execute([':by' => $actor['id'], ':id' => $id]);
         $db->commit();
+        if ($p['target_type'] === 'profile' && array_key_exists('signature', $d)) {   // the signature goes on the certificates now
+            require_once __DIR__ . '/sig_lib.php';
+            owSigApprovePending($tid, (string) $d['signature']);
+        }
     } catch (Throwable $e) {
         if ($db->inTransaction()) $db->rollBack();
         error_log('owApproveChange: ' . $e->getMessage());
@@ -197,11 +210,11 @@ function owApproveChange(int $id, array $actor): bool {
             'article.php?slug=' . rawurlencode((string) $art['slug']));
         return true;
     }
-    [$what, $whatAr] = owChangeWords($p['target_type']);
+    [$what, $whatAr] = array_keys($d) === ['signature'] ? ['signature', 'توقيعك'] : owChangeWords($p['target_type']);
     owTellUser((int) $p['user_id'], 'Approved · تمت الموافقة',
         "Good news: the changes to your $what are approved and now visible on Oweili.",
         "خبر جميل: تمت الموافقة على التعديلات على {$whatAr}، وهي ظاهرة الآن في أويلي.",
-        $p['target_type'] === 'profile' ? 'artist_dashboard.php?id=' . $tid : ($p['target_type'] === 'artwork' ? 'artwork.php?id=' . $tid : 'admin_articles.php'));
+        array_keys($d) === ['signature'] ? 'signature.php' : ($p['target_type'] === 'profile' ? 'artist_dashboard.php?id=' . $tid : ($p['target_type'] === 'artwork' ? 'artwork.php?id=' . $tid : 'admin_articles.php')));
     return true;
 }
 
@@ -217,6 +230,7 @@ function owRejectChange(int $id, string $reason, array $actor): bool {
     getDB()->prepare("UPDATE pending_changes SET status = 'rejected', reason = :r, decided_at = NOW(), decided_by = :by WHERE id = :id")
            ->execute([':r' => $reason, ':by' => $actor['id'], ':id' => $id]);
     if (!empty($d['profile_picture'])) owDeletePendingFile((string) $d['profile_picture']);
+    if ($p['target_type'] === 'profile' && array_key_exists('signature', $d)) { require_once __DIR__ . '/sig_lib.php'; owSigRemove((string) (int) $p['target_id'], true); }
     owLog('change_reject', $p['target_type'], (int) $p['target_id'], $reason, $actor);
     if ($p['target_type'] === 'article' && ($art = owArticleOfArtist((int) $p['target_id'], (int) $p['user_id']))) {
         owTellUser((int) $p['user_id'], 'About your article · بخصوص مقالك',
@@ -225,11 +239,11 @@ function owRejectChange(int $id, string $reason, array $actor): bool {
             'my_articles.php?edit=' . (int) $p['target_id']);
         return true;
     }
-    [$what, $whatAr] = owChangeWords($p['target_type']);
+    [$what, $whatAr] = array_keys($d) === ['signature'] ? ['signature', 'توقيعك'] : owChangeWords($p['target_type']);
     owTellUser((int) $p['user_id'], 'About your changes · بخصوص تعديلاتك',
         "The changes to your $what were not approved. The reason: $reason\r\nVisitors still see the approved version. You can make the changes again.",
         "لم تتم الموافقة على التعديلات على {$whatAr}. السبب: $reason\r\nما زال الزوار يرون النسخة المعتمدة. يمكنك إعادة التعديل.",
-        $p['target_type'] === 'artwork' ? 'artist_studio.php' : 'edit_profile.php');
+        $p['target_type'] === 'artwork' ? 'artist_studio.php' : (array_keys($d) === ['signature'] ? 'signature.php' : 'edit_profile.php'));
     return true;
 }
 

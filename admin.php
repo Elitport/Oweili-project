@@ -513,6 +513,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 .wc-table td{vertical-align:top;word-break:break-word;}
 .wc-new{background:rgba(var(--rgb-accent),.06);}
 .wc-pic{width:72px;height:72px;object-fit:cover;border-radius:50%;border:1px solid var(--color-border);}
+.wc-sig{display:block;max-width:220px;max-height:80px;background:#fff;border:1px solid var(--color-border);border-radius:8px;padding:6px;}
 .wc-lbl{display:none;font-weight:700;}
 .art-cert{display:flex;flex-direction:column;gap:4px;margin-top:var(--space-xs);font-size:var(--fs-caption);color:var(--color-body);}
 .art-cert .warn{color:var(--color-dark);background:var(--color-tint-pink);padding:4px 8px;border-radius:var(--radius-input);}
@@ -982,7 +983,13 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
           <div class="table-wrap"><table class="table wc-table">
             <thead><tr><th><?= owBi('What', 'ماذا') ?></th><th><?= owBi('Now (visitors see)', 'الآن (يراه الزوار)') ?></th><th><?= owBi('Asked for', 'المطلوب') ?></th></tr></thead>
             <tbody>
-            <?php foreach ($wc['data'] as $fk => $fv): if (!isset(OW_FIELD_WORDS[$fk])) continue; ?>
+            <?php foreach ($wc['data'] as $fk => $fv): if (!isset(OW_FIELD_WORDS[$fk])) continue;
+              if ($fk === 'signature'): require_once __DIR__ . '/sig_lib.php'; $su = (string) (int) $wc['target_id'];   /* the artist's signature for certificates (private, shown only here) */
+                $sigNow = owSigDataUri($su); $sigNew = $fv === 'new' ? owSigDataUri($su, true) : ''; ?>
+              <tr><td class="wc-f"><?= owBi(OW_FIELD_WORDS[$fk][0], OW_FIELD_WORDS[$fk][1]) ?></td>
+                <td><span class="wc-lbl"><?= owBi('Now: ', 'الآن: ') ?></span><?= $sigNow !== '' ? '<img class="wc-sig" src="' . e($sigNow) . '" alt="Signature now · التوقيع الحالي">' : '<span class="mini">' . owBi('(none)', '(لا يوجد)') . '</span>' ?></td>
+                <td class="wc-new"><span class="wc-lbl"><?= owBi('Asked for: ', 'المطلوب: ') ?></span><?= $sigNew !== '' ? '<img class="wc-sig" src="' . e($sigNew) . '" alt="New signature · التوقيع الجديد">' : '<span class="mini">' . owBi('Remove the signature', 'حذف التوقيع') . '</span>' ?></td></tr>
+              <?php continue; endif; ?>
               <tr><td class="wc-f"><?= owBi(OW_FIELD_WORDS[$fk][0], OW_FIELD_WORDS[$fk][1]) ?></td><td><span class="wc-lbl"><?= owBi('Now: ', 'الآن: ') ?></span><?= $showVal($fk, $cur[$fk] ?? '') ?></td><td class="wc-new"><span class="wc-lbl"><?= owBi('Asked for: ', 'المطلوب: ') ?></span><?= $showVal($fk, $fv) ?></td></tr>
             <?php endforeach; ?>
             </tbody></table></div>
