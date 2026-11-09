@@ -118,8 +118,8 @@ if (!defined('OW_THEME_HEAD')):
 })();
 </script>
 <script>window.OW_STATE = <?= json_encode(owStateCode()) ?>; window.OW_STATE_AT = <?= (int) round(microtime(true) * 1000) ?>; window.OW_PRIVATE = <?= defined('OW_PUBLIC_PAGE') ? 'false' : 'true' ?>;</script>
-<script>/* Visitor city statistics (geo_lib.php): once per browser per day, after the page has loaded, a tiny signal to visit.php. The cookie holds only the date. */
-(function(){function go(){try{var t=new Date().toISOString().slice(0,10).replace(/-/g,''),c=document.cookie;if(/\/(admin|subadmin)[^\/]*$/.test(location.pathname)||/(^|; )ow_nostat=/.test(c)||c.indexOf('ow_seen='+t)>=0||!navigator.sendBeacon)return;document.cookie='ow_seen='+t+'; path=/; max-age=90000; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');navigator.sendBeacon(<?= json_encode(owBase() . 'visit.php') ?>);}catch(e){}}
+<script>/* Visitor city statistics (geo_lib.php): once per browser per day, after the page has loaded, a tiny signal to visit.php. The cookie holds only the date. Browsers run by test or robot software (navigator.webdriver) send nothing. */
+(function(){function go(){try{var t=new Date().toISOString().slice(0,10).replace(/-/g,''),c=document.cookie;if(/\/(admin|subadmin)[^\/]*$/.test(location.pathname)||/(^|; )ow_nostat=/.test(c)||c.indexOf('ow_seen='+t)>=0||!navigator.sendBeacon||navigator.webdriver)return;document.cookie='ow_seen='+t+'; path=/; max-age=90000; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');navigator.sendBeacon(<?= json_encode(owBase() . 'visit.php') ?>);}catch(e){}}
 if(document.prerendering){document.addEventListener('prerenderingchange',go,{once:true});}else if(document.readyState==='complete'){setTimeout(go,0);}else{addEventListener('load',function(){setTimeout(go,0);});}})();</script>
 <link rel="preload" href="<?= owBase() ?>assets/fonts/dmsans-300-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <?php /* Instant page changes: Chrome, Edge and Android load a page in the background

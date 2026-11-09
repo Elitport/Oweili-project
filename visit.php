@@ -3,7 +3,8 @@
    browser after the page has loaded (theme_head.php, once per browser per
    day). Answers at once with "204 No content"; the country and city are
    looked up afterwards, so no visitor waits. See geo_lib.php.
-   Saves only: date, country, city, +1. Never the internet address. */
+   Saves only: date, country, city, +1. Never the internet address.
+   Not counted: visits from data centers and cloud servers (owIsDataCenter). */
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/geo_lib.php';
@@ -25,6 +26,7 @@ ignore_user_abort(true);
 
 if ($ok) {
     require_once __DIR__ . '/visitor_lib.php';
-    try { owGeoCount(owVisitorIp()); } catch (Throwable $e) { error_log('visit.php: ' . $e->getMessage()); }
+    // data centers and cloud servers are not people
+    try { $ip = owVisitorIp(); if (!owIsDataCenter($ip)) owGeoCount($ip); } catch (Throwable $e) { error_log('visit.php: ' . $e->getMessage()); }
 }
 try { owGeoMaybeUpdate(); } catch (Throwable $e) { error_log('owGeoMaybeUpdate: ' . $e->getMessage()); }
