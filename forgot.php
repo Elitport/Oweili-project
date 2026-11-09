@@ -39,17 +39,17 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
             if ($uid > 0) {
                 $rtok = bin2hex(random_bytes(32));
-                // 1 hour, counted by the database clock (the same clock that checks it later)
-                getDB()->prepare('UPDATE users SET reset_token = :t, reset_expires = NOW() + INTERVAL 1 HOUR WHERE id = :id')
+                // 24 hours (owner, 9 Nov 2026), counted by the database clock (the same clock that checks it later)
+                getDB()->prepare('UPDATE users SET reset_token = :t, reset_expires = NOW() + INTERVAL 24 HOUR WHERE id = :id')
                        ->execute([':t' => $rtok, ':id' => $uid]);
 
                 $resetUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/forgot.php?token=' . $rtok;
                 $subject  = 'Reset your Oweili password · إعادة تعيين كلمة المرور';
                 $body     = "Hello,\r\n\r\nSomeone asked to reset the password for your Oweili account.\r\n"
-                          . "Open this link to choose a new one. It works for 1 hour:\r\n"
+                          . "Open this link to choose a new one. It works for 24 hours:\r\n"
                           . $resetUrl . "\r\n\r\nIf this was not you, you can ignore this email.\r\n\r\n"
                           . "مرحباً،\r\n\r\nطلب أحدهم إعادة تعيين كلمة المرور لحسابك في أويلي.\r\n"
-                          . "افتح هذا الرابط لاختيار كلمة جديدة. يعمل لمدة ساعة واحدة:\r\n"
+                          . "افتح هذا الرابط لاختيار كلمة جديدة. يعمل لمدة 24 ساعة:\r\n"
                           . $resetUrl . "\r\n\r\nإن لم تطلب ذلك، تجاهل هذه الرسالة.\r\n\r\nOweili · أويلي\r\n";
 
                 // Mailbox SMTP first, with fallbacks (mail_lib.php)
@@ -116,6 +116,7 @@ $okEn  = $okCode ? $OK[$okCode]['en'] : '';      $okAr  = $okCode ? $OK[$okCode]
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
 @keyframes riseUp {from{opacity:1}to{opacity:1}}
+.newlink-note{margin:0 0 12px;font-size:14px;color:var(--color-body);}
 </style>
 </head>
 <body>
@@ -163,7 +164,12 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <?= csrfField() ?>
         <div class="field"><label id="t-l-email">Email</label>
           <input type="email" name="email" required value="<?= e($_POST['email'] ?? '') ?>"></div>
+        <?php if ($errCode === 'token'): /* "Send me a new link" on the invalid / expired page (owner, 9 Nov 2026) */ ?>
+        <p class="newlink-note"><span class="bi-en">Type your email and we will send you a new link. It works for 24 hours.</span><span class="bi-ar">اكتب بريدك وسنرسل لك رابطاً جديداً. يعمل لمدة 24 ساعة.</span></p>
+        <button type="submit" class="btn btn-primary btn-block btn-submit"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></button>
+        <?php else: ?>
         <button type="submit" class="btn btn-primary btn-block btn-submit" id="t-submit">Send Reset Link</button>
+        <?php endif; ?>
       </form>
     <?php endif; ?>
 
