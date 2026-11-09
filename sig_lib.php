@@ -2,8 +2,8 @@
 /* =====================================================================
  *  sig_lib.php — signatures on the Certificate of Authenticity (owner, 9 Nov 2026)
  *  - The artist draws a signature once (signature.php, from Edit Profile).
- *  - The owner uploads Oweili's signature once (Admin → Settings).
- *  - Both are kept in the PRIVATE folder .private/signatures/ (blocked for
+ *  - Oweili has no signature, only its seal (owner, 9 Nov 2026).
+ *  - Signatures are kept in the PRIVATE folder .private/signatures/ (blocked for
  *    visitors, kept by deploys through .gitignore) and are only ever placed
  *    INSIDE the certificate page as an embedded picture, never at a public
  *    address, so nobody can copy them from a link.
@@ -15,7 +15,7 @@
 const OW_SIG_DIR = __DIR__ . '/.private/signatures';
 
 function owSigKey(string $who): string {
-    return $who === 'oweili' ? 'oweili' : 'artist-' . (int) $who;
+    return 'artist-' . (int) $who;
 }
 function owSigPath(string $who): string { return OW_SIG_DIR . '/' . owSigKey($who) . '.png'; }
 function owSigExists(string $who): bool { return is_file(owSigPath($who)); }

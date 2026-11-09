@@ -33,7 +33,6 @@ $stages  = $s['stages'] ?? [];
 $owner   = trim((string) ($cert['owner_name'] ?? ''));
 [$ownEn, $ownAr] = $owner !== '' && !empty($cert['owner_added_at']) ? owDateBi((string) $cert['owner_added_at']) : ['', ''];
 $sigArtist = owSigDataUri((string) (int) $cert['artist_id']);   // drawn once by the artist (signature.php)
-$sigOweili = owSigDataUri('oweili');                            // uploaded once in Admin → Settings
 $fileName = 'Oweili-Certificate-' . $no;
 $mark = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><path d="M11 1A10 10 0 0 0 1 11h10z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z"/><path d="M1 13a10 10 0 0 0 10 10V13z"/><path d="M13 13v10a10 10 0 0 0 10-10z"/></g></svg>';
 /* one line of the details: English label · value · Arabic label */
@@ -220,7 +219,6 @@ body.cert-page{background:var(--color-surface-2);min-height:100vh;margin:0;}
           <span lang="ar" dir="rtl">صادرة عن <b>أويلي</b>، بيت الفن الأصيل، بتاريخ <b><?= e($issAr) ?></b></span></div>
       </div>
       <div class="c-oweili">
-        <div class="c-sign"><div class="sig-img"><?php if ($sigOweili !== ''): ?><img src="<?= e($sigOweili) ?>" alt="Oweili signature · توقيع أويلي"><?php endif; ?></div><span>For Oweili · <span lang="ar">عن أويلي</span></span></div>
         <div class="c-seal" aria-hidden="true"><?= $mark ?>OWEILI<br>AUTHENTIC<br>أصلي</div>
       </div>
     </footer>

@@ -70,29 +70,6 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     </div>
   </div>
 
-  <?php /* Oweili's signature on every Certificate of Authenticity (owner, 9 Nov 2026), next to the seal. Kept private (sig_lib.php). */
-  require_once __DIR__ . '/sig_lib.php'; $sigMsg = '';
-  if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array($_POST['do'] ?? '', ['oweili_sig', 'oweili_sig_remove'], true) && verifyCsrf($_POST['csrf_token'] ?? null)) {
-      if ($_POST['do'] === 'oweili_sig_remove') { owSigRemove('oweili'); $sigMsg = 'removed'; owLog('signature_remove', 'admin', null, 'oweili', ['type' => 'admin', 'id' => null]); }
-      else {
-          $f = $_FILES['sig'] ?? null;
-          $r = ($f && ($f['error'] ?? 1) === UPLOAD_ERR_OK && is_uploaded_file($f['tmp_name'])) ? owSigSave('oweili', (string) file_get_contents($f['tmp_name'])) : 'type';
-          $sigMsg = $r === '' ? 'saved' : $r;
-          if ($r === '') owLog('signature_set', 'admin', null, 'oweili', ['type' => 'admin', 'id' => null]);
-      }
-  } ?>
-  <div class="card" id="oweili-signature"><h2><?= owBi('Oweili signature on certificates', 'توقيع أويلي على الشهادات') ?> <?= owSigExists('oweili') ? '<span class="pillx ok">' . owBi('Added', 'مضاف') . '</span>' : '<span class="pillx no">' . owBi('Not added', 'غير مضاف') . '</span>' ?></h2>
-    <p class="mini"><?= owBi('Upload your signature once (a PNG with a clear or white background works best). It appears next to the Oweili seal on every certificate. It is kept private and is never shown at a public address.', 'ارفع توقيعك مرة واحدة (يفضّل PNG بخلفية شفافة أو بيضاء). يظهر بجوار ختم أويلي على كل شهادة، ويُحفظ بشكل خاص ولا يظهر في أي رابط عام.') ?></p>
-    <?php if ($sigMsg === 'saved'): ?><p class="pillx ok"><?= owBi('Saved.', 'تم الحفظ.') ?></p><?php elseif ($sigMsg === 'removed'): ?><p class="pillx ok"><?= owBi('Removed.', 'تم الحذف.') ?></p><?php elseif ($sigMsg !== ''): [$se, $sa] = owSigError($sigMsg); ?><p class="pillx no"><?= owBi($se, $sa) ?></p><?php endif; ?>
-    <?php if (owSigExists('oweili')): ?><p><img src="<?= e(owSigDataUri('oweili')) ?>" alt="Oweili signature · توقيع أويلي" style="max-width:280px;max-height:100px;background:#fff;border:1px solid var(--color-border);border-radius:8px;padding:8px"></p><?php endif; ?>
-    <form method="post" action="admin.php?settings=1#oweili-signature" enctype="multipart/form-data" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-      <?= csrfField() ?><input type="hidden" name="do" value="oweili_sig">
-      <input type="file" name="sig" accept="image/png,image/jpeg" required>
-      <button class="btn btn-primary btn-sm"><?= owSigExists('oweili') ? owBi('Replace signature', 'استبدل التوقيع') : owBi('Upload signature', 'ارفع التوقيع') ?></button>
-    </form>
-    <?php if (owSigExists('oweili')): ?><form method="post" action="admin.php?settings=1#oweili-signature" style="margin-top:8px" onsubmit="return confirm('Remove? · حذف؟');"><?= csrfField() ?><input type="hidden" name="do" value="oweili_sig_remove"><button class="btn btn-danger btn-sm"><?= owBi('Remove', 'احذف') ?></button></form><?php endif; ?>
-  </div>
-
   <div class="card"><h2><?= owBi('Database backups on the server', 'نسخ قاعدة البيانات على الخادم') ?></h2>
     <?php if (!$backups): ?><p class="mini"><?= owBi('No backups yet.', 'لا نسخ بعد.') ?></p><?php else: ?>
     <ul class="rows"><?php foreach (array_slice($backups, 0, 10) as $b): ?><li><span dir="ltr"><?= e(basename($b)) ?></span><span class="mini"><?= e(gmdate('Y-m-d H:i', (int) filemtime($b))) ?> UTC · <?= number_format((int) filesize($b) / 1024, 1) ?> KB</span></li><?php endforeach; ?></ul>
