@@ -46,6 +46,36 @@ if ($token !== '' && ctype_xdigit($token) && strlen($token) <= 128) {
     }
 }
 
+/* "Send me a new link" (owner, 9 Nov 2026): for an account that is not confirmed yet.
+   The answer is the same whether or not the email has an account, so nobody can
+   use it to find out who is signed up. Limits: owResendVerify (3 per hour per
+   browser, 6 per hour for the whole site). */
+if ($state !== 'success') {
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'resend') {
+        if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
+            $state = 'resend_old';                     // the page was open too long: show the form again
+        } elseif (trim((string) ($_POST['website'] ?? '')) !== '') {
+            $state = 'sent';                           // robot trap: say "sent", send nothing
+        } else {
+            $em = strtolower(trim((string) ($_POST['email'] ?? '')));
+            $state = 'sent';
+            if (filter_var($em, FILTER_VALIDATE_EMAIL)) {
+                $st = getDB()->prepare("SELECT id, email, role, is_verified FROM users WHERE LOWER(TRIM(email)) = :e AND role IN ('artist','collector') LIMIT 1");
+                $st->execute([':e' => $em]);
+                $u = $st->fetch();
+                if ($u && (int) $u['is_verified'] !== 1) {
+                    require_once __DIR__ . '/account_lib.php';
+                    if (owResendVerify($u) === 'rate') $state = 'rate';
+                }
+            } else {
+                $state = 'resend_bad';
+            }
+        }
+    } elseif (isset($_GET['resend'])) {
+        $state = 'resend';
+    }
+}
+
 /**
  * Build the bilingual (EN + AR) HTML welcome email. Uses inline styles and a
  * table layout so it renders in every email client.
@@ -129,6 +159,10 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .v-icon.ok{background:rgba(var(--rgb-accent),0.12);border:1px solid rgba(var(--rgb-accent),0.3);}
 .v-icon.bad{background:rgba(var(--rgb-primary),0.1);border:1px solid rgba(var(--rgb-primary),0.25);}
 .redir-note{margin-top:16px;font-size:12px;color:var(--color-body);}
+.v-or{margin:20px 0 12px;font-size:13px;color:var(--color-body);}
+.v-resend{margin-top:16px;text-align:start;}
+.v-resend .btn{margin-top:4px;}
+.v-trap{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;}
 @keyframes riseUp {from{opacity:1}to{opacity:1}}
 </style>
 </head>
@@ -141,7 +175,31 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
 <div class="auth-wrap">
   <div class="auth-card">
-    <?php if ($state === 'success'): ?>
+    <?php if ($state === 'sent'): ?>
+      <div class="v-icon ok">✓</div>
+      <h1><span class="bi-en">Check your email</span><span class="bi-ar">راجع بريدك</span></h1>
+      <p><span class="bi-en">If this email has an Oweili account that is not confirmed yet, we sent a new link to it. The link works for 48 hours.</span><span class="bi-ar">إن كان لهذا البريد حساب في أويلي لم يُؤكَّد بعد، فقد أرسلنا إليه رابطاً جديداً. يعمل الرابط لمدة 48 ساعة.</span></p>
+      <a class="btn btn-primary" href="login.php"><span class="bi-en">Sign In</span><span class="bi-ar">تسجيل الدخول</span></a>
+    <?php elseif ($state === 'rate'): ?>
+      <div class="v-icon bad">✕</div>
+      <h1><span class="bi-en">Please wait a little</span><span class="bi-ar">انتظر قليلاً من فضلك</span></h1>
+      <p><span class="bi-en">We already sent several links in the last hour. Please check your inbox and spam folder, or try again in an hour.</span><span class="bi-ar">أرسلنا عدة روابط خلال الساعة الأخيرة. راجع البريد الوارد ومجلد الرسائل غير المرغوب فيها، أو حاول بعد ساعة.</span></p>
+    <?php elseif (in_array($state, ['resend', 'resend_old', 'resend_bad'], true)): ?>
+      <h1><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></h1>
+      <p><span class="bi-en">Type the email you joined with. We will send you a new confirmation link.</span><span class="bi-ar">اكتب البريد الذي سجّلت به، وسنرسل لك رابط تأكيد جديداً.</span></p>
+      <?php if ($state === 'resend_old'): ?><div class="err-box" style="display:block"><span class="bi-en">This page was open for a long time. Please press the button again.</span><span class="bi-ar">بقيت الصفحة مفتوحة وقتاً طويلاً. اضغط الزر مرة أخرى من فضلك.</span></div><?php endif; ?>
+      <?php if ($state === 'resend_bad'): ?><div class="err-box" style="display:block"><span class="bi-en">Please enter a valid email address.</span><span class="bi-ar">يرجى إدخال بريد إلكتروني صالح.</span></div><?php endif; ?>
+      <form method="post" action="verify.php" class="v-resend">
+        <?= csrfField() ?>
+        <input type="hidden" name="action" value="resend">
+        <div class="v-trap" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="field">
+          <label for="v-email"><span class="bi-en">Your email</span><span class="bi-ar">بريدك الإلكتروني</span></label>
+          <input type="email" id="v-email" name="email" required autocomplete="email" dir="ltr">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></button>
+      </form>
+    <?php elseif ($state === 'success'): ?>
       <div class="v-icon ok">✓</div>
       <h1 id="t-title">Your account is verified</h1>
       <p id="t-sub">You can now sign in.</p>
@@ -152,6 +210,17 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <h1 id="t-title">Invalid or expired link</h1>
       <p id="t-sub">This verification link is invalid or has expired. Please register again or request a new link.</p>
       <a class="btn btn-primary" href="register.php" id="t-btn">Register</a>
+      <p class="v-or"><span class="bi-en">Already joined? Get a new confirmation link:</span><span class="bi-ar">لديك حساب؟ اطلب رابط تأكيد جديداً:</span></p>
+      <form method="post" action="verify.php" class="v-resend">
+        <?= csrfField() ?>
+        <input type="hidden" name="action" value="resend">
+        <div class="v-trap" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="field">
+          <label for="v-email"><span class="bi-en">Your email</span><span class="bi-ar">بريدك الإلكتروني</span></label>
+          <input type="email" id="v-email" name="email" required autocomplete="email" dir="ltr">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></button>
+      </form>
     <?php endif; ?>
   </div>
 </div>
@@ -181,7 +250,7 @@ function apply(l){
   document.getElementById('lb').textContent=t.lb;
   if(STATE==='success'){
     setTxt('t-title',t.okTitle);setTxt('t-sub',t.okSub);setTxt('t-btn',t.okBtn);setTxt('t-redir',t.redir);
-  }else{
+  }else if(STATE==='invalid'){
     setTxt('t-title',t.badTitle);setTxt('t-sub',t.badSub);setTxt('t-btn',t.badBtn);
   }
   const n=t.nav;

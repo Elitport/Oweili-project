@@ -128,7 +128,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 }
                 // Insert user
                 $token = bin2hex(random_bytes(32));
-                $expires = date('Y-m-d H:i:s', time() + 24*60*60);
+                $expires = date('Y-m-d H:i:s', time() + 48*60*60);   // the confirm link works for 48 hours (owner, 9 Nov 2026)
                 getDB()->prepare(
                     'INSERT INTO users (email,password,full_name_en,full_name_ar,artist_name,phone,city,bio_en,bio_ar,profile_picture,art_video,role,is_verified,is_approved,verification_token,verification_expires)
                      VALUES (:email,:pass,:name,:nar,:aname,:phone,:city,:ben,:bar,:pic,:vid,"artist",0,0,:tok,:exp)'

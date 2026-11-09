@@ -92,6 +92,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .remember{display:flex;align-items:center;gap:7px;color:var(--color-body);cursor:pointer;}
 .remember input{width:15px;height:15px;accent-color:var(--color-primary);cursor:pointer;}
 @keyframes riseUp {from{opacity:1}to{opacity:1}}
+.ow-newlink{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;margin-top:var(--space-sm);}
 </style>
 </head>
 <body>
@@ -139,6 +140,10 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <div class="auth-foot">
       <span id="t-noacc">Don't have an account?</span>
       <a class="link" href="register.php" id="t-joinlink">Join Free</a>
+    </div>
+    <div class="auth-foot ow-newlink">
+      <span><span class="bi-en">Did not get the confirmation email?</span><span class="bi-ar">لم يصلك بريد التأكيد؟</span></span>
+      <a class="btn btn-secondary btn-sm" href="verify.php?resend=1" data-no-prefetch><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></a>
     </div>
   </div>
 </div>

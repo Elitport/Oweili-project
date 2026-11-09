@@ -275,10 +275,10 @@ function owSignupCounted(int $newUserId, string $role): void {
 /* The "please confirm your email" message, in English and Arabic */
 function owVerifyEmailBody(string $verifyUrl, bool $artist = false): string {
     return "Welcome to Oweili!\r\n\r\nPlease confirm your email address with this link:\r\n" . $verifyUrl . "\r\n\r\n"
-         . "The link works for 24 hours." . ($artist ? " After that, our team reviews your portfolio before your profile goes live." : '') . "\r\n\r\n"
+         . "The link works for 48 hours." . ($artist ? " After that, our team reviews your portfolio before your profile goes live." : '') . "\r\n\r\n"
          . "—\r\n\r\n"
          . "أهلاً بك في أويلي!\r\n\r\nيرجى تأكيد بريدك الإلكتروني عبر هذا الرابط:\r\n" . $verifyUrl . "\r\n\r\n"
-         . "يعمل الرابط لمدة 24 ساعة." . ($artist ? " بعدها يراجع فريقنا أعمالك قبل ظهور ملفك." : '') . "\r\n";
+         . "يعمل الرابط لمدة 48 ساعة." . ($artist ? " بعدها يراجع فريقنا أعمالك قبل ظهور ملفك." : '') . "\r\n";
 }
 
 /* A social or website link that is safe to show as a link: only http(s).

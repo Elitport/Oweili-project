@@ -77,7 +77,7 @@ function owChangeEmail(array $user, string $newEmail, string $current): string {
     $old   = (string) $user['email'];
     $token = bin2hex(random_bytes(32));
     getDB()->prepare('UPDATE users SET email = :e, is_verified = 0, verification_token = :t,
-                      verification_expires = (NOW() + INTERVAL 1 DAY) WHERE id = :id')
+                      verification_expires = (NOW() + INTERVAL 2 DAY) WHERE id = :id')
            ->execute([':e' => $newEmail, ':t' => $token, ':id' => $uid]);
     owLog('email_change', 'user', $uid, '', ['type' => owActorType($user['role'] ?? ''), 'id' => $uid]);
     owSendMail($newEmail, 'Confirm your email · تأكيد بريدك الإلكتروني', owVerifyEmailBody('https://' . owHost() . '/verify.php?token=' . $token));
@@ -96,7 +96,7 @@ function owResendVerify(array $user): string {
     $_SESSION['ow_resend'] = array_merge($mine, [$now]);
     $uid   = (int) $user['id'];
     $token = bin2hex(random_bytes(32));
-    getDB()->prepare('UPDATE users SET verification_token = :t, verification_expires = (NOW() + INTERVAL 1 DAY) WHERE id = :id')
+    getDB()->prepare('UPDATE users SET verification_token = :t, verification_expires = (NOW() + INTERVAL 2 DAY) WHERE id = :id')
            ->execute([':t' => $token, ':id' => $uid]);
     owLog('verify_resend', 'user', $uid, '', ['type' => owActorType($user['role'] ?? ''), 'id' => $uid]);
     return owSendMail((string) $user['email'], 'Confirm your email · تأكيد بريدك الإلكتروني',
