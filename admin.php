@@ -50,6 +50,8 @@ if (isset($_GET['logout'])) {
 /* Logged in only if the login was made with the current password —
    after the password changes, older admin sessions are signed out. */
 $isAdmin = !empty($_SESSION['is_admin']) && $adminSig !== '' && hash_equals($adminSig, (string) ($_SESSION['admin_sig'] ?? ''));
+/* this browser is the owner's: never count it in the visitor statistics (geo_lib.php) */
+if ($isAdmin && empty($_COOKIE['ow_nostat']) && !headers_sent()) setcookie('ow_nostat', '1', ['expires' => time() + 5 * 365 * 86400, 'path' => '/', 'secure' => !empty($_SERVER['HTTPS']), 'httponly' => false, 'samesite' => 'Lax']);
 
 /* ---- Auctions waiting list as a CSV file (opens in Excel; admin only) ---- */
 if ($isAdmin && isset($_GET['auctions_csv'])) {
@@ -324,6 +326,20 @@ if ($isAdmin) {
 
 /* ---- Overview numbers and every artwork (with its status) ---- */
 $overview = $isAdmin ? owAdminOverview() : [];
+/* Today summary and visitor statistics (owner, 9 Nov 2026) */
+$today = ['visitors' => 0, 'signups' => 0, 'interest' => 0];
+$geo = [];
+if ($isAdmin) {
+    require_once __DIR__ . '/geo_lib.php';
+    require_once __DIR__ . '/gallery_lib.php';
+    try {
+        $db = getDB();
+        $today['visitors'] = owVisitorsToday();
+        $today['signups']  = (int) $db->query("SELECT COUNT(*) FROM users WHERE role IN ('artist','collector') AND created_at >= CURDATE()")->fetchColumn();
+        $today['interest'] = owHasTable('artwork_inquiries') ? (int) $db->query('SELECT COUNT(*) FROM artwork_inquiries WHERE created_at >= CURDATE()')->fetchColumn() : 0;
+        foreach ([1, 7, 30] as $d) $geo[$d] = owGeoStats($d);
+    } catch (Throwable $e) { error_log('admin today: ' . $e->getMessage()); }
+}
 $allArt = [];
 if ($isAdmin) {
     try {
@@ -376,6 +392,37 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
 .ov-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+.adm-sec{margin:var(--space-md) 0 var(--space-xs);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-body);}
+.today-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+.today-grid .stat-card{text-decoration:none;}
+.today-grid .stat-num{font-size:32px;}
+.stat-wait.has{border-color:var(--color-primary);box-shadow:0 0 0 2px rgba(var(--rgb-primary),.35);}
+.ov-small .stat-card{padding:12px 16px;}
+.ov-small .stat-num{font-size:20px;}
+@media (max-width:640px){.today-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.adm-main{margin-top:var(--space-lg);}
+.pill.hot{background:var(--color-primary);color:var(--color-on-primary);}
+.adm-sub{display:none;flex-wrap:wrap;gap:8px;margin:0 0 var(--space-md);}
+.adm-sub.show{display:flex;}
+.sub-btn{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 14px;border-radius:999px;border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);font:inherit;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;}
+.sub-btn:hover,.sub-btn:focus-visible{border-color:var(--color-accent);}
+.sub-btn.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff;}
+.adm-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-sm);}
+.adm-cards .card{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--color-dark);}
+.adm-cards .card span{font-size:14px;color:var(--color-body);}
+.stat-range{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 var(--space-sm);}
+.stat-total{font-size:16px;margin:0 0 var(--space-sm);}
+.stat-total strong{font-size:28px;}
+.stat-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space-sm);margin-bottom:var(--space-sm);}
+.stat-cols h3{font-size:16px;margin:0 0 var(--space-xs);}
+.stat-cols>.card{margin:0;}
+.adm-main{flex-wrap:wrap;overflow-x:visible;}
+.stat-cols td.num{text-align:end;font-weight:700;width:60px;}
+.bars{list-style:none;margin:0;padding:0;display:grid;gap:8px;}
+.bars li{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 40px;gap:8px;align-items:center;font-size:14px;}
+.b-bar{height:10px;border-radius:5px;background:var(--color-border);overflow:hidden;}
+.b-bar i{display:block;height:100%;background:var(--color-accent);}
+.b-n{text-align:end;font-weight:700;}
 .adm-search{max-width:420px;margin-bottom:var(--space-sm);}
 .rej-box{display:inline-block;}
 .rej-box summary{list-style:none;cursor:pointer;}
@@ -535,37 +582,20 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <div class="sub">Manage artists, buyers, artworks and requests.</div>
     </div>
   </div>
-  <nav class="adm-tools" aria-label="Admin tools · أدوات الإدارة">
-    <div class="adm-group">
-      <span class="adm-glabel"><?= owBi('Content', 'المحتوى') ?></span>
-      <a class="btn btn-dark btn-sm" href="admin_articles.php"><?= owBi('Articles', 'المقالات') ?></a>
-      <a class="btn btn-dark btn-sm" href="admin_gallery.php"><?= owBi('Gallery', 'المعرض') ?></a>
-      <a class="btn btn-dark btn-sm" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
-    </div>
-    <div class="adm-group">
-      <span class="adm-glabel"><?= owBi('Requests', 'الطلبات') ?></span>
-      <a class="btn btn-dark btn-sm" href="admin_gifts.php"><?= owBi('Gifts', 'الهدايا') ?></a>
-      <a class="btn btn-dark btn-sm" href="admin_commissions.php"><?= owBi('Commissions', 'الأعمال الخاصة') ?></a>
-      <a class="btn btn-secondary btn-sm" href="admin_orders.php"><?= owBi('Orders (off)', 'الطلبات (متوقفة)') ?></a>
-    </div>
-    <div class="adm-group">
-      <span class="adm-glabel"><?= owBi('Checks', 'الفحوصات') ?></span>
-      <a class="btn btn-secondary btn-sm" href="admin.php?photo_check=1"><?= owBi('Photo check', 'فحص الصور') ?></a>
-      <a class="btn btn-secondary btn-sm" href="admin.php?mail_check=1"><?= owBi('Email check', 'فحص البريد') ?></a>
-      <a class="btn btn-secondary btn-sm" href="admin.php?error_log=1"><?= owBi('Error log', 'سجل الأخطاء') ?></a>
-    </div>
-    <div class="adm-group">
-      <span class="adm-glabel"><?= owBi('Site', 'الموقع') ?></span>
-      <a class="btn btn-secondary btn-sm" href="admin.php?settings=1"><?= owBi('Settings', 'الإعدادات') ?></a>
-    </div>
-  </nav>
-  <div class="stat-grid ov-grid">
+  <p class="adm-sec"><?= owBi('Today', 'اليوم') ?></p>
+  <div class="stat-grid today-grid">
+    <a class="stat-card" href="#stats" onclick="showTab('stats');return false;"><span class="stat-num"><?= (int) $today['visitors'] ?></span><span class="stat-lbl"><?= owBi('Visitors', 'الزوار') ?></span></a>
+    <a class="stat-card" href="#artists" onclick="showTab('artists');return false;"><span class="stat-num"><?= (int) $today['signups'] ?></span><span class="stat-lbl"><?= owBi('New sign-ups', 'تسجيلات جديدة') ?></span></a>
+    <a class="stat-card" href="#inquiries" onclick="showTab('inquiries');return false;"><span class="stat-num"><?= (int) $today['interest'] ?></span><span class="stat-lbl"><?= owBi('“I’m interested” requests', 'طلبات «أنا مهتم»') ?></span></a>
+    <a class="stat-card stat-wait<?= $waitTotal ? ' has' : '' ?>" href="#pending" onclick="showTab('pending');return false;"><span class="stat-num"><?= (int) $waitTotal ?></span><span class="stat-lbl"><?= owBi('Waiting for my approval', 'بانتظار موافقتي') ?></span></a>
+  </div>
+  <p class="adm-sec"><?= owBi('All time', 'منذ البداية') ?></p>
+  <div class="stat-grid ov-grid ov-small">
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['artists'] ?></span><span class="stat-lbl"><?= owBi('Artists', 'الفنانون') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['buyers'] ?></span><span class="stat-lbl"><?= owBi('Buyers', 'المشترون') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['artworks'] ?></span><span class="stat-lbl"><?= owBi('Artworks (' . (int) $overview['in_gallery'] . ' in the Gallery)', 'الأعمال (' . (int) $overview['in_gallery'] . ' في المعرض)') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['inquiries'] ?></span><span class="stat-lbl"><?= owBi('Interest requests (' . (int) $overview['new_inq'] . ' new)', 'طلبات الاهتمام (' . (int) $overview['new_inq'] . ' جديد)') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['week'] ?></span><span class="stat-lbl"><?= owBi('New sign-ups this week', 'تسجيلات هذا الأسبوع') ?></span></div>
-    <a class="stat-card" href="#pending" onclick="showTab('pending',document.querySelector('.tab-btn[data-tab=pending]'));return false;" style="text-decoration:none"><span class="stat-num"><?= (int) $waitTotal ?></span><span class="stat-lbl"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></span></a>
     <?php if ($photoChanges): ?><a class="stat-card" href="#photos" onclick="showTab('photos',document.querySelector('.tab-btn[data-tab=photos]'));return false;" style="text-decoration:none"><span class="stat-num"><?= count($photoChanges) ?></span><span class="stat-lbl"><?= owBi('Photo changed, needs a look', 'صورة تغيّرت، تحتاج نظرة') ?></span></a><?php endif; ?>
     <div class="stat-card"><span class="stat-num"><span class="online-dot on" aria-hidden="true"></span> <?= (int) $onlineCount ?></span><span class="stat-lbl">Online Now</span></div>
   </div>
@@ -581,23 +611,97 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="alert alert-ok"><strong>✓ Saved.</strong></div>
   <?php endif; ?>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab tab-btn active" data-tab="artists" onclick="showTab('artists',this)">Artists <span class="pill count"><?= count($artists) ?></span></button>
-    <button class="tab tab-btn" data-tab="collectors" onclick="showTab('collectors',this)"><?= owBi('Buyers', 'المشترون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
-    <button class="tab tab-btn" data-tab="pending" onclick="showTab('pending',this)"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?> <span class="pill count"><?= (int) $waitTotal ?></span></button>
-    <button class="tab tab-btn" data-tab="photos" onclick="showTab('photos',this)"><?= owBi('Photo changes', 'تغيير الصور') ?> <span class="pill count"><?= count($photoChanges) ?></span></button>
-    <button class="tab tab-btn" data-tab="artworks" onclick="showTab('artworks',this)"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
-    <button class="tab tab-btn" data-tab="certs" onclick="showTab('certs',this)"><?= owBi('Certificates', 'الشهادات') ?> <span class="pill count"><?= count($allCerts) ?></span></button>
-    <a class="tab" href="admin_articles.php"><?= owBi('Articles & events', 'المقالات والملتقيات') ?></a>
-    <a class="tab" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
-    <button class="tab tab-btn" data-tab="inquiries" onclick="showTab('inquiries',this)">Inquiries <span class="pill count"><?= count($inquiries) ?></span></button>
-    <?php require_once __DIR__ . '/auction_lib.php'; $auList = owAuctionList(); ?>
-    <button class="tab tab-btn" data-tab="auctions" onclick="showTab('auctions',this)"><?= owBi('Auctions', 'المزاد') ?> <span class="pill count"><?= count($auList) ?></span></button>
+  <!-- TABS (owner, 9 Nov 2026): Waiting for approval first, then grouped -->
+  <?php require_once __DIR__ . '/auction_lib.php'; $auOn = function_exists('owAuctionsPageOn') && owAuctionsPageOn(); $auList = owAuctionList();
+        $giftsOn = function_exists('owGiftsPageOn') && owGiftsPageOn(); $commOn = function_exists('owCommissionsPageOn') && owCommissionsPageOn(); ?>
+  <div class="tabs adm-main" role="tablist">
+    <button class="tab tab-btn active" data-tab="pending" onclick="showTab('pending')"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?> <span class="pill count<?= $waitTotal ? ' hot' : '' ?>"><?= (int) $waitTotal ?></span></button>
+    <button class="tab tab-btn" data-tab="g-people" onclick="showTab('artists')"><?= owBi('Artists', 'الفنانون') ?></button>
+    <button class="tab tab-btn" data-tab="g-art" onclick="showTab('artworks')"><?= owBi('Artworks', 'الأعمال') ?><?php if ($photoChanges): ?> <span class="pill count hot"><?= count($photoChanges) ?></span><?php endif; ?></button>
+    <button class="tab tab-btn" data-tab="g-req" onclick="showTab('inquiries')"><?= owBi('Requests', 'الطلبات') ?></button>
+    <button class="tab tab-btn" data-tab="articles" onclick="showTab('articles')"><?= owBi('Articles', 'المقالات') ?></button>
+    <button class="tab tab-btn" data-tab="stats" onclick="showTab('stats')"><?= owBi('Statistics', 'الإحصاءات') ?></button>
+    <button class="tab tab-btn" data-tab="settings" onclick="showTab('settings')"><?= owBi('Settings', 'الإعدادات') ?></button>
+  </div>
+  <div class="adm-sub" data-group="g-people">
+    <button class="sub-btn" data-tab="artists" onclick="showTab('artists')"><?= owBi('Artists', 'الفنانون') ?> <span class="pill count"><?= count($artists) ?></span></button>
+    <button class="sub-btn" data-tab="collectors" onclick="showTab('collectors')"><?= owBi('Buyers', 'المشترون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
+  </div>
+  <div class="adm-sub" data-group="g-art">
+    <button class="sub-btn" data-tab="artworks" onclick="showTab('artworks')"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
+    <button class="sub-btn" data-tab="photos" onclick="showTab('photos')"><?= owBi('Photo changes', 'تغيير الصور') ?> <span class="pill count"><?= count($photoChanges) ?></span></button>
+    <button class="sub-btn" data-tab="certs" onclick="showTab('certs')"><?= owBi('Certificates', 'الشهادات') ?> <span class="pill count"><?= count($allCerts) ?></span></button>
+  </div>
+  <div class="adm-sub" data-group="g-req">
+    <button class="sub-btn" data-tab="inquiries" onclick="showTab('inquiries')"><?= owBi('“I’m interested”', '«أنا مهتم»') ?> <span class="pill count"><?= count($inquiries) ?></span></button>
+    <?php if ($auOn): ?><button class="sub-btn" data-tab="auctions" onclick="showTab('auctions')"><?= owBi('Auctions', 'المزاد') ?> <span class="pill count"><?= count($auList) ?></span></button><?php endif; ?>
+    <?php if ($giftsOn): ?><a class="sub-btn" href="admin_gifts.php"><?= owBi('Gifts', 'الهدايا') ?></a><?php endif; ?>
+    <?php if ($commOn): ?><a class="sub-btn" href="admin_commissions.php"><?= owBi('Commissions', 'الأعمال الخاصة') ?></a><?php endif; ?>
+  </div>
+
+  <!-- ===== TAB: ARTICLES (links to the team tools) ===== -->
+  <div class="tab-panel" id="tab-articles">
+    <div class="adm-cards">
+      <a class="card card-hover" href="admin_articles.php"><b><?= owBi('Articles & events', 'المقالات والملتقيات') ?></b><span><?= owBi('Write and publish Art Events and Art Education.', 'اكتب وانشر الملتقيات والتثقيف الفني.') ?></span></a>
+      <a class="card card-hover" href="admin_gallery.php"><b><?= owBi('Gallery', 'المعرض') ?></b><span><?= owBi('Collections, Artist of the week, verified artists.', 'المجموعات، فنان الأسبوع، الفنانون الموثّقون.') ?></span></a>
+      <a class="card card-hover" href="admin_institutes.php"><b><?= owBi('Institutes', 'المعاهد') ?></b><span><?= owBi('Art institutes and their courses.', 'المعاهد الفنية ودوراتها.') ?></span></a>
+    </div>
+  </div>
+
+  <!-- ===== TAB: STATISTICS (visitor countries and cities, geo_lib.php) ===== -->
+  <div class="tab-panel" id="tab-stats">
+    <?php $hasGeo = owGeoReady(); ?>
+    <div class="stat-range" role="group" aria-label="Period · المدة">
+      <button class="sub-btn on" data-days="1" onclick="statRange(1,this)"><?= owBi('Today', 'اليوم') ?></button>
+      <button class="sub-btn" data-days="7" onclick="statRange(7,this)"><?= owBi('Last 7 days', 'آخر 7 أيام') ?></button>
+      <button class="sub-btn" data-days="30" onclick="statRange(30,this)"><?= owBi('Last 30 days', 'آخر 30 يوماً') ?></button>
+    </div>
+    <?php if (!owHasTable('visitor_stats')): ?>
+      <p class="mini"><?= owBi('Statistics start once the visitor_stats table is added (visitor_stats.sql).', 'تبدأ الإحصاءات بعد إضافة جدول visitor_stats.') ?></p>
+    <?php elseif (!$hasGeo): ?>
+      <p class="mini"><?= owBi('The location file is being downloaded. Visits are counted already; cities show once it is ready.', 'يجري تنزيل ملف المواقع. الزيارات تُحسب الآن، وتظهر المدن عند جاهزيته.') ?></p>
+    <?php endif; ?>
+    <?php foreach ([1, 7, 30] as $d): $gs = $geo[$d] ?? ['total' => 0, 'countries' => [], 'cities' => []]; ?>
+    <div class="stat-block" data-days="<?= $d ?>"<?= $d === 1 ? '' : ' hidden' ?>>
+      <p class="stat-total"><strong><?= (int) $gs['total'] ?></strong> <?= owBi('visitors', 'زائر') ?></p>
+      <div class="stat-cols">
+        <div class="card"><h3><?= owBi('Top cities', 'أكثر المدن') ?></h3>
+          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: $max = max(1, (int) $gs['cities'][0]['v']); ?>
+          <ol class="bars"><?php foreach (array_slice($gs['cities'], 0, 10) as $c): ?>
+            <li><span class="b-name"><?= e($c['city']) ?> <span class="mini">· <?= e(owCountryName($c['country'], false)) ?></span></span><span class="b-bar"><i style="width:<?= round(100 * $c['v'] / $max) ?>%"></i></span><span class="b-n"><?= (int) $c['v'] ?></span></li>
+          <?php endforeach; ?></ol><?php endif; ?>
+        </div>
+        <div class="card"><h3><?= owBi('By country', 'حسب الدولة') ?></h3>
+          <?php if (!$gs['countries']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: ?>
+          <table class="table"><tbody><?php foreach ($gs['countries'] as $c): ?>
+            <tr><td><?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></td><td class="num"><?= (int) $c['v'] ?></td></tr>
+          <?php endforeach; ?></tbody></table><?php endif; ?>
+        </div>
+        <div class="card"><h3><?= owBi('By city', 'حسب المدينة') ?></h3>
+          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: ?>
+          <table class="table"><tbody><?php foreach ($gs['cities'] as $c): ?>
+            <tr><td><?= e($c['city']) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></td><td class="num"><?= (int) $c['v'] ?></td></tr>
+          <?php endforeach; ?></tbody></table><?php endif; ?>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+    <p class="mini"><?= owBi('One visit = one browser on one day. Robots and your own Admin browser are not counted. Only the country, city and date are kept, never the internet address.', 'الزيارة = متصفح واحد في يوم واحد. لا تُحسب الروبوتات ولا متصفح الإدارة الخاص بك. نحفظ الدولة والمدينة والتاريخ فقط، ولا نحفظ عنوان الإنترنت.') ?>
+      <?= owBi('Location data: ', 'بيانات المواقع: ') ?><a href="https://db-ip.com" target="_blank" rel="noopener">IP Geolocation by DB-IP</a> (CC BY 4.0)</p>
+  </div>
+
+  <!-- ===== TAB: SETTINGS (links) ===== -->
+  <div class="tab-panel" id="tab-settings">
+    <div class="adm-cards">
+      <a class="card card-hover" href="admin.php?settings=1"><b><?= owBi('Site settings', 'إعدادات الموقع') ?></b><span><?= owBi('Show or hide parts of the site, Bashro, payments, signature.', 'إظهار أو إخفاء أجزاء الموقع، بشرو، الدفع، التوقيع.') ?></span></a>
+      <a class="card card-hover" href="admin.php?photo_check=1"><b><?= owBi('Photo check', 'فحص الصور') ?></b><span><?= owBi('Are artwork photos and their small copies working?', 'هل تعمل صور الأعمال ونسخها الصغيرة؟') ?></span></a>
+      <a class="card card-hover" href="admin.php?mail_check=1"><b><?= owBi('Email check', 'فحص البريد') ?></b><span><?= owBi('Send a test email and see the answer.', 'أرسل بريداً تجريبياً واطّلع على الرد.') ?></span></a>
+      <a class="card card-hover" href="admin.php?error_log=1"><b><?= owBi('Error log', 'سجل الأخطاء') ?></b><span><?= owBi('The newest errors on the server.', 'أحدث الأخطاء على الخادم.') ?></span></a>
+    </div>
   </div>
 
   <!-- ===== TAB: ARTISTS ===== -->
-  <div class="tab-panel active" id="tab-artists">
+  <div class="tab-panel" id="tab-artists">
   <div class="card">
     <div class="field adm-search"><label for="s-artists"><?= owBi('Search artists (name, email, phone, city)', 'ابحث عن فنان (الاسم، البريد، الهاتف، المدينة)') ?></label>
       <input id="s-artists" type="search" data-search=".acard" autocomplete="off"></div>
@@ -773,7 +877,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   </div>
 
   <!-- ===== TAB: PENDING ARTWORKS ===== -->
-  <div class="tab-panel" id="tab-pending">
+  <div class="tab-panel active" id="tab-pending">
   <div class="card" id="pending">
     <div class="sec-head">
       <div class="sub" style="margin:0;"><?= owBi('Everything here waits for you before visitors see it. Until you approve, visitors see the approved version, or nothing if it is new. The artist gets an email either way.', 'كل ما هنا ينتظر موافقتك قبل أن يراه الزوار. حتى توافق، يرى الزوار النسخة المعتمدة، أو لا شيء إن كان جديداً. يصل الفنانَ بريد في الحالتين.') ?></div>
@@ -1060,21 +1164,24 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       });
     });
   });
-  function showTab(name, btn){
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    var panel=document.getElementById('tab-'+name); if(panel)panel.classList.add('active');
-    if(btn)btn.classList.add('active');
-    try{location.hash=name;}catch(e){}
+  /* Tabs (owner, 9 Nov 2026): each panel belongs to one main tab; some main tabs have small sub-tabs */
+  var OW_GROUP={artists:'g-people',collectors:'g-people',artworks:'g-art',photos:'g-art',certs:'g-art',inquiries:'g-req',auctions:'g-req'};
+  function showTab(name){
+    if(!document.getElementById('tab-'+name)) name='pending';
+    var g=OW_GROUP[name]||name;
+    document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+name);});
+    document.querySelectorAll('.adm-main .tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===g);});
+    document.querySelectorAll('.adm-sub').forEach(function(s){s.classList.toggle('show',s.dataset.group===g);});
+    document.querySelectorAll('.adm-sub .sub-btn').forEach(function(b){b.classList.toggle('on',b.dataset.tab===name);});
+    try{history.replaceState(null,'','#'+name);}catch(e){}
   }
-  // Restore the tab from the URL hash (e.g. after approving an artwork).
-  (function(){
-    var h=(location.hash||'').replace('#','');
-    if(['pending','collectors','artists','artworks','inquiries','photos','certs'].indexOf(h)>=0){
-      var btn=document.querySelector('.tab-btn[data-tab="'+h+'"]');
-      showTab(h,btn);
-    }
-  })();
+  function statRange(d,btn){
+    document.querySelectorAll('.stat-block').forEach(function(b){b.hidden=b.dataset.days!=String(d);});
+    document.querySelectorAll('.stat-range .sub-btn').forEach(function(b){b.classList.toggle('on',b===btn);});
+  }
+  // Restore the tab from the address (e.g. after approving an artwork); Waiting for approval is the first tab
+  (function(){ showTab((location.hash||'#pending').replace('#','')); })();
+  window.addEventListener('hashchange',function(){ var h=(location.hash||'').replace('#',''); if(h) showTab(h); });
   </script>
 
 <?php endif; ?>

@@ -48,6 +48,7 @@ owLegalPage([
         '- Private commission requests: your name, phone and email, what you would like, and your reference photos. The photos are kept in a private place visitors can never open. Only the Oweili team and the one artist we assign (after they accept our confidentiality agreement) can see them.',
         '- Buyer profile: country, city, preferred language, and the artworks you save as favorites.',
         '- Activity: what you do in your account and when (for example signing in or saving a favorite). With it we keep a one-way code made from your internet address that changes every month. We never keep the address itself.',
+        '- Visitor statistics: approximate visitor counts by country and city (from the internet address, using a location file on our own server, data by DB-IP). We keep only the country, city and date, never the address itself.',
         '- Photo consent records: for local artists featured in Artist Spotlights, a record of their approval (who, when and how).',
         '- Browser storage: a small sign-in cookie, and your language and light or dark mode choice saved in your own browser.',
     ], [
@@ -60,6 +61,7 @@ owLegalPage([
         '- طلبات الأعمال الخاصة: اسمك وهاتفك وبريدك، وما ترغب فيه، وصورك المرجعية. تُحفظ الصور في مكان خاص لا يفتحه الزوار أبداً، ولا يراها إلا فريق أويلي والفنان الوحيد الذي نسند إليه العمل (بعد قبوله اتفاقية السرّية).',
         '- ملف المشتري: الدولة والمدينة واللغة المفضلة والأعمال التي تحفظها في المفضلة.',
         '- النشاط: ما تفعله في حسابك ومتى (مثل تسجيل الدخول أو حفظ عمل في المفضلة). ونحفظ معه رمزاً باتجاه واحد من عنوانك على الإنترنت يتغير كل شهر، ولا نحفظ العنوان نفسه أبداً.',
+        '- إحصاءات الزوار: أعداد تقريبية للزوار حسب الدولة والمدينة (من عنوان الإنترنت، بملف مواقع على خادمنا، والبيانات من DB-IP). نحفظ الدولة والمدينة والتاريخ فقط، ولا نحفظ العنوان نفسه أبداً.',
         '- سجلات موافقة الصور: للفنانين المحليين في «أضواء على الفنانين»، سجل بموافقتهم (من ومتى وكيف).',
         '- تخزين المتصفح: ملف صغير لتسجيل الدخول، واختيارك للغة والوضع الليلي أو النهاري محفوظاً في متصفحك أنت.',
     ]],
