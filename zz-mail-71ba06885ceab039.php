@@ -5,6 +5,37 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/mail_lib.php';
 header('Content-Type: text/plain; charset=utf-8'); header('Cache-Control: no-store'); header('X-Robots-Tag: noindex');
 $db = getDB();
+
+require_once __DIR__ . '/platform_lib.php';
+/* ?do=send: one diagnostic copy of the real "Confirm your email" message to mail-tester.com and to no-reply@oweili.com, with the mail server's answers */
+if (($_GET['do'] ?? '') === 'send') {
+    $page = @file_get_contents('https://www.mail-tester.com/', false, stream_context_create(['http' => ['timeout' => 15, 'header' => "User-Agent: Mozilla/5.0\r\n"]]));
+    preg_match('/([a-z0-9-]+)@srv1\.mail-tester\.com/i', (string) $page, $mm);
+    $mt = $mm[0] ?? ''; echo "mail-tester address: ", $mt ?: '(not found)', "\n";
+    require_once __DIR__ . '/lib/PHPMailer/Exception.php'; require_once __DIR__ . '/lib/PHPMailer/PHPMailer.php'; require_once __DIR__ . '/lib/PHPMailer/SMTP.php';
+    foreach (array_filter([$mt, 'no-reply@oweili.com']) as $to) {
+        $subject = 'Confirm your email · تأكيد بريدك الإلكتروني';
+        $msg = owMailMessage($to, $subject, owVerifyEmailBody('https://oweili.com/verify.php?token=diagnostic-test-not-a-real-link', true), false);
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+        $tr = [];
+        $mail->SMTPDebug = 2;
+        $mail->Debugoutput = function ($str) use (&$tr) { if (!preg_match('/^CLIENT -> SERVER: (AUTH|[A-Za-z0-9+\/=]{12,}\s*$)/', $str)) $tr[] = rtrim($str); };
+        try {
+            $mail->isSMTP(); $mail->Host = owMailSetting('SMTP_HOST', 'smtp.hostinger.com'); $mail->SMTPAuth = true;
+            $mail->Username = owMailSetting('SMTP_USER'); $mail->Password = owMailSetting('SMTP_PASS');
+            $mail->Port = 465; $mail->SMTPSecure = 'ssl'; $mail->CharSet = 'UTF-8'; $mail->Timeout = 15;
+            $mail->setFrom(owMailFrom(), OW_MAIL_FROM_NAME); $mail->addReplyTo(owContactEmail(), 'Oweili'); $mail->addAddress($to);
+            $mail->isHTML(true); $mail->Subject = $subject; $mail->Body = $msg['html']; $mail->AltBody = $msg['text'];
+            $mail->send(); echo "\n== to $to: SENT ==\n";
+        } catch (\Throwable $e) { echo "\n== to $to: FAILED ", $mail->ErrorInfo, " ==\n"; }
+        foreach ($tr as $l) if (preg_match('/SERVER -> CLIENT|SMTP ERROR|MAIL FROM|RCPT TO/', $l)) echo $l, "\n";
+    }
+    exit;
+}
+if (($_GET['do'] ?? '') === 'mt' && preg_match('/^[a-z0-9-]+$/i', (string) ($_GET['id'] ?? ''))) {
+    echo @file_get_contents('https://www.mail-tester.com/' . $_GET['id'] . '&format=json', false, stream_context_create(['http' => ['timeout' => 20, 'header' => "User-Agent: Mozilla/5.0\r\n"]]));
+    exit;
+}
 echo "now (db): ", $db->query('SELECT NOW()')->fetchColumn(), "  php: ", date('Y-m-d H:i:s T'), "\n";
 echo "SMTP_HOST=", owMailSetting('SMTP_HOST'), " PORT=", owMailSetting('SMTP_PORT'), " USER=", owMailSetting('SMTP_USER'), " PASS set=", owMailSetting('SMTP_PASS') !== '' ? 'yes' : 'no', "\n";
 echo "From=", owMailFrom(), " contact=", owContactEmail(), " phpmailer file=", is_file(__DIR__ . '/lib/PHPMailer/PHPMailer.php') ? 'yes' : 'no', "\n";
@@ -45,11 +76,11 @@ echo "login: ", preg_match('/^A1 OK/m', $r) ? 'ok' : 'failed', "\n";
 echo preg_replace('/^A\d+ .*$/m', '', $cmd('LIST "" "*"'));
 foreach (['INBOX', 'INBOX.Junk', 'INBOX.Spam', 'Junk', 'Spam'] as $box) {
     $r = $cmd('EXAMINE ' . $q($box)); if (!preg_match('/^A\d+ OK/m', $r)) continue;
-    $s = $cmd('SEARCH SINCE 8-Nov-2026');
+    $s = $cmd('SEARCH SINCE 9-Nov-2026');
     preg_match('/\* SEARCH([\d ]*)/', $s, $m); $ids = array_filter(explode(' ', trim($m[1] ?? '')));
     echo "\n-- $box: ", count($ids), " since 8 Nov\n";
     foreach (array_slice($ids, -20) as $id) {
-        $h = $cmd("FETCH $id (BODY.PEEK[HEADER.FIELDS (FROM TO SUBJECT DATE)])");
+        $h = $cmd("FETCH $id (BODY.PEEK[HEADER.FIELDS (FROM TO SUBJECT DATE X-SPAM-STATUS X-SPAM-FLAG)])");
         $h = preg_replace(['/^\* \d+ FETCH.*$/m', '/^A\d+ .*$/m', '/^\)\s*$/m'], '', $h);
         echo "#$id ", trim(preg_replace('/\s*\r?\n\s*/', ' | ', $h)), "\n";
         if (preg_match('/mailer-daemon|postmaster|undeliver|delivery status|failure|returned/i', $h)) {
