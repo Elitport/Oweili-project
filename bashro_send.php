@@ -13,6 +13,7 @@
  *    "I'm Interested"      → kind quote  (Bashro Sales lead)          ON
  *    Gift requests         → kind quote  (Sales)                      ON
  *    Commission requests   → kind quote  (Sales; never the photos)    ON
+ *    Support page form     → kind contact (Bashro Customer Service)   ON (9 Nov 2026)
  *    New artist / buyer    → kind signup                              OFF until Bashro accepts it:
  *                                                                     define('BASHRO_DOOR_SIGNUPS', true)
  *    Approvals waiting     → kind approval (no personal details)      OFF until Bashro accepts it:
@@ -29,6 +30,7 @@ require_once __DIR__ . '/platform_lib.php';
 
 const OW_BASHRO_DOOR = 'https://bashro.com/in/';
 const OW_BASHRO_FIELDS = [
+    'contact'  => ['name' => 120, 'email' => 160, 'phone' => 30, 'subject' => 200, 'message' => 5000, 'lang' => 2],   /* door guide section 4: Customer Service ticket */
     'quote'    => ['name' => 120, 'email' => 160, 'phone' => 30, 'company' => 120, 'service' => 120, 'city' => 60, 'message' => 5000, 'lang' => 2],
     'signup'   => ['role' => 10, 'name' => 120, 'email' => 160, 'phone' => 30, 'city' => 60, 'joined' => 10],   /* door guide section 4b */
     'approval' => ['ref' => 60, 'type' => 20, 'title' => 120, 'link' => 300],
@@ -46,7 +48,7 @@ function owBashroKindOn(string $kind): bool {
     if ($kind === 'signup')   return defined('BASHRO_DOOR_SIGNUPS') && BASHRO_DOOR_SIGNUPS === true;
     if ($kind === 'approval') return defined('BASHRO_DOOR_APPROVALS') && BASHRO_DOOR_APPROVALS === true;
     if ($kind === 'account_deleted') return true;   // Saudi PDPL: always told once the door is set up
-    return $kind === 'quote';
+    return $kind === 'quote' || $kind === 'contact';
 }
 /* Only the allowed fields, as plain strings within their limits; empty ones are left out */
 function owBashroClean(string $kind, array $m): array {
@@ -214,4 +216,10 @@ function owBashroAccountDeleted(string $email): void {
     $email = strtolower(trim($email));
     if ($email === '' || !owBashroKindOn('account_deleted')) return;
     owBashroQueue('account_deleted', ['email' => $email]);
+}
+
+/* The Support page form "Write to Us" (support_send.php, owner 9 Nov 2026) → Bashro Customer Service ticket */
+function owBashroContact(string $name, string $email, string $phone, string $message, string $lang = 'en'): void {
+    if (!owBashroKindOn('contact')) return;
+    owBashroQueue('contact', ['name' => $name, 'email' => $email, 'phone' => $phone, 'subject' => 'Oweili Support page', 'message' => $message, 'lang' => $lang === 'ar' ? 'ar' : 'en']);
 }

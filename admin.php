@@ -50,6 +50,8 @@ if (isset($_GET['logout'])) {
 /* Logged in only if the login was made with the current password —
    after the password changes, older admin sessions are signed out. */
 $isAdmin = !empty($_SESSION['is_admin']) && $adminSig !== '' && hash_equals($adminSig, (string) ($_SESSION['admin_sig'] ?? ''));
+/* this browser is the owner's: never count it in the visitor statistics (geo_lib.php) */
+if ($isAdmin && empty($_COOKIE['ow_nostat']) && !headers_sent()) setcookie('ow_nostat', '1', ['expires' => time() + 5 * 365 * 86400, 'path' => '/', 'secure' => !empty($_SERVER['HTTPS']), 'httponly' => false, 'samesite' => 'Lax']);
 
 /* ---- Auctions waiting list as a CSV file (opens in Excel; admin only) ---- */
 if ($isAdmin && isset($_GET['auctions_csv'])) {
@@ -173,6 +175,16 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
     if ($action === 'photo_ok') {
         owPhotoOk((int) ($_POST['artwork_id'] ?? 0));
         header('Location: admin.php?ok=1#photos');
+        exit;
+    }
+
+    /* --- Publish an article draft written for the Oweili team (owner, 9 Nov 2026) --- */
+    if ($action === 'publish_team_article') {
+        $aid = (int) ($_POST['article_id'] ?? 0);
+        $st = getDB()->prepare("UPDATE articles SET status = 'published', published_at = COALESCE(published_at, NOW()) WHERE id = :id AND status = 'draft' AND author_user_id IS NULL");
+        $st->execute([':id' => $aid]);
+        if ($st->rowCount() > 0) owLog('article_publish', 'article', $aid, 'team draft', ['type' => 'admin', 'id' => null]);
+        header('Location: admin.php?ok=1#pending');
         exit;
     }
 
@@ -324,6 +336,9 @@ if ($isAdmin) {
 
 /* ---- Overview numbers and every artwork (with its status) ---- */
 $overview = $isAdmin ? owAdminOverview() : [];
+/* Visitor statistics (owner, 9 Nov 2026): countries and cities for today, 7 and 30 days (geo_lib.php) */
+$geo = [];
+if ($isAdmin) { require_once __DIR__ . '/geo_lib.php'; try { foreach ([1, 7, 30] as $d) $geo[$d] = owGeoStats($d); } catch (Throwable $e) { error_log('admin geo: ' . $e->getMessage()); } }
 $allArt = [];
 if ($isAdmin) {
     try {
@@ -348,7 +363,13 @@ if ($isAdmin && owCertReady()) {
 }
 $waitChanges  = $isAdmin ? owWaitingChanges() : [];
 $waitArtists  = $isAdmin ? owWaitingArtists() : [];
-$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists);
+/* Article drafts written for the Oweili team (no author account), waiting for the owner to read and publish (owner, 9 Nov 2026) */
+$teamDrafts = [];
+if ($isAdmin && owHasTable('articles')) {
+    try { $teamDrafts = getDB()->query("SELECT id, type, slug, title_en, title_ar, created_at FROM articles WHERE status = 'draft' AND author_user_id IS NULL ORDER BY id")->fetchAll(); }
+    catch (Throwable $e) { error_log('team drafts: ' . $e->getMessage()); }
+}
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts);
 $SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
 /* one value, as the admin should read it */
 $showVal = function (string $field, $v) use ($SALE_WORDS): string {
@@ -376,6 +397,21 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
 .ov-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+.sub-btn{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 14px;border-radius:999px;border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);font:inherit;font-size:13px;font-weight:600;cursor:pointer;}
+.sub-btn:hover,.sub-btn:focus-visible{border-color:var(--color-accent);}
+.sub-btn.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff;}
+.stat-range{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 var(--space-sm);}
+.stat-total{font-size:16px;margin:0 0 var(--space-sm);}
+.stat-total strong{font-size:28px;}
+.stat-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space-sm);margin-bottom:var(--space-sm);}
+.stat-cols>.card{margin:0;}
+.stat-cols h3{font-size:16px;margin:0 0 var(--space-xs);}
+.stat-cols td.num{text-align:end;font-weight:700;width:60px;}
+.bars{list-style:none;margin:0;padding:0;display:grid;gap:8px;}
+.bars li{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 40px;gap:8px;align-items:center;font-size:14px;}
+.b-bar{height:10px;border-radius:5px;background:var(--color-border);overflow:hidden;}
+.b-bar i{display:block;height:100%;background:var(--color-accent);}
+.b-n{text-align:end;font-weight:700;}
 .adm-search{max-width:420px;margin-bottom:var(--space-sm);}
 .rej-box{display:inline-block;}
 .rej-box summary{list-style:none;cursor:pointer;}
@@ -594,6 +630,48 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <button class="tab tab-btn" data-tab="inquiries" onclick="showTab('inquiries',this)">Inquiries <span class="pill count"><?= count($inquiries) ?></span></button>
     <?php require_once __DIR__ . '/auction_lib.php'; $auList = owAuctionList(); ?>
     <button class="tab tab-btn" data-tab="auctions" onclick="showTab('auctions',this)"><?= owBi('Auctions', 'المزاد') ?> <span class="pill count"><?= count($auList) ?></span></button>
+    <button class="tab tab-btn" data-tab="stats" onclick="showTab('stats',this)"><?= owBi('Visitors', 'الزوار') ?> <span class="pill count"><?= (int) ($geo[1]['total'] ?? 0) ?></span></button>
+  </div>
+
+  <!-- ===== TAB: VISITORS (countries and cities, geo_lib.php) ===== -->
+  <div class="tab-panel" id="tab-stats">
+    <div class="stat-range" role="group" aria-label="Period · المدة">
+      <button class="sub-btn on" data-days="1" onclick="statRange(1,this)"><?= owBi('Today', 'اليوم') ?></button>
+      <button class="sub-btn" data-days="7" onclick="statRange(7,this)"><?= owBi('Last 7 days', 'آخر 7 أيام') ?></button>
+      <button class="sub-btn" data-days="30" onclick="statRange(30,this)"><?= owBi('Last 30 days', 'آخر 30 يوماً') ?></button>
+    </div>
+    <?php if (!owHasTable('visitor_stats')): ?>
+      <p class="mini"><?= owBi('Statistics start once the visitor_stats table is added (visitor_stats.sql).', 'تبدأ الإحصاءات بعد إضافة جدول visitor_stats.') ?></p>
+    <?php elseif (!owGeoReady()): ?>
+      <p class="mini"><?= owBi('The location file is being downloaded. Visits are counted already; cities show once it is ready.', 'يجري تنزيل ملف المواقع. الزيارات تُحسب الآن، وتظهر المدن عند جاهزيته.') ?></p>
+    <?php endif; ?>
+    <?php foreach ([1, 7, 30] as $d): $gs = $geo[$d] ?? ['total' => 0, 'countries' => [], 'cities' => []]; ?>
+    <div class="stat-block" data-days="<?= $d ?>"<?= $d === 1 ? '' : ' hidden' ?>>
+      <p class="stat-total"><strong><?= (int) $gs['total'] ?></strong> <?= owBi('visitors', 'زائر') ?></p>
+      <div class="stat-cols">
+        <div class="card"><h3><?= owBi('Top cities', 'أكثر المدن') ?></h3>
+          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: $max = max(1, (int) $gs['cities'][0]['v']); ?>
+          <ol class="bars"><?php foreach (array_slice($gs['cities'], 0, 10) as $c): ?>
+            <li><span class="b-name"><?= owBi((string) $c['city'], owCityName((string) $c['city'], true)) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></span><span class="b-bar"><i style="width:<?= round(100 * $c['v'] / $max) ?>%"></i></span><span class="b-n"><?= (int) $c['v'] ?></span></li>
+          <?php endforeach; ?></ol><?php endif; ?>
+        </div>
+        <div class="card"><h3><?= owBi('By country', 'حسب الدولة') ?></h3>
+          <?php if (!$gs['countries']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: ?>
+          <table class="table"><tbody><?php foreach ($gs['countries'] as $c): ?>
+            <tr><td><?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></td><td class="num"><?= (int) $c['v'] ?></td></tr>
+          <?php endforeach; ?></tbody></table><?php endif; ?>
+        </div>
+        <div class="card"><h3><?= owBi('By city', 'حسب المدينة') ?></h3>
+          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: ?>
+          <table class="table"><tbody><?php foreach ($gs['cities'] as $c): ?>
+            <tr><td><?= owBi((string) $c['city'], owCityName((string) $c['city'], true)) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></td><td class="num"><?= (int) $c['v'] ?></td></tr>
+          <?php endforeach; ?></tbody></table><?php endif; ?>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+    <p class="mini"><?= owBi('One visit = one browser on one day. Robots and your own Admin browser are not counted. Only the country, city and date are kept, never the internet address.', 'الزيارة = متصفح واحد في يوم واحد. لا تُحسب الروبوتات ولا متصفح الإدارة الخاص بك. نحفظ الدولة والمدينة والتاريخ فقط، ولا نحفظ عنوان الإنترنت.') ?>
+      <?= owBi('Location data: ', 'بيانات المواقع: ') ?><a href="https://db-ip.com" target="_blank" rel="noopener">IP Geolocation by DB-IP</a> (CC BY 4.0)</p>
   </div>
 
   <!-- ===== TAB: ARTISTS ===== -->
@@ -783,6 +861,23 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <?php endif; ?>
     <?php if ($waitTotal === 0): ?>
       <div class="empty"><?= owBi('Nothing waiting. All caught up.', 'لا شيء بانتظارك. كل شيء محدّث.') ?></div>
+    <?php endif; ?>
+
+    <?php if ($teamDrafts): $ATYPE = ['event' => ['Art Event', 'ملتقى فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان'], 'art_education' => ['Art Education', 'تثقيف فني']]; ?>
+    <h3 class="wc-h"><?= owBi('Article drafts from the Oweili team', 'مسودات مقالات من فريق أويلي') ?> <span class="pill count"><?= count($teamDrafts) ?></span></h3>
+    <p class="mini"><?= owBi('Read each one with Preview. Publish puts it on the site; Edit lets you change it first. Nothing is public until you publish.', 'اقرأ كل مقال عبر «معاينة». «انشر» يضعه في الموقع، و«تعديل» يتيح لك تغييره أولاً. لا يظهر شيء للزوار قبل النشر.') ?></p>
+    <div class="wc-list">
+      <?php foreach ($teamDrafts as $td): $tt = $ATYPE[$td['type']] ?? [$td['type'], $td['type']]; ?>
+      <div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+        <div><strong><?= e((string) $td['title_en']) ?></strong><div class="name-ar" dir="rtl"><?= e((string) $td['title_ar']) ?></div><div class="mini"><?= owBi($tt[0], $tt[1]) ?> · <?= owBi('Draft', 'مسودة') ?></div></div>
+        <div class="acts" style="display:flex;flex-wrap:wrap;gap:6px">
+          <a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode((string) $td['slug'])) ?>&amp;preview=1" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a>
+          <a class="btn btn-secondary btn-sm" href="admin_articles.php?edit=<?= (int) $td['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a>
+          <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.dir==='rtl'?'نشر هذا المقال في الموقع؟':'Publish this article on the site?');"><?= csrfField() ?><input type="hidden" name="article_id" value="<?= (int) $td['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="publish_team_article"><?= owBi('Publish', 'انشر') ?></button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
     <?php endif; ?>
 
     <?php if ($waitArtists): ?>
@@ -1060,6 +1155,10 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       });
     });
   });
+  function statRange(d,btn){
+    document.querySelectorAll('.stat-block').forEach(function(b){b.hidden=b.dataset.days!=String(d);});
+    document.querySelectorAll('.stat-range .sub-btn').forEach(function(b){b.classList.toggle('on',b===btn);});
+  }
   function showTab(name, btn){
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -1070,7 +1169,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   // Restore the tab from the URL hash (e.g. after approving an artwork).
   (function(){
     var h=(location.hash||'').replace('#','');
-    if(['pending','collectors','artists','artworks','inquiries','photos','certs'].indexOf(h)>=0){
+    if(['pending','collectors','artists','artworks','inquiries','photos','certs','stats'].indexOf(h)>=0){
       var btn=document.querySelector('.tab-btn[data-tab="'+h+'"]');
       showTab(h,btn);
     }
