@@ -24,7 +24,7 @@ if ($cfSize === '' && (float) $cv('width_cm') > 0 && (float) $cv('height_cm') > 
            placeholder="Oil on canvas · زيت على قماش">
     <datalist id="cf-mediums">
       <?php foreach (owIsAr() ? ['زيت على قماش', 'أكريليك على قماش', 'ألوان مائية على ورق', 'حبر على ورق', 'فحم على ورق', 'وسائط مختلطة', 'طباعة رقمية على ورق']
-                               : ['Oil on canvas', 'Acrylic on canvas', 'Watercolour on paper', 'Ink on paper', 'Charcoal on paper', 'Mixed media', 'Digital print on paper'] as $cfM): ?><option value="<?= e($cfM) ?>"><?php endforeach; ?>
+                               : ['Oil on canvas', 'Acrylic on canvas', 'Watercolor on paper', 'Ink on paper', 'Charcoal on paper', 'Mixed media', 'Digital print on paper'] as $cfM): ?><option value="<?= e($cfM) ?>"><?php endforeach; ?>
     </datalist>
   </div>
   <?= owSizeSelect($cfSize, $cfOrient, false, 'cf-size') ?>

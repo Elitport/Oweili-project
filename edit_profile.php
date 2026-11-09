@@ -233,6 +233,12 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
         <a class="btn btn-secondary" href="<?= e(dashboardUrl($u['role'] ?? '')) ?>" id="t-cancel">Cancel</a>
       </div>
     </form>
+    <?php if (($u['role'] ?? '') === 'artist'): require_once __DIR__ . '/sig_lib.php'; ?>
+    <div class="sig-link" style="margin-top:var(--space-md);padding-top:var(--space-md);border-top:1px solid var(--color-border);display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;justify-content:space-between">
+      <span><b><span class="bi-en">My signature for certificates</span><span class="bi-ar">توقيعي على الشهادات</span></b><br><span class="bi-en"><?= owSigExists((string) $u['id']) ? 'Saved. It appears on all your certificates.' : 'Not drawn yet. Draw it once with your finger or mouse.' ?></span><span class="bi-ar"><?= owSigExists((string) $u['id']) ? 'محفوظ، ويظهر على كل شهاداتك.' : 'لم يُرسم بعد. ارسمه مرة واحدة بإصبعك أو بالفأرة.' ?></span></span>
+      <a class="btn btn-secondary btn-sm" href="signature.php"><span class="bi-en"><?= owSigExists((string) $u['id']) ? 'Change signature' : 'Draw my signature' ?></span><span class="bi-ar"><?= owSigExists((string) $u['id']) ? 'غيّر التوقيع' : 'ارسم توقيعي' ?></span></a>
+    </div>
+    <?php endif; ?>
   </div>
 </div>
 

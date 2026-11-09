@@ -11,6 +11,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/cert_lib.php';
 require_once __DIR__ . '/qr_lib.php';
+require_once __DIR__ . '/sig_lib.php';
 
 $cert = owCertByNo((string) ($_GET['no'] ?? ''));
 if (!$cert || !owCertCanView($cert)) {
@@ -30,6 +31,9 @@ $verify  = owCertVerifyUrl($no);
 $qr      = owQrSvg($verify, 112, 'Scan to verify · امسح للتحقق');
 $stages  = $s['stages'] ?? [];
 $owner   = trim((string) ($cert['owner_name'] ?? ''));
+[$ownEn, $ownAr] = $owner !== '' && !empty($cert['owner_added_at']) ? owDateBi((string) $cert['owner_added_at']) : ['', ''];
+$sigArtist = owSigDataUri((string) (int) $cert['artist_id']);   // drawn once by the artist (signature.php)
+$sigOweili = owSigDataUri('oweili');                            // uploaded once in Admin → Settings
 $fileName = 'Oweili-Certificate-' . $no;
 $mark = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><path d="M11 1A10 10 0 0 0 1 11h10z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z"/><path d="M1 13a10 10 0 0 0 10 10V13z"/><path d="M13 13v10a10 10 0 0 0 10-10z"/></g></svg>';
 /* one line of the details: English label · value · Arabic label */
@@ -92,27 +96,37 @@ body.cert-page{background:var(--color-surface-2);min-height:100vh;margin:0;}
 .c-stages figcaption{font-size:10px;font-weight:700;color:var(--cert-body);margin-top:3px;}
 .c-stages .gap{width:14px;border-top:1px dashed var(--cert-muted);flex:0 0 14px;}
 .c-touch{align-self:center;display:inline-block;padding:4px 12px;border:1px solid var(--cert-accent);border-radius:999px;font-size:12px;font-weight:700;color:var(--cert-ink);background:var(--cert-tint);}
-.c-details{display:flex;flex-direction:column;gap:10px;min-width:0;}
+.c-details{display:flex;flex-direction:column;gap:7px;min-width:0;}
 .c-table{width:100%;border-collapse:collapse;font-size:13px;}
-.c-table th,.c-table td{padding:6px 0;border-bottom:1px solid var(--cert-line);vertical-align:top;text-align:start;}
-.c-table th{width:118px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cert-body);padding-top:8px;}
+.c-table th,.c-table td{padding:4px 0;border-bottom:1px solid var(--cert-line);vertical-align:top;text-align:start;}
+.c-table th{width:118px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cert-body);padding-top:6px;}
 .c-table th.th-ar{text-align:end;letter-spacing:0;text-transform:none;font-size:12px;}
 .c-table td{font-weight:600;color:var(--cert-ink);padding-inline:12px;}
 .c-table td .v-ar{display:block;font-weight:600;text-align:right;}
 .c-table tr.big td{font-size:17px;font-weight:700;}
-.c-declare{border-inline-start:3px solid var(--cert-accent);background:var(--cert-tint);padding:8px 14px;font-size:12.5px;line-height:1.55;}
+.c-declare{border-inline-start:3px solid var(--cert-accent);background:var(--cert-tint);padding:6px 14px;font-size:12.5px;line-height:1.55;}
 .c-declare q{display:block;font-style:italic;quotes:"“" "”";}
 .c-declare q[lang=ar]{font-style:normal;text-align:right;quotes:"«" "»";}
 .c-declare .when{font-size:11px;color:var(--cert-body);margin-top:3px;display:flex;justify-content:space-between;gap:8px;}
 .c-rights{font-size:11px;line-height:1.5;color:var(--cert-body);display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .c-rights [lang=ar]{text-align:right;}
-.c-owner{font-size:12px;color:var(--cert-ink);}
-.c-foot{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:20px;border-top:1px solid var(--cert-line);padding-top:12px;}
+.c-owner{font-size:12px;color:var(--cert-ink);margin:0;}
+.c-rights p{margin:0;}
+.c-foot{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:16px;border-top:1px solid var(--cert-line);padding-top:12px;}
 .c-qr{display:flex;align-items:center;gap:12px;}
 .c-qr svg{display:block;width:96px;height:96px;}
 .c-qr .how{font-size:11px;line-height:1.5;color:var(--cert-body);max-width:200px;}
 .c-qr .how b{color:var(--cert-ink);}
-.c-qr .url{font-size:10px;word-break:break-all;color:var(--cert-ink);}
+.c-qr .url{font-size:10px;white-space:nowrap;color:var(--cert-ink);}
+.c-qr .how{max-width:none;}
+.c-mid{display:flex;align-items:flex-end;justify-content:center;gap:14px;min-width:0;}
+.c-mid .c-issued{flex:1;min-width:0;font-size:10.5px;}
+.c-oweili{display:flex;align-items:flex-end;gap:12px;}
+.c-sign{display:flex;flex-direction:column;align-items:center;gap:2px;width:132px;flex:0 0 132px;}
+.c-sign .sig-img{height:46px;width:100%;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px solid var(--cert-ink);}
+.c-sign .sig-img img{max-height:44px;max-width:100%;display:block;}
+.c-sign>span{font-size:10px;color:var(--cert-body);white-space:nowrap;}
+.c-owner .own-d{font-weight:400;color:var(--cert-body);}
 .c-issued{text-align:center;font-size:11.5px;line-height:1.6;color:var(--cert-body);}
 .c-issued b{color:var(--cert-ink);}
 .c-seal{width:96px;height:96px;border-radius:50%;border:2px solid var(--cert-accent);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
@@ -192,16 +206,22 @@ body.cert-page{background:var(--color-surface-2);min-height:100vh;margin:0;}
           <q lang="ar" dir="rtl"><?= e(OW_CERT_DECLARATION[1]) ?></q>
           <div class="when"><span>Declared by the artist on <?= e($decEn) ?></span><span lang="ar" dir="rtl">أقرّ به الفنان بتاريخ <?= e($decAr) ?></span></div>
         </div>
-        <?php if ($owner !== ''): ?><p class="c-owner"><b>Owner · المالك:</b> <span dir="auto"><?= e($owner) ?></span></p><?php endif; ?>
+        <?php if ($owner !== ''): ?><p class="c-owner"><b>Owner · المالك:</b> <span dir="auto"><?= e($owner) ?></span><?php if ($ownEn !== ''): ?> <span class="own-d">· since <?= e($ownEn) ?> · <span lang="ar" dir="rtl">منذ <?= e($ownAr) ?></span></span><?php endif; ?></p><?php endif; ?>
         <div class="c-rights"><p lang="en"><?= e(OW_CERT_RIGHTS[0]) ?></p><p lang="ar" dir="rtl"><?= e(OW_CERT_RIGHTS[1]) ?></p></div>
       </div>
     </section>
 
     <footer class="c-foot">
       <div class="c-qr"><?= $qr ?><div class="how"><b>Scan to verify</b> · <span lang="ar">امسح للتحقق</span><br>or open · أو افتح<br><span class="url" dir="ltr"><?= e(preg_replace('#^https://#', '', $verify)) ?></span></div></div>
-      <div class="c-issued">Issued by <b>Oweili</b>, the home of real art, on <b><?= e($issEn) ?></b><br>
-        <span lang="ar" dir="rtl">صادرة عن <b>أويلي</b>، بيت الفن الأصيل، بتاريخ <b><?= e($issAr) ?></b></span></div>
-      <div class="c-seal" aria-hidden="true"><?= $mark ?>OWEILI<br>AUTHENTIC<br>أصلي</div>
+      <div class="c-mid">
+        <div class="c-sign"><div class="sig-img"><?php if ($sigArtist !== ''): ?><img src="<?= e($sigArtist) ?>" alt="Artist's signature · توقيع الفنان"><?php endif; ?></div><span>Artist's signature · <span lang="ar">توقيع الفنان</span></span></div>
+        <div class="c-issued">Issued by <b>Oweili</b>, the home of real art, on <b><?= e($issEn) ?></b><br>
+          <span lang="ar" dir="rtl">صادرة عن <b>أويلي</b>، بيت الفن الأصيل، بتاريخ <b><?= e($issAr) ?></b></span></div>
+      </div>
+      <div class="c-oweili">
+        <div class="c-sign"><div class="sig-img"><?php if ($sigOweili !== ''): ?><img src="<?= e($sigOweili) ?>" alt="Oweili signature · توقيع أويلي"><?php endif; ?></div><span>For Oweili · <span lang="ar">عن أويلي</span></span></div>
+        <div class="c-seal" aria-hidden="true"><?= $mark ?>OWEILI<br>AUTHENTIC<br>أصلي</div>
+      </div>
     </footer>
   </div>
 </article>

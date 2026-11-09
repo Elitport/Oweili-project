@@ -365,6 +365,11 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 
 <?php elseif ($tab === 'certs'): ?>
   <p class="note"><?= owBi('Each approved artwork gets a Certificate of Authenticity with its own number. Open one to download it as a PDF, or share its verify page with a buyer.', 'يحصل كل عمل معتمد على شهادة أصالة برقم خاص. افتح الشهادة لتنزيلها بصيغة PDF، أو شارك صفحة التحقق مع المشتري.') ?></p>
+  <?php require_once __DIR__ . '/sig_lib.php'; $sigOn = owSigExists((string) $uid); ?>
+  <div class="card" style="display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;justify-content:space-between;margin-bottom:var(--space-sm)">
+    <span><?= $sigOn ? owBi('✓ Your signature is on your certificates.', '✓ توقيعك على شهاداتك.') : owBi('Add your signature to your certificates: draw it once.', 'أضف توقيعك إلى شهاداتك: ارسمه مرة واحدة.') ?></span>
+    <a class="btn btn-secondary btn-sm" href="signature.php"><?= $sigOn ? owBi('Change signature', 'غيّر التوقيع') : owBi('Draw my signature', 'ارسم توقيعي') ?></a>
+  </div>
   <?php if (!owCertReady() || !$certs): ?>
     <div class="card empty"><p><?= owBi('Your certificates will appear here once your artworks are approved.', 'ستظهر شهاداتك هنا بعد اعتماد أعمالك.') ?></p></div>
   <?php else: ?>
@@ -381,6 +386,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
         <span class="st-pill <?= $ok ? 's-approved' : 's-rejected' ?>"><?= $ok ? owBi('Valid', 'سارية') : owBi('Cancelled', 'ملغاة') ?></span>
         <a class="btn btn-accent btn-sm" href="certificate.php?no=<?= e(rawurlencode($c['cert_no'])) ?>"><?= owBi('View & download', 'عرض وتنزيل') ?></a>
         <a class="btn btn-ghost btn-sm" href="<?= e(owCertVerifyUrl((string) $c['cert_no'])) ?>"><?= owBi('Verify page', 'صفحة التحقق') ?></a>
+        <?php if ($ok): ?><a class="btn btn-ghost btn-sm" href="cert_label.php?no=<?= e(rawurlencode($c['cert_no'])) ?>"><?= owBi('Back label', 'ملصق الظهر') ?></a><?php endif; ?>
       </div>
     </div>
     <?php endforeach; ?>

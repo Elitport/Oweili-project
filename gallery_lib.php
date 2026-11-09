@@ -100,7 +100,7 @@ function owMediumFilters(): array {
     return [
         'oil'         => ['en' => 'Oil',           'ar' => 'زيت',           'words' => ['oil', 'زيت']],
         'acrylic'     => ['en' => 'Acrylic',       'ar' => 'أكريليك',       'words' => ['acrylic', 'أكريليك', 'اكريليك']],
-        'watercolour' => ['en' => 'Watercolour',   'ar' => 'ألوان مائية',   'words' => ['watercolo', 'مائي']],
+        'watercolour' => ['en' => 'Watercolor',    'ar' => 'ألوان مائية',   'words' => ['watercolo', 'مائي']],
         'ink'         => ['en' => 'Ink',           'ar' => 'حبر',           'words' => ['ink', 'حبر']],
         'charcoal'    => ['en' => 'Charcoal & pencil', 'ar' => 'فحم ورصاص', 'words' => ['charcoal', 'pencil', 'graphite', 'فحم', 'رصاص']],
         'mixed'       => ['en' => 'Mixed media',   'ar' => 'وسائط مختلطة',  'words' => ['mixed', 'collage', 'مختلط', 'كولاج']],

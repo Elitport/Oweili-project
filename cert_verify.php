@@ -36,6 +36,14 @@ if ($state === 'valid') {   // link to the artwork page while it is in the Galle
     $st->execute([':id' => (int) $cert['artwork_id']]);
     $live = (bool) $st->fetchColumn();
 }
+/* Ownership (owner, 9 Nov 2026): the public page never shows the buyer's name, only that it is sold and how many owners it has had */
+$sold = false; $owners = 0;
+if ($state === 'valid') {
+    $owners = owCertOwnerCount($cert);
+    $st = getDB()->prepare("SELECT status FROM artworks WHERE id = :id");
+    $st->execute([':id' => (int) $cert['artwork_id']]);
+    $sold = $owners > 0 || $st->fetchColumn() === 'sold';
+}
 if (!headers_sent()) header('Cache-Control: no-store');
 ?>
 <!DOCTYPE html>
@@ -124,6 +132,7 @@ if (!headers_sent()) header('Cache-Control: no-store');
             <div><dt><?= owBi('Type', 'النوع') ?></dt><dd><?= owBi($edE, $edA) ?></dd></div>
             <div><dt><?= owBi('Issued by Oweili on', 'أصدرتها أويلي بتاريخ') ?></dt><dd><?= owBi($iE, $iA) ?></dd></div>
             <div><dt><?= owBi('Artist’s declaration', 'إقرار الفنان') ?></dt><dd><?= owBi('Made by the artist’s own hand', 'من صنع يد الفنان') ?></dd></div>
+            <?php if ($sold): ?><div><dt><?= owBi('Ownership', 'الملكية') ?></dt><dd><?= owBi('Sold · owned by a verified collector', 'مباع · يملكه مقتنٍ موثّق') ?><?php if ($owners > 1): ?><br><span class="mini"><?= owBi('Owners so far: ' . $owners, 'عدد المالكين حتى الآن: ' . $owners) ?></span><?php endif; ?></dd></div><?php endif; ?>
           </dl>
           <?php if (!empty($s['real_touch'])): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
           <p class="rights-note"><?= owBi(OW_CERT_RIGHTS[0], OW_CERT_RIGHTS[1]) ?></p>

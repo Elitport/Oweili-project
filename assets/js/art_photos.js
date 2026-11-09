@@ -458,7 +458,7 @@ window.OW_ART_PHOTO = {
  "dry_brush": {
   "w": 560,
   "h": 800,
-  "en": "Winslow Homer, Palm Tree, Nassau, watercolour, 1898",
+  "en": "Winslow Homer, Palm Tree, Nassau, watercolor, 1898",
   "ar": "وينسلو هومر، «نخلة، ناساو»، ألوان مائية، 1898",
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Winslow_Homer_-_Palm_Tree%2C_Nassau.jpg"

@@ -178,9 +178,20 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
         exit;
     }
 
+    /* --- The owner's name on a certificate (after a sale or a resale) --- */
+    if ($action === 'cert_owner') {
+        owSetCertificateOwner((int) ($_POST['cert_id'] ?? 0), (string) ($_POST['owner_name'] ?? ''));
+        header('Location: admin.php?ok=1#certs');
+        exit;
+    }
+
     /* --- Mark an artwork as sold / back to available --- */
     if ($action === 'sell_art' || $action === 'unsell_art') {
-        owSetArtworkSale((int) ($_POST['artwork_id'] ?? 0), $action === 'sell_art');
+        $saleId = (int) ($_POST['artwork_id'] ?? 0);
+        owSetArtworkSale($saleId, $action === 'sell_art');
+        /* the buyer's name goes on the certificate as "Owner" (never on the public verify page) */
+        $buyer = trim((string) ($_POST['buyer_name'] ?? ''));
+        if ($action === 'sell_art' && $buyer !== '' && ($sc = owCertForArtwork($saleId))) owSetCertificateOwner((int) $sc['id'], $buyer);
         header('Location: admin.php?ok=1#artworks');
         exit;
     }
@@ -1043,6 +1054,12 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
           <td><div class="acts">
             <a class="btn btn-ghost btn-sm" href="certificate.php?no=<?= e(rawurlencode($c['cert_no'])) ?>"><?= owBi('View', 'عرض') ?></a>
             <?php if ($ok): ?>
+            <details class="rej-box"><summary class="btn btn-secondary btn-sm"><?= trim((string) ($c['owner_name'] ?? '')) !== '' ? owBi('Owner…', 'المالك…') : owBi('Add owner…', 'أضف المالك…') ?></summary>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="cert_id" value="<?= (int) $c['id'] ?>">
+                <div class="field"><label for="co-<?= (int) $c['id'] ?>"><?= owBi('Owner’s name (shown on the certificate, never on the public verify page). A new name counts as a new owner.', 'اسم المالك (يظهر على الشهادة، ولا يظهر في صفحة التحقق العامة). الاسم الجديد يُحسب مالكاً جديداً.') ?></label>
+                  <input id="co-<?= (int) $c['id'] ?>" name="owner_name" maxlength="200" required value="<?= e((string) ($c['owner_name'] ?? '')) ?>"></div>
+                <button class="btn btn-accent btn-sm" name="action" value="cert_owner"><?= owBi('Save owner', 'احفظ المالك') ?></button>
+              </form></details>
             <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Cancel…', 'إلغاء…') ?></summary>
               <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="cert_id" value="<?= (int) $c['id'] ?>">
                 <div class="field"><label for="cc-<?= (int) $c['id'] ?>"><?= owBi('Reason (kept on record; the artist sees it)', 'السبب (يُحفظ في السجل ويراه الفنان)') ?></label>
@@ -1131,7 +1148,10 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php if ($stw === 'sold'): ?>
               <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unsell_art"><?= owBi('Back to available', 'أعده متاحاً') ?></button></form>
             <?php else: ?>
-              <form method="post" action="admin.php" onsubmit="return confirm('Mark this artwork as sold? It leaves the Gallery.');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><button class="btn btn-dark btn-sm" name="action" value="sell_art"><?= owBi('Mark as sold', 'علّمه كمباع') ?></button></form>
+              <details class="rej-box"><summary class="btn btn-dark btn-sm"><?= owBi('Mark as sold…', 'علّمه كمباع…') ?></summary>
+                <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.dir==='rtl'?'تعليم هذا العمل كمباع؟ سيخرج من المعرض.':'Mark this artwork as sold? It leaves the Gallery.');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>">
+                  <div class="field"><label for="bn-<?= (int) $w['id'] ?>"><?= owBi('Buyer’s name for the certificate (optional)', 'اسم المشتري للشهادة (اختياري)') ?></label><input id="bn-<?= (int) $w['id'] ?>" name="buyer_name" maxlength="200" autocomplete="off"></div>
+                  <button class="btn btn-dark btn-sm" name="action" value="sell_art"><?= owBi('Mark as sold', 'علّمه كمباع') ?></button></form></details>
             <?php endif; ?>
             <?php if ($stw === 'approved'): ?>
             <details class="rej-box"><summary class="btn btn-ghost btn-sm"><?= owBi('Take down…', 'إزالة من المعرض…') ?></summary>

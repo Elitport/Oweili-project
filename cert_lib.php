@@ -233,9 +233,24 @@ function owCancelCertificatesOfArtwork(int $artworkId, string $reason): void {
 function owSetCertificateOwner(int $certId, string $name, ?int $ownerUserId = null): bool {
     $name = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F<>]/u', ' ', $name)), 0, 200);
     if ($name === '' || !owCertReady()) return false;
+    $q = getDB()->prepare("SELECT artwork_id, cert_no, owner_name FROM certificates WHERE id = :id AND status = 'valid'");
+    $q->execute([':id' => $certId]); $c = $q->fetch();
+    if (!$c) return false;
+    if (trim((string) $c['owner_name']) === $name) return true;                   // same owner again: nothing new
     $st = getDB()->prepare("UPDATE certificates SET owner_name = :n, owner_user_id = :u, owner_added_at = NOW() WHERE id = :id AND status = 'valid'");
     $st->execute([':n' => $name, ':u' => $ownerUserId, ':id' => $certId]);
+    /* one record per owner (only the certificate number, never the name), so the verify page can count owners */
+    owLog('cert_owner', 'artwork', (int) $c['artwork_id'], (string) $c['cert_no'], ['type' => 'admin', 'id' => null]);
     return $st->rowCount() > 0;
+}
+
+/* How many owners a certificate has had (0 = not sold yet). Names are never counted or shown in public. */
+function owCertOwnerCount(array $cert): int {
+    if (trim((string) ($cert['owner_name'] ?? '')) === '') return 0;
+    if (!owHasTable('activity_log')) return 1;
+    $st = getDB()->prepare("SELECT COUNT(*) FROM activity_log WHERE action = 'cert_owner' AND target_id = :a AND details = :n");
+    $st->execute([':a' => (int) $cert['artwork_id'], ':n' => (string) $cert['cert_no']]);
+    return max(1, (int) $st->fetchColumn());
 }
 
 /* ---------------------------------------------------------------------
