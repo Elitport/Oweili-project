@@ -98,7 +98,7 @@ const OW_CITY_AR = [
 ];
 function owCityName(string $city, bool $ar): string {
     if (!$ar || $city === '') return $city;
-    $k = strtolower(trim($city));
+    $k = strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', $city)));   // "Riyadh (Al Olaya)" → riyadh
     if (isset(OW_CITY_AR[$k])) return OW_CITY_AR[$k];
     $k2 = preg_replace('/^(al|ar|ad|as|ash|az)[\s\-]+/', '', $k);     // "Al Khobar", "Al-Ain", "Ar Rayyan" …
     return OW_CITY_AR[$k2] ?? $city;
