@@ -27,3 +27,35 @@ if (is_file($log)) {
     echo "(log size ", filesize($log), ", lines ", count($lines), ")\n";
 } else echo "no log file\n";
 foreach (glob(__DIR__ . '/.logs/*') as $g) echo basename($g), "\t", @filesize($g), "\t", date('Y-m-d H:i', (int) @filemtime($g)), "\n";
+
+echo "\n== no-reply mailbox (read-only, EXAMINE) ==\n";
+$imap = @stream_socket_client('ssl://imap.hostinger.com:993', $en, $es, 15);
+if (!$imap) { echo "IMAP connect failed: $es\n"; exit; }
+stream_set_timeout($imap, 20);
+$n = 0;
+$cmd = function (string $c) use ($imap, &$n) {
+    $t = 'A' . (++$n); fwrite($imap, $t . ' ' . $c . "\r\n"); $out = '';
+    while (($l = fgets($imap)) !== false) { $out .= $l; if (strpos($l, $t . ' ') === 0) break; }
+    return $out;
+};
+fgets($imap);
+$q = function ($s) { return '"' . addcslashes($s, "\"\\") . '"'; };
+$r = $cmd('LOGIN ' . $q(owMailSetting('SMTP_USER')) . ' ' . $q(owMailSetting('SMTP_PASS')));
+echo "login: ", preg_match('/^A1 OK/m', $r) ? 'ok' : 'failed', "\n";
+echo preg_replace('/^A\d+ .*$/m', '', $cmd('LIST "" "*"'));
+foreach (['INBOX', 'INBOX.Junk', 'INBOX.Spam', 'Junk', 'Spam'] as $box) {
+    $r = $cmd('EXAMINE ' . $q($box)); if (!preg_match('/^A\d+ OK/m', $r)) continue;
+    $s = $cmd('SEARCH SINCE 8-Nov-2026');
+    preg_match('/\* SEARCH([\d ]*)/', $s, $m); $ids = array_filter(explode(' ', trim($m[1] ?? '')));
+    echo "\n-- $box: ", count($ids), " since 8 Nov\n";
+    foreach (array_slice($ids, -20) as $id) {
+        $h = $cmd("FETCH $id (BODY.PEEK[HEADER.FIELDS (FROM TO SUBJECT DATE)])");
+        $h = preg_replace(['/^\* \d+ FETCH.*$/m', '/^A\d+ .*$/m', '/^\)\s*$/m'], '', $h);
+        echo "#$id ", trim(preg_replace('/\s*\r?\n\s*/', ' | ', $h)), "\n";
+        if (preg_match('/mailer-daemon|postmaster|undeliver|delivery status|failure|returned/i', $h)) {
+            $b = $cmd("FETCH $id (BODY.PEEK[TEXT]<0.4000>)");
+            echo "   BODY: ", substr(preg_replace('/\s+/', ' ', $b), 0, 2500), "\n";
+        }
+    }
+}
+$cmd('LOGOUT'); fclose($imap);
