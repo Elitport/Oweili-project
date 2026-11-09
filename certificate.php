@@ -62,7 +62,8 @@ body.cert-page{background:var(--color-surface-2);min-height:100vh;margin:0;}
 .cert-bar .acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:center;}
 .cert-hint-print{font-size:var(--fs-caption);color:var(--color-body);max-width:1123px;margin:var(--space-sm) auto 0;padding:0 var(--space-sm);}
 .cert-stage{padding:var(--space-md) var(--space-sm) var(--space-xl);display:flex;justify-content:center;}
-.cert-fit{width:1123px;}
+.cert-fit{width:1123px;overflow:hidden;}
+.cert-stage{direction:ltr;}   /* the scaled certificate is placed from the left in both languages (Arabic phones scrolled sideways) */
 /* ---- the certificate: A4 landscape, 297 × 210 mm (1123 × 794 px) ---- */
 .cert{position:relative;width:1123px;height:794px;box-sizing:border-box;background:var(--cert-paper);color:var(--cert-ink);
   font-family:var(--font-sans);padding:30px;box-shadow:0 20px 60px rgba(35,49,74,.18);overflow:hidden;color-scheme:light;}
