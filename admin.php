@@ -679,7 +679,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
         <div class="card"><h3><?= owBi('Top cities', 'أكثر المدن') ?></h3>
           <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: $max = max(1, (int) $gs['cities'][0]['v']); ?>
           <ol class="bars"><?php foreach (array_slice($gs['cities'], 0, 10) as $c): ?>
-            <li><span class="b-name"><?= e($c['city']) ?> <span class="mini">· <?= e(owCountryName($c['country'], false)) ?></span></span><span class="b-bar"><i style="width:<?= round(100 * $c['v'] / $max) ?>%"></i></span><span class="b-n"><?= (int) $c['v'] ?></span></li>
+            <li><span class="b-name"><?= owBi((string) $c['city'], owCityName((string) $c['city'], true)) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></span><span class="b-bar"><i style="width:<?= round(100 * $c['v'] / $max) ?>%"></i></span><span class="b-n"><?= (int) $c['v'] ?></span></li>
           <?php endforeach; ?></ol><?php endif; ?>
         </div>
         <div class="card"><h3><?= owBi('By country', 'حسب الدولة') ?></h3>
@@ -691,7 +691,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
         <div class="card"><h3><?= owBi('By city', 'حسب المدينة') ?></h3>
           <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: ?>
           <table class="table"><tbody><?php foreach ($gs['cities'] as $c): ?>
-            <tr><td><?= e($c['city']) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></td><td class="num"><?= (int) $c['v'] ?></td></tr>
+            <tr><td><?= owBi((string) $c['city'], owCityName((string) $c['city'], true)) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></td><td class="num"><?= (int) $c['v'] ?></td></tr>
           <?php endforeach; ?></tbody></table><?php endif; ?>
         </div>
       </div>

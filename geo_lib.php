@@ -71,6 +71,39 @@ function owCountryName(string $cc, bool $ar): string {
     return $cc;
 }
 
+/* Arabic names for the main Saudi and Gulf cities (owner, 9 Nov 2026). The location
+   file gives city names in English only; other cities stay in English. Several
+   spellings of the same city are listed, because the file is not always the same. */
+const OW_CITY_AR = [
+    // Saudi Arabia
+    'riyadh' => 'الرياض', 'jeddah' => 'جدة', 'jiddah' => 'جدة', 'mecca' => 'مكة المكرمة', 'makkah' => 'مكة المكرمة',
+    'medina' => 'المدينة المنورة', 'madinah' => 'المدينة المنورة', 'dammam' => 'الدمام', 'khobar' => 'الخبر', 'dhahran' => 'الظهران',
+    'taif' => 'الطائف', 'tabuk' => 'تبوك', 'abha' => 'أبها', 'khamis mushait' => 'خميس مشيط', 'buraidah' => 'بريدة', 'buraydah' => 'بريدة',
+    'unaizah' => 'عنيزة', 'unayzah' => 'عنيزة', 'hail' => 'حائل', "ha'il" => 'حائل', 'jazan' => 'جازان', 'jizan' => 'جازان', 'najran' => 'نجران',
+    'hofuf' => 'الهفوف', 'hufuf' => 'الهفوف', 'mubarraz' => 'المبرز', 'jubail' => 'الجبيل', 'yanbu' => 'ينبع', 'kharj' => 'الخرج',
+    'qatif' => 'القطيف', 'hafar al-batin' => 'حفر الباطن', 'hafar al batin' => 'حفر الباطن', 'arar' => 'عرعر', 'sakakah' => 'سكاكا',
+    'baha' => 'الباحة', 'bahah' => 'الباحة', 'ula' => 'العلا', 'rabigh' => 'رابغ', 'thuwal' => 'ثول', 'qurayyat' => 'القريات',
+    'majmaah' => 'المجمعة', 'zulfi' => 'الزلفي', 'bisha' => 'بيشة', 'ras tanura' => 'رأس تنورة', 'khafji' => 'الخفجي',
+    // United Arab Emirates
+    'dubai' => 'دبي', 'abu dhabi' => 'أبوظبي', 'sharjah' => 'الشارقة', 'ajman' => 'عجمان', 'ain' => 'العين',
+    'ras al-khaimah' => 'رأس الخيمة', 'ras al khaimah' => 'رأس الخيمة', 'fujairah' => 'الفجيرة', 'umm al quwain' => 'أم القيوين', 'umm al-quwain' => 'أم القيوين',
+    // Kuwait
+    'kuwait city' => 'مدينة الكويت', 'kuwait' => 'الكويت', 'hawalli' => 'حولي', 'ahmadi' => 'الأحمدي', 'jahra' => 'الجهراء', 'salmiya' => 'السالمية', 'farwaniya' => 'الفروانية',
+    // Qatar
+    'doha' => 'الدوحة', 'rayyan' => 'الريان', 'wakrah' => 'الوكرة', 'khor' => 'الخور', 'lusail' => 'لوسيل',
+    // Bahrain
+    'manama' => 'المنامة', 'muharraq' => 'المحرق', 'riffa' => 'الرفاع', 'isa town' => 'مدينة عيسى', 'hamad town' => 'مدينة حمد',
+    // Oman
+    'muscat' => 'مسقط', 'salalah' => 'صلالة', 'sohar' => 'صحار', 'nizwa' => 'نزوى', 'seeb' => 'السيب', 'sur' => 'صور', 'ibri' => 'عبري',
+];
+function owCityName(string $city, bool $ar): string {
+    if (!$ar || $city === '') return $city;
+    $k = strtolower(trim($city));
+    if (isset(OW_CITY_AR[$k])) return OW_CITY_AR[$k];
+    $k2 = preg_replace('/^(al|ar|ad|as|ash|az)[\s\-]+/', '', $k);     // "Al Khobar", "Al-Ain", "Ar Rayyan" …
+    return OW_CITY_AR[$k2] ?? $city;
+}
+
 /* Statistics for Admin: totals, by country, by city, for 1 / 7 / 30 days */
 function owGeoStats(int $days): array {
     $out = ['total' => 0, 'countries' => [], 'cities' => []];
