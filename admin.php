@@ -185,6 +185,16 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
         exit;
     }
 
+    /* --- Publish an article draft written for the Oweili team (owner, 9 Nov 2026) --- */
+    if ($action === 'publish_team_article') {
+        $aid = (int) ($_POST['article_id'] ?? 0);
+        $st = getDB()->prepare("UPDATE articles SET status = 'published', published_at = COALESCE(published_at, NOW()) WHERE id = :id AND status = 'draft' AND author_user_id IS NULL");
+        $st->execute([':id' => $aid]);
+        if ($st->rowCount() > 0) owLog('article_publish', 'article', $aid, 'team draft', ['type' => 'admin', 'id' => null]);
+        header('Location: admin.php?ok=1#pending');
+        exit;
+    }
+
     /* --- Mark an artwork as sold / back to available --- */
     if ($action === 'sell_art' || $action === 'unsell_art') {
         $saleId = (int) ($_POST['artwork_id'] ?? 0);
@@ -375,7 +385,13 @@ if ($isAdmin && owCertReady()) {
 }
 $waitChanges  = $isAdmin ? owWaitingChanges() : [];
 $waitArtists  = $isAdmin ? owWaitingArtists() : [];
-$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists);
+/* Article drafts written for the Oweili team (no author account), waiting for the owner to read and publish (owner, 9 Nov 2026) */
+$teamDrafts = [];
+if ($isAdmin && owHasTable('articles')) {
+    try { $teamDrafts = getDB()->query("SELECT id, type, slug, title_en, title_ar, created_at FROM articles WHERE status = 'draft' AND author_user_id IS NULL ORDER BY id")->fetchAll(); }
+    catch (Throwable $e) { error_log('team drafts: ' . $e->getMessage()); }
+}
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts);
 $SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
 /* one value, as the admin should read it */
 $showVal = function (string $field, $v) use ($SALE_WORDS): string {
@@ -898,6 +914,23 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <?php endif; ?>
     <?php if ($waitTotal === 0): ?>
       <div class="empty"><?= owBi('Nothing waiting. All caught up.', 'لا شيء بانتظارك. كل شيء محدّث.') ?></div>
+    <?php endif; ?>
+
+    <?php if ($teamDrafts): $ATYPE = ['event' => ['Art Event', 'ملتقى فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان'], 'art_education' => ['Art Education', 'تثقيف فني']]; ?>
+    <h3 class="wc-h"><?= owBi('Article drafts from the Oweili team', 'مسودات مقالات من فريق أويلي') ?> <span class="pill count"><?= count($teamDrafts) ?></span></h3>
+    <p class="mini"><?= owBi('Read each one with Preview. Publish puts it on the site; Edit lets you change it first. Nothing is public until you publish.', 'اقرأ كل مقال عبر «معاينة». «انشر» يضعه في الموقع، و«تعديل» يتيح لك تغييره أولاً. لا يظهر شيء للزوار قبل النشر.') ?></p>
+    <div class="wc-list">
+      <?php foreach ($teamDrafts as $td): $tt = $ATYPE[$td['type']] ?? [$td['type'], $td['type']]; ?>
+      <div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+        <div><strong><?= e((string) $td['title_en']) ?></strong><div class="name-ar" dir="rtl"><?= e((string) $td['title_ar']) ?></div><div class="mini"><?= owBi($tt[0], $tt[1]) ?> · <?= owBi('Draft', 'مسودة') ?></div></div>
+        <div class="acts" style="display:flex;flex-wrap:wrap;gap:6px">
+          <a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode((string) $td['slug'])) ?>&amp;preview=1" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a>
+          <a class="btn btn-secondary btn-sm" href="admin_articles.php?edit=<?= (int) $td['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a>
+          <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.dir==='rtl'?'نشر هذا المقال في الموقع؟':'Publish this article on the site?');"><?= csrfField() ?><input type="hidden" name="article_id" value="<?= (int) $td['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="publish_team_article"><?= owBi('Publish', 'انشر') ?></button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
     <?php endif; ?>
 
     <?php if ($waitArtists): ?>

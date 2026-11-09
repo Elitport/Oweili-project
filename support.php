@@ -49,7 +49,18 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 [dir="rtl"] .contact-grid,[dir="rtl"] .legal-grid{direction:rtl;}
 [dir="rtl"] .page-header p{text-align:right;}
 /* only "Write to Us" shown (Community hidden, owner 8 Nov 2026): it sits in the middle column */
-@media(min-width:769px){.contact-grid.one .contact-card{grid-column:2;}}
+@media(min-width:769px){.contact-grid.one .contact-card{grid-column:2;}.contact-grid.one .sp-form-card{grid-column:1 / -1;width:100%;max-width:640px;margin:0 auto;}}
+.sp-form-card{cursor:default;text-align:center;}
+.sp-form-card:hover{transform:none;box-shadow:var(--shadow-card);}
+.sp-form{text-align:start;margin-top:4px;}
+.sp-form .field{margin-bottom:12px;}
+.sp-form textarea{width:100%;min-height:120px;resize:vertical;}
+.sp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:560px){.sp-row{grid-template-columns:1fr;}}
+.sp-trap{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;}
+.sp-note{font-size:13px;color:var(--color-body);margin:0 0 12px;}
+.sp-alt{font-size:13px;color:var(--color-body);margin:14px 0 0;}
+.sp-form-card .ok-box{text-align:start;}
 @media(max-width:768px){.contact-grid{grid-template-columns:1fr;}.legal-grid{grid-template-columns:1fr;}.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
 </style>
 </head>
@@ -70,12 +81,27 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   <p class="section-title" id="t-ct-title">Get in Touch</p>
   <?php require_once __DIR__ . '/gallery_lib.php'; ?>
   <div class="contact-grid<?= owCommunityPageOn() ? '' : ' one' ?>">
-    <a class="contact-card" href="mailto:<?= e(owContactEmail()) ?>">
+    <?php /* "Write to Us" is a real form now (owner, 9 Nov 2026): support_send.php sends it to contact@oweili.com and Bashro Customer Service */ ?>
+    <div class="contact-card sp-form-card" id="write">
       <div class="contact-icon">✉️</div>
       <h3 id="t-c1">Write to Us</h3>
       <p id="t-c1d">Send us a message. We reply within 24 hours, usually sooner.</p>
-      <span class="contact-link"><?= e(owContactEmail()) ?></span>
-    </a>
+      <form class="sp-form" id="sp-form" novalidate>
+        <?= csrfField() ?>
+        <div class="sp-trap" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <div class="sp-row">
+          <div class="field"><label for="sp-name"><span class="bi-en">Your name</span><span class="bi-ar">اسمك</span></label><input id="sp-name" name="name" required maxlength="120" autocomplete="name"></div>
+          <div class="field"><label for="sp-email"><span class="bi-en">Email</span><span class="bi-ar">البريد الإلكتروني</span></label><input id="sp-email" name="email" type="email" required maxlength="160" autocomplete="email" dir="ltr"></div>
+        </div>
+        <div class="field"><label for="sp-phone"><span class="bi-en">Phone (optional)</span><span class="bi-ar">الهاتف (اختياري)</span></label><input id="sp-phone" name="phone" type="tel" maxlength="30" autocomplete="tel" dir="ltr"></div>
+        <div class="field"><label for="sp-msg"><span class="bi-en">Your message</span><span class="bi-ar">رسالتك</span></label><textarea id="sp-msg" name="message" required maxlength="3000" rows="5"></textarea></div>
+        <p class="sp-note"><span class="bi-en">We use your details only to answer you.</span><span class="bi-ar">نستخدم بياناتك فقط للرد عليك.</span> <a href="privacy.php"><span class="bi-en">Privacy Policy</span><span class="bi-ar">سياسة الخصوصية</span></a></p>
+        <div class="err-box" id="sp-err" role="alert" hidden></div>
+        <button type="submit" class="btn btn-primary btn-block" id="sp-send"><span class="bi-en">Send message</span><span class="bi-ar">أرسل الرسالة</span></button>
+      </form>
+      <div class="ok-box" id="sp-ok" role="status" hidden><span class="bi-en">Thank you! We received your message and will reply soon. We also sent you a short email.</span><span class="bi-ar">شكراً لك! وصلتنا رسالتك وسنرد عليك قريباً، وأرسلنا لك بريداً قصيراً.</span></div>
+      <p class="sp-alt"><span class="bi-en">Or write to</span><span class="bi-ar">أو راسلنا على</span> <a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p>
+    </div>
     <?php /* "Join the Community" is hidden while the Community page is hidden (owner, 8 Nov 2026); it comes back by itself with Admin → Settings → Community */
     require_once __DIR__ . '/gallery_lib.php'; if (owCommunityPageOn()): ?>
     <a class="contact-card" href="register.php">
@@ -115,6 +141,36 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   </div>
 </div>
 
+<script>
+/* "Write to Us" form → support_send.php (owner, 9 Nov 2026) */
+(function(){
+  var f = document.getElementById('sp-form'); if (!f) return;
+  var err = document.getElementById('sp-err'), ok = document.getElementById('sp-ok'), btn = document.getElementById('sp-send');
+  var M = {
+    required: ['Please fill in your name, email and message.', 'يرجى كتابة اسمك وبريدك ورسالتك.'],
+    email: ['Please enter a valid email address.', 'يرجى إدخال بريد إلكتروني صالح.'],
+    phone: ['Please check the phone number.', 'يرجى التحقق من رقم الهاتف.'],
+    short: ['Please write a little more in your message.', 'يرجى كتابة رسالة أطول قليلاً.'],
+    rate: ['You sent several messages already. Please try again in an hour.', 'أرسلت عدة رسائل. حاول مرة أخرى بعد ساعة.'],
+    csrf: ['This page was open for a long time. Please refresh it and send again.', 'بقيت الصفحة مفتوحة طويلاً. حدّثها وأرسل مرة أخرى.'],
+    server: ['We could not send it. Please try again, or email us.', 'تعذّر الإرسال. حاول مرة أخرى أو راسلنا بالبريد.']
+  };
+  function ar(){ return document.documentElement.getAttribute('dir') === 'rtl'; }
+  function show(code){ var m = M[code] || M.server; err.textContent = m[ar() ? 1 : 0]; err.hidden = false; }
+  f.addEventListener('submit', function(e){
+    e.preventDefault(); err.hidden = true;
+    var n = f.elements['name'].value.trim(), em = f.elements['email'].value.trim(), msg = f.elements['message'].value.trim();
+    if (!n || !em || !msg) return show('required');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return show('email');
+    var d = new FormData(f); d.append('lang', ar() ? 'ar' : 'en');
+    btn.disabled = true;
+    fetch('support_send.php', { method: 'POST', body: d, credentials: 'same-origin' })
+      .then(function(r){ return r.json().catch(function(){ return { ok: false, error: 'server' }; }); })
+      .then(function(j){ if (j && j.ok) { f.hidden = true; ok.hidden = false; } else { show(j && j.error); btn.disabled = false; } })
+      .catch(function(){ show('server'); btn.disabled = false; });
+  });
+})();
+</script>
 <script>
 const FAQS={
   en:[
