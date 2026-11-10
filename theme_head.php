@@ -64,7 +64,7 @@ if (!function_exists('owThemeButton')) {
        $onclick is the page's own language switch (tgl() on public pages, tglLang() on admin). */
     function owCornerControls(string $onclick = 'tgl()'): void {
         require_once __DIR__ . '/lang_lib.php';
-        echo '<span class="ow-ctls"><button type="button" class="ow-ctl lang-btn" id="lb" onclick="' . htmlspecialchars($onclick, ENT_QUOTES, 'UTF-8') . '">' . (owIsAr() ? 'English' : 'العربية') . '</button>';
+        echo '<span class="ow-ctls"><button type="button" class="ow-ctl lang-btn" id="lb" onclick="' . htmlspecialchars($onclick, ENT_QUOTES, 'UTF-8') . '" aria-label="' . (owIsAr() ? 'English' : 'العربية') . '">' . (owIsAr() ? 'E' : 'ع') . '</button>';   // one letter; screen readers hear the full name (owner, 10 Nov 2026)
         owThemeButton();
         echo '</span>';
     }
@@ -75,6 +75,19 @@ if (!defined('OW_THEME_HEAD')):
 <style>html{background:#fff}html.dark-mode{background:#0F1520}html.ow-wait body{visibility:hidden;animation:owShow 0s 1.5s forwards}@keyframes owShow{to{visibility:visible}}</style>
 <?php require_once __DIR__ . '/page_cache.php'; ?>
 <?php require_once __DIR__ . '/lang_lib.php'; ?>
+<script>
+/* The language button shows one letter (owner, 10 Nov 2026): E on Arabic pages, ع on English pages,
+   and screen readers hear "English" / "العربية". Older page scripts still write the full word when
+   they switch in place; this turns it back into the letter before the page is drawn. */
+(function(){
+  function fix(b){ var t = (b.textContent || '').trim();
+    if (t === 'English' || t === 'E') { if (t !== 'E') b.textContent = 'E'; b.setAttribute('aria-label', 'English'); }
+    else if (t === 'العربية' || t === 'ع') { if (t !== 'ع') b.textContent = 'ع'; b.setAttribute('aria-label', 'العربية'); } }
+  function go(){ var b = document.getElementById('lb'); if (!b) return; fix(b);
+    try { new MutationObserver(function(){ fix(b); }).observe(b, { childList: true, characterData: true, subtree: true }); } catch (e) {} }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+</script>
 <script>
 /* The language (lang_lib.php): the server already sent this page in the saved
    language. Here the browser only (1) remembers a new choice when the language

@@ -152,7 +152,7 @@ if (!function_exists('owLogoMark')) {
     'nav-explore-label':     ['Art Styles', 'أساليب الرسم'],
     'nav-support-label':     ['Support', 'الدعم'],
     'dd-sp1': ['Contact Us', 'تواصل معنا'], 'dd-sp2': ['How It Works', 'كيف يعمل الموقع'], 'dd-sp3': ['Terms of Use', 'شروط الاستخدام'],
-    'n-login-t': ['Sign In', 'تسجيل الدخول'], 'n-reg-t': ['Join Free', 'انضم مجاناً'], 'lb': ['العربية', 'English']
+    'n-login-t': ['Sign In', 'تسجيل الدخول'], 'n-reg-t': ['Join Free', 'انضم مجاناً'], 'lb': ['ع', 'E']
   };
   function syncNavI18n(){
     var ar = curLang() === 'ar';

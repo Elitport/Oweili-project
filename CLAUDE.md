@@ -122,7 +122,11 @@
 
 ## Features
 
-### Artist signature on certificates waits for approval (9 Nov 2026, owner) — work branch, not live yet
+### Language button shows one letter (10 Nov 2026, owner)
+- The language button shows only E on Arabic pages and ع on English pages; screen readers hear "English" / «العربية» (aria-label). Same size (84 px), place and colours as before; checked with 320 before / after screenshots (every page, laptop and phone, light and dark, Arabic and English): only the letter changed. Older page scripts that still write the full word when switching in place are turned back into the letter by one small script in theme_head.php
+- Files: theme_head.php (owCornerControls and the letter script), lang_lib.php, nav.php. Tables: none
+
+### Artist signature on certificates waits for approval (9 Nov 2026, owner) — live 10 Nov 2026
 - The artist draws a signature in signature.php (My signature). A new, changed or removed signature goes to Admin → Waiting for approval (pending_changes as a profile change with data signature = new / remove; no database change). The waiting picture is kept apart in .private/signatures/artist-N.pending.png. Certificates show only the approved artist-N.png, so until the admin approves they keep the last approved signature, or none. Approve puts the new one on the certificates (or removes the old one); Reject deletes the waiting picture and the artist sees the reason on signature.php and by email. The artist can cancel a waiting request. A waiting signature is kept when the artist saves Edit Profile. Oweili has no signature on the certificate, only its seal (the upload in Admin → Settings was removed)
 - Files: sig_lib.php, signature.php, approval_lib.php, admin.php, edit_profile.php, certificate.php, admin_settings.php. Tables: pending_changes, activity_log
 
