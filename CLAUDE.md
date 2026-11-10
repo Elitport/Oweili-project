@@ -122,6 +122,11 @@
 
 ## Features
 
+### Art Education pictures, TEST article hidden (10 Nov 2026, owner)
+- The TEST article ("TEST How watercolour glazing works" / «اختبار: كيف يعمل التزجيج بالألوان المائية») was set back to draft, so visitors get 404; nothing deleted
+- Each of the 5 Art Education articles has a cover picture (shown on its card and at the top of the article, the existing layout) and a last line in its text with the picture credit ("Picture: …" / «الصورة: …»). The pictures are the site's own free-licence copies already used on Art Styles (assets/img/styles/, 800 px, 80 to 145 KB), copied to uploads/articles/: original vs printed copy = Van Gogh, Wheat Field with Cypresses (CC0); choosing a painting for your home = Cézanne, Mont Sainte-Victoire (CC0); caring for a painting = Gijsbrechts, The Reverse of a Framed Painting (public domain); why prices differ = Ruisdael, The Windmill at Wijk bij Duurstede (public domain); certificate of authenticity = Dürer, Young Hare (public domain)
+- Run on the live database 10 Nov 2026 by a temporary locked page (removed straight after), after a full backup: .backups/db-u405344949_contact-20261110-194315.sql.gz. No code or layout change. Tables: articles
+
 ### Language button shows one letter (10 Nov 2026, owner)
 - The language button shows only E on Arabic pages and ع on English pages; screen readers hear "English" / «العربية» (aria-label). Same size (84 px), place and colours as before; checked with 320 before / after screenshots (every page, laptop and phone, light and dark, Arabic and English): only the letter changed. Older page scripts that still write the full word when switching in place are turned back into the letter by one small script in theme_head.php
 - Files: theme_head.php (owCornerControls and the letter script), lang_lib.php, nav.php. Tables: none
