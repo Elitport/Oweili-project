@@ -508,7 +508,7 @@ button.ow-ctl.ow-ctl {
   white-space: nowrap; cursor: pointer; box-shadow: none;
   transition: background var(--ease), color var(--ease), border-color var(--ease);
 }
-button.ow-ctl.ow-ctl.lang-btn { min-width: 84px; }
+button.ow-ctl.ow-ctl.lang-btn { width: 40px; min-width: 40px; padding: 0; font-weight: 800; }   /* one letter, the same square as the dark-mode button (owner, 11 Nov 2026) */
 button.ow-ctl.ow-ctl.theme-btn { width: 40px; min-width: 40px; padding: 0; }
 button.ow-ctl.ow-ctl:hover { background: var(--color-dark); border-color: var(--color-dark); color: var(--color-on-dark); }
 button.ow-ctl.ow-ctl:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }

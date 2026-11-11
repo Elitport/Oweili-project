@@ -238,7 +238,10 @@ foreach ($modalArtworks as $aw) {
     .mp-count{font-size:var(--fs-label);color:var(--color-body);margin:0 0 var(--space-sm);}
 
     /* artwork cards */
-    .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);}
+    .art-grid{--cols:4;--g:var(--space-md);display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:var(--g);}
+    /* fewer artworks than a full row: the same card width, centred (owner, 11 Nov 2026) */
+    .art-grid[data-few]{display:flex;flex-wrap:wrap;justify-content:center;}
+    .art-grid[data-few] > *{flex:0 0 calc((100% - (var(--cols) - 1) * var(--g)) / var(--cols));min-width:0;}
     .mp-card{border-radius:16px;animation:mpRise .15s ease-out both;}
     .mp-card:nth-child(2){animation-delay:.04s}.mp-card:nth-child(3){animation-delay:.08s}.mp-card:nth-child(4){animation-delay:.12s}
     .mp-card:nth-child(n+5){animation-delay:.16s}
@@ -350,7 +353,7 @@ foreach ($modalArtworks as $aw) {
     @media(max-width:640px){ .mp-promos{grid-template-columns:1fr;} }
     @keyframes mpRise {from{opacity:1}to{opacity:1}}
     @media (prefers-reduced-motion: reduce){ .page-header,.human-banner,.mp-tools,.mp-card,.gallery-empty,.modal{animation:none;} .mp-card:hover,.mp-card:hover .aw-img img{transform:none;} }
-    @media(max-width:1024px){ .art-grid{grid-template-columns:repeat(3,1fr);} }
+    @media(max-width:1024px){ .art-grid{--cols:3;} }
     /* computers: the same centred column as Art Institutes (owner, 6 Nov 2026): the title card, the line under it,
        the search, the topics, the sort, "More filters", the count and the empty card sit one under the other in the middle */
     @media(min-width:769px){
@@ -365,9 +368,41 @@ foreach ($modalArtworks as $aw) {
       .mp-count{text-align:center;margin-left:auto;margin-right:auto;}
       .gallery-empty{max-width:420px !important;}
     }
-    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{gap:var(--space-sm);} .mp-search,.mp-topic{max-width:none;} }
-    @media(max-width:640px){ .art-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{--g:var(--space-sm);} .mp-search,.mp-topic{max-width:none;} }
+    @media(max-width:640px){ .art-grid{--cols:2;} }
     @media(max-width:420px){ .mp-card .aw-body{padding:12px;} .mp-card .btn{padding:0 8px;} .cat-pill{padding:0 14px;} }
+    /* A shorter top part, so artworks show on the first screen (owner, 11 Nov 2026): a smaller title card;
+       laptops put Topic, Status, Sort and "More filters" side by side in one row under the search;
+       phones put Topic and Sort side by side */
+    .ow-backdrop ~ .main-content .page-header{padding:12px 22px;margin-bottom:12px;}
+    .ow-backdrop ~ .main-content .page-header h1{font-size:28px;margin-bottom:4px;}
+    .ow-backdrop ~ .main-content .page-header p{font-size:14px;}
+    .main-content .human-banner{margin-bottom:var(--space-sm);padding:8px var(--space-md);}
+    @media(min-width:769px){
+      .mp-tools{max-width:1100px;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 20px;margin-bottom:12px;}
+      .mp-search{flex:0 0 100%;justify-content:center;}
+      .mp-search .input{flex:0 1 380px;}
+      .mp-topic{flex-direction:row;align-items:center;gap:8px;}
+      .mp-topic select{width:auto;min-width:170px;min-height:40px;}
+      .mp-row{gap:20px;}
+      .mp-more[open]{flex:0 0 100%;}
+      .mp-count{margin-bottom:12px;}
+    }
+    @media(max-width:768px){
+      .ow-backdrop ~ .main-content .page-header{padding:10px 16px;margin-bottom:10px;}
+      .ow-backdrop ~ .main-content .page-header h1{font-size:24px;}
+      .main-content .human-banner{margin-bottom:12px;font-size:14px;padding:8px 12px;}
+      .mp-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:12px;}
+      .mp-tools > *{grid-column:1 / -1;}
+      .mp-row{display:contents;}
+      .mp-search{order:1;}
+      .mp-topic{order:2;grid-column:1;}
+      .mp-sort{order:3;grid-column:2;flex-direction:column;align-items:stretch;gap:6px;}
+      .mp-topic select,.mp-sort select{width:100%;min-height:44px;}
+      .st-pills{order:4;}
+      .type-chip{order:5;}
+      .mp-more{order:6;}
+    }
   </style>
 </head>
 <body>
@@ -555,7 +590,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
 
   <?php if ($total > 0): ?>
   <p class="mp-count"><?= $ar ? ('عدد الأعمال: ' . $total) : ($total === 1 ? '1 artwork' : $total . ' artworks') ?></p>
-  <div class="art-grid" id="artGrid">
+  <div class="art-grid" id="artGrid"<?= count($artworks) < 4 ? ' data-few' : '' ?>>
     <?php $cardNo = 0; foreach ($artworks as $aw):
       $id  = (int) $aw['id'];
       $img = $mpImg((string) $aw['image_url']);
