@@ -533,6 +533,12 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 .art-thumb{width:72px;height:72px;border-radius:var(--radius-input);background-size:contain;background-repeat:no-repeat;background-position:center;background-color:var(--color-surface);border:1px solid var(--color-border);flex-shrink:0;}
 .art-meta{flex:1;min-width:0;}
 .art-proof{flex-basis:100%;min-width:0;}
+.sw-box{flex-basis:100%;min-width:0;display:grid;gap:8px;padding:12px 14px;border:1px solid rgba(var(--rgb-primary),.45);background:var(--color-tint-pink);border-radius:var(--radius-input);font-size:var(--fs-caption);color:var(--color-dark);}
+.sw-box .warn{font-weight:700;}
+.sw-pics{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+.sw-pics figure{margin:0;width:160px;}
+.sw-pics img{width:160px;height:120px;object-fit:contain;background:var(--color-frame);border:1px solid var(--color-border);border-radius:8px;display:block;}
+.sw-pics figcaption{font-size:var(--fs-min);margin-top:4px;overflow-wrap:anywhere;}
 .art-proof .pj{margin-top:4px;}
 .art-meta strong{font-size:var(--fs-body);color:var(--color-dark);}
 .art-info{font-size:var(--fs-caption);color:var(--color-body);margin-top:3px;}
@@ -1055,6 +1061,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
           </div>
           <?php endif; ?>
           <div class="art-proof"><?= owProofPanelHtml($pendingStages[(int)$art['id']] ?? [], $pendingColors[(int)$art['id']] ?? [], (string)$art['type'], $ART_TYPES) ?></div>
+          <?php require_once __DIR__ . '/stolen_lib.php'; echo owStolenWarningsHtml($art, $pendingStages[(int)$art['id']] ?? []); /* stolen-art warnings, admin only (owner, 11 Nov 2026) */ ?>
         </div>
       <?php endforeach; ?>
       </div>

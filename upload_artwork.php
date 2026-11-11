@@ -107,6 +107,7 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                               ON DUPLICATE KEY UPDATE photo_path = VALUES(photo_path), taken_at = VALUES(taken_at), created_at = CURRENT_TIMESTAMP')
                    ->execute([':aid' => $draft['id'], ':st' => $stage, ':p' => $res['path'], ':t' => $res['taken_at']]);
                 if ($old !== '' && $old !== $res['path']) { owDeleteStageFile($old); }
+                require_once __DIR__ . '/stolen_lib.php'; owLogStageCamera((int) $draft['id'], $stage, $res);   // camera make, model and date, for the admin's checks
                 $next = $stage === 25 ? 3 : 4;
                 header('Location: upload_artwork.php?id=' . (int) $draft['id'] . '&step=' . $next . ($stage === 100 ? '#choices' : ''));
                 exit;

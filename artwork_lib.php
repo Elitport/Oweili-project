@@ -208,14 +208,18 @@ function owStoreImage(array $file, string $relDir, bool $strict = false): array 
     // When the photo was taken: the camera's own timestamp if it looks real, else now.
     $takenAt = date('Y-m-d H:i:s');
     $orientation = 1;
+    $camera = ['make' => '', 'model' => '', 'cam_date' => false];   // read before the photo is cleaned (stolen-art checks, stolen_lib.php)
     if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
         $exif = @exif_read_data($file['tmp_name']);
         if (!empty($exif['DateTimeOriginal'])) {
             $ts = strtotime(str_replace(':', '-', substr($exif['DateTimeOriginal'], 0, 10)) . substr($exif['DateTimeOriginal'], 10));
             if ($ts && $ts > strtotime('2000-01-01') && $ts <= time() + 86400) {
                 $takenAt = date('Y-m-d H:i:s', $ts);
+                $camera['cam_date'] = true;
             }
         }
+        $camera['make']  = trim((string) ($exif['Make'] ?? ''));
+        $camera['model'] = trim((string) ($exif['Model'] ?? ''));
         $orientation = (int) ($exif['Orientation'] ?? 1);
     }
 
@@ -252,7 +256,7 @@ function owStoreImage(array $file, string $relDir, bool $strict = false): array 
         return ['ok' => false, 'err' => 'save'];
     }
     @chmod($dest, 0644);
-    return ['ok' => true, 'path' => $relDir . $name, 'taken_at' => $takenAt];
+    return ['ok' => true, 'path' => $relDir . $name, 'taken_at' => $takenAt, 'camera' => $camera];
 }
 
 /* =====================================================================
