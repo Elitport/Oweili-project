@@ -1,6 +1,6 @@
 <?php
 /* =====================================================================
- *  terms.php — Terms of Use («شروط الاستخدام»), DRAFT under review.
+ *  terms.php — Terms of Use («شروط الاستخدام»). Reviewed 11 Nov 2026 (no lawyer yet).
  *  Covers: Oweili as the middle party, accounts, handmade art only,
  *  proof of process, artwork rights, the 15% commission, conduct,
  *  removal, liability, Saudi law. Layout: legal_lib.php. Tables: none
@@ -9,6 +9,8 @@ require_once 'config.php';
 require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/legal_lib.php';
 $C = OW_LEGAL_CONTACT;
+$CO = OW_COMPANY_NAME; $CR = function_exists('owCompanyCr') ? owCompanyCr() : '';
+require_once __DIR__ . '/cert_lib.php';   // OW_CERT_RIGHTS: the rights line of the certificate
 
 owLegalPage([
     'path' => 'terms.php',
@@ -17,14 +19,14 @@ owLegalPage([
     'lead_ar' => 'القواعد البسيطة التي تجعل أويلي بيتاً موثوقاً للفن الأصيل المصنوع باليد.',
     'desc_en' => 'The rules for artists, buyers and visitors on Oweili, the gallery of handmade art.',
     'desc_ar' => 'القواعد للفنانين والمشترين والزوار في أويلي، معرض الفن الأصيل المصنوع باليد.',
-    'updated_en' => '31 October 2026 (draft)', 'updated_ar' => '31 أكتوبر 2026 (مسودة)',
+    'updated_en' => '11 November 2026', 'updated_ar' => '11 نوفمبر 2026',
     'other' => ['privacy.php', 'Privacy Policy', 'سياسة الخصوصية'],
 ], [
     ['agree', 'Using Oweili', 'استخدام أويلي', [
-        'Oweili (oweili.com) is run from Saudi Arabia. By using the site or opening an account, you agree to these terms and to our Privacy Policy.',
+        "Oweili (oweili.com) is run by $CO, Jeddah, Saudi Arabia" . ($CR !== '' ? ", commercial registration $CR" : '') . ". You can reach us at $C. By using the site or opening an account, you agree to these terms and to our Privacy Policy.",
         'If you do not agree, please do not use the site.',
     ], [
-        'يُدار أويلي (oweili.com) من المملكة العربية السعودية. باستخدامك الموقع أو فتح حساب، فإنك توافق على هذه الشروط وعلى سياسة الخصوصية.',
+        "يُدار أويلي (oweili.com) من قِبل $CO في جدة، المملكة العربية السعودية" . ($CR !== '' ? "، سجل تجاري رقم $CR" : '') . ". ويمكنك التواصل معنا على $C. باستخدامك الموقع أو فتح حساب، فإنك توافق على هذه الشروط وعلى سياسة الخصوصية.",
         'إن لم توافق، يرجى عدم استخدام الموقع.',
     ]],
     ['middle', 'Oweili is the middle party', 'أويلي هو الوسيط', [
@@ -64,19 +66,45 @@ owLegalPage([
         'You keep every right in your artwork. You give Oweili permission to show its photos, title and story on the site and in Oweili’s own posts and ads, only to present your work, for as long as it is on Oweili.',
         'When you delete an artwork, we stop showing it. Posts already shared may stay where they are.',
         'Visitors may not copy, download or reuse artwork photos without the artist’s permission.',
+        'When an artwork is sold: ' . lcfirst(OW_CERT_RIGHTS[0]),
     ], [
         'تبقى لك كل الحقوق في عملك. وتمنح أويلي الإذن بعرض صوره وعنوانه وقصته على الموقع وفي منشورات أويلي وإعلاناته، لتقديم عملك فقط، ما دام على أويلي.',
         'حين تحذف عملاً نتوقف عن عرضه. وقد تبقى المنشورات التي سبق نشرها في أماكنها.',
         'لا يحق للزوار نسخ صور الأعمال أو تنزيلها أو إعادة استخدامها دون إذن الفنان.',
+        'عند بيع العمل: ' . OW_CERT_RIGHTS[1],
     ]],
     ['price', 'Prices and commission', 'الأسعار والعمولة', [
         'Artists set their own prices in Saudi riyals (SAR).',
         'When an artwork sells, Oweili keeps 15% of the price, before VAT. This covers shipping and advertising. Joining and showing your work is free.',
-        'The full payment, shipping and refund rules will be added here before online payments open.',
+        'Once online payments open, you are paid your share after the buyer receives the artwork. You are responsible for any tax that applies to your own income.',
     ], [
         'يحدد الفنان أسعار أعماله بالريال السعودي.',
         'حين يُباع عمل، يحتفظ أويلي بـ15% من السعر قبل ضريبة القيمة المضافة، وتغطي الشحن والإعلان. والانضمام وعرض أعمالك مجاني.',
-        'ستُضاف هنا قواعد الدفع والشحن والاسترجاع كاملة قبل فتح المدفوعات الإلكترونية.',
+        'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يستلم المشتري العمل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
+    ]],
+    ['buying', 'Buying an artwork', 'شراء عمل فني', [
+        '- Prices are shown in Saudi riyals (SAR). Before you pay, our team confirms the full total with you in writing: the price, any VAT, any delivery cost, and the expected delivery date.',
+        '- You receive an invoice for every sale.',
+        '- Your right to cancel: under the Saudi E-Commerce Law, you may cancel within 7 days of receiving the artwork, if it is unused and in the condition you received it. You pay the return shipping, unless the artwork arrived damaged or different from its description.',
+        '- This right to cancel does not apply to a private commission made to your own description.',
+        '- If the artwork arrives damaged or different from its description, tell us within 7 days of delivery, with photos. We arrange its return and give you a full refund.',
+        '- If delivery is more than 15 days later than the date we agreed, you may cancel and get your money back, unless the delay is caused by something outside our control.',
+        "- Questions or complaints about a purchase: write to us first at $C. You can also contact the Ministry of Commerce.",
+    ], [
+        '- تُعرض الأسعار بالريال السعودي. وقبل أن تدفع، يؤكد لك فريقنا كتابياً المبلغ الكامل: السعر وأي ضريبة قيمة مضافة وأي تكلفة توصيل وموعد التوصيل المتوقع.',
+        '- تحصل على فاتورة لكل عملية بيع.',
+        '- حقك في الإلغاء: وفق نظام التجارة الإلكترونية السعودي، يمكنك الإلغاء خلال 7 أيام من استلام العمل، إن لم يُستخدم وبقي بالحالة التي استلمته بها. وتتحمل تكلفة شحن الإرجاع، إلا إن وصل العمل تالفاً أو مختلفاً عن وصفه.',
+        '- لا ينطبق حق الإلغاء على العمل الخاص المصنوع وفق وصفك أنت.',
+        '- إن وصل العمل تالفاً أو مختلفاً عن وصفه، أخبرنا خلال 7 أيام من التسليم مع صور. ونرتب إرجاعه ونرد لك المبلغ كاملاً.',
+        '- إن تأخر التوصيل أكثر من 15 يوماً عن الموعد المتفق عليه، يمكنك الإلغاء واسترداد مالك، إلا إن كان التأخير لسبب خارج عن إرادتنا.',
+        "- للأسئلة أو الشكاوى عن عملية شراء: راسلنا أولاً على $C. ويمكنك أيضاً التواصل مع وزارة التجارة.",
+    ]],
+    ['site', 'Oweili’s own content', 'محتوى أويلي', [
+        'The Oweili name, logo, design and our own texts belong to Oweili. Please do not copy them without our permission.',
+        'Links to other websites are there to help you. We are not responsible for their content.',
+    ], [
+        'اسم أويلي وشعاره وتصميمه ونصوصنا ملك لأويلي. يرجى عدم نسخها دون إذننا.',
+        'الروابط إلى مواقع أخرى موجودة لمساعدتك، ولسنا مسؤولين عن محتواها.',
     ]],
     ['conduct', 'Be kind and fair', 'كن لطيفاً وعادلاً', [
         '- Respect other people and Saudi law and values.',

@@ -103,6 +103,12 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
 
 .hero-btns { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; }
 .hero-btns .btn { min-width: 200px; }
+/* what Oweili is, and 3 small trust points (owner, 11 Nov 2026) */
+.hero-what { font-size: 17px; font-weight: 600; line-height: 1.5; color: var(--color-dark); max-width: 520px; margin: calc(-1 * var(--space-xs)) auto var(--space-sm); }
+[dir="rtl"] .hero-what { line-height: 1.7; }
+.hero-trust { list-style: none; margin: var(--space-md) 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px var(--space-md); }
+.hero-trust li { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--color-body); }
+.hero-trust svg { width: 16px; height: 16px; flex-shrink: 0; fill: none; stroke: var(--color-dark); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 /* one very quick soft fade (0.15 s), everything at once: nothing starts hidden or waits */
 @keyframes ow-fadeUp {from{opacity:1}to{opacity:1}}
@@ -125,6 +131,8 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
   .aotw-home { position: static; margin: var(--space-lg) auto 0; max-width: 320px; }
   .hero h1 { font-size: 36px; }
   .hero-sub { font-size: 16px; }
+  .hero-what { font-size: 15px; }
+  .hero-trust { flex-direction: column; align-items: center; gap: 6px; }
 }
 @media (max-width: 420px) {
   .hero-btns { flex-direction: column; width: 100%; max-width: 320px; }
@@ -159,11 +167,17 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
     <div class="hero-card">
       <span class="hero-badge fade fade-1"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
       <h1 class="fade fade-2"><?= owBi('Everything here started with real hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
+      <p class="hero-what fade fade-2"><?= owBi('Oweili is an online gallery where you buy original handmade paintings straight from real artists.', 'أويلي معرض إلكتروني تقتني فيه لوحات أصلية مرسومة باليد، مباشرة من فنانين حقيقيين.') ?></p>
       <p class="hero-sub fade fade-3"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
       <div class="hero-btns fade fade-4">
         <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
         <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
       </div>
+      <ul class="hero-trust fade fade-4">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="14" width="5" height="7" rx="1"/><rect x="9.5" y="9" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="18" rx="1"/></svg><?= owBi('Proof of process: 25%, 50%, 100%', 'إثبات مراحل العمل: 25% و50% و100%') ?></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h7v-4"/></svg><?= owBi('Certificate of authenticity with QR', 'شهادة أصالة برمز QR') ?></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l7.5 3v6c0 4.6-3.2 8.6-7.5 10-4.3-1.4-7.5-5.4-7.5-10v-6z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg><?= owBi('Every artist reviewed', 'نراجع كل فنان') ?></li>
+      </ul>
     </div>
     <?php if ($aotw): $aImg = $aotw['art'] ? owImgSrc((string) $aotw['art']['image_url']) : ''; if ($aImg === '') $aImg = owImgSrc((string) ($aotw['profile_picture'] ?? '')); ?>
     <a class="aotw-home fade fade-4" href="artist_dashboard.php?id=<?= (int) $aotw['id'] ?>">

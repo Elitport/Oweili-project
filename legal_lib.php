@@ -1,8 +1,8 @@
 <?php
 /* =====================================================================
  *  legal_lib.php — the shared layout of the Privacy Policy (privacy.php)
- *  and Terms of Use (terms.php). Both pages are DRAFTS under review:
- *  a banner says so on top, in both languages.
+ *  and Terms of Use (terms.php). The "Draft, under review" banner was removed on
+ *  11 Nov 2026 (owner); "Last updated" shows on top instead.
  *  owLegalPage($meta, $sections) prints the whole page. Each section is
  *  ['id', 'Heading EN', 'العنوان', [English paragraphs], [Arabic paragraphs]].
  *  A paragraph that starts with "- " is shown as a list item.
@@ -46,7 +46,7 @@ function owLegalPage(array $meta, array $sections): void {
 .legal{position:relative;z-index:10;max-width:820px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-xl)) var(--space-sm) var(--space-2xl);}
 .legal h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
 .legal .lead{font-size:var(--fs-subtitle);color:var(--color-body);margin:0 0 var(--space-md);}
-.draft{display:flex;gap:var(--space-xs);align-items:flex-start;padding:12px var(--space-sm);border:1px dashed var(--color-primary);background:var(--color-tint-pink);border-radius:var(--radius-input);color:var(--color-dark);font-weight:700;margin-bottom:var(--space-md);}
+.legal .updated{font-size:var(--fs-caption);font-weight:600;color:var(--color-body);margin:0 0 var(--space-md);}
 .legal .card{padding:var(--space-lg);}
 .toc{margin:0 0 var(--space-md);padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px;}
 .toc a{display:inline-block;padding:6px 12px;border:1px solid var(--color-border-strong);border-radius:var(--radius-pill);font-size:var(--fs-caption);font-weight:600;color:var(--color-dark);text-decoration:none;background:var(--color-surface);}
@@ -57,7 +57,6 @@ function owLegalPage(array $meta, array $sections): void {
 .legal p,.legal li{font-size:16px;line-height:1.6;color:var(--color-body);}
 html[dir="rtl"] .legal p,html[dir="rtl"] .legal li{line-height:1.7;}
 .legal ul{margin:0 0 var(--space-sm);padding-inline-start:22px;}
-.legal .meta{font-size:var(--fs-caption);color:var(--color-body);margin-top:var(--space-md);}
 .legal .next{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-top:var(--space-md);}
 @media(max-width:768px){.legal{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}.legal .card{padding:var(--space-md);}}
 </style>
@@ -69,7 +68,7 @@ html[dir="rtl"] .legal p,html[dir="rtl"] .legal li{line-height:1.7;}
 <main class="legal">
   <h1><?= owBi($meta['title_en'], $meta['title_ar']) ?></h1>
   <p class="lead"><?= owBi($meta['lead_en'], $meta['lead_ar']) ?></p>
-  <div class="draft" role="note"><span aria-hidden="true">✎</span><span><?= owBi('Draft, under review. This page is not final yet and may change before launch.', 'مسودة قيد المراجعة. هذه الصفحة ليست نهائية بعد وقد تتغير قبل الإطلاق.') ?></span></div>
+  <p class="updated"><?= owBi('Last updated: ' . $meta['updated_en'], 'آخر تحديث: ' . $meta['updated_ar']) ?></p>
   <ul class="toc" aria-label="Contents · المحتويات">
     <?php foreach ($sections as $s): ?><li><a href="#<?= e($s[0]) ?>"><?= owBi($s[1], $s[2]) ?></a></li><?php endforeach; ?>
   </ul>
@@ -82,7 +81,6 @@ html[dir="rtl"] .legal p,html[dir="rtl"] .legal li{line-height:1.7;}
     </section>
     <?php endforeach; ?>
   </div>
-  <p class="meta"><?= owBi('Last updated: ' . $meta['updated_en'], 'آخر تحديث: ' . $meta['updated_ar']) ?></p>
   <div class="next">
     <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore the Gallery', 'استكشف المعرض') ?></a>
     <a class="btn btn-secondary" href="<?= e($other[0]) ?>"><?= owBi($other[1], $other[2]) ?></a>
