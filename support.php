@@ -37,6 +37,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .faq-a p{font-size:var(--fs-body);color:var(--color-body);line-height:1.7;}
 /* LEGAL */
 .legal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;animation:riseUp .15s ease-out both;}
+.legal-grid.three{grid-template-columns:repeat(3,1fr);}   /* while the 4th card is hidden: the 3 cards in one row (owner, 11 Nov 2026) */
 .legal-card{background:var(--color-surface);border:1px solid rgba(var(--rgb-ink),0.07);border-radius:16px;padding:24px;cursor:pointer;transition:all 0.25s;text-decoration:none;display:block;box-shadow:var(--shadow-card);}
 .legal-card:hover{background:rgba(var(--rgb-surface),0.85);transform:translateX(4px);}
 .legal-card h4{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);margin-bottom:6px;}
@@ -62,7 +63,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .sp-note{font-size:13px;color:var(--color-body);margin:0 0 12px;}
 .sp-alt{font-size:13px;color:var(--color-body);margin:14px 0 0;}
 .sp-form-card .ok-box{text-align:start;}
-@media(max-width:768px){.contact-grid{grid-template-columns:1fr;}.legal-grid{grid-template-columns:1fr;}.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
+@media(max-width:768px){.contact-grid{grid-template-columns:1fr;}.legal-grid,.legal-grid.three{grid-template-columns:1fr;}.page{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);}}
 </style>
 </head>
 <body>
@@ -118,7 +119,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   <div class="faq-section" id="faqSection"></div>
 
   <p class="section-title" id="t-legal-title">Legal & Policies</p>
-  <div class="legal-grid">
+  <?php $spReportOn = false;   /* "Report Misuse of Your Art" card: hidden for now (owner, 11 Nov 2026). Set to true to bring it back */ ?>
+  <div class="legal-grid<?= $spReportOn ? '' : ' three' ?>">
     <a class="legal-card" href="#">
       <span class="legal-arrow">→</span>
       <h4 id="t-l1">Your Art Stays Yours</h4>
@@ -134,11 +136,11 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <h4 id="t-l3">Privacy</h4>
       <p id="t-l3d">We protect your personal data and your creative work. That is a promise.</p>
     </a>
-    <a class="legal-card" href="mailto:<?= e(owContactEmail()) ?>">
+    <?php if ($spReportOn): ?><a class="legal-card" href="mailto:<?= e(owContactEmail()) ?>">
       <span class="legal-arrow">→</span>
       <h4 id="t-l4">Report Misuse of Your Art</h4>
       <p id="t-l4d">Someone used your art without asking? Tell us right away.</p>
-    </a>
+    </a><?php endif; ?>
   </div>
 </div>
 
