@@ -35,7 +35,7 @@ if (!$me) { header('Location: login.php'); exit; }
 if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 $uid = (int) $me['id'];
 
-$TABS = ['works', 'certs', 'articles', 'commissions', 'account', 'activity', 'earnings'];
+$TABS = ['works', 'certs', 'articles', 'commissions', 'account', 'activity', 'earnings', 'packing'];
 $tab  = in_array($_GET['tab'] ?? '', $TABS, true) ? $_GET['tab'] : 'works';
 $tabLink = fn(string $t) => 'artist_studio.php?tab=' . $t;
 
@@ -175,6 +175,13 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 .st-mini{display:flex;gap:var(--space-md);flex-wrap:wrap;margin-top:var(--space-sm);font-size:var(--fs-caption);color:var(--color-body);}
 .st-mini b{color:var(--color-dark);}
 .w-side form{margin:0;}
+.pk-list{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-sm);}
+.pk-step{display:flex;align-items:center;gap:var(--space-md);padding:var(--space-md);}
+.pk-ico{flex-shrink:0;width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-input);background:var(--color-frame);border:1px solid var(--color-border);}
+.pk-ico svg{width:52px;height:52px;fill:none;stroke:var(--color-dark);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.pk-txt{font-size:16px;line-height:1.6;color:var(--color-dark);}
+.pk-n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-inline-end:10px;border-radius:50%;background:var(--color-primary);color:var(--color-on-primary);font-size:14px;}
+@media(max-width:768px){.pk-step{gap:var(--space-sm);padding:var(--space-sm);}.pk-ico{width:56px;height:56px;}.pk-ico svg{width:40px;height:40px;}}
 .st-tabs{margin:var(--space-lg) 0 var(--space-md);}
 .note{font-size:var(--fs-caption);color:var(--color-body);margin:0 0 var(--space-sm);}
 .w-list{display:grid;gap:var(--space-sm);}
@@ -259,7 +266,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
-    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'articles' => ['My articles', 'مقالاتي'], 'commissions' => ['Commissions', 'الأعمال الخاصة'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات']] as $t => $l): ?>
+    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'articles' => ['My articles', 'مقالاتي'], 'commissions' => ['Commissions', 'الأعمال الخاصة'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات'], 'packing' => ['Packing guide', 'دليل التغليف']] as $t => $l): ?>
       <a class="tab<?= $tab === $t ? ' active' : '' ?>" href="<?= e($tabLink($t)) ?>"<?= $tab === $t ? ' aria-current="page"' : '' ?>><?= owBi($l[0], $l[1]) ?></a>
     <?php endforeach; ?>
   </nav>
@@ -429,6 +436,17 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
     <?php endforeach; ?>
   </div>
   <?php endif; ?>
+
+<?php elseif ($tab === 'packing'): /* Packing guide (owner, 11 Nov 2026): only here, for the signed-in artist */ ?>
+  <p class="note"><?= owBi('Oweili arranges the shipping. You only pack the artwork.', 'أويلي يتولى الشحن. عليك فقط تغليف العمل.') ?></p>
+  <ol class="pk-list">
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="40" height="40" rx="2"/><path d="M16 18h28v28H16z" stroke-dasharray="3 3"/><path d="M18 8h36v36l-8 8H18z"/><path d="M54 44h-8v8"/></svg></span><span class="pk-txt"><b class="pk-n">1</b><?= owBi('Cover the front of the painting with glassine paper (soft protective paper). Never put bubble wrap straight on the paint.', 'غطِّ وجه اللوحة بورق الجلاسين (ورق حماية ناعم). لا تضع الغلاف الفقاعي مباشرة على الطلاء أبداً.') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="10" width="44" height="44" rx="2"/><path d="M10 22V10h12M42 10h12v12M54 42v12H42M22 54H10V42"/><path d="M10 22l12-12M42 10l12 12M54 42L42 54M22 54L10 42"/></svg></span><span class="pk-txt"><b class="pk-n">2</b><?= owBi('Add corner protectors.', 'أضف واقيات الزوايا.') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="10" width="48" height="44" rx="6"/><circle cx="18" cy="20" r="3"/><circle cx="32" cy="20" r="3"/><circle cx="46" cy="20" r="3"/><circle cx="18" cy="32" r="3"/><circle cx="32" cy="32" r="3"/><circle cx="46" cy="32" r="3"/><circle cx="18" cy="44" r="3"/><circle cx="32" cy="44" r="3"/><circle cx="46" cy="44" r="3"/></svg></span><span class="pk-txt"><b class="pk-n">3</b><?= owBi('Wrap it in bubble wrap.', 'لُفَّ اللوحة بالغلاف الفقاعي.') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 24l24-10 24 10v26L32 60 8 50z"/><path d="M8 24l24 10 24-10M32 34v26"/><path d="M8 24l-4 8 24 10 4-8M56 24l4 8-24 10-4-8"/></svg></span><span class="pk-txt"><b class="pk-n">4</b><?= owBi('Put it in a strong cardboard box that fits snugly, with no empty space.', 'ضعها في صندوق كرتون متين يناسب مقاسها تماماً، دون فراغات.') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 26l22-9 22 9v22L28 57 6 48z"/><path d="M6 26l22 9 22-9M28 35v22"/><path d="M11 37l12 5v6l-12-5z"/><rect x="40" y="6" width="20" height="16" rx="2"/><path d="M44 12h12M44 16h8"/></svg></span><span class="pk-txt"><b class="pk-n">5</b><?= owBi('Write the certificate number on the box, and put the back label on the artwork.', 'اكتب رقم الشهادة على الصندوق، وألصق ملصق الظهر على العمل.') ?></span></li>
+  </ol>
+  <p class="note" style="margin-top:var(--space-sm)"><?= owBi('Your certificate numbers and back labels are in', 'تجد أرقام شهاداتك وملصقات الظهر في') ?> <a href="<?= e($tabLink('certs')) ?>"><?= owBi('Certificates', 'الشهادات') ?></a>.</p>
 
 <?php elseif ($tab === 'activity'): ?>
   <div class="card">

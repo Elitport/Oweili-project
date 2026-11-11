@@ -122,6 +122,10 @@
 
 ## Features
 
+### Packing guide for artists (11 Nov 2026, owner)
+- My Studio → "Packing guide" / «دليل التغليف» tab (artist_studio.php?tab=packing): only the signed-in artist sees it (visitors are sent to sign in, buyers and staff to their own pages; not on any public page). One line "Oweili arranges the shipping. You only pack the artwork." / «أويلي يتولى الشحن. عليك فقط تغليف العمل.», then 5 numbered steps, each with a simple outline drawing (no people): glassine paper on the front (never bubble wrap straight on the paint), corner protectors, bubble wrap, a strong snug box with no empty space, the certificate number on the box and the back label on the artwork; a last line links to the Certificates tab (numbers and back labels). No shipping prices or agreements
+- Files: artist_studio.php. Tables: none
+
 ### One commission number, one artist home, 5 drafts removed (11 Nov 2026, owner)
 - Oweili's commission is ONE number in Admin → Settings → "Oweili’s commission" (admin.php?settings=1#commission; 1 to 50, before VAT; logged setting_change). site_settings commission_rate = the rate now (15 by default) and commission_history = JSON [[date, rate], …] written at every change (the first change also stores the old rate "before the first change"), so each sold artwork keeps the rate in force on its sale date (sold_at, else updated_at, else created_at). No database structure change. Code: owCommissionPct(), owCommissionText(), owCommissionHistory(), owCommissionAt($date), owSetCommission(), owArtistShare($price, $soldOn), owArtistShareText() in platform_lib.php; order_lib.php owCommissionRate() reads the same number. Shown from the setting: the "What you get" box (register_artist.php), the Terms (price section), the Help page FAQ (support.php), the upload's price step ("You receive 85%", upload_artwork.php), the private commission price box (artist_commission.php), My Studio, Admin → Settings → Payments
 - Terms (terms.php, Buying an artwork): the 15-day late-delivery refund is for ready artworks only; private commissions will have their own terms
