@@ -312,12 +312,53 @@ function owRealName(?string $name): string {
     return ($name !== '' && preg_match('/\p{L}/u', $name) && strpos($name, '@') === false) ? $name : '';
 }
 /* '' when fine; otherwise an error code for a name a person typed */
-/* The artist's share of a sales amount after Oweili's commission (15% before VAT), as text: "1,275" or "283.05" */
-function owArtistShareText(float $amount): string {
-    $rate = 15.0;
-    require_once __DIR__ . '/gallery_lib.php';   // owSetting: the rate from Admin settings (15 by default)
-    $r = (float) owSetting('commission_rate', '15'); if ($r > 0 && $r < 100) $rate = $r;
-    $v = round($amount * (100 - $rate) / 100, 2);
+/* ---------------- Oweili's commission: one number (Admin → Settings), owner 11 Nov 2026 ----------------
+   site_settings 'commission_rate' = the rate now (15 by default, before VAT).
+   site_settings 'commission_history' = JSON [["Y-m-d H:i:s", rate], ...]: each change with its date, so an
+   artwork keeps the rate in force on the day it was sold. No history yet = every sale used today's rate. */
+function owCommissionPct(): float {
+    require_once __DIR__ . '/gallery_lib.php';   // owSetting
+    $r = (float) owSetting('commission_rate', '15');
+    return ($r > 0 && $r < 100) ? $r : 15.0;
+}
+/* "15%" (no decimals when it is a whole number) */
+function owCommissionText(?float $rate = null): string {
+    $r = $rate ?? owCommissionPct();
+    return rtrim(rtrim(number_format($r, 2, '.', ''), '0'), '.') . '%';
+}
+function owCommissionHistory(): array {
+    require_once __DIR__ . '/gallery_lib.php';
+    $h = json_decode((string) owSetting('commission_history', ''), true);
+    return is_array($h) ? array_values(array_filter($h, fn($x) => is_array($x) && count($x) === 2)) : [];
+}
+/* The rate in force at a date (a sale date); today's rate when there is no date or no history */
+function owCommissionAt(?string $when): float {
+    $h = owCommissionHistory();
+    if (!$h || !$when) return owCommissionPct();
+    $rate = (float) $h[0][1];
+    foreach ($h as [$from, $r]) { if (strcmp((string) $when, (string) $from) >= 0) $rate = (float) $r; }
+    return ($rate > 0 && $rate < 100) ? $rate : owCommissionPct();
+}
+/* Change the rate (Admin → Settings). The old rate stays in force for everything sold before now. */
+function owSetCommission(float $new): bool {
+    require_once __DIR__ . '/gallery_lib.php';
+    if (!($new > 0 && $new < 100)) return false;
+    $old = owCommissionPct();
+    if (abs($new - $old) < 0.0001) return true;
+    $h = owCommissionHistory();
+    if (!$h) $h[] = ['2000-01-01 00:00:00', $old];
+    $h[] = [date('Y-m-d H:i:s'), $new];
+    if (!owSetSetting('commission_history', json_encode($h)) || !owSetSetting('commission_rate', rtrim(rtrim(number_format($new, 2, '.', ''), '0'), '.'))) return false;
+    owLog('setting_change', null, null, 'commission_rate=' . $new . ' (was ' . $old . ')', ['type' => 'admin', 'id' => null]);
+    return true;
+}
+/* The artist's share of one sale: the price minus the commission in force on the day it was sold */
+function owArtistShare(float $price, ?string $soldOn): float {
+    return round($price * (100 - owCommissionAt($soldOn)) / 100, 2);
+}
+/* A money amount as text: "1,275" or "283.05" */
+function owArtistShareText(float $share): string {
+    $v = round($share, 2);
     return number_format($v, $v == floor($v) ? 0 : 2);
 }
 

@@ -13,6 +13,7 @@
  *  Tables: commissions, commission_files, commission_nda, users, activity_log
  * ===================================================================== */
 require_once 'config.php';
+require_once __DIR__ . '/platform_lib.php';   // owCommissionText
 require_once __DIR__ . '/commission_lib.php';
 header('X-Robots-Tag: noindex', false);
 
@@ -171,7 +172,7 @@ foreach ($files as $ff) $byKind[$ff['kind']][] = $ff;
       <h2><?= owBi('Your price', 'سعرك') ?></h2>
       <form method="post" action="artist_commission.php?id=<?= (int) $c['id'] ?>"><?= csrfField() ?><input type="hidden" name="do" value="quote"><input type="hidden" name="id" value="<?= (int) $c['id'] ?>">
         <div class="two">
-          <div class="field"><label for="qp"><?= owBi('Price in SAR (before VAT; Oweili keeps 15%)', 'السعر بالريال (قبل الضريبة؛ يحتفظ أويلي بـ15%)') ?></label><input id="qp" name="quote_sar" inputmode="decimal" dir="ltr" required></div>
+          <div class="field"><label for="qp"><?= owBi('Price in SAR (before VAT; Oweili keeps ' . owCommissionText() . ')', 'السعر بالريال (قبل الضريبة؛ يحتفظ أويلي بـ' . owCommissionText() . ')') ?></label><input id="qp" name="quote_sar" inputmode="decimal" dir="ltr" required></div>
           <div class="field"><label for="qd"><?= owBi('Days you need', 'الأيام التي تحتاجها') ?></label><input id="qd" name="quote_days" type="number" min="1" max="365" dir="ltr" required></div>
         </div>
         <div class="field"><label for="qn"><?= owBi('A short note for the buyer (optional)', 'ملاحظة قصيرة للمشتري (اختياري)') ?></label><textarea id="qn" name="quote_note" rows="2" maxlength="1000" dir="auto"></textarea></div>

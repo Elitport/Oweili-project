@@ -50,10 +50,7 @@ function owPaymentsMissing(): array {
     return $m;
 }
 function owPaymentsOn(): bool { return owPaymentsMissing() === []; }
-function owCommissionRate(): float {
-    $r = (float) owSetting('commission_rate', '15');
-    return ($r > 0 && $r < 100) ? $r : 15.0;
-}
+function owCommissionRate(): float { return owCommissionPct(); }   // one number, Admin → Settings (platform_lib.php)
 /* Oweili's share and the artist's share of an amount (before VAT), in SAR with 2 decimals */
 function owSplitAmount(float $amount, ?float $rate = null): array {
     $rate = $rate ?? owCommissionRate();

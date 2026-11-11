@@ -1,8 +1,11 @@
 <?php
 /* =====================================================================
- *  artist_studio.php — "My Studio" («مرسمي»), the artist's private area.
- *  Linked from the artist dashboard (artist_dashboard.php). Only the
- *  signed-in artist's OWN data (no ?id); everyone else is sent away.
+ *  artist_studio.php — "My Studio" («مرسمي»), the artist's ONLY home (owner, 11 Nov 2026):
+ *  the old dashboard address (artist_dashboard.php without ?id) comes here, and
+ *  artist_dashboard.php?id=N is only the public profile. Only the signed-in
+ *  artist's OWN data; everyone else is sent away. On top: one summary
+ *  (artworks, sold, the artist's share after the commission, waiting for approval)
+ *  worked out once below, so every number is the same everywhere.
  *  Tabs (?tab=):
  *    works     — every artwork with its status (draft, in review, approved,
  *                not approved + the reason, sold) and its numbers: views,
@@ -86,6 +89,22 @@ try {
 $tot = ['views' => 0, 'favs' => 0, 'inquiries' => 0];
 foreach ($works as $w) foreach ($tot as $k => $_) $tot[$k] += (int) $w[$k];
 
+/* The one summary (owner, 11 Nov 2026). Artworks = every piece sent to Oweili (drafts in progress are counted
+   apart); sold = marked sold; share = each sale minus the commission in force on its sale date;
+   waiting = pieces in review + changes waiting for approval (+ the account itself while it waits). */
+$soldOn = fn(array $w): string => (string) (($w['sold_at'] ?? '') ?: (($w['updated_at'] ?? '') ?: $w['created_at']));
+$sum = ['works' => 0, 'drafts' => 0, 'sold' => 0, 'sales' => 0.0, 'share' => 0.0, 'share_year' => 0.0, 'waiting' => 0];
+foreach ($works as $w) {
+    if ($w['state'] === 'draft') { $sum['drafts']++; continue; }
+    $sum['works']++;
+    if ($w['state'] === 'pending') $sum['waiting']++;
+    if ($w['state'] === 'sold') {
+        $sh = owArtistShare((float) $w['price'], $soldOn($w));
+        $sum['sold']++; $sum['sales'] += (float) $w['price']; $sum['share'] += $sh;
+        if (substr($soldOn($w), 0, 4) === date('Y')) $sum['share_year'] += $sh;
+    }
+}
+
 $STATE = [
     'draft'    => ['Draft', 'مسودة'],
     'pending'  => ['In review', 'قيد المراجعة'],
@@ -113,7 +132,6 @@ if ($tab === 'earnings') {
         $payouts = $st->fetchAll();
     }
 }
-$salesTotal = array_sum(array_map(fn($s) => (float) $s['price'], $sales));
 
 $DONE = [
     'email'    => ['Your new email is saved. Please open the link we sent to it to confirm it.', 'تم حفظ بريدك الجديد. افتح الرابط الذي أرسلناه إليه لتأكيده.'],
@@ -124,6 +142,8 @@ $DONE = [
     'saved'    => ['Your changes are saved.', 'تم حفظ تعديلاتك.'],
 ];
 $myChanges = owMyChanges($uid);
+foreach ($myChanges as $mc) if ($mc['state'] === 'pending') $sum['waiting']++;
+if ((int) ($me['is_approved'] ?? 1) === 0) $sum['waiting']++;   // the account itself, until the team approves it
 /* Certificates of Authenticity: one per approved artwork */
 $certs = owCertsForArtist($uid);
 $certByArt = [];
@@ -151,6 +171,10 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 .st-head p{margin:0;color:var(--color-body);}
 .st-head .acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;}
 .st-stats{grid-template-columns:repeat(4,1fr);margin-top:var(--space-md);}
+.st-sub{display:block;font-size:var(--fs-caption);color:var(--color-body);margin-top:2px;}
+.st-mini{display:flex;gap:var(--space-md);flex-wrap:wrap;margin-top:var(--space-sm);font-size:var(--fs-caption);color:var(--color-body);}
+.st-mini b{color:var(--color-dark);}
+.w-side form{margin:0;}
 .st-tabs{margin:var(--space-lg) 0 var(--space-md);}
 .note{font-size:var(--fs-caption);color:var(--color-body);margin:0 0 var(--space-sm);}
 .w-list{display:grid;gap:var(--space-sm);}
@@ -216,11 +240,22 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   <?php if ($done): ?><div class="alert alert-ok" role="status" style="margin-top:var(--space-md)"><?= owBi($done[0], $done[1]) ?></div><?php endif; ?>
   <?php if ($err !== ''): $m = OW_ACCOUNT_ERR[$err] ?? OW_ACCOUNT_ERR['server']; ?><div class="alert alert-error" role="alert" style="margin-top:var(--space-md)"><?= owBi($m[0], $m[1]) ?></div><?php endif; ?>
 
-  <div class="stat-grid st-stats">
-    <div class="stat-card"><span class="stat-num"><?= count($works) ?></span><span class="stat-lbl"><?= owBi('Artworks', 'الأعمال') ?></span></div>
-    <div class="stat-card"><span class="stat-num"><?= number_format($tot['views']) ?></span><span class="stat-lbl"><?= owBi('Views', 'المشاهدات') ?></span></div>
-    <div class="stat-card"><span class="stat-num"><?= number_format($tot['favs']) ?></span><span class="stat-lbl"><?= owBi('Favorites', 'الإعجابات') ?></span></div>
-    <div class="stat-card"><span class="stat-num"><?= number_format($tot['inquiries']) ?></span><span class="stat-lbl"><?= owBi('Interested buyers', 'مهتمون بالشراء') ?></span></div>
+  <?php $dashMsg = (string) ($_SESSION['dash_msg'] ?? ''); unset($_SESSION['dash_msg']);   /* the result of Delete (artist_dashboard.php does the deleting) */
+  $DASH_MSG = ['deleted' => ['alert-ok', 'The artwork is deleted. It is gone from your profile and the Gallery.', 'تم حذف العمل. لم يعد في ملفك ولا في المعرض.'],
+               'not_deleted' => ['alert-error', 'We could not delete that artwork. Please try again, or write to ' . owContactEmail() . '.', 'لم نتمكن من حذف هذا العمل. حاول مرة أخرى، أو راسلنا على ' . owContactEmail() . '.'],
+               'expired' => ['alert-error', 'This page was open for a long time, so nothing was changed. Please press Delete again.', 'كانت هذه الصفحة مفتوحة لوقت طويل، لذلك لم يتغير شيء. اضغط «حذف» مرة أخرى.']];
+  if (isset($DASH_MSG[$dashMsg])): ?><div class="alert <?= $DASH_MSG[$dashMsg][0] ?>" role="status" style="margin-top:var(--space-md)"><?= owBi($DASH_MSG[$dashMsg][1], $DASH_MSG[$dashMsg][2]) ?></div><?php endif; ?>
+
+  <div class="stat-grid st-stats st-sum">
+    <div class="stat-card"><span class="stat-num"><?= $sum['works'] ?></span><span class="stat-lbl"><?= owBi('Artworks', 'الأعمال') ?></span><?php if ($sum['drafts']): ?><span class="st-sub"><?= owBi('+ ' . $sum['drafts'] . ' draft' . ($sum['drafts'] > 1 ? 's' : '') . ' in progress', '+ ' . $sum['drafts'] . ' ' . ($sum['drafts'] > 1 ? 'مسودات' : 'مسودة') . ' قيد الإعداد') ?></span><?php endif; ?></div>
+    <div class="stat-card"><span class="stat-num"><?= $sum['sold'] ?></span><span class="stat-lbl"><?= owBi('Sold', 'المباعة') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($sum['share']) ?></span><span class="stat-lbl"><?= owBi('Your share after commission (SAR)', 'حصتك بعد العمولة (ر.س)') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= $sum['waiting'] ?></span><span class="stat-lbl"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></span></div>
+  </div>
+  <div class="st-mini">
+    <span><b><?= number_format($tot['views']) ?></b> <?= owBi('views', 'مشاهدة') ?></span>
+    <span><b><?= number_format($tot['favs']) ?></b> <?= owBi('favorites', 'إعجاب') ?></span>
+    <span><b><?= number_format($tot['inquiries']) ?></b> <?= owBi('interested buyers', 'مهتم بالشراء') ?></span>
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
@@ -271,11 +306,13 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
         <?php else: ?>
           <a class="btn btn-ghost btn-sm" href="edit_artwork.php?id=<?= (int) $w['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a>
         <?php endif; ?>
+          <form method="post" action="artist_dashboard.php" onsubmit="return confirm(document.documentElement.dir === 'rtl' ? <?= $s === 'draft' ? "'حذف هذه المسودة؟'" : "'حذف هذا العمل؟ لا يمكن التراجع.'" ?> : <?= $s === 'draft' ? "'Delete this draft?'" : "'Delete this artwork? This cannot be undone.'" ?>);">
+            <?= csrfField() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>">
+            <button type="submit" class="btn btn-danger btn-sm"><?= owBi('Delete', 'حذف') ?></button></form>
       </div>
     </div>
     <?php endforeach; ?>
   </div>
-  <p class="note" style="margin-top:var(--space-sm)"><?= owBi('To delete an artwork, open your dashboard and press Delete under it.', 'لحذف عمل، افتح لوحتك واضغط «حذف» تحته.') ?> <a href="artist_dashboard.php"><?= owBi('Open dashboard', 'افتح اللوحة') ?></a></p>
   <?php endif; ?>
 
 <?php elseif ($tab === 'articles'):
@@ -407,20 +444,21 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </div>
 
 <?php else: /* earnings */ ?>
-  <p class="note"><?= owBi('Payments on Oweili open soon. When a work sells, Oweili keeps 15% (before VAT), which covers shipping and advertising.', 'المدفوعات في أويلي قريباً. عند بيع عمل، يحتفظ أويلي بـ15% (قبل الضريبة) تغطي الشحن والإعلان.') ?></p>
-  <div class="stat-grid st-stats" style="grid-template-columns:repeat(3,1fr)">
-    <div class="stat-card"><span class="stat-num"><?= count($sales) ?></span><span class="stat-lbl"><?= owBi('Works sold', 'أعمال مباعة') ?></span></div>
-    <div class="stat-card"><span class="stat-num"><?= number_format($salesTotal) ?></span><span class="stat-lbl"><?= owBi('Sales total (SAR)', 'إجمالي المبيعات (ر.س)') ?></span></div>
-    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($salesTotal) ?></span><span class="stat-lbl"><?= owBi('Your share, after Oweili’s 15% (SAR)', 'حصتك بعد 15% لأويلي (ر.س)') ?></span></div>
+  <p class="note"><?= owBi('Payments on Oweili open soon. When a work sells, Oweili keeps ' . owCommissionText() . ' (before VAT), which covers shipping and advertising. A work already sold keeps the rate it was sold at.', 'المدفوعات في أويلي قريباً. عند بيع عمل، يحتفظ أويلي بـ' . owCommissionText() . ' (قبل الضريبة) تغطي الشحن والإعلان. ويبقى العمل المباع سابقاً على النسبة التي بيع بها.') ?></p>
+  <div class="stat-grid st-stats">
+    <div class="stat-card"><span class="stat-num"><?= $sum['sold'] ?></span><span class="stat-lbl"><?= owBi('Works sold', 'أعمال مباعة') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($sum['sales']) ?></span><span class="stat-lbl"><?= owBi('Sales total (SAR)', 'إجمالي المبيعات (ر.س)') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($sum['share']) ?></span><span class="stat-lbl"><?= owBi('Your share, all time (SAR)', 'حصتك الإجمالية (ر.س)') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($sum['share_year']) ?></span><span class="stat-lbl"><?= owBi('Your share this year (SAR)', 'حصتك هذا العام (ر.س)') ?></span></div>
   </div>
   <div class="table-wrap" style="margin-top:var(--space-md)">
     <?php if (!$sales): ?>
       <div class="card empty"><p><?= owBi('No sales yet. Your sold works will appear here.', 'لا مبيعات بعد. ستظهر أعمالك المباعة هنا.') ?></p></div>
     <?php else: ?>
     <table class="table">
-      <thead><tr><th><?= owBi('Artwork', 'العمل') ?></th><th><?= owBi('Sold on', 'تاريخ البيع') ?></th><th><?= owBi('Price', 'السعر') ?></th></tr></thead>
-      <tbody><?php foreach ($sales as $s): ?>
-        <tr><td><?= owBi((string) ($s['title_en'] ?: $s['title_ar']), (string) ($s['title_ar'] ?: $s['title_en'])) ?></td><td><?= $fmtDate($s['sold_on']) ?></td><td><b><?= number_format((float) $s['price']) ?></b> <?= owBi('SAR', 'ر.س') ?></td></tr>
+      <thead><tr><th><?= owBi('Artwork', 'العمل') ?></th><th><?= owBi('Sold on', 'تاريخ البيع') ?></th><th><?= owBi('Price', 'السعر') ?></th><th><?= owBi('Your share', 'حصتك') ?></th></tr></thead>
+      <tbody><?php foreach ($sales as $s): $sRate = owCommissionAt((string) $s['sold_on']); ?>
+        <tr><td><?= owBi((string) ($s['title_en'] ?: $s['title_ar']), (string) ($s['title_ar'] ?: $s['title_en'])) ?></td><td><?= $fmtDate($s['sold_on']) ?></td><td><b><?= number_format((float) $s['price']) ?></b> <?= owBi('SAR', 'ر.س') ?></td><td><b><?= owArtistShareText(owArtistShare((float) $s['price'], (string) $s['sold_on'])) ?></b> <?= owBi('SAR', 'ر.س') ?> <span class="st-sub" style="display:inline"><?= owBi('(after ' . owCommissionText($sRate) . ')', '(بعد ' . owCommissionText($sRate) . ')') ?></span></td></tr>
       <?php endforeach; ?></tbody>
     </table>
     <?php endif; ?>

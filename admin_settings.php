@@ -76,6 +76,24 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     <p class="mini"><?= owBi('To download one: hPanel → Files → File Manager → public_html → show hidden files → .backups.', 'للتنزيل: hPanel ← الملفات ← مدير الملفات ← public_html ← إظهار الملفات المخفية ← ‎.backups') ?></p><?php endif; ?>
   </div>
 
+<?php /* Oweili's commission: one number used everywhere (owner, 11 Nov 2026). Artworks already sold keep their rate. */
+  $comMsg = '';
+  if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'commission' && verifyCsrf($_POST['csrf_token'] ?? null)) {
+      $raw = str_replace(['٫', ','], '.', strtr(trim((string) ($_POST['rate'] ?? '')), ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9']));
+      $comMsg = (preg_match('/^\d{1,2}(\.\d{1,2})?$/', $raw) && (float) $raw >= 1 && (float) $raw <= 50 && owSetCommission((float) $raw)) ? 'ok' : 'bad';
+  }
+  $comHist = owCommissionHistory(); ?>
+  <div class="card" id="commission"><h2><?= owBi('Oweili’s commission', 'عمولة أويلي') ?> <span class="pillx ok"><?= e(owCommissionText()) ?></span></h2>
+    <p><?= owBi('One number for the whole site, before VAT. When you change it, the new rate shows by itself on the "What you get" box, the artists’ earnings, the Terms of Use, the Help page, the upload page and the commission price box. Artworks already sold keep the rate they were sold at.',
+                'رقم واحد لكل الموقع، قبل ضريبة القيمة المضافة. حين تغيّره تظهر النسبة الجديدة تلقائياً في مربع «ما تحصل عليه» وأرباح الفنانين وشروط الاستخدام وصفحة المساعدة وصفحة رفع العمل وخانة سعر العمل الخاص. وتبقى الأعمال المباعة سابقاً على النسبة التي بيعت بها.') ?></p>
+    <?php if ($comMsg === 'ok'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. The commission is now ' . owCommissionText() . '.', 'تم الحفظ. العمولة الآن ' . owCommissionText() . '.') ?></div>
+    <?php elseif ($comMsg === 'bad'): ?><div class="alert alert-error" role="alert"><?= owBi('Please type a number from 1 to 50, for example 15.', 'يرجى كتابة رقم من 1 إلى 50، مثل 15.') ?></div><?php endif; ?>
+    <form method="post" action="admin.php?settings=1#commission" style="display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:flex-end"><?= csrfField() ?><input type="hidden" name="do" value="commission">
+      <div class="field" style="margin:0"><label for="com-rate"><?= owBi('Commission (%)', 'العمولة (٪)') ?></label><input id="com-rate" name="rate" type="text" inputmode="decimal" dir="ltr" maxlength="5" style="max-width:120px" value="<?= e(rtrim(owCommissionText(), '%')) ?>"></div>
+      <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
+    <?php if (count($comHist) > 1): ?><ul class="rows" style="margin-top:var(--space-sm)"><?php foreach (array_reverse($comHist) as [$cFrom, $cRate]): ?><li><span><?= e(owCommissionText((float) $cRate)) ?></span><span class="mini" dir="ltr"><?= $cFrom === '2000-01-01 00:00:00' ? owBi('before the first change', 'قبل أول تغيير') : e(substr((string) $cFrom, 0, 16)) ?></span></li><?php endforeach; ?></ul><?php endif; ?>
+  </div>
+
 <?php require_once __DIR__ . '/order_lib.php'; $payMiss = owPaymentsMissing(); ?>
   <div class="card"><h2><?= owBi('Payments and escrow', 'الدفع والضمان') ?> <?= !$payMiss ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Switched off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('Orders for artworks, gifts, commissions and course or workshop tickets are built, with escrow: Oweili holds the money and releases it to the artist after the buyer confirms receipt, or ' . OW_ESCROW_DAYS . ' days after delivery with no complaint, minus Oweili’s commission (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '%, before VAT). Everything stays switched off and hidden until these are ready:',

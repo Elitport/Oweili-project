@@ -25,16 +25,26 @@ $ART_TYPES = require __DIR__ . '/art_types.php';
  *  - no id  -> the logged-in user's own profile
  */
 $profileId = $hasId ? (int) $_GET['id'] : $viewerId;
-$isOwner   = $viewerId === $profileId;
+$isSelf    = $viewerId === $profileId;
 
 /* This is the artist dashboard. Any non-artist landing on their OWN dashboard
    is redirected to the correct one for their role. (Viewing another artist's
    public profile by ?id is still allowed — private data stays owner-only.) */
 $viewer = currentUser();
-if ($isOwner && $viewer && ($viewer['role'] ?? '') !== 'artist') {
+if ($isSelf && $viewer && ($viewer['role'] ?? '') !== 'artist') {
     header('Location: ' . dashboardUrl($viewer['role'] ?? ''));
     exit;
 }
+/* One home for the artist (owner, 11 Nov 2026): My Studio. The old dashboard address goes there;
+   ?saved=1 (after Edit Profile) shows its "saved" message there. */
+if (!$hasId && ($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+    header('Location: artist_studio.php' . (isset($_GET['saved']) ? '?done=saved' : ''), true, 301);
+    exit;
+}
+/* This page is now only the public profile, also for the artist looking at their own page
+   ("My public page" in My Studio): the same as visitors see. Editing, deleting, drafts and
+   the money figures are in My Studio. */
+$isOwner = false;
 
 /* ---------------------------------------------------------------------
  *  POST handlers (owner-only, CSRF-protected). PRG pattern.
@@ -43,12 +53,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $action = (string) ($_POST['action'] ?? '');
     $artId  = (int) ($_POST['artwork_id'] ?? 0);
     /* Signed out in the meantime: sign in again, then come back here */
-    if (!isLoggedIn()) { header('Location: login.php?next=' . rawurlencode('artist_dashboard.php')); exit; }
+    if (!isLoggedIn()) { header('Location: login.php?next=' . rawurlencode('artist_studio.php')); exit; }
     /* An old or expired form: say so clearly (and keep a record) instead of a bare error page */
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         owLog('artwork_delete_fail', 'artwork', $artId ?: null, 'expired form', ['type' => 'artist', 'id' => $viewerId]);
         $_SESSION['dash_msg'] = 'expired';
-        header('Location: artist_dashboard.php');
+        header('Location: artist_studio.php');
         exit;
     }
 
@@ -80,10 +90,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             owLog('artwork_delete_fail', 'artwork', $artId ?: null, $row ? 'not removed' : 'not found or not yours', ['type' => 'artist', 'id' => $viewerId]);
             $_SESSION['dash_msg'] = 'not_deleted';
         }
-        header('Location: artist_dashboard.php');
+        header('Location: artist_studio.php');
         exit;
     }
-    header('Location: artist_dashboard.php');
+    header('Location: artist_studio.php');
     exit;
 }
 
@@ -96,12 +106,12 @@ $artist = $stmt->fetch();
 
 /* Visitors can only see real, active artist profiles (not collectors, admins or banned accounts). */
 /* A new artist's profile stays hidden until the admin approves the account. */
-if ($artist && !$isOwner && (($artist['role'] ?? '') !== 'artist' || !empty($artist['is_banned']) || (int) ($artist['is_approved'] ?? 0) !== 1)) {
+if ($artist && !$isSelf && (($artist['role'] ?? '') !== 'artist' || !empty($artist['is_banned']) || (int) ($artist['is_approved'] ?? 0) !== 1)) {
     $artist = null;
 }
 if (!$artist) {
     // If the logged-in user's own record is missing, the session is stale -> login.
-    if ($profileId === $viewerId) {
+    if ($isSelf) {
         header('Location: login.php');
         exit;
     }
@@ -122,45 +132,12 @@ if ($artist) {
     }
 }
 
-/* Drafts in progress (3-stage upload not yet submitted) — owner only */
-$drafts = [];
-$draftStages = [];
-if ($artist && $isOwner && owStagesReady()) {
-    $stmt = getDB()->prepare('SELECT id, title_en, title_ar, created_at FROM artworks WHERE artist_id = :id AND is_draft = 1 ORDER BY created_at DESC');
-    $stmt->execute([':id' => $profileId]);
-    $drafts = $stmt->fetchAll();
-    $draftStages = owGetStagesFor(array_column($drafts, 'id'));
-}
-
 /* Creation Journey for each artwork shown (stage photos + colors) */
 $artStages = owGetStagesFor(array_column($artworks, 'id'));
 $artColors = owGetColorsFor(array_column($artworks, 'id'));
 
 $memberSince = $artist && !empty($artist['created_at']) ? date('Y', strtotime($artist['created_at'])) : 'N/A';
 $totalCount  = count($artworks);
-
-/* ---- Financial summary (owner's own figures) ---- */
-$earnAll   = 0.0;
-$earnYear  = 0.0;
-$soldList  = [];
-$thisYear  = date('Y');
-foreach ($artworks as $a) {
-    if ($a['status'] === 'sold') {
-        $price = (float) $a['price'];
-        $earnAll += $price;
-        // sold_at may not exist on older schemas; fall back to created_at.
-        $when = !empty($a['sold_at']) ? $a['sold_at'] : $a['created_at'];
-        if ($when && date('Y', strtotime($when)) === $thisYear) {
-            $earnYear += $price;
-        }
-        $soldList[] = [
-            'title_en' => $a['title_en'],
-            'title_ar' => $a['title_ar'],
-            'price'    => $price,
-            'date'     => $when ? date('Y-m-d', strtotime($when)) : 'N/A',
-        ];
-    }
-}
 
 /* helpers for optional social columns (may not exist in older schemas) */
 $ig  = $artist['instagram'] ?? '';
@@ -256,6 +233,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
   <div class="card empty-state">Artist not found.</div>
 <?php else: ?>
 
+  <?php if ($isSelf): ?><div class="alert alert-ok" role="status" style="margin-bottom:var(--space-sm)"><?= owBi('This is your public page, as visitors see it.', 'هذه صفحتك العامة كما يراها الزوار.') ?> <a href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div><?php endif; ?>
   <!-- SECTION 1: PROFILE HEADER -->
   <p class="section-title" id="t-profile-title">Artist Profile</p>
   <div class="card profile-head">
@@ -303,50 +281,6 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
       <?php endif; ?>
     </div>
   </div>
-
-  <?php $dashMsg = $isOwner ? (string) ($_SESSION['dash_msg'] ?? '') : ''; unset($_SESSION['dash_msg']);
-  $DASH_MSG = ['deleted' => ['ok-box', 'The artwork is deleted. It is gone from your profile and the Gallery.', 'تم حذف العمل. لم يعد في ملفك ولا في المعرض.'],
-               'not_deleted' => ['err-box', 'We could not delete that artwork. Please try again, or write to ' . owContactEmail() . '.', 'لم نتمكن من حذف هذا العمل. حاول مرة أخرى، أو راسلنا على ' . owContactEmail() . '.'],
-               'expired' => ['err-box', 'This page was open for a long time, so nothing was changed. Please press Delete again.', 'كانت هذه الصفحة مفتوحة لوقت طويل، لذلك لم يتغير شيء. اضغط «حذف» مرة أخرى.']];
-  if (isset($DASH_MSG[$dashMsg])): ?>
-    <div class="<?= $DASH_MSG[$dashMsg][0] ?>" role="status" style="margin-top:var(--space-sm);"><?= owBi($DASH_MSG[$dashMsg][1], $DASH_MSG[$dashMsg][2]) ?></div>
-  <?php endif; ?>
-  <?php if ($isOwner && isset($_GET['saved'])): ?>
-    <div class="ok-box" id="t-saved" style="margin-top:var(--space-sm);">Profile updated successfully.</div>
-  <?php endif; ?>
-
-  <!-- SECTION: FINANCIAL REPORT (owner only) -->
-  <?php if ($isOwner): ?>
-  <p class="section-title" id="t-fin-title">Financial Report</p>
-  <div class="stat-grid" style="margin-bottom:var(--space-md);">
-    <div class="stat-card"><span class="stat-num"><?= (int) $totalCount ?></span><span class="stat-lbl" id="t-fin-total">Total Artworks</span></div>
-    <div class="stat-card"><span class="stat-num"><?= (int) $soldCount ?></span><span class="stat-lbl" id="t-fin-sold">Artworks Sold</span></div>
-    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($earnYear) ?></span><span class="stat-lbl" id="t-fin-year">Your share this year, after Oweili’s 15% (SAR)</span></div>
-    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($earnAll) ?></span><span class="stat-lbl" id="t-fin-all">Your share all time, after Oweili’s 15% (SAR)</span></div>
-  </div>
-  <div class="table-wrap">
-    <?php if (!$soldList): ?>
-      <div class="fin-empty" id="t-fin-empty">No sales yet. Your sold artworks will appear here.</div>
-    <?php else: ?>
-      <table class="table">
-        <thead><tr>
-          <th id="t-fin-h-art">Artwork</th>
-          <th id="t-fin-h-date">Sale Date</th>
-          <th id="t-fin-h-price">Price</th>
-        </tr></thead>
-        <tbody>
-        <?php foreach ($soldList as $s): ?>
-          <tr>
-            <td><?= owBi((string) ($s['title_en'] ?: ($s['title_ar'] ?: 'N/A')), (string) ($s['title_ar'] ?: ($s['title_en'] ?: 'N/A'))) ?></td>
-            <td><?= e($s['date']) ?></td>
-            <td class="fin-price"><?= number_format($s['price']) ?> <span class="sar">SAR</span></td>
-          </tr>
-        <?php endforeach; ?>
-        </tbody>
-      </table>
-    <?php endif; ?>
-  </div>
-  <?php endif; ?>
 
   <!-- SECTION 2: ARTWORKS -->
   <p class="section-title" id="t-works-title">Artworks</p>
@@ -399,40 +333,6 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
       </article>
       <?php endforeach; ?>
     </div>
-  <?php endif; ?>
-
-  <!-- SECTION 3: NEW ARTWORK + DRAFTS (owner only) -->
-  <?php if ($isOwner): ?>
-  <p class="section-title" id="t-upload-title">New Artwork</p>
-  <div class="card start-card">
-    <p id="t-start-desc">Show the real journey of your work: photograph it at 25%, 50% and 100%. Your progress is saved after every step.</p>
-    <a class="btn btn-primary" href="upload_artwork.php" id="t-start">Start New Artwork</a>
-  </div>
-  <?php if ($drafts): ?>
-  <p class="section-title" id="t-drafts-title">Drafts in progress</p>
-  <div class="draft-list">
-    <?php foreach ($drafts as $d):
-      $ds = $draftStages[(int) $d['id']] ?? [];
-          ?>
-    <div class="card draft">
-      <div class="draft-info">
-        <div class="draft-title"><?= owBi((string) ($d['title_en'] ?: $d['title_ar']), (string) ($d['title_ar'] ?: $d['title_en'])) ?></div>
-        <?= owStagesHtml($ds, 'strip') ?>
-      </div>
-      <div class="art-actions">
-        <a class="btn btn-accent btn-sm" href="upload_artwork.php?id=<?= (int) $d['id'] ?>" data-t="continue">Continue</a>
-        <form method="post" action="artist_dashboard.php?id=<?= (int) $profileId ?>"
-              onsubmit="return confirm(document.documentElement.dir === 'rtl' ? 'حذف هذه المسودة؟' : 'Delete this draft?');">
-          <?= csrfField() ?>
-          <input type="hidden" name="action" value="delete">
-          <input type="hidden" name="artwork_id" value="<?= (int) $d['id'] ?>">
-          <button type="submit" class="btn btn-danger btn-sm" data-t="delete">Delete</button>
-        </form>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-  <?php endif; ?>
   <?php endif; ?>
 
 <?php endif; ?>

@@ -243,7 +243,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <h2 id="ja-get-h"><?= owBi('What you get', 'ما تحصل عليه') ?></h2>
       <ul>
         <li><?= owBi('Free to join.', 'الانضمام مجاني.') ?></li>
-        <li><?= owBi('Oweili takes 15% only when a work sells.', 'تأخذ أويلي 15% فقط عند بيع العمل.') ?></li>
+        <li><?= owBi('Oweili takes ' . owCommissionText() . ' only when a work sells.', 'تأخذ أويلي ' . owCommissionText() . ' فقط عند بيع العمل.') ?></li>
         <li><?= owBi('You are paid after the buyer receives the work.', 'تحصل على المبلغ بعد أن يستلم المشتري العمل.') ?></li>
         <li><?= owBi('Every artist is reviewed by our team.', 'يراجع فريقنا كل فنان.') ?></li>
       </ul>

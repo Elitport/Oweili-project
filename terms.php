@@ -2,12 +2,13 @@
 /* =====================================================================
  *  terms.php — Terms of Use («شروط الاستخدام»). Reviewed 11 Nov 2026 (no lawyer yet).
  *  Covers: Oweili as the middle party, accounts, handmade art only,
- *  proof of process, artwork rights, the 15% commission, conduct,
+ *  proof of process, artwork rights, the commission (Admin → Settings), conduct,
  *  removal, liability, Saudi law. Layout: legal_lib.php. Tables: none
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/legal_lib.php';
+require_once __DIR__ . '/platform_lib.php';   // owCommissionText: the commission from Admin → Settings
 $C = OW_LEGAL_CONTACT;
 $CO = OW_COMPANY_NAME; $CR = function_exists('owCompanyCr') ? owCompanyCr() : '';
 require_once __DIR__ . '/cert_lib.php';   // OW_CERT_RIGHTS: the rights line of the certificate
@@ -75,11 +76,11 @@ owLegalPage([
     ]],
     ['price', 'Prices and commission', 'الأسعار والعمولة', [
         'Artists set their own prices in Saudi riyals (SAR).',
-        'When an artwork sells, Oweili keeps 15% of the price, before VAT. This covers shipping and advertising. Joining and showing your work is free.',
+        'When an artwork sells, Oweili keeps ' . owCommissionText() . ' of the price, before VAT. This covers shipping and advertising. Joining and showing your work is free.',
         'Once online payments open, you are paid your share after the buyer receives the artwork. You are responsible for any tax that applies to your own income.',
     ], [
         'يحدد الفنان أسعار أعماله بالريال السعودي.',
-        'حين يُباع عمل، يحتفظ أويلي بـ15% من السعر قبل ضريبة القيمة المضافة، وتغطي الشحن والإعلان. والانضمام وعرض أعمالك مجاني.',
+        'حين يُباع عمل، يحتفظ أويلي بـ' . owCommissionText() . ' من السعر قبل ضريبة القيمة المضافة، وتغطي الشحن والإعلان. والانضمام وعرض أعمالك مجاني.',
         'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يستلم المشتري العمل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
     ]],
     ['buying', 'Buying an artwork', 'شراء عمل فني', [
@@ -88,7 +89,7 @@ owLegalPage([
         '- Your right to cancel: under the Saudi E-Commerce Law, you may cancel within 7 days of receiving the artwork, if it is unused and in the condition you received it. You pay the return shipping, unless the artwork arrived damaged or different from its description.',
         '- This right to cancel does not apply to a private commission made to your own description.',
         '- If the artwork arrives damaged or different from its description, tell us within 7 days of delivery, with photos. We arrange its return and give you a full refund.',
-        '- If delivery is more than 15 days later than the date we agreed, you may cancel and get your money back, unless the delay is caused by something outside our control.',
+        '- If a ready artwork is delivered more than 15 days later than the date we agreed, you may cancel and get your money back, unless the delay is caused by something outside our control. This does not apply to private commissions, which will have their own terms.',
         "- Questions or complaints about a purchase: write to us first at $C. You can also contact the Ministry of Commerce.",
     ], [
         '- تُعرض الأسعار بالريال السعودي. وقبل أن تدفع، يؤكد لك فريقنا كتابياً المبلغ الكامل: السعر وأي ضريبة قيمة مضافة وأي تكلفة توصيل وموعد التوصيل المتوقع.',
@@ -96,7 +97,7 @@ owLegalPage([
         '- حقك في الإلغاء: وفق نظام التجارة الإلكترونية السعودي، يمكنك الإلغاء خلال 7 أيام من استلام العمل، إن لم يُستخدم وبقي بالحالة التي استلمته بها. وتتحمل تكلفة شحن الإرجاع، إلا إن وصل العمل تالفاً أو مختلفاً عن وصفه.',
         '- لا ينطبق حق الإلغاء على العمل الخاص المصنوع وفق وصفك أنت.',
         '- إن وصل العمل تالفاً أو مختلفاً عن وصفه، أخبرنا خلال 7 أيام من التسليم مع صور. ونرتب إرجاعه ونرد لك المبلغ كاملاً.',
-        '- إن تأخر التوصيل أكثر من 15 يوماً عن الموعد المتفق عليه، يمكنك الإلغاء واسترداد مالك، إلا إن كان التأخير لسبب خارج عن إرادتنا.',
+        '- إن تأخر توصيل عمل جاهز أكثر من 15 يوماً عن الموعد المتفق عليه، يمكنك الإلغاء واسترداد مالك، إلا إن كان التأخير لسبب خارج عن إرادتنا. ولا ينطبق ذلك على الأعمال الخاصة، فلها شروطها الخاصة.',
         "- للأسئلة أو الشكاوى عن عملية شراء: راسلنا أولاً على $C. ويمكنك أيضاً التواصل مع وزارة التجارة.",
     ]],
     ['site', 'Oweili’s own content', 'محتوى أويلي', [

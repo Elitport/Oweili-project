@@ -46,7 +46,7 @@ $artId = (int) ($_POST['artwork_id'] ?? $_GET['id'] ?? 0);
 if ($ready && $artId > 0) {
     $draft = owLoadDraft($artId, $uid);
     if (!$draft) {                 // not theirs, already submitted, or deleted
-        header('Location: artist_dashboard.php');
+        header('Location: artist_studio.php');
         exit;
     }
 }
@@ -338,7 +338,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
   <div class="card panel">
     <?= t2('Start New Artwork', 'ابدأ عملاً فنياً جديداً', 'h1') ?>
     <p class="lead"><?= t2('The new 3-stage upload is being set up. Please check back soon.', 'يجري تجهيز نظام الرفع الجديد بثلاث مراحل. يرجى العودة قريباً.') ?></p>
-    <a class="btn btn-secondary" href="artist_dashboard.php"><?= t2('Back to my dashboard', 'العودة إلى لوحتي') ?></a>
+    <a class="btn btn-secondary" href="artist_studio.php"><?= t2('Back to My Studio', 'العودة إلى مرسمي') ?></a>
   </div>
 
 <?php elseif ($done): ?>
@@ -346,7 +346,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>
     <?= t2('Your artwork has been submitted. Our team will review it within 24 hours.', 'تم إرسال عملك. سيراجعه فريقنا خلال 24 ساعة.', 'h1', 'style="font-size:22px;line-height:1.5;"') ?>
     <div class="actions" style="margin-top:20px;">
-      <a class="btn btn-dark" href="artist_dashboard.php"><?= t2('Back to my dashboard', 'العودة إلى لوحتي') ?></a>
+      <a class="btn btn-dark" href="artist_studio.php"><?= t2('Back to My Studio', 'العودة إلى مرسمي') ?></a>
       <a class="btn btn-secondary" href="upload_artwork.php"><?= t2('Start another artwork', 'ابدأ عملاً آخر') ?></a>
     </div>
   </div>
@@ -402,7 +402,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
           <textarea id="desc_en" name="desc_en" dir="ltr" lang="en" maxlength="3000"><?= e($_POST['desc_en'] ?? ($draft['description_en'] ?? '')) ?></textarea>
         </div>
         <div class="actions">
-          <a class="btn btn-secondary" href="artist_dashboard.php"><?= t2('Cancel', 'إلغاء') ?></a>
+          <a class="btn btn-secondary" href="artist_studio.php"><?= t2('Cancel', 'إلغاء') ?></a>
           <button type="submit" class="btn btn-dark"><?= t2('Save & Continue', 'احفظ وتابع') ?></button>
         </div>
       </form>
@@ -504,7 +504,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
             <b class="nav-i18n" data-en="SAR" data-ar="ر.س">SAR</b>
           </div>
         </div>
-        <p class="note"><?= t2('Oweili charges 15% commission on the sale price, which covers shipping and advertising. You receive 85% of your price.', 'تأخذ أويلي 15% عمولة من سعر البيع، تشمل الشحن والإعلانات. تستلم أنت 85% من سعرك.') ?></p>
+        <p class="note"><?php $cKeep = owCommissionText(100 - owCommissionPct()); ?><?= t2('Oweili charges ' . owCommissionText() . ' commission on the sale price, which covers shipping and advertising. You receive ' . $cKeep . ' of your price.', 'تأخذ أويلي ' . owCommissionText() . ' عمولة من سعر البيع، تشمل الشحن والإعلانات. تستلم أنت ' . $cKeep . ' من سعرك.') ?></p>
         <?php if ($certOn): $cv = fn($k) => e((string) ($_POST[$k] ?? ($draft[$k] ?? ''))); $etype = (string) ($_POST['edition_type'] ?? ($draft['edition_type'] ?? '')); ?>
         <?php include __DIR__ . '/cert_fields.php'; ?>
         <label class="declare">

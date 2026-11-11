@@ -1,4 +1,4 @@
-<?php require_once 'config.php'; require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage(); ?>
+<?php require_once 'config.php'; require_once __DIR__ . '/platform_lib.php'; require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage(); ?>
 <!DOCTYPE html>
 <html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(true); ?> id="html">
 <head>
@@ -184,14 +184,14 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 const FAQS={
   en:[
     {q:'How do I create an account?',a:'Tap "Join Free" at the top. Add your name, email, phone and a password. Then confirm your email, and you are in.'},
-    {q:'Does it cost anything to join?',a:'Joining Oweili is free. When a piece sells, Oweili keeps 15% before VAT. That covers shipping and advertising.'},
+    {q:'Does it cost anything to join?',a:'Joining Oweili is free. When a piece sells, Oweili keeps <?= owCommissionText() ?> before VAT. That covers shipping and advertising.'},
     {q:'Can I share my artwork on Oweili?',a:'Yes, please do. Once our team approves your profile, add your work from your dashboard. Photograph it at 25%, 50% and 100%. Then it appears in the gallery and on your profile.'},
     {q:'How do I report a problem?',a:'Write to us at <?= e(owContactEmail()) ?>. A real person on our team will help you.'},
     {q:'Is Oweili available in Arabic?',a:'Yes. Oweili speaks Arabic and English. Tap the language button at the top to switch.'}
   ],
   ar:[
     {q:'كيف أنشئ حساباً؟',a:'اضغط «انضم مجاناً» في الأعلى. أضف اسمك وبريدك وجوالك وكلمة مرور. ثم أكّد بريدك، وأهلاً بك معنا.'},
-    {q:'هل الانضمام مجاني؟',a:'الانضمام إلى أويلي مجاني. وعند بيع عمل، يأخذ أويلي 15% قبل ضريبة القيمة المضافة. وهي تغطي الشحن والإعلان.'},
+    {q:'هل الانضمام مجاني؟',a:'الانضمام إلى أويلي مجاني. وعند بيع عمل، يأخذ أويلي <?= owCommissionText() ?> قبل ضريبة القيمة المضافة. وهي تغطي الشحن والإعلان.'},
     {q:'هل يمكنني مشاركة أعمالي على أويلي؟',a:'نعم، ويسعدنا ذلك. بعد موافقة فريقنا على ملفك، أضف أعمالك من لوحة التحكم. صوّر العمل عند 25% و50% و100%. بعدها يظهر في المعرض وفي ملفك.'},
     {q:'كيف أبلّغ عن مشكلة؟',a:'راسلنا على <?= e(owContactEmail()) ?>. سيساعدك شخص حقيقي من فريقنا.'},
     {q:'هل أويلي متاح بالعربية؟',a:'نعم. أويلي يتحدث العربية والإنجليزية. اضغط زر اللغة في الأعلى للتبديل.'}

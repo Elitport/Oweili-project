@@ -158,7 +158,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 owAdminAlert('artwork', 'Artwork sent back for review after changes: ' . $tEn, 'عمل أُعيد للمراجعة بعد التعديل: ' . ($tAr ?: $tEn), 'admin.php#pending');
             }
             if ($photoChanged && $isLive) owPhotoChanged($aw, (string) $aw['image_url'], $imageUrl, $viewerId);
-            header('Location: artist_dashboard.php?id=' . $viewerId);
+            header('Location: artist_studio.php?done=saved');   // My Studio is the artist's home (11 Nov 2026)
             exit;
         }
     }
@@ -288,7 +288,7 @@ $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
 
       <div class="row">
         <button type="submit" class="btn btn-primary" id="t-save">Save Changes</button>
-        <a class="btn btn-secondary" href="artist_dashboard.php?id=<?= (int) $viewerId ?>" id="t-cancel">Cancel</a>
+        <a class="btn btn-secondary" href="artist_studio.php" id="t-cancel">Cancel</a>
       </div>
     </form>
   </div>
