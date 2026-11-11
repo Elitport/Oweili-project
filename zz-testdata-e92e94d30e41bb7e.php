@@ -30,6 +30,7 @@ $q('test entries sent to Bashro and the test support message (for the owner)', "
 $q('test entries in the activity log that will be removed', "SELECT id, action, actor_type, actor_id, target_type, target_id, created_at FROM activity_log WHERE (actor_type IN ('artist','buyer') AND actor_id IN (4,5))
    OR (target_type = 'user' AND target_id IN (4,5)) OR (target_type = 'artwork' AND target_id = 3) OR (target_type = 'article' AND target_id = 1)
    OR (target_type IN ('certificate','cert') AND target_id = 1) OR action IN ('bashro_send','support_message','admin_alert','admin_alert_mail') ORDER BY id");
+if (($_GET['a'] ?? '') === 'look') { $q('remaining activity rows', "SELECT id, action, actor_type, actor_id, target_type, target_id, details, created_at FROM activity_log WHERE action IN ('login','artist_verify','artist_unverify','artwork_delete','user_delete') ORDER BY id"); exit; }
 if (($_GET['a'] ?? '') !== 'run') { echo "\nready, database $dbName\n"; $show(); exit; }
 if (is_file(__DIR__ . '/.logs/zz-testdata-done')) { echo "already run\n"; $show(); exit; }
 
