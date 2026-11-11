@@ -312,6 +312,27 @@ function owRealName(?string $name): string {
     return ($name !== '' && preg_match('/\p{L}/u', $name) && strpos($name, '@') === false) ? $name : '';
 }
 /* '' when fine; otherwise an error code for a name a person typed */
+/* The artist's share of a sales amount after Oweili's commission (15% before VAT), as text: "1,275" or "283.05" */
+function owArtistShareText(float $amount): string {
+    $rate = 15.0;
+    require_once __DIR__ . '/gallery_lib.php';   // owSetting: the rate from Admin settings (15 by default)
+    $r = (float) owSetting('commission_rate', '15'); if ($r > 0 && $r < 100) $rate = $r;
+    $v = round($amount * (100 - $rate) / 100, 2);
+    return number_format($v, $v == floor($v) ? 0 : 2);
+}
+
+/* Forms: the box that is wrong gets the error look (.field.has-error, oweili.css) and is
+   announced to screen readers. $bad = the names of the wrong boxes. */
+function owBadField(array $bad, string $name): string { return in_array($name, $bad, true) ? ' has-error' : ''; }
+function owBadAttr(array $bad, string $name): string { return in_array($name, $bad, true) ? ' aria-invalid="true"' : ''; }
+/* After a refused send: go to the first wrong box; typing in it clears its error look */
+function owBadScript(): string {
+    return '<script>(function(){var f=document.querySelector(".field.has-error input,.field.has-error textarea,.field.has-error select");'
+         . 'if(f){try{f.focus({preventScroll:true});f.scrollIntoView({block:"center"});}catch(e){}}'
+         . 'document.querySelectorAll(".field.has-error").forEach(function(d){d.addEventListener("input",function(){d.classList.remove("has-error");'
+         . 'd.querySelectorAll("[aria-invalid]").forEach(function(i){i.removeAttribute("aria-invalid");});});});})();</script>';
+}
+
 function owNameProblem(string $name, bool $required): string {
     $name = trim($name);
     if ($name === '') return $required ? 'name' : '';

@@ -139,6 +139,34 @@ function owCertSize($w, $h): array {
     return [$f($w) . ' × ' . $f($h) . ' cm', $f($w) . ' × ' . $f($h) . ' سم'];
 }
 
+/* The size line shown to visitors (artwork page, Gallery window): "50 × 70 cm · Medium · Portrait",
+   [English, Arabic], or null when the artwork has no size yet */
+function owArtworkSizeWords(array $aw): ?array {
+    if ((float) ($aw['width_cm'] ?? 0) <= 0) return null;
+    [$sE, $sA] = owCertSize($aw['width_cm'], $aw['height_cm'] ?? 0);
+    if (!empty($aw['size_code'])) {
+        require_once __DIR__ . '/size_lib.php';
+        $sc = owSizeCheck((string) $aw['size_code'], (string) ($aw['orientation'] ?? ''));
+        if ($sc) { $sE .= ' · ' . owSizeGroups()[$sc[1]][0] . ' · ' . preg_replace('/ \(.*\)$/', '', owSizeOrientations()[$sc[2]][0]); $sA .= ' · ' . owSizeGroups()[$sc[1]][1] . ' · ' . owSizeOrientations()[$sc[2]][1]; }
+    }
+    return [$sE, $sA];
+}
+
+/* Under the price (artwork page, Gallery window): what happens after "I'm Interested" */
+const OW_BUY_NEXT = ['We’ll contact you within 24 hours to arrange payment and delivery.', 'سنتواصل معك خلال 24 ساعة لترتيب الدفع والتوصيل.'];
+
+/* The medium suggestions of the upload form, [English, Arabic] (cert_fields.php) */
+const OW_MEDIUMS = [['Oil on canvas', 'زيت على قماش'], ['Acrylic on canvas', 'أكريليك على قماش'], ['Watercolor on paper', 'ألوان مائية على ورق'],
+    ['Ink on paper', 'حبر على ورق'], ['Charcoal on paper', 'فحم على ورق'], ['Mixed media', 'وسائط مختلطة'], ['Digital print on paper', 'طباعة رقمية على ورق']];
+
+/* A medium the artist picked from the suggestions is shown in the page language
+   ("Watercolour on paper" counts as "Watercolor on paper"); anything else is shown as typed */
+function owMediumWords(string $m): array {
+    $k = mb_strtolower(trim(str_ireplace('colour', 'color', $m)));
+    foreach (OW_MEDIUMS as $pair) if ($k === mb_strtolower($pair[0]) || $k === $pair[1]) return $pair;
+    return [$m, $m];
+}
+
 /* "Original, one of a kind" / "Limited print, 3 of 50" */
 function owCertEdition(?string $type, $no = null, $of = null): array {
     if ($type === 'limited') return ['Limited print, ' . (int) $no . ' of ' . (int) $of, 'نسخة مطبوعة محدودة، رقم ' . (int) $no . ' من ' . (int) $of];

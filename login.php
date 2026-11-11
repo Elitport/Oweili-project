@@ -89,7 +89,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .pw-toggle{position:absolute;top:50%;transform:translateY(-50%);right:10px;background:none;border:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.04em;padding:4px;}
 [dir="rtl"] .pw-toggle{right:auto;left:10px;}
 .row-between{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:12px;}
-.remember{display:flex;align-items:center;gap:7px;color:var(--color-body);cursor:pointer;}
+.remember{display:flex;align-items:center;gap:7px;color:var(--color-body);cursor:pointer;padding:12px 8px;margin:-12px -8px;}   /* a bigger tap area, same look (owner, 11 Nov 2026) */
 .remember input{width:15px;height:15px;accent-color:var(--color-primary);cursor:pointer;}
 @keyframes riseUp {from{opacity:1}to{opacity:1}}
 .ow-newlink{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;margin-top:var(--space-sm);}
@@ -118,15 +118,15 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <form method="post" action="login.php" autocomplete="on">
       <?= csrfField() ?>
       <?php if (($nextPage = owSafeNext($_POST['next'] ?? $_GET['next'] ?? '')) !== ''): ?><input type="hidden" name="next" value="<?= e($nextPage) ?>"><?php endif; ?>
-      <div class="field">
+      <div class="field<?= $errCode === 'invalid' ? ' has-error' : '' ?>">
         <label id="t-l-email" for="email">Email</label>
-        <input type="email" id="email" name="email" required
+        <input type="email" id="email" name="email" required<?= $errCode === 'invalid' ? ' aria-invalid="true"' : '' ?>
                value="<?= e($_POST['email'] ?? '') ?>">
       </div>
-      <div class="field">
+      <div class="field<?= $errCode === 'invalid' ? ' has-error' : '' ?>">
         <label id="t-l-pass" for="password">Password</label>
         <div class="pw-wrap">
-          <input type="password" id="password" name="password" required>
+          <input type="password" id="password" name="password" required<?= $errCode === 'invalid' ? ' aria-invalid="true"' : '' ?>>
           <button type="button" class="pw-toggle" id="pw-toggle" onclick="togglePw('password',this)">SHOW</button>
         </div>
       </div>
@@ -201,6 +201,7 @@ apply(L);
 const v=document.getElementById('vid');
 if(v){{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}v.play().catch(()=>{});}
 </script>
+<?= owBadScript() ?>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

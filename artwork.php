@@ -69,10 +69,10 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
 .aw-photo img{width:100%;height:100%;object-fit:contain;display:block;}
 .aw-photo img[hidden]{display:none;}
 .aw-info h1{font-size:var(--fs-section);margin:0 0 4px;}
-.aw-info .sub{font-size:var(--fs-subtitle);color:var(--color-body);margin:0 0 var(--space-sm);}
 .aw-info .by{font-size:15px;margin:0 0 var(--space-sm);}
 .aw-info .row{display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-sm);}
-.aw-info .price{font-size:var(--fs-card);font-weight:700;color:var(--color-dark);margin:var(--space-sm) 0;}
+.aw-info .price{font-size:var(--fs-card);font-weight:700;color:var(--color-dark);margin:var(--space-sm) 0 4px;}
+.aw-info .aw-next{font-size:var(--fs-caption);color:var(--color-body);margin:0 0 var(--space-sm);}
 .aw-info .desc{color:var(--color-body);white-space:pre-line;}
 .aw-acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:center;margin-top:var(--space-md);}
 .aw-journey{grid-column:1 / -1;}
@@ -81,7 +81,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
 .aw-facts dt{font-size:var(--fs-caption);font-weight:700;color:var(--color-body);}
 .aw-facts dd{margin:0;font-size:15px;color:var(--color-dark);overflow-wrap:anywhere;}
 .aw-cert{margin:0 0 var(--space-sm);}
-@media(max-width:860px){.aw-page{grid-template-columns:1fr;padding-top:calc(var(--nav-h) + var(--space-md));}}
+@media(max-width:860px){.aw-page{grid-template-columns:minmax(0,1fr);padding-top:calc(var(--nav-h) + var(--space-md));}}
 </style>
 </head>
 <body>
@@ -98,7 +98,6 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
   </div>
   <div class="aw-info card">
     <h1><?= owBi($tEn, $tAr) ?></h1>
-    <p class="sub"><?= owBi($tAr !== $tEn ? $tAr : '', $tEn !== $tAr ? $tEn : '') ?></p>
     <p class="by"><a href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>"><?= owBi('by ' . $aw['artist_en'], 'بواسطة ' . $aw['artist_ar']) ?></a><?php if ((int) ($aw['artist_verified'] ?? 0) === 1): ?> <?= owVerifiedBadge() ?><?php endif; ?></p>
     <div class="row">
       <?php if ($type): ?><span class="type-pill"><?= owBi($type['en'], $type['ar']) ?></span><?php endif; ?>
@@ -106,12 +105,11 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
       <?php if ($aw['status'] === 'auction'): ?><span class="type-pill"><?= owBi('Auction', 'مزاد') ?></span><?php endif; ?>
     </div>
     <div class="price"><?= $price ?> <?= owBi('SAR', 'ر.س') ?></div>
+    <p class="aw-next"><?= owBi(OW_BUY_NEXT[0], OW_BUY_NEXT[1]) ?></p>
     <?php if (trim((string) ($aw['medium'] ?? '')) !== '' || (float) ($aw['width_cm'] ?? 0) > 0 || !empty($aw['edition_type'])): ?>
     <dl class="aw-facts">
-      <?php if (trim((string) ($aw['medium'] ?? '')) !== ''): ?><div><dt><?= owBi('Medium', 'الخامة') ?></dt><dd dir="auto"><?= e((string) $aw['medium']) ?></dd></div><?php endif; ?>
-      <?php if ((float) ($aw['width_cm'] ?? 0) > 0): [$sE, $sA] = owCertSize($aw['width_cm'], $aw['height_cm']);
-        if (!empty($aw['size_code'])) { require_once __DIR__ . '/size_lib.php'; $sc = owSizeCheck((string) $aw['size_code'], (string) ($aw['orientation'] ?? ''));
-          if ($sc) { $sE .= ' · ' . owSizeGroups()[$sc[1]][0] . ' · ' . preg_replace('/ \(.*\)$/', '', owSizeOrientations()[$sc[2]][0]); $sA .= ' · ' . owSizeGroups()[$sc[1]][1] . ' · ' . owSizeOrientations()[$sc[2]][1]; } } ?><div><dt><?= owBi('Size', 'المقاس') ?></dt><dd><?= owBi($sE, $sA) ?></dd></div><?php endif; ?>
+      <?php if (trim((string) ($aw['medium'] ?? '')) !== ''): [$mE, $mA] = owMediumWords((string) $aw['medium']); ?><div><dt><?= owBi('Medium', 'الخامة') ?></dt><dd dir="auto"><?= owBi($mE, $mA) ?></dd></div><?php endif; ?>
+      <?php if ($szw = owArtworkSizeWords($aw)): [$sE, $sA] = $szw; ?><div><dt><?= owBi('Size', 'المقاس') ?></dt><dd><?= owBi($sE, $sA) ?></dd></div><?php endif; ?>
       <?php if ((int) ($aw['year_made'] ?? 0) > 0): ?><div><dt><?= owBi('Year', 'السنة') ?></dt><dd><?= (int) $aw['year_made'] ?></dd></div><?php endif; ?>
       <?php if (!empty($aw['edition_type'])): [$eE, $eA] = owCertEdition($aw['edition_type'], $aw['edition_number'], $aw['edition_size']); ?><div><dt><?= owBi('Type', 'النوع') ?></dt><dd><?= owBi($eE, $eA) ?></dd></div><?php endif; ?>
     </dl>

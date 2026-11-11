@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Support', 'ar' => 'الدعم', 'desc_en' => 'Questions about buying, selling or joining Oweili? The answers are here.', 'desc_ar' => 'أسئلة عن الشراء أو البيع أو الانضمام إلى أويلي؟ الإجابات هنا.', 'path' => 'support.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Help & Support', 'ar' => 'المساعدة والدعم', 'desc_en' => 'Questions about buying, selling or joining Oweili? The answers are here.', 'desc_ar' => 'أسئلة عن الشراء أو البيع أو الانضمام إلى أويلي؟ الإجابات هنا.', 'path' => 'support.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -51,6 +51,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 /* only "Write to Us" shown (Community hidden, owner 8 Nov 2026): it sits in the middle column */
 @media(min-width:769px){.contact-grid.one .contact-card{grid-column:2;}.contact-grid.one .sp-form-card{grid-column:1 / -1;width:100%;max-width:640px;margin:0 auto;}}
 .sp-form-card{cursor:default;text-align:center;}
+.sp-form-card .sp-h{font-size:var(--fs-card);font-weight:700;color:var(--color-dark);letter-spacing:-0.02em;margin-bottom:8px;}
 .sp-form-card:hover{transform:none;box-shadow:var(--shadow-card);}
 .sp-form{text-align:start;margin-top:4px;}
 .sp-form .field{margin-bottom:12px;}
@@ -74,17 +75,17 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 <div class="page" id="pg">
   <div class="page-header">
     <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">We Are Here for You</span></div>
-    <h1 id="t-h1">Artist <em>Support Center</em></h1>
+    <h1 id="t-h1">Help &amp; <em>Support</em></h1>
     <p id="t-desc">Got a question? Just ask. A real person on our team will help you.</p>
   </div>
 
-  <p class="section-title" id="t-ct-title">Get in Touch</p>
-  <?php require_once __DIR__ . '/gallery_lib.php'; ?>
-  <div class="contact-grid<?= owCommunityPageOn() ? '' : ' one' ?>">
+  <?php require_once __DIR__ . '/gallery_lib.php'; $spOne = !owCommunityPageOn(); /* one card: "Get in Touch" becomes its title, no separate card (owner, 11 Nov 2026) */ ?>
+  <?php if (!$spOne): ?><p class="section-title" id="t-ct-title">Get in Touch</p><?php endif; ?>
+  <div class="contact-grid<?= $spOne ? ' one' : '' ?>">
     <?php /* "Write to Us" is a real form now (owner, 9 Nov 2026): support_send.php sends it to contact@oweili.com and Bashro Customer Service */ ?>
     <div class="contact-card sp-form-card" id="write">
       <div class="contact-icon">✉️</div>
-      <h3 id="t-c1">Write to Us</h3>
+      <?php if ($spOne): ?><h2 class="sp-h" id="t-ct-title">Get in Touch</h2><?php else: ?><h3 id="t-c1">Write to Us</h3><?php endif; ?>
       <p id="t-c1d">Send us a message. We reply within 24 hours, usually sooner.</p>
       <form class="sp-form" id="sp-form" novalidate>
         <?= csrfField() ?>
@@ -156,11 +157,19 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     server: ['We could not send it. Please try again, or email us.', 'تعذّر الإرسال. حاول مرة أخرى أو راسلنا بالبريد.']
   };
   function ar(){ return document.documentElement.getAttribute('dir') === 'rtl'; }
-  function show(code){ var m = M[code] || M.server; err.textContent = m[ar() ? 1 : 0]; err.hidden = false; }
+  /* the exact boxes that are wrong get the error look, and the first one gets the focus */
+  var BOX = { email: ['email'], phone: ['phone'], short: ['message'] };
+  function mark(boxes){
+    ['name', 'email', 'phone', 'message'].forEach(function(k){ var i = f.elements[k], on = boxes.indexOf(k) >= 0;
+      i.closest('.field').classList.toggle('has-error', on); if (on) i.setAttribute('aria-invalid', 'true'); else i.removeAttribute('aria-invalid'); });
+    if (boxes.length) f.elements[boxes[0]].focus();
+  }
+  function show(code, boxes){ var m = M[code] || M.server; err.textContent = m[ar() ? 1 : 0]; err.hidden = false; mark(boxes || BOX[code] || []); }
+  f.addEventListener('input', function(e){ var d = e.target.closest('.field'); if (d) { d.classList.remove('has-error'); e.target.removeAttribute('aria-invalid'); } });
   f.addEventListener('submit', function(e){
-    e.preventDefault(); err.hidden = true;
+    e.preventDefault(); err.hidden = true; mark([]);
     var n = f.elements['name'].value.trim(), em = f.elements['email'].value.trim(), msg = f.elements['message'].value.trim();
-    if (!n || !em || !msg) return show('required');
+    if (!n || !em || !msg) return show('required', [!n && 'name', !em && 'email', !msg && 'message'].filter(Boolean));
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return show('email');
     var d = new FormData(f); d.append('lang', ar() ? 'ar' : 'en');
     btn.disabled = true;
@@ -190,7 +199,7 @@ const FAQS={
 };
 const T={
   en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
-    badge:'We Are Here for You',h1:'Artist <em>Support Center</em>',desc:'Got a question? Just ask. A real person on our team will help you.',
+    badge:'We Are Here for You',h1:'Help &amp; <em>Support</em>',desc:'Got a question? Just ask. A real person on our team will help you.',
     ctTitle:'Get in Touch',c1:'Write to Us',c1d:'Send us a message. We reply within 24 hours, usually sooner.',c3:'Join the Community',c3d:'Create your free account and meet artists who share your love of art.',c3l:'Join Free →',
     faqTitle:'Questions We Hear Often',legalTitle:'Rights & Privacy',
     l1:'Your Art Stays Yours',l1d:'Everything you share on Oweili still belongs to you. Always.',
@@ -198,7 +207,7 @@ const T={
     l3:'Privacy',l3d:'We protect your personal data and your creative work. That is a promise.',
     l4:'Report Misuse of Your Art',l4d:'Someone used your art without asking? Tell us right away.'},
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
-    badge:'نحن هنا من أجلك',h1:'<em>مركز دعم</em> الفنانين',desc:'لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.',
+    badge:'نحن هنا من أجلك',h1:'المساعدة و<em>الدعم</em>',desc:'لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.',
     ctTitle:'تواصل معنا',c1:'اكتب لنا',c1d:'أرسل لنا رسالة. نرد خلال 24 ساعة، وغالباً أسرع.',c3:'انضم للمجتمع',c3d:'أنشئ حسابك المجاني والتقِ بفنانين يشاركونك حب الفن.',c3l:'انضم مجاناً →',
     faqTitle:'أسئلة تصلنا كثيراً',legalTitle:'الحقوق والخصوصية',
     l1:'فنك يبقى لك',l1d:'كل ما تشاركه على أويلي يبقى ملكك. دائماً.',

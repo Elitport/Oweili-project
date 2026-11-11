@@ -281,7 +281,10 @@ fieldset { min-width: 0; }
 }
 .field input[type=file], .ow-form input[type=file] { font-size: var(--fs-label); max-width: 100%; }
 .field.has-error input, .field.has-error select, .field.has-error textarea, .input.has-error,
-input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--color-primary); }
+input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--color-primary-dark); box-shadow: 0 0 0 1px var(--color-primary-dark); }
+/* the wrong box stays clearly marked, also while it has the focus (owner, 11 Nov 2026) */
+.field.has-error input:focus, .field.has-error select:focus, .field.has-error textarea:focus,
+input[aria-invalid="true"]:focus, select[aria-invalid="true"]:focus, textarea[aria-invalid="true"]:focus { border-color: var(--color-primary-dark); box-shadow: 0 0 0 2px var(--color-primary-dark); }
 .field-error { font-size: var(--fs-label); font-weight: 600; color: var(--color-dark); }
 .field-error::before { content: "● "; color: var(--color-primary); }
 .field-hint { font-size: var(--fs-label); color: var(--color-body); line-height: 1.5; }
@@ -446,6 +449,8 @@ a.stage:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 
 .ow-footer-links { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md); list-style: none; margin: 0; padding: 0; }
 .ow-footer-links a { font-size: 15px; font-weight: 600; color: var(--color-dark); text-decoration: none; }
 .ow-footer-links a:hover { color: var(--color-accent); }
+/* phones: a bigger tap area (about 44 px tall) that looks and sits exactly the same (owner, 11 Nov 2026) */
+.ow-footer-links a, .ow-footer-mail { display: inline-block; padding: 12px 6px; margin: -12px -6px; }
 .ow-footer-social { display: flex; gap: var(--space-xs); }
 .ow-footer-social a { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border-radius: var(--radius-btn); border: 1px solid var(--color-border-strong); color: var(--color-dark); transition: background var(--ease), color var(--ease); }
 .ow-footer-social a:hover { background: var(--color-dark); color:var(--color-on-dark); }

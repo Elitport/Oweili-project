@@ -193,6 +193,19 @@ $ERR = [
     'rate'=>['en'=>'Too many new accounts from here. Please try again in an hour.','ar'=>'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'],
 ];
 $OK = ['check_email'=>['en'=>'Thanks! Check your email to verify. Our team will review your portfolio before approval.','ar'=>'شكراً! راجع بريدك للتفعيل. سيراجع فريقنا أعمالك قبل الموافقة.']];
+/* The exact boxes that are wrong (marked on the form) */
+$bad = match ($errCode) {
+    'required'      => array_keys(array_filter(['first_name' => $old['first'], 'artist_name' => $old['artist'], 'email' => $old['email'], 'phone' => $old['phone'], 'city' => $old['city']], fn($v) => $v === '')),
+    'name_letters'  => array_keys(array_filter(['first_name' => owNameProblem($old['first'], true), 'last_name' => owNameProblem($old['last'], false), 'artist_name' => owNameProblem($old['artist'], true), 'full_name_ar' => owNameProblem($old['nameAr'], false)], fn($v) => $v !== '')),
+    'email', 'exists' => ['email'],
+    'phone'         => ['phone'],
+    'weak'          => ['password'],
+    'mismatch'      => ['confirm'],
+    'photo'         => ['profile_picture'],
+    'portfolio_req', 'portfolio_max', 'portfolio' => ['portfolio'],
+    'video'         => ['art_video'],
+    default         => [],
+};
 $errEn = $errCode ? $ERR[$errCode]['en'] : ''; $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
 $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] : '';
 ?>
@@ -207,6 +220,13 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
+.ja-get{margin:0 0 var(--space-md);padding:var(--space-sm) var(--space-md);border:1px solid var(--color-border);border-radius:var(--radius-card);background:rgba(var(--rgb-primary),0.06);}
+.ja-get h2{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin:0 0 6px;text-transform:uppercase;letter-spacing:.06em;}
+[dir="rtl"] .ja-get h2{letter-spacing:0;text-transform:none;font-size:15px;}
+.ja-get ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px var(--space-sm);}
+.ja-get li{position:relative;padding-inline-start:22px;font-size:14px;line-height:1.5;color:var(--color-dark);}
+.ja-get li::before{content:"";position:absolute;inset-inline-start:2px;top:4px;width:12px;height:7px;border-left:2px solid var(--color-primary);border-bottom:2px solid var(--color-primary);transform:rotate(-45deg);}
+@media(max-width:560px){.ja-get ul{grid-template-columns:1fr;}}
 .opt-badge{display:inline-block;font-size:var(--fs-min);font-weight:700;line-height:1.4;padding:2px 8px;border-radius:999px;background:rgba(var(--rgb-ink),0.07);color:var(--color-dark);margin-inline-start:6px;vertical-align:middle;}
 </style>
 </head>
@@ -219,36 +239,45 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 <div class="auth-wrap">
   <div class="auth-card wide">
     <div class="auth-head"><h1 id="t-title">Join as an Artist</h1><p id="t-sub">We are glad you are here. Our team reviews every profile by hand.</p></div>
+    <section class="ja-get" aria-labelledby="ja-get-h">
+      <h2 id="ja-get-h"><?= owBi('What you get', 'ما تحصل عليه') ?></h2>
+      <ul>
+        <li><?= owBi('Free to join.', 'الانضمام مجاني.') ?></li>
+        <li><?= owBi('Oweili takes 15% only when a work sells.', 'تأخذ أويلي 15% فقط عند بيع العمل.') ?></li>
+        <li><?= owBi('You are paid after the buyer receives the work.', 'تحصل على المبلغ بعد أن يستلم المشتري العمل.') ?></li>
+        <li><?= owBi('Every artist is reviewed by our team.', 'يراجع فريقنا كل فنان.') ?></li>
+      </ul>
+    </section>
     <div class="err-box" id="err" data-en="<?= e($errEn) ?>" data-ar="<?= e($errAr) ?>" style="display:<?= $errCode?'block':'none' ?>;"><?= e($errEn) ?></div>
     <div class="ok-box" id="ok" data-en="<?= e($okEn) ?>" data-ar="<?= e($okAr) ?>" style="display:<?= $okCode?'block':'none' ?>;"><?= e($okEn) ?></div>
     <form method="post" action="register_artist.php" enctype="multipart/form-data" onsubmit="return checkSizes()" data-total="<?= (int) $arTotalMax ?>">
       <?= csrfField() ?>
       <div class="grid2">
-        <div class="field"><label id="t-l-first">First name</label><input type="text" name="first_name" required value="<?= e($old['first']) ?>"></div>
-        <div class="field"><label id="t-l-last">Last name</label><input type="text" name="last_name" value="<?= e($old['last']) ?>"></div>
+        <div class="field<?= owBadField($bad, 'first_name') ?>"><label id="t-l-first" for="f-first">First name</label><input type="text" id="f-first" name="first_name"<?= owBadAttr($bad, 'first_name') ?> required value="<?= e($old['first']) ?>"></div>
+        <div class="field<?= owBadField($bad, 'last_name') ?>"><label id="t-l-last" for="f-last">Last name</label><input type="text" id="f-last" name="last_name"<?= owBadAttr($bad, 'last_name') ?> value="<?= e($old['last']) ?>"></div>
       </div>
-      <div class="field"><label for="full_name_ar"><?= owBi('Your name in Arabic (optional)', 'اسمك بالعربية (اختياري)') ?></label><input type="text" id="full_name_ar" name="full_name_ar" dir="rtl" maxlength="150" autocomplete="off" value="<?= e($old['nameAr']) ?>"></div>
-      <div class="field"><label id="t-l-artist">Artist name (the name people will see)</label><input type="text" name="artist_name" required value="<?= e($old['artist']) ?>"></div>
+      <div class="field<?= owBadField($bad, 'full_name_ar') ?>"><label for="full_name_ar"><?= owBi('Your name in Arabic (optional)', 'اسمك بالعربية (اختياري)') ?></label><input type="text" id="full_name_ar" name="full_name_ar"<?= owBadAttr($bad, 'full_name_ar') ?> dir="rtl" maxlength="150" autocomplete="off" value="<?= e($old['nameAr']) ?>"></div>
+      <div class="field<?= owBadField($bad, 'artist_name') ?>"><label id="t-l-artist" for="f-artist">Artist name (the name people will see)</label><input type="text" id="f-artist" name="artist_name"<?= owBadAttr($bad, 'artist_name') ?> required value="<?= e($old['artist']) ?>"></div>
       <div class="grid2">
-        <div class="field"><label id="t-l-email">Email</label><input type="email" name="email" required value="<?= e($old['email']) ?>"></div>
-        <div class="field"><label id="t-l-phone">Mobile number</label><input type="tel" name="phone" dir="ltr" required value="<?= e($old['phone']) ?>" placeholder="+966 5X XXX XXXX"></div>
+        <div class="field<?= owBadField($bad, 'email') ?>"><label id="t-l-email" for="f-email">Email</label><input type="email" id="f-email" name="email"<?= owBadAttr($bad, 'email') ?> required value="<?= e($old['email']) ?>"></div>
+        <div class="field<?= owBadField($bad, 'phone') ?>"><label id="t-l-phone" for="f-phone">Mobile number</label><input type="tel" id="f-phone" name="phone"<?= owBadAttr($bad, 'phone') ?> dir="ltr" required value="<?= e($old['phone']) ?>" placeholder="+966 5X XXX XXXX"></div>
       </div>
-      <div class="field"><label id="t-l-city">City</label><input type="text" name="city" required value="<?= e($old['city']) ?>"></div>
+      <div class="field<?= owBadField($bad, 'city') ?>"><label id="t-l-city" for="f-city">City</label><input type="text" id="f-city" name="city"<?= owBadAttr($bad, 'city') ?> required value="<?= e($old['city']) ?>"></div>
       <div class="grid2">
-        <div class="field"><label id="t-l-bioen">About you in English (optional)</label><textarea name="bio_en"><?= e($old['bioEn']) ?></textarea></div>
-        <div class="field"><label id="t-l-bioar">About you in Arabic (optional)</label><textarea name="bio_ar" dir="rtl"><?= e($old['bioAr']) ?></textarea></div>
+        <div class="field"><label id="t-l-bioen" for="f-bioen">About you in English (optional)</label><textarea id="f-bioen" name="bio_en"><?= e($old['bioEn']) ?></textarea></div>
+        <div class="field"><label id="t-l-bioar" for="f-bioar">About you in Arabic (optional)</label><textarea id="f-bioar" name="bio_ar" dir="rtl"><?= e($old['bioAr']) ?></textarea></div>
       </div>
-      <div class="field"><label id="t-l-photo" for="f-photo">Your photo (required)</label>
-        <input type="file" id="f-photo" name="profile_picture" accept="image/jpeg,image/png" required data-max="<?= (int) $arPhotoMax ?>">
+      <div class="field<?= owBadField($bad, 'profile_picture') ?>"><label id="t-l-photo" for="f-photo">Your photo (required)</label>
+        <input type="file" id="f-photo" name="profile_picture"<?= owBadAttr($bad, 'profile_picture') ?> accept="image/jpeg,image/png" required data-max="<?= (int) $arPhotoMax ?>">
         <p class="hint" id="t-photo-hint">JPG or PNG, up to <?= e($LIM['photo']) ?>MB</p></div>
-      <div class="field"><label id="t-l-port" for="f-port">Your artworks (required, up to 5 photos)</label>
-        <input type="file" id="f-port" name="portfolio[]" accept="image/jpeg,image/png" multiple required data-max="<?= (int) $arPhotoMax ?>">
+      <div class="field<?= owBadField($bad, 'portfolio') ?>"><label id="t-l-port" for="f-port">Your artworks (required, up to 5 photos)</label>
+        <input type="file" id="f-port" name="portfolio[]"<?= owBadAttr($bad, 'portfolio') ?> accept="image/jpeg,image/png" multiple required data-max="<?= (int) $arPhotoMax ?>">
         <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each.</p></div>
-      <div class="field"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt"><?= owIsAr() ? 'اختياري' : 'Optional' ?></span></label>
-        <input type="file" id="f-video" name="art_video" accept="video/mp4,video/quicktime,.mp4,.mov" data-max="<?= (int) $arVideoMax ?>">
+      <div class="field<?= owBadField($bad, 'art_video') ?>"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt"><?= owIsAr() ? 'اختياري' : 'Optional' ?></span></label>
+        <input type="file" id="f-video" name="art_video"<?= owBadAttr($bad, 'art_video') ?> accept="video/mp4,video/quicktime,.mp4,.mov" data-max="<?= (int) $arVideoMax ?>">
         <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to <?= e($LIM['video']) ?>MB.</p></div>
       <?php if ($LIM['total'] !== ''): ?><p class="hint" id="t-total-hint">All files together: up to <?= e($LIM['total']) ?>MB.</p><?php endif; ?>
-      <div class="field"><label id="t-l-pass">Password</label><input type="password" id="password" name="password" required oninput="checkRules()">
+      <div class="field<?= owBadField($bad, 'password') ?>"><label id="t-l-pass" for="password">Password</label><input type="password" id="password" name="password"<?= owBadAttr($bad, 'password') ?> required oninput="checkRules()">
         <ul class="pw-rules">
           <li id="r-len"><span class="mark">✓</span><span id="t-r-len">Minimum 8 characters</span></li>
           <li id="r-upper"><span class="mark">✓</span><span id="t-r-upper">At least one uppercase letter</span></li>
@@ -256,7 +285,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
           <li id="r-spec"><span class="mark">✓</span><span id="t-r-spec">At least one special character (!@#$%^&*)</span></li>
         </ul>
       </div>
-      <div class="field"><label id="t-l-confirm">Confirm password</label><input type="password" name="confirm" required></div>
+      <div class="field<?= owBadField($bad, 'confirm') ?>"><label id="t-l-confirm" for="f-confirm">Confirm password</label><input type="password" id="f-confirm" name="confirm"<?= owBadAttr($bad, 'confirm') ?> required></div>
       <p class="agree-note"><?= owBi('By joining you agree to our', 'بانضمامك فإنك توافق على') ?> <a href="terms.php" target="_blank" rel="noopener"><?= owBi('Terms of Use', 'شروط الاستخدام') ?></a> <?= owBi('and', 'و') ?> <a href="privacy.php" target="_blank" rel="noopener"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>
       <button type="submit" class="btn btn-primary btn-block btn-submit" id="t-submit">Send for Review</button>
     </form>
@@ -338,6 +367,7 @@ apply(L);
 const v=document.getElementById('vid');
 if(v){{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}v.play().catch(()=>{});}
 </script>
+<?= owBadScript() ?>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

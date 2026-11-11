@@ -90,6 +90,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 
 /* the grid: square cards, all the same size */
 .sc-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+.sc-grid:empty { min-height: 110vh; }   /* room for the cards before they are drawn, so the end text and footer do not jump (owner, 11 Nov 2026) */
 .sc {
   width: 100%; aspect-ratio: 1 / 1; display: flex; flex-direction: column; padding: 0; overflow: hidden;
   background: var(--color-menu); border: 1px solid var(--color-border); border-radius: var(--radius-card);

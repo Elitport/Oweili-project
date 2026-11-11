@@ -81,6 +81,16 @@ $ERR = [
     'exists'=>['en'=>'An account with this email already exists.','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل.'],
 ];
 $OK = ['check_email'=>['en'=>'Please check your email to verify your account.','ar'=>'يرجى مراجعة بريدك لتفعيل حسابك.']];
+/* The exact boxes that are wrong (marked on the form) */
+$bad = match ($errCode) {
+    'required'        => array_keys(array_filter(['first_name' => $old['first'], 'email' => $old['email'], 'phone' => $old['phone']], fn($v) => $v === '')),
+    'name_letters'    => array_keys(array_filter(['first_name' => owNameProblem($old['first'], true), 'last_name' => owNameProblem($old['last'], false), 'full_name_ar' => owNameProblem($old['nameAr'], false)], fn($v) => $v !== '')),
+    'email', 'exists' => ['email'],
+    'phone'           => ['phone'],
+    'weak'            => ['password'],
+    'mismatch'        => ['confirm'],
+    default           => [],
+};
 $errEn = $errCode ? $ERR[$errCode]['en'] : ''; $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
 $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] : '';
 ?>
@@ -112,13 +122,13 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <?= csrfField() ?>
       <input type="hidden" name="lang" id="f-lang" value="en">
       <div class="grid2">
-        <div class="field"><label id="t-l-first" for="first_name">First name</label><input type="text" id="first_name" name="first_name" required value="<?= e($old['first']) ?>"></div>
-        <div class="field"><label id="t-l-last" for="last_name">Last name</label><input type="text" id="last_name" name="last_name" value="<?= e($old['last']) ?>"></div>
+        <div class="field<?= owBadField($bad, 'first_name') ?>"><label id="t-l-first" for="first_name">First name</label><input type="text" id="first_name" name="first_name"<?= owBadAttr($bad, 'first_name') ?> required value="<?= e($old['first']) ?>"></div>
+        <div class="field<?= owBadField($bad, 'last_name') ?>"><label id="t-l-last" for="last_name">Last name</label><input type="text" id="last_name" name="last_name"<?= owBadAttr($bad, 'last_name') ?> value="<?= e($old['last']) ?>"></div>
       </div>
-      <div class="field"><label for="full_name_ar"><?= owBi('Your name in Arabic (optional)', 'اسمك بالعربية (اختياري)') ?></label><input type="text" id="full_name_ar" name="full_name_ar" dir="rtl" maxlength="150" autocomplete="off" value="<?= e($old['nameAr']) ?>"></div>
-      <div class="field"><label id="t-l-email" for="email">Email</label><input type="email" id="email" name="email" required value="<?= e($old['email']) ?>"></div>
-      <div class="field"><label id="t-l-phone" for="phone">Mobile number</label><input type="tel" id="phone" name="phone" dir="ltr" required value="<?= e($old['phone']) ?>" placeholder="+966 5X XXX XXXX"></div>
-      <div class="field"><label id="t-l-pass" for="password">Password</label><input type="password" id="password" name="password" required oninput="checkRules()">
+      <div class="field<?= owBadField($bad, 'full_name_ar') ?>"><label for="full_name_ar"><?= owBi('Your name in Arabic (optional)', 'اسمك بالعربية (اختياري)') ?></label><input type="text" id="full_name_ar" name="full_name_ar"<?= owBadAttr($bad, 'full_name_ar') ?> dir="rtl" maxlength="150" autocomplete="off" value="<?= e($old['nameAr']) ?>"></div>
+      <div class="field<?= owBadField($bad, 'email') ?>"><label id="t-l-email" for="email">Email</label><input type="email" id="email" name="email"<?= owBadAttr($bad, 'email') ?> required value="<?= e($old['email']) ?>"></div>
+      <div class="field<?= owBadField($bad, 'phone') ?>"><label id="t-l-phone" for="phone">Mobile number</label><input type="tel" id="phone" name="phone"<?= owBadAttr($bad, 'phone') ?> dir="ltr" required value="<?= e($old['phone']) ?>" placeholder="+966 5X XXX XXXX"></div>
+      <div class="field<?= owBadField($bad, 'password') ?>"><label id="t-l-pass" for="password">Password</label><input type="password" id="password" name="password"<?= owBadAttr($bad, 'password') ?> required oninput="checkRules()">
         <ul class="pw-rules">
           <li id="r-len"><span class="mark">✓</span><span id="t-r-len">Minimum 8 characters</span></li>
           <li id="r-upper"><span class="mark">✓</span><span id="t-r-upper">At least one uppercase letter</span></li>
@@ -126,7 +136,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
           <li id="r-spec"><span class="mark">✓</span><span id="t-r-spec">At least one special character (!@#$%^&*)</span></li>
         </ul>
       </div>
-      <div class="field"><label id="t-l-confirm" for="confirm">Confirm password</label><input type="password" id="confirm" name="confirm" required></div>
+      <div class="field<?= owBadField($bad, 'confirm') ?>"><label id="t-l-confirm" for="confirm">Confirm password</label><input type="password" id="confirm" name="confirm"<?= owBadAttr($bad, 'confirm') ?> required></div>
       <p class="agree-note"><?= owBi('By joining you agree to our', 'بانضمامك فإنك توافق على') ?> <a href="terms.php" target="_blank" rel="noopener"><?= owBi('Terms of Use', 'شروط الاستخدام') ?></a> <?= owBi('and', 'و') ?> <a href="privacy.php" target="_blank" rel="noopener"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>
       <button type="submit" class="btn btn-accent btn-block btn-submit" id="t-submit">Create My Account</button>
     </form>
@@ -178,6 +188,7 @@ apply(L);
 const v=document.getElementById('vid');
 if(v){{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}v.play().catch(()=>{});}
 </script>
+<?= owBadScript() ?>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

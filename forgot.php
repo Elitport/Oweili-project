@@ -146,10 +146,10 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <form method="post" action="forgot.php">
         <?= csrfField() ?>
         <input type="hidden" name="token" value="<?= e($token) ?>">
-        <div class="field"><label id="t-l-pass">New password</label>
-          <input type="password" name="password" required></div>
-        <div class="field"><label id="t-l-conf">Confirm password</label>
-          <input type="password" name="confirm" required></div>
+        <div class="field<?= $errCode === 'weak' ? ' has-error' : '' ?>"><label id="t-l-pass" for="f-pass">New password</label>
+          <input type="password" id="f-pass" name="password" required<?= $errCode === 'weak' ? ' aria-invalid="true"' : '' ?>></div>
+        <div class="field<?= $errCode === 'mismatch' ? ' has-error' : '' ?>"><label id="t-l-conf" for="f-conf">Confirm password</label>
+          <input type="password" id="f-conf" name="confirm" required<?= $errCode === 'mismatch' ? ' aria-invalid="true"' : '' ?>></div>
         <ul class="rules" id="t-rules">
           <li id="t-r1">Minimum 8 characters</li>
           <li id="t-r2">At least one uppercase letter</li>
@@ -162,8 +162,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <?php else: ?>
       <form method="post" action="forgot.php">
         <?= csrfField() ?>
-        <div class="field"><label id="t-l-email">Email</label>
-          <input type="email" name="email" required value="<?= e($_POST['email'] ?? '') ?>"></div>
+        <div class="field<?= $errCode === 'email' ? ' has-error' : '' ?>"><label id="t-l-email" for="f-email">Email</label>
+          <input type="email" id="f-email" name="email" required<?= $errCode === 'email' ? ' aria-invalid="true"' : '' ?> value="<?= e($_POST['email'] ?? '') ?>"></div>
         <?php if ($errCode === 'token'): /* "Send me a new link" on the invalid / expired page (owner, 9 Nov 2026) */ ?>
         <p class="newlink-note"><span class="bi-en">Type your email and we will send you a new link. It works for 24 hours.</span><span class="bi-ar">اكتب بريدك وسنرسل لك رابطاً جديداً. يعمل لمدة 24 ساعة.</span></p>
         <button type="submit" class="btn btn-primary btn-block btn-submit"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></button>
@@ -228,6 +228,7 @@ apply(L);
 const v=document.getElementById('vid');
 if(v){{const on=()=>v.classList.add('on');if(v.readyState>=3)on();v.addEventListener('canplay',on,{once:true});v.addEventListener('playing',on,{once:true});}v.play().catch(()=>{});}
 </script>
+<?= owBadScript() ?>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

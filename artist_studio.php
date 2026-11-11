@@ -197,7 +197,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   <div class="card st-head">
     <div>
       <h1><?= owBi('My Studio', 'مرسمي') ?></h1>
-      <p><?= owBi('Welcome back, ' . $name . '. Here is how your work is doing.', 'أهلاً بعودتك يا ' . $name . '. هذا حال أعمالك.') ?></p>
+      <p><?php $nmDot = rtrim($name, '. '); /* a name like "Sara A." keeps one full stop, not two */ ?><?= owBi('Welcome back, ' . $nmDot . '. Here is how your work is doing.', 'أهلاً بعودتك يا ' . $nmDot . '. هذا حال أعمالك.') ?></p>
     </div>
     <div class="acts">
       <a class="btn btn-primary" href="upload_artwork.php"><?= owBi('Start New Artwork', 'ابدأ عملاً جديداً') ?></a>
@@ -408,9 +408,10 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 
 <?php else: /* earnings */ ?>
   <p class="note"><?= owBi('Payments on Oweili open soon. When a work sells, Oweili keeps 15% (before VAT), which covers shipping and advertising.', 'المدفوعات في أويلي قريباً. عند بيع عمل، يحتفظ أويلي بـ15% (قبل الضريبة) تغطي الشحن والإعلان.') ?></p>
-  <div class="stat-grid st-stats" style="grid-template-columns:repeat(2,1fr)">
+  <div class="stat-grid st-stats" style="grid-template-columns:repeat(3,1fr)">
     <div class="stat-card"><span class="stat-num"><?= count($sales) ?></span><span class="stat-lbl"><?= owBi('Works sold', 'أعمال مباعة') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= number_format($salesTotal) ?></span><span class="stat-lbl"><?= owBi('Sales total (SAR)', 'إجمالي المبيعات (ر.س)') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($salesTotal) ?></span><span class="stat-lbl"><?= owBi('Your share, after Oweili’s 15% (SAR)', 'حصتك بعد 15% لأويلي (ر.س)') ?></span></div>
   </div>
   <div class="table-wrap" style="margin-top:var(--space-md)">
     <?php if (!$sales): ?>

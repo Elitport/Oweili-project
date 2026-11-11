@@ -5,6 +5,7 @@ require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.ph
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/gallery_lib.php';   // filters, collections, Artist of the week, Verified artist
+require_once __DIR__ . '/cert_lib.php';      // size words and the certificate badge in the details window
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $ART_CATS  = require __DIR__ . '/art_categories.php';
 
@@ -170,6 +171,19 @@ $mpColors = owGetColorsFor($pageIds);
 /* Pictures: cleaned up by owImgSrc() (artwork_lib.php) */
 $mpImg = 'owImgSrc';
 
+/* Size and certificate for the details window (one read each, only the artworks in the window data) */
+$mpDims = []; $mpCerts = [];
+if ($pageIds && owHasColumn('artworks', 'width_cm')) {
+    $in  = implode(',', array_fill(0, count($pageIds), '?'));
+    $sel = 'id, width_cm, height_cm' . ($hasDims && owHasColumn('artworks', 'size_code') ? ', size_code, orientation' : '');
+    $dq  = getDB()->prepare("SELECT $sel FROM artworks WHERE id IN ($in)"); $dq->execute($pageIds);
+    foreach ($dq->fetchAll() as $r) $mpDims[(int) $r['id']] = $r;
+    if (owCertReady()) {
+        $cq = getDB()->prepare("SELECT * FROM certificates WHERE status = 'valid' AND artwork_id IN ($in) ORDER BY id"); $cq->execute($pageIds);
+        foreach ($cq->fetchAll() as $r) $mpCerts[(int) $r['artwork_id']] = $r;
+    }
+}
+
 /* Data for the details modal (escaped on output via JSON flags) */
 $modalData = [];
 foreach ($modalArtworks as $aw) {
@@ -187,6 +201,8 @@ foreach ($modalArtworks as $aw) {
         'image_fb'  => $mOrig === '' ? [] : array_values(array_unique(array_filter([owImgSized($mOrig, 800), owImgSized($mOrig, 400), owImgSized($mOrig, 800, false), $mOrig], fn($u) => $u !== '' && $u !== $mBig))),
         'status'    => $aw['status'],
         'journey'   => owHasJourney($mpStages[(int) $aw['id']] ?? []),
+        'size'      => ($szw = owArtworkSizeWords($mpDims[(int) $aw['id']] ?? [])) ? $szw[$ar ? 1 : 0] : '',
+        'cert'      => isset($mpCerts[(int) $aw['id']]) ? owCertBadgeHtml($mpCerts[(int) $aw['id']]) : '',
     ];
 }
 ?>
@@ -222,6 +238,8 @@ foreach ($modalArtworks as $aw) {
     .ow-backdrop ~ * .mp-label{display:inline-block;width:fit-content;padding:4px 12px;border-radius:var(--radius-card);background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);text-shadow:none;}
     .ow-backdrop ~ * .st-pill:not(.active),.ow-backdrop ~ * .mp-count{background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);color:var(--color-dark);text-shadow:none;}
     .ow-backdrop ~ * .mp-count{width:fit-content;padding:4px 12px;border-radius:var(--radius-card);}
+    .st-pill{position:relative;}
+    .st-pill::after{content:"";position:absolute;inset:-6px -3px;}   /* a bigger tap area (44 px), same look (owner, 11 Nov 2026) */
     .st-pill{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:var(--radius-pill);font-size:var(--fs-label);font-weight:600;text-decoration:none;color:var(--color-body);border:1px solid var(--color-border);background:transparent;transition:background var(--ease),color var(--ease);}
     .st-pill:hover{background:var(--color-hover-light);color:var(--color-dark);}
     .st-pill.active{color:var(--color-dark);border-color:var(--color-dark);background:var(--color-surface);}
@@ -274,7 +292,6 @@ foreach ($modalArtworks as $aw) {
     .modal-body{padding:var(--space-md);}
     .modal-img{width:100%;aspect-ratio:4/3;object-fit:contain;background:var(--color-frame);border:1px solid var(--color-border);border-radius:12px;margin-bottom:var(--space-sm);display:block;}
     .modal-body h2{font-size:var(--fs-card);margin:0 0 4px;}
-    .modal-body .m-title-ar{font-size:var(--fs-body);color:var(--color-body);margin-bottom:var(--space-xs);}
     .modal-body .m-artist{font-size:var(--fs-caption);font-weight:600;margin-bottom:var(--space-sm);display:inline-block;}
     .modal-body .m-label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin:var(--space-sm) 0 4px;}
     .modal-body p{margin:0;}
@@ -284,6 +301,12 @@ foreach ($modalArtworks as $aw) {
     .mi-form .field{margin:0;}
     .mi-note{font-size:var(--fs-caption);color:var(--color-body);}
     .m-share{display:inline-block;margin:var(--space-xs) 0;font-size:var(--fs-caption);font-weight:700;color:var(--color-accent);}
+    .modal-body .m-next{font-size:var(--fs-caption);color:var(--color-body);margin:4px 0 0;}
+    .m-size{font-size:var(--fs-caption);color:var(--color-body);margin-top:var(--space-xs);}
+    .m-size b{color:var(--color-dark);}
+    .m-cert{margin-top:var(--space-xs);}
+    .m-cert .cert-badge{font-size:12px;padding:4px 10px;gap:4px;}
+    .m-cert .cert-badge svg{width:14px;height:14px;}
     .m-price-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-sm);margin-top:var(--space-sm);}
     .modal-body .m-price-row .m-price{margin-top:0;}
     .m-interest [hidden]{display:none !important;}
@@ -645,17 +668,17 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
       <button class="modal-close" onclick="closeModal()" aria-label="<?= $ar ? 'إغلاق' : 'Close' ?>">&times;</button>
       <img id="m-img" class="modal-img" alt="" onerror="if(window.modalImgFailed)modalImgFailed(this)">
       <div class="modal-img modal-noimg" id="m-noimg" hidden aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>
-      <h2 id="m-title-en"></h2>
+      <h2 id="m-title" dir="auto"></h2>
       <span class="human-badge" id="m-verified" hidden><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
-      <div class="m-title-ar" id="m-title-ar" dir="rtl"></div>
       <a class="m-artist" id="m-artist" href="#"></a> <span id="m-vf" hidden><?= owVerifiedBadge(true) ?></span>
-      <div class="m-label" id="m-label-en-h"><?= $ar?'عن العمل (بالإنجليزية)':'About this work (English)' ?></div>
-      <p id="m-desc-en"></p>
-      <div class="m-label" id="m-label-ar-h"><?= $ar?'عن العمل (بالعربية)':'About this work (Arabic)' ?></div>
-      <p id="m-desc-ar" dir="rtl"></p>
+      <div class="m-label" id="m-desc-h"><?= $ar ? 'عن العمل' : 'About this work' ?></div>
+      <p id="m-desc" dir="auto"></p>
       <div class="m-price-row"><div class="m-price" id="m-price"></div>
         <?php if ($showFav): ?><button type="button" class="fav-btn fav-inline" id="m-fav" data-fav="" aria-pressed="false" aria-label="<?= e($favLbl['on']) ?>"><?= MP_HEART ?></button><?php endif; ?>
       </div>
+      <p class="m-next"><?= e(OW_BUY_NEXT[$ar ? 1 : 0]) ?></p>
+      <div class="m-size" id="m-size" hidden><b><?= $ar ? 'المقاس' : 'Size' ?></b> <span id="m-size-v"></span></div>
+      <div class="m-cert" id="m-cert" hidden></div>
       <a class="m-share" id="m-share" href="#" onclick="return shareArtwork(this)"><?= $ar ? 'شارك هذا العمل' : 'Share this artwork' ?></a>
       <?php if (owGiftsPageOn()): ?><a class="m-share m-gift" id="m-gift" href="gifts.php"><?= $ar ? 'قدّمه هدية' : 'Give it as a gift' ?></a><?php endif; ?>
       <!-- I'm Interested: name, phone, email → inquire.php -->
@@ -715,14 +738,19 @@ function openModal(id){
   document.getElementById('m-noimg').hidden = !!a.image;
   if (a.image) mImg.src = a.image;
   document.getElementById('m-img').alt = a.title_en + ' · ' + a.title_ar;
-  document.getElementById('m-title-en').textContent = a.title_en;
-  document.getElementById('m-title-ar').textContent = a.title_ar;
+  /* one language per page: the page language, or the other one when the artist left it empty */
+  document.getElementById('m-title').textContent = LANG==='ar' ? (a.title_ar || a.title_en) : (a.title_en || a.title_ar);
   const artist = document.getElementById('m-artist');
   artist.textContent = (LANG==='ar' ? 'بواسطة ' : 'by ') + (LANG==='ar' ? a.artist_ar : a.artist_en);
   artist.href = 'artist_dashboard.php?id=' + a.artist_id + '&lang=' + LANG;
   document.getElementById('m-vf').hidden = !a.verified;
-  document.getElementById('m-desc-en').textContent = esc(a.desc_en);
-  document.getElementById('m-desc-ar').textContent = esc(a.desc_ar);
+  const desc = esc(LANG==='ar' ? (a.desc_ar || a.desc_en) : (a.desc_en || a.desc_ar)).trim();
+  document.getElementById('m-desc').textContent = desc;
+  document.getElementById('m-desc').hidden = document.getElementById('m-desc-h').hidden = desc === '';
+  document.getElementById('m-size-v').textContent = a.size || '';
+  document.getElementById('m-size').hidden = !a.size;
+  document.getElementById('m-cert').innerHTML = a.cert || '';   /* made and escaped on the server (owCertBadgeHtml) */
+  document.getElementById('m-cert').hidden = !a.cert;
   document.getElementById('m-price').textContent =
     Number(a.price).toLocaleString() + ' ' + (LANG==='ar' ? 'ر.س' : 'SAR');
   // Creation Journey + trust badge (only for artworks with stage photos)
@@ -755,22 +783,36 @@ function resetInterest(id){
   document.getElementById('mi-ok').hidden = true;
   document.getElementById('mi-err').hidden = true;
   document.getElementById('mi-send').disabled = false;
+  miMark([]);
 }
 function openInterest(){
   document.getElementById('mi-open').hidden = true;
   document.getElementById('mi-form').hidden = false;
   document.getElementById('mi-name').focus();
 }
-function showInterestError(code){
+function showInterestError(code, boxes){
   const box = document.getElementById('mi-err');
   box.textContent = MI_ERR[code] || MI_ERR.other; box.hidden = false;
+  /* mark the exact boxes that are wrong, and go to the first one */
+  if (!boxes) boxes = ['name', 'phone', 'email'].indexOf(code) >= 0 ? [code] : [];
+  miMark(boxes);
+}
+function miMark(boxes){
+  const f = document.getElementById('mi-form');
+  ['name', 'phone', 'email'].forEach(function(n){
+    const i = f.elements[n], on = boxes.indexOf(n) >= 0;
+    i.closest('.field').classList.toggle('has-error', on);
+    if (on) i.setAttribute('aria-invalid', 'true'); else i.removeAttribute('aria-invalid');
+  });
+  if (boxes.length) f.elements[boxes[0]].focus();
 }
 function sendInterest(ev){
   ev.preventDefault();
   const f = ev.target, btn = document.getElementById('mi-send');
-  document.getElementById('mi-err').hidden = true;
+  document.getElementById('mi-err').hidden = true; miMark([]);
   const v = n => f.elements[n].value.trim();
-  if (!v('name') || !v('phone') || !v('email')) { showInterestError('required'); return false; }
+  const empty = ['name', 'phone', 'email'].filter(n => !v(n));
+  if (empty.length) { showInterestError('required', empty); return false; }
   if (!f.elements.email.checkValidity()) { showInterestError('email'); return false; }
   btn.disabled = true;
   fetch('inquire.php', {method:'POST', body:new FormData(f), credentials:'same-origin'})
@@ -782,6 +824,10 @@ function sendInterest(ev){
     .catch(() => { showInterestError('other'); btn.disabled = false; });
   return false;
 }
+/* typing in a marked box clears its error look */
+document.getElementById('mi-form').addEventListener('input', function(e){
+  const d = e.target.closest('.field'); if (d) { d.classList.remove('has-error'); e.target.removeAttribute('aria-invalid'); }
+});
 /* The big picture failed: try the next copy, then the original, then show the drawing */
 function modalImgFailed(img){
   const l = (img.dataset.fb || '').split('|').filter(Boolean);

@@ -19,6 +19,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .choice{display:block;text-decoration:none;background:var(--color-surface);border:1px solid rgba(var(--rgb-ink),0.08);border-radius:var(--radius-card);padding:36px 28px;text-align:center;transition:transform 0.3s ease,box-shadow 0.3s ease,border-color 0.3s;animation:riseUp .15s ease-out both;}
 .choice:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(var(--rgb-shadow),0.1);border-color:rgba(var(--rgb-accent),0.3);}
 .choice .icon{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:34px;}
+.choice .icon svg{width:34px;height:34px;fill:none;stroke:var(--color-dark);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .choice.artist .icon{background:rgba(var(--rgb-primary),0.1);}
 .choice.collector .icon{background:rgba(var(--rgb-accent),0.1);}
 .choice h2{font-size:var(--fs-card);font-weight:700;color:var(--color-dark);margin-bottom:8px;}
@@ -28,6 +29,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .choice.collector .go{background:var(--color-accent);color:var(--color-on-accent);}
 .foot{margin-top:26px;font-size:13px;color:var(--color-body);}
 .foot a{color:var(--color-accent);text-decoration:none;font-weight:600;}
+/* on the photo: the same small frosted card as the heading, so the line is easy to read */
+.ow-backdrop ~ .wrap > .foot{width:fit-content;max-width:100%;padding:10px 18px;border-radius:var(--radius-card);background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);color:var(--color-dark);}
 @keyframes riseUp {from{opacity:1}to{opacity:1}}
 @media(max-width:640px){.choices{grid-template-columns:1fr;}}
 </style>
@@ -45,13 +48,13 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   </div>
   <div class="choices">
     <a class="choice artist" href="register_artist.php">
-      <div class="icon">🎨</div>
+      <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7h2.1A4.5 4.5 0 0 0 21 10.7C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7.3" r="1.2"/><circle cx="14.5" cy="7.3" r="1.2"/></svg></div>
       <h2 id="t-a-title">I am an Artist</h2>
-      <p id="t-a-desc">Showcase and sell your work. Requires a profile picture, portfolio, and a short video, all reviewed by our team.</p>
+      <p id="t-a-desc">Share your work and sell it to people who care. We review every artist by hand. You will need a photo and a few artworks. A short video is optional.</p>
       <span class="go" id="t-a-go">Register as Artist</span>
     </a>
     <a class="choice collector" href="register_collector.php">
-      <div class="icon">🖼️</div>
+      <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="6.5" y="6.5" width="11" height="11" rx="1"/><path d="M6.5 15l3.2-3.2 2.6 2.6 1.7-1.7 3.5 3.5"/></svg></div>
       <h2 id="t-c-title">I am a Collector</h2>
       <p id="t-c-desc">Discover and collect original art. Quick sign-up: just your details and you're in.</p>
       <span class="go" id="t-c-go">Register as Collector</span>
@@ -65,13 +68,13 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 <script>
 const T={
   en:{dir:'ltr',lb:'العربية',h1:'Join <em>Oweili</em>',sub:'Choose how you would like to join us.',
-    aTitle:'I am an Artist',aDesc:'Share your work and sell it to people who care. We review every artist by hand. You will need a photo, a few artworks and a short video.',aGo:'Join as Artist',
+    aTitle:'I am an Artist',aDesc:'Share your work and sell it to people who care. We review every artist by hand. You will need a photo and a few artworks. A short video is optional.',aGo:'Join as Artist',
     cTitle:'I am a Collector',cDesc:'Find art made by real hands and bring it home. Signing up takes a minute.',cGo:'Join as Collector',
     have:'Already one of us?',login:'Sign In',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',h1:'انضم إلى <em>أويلي</em>',sub:'اختر كيف تحب أن تنضم إلينا.',
-    aTitle:'أنا فنان',aDesc:'شارك أعمالك وبِعها لمن يقدّرها. نراجع كل فنان بعناية. ستحتاج صورة وبعض أعمالك ومقطعاً قصيراً.',aGo:'انضم كفنان',
+    aTitle:'أنا فنان',aDesc:'شارك أعمالك وبِعها لمن يقدّرها. نراجع كل فنان بعناية. ستحتاج صورة وبعض أعمالك، والمقطع القصير اختياري.',aGo:'انضم كفنان',
     cTitle:'أنا مقتنٍ',cDesc:'اعثر على فن صنعته أيدٍ حقيقية، وخذه إلى بيتك. التسجيل يستغرق دقيقة.',cGo:'انضم كمقتنٍ',
     have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',

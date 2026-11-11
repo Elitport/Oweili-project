@@ -82,6 +82,7 @@ else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود
 .event-note{font-size:var(--fs-label);font-weight:600;color:var(--color-accent-dark);}
 .article-body p{font-size:17px;color:rgba(var(--rgb-ink),0.72);margin:0 0 var(--space-md);}
 .article-body[dir="rtl"] p{font-size:18px;}
+html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a little lighter, easier to read (owner, 11 Nov 2026) */
 .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-sm);margin-top:var(--space-lg);}
 .gallery figure{margin:0;border-radius:12px;overflow:hidden;background:var(--color-surface);border:1px solid var(--color-border);}
 .gallery a{display:block;}

@@ -68,7 +68,10 @@ if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $tEn = sanitize($_POST['title_en'] ?? '');
         $dAr = sanitize($_POST['desc_ar'] ?? '');
         $dEn = sanitize($_POST['desc_en'] ?? '');
-        if ($tAr === '' || $tEn === '') {
+        /* one language is enough (owner, 11 Nov 2026): the other one gets the same title, so every page shows one */
+        if ($tAr === '') $tAr = $tEn;
+        if ($tEn === '') $tEn = $tAr;
+        if ($tAr === '') {
             $error = 'titles';
         } elseif (mb_strlen($tAr) > 200 || mb_strlen($tEn) > 200 || mb_strlen($dAr) > 3000 || mb_strlen($dEn) > 3000) {
             $error = 'too_long';
@@ -194,7 +197,7 @@ $idQ     = $draft ? '?id=' . (int) $draft['id'] . '&step=' : '?step=';
 
 /* Bilingual error messages */
 $ERR = [
-    'titles'     => ['Please enter the title in both Arabic and English.', 'يرجى إدخال العنوان بالعربية والإنجليزية.'],
+    'titles'     => ['Please enter the title in Arabic or English.', 'يرجى إدخال العنوان بالعربية أو الإنجليزية.'],
     'too_long'   => ['Titles can be up to 200 characters and descriptions up to 3,000.', 'العنوان حتى 200 حرف والوصف حتى 3000 حرف.'],
     'none'       => ['Please take a photo first.', 'يرجى التقاط صورة أولاً.'],
     'size'       => ['This photo is larger than 10MB. Please take it again.', 'حجم الصورة أكبر من 10 ميغابايت. يرجى التقاطها مرة أخرى.'],
@@ -350,7 +353,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 
 <?php else: ?>
   <?= t2('Start New Artwork', 'ابدأ عملاً فنياً جديداً', 'h1') ?>
-  <p class="lead"><?= t2('Show the real journey of your work. Your progress is saved after every step — you can come back any time.', 'اعرض الرحلة الحقيقية لعملك. يُحفظ تقدّمك بعد كل خطوة — يمكنك العودة في أي وقت.') ?></p>
+  <p class="lead"><?= t2('Show the real journey of your work. Your progress is saved after every step. You can come back any time.', 'اعرض الرحلة الحقيقية لعملك. يُحفظ تقدّمك بعد كل خطوة، ويمكنك العودة في أي وقت.') ?></p>
 
   <nav class="progress" aria-label="Progress · التقدم">
     <div class="progress-label">
@@ -381,13 +384,14 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
         <input type="hidden" name="action" value="save_details">
         <input type="hidden" name="step" value="1">
         <?php if ($draft): ?><input type="hidden" name="artwork_id" value="<?= (int) $draft['id'] ?>"><?php endif; ?>
-        <div class="field">
+        <p class="hint"><?= t2('Write the title in Arabic, in English, or in both.', 'اكتب العنوان بالعربية أو بالإنجليزية أو بكلتيهما.') ?></p>
+        <div class="field<?= owBadField($error === 'titles' ? ['title'] : [], 'title') ?>">
           <label for="title_ar"><?= t2('Title in Arabic', 'العنوان بالعربية') ?></label>
-          <input id="title_ar" name="title_ar" dir="rtl" lang="ar" required maxlength="200" value="<?= e($_POST['title_ar'] ?? ($draft['title_ar'] ?? '')) ?>">
+          <input id="title_ar" name="title_ar" dir="rtl" lang="ar" maxlength="200"<?= $error === 'titles' ? ' aria-invalid="true"' : '' ?> value="<?= e($_POST['title_ar'] ?? ($draft['title_ar'] ?? '')) ?>">
         </div>
-        <div class="field">
+        <div class="field<?= owBadField($error === 'titles' ? ['title'] : [], 'title') ?>">
           <label for="title_en"><?= t2('Title in English', 'العنوان بالإنجليزية') ?></label>
-          <input id="title_en" name="title_en" dir="ltr" lang="en" required maxlength="200" value="<?= e($_POST['title_en'] ?? ($draft['title_en'] ?? '')) ?>">
+          <input id="title_en" name="title_en" dir="ltr" lang="en" maxlength="200"<?= $error === 'titles' ? ' aria-invalid="true"' : '' ?> value="<?= e($_POST['title_en'] ?? ($draft['title_en'] ?? '')) ?>">
         </div>
         <div class="field">
           <label for="desc_ar"><?= t2('Description in Arabic', 'الوصف بالعربية') ?> <span class="opt nav-i18n" data-en="(optional)" data-ar="(اختياري)">(optional)</span></label>
@@ -588,6 +592,7 @@ document.querySelectorAll('.submit-form').forEach(function(f){
 /* Show the saved language straight away (nav.php may already have set the direction) */
 applyLang(document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en');
 </script>
+<?= owBadScript() ?>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

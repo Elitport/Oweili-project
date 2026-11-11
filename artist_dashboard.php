@@ -266,10 +266,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
     <?php endif; ?>
 
     <div class="profile-info">
-      <h1><?= e($artist['artist_en']) ?></h1>
-      <?php if ($artist['artist_ar'] !== '' && $artist['artist_ar'] !== $artist['artist_en']): ?>
-        <div class="name-ar" dir="rtl"><?= e($artist['artist_ar']) ?></div>
-      <?php endif; ?>
+      <h1><?= owBi((string) $artist['artist_en'], (string) ($artist['artist_ar'] ?: $artist['artist_en'])) /* the page language only (owner, 11 Nov 2026) */ ?></h1>
       <?php if ((int) ($artist['is_verified_artist'] ?? 0) === 1): require_once __DIR__ . '/gallery_lib.php'; ?><div class="p-verified"><?= owVerifiedBadge() ?></div><?php endif; ?>
       <?php if (!empty($artist['city']) || !empty($artist['country'])): ?>
         <div class="city">📍 <?= e(implode(', ', array_filter([(string) ($artist['city'] ?? ''), (string) ($artist['country'] ?? '')]))) ?></div>
@@ -324,8 +321,8 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
   <div class="stat-grid" style="margin-bottom:var(--space-md);">
     <div class="stat-card"><span class="stat-num"><?= (int) $totalCount ?></span><span class="stat-lbl" id="t-fin-total">Total Artworks</span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $soldCount ?></span><span class="stat-lbl" id="t-fin-sold">Artworks Sold</span></div>
-    <div class="stat-card"><span class="stat-num"><?= number_format($earnYear) ?></span><span class="stat-lbl" id="t-fin-year">Earnings This Year (SAR)</span></div>
-    <div class="stat-card"><span class="stat-num"><?= number_format($earnAll) ?></span><span class="stat-lbl" id="t-fin-all">Earnings All Time (SAR)</span></div>
+    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($earnYear) ?></span><span class="stat-lbl" id="t-fin-year">Your share this year, after Oweili’s 15% (SAR)</span></div>
+    <div class="stat-card"><span class="stat-num"><?= owArtistShareText($earnAll) ?></span><span class="stat-lbl" id="t-fin-all">Your share all time, after Oweili’s 15% (SAR)</span></div>
   </div>
   <div class="table-wrap">
     <?php if (!$soldList): ?>
@@ -340,7 +337,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
         <tbody>
         <?php foreach ($soldList as $s): ?>
           <tr>
-            <td><?= e($s['title_en'] ?: ($s['title_ar'] ?: 'N/A')) ?><?php if (!empty($s['title_ar'])): ?><div class="art-title-ar" dir="rtl"><?= e($s['title_ar']) ?></div><?php endif; ?></td>
+            <td><?= owBi((string) ($s['title_en'] ?: ($s['title_ar'] ?: 'N/A')), (string) ($s['title_ar'] ?: ($s['title_en'] ?: 'N/A'))) ?></td>
             <td><?= e($s['date']) ?></td>
             <td class="fin-price"><?= number_format($s['price']) ?> <span class="sar">SAR</span></td>
           </tr>
@@ -372,8 +369,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
           <?php endif; ?>
         </div>
         <div class="aw-body">
-          <div class="aw-title"><?= e($aw['title_en']) ?></div>
-          <?php if ($aw['title_ar'] !== ''): ?><div class="art-title-ar" dir="rtl" lang="ar"><?= e($aw['title_ar']) ?></div><?php endif; ?>
+          <div class="aw-title"><?= owBi((string) ($aw['title_en'] ?: $aw['title_ar']), (string) ($aw['title_ar'] ?: $aw['title_en'])) ?></div>
           <?php $stg = $artStages[(int) $aw['id']] ?? [];
           if (owHasJourney($stg)): ?>
           <span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
@@ -420,7 +416,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
           ?>
     <div class="card draft">
       <div class="draft-info">
-        <div class="draft-title"><?= e($d['title_en']) ?> · <span dir="rtl"><?= e($d['title_ar']) ?></span></div>
+        <div class="draft-title"><?= owBi((string) ($d['title_en'] ?: $d['title_ar']), (string) ($d['title_ar'] ?: $d['title_en'])) ?></div>
         <?= owStagesHtml($ds, 'strip') ?>
       </div>
       <div class="art-actions">
@@ -449,7 +445,7 @@ const T={
   en:{dir:'ltr',lb:'العربية',
     profileTitle:'Artist Profile',worksTitle:'Artworks',uploadTitle:'New Artwork',start:'Start New Artwork',startDesc:'Show the real journey of your work: photograph it at 25%, 50% and 100%. Your progress is saved after every step.',draftsTitle:'Drafts in progress',cardContinue:'Continue',review:'In review',
     statTotal:'Total Artworks',statSold:'Artworks Sold',statSince:'Member Since',
-    finTitle:'Financial Report',finTotal:'Total Artworks',finSold:'Artworks Sold',finYear:'Earnings This Year (SAR)',finAll:'Earnings All Time (SAR)',
+    finTitle:'Financial Report',finTotal:'Total Artworks',finSold:'Artworks Sold',finYear:'Your share this year, after Oweili’s 15% (SAR)',finAll:'Your share all time, after Oweili’s 15% (SAR)',
     finEmpty:'No sales yet. Your sold artworks will appear here.',finHArt:'Artwork',finHDate:'Sale Date',finHPrice:'Price',saved:'Profile updated successfully.',
     edit:'Edit Profile',empty:'No artworks yet. Start by uploading your first piece.',
     abstract:'Abstract',landscape:'Landscape',portrait:'Portrait',other:'Other',
@@ -460,7 +456,7 @@ const T={
   ar:{dir:'rtl',lb:'English',
     profileTitle:'الملف الشخصي للفنان',worksTitle:'الأعمال الفنية',uploadTitle:'عمل فني جديد',start:'ابدأ عملاً فنياً جديداً',startDesc:'اعرض الرحلة الحقيقية لعملك: صوّره عند 25% و50% و100%. يُحفظ تقدّمك بعد كل خطوة.',draftsTitle:'مسودات قيد العمل',cardContinue:'متابعة',review:'قيد المراجعة',
     statTotal:'إجمالي الأعمال',statSold:'الأعمال المباعة',statSince:'عضو منذ',
-    finTitle:'التقرير المالي',finTotal:'إجمالي الأعمال',finSold:'الأعمال المباعة',finYear:'أرباح هذا العام (ر.س)',finAll:'إجمالي الأرباح (ر.س)',
+    finTitle:'التقرير المالي',finTotal:'إجمالي الأعمال',finSold:'الأعمال المباعة',finYear:'حصتك هذا العام بعد 15% لأويلي (ر.س)',finAll:'حصتك الإجمالية بعد 15% لأويلي (ر.س)',
     finEmpty:'لا توجد مبيعات بعد. ستظهر أعمالك المباعة هنا.',finHArt:'العمل الفني',finHDate:'تاريخ البيع',finHPrice:'السعر',saved:'تم تحديث الملف الشخصي بنجاح.',
     edit:'تعديل الملف الشخصي',empty:'لا توجد أعمال بعد. ابدأ برفع عملك الأول.',
     abstract:'تجريدي',landscape:'طبيعي',portrait:'بورتريه',other:'أخرى',
