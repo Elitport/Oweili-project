@@ -122,6 +122,11 @@
 
 ## Features
 
+### Privacy line on stage photo details, 404 contrast on phones (12 Nov 2026, owner)
+- Privacy Policy (privacy.php, What we collect): one new line after "Artwork photos": "Stage photo details: we read the camera make, model and photo time of the stage photos, only to check that artworks are original. This is never shown publicly." / «تفاصيل صور المراحل: نقرأ نوع الكاميرا وطرازها ووقت التقاط صور المراحل، فقط للتأكد من أن الأعمال أصلية. ولا يُعرض ذلك للعموم أبداً.» The "Last updated" date was not changed
+- 404 page on phones (768 px and narrower), light mode: the small Arabic © line at the bottom («© 2026 أويلي · بيت الفن الأصيل») uses --color-dark instead of --color-body (contrast 4.45 → passes). Only in 404.php; the shared footer is unchanged elsewhere. The English © line there still measures 4.45 (not asked)
+- OW_STAGE_SPAN_MIN stays 30 minutes. Files: privacy.php, 404.php. Tables: none
+
 ### Stolen-art warnings for the admin, Support card hidden (night of 11 Nov 2026, owner)
 - Admin → Waiting for approval → New artworks: a pink box "Checks for copied art (only you see this; nothing is blocked)" under the Proof of Process, only when there is something to say (stolen_lib.php, owStolenWarningsHtml; admin.php only, not the sub-admin panel, nothing public). Warnings only: an upload is never blocked
   - Duplicate check: a 64-bit picture fingerprint (difference hash) of the artwork's main photo, of the whole picture and of the centre 80% and 60%, compared with the main photo of every other artwork that is not a draft. Same or very close (OW_DUP_MAX_DIST = 5 of 64; measured: a resized or 10%-cropped copy = 1, 65 different paintings = 8 or more) shows "Looks like an artwork by [artist]" with both pictures, a link to the other artwork and "the same artist" when it is. Fingerprints are kept in .logs/img_hash.json (private, kept by deploys) so each photo is read once
