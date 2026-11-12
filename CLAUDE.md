@@ -123,6 +123,16 @@
 
 ## Features
 
+### Gallery: new search and filter bar, side panel, phone sheet (12 Nov 2026, owner)
+- marketplace.php only. The line «كل عمل هنا رسمته يد فنان، بصبر وحب» / "Every piece here was made by an artist’s own hand, with patience and love." now sits inside the title card under the description (.ph-note; also on collection pages); the separate pill under the card is gone
+- Laptops: one rounded frosted bar (.mp-bar): [search "Search artworks" / «ابحث عن عمل فني» | Topic ▾ | Status ▾ | Sort ▾ | filters button], thin lines between the parts. Status is now a dropdown (All / Available; Auction only while the Auctions page is on). Choosing a Topic, Status or Sort opens the Gallery at once; a new Topic drops a style from Art Styles, as before. When the page scrolls past it, the bar sticks under the menu, slimmer and still frosted (.stuck, its place kept so nothing jumps)
+- The filters button (pink circle, sliders icon, with a small number for extra filters on) opens "More filters" / «تصفية أدق» as a side panel sliding in (from the left in Arabic): Style (grouped), Medium, Price, Size, Orientation, Artist’s city, Color and Verified artists only, all as tappable chips, plus "Clear all" (clears what the panel shows) and "Show results". Closes with ×, a tap outside or Escape; the keyboard stays inside while it is open
+- Phones (768 px and narrower): one line [search] [filters button]; the button opens a bottom sheet "Filters" / «التصفية» with Topic, Status, Sort and every extra filter, "Clear all" and "Show results"
+- Chosen filters show as small removable chips with × under the bar (search words, topic or style, status, medium, price, size, orientation, city, color, verified)
+- Same filters, same values and the same web addresses as before (empty and default choices are left out). One change agreed by the owner: "Show results" in More filters now keeps the chosen Topic (before, it quietly reset it to All)
+- Light animations (panel slide, chip fade), off for visitors who ask for less motion. Same colours (oweili.css variables) and fonts. Background photo, artwork cards, menu, footer and other pages unchanged
+- Files: marketplace.php. Tables: none (reads artworks, users, artwork_colors as before)
+
 ### Art Map: Region next to the tabs, Arabic title «وجهات الفن» (12 Nov 2026, owner)
 - art_map.php: the three tabs and the Region filter sit in one row (.m-bar): [Museums] [Art Galleries] [Institutes] Region [All regions]. Laptops: one row. Phones: the tabs on one line and Region with its list on one short line under them (it does not fit beside the tabs at phone width). The big page title in Arabic is «وجهات الفن» (English stays "Art Map"). The Arabic browser tab title and link preview also say «وجهات الفن» (owner, same day). Files: art_map.php. Tables: none
 
