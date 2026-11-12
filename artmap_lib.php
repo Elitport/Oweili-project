@@ -61,6 +61,14 @@ function owMapRegionKey(string $s): string {
     return '';
 }
 
+/* One example photo per type, shown (with an "Example photo" label) on a place that has no photo of its own,
+   so it never pretends to be the place (owner, 12 Nov 2026). Free licences, small copies in assets/img/places/type-*. */
+const OW_MAP_TYPE_PHOTO = [
+    'museum'    => ['assets/img/places/type-museum', 'Dale Cruse, CC BY 4.0, Flickr', 'https://www.flickr.com/photos/dalecruse/55192096411/'],
+    'gallery'   => ['assets/img/places/type-gallery', 'Dale Cruse, CC BY 4.0, Flickr', 'https://www.flickr.com/photos/dalecruse/53869486479/'],
+    'institute' => ['assets/img/places/type-institute', 'Michael Coghlan, CC BY-SA 2.0, Flickr', 'https://www.flickr.com/photos/mikecogh/6559129473/'],
+];
+
 function owArtPlacesReady(): bool { return owHasTable('art_places'); }
 
 /* Published places of one kind (optionally one region), for visitors */

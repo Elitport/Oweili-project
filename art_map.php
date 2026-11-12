@@ -96,6 +96,12 @@ $placeCard = function (array $p) use ($PIN): string {
         $alt = e($nEn . ' · ' . $nAr);
         $h .= '<figure class="m-photo"><picture><source type="image/webp" srcset="' . e(owBase() . $ph . '.webp') . '"><img loading="lazy" decoding="async" width="480" height="300" src="' . e(owBase() . $ph . '.jpg') . '" alt="' . $alt . '"></picture>'
             . ((string) $p['photo_credit'] !== '' ? '<figcaption>' . owBi('Photo: ', 'الصورة: ') . ((string) $p['photo_page'] !== '' && owMapUrl((string) $p['photo_page']) !== '' ? '<a href="' . e((string) $p['photo_page']) . '" target="_blank" rel="noopener nofollow">' . e((string) $p['photo_credit']) . '</a>' : e((string) $p['photo_credit'])) . '</figcaption>' : '') . '</figure>';
+    } elseif (isset(OW_MAP_TYPE_PHOTO[$p['kind']]) && is_file(__DIR__ . '/' . OW_MAP_TYPE_PHOTO[$p['kind']][0] . '.jpg')) {
+        /* no photo of this place yet: one example photo for its type, clearly labelled, never presented as the place */
+        [$tb, $tc, $tp] = OW_MAP_TYPE_PHOTO[$p['kind']];
+        $h .= '<figure class="m-photo m-ex"><picture><source type="image/webp" srcset="' . e(owBase() . $tb . '.webp') . '"><img loading="lazy" decoding="async" width="480" height="300" src="' . e(owBase() . $tb . '.jpg') . '" alt="' . e('Example photo, not this place · صورة توضيحية، ليست لهذا المكان') . '"></picture>'
+            . '<span class="m-ex-tag">' . owBi('Example photo', 'صورة توضيحية') . '</span>'
+            . '<figcaption>' . owBi('Example photo: ', 'صورة توضيحية: ') . '<a href="' . e($tp) . '" target="_blank" rel="noopener nofollow">' . e($tc) . '</a></figcaption></figure>';
     } else {
         $h .= '<div class="m-photo m-ph" aria-hidden="true"><svg viewBox="0 0 24 24">' . ($p['kind'] === 'institute' ? '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/>' : ($p['kind'] === 'gallery' ? '<rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="m3 15 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>' : '<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/>')) . '</svg></div>';
     }
@@ -164,6 +170,8 @@ $placeCard = function (array $p) use ($PIN): string {
 .m-photo img{display:block;width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;}
 .m-photo figcaption{font-size:12px;line-height:1.4;color:var(--color-body);padding:6px var(--space-md) 0;}
 .m-photo figcaption a{color:inherit;}
+.m-ex{position:relative;}
+.m-ex-tag{position:absolute;top:10px;inset-inline-start:10px;padding:3px 10px;border-radius:var(--radius-pill);background:rgba(var(--rgb-shadow),.62);color:#fff;font-size:12px;font-weight:700;line-height:1.5;}
 .m-ph{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--color-tint-pink),rgba(var(--rgb-neutral),0.10));}
 .m-ph svg{width:44px;height:44px;stroke:var(--color-dark);opacity:.55;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
 .m-info{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-caption);color:var(--color-body);}
