@@ -185,7 +185,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 </style>
 </head>
 <body class="ow">
-<?= owStudioBackdrop('museum-walk') /* the owner's photo of visitors in a museum hall (6 Nov 2026) */ ?>
+<?= owStudioBackdrop('easels-corridor') /* the owner's photo of paintings on easels in a bright corridor (12 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 

@@ -87,6 +87,11 @@ const OW_STUDIO = [
         'A bright concrete hall with art posters on the wall, a glass roof and cafe tables',
         'قاعة خرسانية مضيئة بملصقات فنية على الجدار وسقف زجاجي وطاولات مقهى',
         'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDibaGSdtsSFj39B9a6DT9PhtyHlxJIOR6D6Cs7TLvZbYDr+8Ubh6VqpdKcMzqAMc54p3MZXuaKKAh2jDZyD6Gt22vEmiw77GT+AfKPw+tcob2FUZTMhP16A1El3MXDx3yIO2yHPAP160ISujtFe1Kg7Q2e4QkUVx02o3UbgfbZn46rGgA9sEUU7jOftrBDFjLkHqBWjHp6FFTgKD3JyaKKdkS5Mt3Ftb/Zi0W1ZAOGI4z71HYQtdWjrJIrZGflUjHNFFK2oJuxeXTEKglMn1HeiiinZBdn/9k='],
+    // the owner's photo for the Art Map (12 Nov 2026): a bright corridor with colourful paintings on wooden easels and benches
+    'easels-corridor' => [[640, 1280, 1920, 2000], 2000, 1331,
+        'A bright corridor with colourful paintings on wooden easels, benches and tall windows',
+        'ممر مضيء فيه لوحات ملوّنة على حوامل خشبية ومقاعد ونوافذ طويلة',
+        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCKDVbaOUIDIy9CSmMGt2zmiuYlkhYMh6MK49ojFNJMYxsY8HJP1HtV/TLo7fLjMqo2fmBwRz2/nXO7nQrM67hF3MPlHemz3EKWqTCaFEkUMjSPgMCcZA6ms6509Fha6Nw06mNsZk6cdx2xUmsW8F5BYvFIixQJs2qRmmmDjoTywPO5ayvxNGOCyKCM9xRU2jW0VpZlBcK4Zy30yBxRV8yMbHDS36z2VnZhOUA3nOATjFTWjKr5UYHaiiiS1LizqNIvFdDZ3Co8MvGG6A1Z1jRV+zia2SSMxjP7sBz+WRmiipBuxzceralbr5dsYJkH8ZhOc+/NFFFGxJ//2Q=='],
     // the owner's photo for the Gallery (8 Nov 2026): a quiet gallery hall with framed photographs and a bench, in black and white
     'gallery-hall' => [[640, 1280, 1920, 2000], 2000, 1333,
         'A quiet gallery hall with framed photographs on white walls and a bench in the middle, in black and white',
@@ -118,6 +123,7 @@ const OW_STUDIO_FOCUS = [
     'easels-class'  => '42% 55%',
     'museum-walk'   => '50% 0%',    // the arch (top of the photo) and the visitors walking under it; laptops trim only the floor
     'gallery-hall'  => '50% 50%',   // the framed photographs and the bench
+    'easels-corridor' => '50% 50%', // the paintings on easels down the corridor
     'events-hall'   => '50% 50%',   // the posters on the wall and the tables below them
     'open-books'    => '50% 50%',   // the open pages
     'gallery-arch'  => '40% 48%',   // the visitor in the lit arch   // the row of easels with their canvases
@@ -172,7 +178,7 @@ function owStudioTinyVar(string $key): string {
    the average of the photo's own bottom edge, which then fills the rest of the page (oweili.css, 768 px and narrower) */
 const OW_STUDIO_UNDER = [
     'art-book' => '#2a211b', 'brushes-jars' => '#b7ad90', 'easels-class' => '#7c9ca7', 'gallery-arch' => '#020202',
-    'gallery-visit' => '#895233', 'home-painting' => '#091b1c', 'museum-walk' => '#633f1b', 'events-hall' => '#4b6b6c', 'gallery-hall' => '#404040', 'open-books' => '#4f4f4f',
+    'gallery-visit' => '#895233', 'home-painting' => '#091b1c', 'museum-walk' => '#633f1b', 'events-hall' => '#4b6b6c', 'gallery-hall' => '#404040', 'easels-corridor' => '#8b7f73', 'open-books' => '#4f4f4f',
     'paint-buckets' => '#787673', 'paint-cloth' => '#9a838f', 'palette-hand' => '#2a2629', 'pink-palette' => '#827d73',
     'studio-table' => '#8c8572',
 ];
