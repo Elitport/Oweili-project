@@ -77,6 +77,14 @@ $n = count($institutes) + count($places);
 /* the All tab: museums and galleries first, then the institutes (the older list, then the newer places) */
 $placesFirst = $tab === 'all' ? array_values(array_filter($places, fn($p) => $p['kind'] !== 'institute')) : [];
 $placesLast  = $tab === 'all' ? array_values(array_filter($places, fn($p) => $p['kind'] === 'institute')) : $places;
+/* the All tab shows a place once: an older-list institute with the same name as a museum or gallery is left out there
+   (Hayy Jameel shows as a gallery; it stays on the Institutes tab; owner, 12 Nov 2026) */
+if ($tab === 'all' && $institutes) {
+    $mapBase = fn(string $s) => mb_strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', $s)));
+    $seen = array_flip(array_map(fn($p) => $mapBase((string) $p['name_en']), $placesFirst));
+    $institutes = array_values(array_filter($institutes, fn($i) => !isset($seen[$mapBase((string) $i['name_en'])])));
+    $n = count($institutes) + count($places);
+}
 /* One place card (art_places row): photo or placeholder, name, city, kind, text, address, phone, buttons. Empty fields are left out */
 $placeCard = function (array $p) use ($PIN): string {
     $K = OW_MAP_KINDS[$p['kind']] ?? OW_MAP_KINDS['museum'];
@@ -354,7 +362,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           </div>
           <?php $dEn = owExcerpt((string) ($i['description_en'] ?: $i['description_ar']), 170); $dAr = owExcerpt((string) ($i['description_ar'] ?: $i['description_en']), 170); ?>
           <?php if ($dEn !== ''): ?><p class="i-desc"><?= owBi($dEn, $dAr) ?></p><?php endif; ?>
-          <span class="i-count"><?= owBi($nEn, $nAr) ?></span>
+          <?php if ((int) $i['course_count'] > 0): /* only when there is an active course (owner, 12 Nov 2026) */ ?><span class="i-count"><?= owBi($nEn, $nAr) ?></span><?php endif; ?>
           <?= owMapActs(owMapUrl((string) $i['website_url']), owMapsLink((string) $nameEn, (string) $cEn), (string) $nameEn) ?>
 
           <details class="i-courses">
