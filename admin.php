@@ -391,7 +391,10 @@ if ($isAdmin && owHasTable('articles')) {
     try { $teamDrafts = getDB()->query("SELECT id, type, slug, title_en, title_ar, created_at FROM articles WHERE status = 'draft' AND author_user_id IS NULL ORDER BY id")->fetchAll(); }
     catch (Throwable $e) { error_log('team drafts: ' . $e->getMessage()); }
 }
-$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts);
+/* Art Map museums and galleries saved as drafts, waiting for the owner to publish (owner, 12 Nov 2026) */
+$mapDrafts = 0;
+if ($isAdmin) { require_once __DIR__ . '/artmap_lib.php'; $mapDrafts = owArtPlacesDrafts(); }
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts;
 $SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
 /* one value, as the admin should read it */
 $showVal = function (string $field, $v) use ($SALE_WORDS): string {
@@ -679,6 +682,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <a class="card card-hover" href="admin_articles.php"><b><?= owBi('Articles & events', 'المقالات والملتقيات') ?></b><span><?= owBi('Write and publish Art Events and Art Education.', 'اكتب وانشر الملتقيات والتثقيف الفني.') ?></span></a>
       <a class="card card-hover" href="admin_gallery.php"><b><?= owBi('Gallery', 'المعرض') ?></b><span><?= owBi('Collections, Artist of the week, verified artists.', 'المجموعات، فنان الأسبوع، الفنانون الموثّقون.') ?></span></a>
       <a class="card card-hover" href="admin_institutes.php"><b><?= owBi('Institutes', 'المعاهد') ?></b><span><?= owBi('Art institutes and their courses.', 'المعاهد الفنية ودوراتها.') ?></span></a>
+      <a class="card card-hover" href="admin_art_map.php"><b><?= owBi('Art Map', 'خريطة الفن') ?></b><span><?= owBi('Museums and art galleries: drafts and published.', 'المتاحف والمعارض الفنية: المسودات والمنشور.') ?></span></a>
     </div>
   </div>
 
@@ -938,6 +942,15 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       </div>
       <?php endforeach; ?>
     </div>
+    <?php endif; ?>
+
+    <?php if ($mapDrafts): ?>
+    <h3 class="wc-h"><?= owBi('Art Map drafts: museums and art galleries', 'مسودات خريطة الفن: المتاحف والمعارض الفنية') ?> <span class="pill count"><?= (int) $mapDrafts ?></span></h3>
+    <p class="mini"><?= owBi('Places our team found and checked on their official websites. Visitors see each one only after you publish it.', 'أماكن وجدها فريقنا وتحقق منها في مواقعها الرسمية. لا يراها الزوار إلا بعد أن تنشرها.') ?></p>
+    <div class="wc-list"><div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+      <div><strong><?= owBi($mapDrafts . ' places waiting', $mapDrafts . ' مكاناً بانتظارك') ?></strong></div>
+      <a class="btn btn-accent btn-sm" href="admin_art_map.php"><?= owBi('Open the Art Map tool', 'افتح أداة خريطة الفن') ?></a>
+    </div></div>
     <?php endif; ?>
 
     <?php if ($waitArtists): ?>

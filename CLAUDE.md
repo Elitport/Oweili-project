@@ -92,8 +92,9 @@
 - chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
 - events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). The old events table was empty on the live site (checked 31 Oct 2026)
-- institutes.php — Art Institutes («المعاهد الفنية»), its own page under the Discover menu (2 Nov 2026): Upcoming Workshops on top, then the institutes directory. No longer one of the Art Events type buttons
-- training.php — retired address: sends old links to institutes.php for good (301), keeping ?city and the language
+- art_map.php — Art Map («خريطة الفن», 12 Nov 2026): Museums, Art Galleries and Institutes tabs with a city filter (see Features). admin_art_map.php — the admin's tool for its museums and galleries
+- institutes.php — retired address since 12 Nov 2026: sends old links to art_map.php?tab=institutes for good (301)
+- training.php — retired address: sends old links to the Art Map's Institutes tab for good (301), keeping ?city and the language
 - articles_list.php — all published articles of one type (?type=event / artist_spotlight / art_education)
 - article.php — one article (article.php?slug=...)
 - admin_articles.php — team tool to write articles (sub-admins and admins only)
@@ -121,6 +122,14 @@
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
 
 ## Features
+
+### Art Map replaces Art Institutes in the menu (12 Nov 2026, owner)
+- art_map.php «خريطة الفن»: the top menu item "Art Institutes" became "Art Map" (same place, same number of items; nav.php, desktop and ☰). institutes.php and training.php now answer 301 to art_map.php?tab=institutes (the old city becomes one of the Art Map cities, the language is kept). Sitemap and the iPhone early-load list name art_map.php
+- 3 tabs: Museums «المتاحف» (default), Art Galleries «المعارض الفنية», Institutes «المعاهد». The Institutes tab is the old directory unchanged (cards, courses, the hidden Upcoming Workshops), plus "Official website" and "Google Maps" buttons on each card. City filter (?city=): Riyadh, Jeddah, AlUla, Dammam / Khobar (Dhahran is in this group), Abha, Other cities; institutes are sorted into these by their city name (owMapCityKey)
+- Each museum or gallery: name, city, a short text in both languages, the official website and a Google Maps link (a Google Maps search for the name and city, unless a Google Maps link is saved). Same look as the other photo pages: museum-walk photo, frosted cards, laptop and phone. No pictures of the places
+- Museums and galleries are kept as ONE setting, site_settings 'art_places' (JSON; no database structure change). Every place starts as a draft; only the admin publishes it: admin_art_map.php (admin only; Admin → Articles tab → "Art Map" card): Publish / Back to draft / Edit / + New place, each with the source the team checked (only the admin sees it); nothing is deleted. Admin → Waiting for approval shows "Art Map drafts" with the count (in the waiting total). Logged: art_place_save, art_place_publish, art_place_draft
+- 21 places researched on official websites (the place's own site, the Ministry of Culture / Museums Commission, Visit Saudi or Experience AlUla; checked through search results limited to those sites, because this environment cannot open them directly) and saved as drafts on the live database by a temporary locked page (removed straight after), after a full backup: 9 museums (National Museum, SAMoCA at JAX, Red Sea Museum, Tariq Abdulhakim Center, House of Islamic Art, Tayebat Museum, Ithra Museum, Alfelwah and Aljowharah Museum, Fatimah Museum) and 12 galleries (ATHR Gallery, ATHR AlUla, Hafez Gallery, Hayy Jameel, Saudi Art Council, Naila Art Gallery, Hewar Art Gallery, Al Ajlan Art Gallery, Abstract Art Gallery, Madrasat Addeera, Al Muftaha Village, Art Street Abha)
+- Files: art_map.php, artmap_lib.php, admin_art_map.php (new); institutes.php, training.php (redirects), nav.php, sitemap.php, theme_head.php (early-load list), admin.php, gallery_lib.php (workshops switch link). Tables: site_settings (art_places), institutes, courses, activity_log
 
 ### Privacy line on stage photo details, 404 contrast on phones (12 Nov 2026, owner)
 - Privacy Policy (privacy.php, What we collect): one new line after "Artwork photos": "Stage photo details: we read the camera make, model and photo time of the stage photos, only to check that artworks are original. This is never shown publicly." / «تفاصيل صور المراحل: نقرأ نوع الكاميرا وطرازها ووقت التقاط صور المراحل، فقط للتأكد من أن الأعمال أصلية. ولا يُعرض ذلك للعموم أبداً.» The "Last updated" date was not changed
@@ -887,7 +896,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- Now (owner, 6 Nov 2026, night): no Discover dropdown. Gallery · Art Styles («أساليب الرسم», renamed from Explore Art Styles) · Art Events · Art Education · Art Institutes · Support ↓ (Artist Spotlights, Community and the Collect menu come back only when switched on). The lines below describe the older layout
+- Now (owner, 6 Nov 2026, night; Art Map since 12 Nov 2026): no Discover dropdown. Gallery · Art Styles («أساليب الرسم», renamed from Explore Art Styles) · Art Events · Art Education · Art Map («خريطة الفن», was Art Institutes) · Support ↓ (Artist Spotlights, Community and the Collect menu come back only when switched on). The lines below describe the older layout
 - Order (owner's choice): Gallery · Collect ↓ · Explore Art Styles · Discover ↓ · Community · Support ↓ (Community, Gifts, Commissions and Artist Spotlights are hidden for now, to bring back later, 6 Nov 2026: while hidden the menu is Gallery · Explore Art Styles · Discover ↓ (Art Events, Art Education, Art Institutes) · Support ↓, and the Collect menu is gone because all its pages are hidden) (Arabic, right to left: المعرض · اقتنِ · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
 - Collect ↓ / «اقتنِ» → Gifts / «هدايا» (gifts.php, hidden for now: then the top word opens commission.php), Commissions / «طلب لوحة خاصة» (commission.php), and Auctions / «المزاد» (auctions.php, with a small "Soon" tag) ONLY while the Auctions page is switched on in Admin → Settings (hidden since 5 Nov 2026). The top word opens gifts.php
 - Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)

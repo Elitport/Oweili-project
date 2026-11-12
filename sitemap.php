@@ -22,7 +22,7 @@ $add = function (string $path, ?string $when = null, string $freq = 'weekly', st
     $urls[] = ['loc' => owAbsUrl($path), 'when' => $when ? gmdate('Y-m-d', strtotime($when)) : null, 'freq' => $freq, 'prio' => $prio];
 };
 foreach ([['', 'daily', '1.0'], ['marketplace.php', 'daily', '0.9'], ['explore.php', 'monthly', '0.8'],
-          ['institutes.php', 'weekly', '0.6'], ['articles_list.php?type=event', 'weekly', '0.6'],
+          ['art_map.php', 'weekly', '0.6'], ['articles_list.php?type=event', 'weekly', '0.6'],
           ['articles_list.php?type=art_education', 'monthly', '0.5'], ['support.php', 'monthly', '0.4'], ['verify', 'monthly', '0.4'], ['register_artist.php', 'monthly', '0.5'],
           ['register_collector.php', 'monthly', '0.4'], ['privacy.php', 'yearly', '0.2'], ['terms.php', 'yearly', '0.2']] as [$p, $f, $pr]) {
     $add($p, null, $f, $pr);

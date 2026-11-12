@@ -250,7 +250,7 @@ if(document.prerendering){document.addEventListener('prerenderingchange',go,{onc
   var d = document.documentElement;
   var skip = /^\/(logout|verify\.php|forgot|upload_artwork|edit_artwork|edit_profile|my_articles|my_orders|commission_file|certificate|img|view|favorite|inquire|bashro_api|bashro_send|admin|subadmin_dashboard|artist_commission|auth_state)/;
   var risky = /[?&](leave|logout|token|k|ref|preview)=/;
-  var pub = /^\/(|index\.php|marketplace\.php|explore\.php|community\.php|gifts\.php|support\.php|institutes\.php|articles_list\.php|article\.php|artwork\.php|artist_dashboard\.php|login\.php|register(_artist|_collector)?\.php|privacy\.php|terms\.php|cert_verify\.php|verify|commission\.php)$/;
+  var pub = /^\/(|index\.php|marketplace\.php|explore\.php|community\.php|gifts\.php|support\.php|art_map\.php|institutes\.php|articles_list\.php|article\.php|artwork\.php|artist_dashboard\.php|login\.php|register(_artist|_collector)?\.php|privacy\.php|terms\.php|cert_verify\.php|verify|commission\.php)$/;
   var native = !!(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules'));
   var done = {}, count = 0, timer = null, slow = false;
   try { var c = navigator.connection || {}; slow = !!c.saveData || /(^|-)(2g|3g)$/.test(c.effectiveType || ''); } catch (e) {}
