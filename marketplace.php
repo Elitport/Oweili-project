@@ -221,39 +221,122 @@ foreach ($modalArtworks as $aw) {
     .page-header{margin-bottom:var(--space-md);animation:mpRise .15s ease-out both;}
     .page-header h1{font-size:var(--fs-section);margin:0 0 var(--space-xs);}
     .page-header p{font-size:var(--fs-body);max-width:600px;margin:0;}
-    .human-banner{text-align:center;margin:0 0 var(--space-lg);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-card);font-size:var(--fs-body);font-weight:600;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.15);animation:mpRise .15s ease-out both;}
 
-    /* filters: search, 6 category pills, then a small row with status and sort */
-    .mp-tools{display:flex;flex-direction:column;gap:var(--space-sm);margin-bottom:var(--space-md);animation:mpRise .15s ease-out both;}
-    .mp-search{display:flex;gap:var(--space-xs);max-width:460px;}
-    .mp-search .input{flex:1;min-width:0;}
-    .cat-pills{display:flex;flex-wrap:wrap;gap:var(--space-xs);}
-    .cat-pill{display:inline-flex;align-items:center;min-height:40px;padding:0 18px;border-radius:var(--radius-pill);font-size:var(--fs-button);font-weight:700;text-decoration:none;color:var(--color-dark);background:var(--color-surface);border:1px solid var(--color-border-strong);transition:background var(--ease),border-color var(--ease),color var(--ease);}
-    .cat-pill:hover{background:var(--color-hover-light);color:var(--color-dark);}
-    .cat-pill.active{background:var(--color-dark);border-color:var(--color-dark);color:var(--color-on-dark);}
-    .cat-pill:focus-visible,.st-pill:focus-visible,.type-chip:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
-    .mp-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-sm);}
-    .st-pills{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
-    .mp-label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-inline-end:4px;}
-    .ow-backdrop ~ * .mp-label{display:inline-block;width:fit-content;padding:4px 12px;border-radius:var(--radius-card);background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);text-shadow:none;}
-    .ow-backdrop ~ * .st-pill:not(.active),.ow-backdrop ~ * .mp-count{background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);color:var(--color-dark);text-shadow:none;}
+    .ow-backdrop ~ * .mp-count{background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);color:var(--color-dark);text-shadow:none;}
     .ow-backdrop ~ * .mp-count{width:fit-content;padding:4px 12px;border-radius:var(--radius-card);}
-    .st-pill{position:relative;}
-    .st-pill::after{content:"";position:absolute;inset:-6px -3px;}   /* a bigger tap area (44 px), same look (owner, 11 Nov 2026) */
-    .st-pill{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:var(--radius-pill);font-size:var(--fs-label);font-weight:600;text-decoration:none;color:var(--color-body);border:1px solid var(--color-border);background:transparent;transition:background var(--ease),color var(--ease);}
-    .st-pill:hover{background:var(--color-hover-light);color:var(--color-dark);}
-    .st-pill.active{color:var(--color-dark);border-color:var(--color-dark);background:var(--color-surface);}
-    .mp-sort{display:flex;align-items:center;gap:var(--space-xs);}
-    .mp-sort select{min-height:40px;padding:0 36px 0 12px;border-radius:var(--radius-input);border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);font-size:var(--fs-label);font-weight:600;cursor:pointer;}
-    [dir="rtl"] .mp-sort select{padding:0 12px 0 36px;}
-    .mp-sort select:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
-    .mp-topic{display:flex;flex-direction:column;gap:6px;max-width:460px;}
-    .mp-topic select{width:100%;min-height:48px;padding:0 36px 0 12px;border-radius:var(--radius-input);border:1px solid var(--color-border-strong);background:var(--color-surface);color:var(--color-dark);font-size:var(--fs-label);font-weight:600;cursor:pointer;}
-    [dir="rtl"] .mp-topic select{padding:0 12px 0 36px;}
-    .mp-topic select:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
-    .type-chip{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:32px;padding:0 12px;border-radius:var(--radius-pill);font-size:var(--fs-label);font-weight:600;text-decoration:none;color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),0.2);}
-    .type-chip span{font-size:16px;line-height:1;}
     .mp-count{font-size:var(--fs-label);color:var(--color-body);margin:0 0 var(--space-sm);}
+    /* ---- Search and filters (owner, 12 Nov 2026): one rounded frosted bar like a travel-site search bar ---- */
+    .ph-note{margin:8px auto 0 !important;font-weight:600;color:var(--color-dark);}
+    .mp-tools{display:flex;flex-direction:column;align-items:center;gap:10px;margin:0 0 12px;}
+    .mp-barwrap{width:100%;display:flex;justify-content:center;}
+    .mp-bar{display:flex;align-items:center;width:100%;max-width:880px;min-height:64px;padding:6px;gap:0;border-radius:var(--radius-pill);background:var(--studio-glass);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);border:1px solid var(--studio-glass-edge);box-shadow:0 8px 28px rgba(var(--rgb-shadow),.14),0 1px 2px rgba(var(--rgb-shadow),.06);transition:box-shadow var(--ease);}
+    .mp-bar:focus-within{box-shadow:0 10px 34px rgba(var(--rgb-shadow),.2),0 1px 2px rgba(var(--rgb-shadow),.06);}
+    .mb-q{display:flex;align-items:center;flex:1 1 auto;min-width:200px;height:52px;padding:0 12px 0 6px;border-radius:var(--radius-pill);transition:background var(--ease);}
+    [dir="rtl"] .mb-q{padding:0 6px 0 12px;}
+    .mb-q:hover{background:var(--color-hover-light);}
+    .mb-go{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;border-radius:50%;background:none;color:var(--color-dark);cursor:pointer;}
+    .mb-go svg,.mb-filt svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+    .mb-q input{flex:1;min-width:0;height:44px;border:0;background:transparent;outline:none;font:inherit;font-size:15px;font-weight:600;color:var(--color-dark);}
+    .mb-q input::placeholder{color:var(--color-body);font-weight:500;opacity:1;}
+    .mb-q input::-webkit-search-cancel-button{cursor:pointer;}
+    .mb-seg{position:relative;flex:0 0 auto;height:52px;border-radius:var(--radius-pill);cursor:pointer;transition:background var(--ease);}
+    .mb-seg::before{content:"";position:absolute;inset-inline-start:0;top:12px;bottom:12px;width:1px;background:var(--color-border-strong);transition:opacity var(--ease);}
+    .mb-seg:hover,.mb-seg:focus-within{background:var(--color-hover-light);}
+    .mb-seg:hover::before,.mb-seg:focus-within::before,.mb-seg:hover + .mb-seg::before,.mb-seg:focus-within + .mb-seg::before,.mb-seg:hover + .mb-filt::before{opacity:0;}
+    .mb-q:hover + .mb-seg::before{opacity:0;}
+    .mb-topic{width:184px;} .mb-status{width:128px;} .mb-sort{width:178px;}
+    .mb-l{position:absolute;inset-inline-start:20px;top:8px;font-size:12px;font-weight:700;line-height:1.2;color:var(--color-dark);pointer-events:none;transition:opacity .15s ease,transform .2s ease;}
+    .mb-seg select{position:absolute;inset:0;width:100%;height:100%;padding:22px 34px 0 20px;margin:0;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--color-body);font:inherit;font-size:14px;font-weight:600;line-height:1.2;cursor:pointer;-webkit-appearance:none;appearance:none;text-overflow:ellipsis;outline:none;transition:padding .2s ease;}
+    [dir="rtl"] .mb-seg select{padding:22px 20px 0 34px;}
+    .mb-seg select option{color:var(--color-dark);background:var(--color-menu);}
+    .mb-seg::after{content:"";position:absolute;inset-inline-end:16px;top:calc(50% + 4px);width:7px;height:7px;margin-top:-6px;border-right:1.6px solid var(--color-body);border-bottom:1.6px solid var(--color-body);transform:rotate(45deg);pointer-events:none;transition:top .2s ease;}
+    .mb-seg:has(select:focus-visible){outline:2px solid var(--color-accent);outline-offset:-2px;}
+    .mb-filt{position:relative;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;margin-inline-start:6px;border:0;border-radius:50%;background:var(--color-primary);color:var(--color-on-primary);cursor:pointer;transition:background var(--ease),transform .15s ease;}
+    .mb-filt:hover{background:var(--color-primary-dark);}
+    .mb-filt:active{transform:scale(.96);}
+    .mb-filt:focus-visible,.mb-go:focus-visible,.mp-chip:focus-visible,.pn-x:focus-visible,.pn-clear:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;}
+    .mb-filt .mp-n{position:absolute;top:-2px;inset-inline-end:-2px;min-width:20px;height:20px;padding:0 5px;border:2px solid var(--color-menu);}
+    .mb-noscript{margin-inline-start:6px;}
+    .mp-n{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:var(--radius-pill);background:var(--color-dark);color:var(--color-on-dark);font-size:var(--fs-min);font-weight:700;}
+    /* stuck under the menu: slim, still frosted (laptops) */
+    .mp-barwrap.stuck .mp-bar{position:fixed;z-index:150;top:calc(var(--nav-h) + 8px);left:0;right:0;margin:0 auto;width:calc(100% - 32px);max-width:760px;min-height:0;padding:4px;animation:mbIn .25s cubic-bezier(.22,1,.36,1) both;}
+    .mp-barwrap.stuck :is(.mb-q,.mb-seg){height:42px;}
+    .mp-barwrap.stuck .mb-q input{height:38px;font-size:14px;}
+    .mp-barwrap.stuck .mb-go{width:34px;height:34px;}
+    .mp-barwrap.stuck .mb-l{opacity:0;transform:translateY(-4px);}
+    .mp-barwrap.stuck .mb-seg select{padding-top:0;}
+    .mp-barwrap.stuck .mb-seg::after{top:50%;}
+    .mp-barwrap.stuck .mb-seg::before{top:9px;bottom:9px;}
+    .mp-barwrap.stuck .mb-filt{width:42px;height:42px;}
+    .mp-barwrap.stuck .mb-topic{width:168px;} .mp-barwrap.stuck .mb-status{width:112px;} .mp-barwrap.stuck .mb-sort{width:164px;}
+    @keyframes mbIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+    /* the chosen filters, each removable */
+    .mp-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0;padding:0;list-style:none;}
+    .mp-chip{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 8px 0 14px;border-radius:var(--radius-pill);background:var(--studio-glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--studio-glass-edge);box-shadow:0 2px 8px rgba(var(--rgb-shadow),.08);font-size:13px;font-weight:600;color:var(--color-dark);text-decoration:none;animation:chIn .2s ease-out both;transition:background var(--ease);}
+    [dir="rtl"] .mp-chip{padding:0 14px 0 8px;}
+    .mp-chip svg{width:18px;height:18px;padding:3px;border-radius:50%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;transition:background var(--ease);}
+    .mp-chip:hover{color:var(--color-dark);background:var(--color-menu);}
+    .mp-chip:hover svg{background:var(--color-hover-light);}
+    @keyframes chIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+    /* the panel: slides in from the side on laptops, up from the bottom on phones */
+    html.mp-lock,html.mp-lock body{overflow:hidden;}
+    .mp-scrim{position:fixed;inset:0;z-index:1500;background:rgba(var(--rgb-shadow),.38);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);opacity:0;transition:opacity .3s ease;}
+    .mp-scrim.open{opacity:1;}
+    .mp-panel{position:fixed;z-index:1501;top:0;bottom:0;inset-inline-end:0;width:min(440px,92vw);display:flex;flex-direction:column;background:var(--color-menu);color:var(--color-body);box-shadow:0 0 50px rgba(var(--rgb-shadow),.25);transform:translateX(102%);transition:transform .32s cubic-bezier(.22,1,.36,1);}
+    [dir="rtl"] .mp-panel{transform:translateX(-102%);}
+    .mp-panel.open,[dir="rtl"] .mp-panel.open{transform:none;}
+    .mp-panel,.mp-panel *,.mp-chip{text-shadow:none;}
+    .mp-panel[hidden],.mp-scrim[hidden]{display:none;}
+    .mp-panel form{display:flex;flex-direction:column;height:100%;min-height:0;}
+    .pn-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px 16px;border-bottom:1px solid var(--color-border);}
+    .pn-head h2{margin:0;font-size:20px;}
+    .pn-t-ph,.pn-grab{display:none;}
+    .pn-x{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;border-radius:50%;background:none;color:var(--color-dark);cursor:pointer;transition:background var(--ease);}
+    .pn-x:hover{background:var(--color-hover-light);}
+    .pn-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+    .pn-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px 24px 24px;}
+    .pn-basic{display:none;}
+    .pn-sec{border:0;margin:0;padding:18px 0 4px;min-width:0;}
+    .pn-sec + .pn-sec,.pn-basic + .pn-sec{border-top:1px solid var(--color-border);}
+    .pn-sec legend{float:left;width:100%;padding:0;margin:0 0 12px;font-size:15px;font-weight:700;color:var(--color-dark);}
+    [dir="rtl"] .pn-sec legend{float:right;}
+    .pn-sub{clear:both;margin:14px 0 8px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--color-body);}
+    [dir="rtl"] .pn-sub{letter-spacing:0;font-size:13px;}
+    .pn-chips{clear:both;display:flex;flex-wrap:wrap;gap:8px;}
+    .ch{position:relative;display:inline-flex;}
+    .ch input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;}
+    .ch span{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);background:var(--color-surface);font-size:14px;font-weight:600;color:var(--color-dark);cursor:pointer;user-select:none;transition:background var(--ease),border-color var(--ease),color var(--ease),transform .12s ease;}
+    .ch span:hover{border-color:var(--color-dark);}
+    .ch span:active{transform:scale(.97);}
+    .ch input:checked + span{background:var(--color-dark);border-color:var(--color-dark);color:var(--color-on-dark);}
+    .ch input:focus-visible + span{outline:2px solid var(--color-accent);outline-offset:2px;}
+    .ch i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(var(--rgb-ink),.25);}
+    .ch input:checked + span i{border-color:var(--color-on-dark);}
+    .pn-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--color-border);background:var(--color-menu);}
+    .pn-clear{min-height:44px;padding:0 6px;border:0;background:none;font:inherit;font-size:15px;font-weight:700;color:var(--color-dark);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+    .pn-foot .btn{min-width:170px;}
+    @media(prefers-reduced-motion: reduce){ .mp-panel,.mp-scrim,.mb-l,.mb-seg select,.mb-seg::after{transition:none;} .mp-barwrap.stuck .mp-bar,.mp-chip{animation:none;} }
+    @media(max-width:768px){
+      .mp-tools{align-items:stretch;}
+      .mp-bar{min-height:0;padding:0;gap:8px;max-width:none;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border-radius:0;}
+      .mp-bar:focus-within{box-shadow:none;}
+      .mb-seg{display:none;}
+      .mb-q{min-width:0;height:52px;background:var(--studio-glass);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);border:1px solid var(--studio-glass-edge);box-shadow:0 6px 20px rgba(var(--rgb-shadow),.12);}
+      .mb-q:hover{background:var(--studio-glass);}
+      .mb-filt{margin:0;box-shadow:0 6px 20px rgba(var(--rgb-shadow),.14);}
+      .mp-chips{justify-content:flex-start;}
+      .mp-panel,[dir="rtl"] .mp-panel{top:auto;left:0;right:0;width:auto;max-height:88vh;max-height:88dvh;border-radius:20px 20px 0 0;transform:translateY(102%);}
+      .mp-panel.open,[dir="rtl"] .mp-panel.open{transform:none;}
+      .pn-grab{display:block;position:absolute;top:8px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:4px;background:var(--color-border-strong);}
+      .pn-head{padding:22px 16px 12px;}
+      .pn-t-lap{display:none;} .pn-t-ph{display:inline;}
+      .pn-body{padding:4px 16px 20px;}
+      .pn-basic{display:block;}
+      .pn-basic .pn-sec:first-child{padding-top:14px;}
+      .pn-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));}
+      .pn-foot .btn{flex:1;min-width:0;}
+    }
+    @media(min-width:769px){ .pn-basic + .pn-sec{border-top:0;} }
 
     /* artwork cards */
     .art-grid{--cols:4;--g:var(--space-md);display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:var(--g);}
@@ -319,25 +402,6 @@ foreach ($modalArtworks as $aw) {
     .modal-close:hover{background:var(--color-hover-light);}
     [dir="rtl"] .modal-close{float:left;}
 
-    /* more filters */
-    .mp-more > summary{list-style:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;width:auto;}
-    .mp-more > summary::-webkit-details-marker{display:none;}
-    .mp-more > summary svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
-    .mp-n{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:var(--radius-pill);background:var(--color-dark);color:var(--color-on-dark);font-size:var(--fs-min);}
-    .mp-filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--space-sm);align-items:end;margin-top:var(--space-sm);padding:var(--space-md);border-radius:var(--radius-card);background:var(--color-surface);border:1px solid var(--color-border);}
-    .mp-filters .field{margin:0;min-width:0;}
-    .mp-filters select{width:100%;min-height:44px;}
-    .f-colors{grid-column:1 / -1;border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
-    .f-colors legend{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);margin-bottom:6px;padding:0;width:100%;}
-    .sw,.sw-any{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px 0 8px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);background:var(--color-surface);font-size:var(--fs-label);font-weight:600;color:var(--color-dark);cursor:pointer;}
-    [dir="rtl"] .sw{padding:0 8px 0 12px;}
-    .sw-any{padding:0 12px;}
-    .sw input,.sw-any input{position:absolute;opacity:0;width:1px;height:1px;}
-    .sw i{width:18px;height:18px;border-radius:50%;border:1px solid rgba(var(--rgb-ink),0.25);}
-    .sw:has(input:checked),.sw-any:has(input:checked){border-color:var(--color-dark);box-shadow:0 0 0 1px var(--color-dark) inset;}
-    .sw:has(input:focus-visible),.sw-any:has(input:focus-visible){outline:2px solid var(--color-accent);outline-offset:2px;}
-    .f-check{grid-column:1 / span 2;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--color-dark);}
-    .f-acts{grid-column:3 / -1;display:flex;gap:var(--space-xs);justify-content:flex-end;flex-wrap:wrap;}
     /* artist of the week */
     .aotw{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;overflow:hidden;padding:0;margin:0 0 var(--space-lg);animation:mpRise .15s ease-out both;}
     .aotw-art{position:relative;aspect-ratio:4/3;background:var(--color-frame);}
@@ -364,8 +428,7 @@ foreach ($modalArtworks as $aw) {
     .col-n{font-size:var(--fs-caption);color:var(--color-body);padding:0 4px;}
     .col-back{display:inline-block;margin-bottom:var(--space-xs);font-size:var(--fs-caption);font-weight:700;color:var(--color-accent);}
     .col-kicker{display:block;margin-bottom:4px;}
-    @media(max-width:1024px){ .mp-filters{grid-template-columns:repeat(3,minmax(0,1fr));} .f-check{grid-column:1 / -1;} .f-acts{grid-column:1 / -1;justify-content:flex-start;} }
-    @media(max-width:640px){ .mp-filters{grid-template-columns:1fr 1fr;padding:var(--space-sm);} .aotw{grid-template-columns:1fr;} .aotw-txt{padding:var(--space-md);} .cols-row{grid-auto-columns:72%;} }
+    @media(max-width:640px){ .aotw{grid-template-columns:1fr;} .aotw-txt{padding:var(--space-md);} .cols-row{grid-auto-columns:72%;} }
 
     .mp-promos{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);margin:0 0 var(--space-lg);}
     .mp-promos.one{grid-template-columns:1fr;}
@@ -382,16 +445,10 @@ foreach ($modalArtworks as $aw) {
     @media(min-width:769px){
       [dir] .page-header{margin-left:auto;margin-right:auto;text-align:center;}
       [dir] .page-header p{margin-left:auto;margin-right:auto;text-align:center;}
-      .mp-tools{max-width:420px;margin-left:auto;margin-right:auto;}
-      .mp-search,.mp-topic{max-width:none;}
-      .cat-pills,.st-pills,.mp-row{justify-content:center;}
-      .mp-more{text-align:center;}
-      .mp-more .mp-filters{grid-template-columns:1fr 1fr;text-align:start;}
-      .mp-more .mp-filters :is(.f-check,.f-acts){grid-column:1 / -1;}
       .mp-count{text-align:center;margin-left:auto;margin-right:auto;}
       .gallery-empty{max-width:420px !important;}
     }
-    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{--g:var(--space-sm);} .mp-search,.mp-topic{max-width:none;} }
+    @media(max-width:768px){ .main-content{padding:calc(var(--nav-h) + var(--space-md)) var(--space-sm) var(--space-xl);} .art-grid{--g:var(--space-sm);} }
     @media(max-width:640px){ .art-grid{--cols:2;} }
     @media(max-width:420px){ .mp-card .aw-body{padding:12px;} .mp-card .btn{padding:0 8px;} .cat-pill{padding:0 14px;} }
     /* A shorter top part, so artworks show on the first screen (owner, 11 Nov 2026): a smaller title card;
@@ -400,31 +457,12 @@ foreach ($modalArtworks as $aw) {
     .ow-backdrop ~ .main-content .page-header{padding:12px 22px;margin-bottom:12px;}
     .ow-backdrop ~ .main-content .page-header h1{font-size:28px;margin-bottom:4px;}
     .ow-backdrop ~ .main-content .page-header p{font-size:14px;}
-    .main-content .human-banner{margin-bottom:var(--space-sm);padding:8px var(--space-md);}
     @media(min-width:769px){
-      .mp-tools{max-width:1100px;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 20px;margin-bottom:12px;}
-      .mp-search{flex:0 0 100%;justify-content:center;}
-      .mp-search .input{flex:0 1 380px;}
-      .mp-topic{flex-direction:row;align-items:center;gap:8px;}
-      .mp-topic select{width:auto;min-width:170px;min-height:40px;}
-      .mp-row{gap:20px;}
-      .mp-more[open]{flex:0 0 100%;}
       .mp-count{margin-bottom:12px;}
     }
     @media(max-width:768px){
       .ow-backdrop ~ .main-content .page-header{padding:10px 16px;margin-bottom:10px;}
       .ow-backdrop ~ .main-content .page-header h1{font-size:24px;}
-      .main-content .human-banner{margin-bottom:12px;font-size:14px;padding:8px 12px;}
-      .mp-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:12px;}
-      .mp-tools > *{grid-column:1 / -1;}
-      .mp-row{display:contents;}
-      .mp-search{order:1;}
-      .mp-topic{order:2;grid-column:1;}
-      .mp-sort{order:3;grid-column:2;flex-direction:column;align-items:stretch;gap:6px;}
-      .mp-topic select,.mp-sort select{width:100%;min-height:44px;}
-      .st-pills{order:4;}
-      .type-chip{order:5;}
-      .mp-more{order:6;}
     }
   </style>
 </head>
@@ -460,6 +498,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
     <span class="col-kicker"><?= $ar ? 'مجموعة مختارة' : 'Curated collection' ?></span>
     <h1><?= e($ar ? ($colObj['title_ar'] ?: $colObj['title_en']) : ($colObj['title_en'] ?: $colObj['title_ar'])) ?></h1>
     <?php $ci = $ar ? ($colObj['intro_ar'] ?: $colObj['intro_en']) : ($colObj['intro_en'] ?: $colObj['intro_ar']); if ($ci !== ''): ?><p><?= e($ci) ?></p><?php endif; ?>
+    <p class="ph-note"><?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love.' ?></p>
   </div>
   <?php else: ?>
   <div class="page-header">
@@ -467,13 +506,10 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
     <p><?= $ar
         ? 'هنا تلتقي بأعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية، ولا تتكرر أبداً.'
         : 'Meet original works by real artists, from Saudi Arabia and all over the world. Every piece has a story. None of them repeat.' ?></p>
+    <!-- the handmade line, inside the title card (owner, 12 Nov 2026; was a pill under it) -->
+    <p class="ph-note"><?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love.' ?></p>
   </div>
   <?php endif; ?>
-
-  <!-- HANDMADE-ONLY BANNER -->
-  <div class="human-banner">
-    <?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love.' ?>
-  </div>
 
   <?php if ($aotw): $aw0 = $aotw['art']; $aImg = $aw0 ? owImgSrc((string) $aw0['image_url']) : ''; $pImg = owImgSrc((string) ($aotw['profile_picture'] ?? ''));
     $nEn = $ar ? $aotw['note_ar'] : $aotw['note_en']; if ($nEn === '') $nEn = $ar ? $aotw['note_en'] : $aotw['note_ar']; ?>
@@ -520,96 +556,185 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
   </div>
   <?php endif; ?>
 
+  <?php
+  /* The search and filter area (owner, 12 Nov 2026): laptops get one rounded frosted bar
+     [search | Topic | Status | Sort | filters button] that sticks under the menu when the page scrolls;
+     the filters button opens "More filters" as a side panel. Phones get [search] [filters button],
+     and the button opens a bottom sheet with every filter. Chosen filters show as removable chips.
+     Same filters, same web addresses as before. */
+  $mpShownTopics = owArtTopicsShown();
+  $topicOpts = [];
+  foreach ($ART_CATS as $ck => $cv) { if ($ck !== 'all' && $ck !== $cat && !isset($mpShownTopics[$ck])) continue; /* hidden topics (owner, 8 Nov 2026) */ $topicOpts[$ck] = $ar ? $cv['ar'] : $cv['en']; }
+  $stOpts = ['all' => ['All', 'الكل'], 'available' => ['Available', 'متاح']]; if (owAuctionsPageOn() || $status === 'auction') $stOpts['auction'] = ['Auction', 'مزاد'];   /* the Auction filter shows only while the Auctions page is switched on */
+  $sortOpts = ['newest' => ['Newest First', 'الأحدث أولاً'], 'popular' => ['Most viewed', 'الأكثر مشاهدة'], 'price_low' => ['Price: Low to High', 'السعر: من الأقل'], 'price_high' => ['Price: High to Low', 'السعر: من الأعلى']];
+  /* the chosen filters, each with a link that removes only that one */
+  $mpChips = [];
+  if ($q !== '') $mpChips[] = ['“' . $q . '”', mpUrl(['q' => ''])];
+  if ($initType !== '') $mpChips[] = [$ar ? $ART_TYPES[$initType]['ar'] : $ART_TYPES[$initType]['en'], mpUrl(['type' => ''])];
+  elseif ($cat !== 'all') $mpChips[] = [$ar ? $ART_CATS[$cat]['ar'] : $ART_CATS[$cat]['en'], mpUrl(['cat' => 'all'])];
+  if ($status !== 'all' && isset($stOpts[$status])) $mpChips[] = [$stOpts[$status][$ar ? 1 : 0], mpUrl(['status' => 'all'])];
+  if ($medium !== '') $mpChips[] = [$ar ? $MEDIUMS[$medium]['ar'] : $MEDIUMS[$medium]['en'], mpUrl(['medium' => ''])];
+  if ($price !== '')  $mpChips[] = [$ar ? $PRICES[$price]['ar'] : $PRICES[$price]['en'], mpUrl(['price' => ''])];
+  if ($size !== '')   $mpChips[] = [$ar ? $SIZES[$size]['ar'] : $SIZES[$size]['en'], mpUrl(['size' => ''])];
+  if ($orient !== '') $mpChips[] = [$ar ? $ORIENTS[$orient]['ar'] : $ORIENTS[$orient]['en'], mpUrl(['orient' => ''])];
+  if ($city !== '')   $mpChips[] = [$city, mpUrl(['city' => ''])];
+  if ($color !== '')  $mpChips[] = [$ar ? $COLORS[$color]['ar'] : $COLORS[$color]['en'], mpUrl(['color' => ''])];
+  if ($vonly !== '')  $mpChips[] = [$ar ? 'فنانون موثّقون فقط' : 'Verified artists only', mpUrl(['verified' => ''])];
+  $filtN = $moreOn + ($initType !== '' ? 1 : 0);
+  /* one group of tappable chips (radio buttons) in the panel */
+  $mpGroup = function (string $title, string $name, array $opts, string $cur, string $defLabel) {
+      $h = '<fieldset class="pn-sec"><legend>' . e($title) . '</legend><div class="pn-chips">';
+      if ($defLabel !== '') $h .= '<label class="ch"><input type="radio" name="' . $name . '" value="" data-def' . ($cur === '' ? ' checked' : '') . '><span>' . e($defLabel) . '</span></label>';
+      foreach ($opts as $v => $l) $h .= '<label class="ch"><input type="radio" name="' . $name . '" value="' . e((string) $v) . '"' . ($defLabel === '' && $v === array_key_first($opts) ? ' data-def' : '') . ((string) $cur === (string) $v ? ' checked' : '') . '><span>' . e($l) . '</span></label>';
+      return $h . '</div></fieldset>';
+  };
+  ?>
   <div class="mp-tools">
-    <!-- SEARCH + SORT (one small form, so every choice travels together) -->
-    <form class="mp-search" method="get" action="marketplace.php" role="search" id="mpForm">
-      <?= mpHidden(['q', 'sort']) ?>
-      <input type="search" class="input" name="q" maxlength="60" value="<?= e($q) ?>"
-             aria-label="<?= $ar ? 'ابحث عن عمل فني' : 'Search artworks by title' ?>"
-             placeholder="<?= $ar ? 'تبحث عن شيء؟ اكتب اسم العمل…' : 'Looking for something? Type a title…' ?>">
-      <button type="submit" class="btn btn-secondary"><?= $ar ? 'ابحث' : 'Search' ?></button>
-    </form>
-    <?php if (!$ar): /* phones, English only (owner, 8 Nov 2026): the long hint was cut off, so phones get a shorter one; laptops keep theirs */ ?>
-    <script>(function(){var i=document.querySelector('#mpForm input[name="q"]');if(i&&window.matchMedia&&matchMedia('(max-width: 768px)').matches)i.placeholder='Search artworks…';})();</script>
-    <?php endif; ?>
-
-    <!-- TOPIC: one dropdown list (was 10 buttons), same filter as before -->
-    <form class="mp-topic" method="get" action="marketplace.php">
-      <?= mpHidden(['cat', 'type']) ?>
-      <label class="mp-label" for="mpTopic"><?= $ar ? 'الموضوع' : 'Topic' ?></label>
-      <select id="mpTopic" name="cat" onchange="this.form.submit()">
-        <?php $mpShownTopics = owArtTopicsShown(); foreach ($ART_CATS as $ck => $cv): if ($ck !== 'all' && $ck !== $cat && !isset($mpShownTopics[$ck])) continue; /* hidden topics (owner, 8 Nov 2026) */ ?>
-        <option value="<?= e($ck) ?>"<?= $cat === $ck ? ' selected' : '' ?>><?= e($ar ? $cv['ar'] : $cv['en']) ?></option>
-        <?php endforeach; ?>
-      </select>
-      <noscript><button type="submit" class="btn btn-secondary btn-sm"><?= $ar ? 'عرض' : 'Show' ?></button></noscript>
-    </form>
-
-    <?php if ($initType !== ''): $tl = $ART_TYPES[$initType]; ?>
-    <a class="type-chip" href="<?= e(mpUrl(['type' => ''])) ?>" aria-label="<?= $ar ? 'إزالة هذا الأسلوب' : 'Remove this style' ?>"><?= e($ar ? $tl['ar'] : $tl['en']) ?> <span aria-hidden="true">×</span></a>
-    <?php endif; ?>
-
-    <!-- STATUS + SORT -->
-    <div class="mp-row">
-      <div class="st-pills">
-        <span class="mp-label"><?= $ar ? 'الحالة' : 'Status' ?></span>
-        <?php $stOpts = ['all' => ['All', 'الكل'], 'available' => ['Available', 'متاح']]; if (owAuctionsPageOn() || $status === 'auction') $stOpts['auction'] = ['Auction', 'مزاد'];   /* the Auction filter shows only while the Auctions page is switched on */ ?>
-        <?php foreach ($stOpts as $sk => $sl): ?>
-        <a class="st-pill<?= $status === $sk ? ' active' : '' ?>" href="<?= e(mpUrl(['status' => $sk])) ?>"<?= $status === $sk ? ' aria-current="page"' : '' ?>><?= $ar ? $sl[1] : $sl[0] ?></a>
-        <?php endforeach; ?>
-      </div>
-      <div class="mp-sort">
-        <label class="mp-label" for="mpSort"><?= $ar ? 'الترتيب' : 'Sort' ?></label>
-        <select id="mpSort" name="sort" form="mpForm" onchange="this.form.submit()">
-          <?php foreach (['newest' => ['Newest First', 'الأحدث أولاً'], 'popular' => ['Most viewed', 'الأكثر مشاهدة'], 'price_low' => ['Price: Low to High', 'السعر: من الأقل'], 'price_high' => ['Price: High to Low', 'السعر: من الأعلى']] as $ok => $ol): ?>
-          <option value="<?= $ok ?>"<?= $sort === $ok ? ' selected' : '' ?>><?= $ar ? $ol[1] : $ol[0] ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
+    <div class="mp-barwrap" id="mpBarWrap">
+      <form class="mp-bar" method="get" action="marketplace.php" role="search" id="mpForm">
+        <?= mpHidden(['q', 'cat', 'status', 'sort']) ?>
+        <div class="mb-q">
+          <button type="submit" class="mb-go" aria-label="<?= $ar ? 'ابحث' : 'Search' ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
+          <input type="search" name="q" maxlength="60" value="<?= e($q) ?>" enterkeyhint="search"
+                 aria-label="<?= $ar ? 'ابحث عن عمل فني' : 'Search artworks by title' ?>"
+                 placeholder="<?= $ar ? 'ابحث عن عمل فني' : 'Search artworks' ?>">
+        </div>
+        <label class="mb-seg mb-topic"><span class="mb-l"><?= $ar ? 'الموضوع' : 'Topic' ?></span>
+          <select id="mpTopic" name="cat"><?php foreach ($topicOpts as $ck => $cl): ?><option value="<?= e($ck) ?>"<?= $cat === $ck ? ' selected' : '' ?>><?= e($cl) ?></option><?php endforeach; ?></select></label>
+        <label class="mb-seg mb-status"><span class="mb-l"><?= $ar ? 'الحالة' : 'Status' ?></span>
+          <select id="mpStatus" name="status"><?php foreach ($stOpts as $sk => $sl): ?><option value="<?= $sk ?>"<?= $status === $sk ? ' selected' : '' ?>><?= $sl[$ar ? 1 : 0] ?></option><?php endforeach; ?></select></label>
+        <label class="mb-seg mb-sort"><span class="mb-l"><?= $ar ? 'الترتيب' : 'Sort' ?></span>
+          <select id="mpSort" name="sort"><?php foreach ($sortOpts as $ok => $ol): ?><option value="<?= $ok ?>"<?= $sort === $ok ? ' selected' : '' ?>><?= $ol[$ar ? 1 : 0] ?></option><?php endforeach; ?></select></label>
+        <noscript><button type="submit" class="mb-noscript btn btn-secondary btn-sm"><?= $ar ? 'عرض' : 'Show' ?></button></noscript>
+        <button type="button" class="mb-filt" id="mpFiltBtn" aria-controls="mpPanel" aria-expanded="false" aria-label="<?= $ar ? 'تصفية أدق' : 'More filters' ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><?php if ($filtN): ?><span class="mp-n"><?= $filtN ?></span><?php endif; ?></button>
+      </form>
     </div>
+    <?php if ($mpChips): ?>
+    <ul class="mp-chips" aria-label="<?= $ar ? 'التصفية المختارة' : 'Chosen filters' ?>">
+      <?php foreach ($mpChips as [$cl, $cu]): ?><li><a class="mp-chip" href="<?= e($cu) ?>" aria-label="<?= e(($ar ? 'إزالة: ' : 'Remove: ') . $cl) ?>"><span><?= e($cl) ?></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg></a></li><?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+  </div>
 
-    <!-- MORE FILTERS: style, medium, price, size, orientation, city, color, verified artists -->
-    <details class="mp-more"<?= $moreOn || $initType !== '' ? ' open' : '' ?>>
-      <summary class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg><?= $ar ? 'تصفية أدق' : 'More filters' ?><?php if ($moreOn): ?> <span class="mp-n"><?= $moreOn ?></span><?php endif; ?></summary>
-      <form class="mp-filters" method="get" action="marketplace.php">
-        <?= mpHidden(['type', 'medium', 'price', 'size', 'orient', 'city', 'color', 'verified', 'cat']) ?>
-        <div class="field"><label for="f-style"><?= $ar ? 'الأسلوب' : 'Style' ?></label>
-          <select id="f-style" name="type"><option value=""><?= $ar ? 'كل الأساليب' : 'All styles' ?></option>
-            <?php /* while the 15 other styles are hidden (owner, 8 Nov 2026), Al-Qatt Al-Asiri sits under Traditional and the Heritage group is gone */
-            $mpMoreOn = owMoreStylesOn(); $mpGrp = fn($t) => (!$mpMoreOn && ($t['cat'] ?? '') === 'heritage') ? 'traditional' : ($t['cat'] ?? '');
-            foreach (owStyleGroups() as $gk => $g): if (!$mpMoreOn && $gk === 'heritage') continue; $opts = array_filter($ART_TYPES, fn($t) => $mpGrp($t) === $gk && empty($t['legacy']) && empty($t['topic_only'])); if (!$opts) continue; ?>
-            <optgroup label="<?= e($ar ? $g['ar'] : $g['en']) ?>"><?php foreach ($opts as $tk => $tv): ?><option value="<?= e($tk) ?>"<?= $initType === $tk ? ' selected' : '' ?>><?= e($ar ? $tv['ar'] : $tv['en']) ?></option><?php endforeach; ?></optgroup>
-            <?php endforeach; ?>
-          </select></div>
-        <?php if ($hasMed): ?><div class="field"><label for="f-medium"><?= $ar ? 'الخامة' : 'Medium' ?></label>
-          <select id="f-medium" name="medium"><option value=""><?= $ar ? 'كل الخامات' : 'All mediums' ?></option>
-            <?php foreach ($MEDIUMS as $mk => $mv): ?><option value="<?= e($mk) ?>"<?= $medium === $mk ? ' selected' : '' ?>><?= e($ar ? $mv['ar'] : $mv['en']) ?></option><?php endforeach; ?></select></div><?php endif; ?>
-        <div class="field"><label for="f-price"><?= $ar ? 'السعر' : 'Price' ?></label>
-          <select id="f-price" name="price"><option value=""><?= $ar ? 'كل الأسعار' : 'Any price' ?></option>
-            <?php foreach ($PRICES as $pk => $pv): ?><option value="<?= e($pk) ?>"<?= $price === $pk ? ' selected' : '' ?>><?= e($ar ? $pv['ar'] : $pv['en']) ?></option><?php endforeach; ?></select></div>
-        <?php if ($hasDims): ?><div class="field"><label for="f-size"><?= $ar ? 'المقاس' : 'Size' ?></label>
-          <select id="f-size" name="size"><option value=""><?= $ar ? 'كل المقاسات' : 'Any size' ?></option>
-            <?php foreach ($SIZES as $zk => $zv): ?><option value="<?= e($zk) ?>"<?= $size === $zk ? ' selected' : '' ?>><?= e($ar ? $zv['ar'] : $zv['en']) ?></option><?php endforeach; ?></select></div>
-        <div class="field"><label for="f-orient"><?= $ar ? 'الاتجاه' : 'Orientation' ?></label>
-          <select id="f-orient" name="orient"><option value=""><?= $ar ? 'كل الاتجاهات' : 'Any orientation' ?></option>
-            <?php foreach ($ORIENTS as $ok => $ov): ?><option value="<?= e($ok) ?>"<?= $orient === $ok ? ' selected' : '' ?>><?= e($ar ? $ov['ar'] : $ov['en']) ?></option><?php endforeach; ?></select></div><?php endif; ?>
-        <?php if ($CITIES): ?><div class="field"><label for="f-city"><?= $ar ? 'مدينة الفنان' : 'Artist’s city' ?></label>
-          <select id="f-city" name="city"><option value=""><?= $ar ? 'كل المدن' : 'All cities' ?></option>
-            <?php foreach ($CITIES as $cName): ?><option value="<?= e($cName) ?>"<?= $city === $cName ? ' selected' : '' ?>><?= e($cName) ?></option><?php endforeach; ?></select></div><?php endif; ?>
-        <fieldset class="f-colors"><legend><?= $ar ? 'اللون' : 'Color' ?></legend>
-          <label class="sw-any"><input type="radio" name="color" value=""<?= $color === '' ? ' checked' : '' ?>><span><?= $ar ? 'أي لون' : 'Any' ?></span></label>
-          <?php foreach ($COLORS as $ck2 => $cv2): ?>
-          <label class="sw" title="<?= e($ar ? $cv2['ar'] : $cv2['en']) ?>"><input type="radio" name="color" value="<?= e($ck2) ?>"<?= $color === $ck2 ? ' checked' : '' ?>><i style="background:<?= e($cv2['hex']) ?>"></i><span><?= e($ar ? $cv2['ar'] : $cv2['en']) ?></span></label>
+  <!-- MORE FILTERS: a side panel on laptops, a bottom sheet with every filter on phones -->
+  <div class="mp-scrim" id="mpScrim" hidden></div>
+  <div class="mp-panel" id="mpPanel" role="dialog" aria-modal="true" aria-labelledby="mpPanelT" hidden>
+    <form id="mpPanelForm" method="get" action="marketplace.php">
+      <div class="pn-head">
+        <span class="pn-grab" aria-hidden="true"></span>
+        <h2 id="mpPanelT"><span class="pn-t-lap"><?= $ar ? 'تصفية أدق' : 'More filters' ?></span><span class="pn-t-ph"><?= $ar ? 'التصفية' : 'Filters' ?></span></h2>
+        <button type="button" class="pn-x" id="mpPanelX" aria-label="<?= $ar ? 'إغلاق' : 'Close' ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="pn-body">
+        <?= mpHidden(['cat', 'status', 'sort', 'type', 'medium', 'price', 'size', 'orient', 'city', 'color', 'verified']) ?>
+        <div class="pn-basic">
+          <?= $mpGroup($ar ? 'الموضوع' : 'Topic', 'cat', $topicOpts, $cat, '') ?>
+          <?= $mpGroup($ar ? 'الحالة' : 'Status', 'status', array_map(fn($s) => $s[$ar ? 1 : 0], $stOpts), $status, '') ?>
+          <?= $mpGroup($ar ? 'الترتيب' : 'Sort', 'sort', array_map(fn($s) => $s[$ar ? 1 : 0], $sortOpts), $sort, '') ?>
+        </div>
+        <fieldset class="pn-sec"><legend><?= $ar ? 'الأسلوب' : 'Style' ?></legend>
+          <div class="pn-chips"><label class="ch"><input type="radio" name="type" value="" data-def<?= $initType === '' ? ' checked' : '' ?>><span><?= $ar ? 'كل الأساليب' : 'All styles' ?></span></label></div>
+          <?php /* while the 15 other styles are hidden (owner, 8 Nov 2026), Al-Qatt Al-Asiri sits under Traditional and the Heritage group is gone */
+          $mpMoreOn = owMoreStylesOn(); $mpGrp = fn($t) => (!$mpMoreOn && ($t['cat'] ?? '') === 'heritage') ? 'traditional' : ($t['cat'] ?? '');
+          foreach (owStyleGroups() as $gk => $g): if (!$mpMoreOn && $gk === 'heritage') continue; $opts = array_filter($ART_TYPES, fn($t) => $mpGrp($t) === $gk && empty($t['legacy']) && empty($t['topic_only'])); if (!$opts) continue; ?>
+          <p class="pn-sub"><?= e($ar ? $g['ar'] : $g['en']) ?></p>
+          <div class="pn-chips"><?php foreach ($opts as $tk => $tv): ?><label class="ch"><input type="radio" name="type" value="<?= e($tk) ?>"<?= $initType === $tk ? ' checked' : '' ?>><span><?= e($ar ? $tv['ar'] : $tv['en']) ?></span></label><?php endforeach; ?></div>
           <?php endforeach; ?>
         </fieldset>
-        <?php if (owVerifiedReady()): ?><label class="f-check"><input type="checkbox" name="verified" value="1"<?= $vonly ? ' checked' : '' ?>> <span><?= $ar ? 'فنانون موثّقون فقط' : 'Verified artists only' ?></span></label><?php endif; ?>
-        <div class="f-acts">
-          <button type="submit" class="btn btn-dark"><?= $ar ? 'اعرض النتائج' : 'Show results' ?></button>
-          <?php if ($moreOn || $initType !== ''): ?><a class="btn btn-ghost" href="<?= e(mpUrl(['type' => '', 'medium' => '', 'price' => '', 'size' => '', 'orient' => '', 'city' => '', 'color' => '', 'verified' => ''])) ?>"><?= $ar ? 'امسح التصفية' : 'Clear filters' ?></a><?php endif; ?>
-        </div>
-      </form>
-    </details>
+        <?php if ($hasMed): ?><?= $mpGroup($ar ? 'الخامة' : 'Medium', 'medium', array_map(fn($m) => $ar ? $m['ar'] : $m['en'], $MEDIUMS), $medium, $ar ? 'كل الخامات' : 'All mediums') ?><?php endif; ?>
+        <?= $mpGroup($ar ? 'السعر' : 'Price', 'price', array_map(fn($m) => $ar ? $m['ar'] : $m['en'], $PRICES), $price, $ar ? 'كل الأسعار' : 'Any price') ?>
+        <?php if ($hasDims): ?>
+        <?= $mpGroup($ar ? 'المقاس' : 'Size', 'size', array_map(fn($m) => $ar ? $m['ar'] : $m['en'], $SIZES), $size, $ar ? 'كل المقاسات' : 'Any size') ?>
+        <?= $mpGroup($ar ? 'الاتجاه' : 'Orientation', 'orient', array_map(fn($m) => $ar ? $m['ar'] : $m['en'], $ORIENTS), $orient, $ar ? 'كل الاتجاهات' : 'Any orientation') ?>
+        <?php endif; ?>
+        <?php if ($CITIES): ?><?= $mpGroup($ar ? 'مدينة الفنان' : 'Artist’s city', 'city', array_combine($CITIES, $CITIES), $city, $ar ? 'كل المدن' : 'All cities') ?><?php endif; ?>
+        <fieldset class="pn-sec"><legend><?= $ar ? 'اللون' : 'Color' ?></legend>
+          <div class="pn-chips">
+            <label class="ch"><input type="radio" name="color" value="" data-def<?= $color === '' ? ' checked' : '' ?>><span><?= $ar ? 'أي لون' : 'Any' ?></span></label>
+            <?php foreach ($COLORS as $ck2 => $cv2): ?>
+            <label class="ch"><input type="radio" name="color" value="<?= e($ck2) ?>"<?= $color === $ck2 ? ' checked' : '' ?>><span><i style="background:<?= e($cv2['hex']) ?>"></i><?= e($ar ? $cv2['ar'] : $cv2['en']) ?></span></label>
+            <?php endforeach; ?>
+          </div>
+        </fieldset>
+        <?php if (owVerifiedReady()): ?><fieldset class="pn-sec"><legend><?= $ar ? 'الفنانون' : 'Artists' ?></legend><div class="pn-chips"><label class="ch"><input type="checkbox" name="verified" value="1"<?= $vonly ? ' checked' : '' ?>><span><?= $ar ? 'فنانون موثّقون فقط' : 'Verified artists only' ?></span></label></div></fieldset><?php endif; ?>
+      </div>
+      <div class="pn-foot">
+        <button type="button" class="pn-clear" id="mpClear"><?= $ar ? 'امسح الكل' : 'Clear all' ?></button>
+        <button type="submit" class="btn btn-dark"><?= $ar ? 'اعرض النتائج' : 'Show results' ?></button>
+      </div>
+    </form>
   </div>
+  <script>
+  (function(){
+    var f = document.getElementById('mpForm'), pf = document.getElementById('mpPanelForm');
+    var panel = document.getElementById('mpPanel'), scrim = document.getElementById('mpScrim'), btn = document.getElementById('mpFiltBtn');
+    if (!f || !pf || !panel) return;
+    document.body.appendChild(scrim); document.body.appendChild(panel);   /* above the menu, outside the page's own layer */
+    /* the same web addresses as before: empty and default choices are left out */
+    var DEF = {q: '', cat: 'all', status: 'all', sort: 'newest'};
+    function go(form){
+      var p = new URLSearchParams();
+      new FormData(form).forEach(function(v, k){ v = String(v); if (v === '' || DEF[k] === v) return; p.append(k, v); });
+      var s = p.toString(); location.href = 'marketplace.php' + (s ? '?' + s : '');
+    }
+    f.addEventListener('submit', function(e){ e.preventDefault(); go(f); });
+    pf.addEventListener('submit', function(e){ e.preventDefault(); go(pf); });
+    f.addEventListener('change', function(e){
+      var t = e.target; if (t.tagName !== 'SELECT') return;
+      if (t.name === 'cat') { var h = f.querySelector('input[type="hidden"][name="type"]'); if (h) h.remove(); }   /* a new topic replaces a style, as before */
+      go(f);
+    });
+    pf.addEventListener('change', function(e){
+      if (e.target.name === 'cat') { var a = pf.querySelector('input[name="type"][data-def]'); if (a) a.checked = true; }
+    });
+    document.getElementById('mpClear').addEventListener('click', function(){
+      pf.querySelectorAll('.pn-sec').forEach(function(s){
+        if (!s.getClientRects().length) return;   /* only what the visitor can see (laptops: not Topic, Status, Sort) */
+        s.querySelectorAll('input').forEach(function(i){ i.checked = i.type === 'radio' && i.hasAttribute('data-def'); });
+      });
+    });
+    /* open and close the panel / sheet */
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, closing;
+    function open(){
+      clearTimeout(closing); panel.hidden = false; scrim.hidden = false; document.documentElement.classList.add('mp-lock');
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ panel.classList.add('open'); scrim.classList.add('open'); }); });
+      btn.setAttribute('aria-expanded', 'true');
+      setTimeout(function(){ var x = document.getElementById('mpPanelX'); if (x) x.focus({preventScroll: true}); }, reduce ? 0 : 60);
+    }
+    function close(){
+      if (panel.hidden) return;
+      panel.classList.remove('open'); scrim.classList.remove('open'); document.documentElement.classList.remove('mp-lock');
+      btn.setAttribute('aria-expanded', 'false');
+      closing = setTimeout(function(){ panel.hidden = true; scrim.hidden = true; }, reduce ? 0 : 320);
+      btn.focus({preventScroll: true});
+    }
+    btn.addEventListener('click', open);
+    scrim.addEventListener('click', close);
+    document.getElementById('mpPanelX').addEventListener('click', close);
+    document.addEventListener('keydown', function(e){
+      if (panel.hidden) return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'Tab') {   /* keep the keyboard inside the open panel */
+        var els = [].filter.call(panel.querySelectorAll('button, input, a[href]'), function(el){ return el.getClientRects().length && !el.disabled; });
+        if (!els.length) return; var a = els[0], z = els[els.length - 1];
+        if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+        else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+      }
+    });
+    /* laptops: the bar sticks under the menu, slim and frosted, once the page scrolls past it */
+    var wrap = document.getElementById('mpBarWrap'), lap = window.matchMedia ? matchMedia('(min-width: 769px)') : null, tick;
+    function stick(){
+      tick = 0;
+      if (!lap || !lap.matches) { wrap.classList.remove('stuck'); wrap.style.minHeight = ''; return; }
+      var nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 64;
+      if (!wrap.classList.contains('stuck')) wrap.style.minHeight = wrap.offsetHeight + 'px';   /* keeps its place, so nothing jumps */
+      wrap.classList.toggle('stuck', wrap.getBoundingClientRect().top < nav + 8);
+    }
+    addEventListener('scroll', function(){ if (!tick) tick = requestAnimationFrame(stick); }, {passive: true});
+    addEventListener('resize', function(){ wrap.classList.remove('stuck'); wrap.style.minHeight = ''; stick(); });
+    stick();
+  })();
+  </script>
 
   <?php if ($total > 0): ?>
   <p class="mp-count"><?= $ar ? ('عدد الأعمال: ' . $total) : ($total === 1 ? '1 artwork' : $total . ' artworks') ?></p>
