@@ -124,7 +124,7 @@
 ## Features
 
 ### Art Map: Region next to the tabs, Arabic title «وجهات الفن» (12 Nov 2026, owner)
-- art_map.php: the three tabs and the Region filter sit in one row (.m-bar): [Museums] [Art Galleries] [Institutes] Region [All regions]. Laptops: one row. Phones: the tabs on one line and Region with its list on one short line under them (it does not fit beside the tabs at phone width). The big page title in Arabic is «وجهات الفن» (English stays "Art Map"; the browser tab title and link preview are unchanged). Files: art_map.php. Tables: none
+- art_map.php: the three tabs and the Region filter sit in one row (.m-bar): [Museums] [Art Galleries] [Institutes] Region [All regions]. Laptops: one row. Phones: the tabs on one line and Region with its list on one short line under them (it does not fit beside the tabs at phone width). The big page title in Arabic is «وجهات الفن» (English stays "Art Map"). The Arabic browser tab title and link preview also say «وجهات الفن» (owner, same day). Files: art_map.php. Tables: none
 
 ### Art Map background photo (12 Nov 2026, owner)
 - art_map.php: the owner's photo of a bright corridor with colourful paintings on wooden easels and benches (easels-corridor, assets/img/studio/easels-corridor-640/1280/1920/2000 .avif/.webp/.jpg, focus 50% 50%, phone colour #8b7f73, its own tiny copy) replaces museum-walk. Used the same way as the other photo pages: full screen on laptops (cover, no zoom), the whole photo on top on phones fading into its own colour, the same dark-mode dimming. Nothing else changed (other photo pages checked: same HTML); museum-walk files are kept. Files: studio_lib.php, art_map.php, assets/img/studio/. Tables: none

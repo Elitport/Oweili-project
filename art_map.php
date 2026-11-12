@@ -99,12 +99,12 @@ $placeCard = function (array $p) use ($PIN): string {
 };
 ?>
 <!DOCTYPE html>
-<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Art Map · Oweili" data-title-ar="خريطة الفن · أويلي">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Art Map · Oweili" data-title-ar="وجهات الفن · أويلي">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Art Map', 'ar' => 'خريطة الفن', 'desc_en' => 'Museums, art galleries and art institutes across Saudi Arabia, in one place.', 'desc_ar' => 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد.', 'path' => 'art_map.php']); ?>
-<meta property="og:title" content="Art Map · خريطة الفن · Oweili">
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Art Map', 'ar' => 'وجهات الفن', 'desc_en' => 'Museums, art galleries and art institutes across Saudi Arabia, in one place.', 'desc_ar' => 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد.', 'path' => 'art_map.php']); ?>
+<meta property="og:title" content="Art Map · وجهات الفن · Oweili">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
