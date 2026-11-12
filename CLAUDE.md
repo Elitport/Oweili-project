@@ -123,6 +123,11 @@
 
 ## Features
 
+### Art Map: more free photos, example photo per type (12 Nov 2026, owner)
+- Free sources only (no Google Places): Flickr Creative Commons (CC BY, CC BY-SA, CC0, public domain only) and Wikimedia Commons, each place searched by name; every photo checked by eye (the building or an empty room, no faces, no flowers, no religious text, really that place). 7 more places got a real photo: Red Sea Museum, Naseef House, teamLab Borderless Jeddah, Ibrahim Palace, Dar Al Madinah Museum, Maraya, Al-Jouf Regional Museum (assets/img/places/<src_ref>.jpg/.webp, 480 px wide, 11 to 34 KB; credit "Author, Licence, Flickr / Wikimedia Commons" under the photo). Now 20 of the 123 published places have a real photo. Saved on the live database 12 Nov 2026 by a temporary locked page (removed straight after), after a full backup (.backups/db-u405344949_contact-20261112-192719.sql.gz)
+- Places with no photo now show one free example photo for their type instead of the drawing, with the tag "Example photo" / «صورة توضيحية» on the photo and "Example photo: <credit>" under it, so it never pretends to be the place: museum = an empty gallery room with a bench (Dale Cruse, CC BY 4.0), gallery = a white gallery with a sculpture (Dale Cruse, CC BY 4.0), institute = an art studio with easels (Michael Coghlan, CC BY-SA 2.0), all from Flickr (OW_MAP_TYPE_PHOTO in artmap_lib.php; assets/img/places/type-*.jpg/.webp, 480 × 300). The drawing stays only as a fallback if a file is missing
+- Files: art_map.php, artmap_lib.php, assets/img/places/. Tables: art_places (photo_path, photo_credit, photo_page, photo_license)
+
 ### Art Map: places published, new "All" tab (12 Nov 2026, owner)
 - The owner's file oweili-art-map-places.json (sent again with oweili-art-map-review.xlsx, the same 148 places and the same confidence levels) was already imported that morning, so nothing new was imported
 - Published on the live database 12 Nov 2026 by a temporary locked page (removed straight after), after a full backup: every art_places draft whose confidence is not "low" (123 places: 70 museums, 44 galleries, 9 institutes). The 22 low-confidence places stay drafts for the owner to check in admin_art_map.php. The 11 hidden institutes of the older institutes list were not changed (still hidden)
