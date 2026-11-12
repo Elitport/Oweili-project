@@ -124,6 +124,12 @@ $placeCard = function (array $p) use ($PIN): string {
   border-radius:var(--radius-card);background:var(--studio-glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--studio-glass-edge);}
 .filter label{font-size:var(--fs-label);font-weight:700;color:var(--color-dark);}
 .filter select{min-width:240px;width:auto;cursor:pointer;}
+/* tabs and the Region filter on one row (owner, 12 Nov 2026); on phones as short as possible */
+.m-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-xs) var(--space-sm);margin:0 auto var(--space-lg);}
+.m-bar .m-tabs,.m-bar .filter{margin:0;}
+.m-bar .filter{padding:4px 6px 4px 14px;gap:var(--space-xs);flex-wrap:nowrap;}
+[dir="rtl"] .m-bar .filter{padding:4px 14px 4px 6px;}
+.m-bar .filter select{min-width:190px;min-height:36px;height:36px;padding-top:0;padding-bottom:0;}
 .result-count{text-align:center;font-size:var(--fs-caption);color:var(--color-dark);width:fit-content;margin:calc(-1 * var(--space-sm)) auto var(--space-md);padding:6px 16px;border-radius:var(--radius-card);background:var(--studio-glass);}
 .i-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);align-items:start;}
 .i-card{display:flex;flex-direction:column;gap:var(--space-sm);}
@@ -181,7 +187,7 @@ details[open] .when-closed{display:none;}
 .m-grid{align-items:stretch;}
 html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 @media (max-width:1024px){.i-grid{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:640px){.i-grid{grid-template-columns:1fr;}.filter select{min-width:0;flex:1 1 180px;}.m-tab{padding:0 14px;}}
+@media (max-width:640px){.i-grid{grid-template-columns:1fr;}.filter select{min-width:0;flex:1 1 180px;}.m-tab{padding:0 14px;}.m-bar .filter select{min-width:0;flex:1 1 auto;}}
 </style>
 </head>
 <body class="ow">
@@ -194,10 +200,11 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 <main>
   <div class="d-wrap">
     <header class="d-head reveal">
-      <h1><?= owBi('Art Map', 'خريطة الفن') ?></h1>
+      <h1><?= owBi('Art Map', 'وجهات الفن') ?></h1>
       <p><?= owBi('Museums, art galleries and art institutes across Saudi Arabia, in one place.', 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد.') ?></p>
     </header>
 
+    <div class="m-bar">
     <nav class="m-tabs" aria-label="Art Map · خريطة الفن">
       <a class="m-tab" href="<?= e($q('museums', $city)) ?>"<?= $tab === 'museums' ? ' aria-current="page"' : '' ?>><?= owBi('Museums', 'المتاحف') ?></a>
       <a class="m-tab" href="<?= e($q('galleries', $city)) ?>"<?= $tab === 'galleries' ? ' aria-current="page"' : '' ?>><?= owBi('Art Galleries', 'المعارض الفنية') ?></a>
@@ -215,6 +222,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       </select>
       <noscript><button class="btn btn-secondary" type="submit"><?= owBi('Show', 'عرض') ?></button></noscript>
     </form>
+    </div>
 
 <?php if ($tab === 'institutes'): ?>
     <?php /* Upcoming Workshops: hidden for now, to bring back later (owner, 6 Nov 2026): Admin → Settings → Upcoming workshops. */ ?>
