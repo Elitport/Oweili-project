@@ -4,12 +4,14 @@ require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
  *  art_map.php: Art Map («خريطة الفن», owner, 12 Nov 2026). Replaces Art
  *  Institutes in the top menu (same place); institutes.php and training.php
  *  send old links here (Institutes tab).
- *  Three tabs: Museums, Art Galleries (published places from artmap_lib.php)
- *  and Institutes (the institutes directory, unchanged: cards, courses and
- *  the hidden "Upcoming Workshops"). A city filter: Riyadh, Jeddah, AlUla,
- *  Dammam / Khobar, Abha, other cities (?city=riyadh …). Each place shows its
- *  name, city, a short text, the official website and a Google Maps link.
- *  Tables: site_settings (art_places), institutes, courses
+ *  Three tabs: Museums, Art Galleries and Institutes (published places from
+ *  the art_places table; the Institutes tab also shows the older institutes
+ *  directory unchanged: cards, courses and the hidden "Upcoming Workshops").
+ *  A filter by the 13 regions (?region=riyadh …; old ?city= links still work).
+ *  Each place shows, when they exist: a free-licence photo with its credit (or
+ *  a neat placeholder), name, city, short text, address, phone, official
+ *  website, Instagram and Google Maps. Sources and confidence: admin only.
+ *  Tables: art_places, institutes, courses
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
@@ -18,14 +20,15 @@ require_once __DIR__ . '/artmap_lib.php';
 
 $tab = (string) ($_GET['tab'] ?? 'museums');
 if (!in_array($tab, ['museums', 'galleries', 'institutes'], true)) $tab = 'museums';
-$city = (string) ($_GET['city'] ?? '');
-if (!isset(OW_MAP_CITIES[$city])) $city = '';
-$kind = $tab === 'galleries' ? 'gallery' : 'museum';
+$region = (string) ($_GET['region'] ?? '');
+if ($region === '' && isset($_GET['city'])) $region = owMapRegionKey((string) $_GET['city']) ?: ['abha' => 'asir', 'alula' => 'madinah', 'jeddah' => 'makkah'][(string) $_GET['city']] ?? '';   // links from before the regions
+if (!isset(OW_MAP_REGIONS[$region])) $region = '';
+$city = $region;   // the filter value, kept under its old name below
+$kind = ['galleries' => 'gallery', 'institutes' => 'institute'][$tab] ?? 'museum';
 
 $places = []; $institutes = []; $courses = [];
-if ($tab !== 'institutes') {
-    $places = owArtPlacesPublished($kind, $city);
-} else {
+try { $places = owArtPlacesPublished($kind, $region); } catch (Throwable $e) { $places = []; }
+if ($tab === 'institutes') {
     try {
         $db = getDB();
         $activeCourse = 'c.is_active = 1 AND (c.end_date IS NULL OR c.end_date >= CURDATE())';
@@ -33,7 +36,7 @@ if ($tab !== 'institutes') {
                        i.logo_path, i.contact_email, i.contact_phone, i.website_url,
                        (SELECT COUNT(*) FROM courses c WHERE c.institute_id = i.id AND $activeCourse) AS course_count
                 FROM institutes i WHERE i.is_active = 1 ORDER BY course_count DESC, i.name_en")->fetchAll();
-        if ($city !== '') $institutes = array_values(array_filter($institutes, fn($i) => owMapCityKey((string) ($i['city_en'] ?: $i['city_ar'])) === $city));
+        if ($city !== '') $institutes = array_values(array_filter($institutes, fn($i) => owMapRegionKey((string) ($i['city_en'] ?: $i['city_ar'])) === $city));
         $ids = array_map('intval', array_column($institutes, 'id'));
         if ($ids) {
             $in = implode(',', array_fill(0, count($ids), '?'));
@@ -59,16 +62,41 @@ function instContact(array $i, string $courseTitle): string {
     if (preg_match('#^https?://#i', $web) && filter_var($web, FILTER_VALIDATE_URL)) return $web;
     return '';
 }
-$q = fn(string $t, string $c) => 'art_map.php?' . http_build_query(array_filter(['tab' => $t === 'museums' ? '' : $t, 'city' => $c]));
-/* "Official website" + "Google Maps" buttons of one place */
-function owMapActs(string $web, string $maps, string $nameEn): string {
+$q = fn(string $t, string $c) => 'art_map.php?' . http_build_query(array_filter(['tab' => $t === 'museums' ? '' : $t, 'region' => $c]));
+/* "Official website", "Instagram" and "Google Maps" buttons of one place (only the ones that exist) */
+function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''): string {
     $h = '<div class="m-acts">';
     if ($web !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($web) . '" target="_blank" rel="noopener">' . owBi('Official website', 'الموقع الرسمي') . ' <span aria-hidden="true">↗</span></a>';
+    if ($insta !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($insta) . '" target="_blank" rel="noopener" aria-label="' . e('Instagram: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6"/></svg>Instagram</a>';
     $h .= '<a class="btn btn-dark btn-sm" href="' . e($maps) . '" target="_blank" rel="noopener" aria-label="' . e('Google Maps: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' . owBi('Google Maps', 'خرائط Google') . '</a>';
     return $h . '</div>';
 }
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
-$n = $tab === 'institutes' ? count($institutes) : count($places);
+$n = count($institutes) + count($places);
+/* One place card (art_places row): photo or placeholder, name, city, kind, text, address, phone, buttons. Empty fields are left out */
+$placeCard = function (array $p) use ($PIN): string {
+    $K = OW_MAP_KINDS[$p['kind']] ?? OW_MAP_KINDS['museum'];
+    $nEn = (string) $p['name_en']; $nAr = (string) ($p['name_ar'] ?: $nEn);
+    $cEn = (string) $p['city_en']; $cAr = (string) ($p['city_ar'] ?: $cEn);
+    $h = '<article class="card i-card m-card reveal">';
+    $ph = owPlacePhotoBase($p);
+    if ($ph !== '') {
+        $alt = e($nEn . ' · ' . $nAr);
+        $h .= '<figure class="m-photo"><picture><source type="image/webp" srcset="' . e(owBase() . $ph . '.webp') . '"><img loading="lazy" decoding="async" width="480" height="300" src="' . e(owBase() . $ph . '.jpg') . '" alt="' . $alt . '"></picture>'
+            . ((string) $p['photo_credit'] !== '' ? '<figcaption>' . owBi('Photo: ', 'الصورة: ') . ((string) $p['photo_page'] !== '' && owMapUrl((string) $p['photo_page']) !== '' ? '<a href="' . e((string) $p['photo_page']) . '" target="_blank" rel="noopener nofollow">' . e((string) $p['photo_credit']) . '</a>' : e((string) $p['photo_credit'])) . '</figcaption>' : '') . '</figure>';
+    } else {
+        $h .= '<div class="m-photo m-ph" aria-hidden="true"><svg viewBox="0 0 24 24">' . ($p['kind'] === 'institute' ? '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/>' : ($p['kind'] === 'gallery' ? '<rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="m3 15 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>' : '<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/>')) . '</svg></div>';
+    }
+    $h .= '<div><h2 class="i-name">' . owBi($nEn, $nAr) . '</h2>' . ($cEn !== '' ? '<div class="i-city">' . $PIN . owBi($cEn, $cAr) . '</div>' : '') . '</div>';
+    $h .= '<span class="m-kind">' . owBi($K[2], $K[3]) . '</span>';
+    if (trim((string) $p['desc_en']) !== '' || trim((string) $p['desc_ar']) !== '') $h .= '<p class="i-desc">' . owBi((string) ($p['desc_en'] ?: $p['desc_ar']), (string) ($p['desc_ar'] ?: $p['desc_en'])) . '</p>';
+    $info = '';
+    if (trim((string) $p['address']) !== '') $info .= '<li><span class="m-lbl">' . owBi('Address', 'العنوان') . '</span> <bdi>' . e((string) $p['address']) . '</bdi></li>';
+    if (($tel = owTelHref((string) $p['phone'])) !== '') $info .= '<li><span class="m-lbl">' . owBi('Phone', 'الهاتف') . '</span> <a href="' . e($tel) . '" dir="ltr">' . e((string) $p['phone']) . '</a></li>';
+    if ($info !== '') $h .= '<ul class="m-info">' . $info . '</ul>';
+    $h .= owMapActs(owMapUrl((string) $p['website']), owMapsLink($nEn, $cEn, (string) $p['maps_url']), $nEn, owInstaUrl((string) $p['instagram']));
+    return $h . '</article>';
+};
 ?>
 <!DOCTYPE html>
 <html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Art Map · Oweili" data-title-ar="خريطة الفن · أويلي">
@@ -114,6 +142,15 @@ $n = $tab === 'institutes' ? count($institutes) : count($places);
 .m-acts .btn{gap:6px;flex:1 1 auto;justify-content:center;}
 .m-acts svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;}
 .m-card{height:100%;}
+.m-photo{margin:calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) 0;border-radius:var(--radius-card) var(--radius-card) 0 0;overflow:hidden;background:var(--color-surface);}
+.m-photo img{display:block;width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;}
+.m-photo figcaption{font-size:12px;line-height:1.4;color:var(--color-body);padding:6px var(--space-md) 0;}
+.m-photo figcaption a{color:inherit;}
+.m-ph{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--color-tint-pink),rgba(var(--rgb-neutral),0.10));}
+.m-ph svg{width:44px;height:44px;stroke:var(--color-dark);opacity:.55;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
+.m-info{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-caption);color:var(--color-body);}
+.m-info a{color:var(--color-dark);}
+.m-lbl{font-weight:700;color:var(--color-dark);}
 details.i-courses{border-top:1px solid var(--color-border);padding-top:var(--space-sm);}
 details.i-courses > summary{list-style:none;user-select:none;}
 details.i-courses > summary::-webkit-details-marker{display:none;}
@@ -169,10 +206,10 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 
     <form class="filter" method="get" action="art_map.php">
       <?php if ($tab !== 'museums'): ?><input type="hidden" name="tab" value="<?= e($tab) ?>"><?php endif; ?>
-      <label for="city"><?= owBi('City', 'المدينة') ?></label>
-      <select class="input" id="city" name="city" onchange="this.form.submit()">
-        <option value="" class="nav-i18n" data-en="All cities" data-ar="كل المدن">All cities</option>
-        <?php foreach (OW_MAP_CITIES as $k => $c): ?>
+      <label for="region"><?= owBi('Region', 'المنطقة') ?></label>
+      <select class="input" id="region" name="region" onchange="this.form.submit()">
+        <option value="" class="nav-i18n" data-en="All regions" data-ar="كل المناطق">All regions</option>
+        <?php foreach (OW_MAP_REGIONS as $k => $c): ?>
           <option value="<?= e($k) ?>" class="nav-i18n" data-en="<?= e($c[0]) ?>" data-ar="<?= e($c[1]) ?>"<?= $k === $city ? ' selected' : '' ?>><?= e($c[0]) ?></option>
         <?php endforeach; ?>
       </select>
@@ -253,12 +290,12 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
     </section>
     <?php endif; ?>
 
-    <?php if (!$institutes): ?>
+    <?php if (!$institutes && !$places): ?>
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg>
         <?php if ($city !== ''): ?>
-          <?= owBi('No institutes in this city yet. Try another city.', 'لا توجد معاهد في هذه المدينة بعد. جرّب مدينة أخرى.') ?>
-          <div><a class="btn btn-secondary" href="<?= e($q('institutes', '')) ?>"><?= owBi('Show all cities', 'عرض كل المدن') ?></a></div>
+          <?= owBi('No institutes in this region yet. Try another region.', 'لا توجد معاهد في هذه المنطقة بعد. جرّب منطقة أخرى.') ?>
+          <div><a class="btn btn-secondary" href="<?= e($q('institutes', '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
         <?php else: ?>
           <?= owBi('We are gathering the best art institutes for you. Check back soon.', 'نجمع لك أفضل المعاهد الفنية. عد قريباً.') ?>
           <div><a class="btn btn-primary" href="articles_list.php?type=art_education"><?= owBi('Learn about art styles', 'تعرّف على الأساليب الفنية') ?></a></div>
@@ -334,6 +371,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           </details>
         </article>
         <?php endforeach; ?>
+        <?php foreach ($places as $p) echo $placeCard($p); ?>
       </div>
     <?php endif; ?>
 
@@ -342,9 +380,9 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
         <?php if ($city !== ''): ?>
-          <?= $kind === 'museum' ? owBi('No museums in this city on our map yet. Try another city.', 'لا متاحف في هذه المدينة على خريطتنا بعد. جرّب مدينة أخرى.')
-                                 : owBi('No art galleries in this city on our map yet. Try another city.', 'لا معارض فنية في هذه المدينة على خريطتنا بعد. جرّب مدينة أخرى.') ?>
-          <div><a class="btn btn-secondary" href="<?= e($q($tab, '')) ?>"><?= owBi('Show all cities', 'عرض كل المدن') ?></a></div>
+          <?= $kind === 'museum' ? owBi('No museums in this region on our map yet. Try another region.', 'لا متاحف في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.')
+                                 : owBi('No art galleries in this region on our map yet. Try another region.', 'لا معارض فنية في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.') ?>
+          <div><a class="btn btn-secondary" href="<?= e($q($tab, '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
         <?php else: ?>
           <?= $kind === 'museum' ? owBi('We are gathering the best museums for you. Check back soon.', 'نجمع لك أجمل المتاحف. عد قريباً.')
                                  : owBi('We are gathering the best art galleries for you. Check back soon.', 'نجمع لك أجمل المعارض الفنية. عد قريباً.') ?>
@@ -356,21 +394,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           ? owBi($n === 1 ? '1 museum' : $n . ' museums', $n === 1 ? 'متحف واحد' : ($n === 2 ? 'متحفان' : $n . ($n <= 10 ? ' متاحف' : ' متحفاً')))
           : owBi($n === 1 ? '1 art gallery' : $n . ' art galleries', $n === 1 ? 'معرض فني واحد' : ($n === 2 ? 'معرضان فنيان' : $n . ($n <= 10 ? ' معارض فنية' : ' معرضاً فنياً'))) ?></p>
       <div class="i-grid m-grid">
-        <?php foreach ($places as $p):
-          $cKey = (string) ($p['city'] ?? 'other');
-          $cEn = (string) (($p['city_en'] ?? '') ?: (OW_MAP_CITIES[$cKey][0] ?? ''));
-          $cAr = (string) (($p['city_ar'] ?? '') ?: (OW_MAP_CITIES[$cKey][1] ?? $cEn));
-        ?>
-        <article class="card i-card m-card reveal">
-          <div>
-            <h2 class="i-name"><?= owBi((string) $p['name_en'], (string) ($p['name_ar'] ?: $p['name_en'])) ?></h2>
-            <div class="i-city"><?= $PIN ?><?= owBi($cEn, $cAr) ?></div>
-          </div>
-          <span class="m-kind"><?= owBi($K[2], $K[3]) ?></span>
-          <?php if (trim((string) ($p['desc_en'] ?? '')) !== ''): ?><p class="i-desc"><?= owBi((string) $p['desc_en'], (string) ($p['desc_ar'] ?: $p['desc_en'])) ?></p><?php endif; ?>
-          <?= owMapActs(owMapUrl((string) ($p['website'] ?? '')), owMapsLink((string) $p['name_en'], $cEn, (string) ($p['maps'] ?? '')), (string) $p['name_en']) ?>
-        </article>
-        <?php endforeach; ?>
+        <?php foreach ($places as $p) echo $placeCard($p); ?>
       </div>
     <?php endif; ?>
 <?php endif; ?>

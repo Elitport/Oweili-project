@@ -1,70 +1,79 @@
 <?php
 /* =====================================================================
- *  artmap_lib.php — Art Map («خريطة الفن», owner, 12 Nov 2026): museums and
- *  art galleries in Saudi Arabia, next to the existing art institutes.
- *  Museums and galleries are a short, team-made list, kept as ONE saved
- *  setting (site_settings 'art_places', JSON), so the database structure
- *  does not change. Every place starts as a draft; only the admin publishes
- *  it (admin_art_map.php). Institutes stay in their own table (institutes).
- *  Each place: kind (museum / gallery), name, city, short text in both
- *  languages, the official website, the source checked, an optional Google
- *  Maps link (otherwise a Google Maps search for its name and city).
- *  Tables: site_settings (one key), institutes (read by art_map.php)
+ *  artmap_lib.php — Art Map («خريطة الفن» page, «وجهات» in the menu; owner,
+ *  12 Nov 2026): museums, art galleries and art institutes in Saudi Arabia.
+ *  Since the 148-place import (12 Nov 2026) the places live in their own
+ *  table, art_places (art_places.sql, add-only), instead of one saved setting.
+ *  Every place starts as a draft; only the admin publishes it
+ *  (admin_art_map.php). The older institutes directory (table institutes,
+ *  with courses) stays as it is and shows on the Institutes tab next to the
+ *  published art_places institutes.
+ *  Each place: kind, name, city, region (one of the 13), short text in both
+ *  languages, address, phone, official website, Instagram, Google Maps link,
+ *  a free-licence photo with its credit (assets/img/places/), and, for the
+ *  admin only, the sources checked and a confidence level (high/medium/low).
+ *  Tables: art_places, institutes (read by art_map.php)
  * ===================================================================== */
-require_once __DIR__ . '/gallery_lib.php';   // owSetting / owSetSetting
+require_once __DIR__ . '/gallery_lib.php';
 
 const OW_MAP_KINDS = [
-    'museum'  => ['Museums', 'المتاحف', 'Museum', 'متحف'],
-    'gallery' => ['Art Galleries', 'المعارض الفنية', 'Art gallery', 'معرض فني'],
+    'museum'    => ['Museums', 'المتاحف', 'Museum', 'متحف'],
+    'gallery'   => ['Art Galleries', 'المعارض الفنية', 'Art gallery', 'معرض فني'],
+    'institute' => ['Institutes', 'المعاهد', 'Art institute', 'معهد فني'],
 ];
-/* The city filter (owner's list), then "Other cities" */
-const OW_MAP_CITIES = [
-    'riyadh'  => ['Riyadh', 'الرياض'],
-    'jeddah'  => ['Jeddah', 'جدة'],
-    'alula'   => ['AlUla', 'العلا'],
-    'eastern' => ['Dammam / Khobar', 'الدمام / الخبر'],
-    'abha'    => ['Abha', 'أبها'],
-    'other'   => ['Other cities', 'مدن أخرى'],
+/* The region filter: the 13 regions of Saudi Arabia (owner, 12 Nov 2026) */
+const OW_MAP_REGIONS = [
+    'riyadh'   => ['Riyadh', 'الرياض'],
+    'makkah'   => ['Makkah', 'مكة المكرمة'],
+    'eastern'  => ['Eastern Province', 'المنطقة الشرقية'],
+    'madinah'  => ['Madinah', 'المدينة المنورة'],
+    'qassim'   => ['Qassim', 'القصيم'],
+    'hail'     => ['Hail', 'حائل'],
+    'tabuk'    => ['Tabuk', 'تبوك'],
+    'jouf'     => ['Al-Jouf', 'الجوف'],
+    'northern' => ['Northern Borders', 'الحدود الشمالية'],
+    'asir'     => ['Asir', 'عسير'],
+    'jazan'    => ['Jazan', 'جازان'],
+    'najran'   => ['Najran', 'نجران'],
+    'baha'     => ['Al-Baha', 'الباحة'],
 ];
+const OW_MAP_CONF = ['high' => ['High', 'عالية'], 'medium' => ['Medium', 'متوسطة'], 'low' => ['Low', 'منخفضة']];
 
-/* Which filter city a typed city name belongs to (used for the institutes) */
-function owMapCityKey(string $city): string {
-    $c = mb_strtolower(trim($city));
-    if ($c === '') return 'other';
-    if (preg_match('/riyadh|diriyah|الرياض|الدرعية/u', $c)) return 'riyadh';
-    if (preg_match('/jedd?ah|jidd?ah|جدة|جده/u', $c)) return 'jeddah';
-    if (preg_match('/al\s*-?\s*ula|العلا/u', $c)) return 'alula';
-    if (preg_match('/dammam|khobar|dhahran|الدمام|الخبر|الظهران/u', $c)) return 'eastern';
-    if (preg_match('/abha|أبها|ابها/u', $c)) return 'abha';
-    return 'other';
+/* The region of a city or region name (used for the institutes table and old links) */
+function owMapRegionKey(string $s): string {
+    $c = mb_strtolower(trim($s));
+    $map = [
+        'riyadh'   => 'riyadh|diriyah|الرياض|الدرعية|shaqra|ushaiger|kharj',
+        'makkah'   => 'makkah|mecca|jedd?ah|jidd?ah|taif|مكة|جدة|جده|الطائف',
+        'eastern'  => 'eastern|dammam|khobar|dhahran|ahsa|hofuf|mubarraz|qatif|tarout|jubail|الشرقية|الدمام|الخبر|الظهران|الأحساء|الاحساء',
+        'madinah'  => 'madinah|medina|al\s*-?\s*ula|yanbu|المدينة|العلا|ينبع',
+        'qassim'   => 'qassim|buraydah|unaizah|القصيم|بريدة|عنيزة',
+        'hail'     => 'hail|حائل',
+        'tabuk'    => 'tabuk|tayma|تبوك|تيماء',
+        'jouf'     => 'jouf|sakaka|dumat|الجوف|سكاكا|دومة',
+        'northern' => 'northern|arar|rafha|الحدود|عرعر',
+        'asir'     => 'asir|aseer|abha|namas|rijal|khamis|ahad rafidah|عسير|أبها|ابها|النماص|رجال',
+        'jazan'    => 'jazan|jizan|farasan|samtah|dayer|جازان|فرسان',
+        'najran'   => 'najran|نجران',
+        'baha'     => 'baha|الباحة',
+    ];
+    foreach ($map as $k => $re) if (preg_match('/' . $re . '/u', $c)) return $k;
+    return '';
 }
 
-/* Every museum and gallery, drafts included (the admin's list) */
-function owArtPlaces(): array {
-    $j = json_decode((string) owSetting('art_places', '[]'), true);
-    if (!is_array($j)) return [];
-    $out = [];
-    foreach ($j as $p) if (is_array($p) && !empty($p['id']) && isset(OW_MAP_KINDS[$p['kind'] ?? ''])) $out[] = $p;
-    return $out;
-}
-function owArtPlacesSave(array $places): bool {
-    return owSetSetting('art_places', json_encode(array_values($places), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-}
-/* Only the published ones, for visitors */
-function owArtPlacesPublished(string $kind, string $city = ''): array {
-    $out = [];
-    foreach (owArtPlaces() as $p) {
-        if (($p['status'] ?? 'draft') !== 'published' || $p['kind'] !== $kind) continue;
-        if ($city !== '' && ($p['city'] ?? 'other') !== $city) continue;
-        $out[] = $p;
-    }
-    usort($out, fn($a, $b) => strcasecmp((string) $a['name_en'], (string) $b['name_en']));
-    return $out;
+function owArtPlacesReady(): bool { return owHasTable('art_places'); }
+
+/* Published places of one kind (optionally one region), for visitors */
+function owArtPlacesPublished(string $kind, string $region = ''): array {
+    if (!owArtPlacesReady()) return [];
+    $sql = "SELECT * FROM art_places WHERE status = 'published' AND kind = :k" . ($region !== '' ? ' AND region = :r' : '') . ' ORDER BY name_en';
+    $st = getDB()->prepare($sql);
+    $st->execute($region !== '' ? [':k' => $kind, ':r' => $region] : [':k' => $kind]);
+    return $st->fetchAll();
 }
 function owArtPlacesDrafts(): int {
-    $n = 0;
-    foreach (owArtPlaces() as $p) if (($p['status'] ?? 'draft') !== 'published') $n++;
-    return $n;
+    try { return owArtPlacesReady() ? (int) getDB()->query("SELECT COUNT(*) FROM art_places WHERE status <> 'published'")->fetchColumn() : 0; }
+    catch (Throwable $e) { return 0; }
 }
 /* A web address we are willing to link to (https / http only) */
 function owMapUrl(string $u): string {
@@ -76,4 +85,23 @@ function owMapsLink(string $nameEn, string $cityEn, string $saved = ''): string 
     $s = owMapUrl($saved);
     if ($s !== '' && preg_match('#^https://(www\.)?(google\.[a-z.]+/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl/maps)#i', $s)) return $s;
     return 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode(trim($nameEn . ', ' . $cityEn . ', Saudi Arabia', ', '));
+}
+/* Instagram: a full instagram.com address, or "@name" / "name" → the full address */
+function owInstaUrl(string $v): string {
+    $v = trim($v);
+    if ($v === '') return '';
+    if (preg_match('#^https?://(www\.)?instagram\.com/([A-Za-z0-9._]{1,30})/?#i', $v, $m)) return 'https://www.instagram.com/' . $m[2];
+    if (preg_match('/^@?([A-Za-z0-9._]{1,30})$/', $v, $m)) return 'https://www.instagram.com/' . $m[1];
+    return '';
+}
+/* A phone number we can dial: digits and a leading + only */
+function owTelHref(string $v): string {
+    $t = preg_replace('/[^0-9+]/', '', $v);
+    return strlen($t) >= 7 ? 'tel:' . $t : '';
+}
+/* The place's photo (assets/img/places/<file>.webp + .jpg), or '' */
+function owPlacePhotoBase(array $p): string {
+    $b = (string) ($p['photo_path'] ?? '');
+    if ($b === '' || !preg_match('#^assets/img/places/[a-z0-9-]+$#', $b) || !is_file(__DIR__ . '/' . $b . '.jpg')) return '';
+    return $b;
 }

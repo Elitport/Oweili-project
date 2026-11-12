@@ -92,7 +92,7 @@
 - chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
 - events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). The old events table was empty on the live site (checked 31 Oct 2026)
-- art_map.php — Art Map («خريطة الفن», 12 Nov 2026): Museums, Art Galleries and Institutes tabs with a city filter (see Features). admin_art_map.php — the admin's tool for its museums and galleries
+- art_map.php — Art Map («خريطة الفن», menu «وجهات», 12 Nov 2026): Museums, Art Galleries and Institutes tabs with a filter by the 13 regions (see Features); places in the art_places table. admin_art_map.php — the admin's tool for its museums and galleries
 - institutes.php — retired address since 12 Nov 2026: sends old links to art_map.php?tab=institutes for good (301)
 - training.php — retired address: sends old links to the Art Map's Institutes tab for good (301), keeping ?city and the language
 - articles_list.php — all published articles of one type (?type=event / artist_spotlight / art_education)
@@ -122,6 +122,15 @@
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
 
 ## Features
+
+### Art Map: 148-place import, own table, 13 regions, photos, «وجهات» (12 Nov 2026, owner)
+- The places now live in their own table art_places (art_places.sql, add-only: kind museum / gallery / institute, status draft / published, names, city, region, short text EN/AR, address, phone, website, instagram, maps_url, lat / lng, photo_path / photo_credit / photo_page / photo_license, sources (JSON, admin only), confidence high / medium / low (admin only), src_ref so an import never adds a place twice). The old site_settings 'art_places' JSON is no longer read (kept, unused)
+- Imported as DRAFTS on the live database by a temporary locked page (removed straight after), after a full backup: the 21 earlier drafts plus 124 places from the owner's file oweili-art-map-places.json (148 places from all 13 regions). 24 skipped as duplicates of the 21 drafts or the 11 institutes: SAMoCA, National Museum, Darat Safeya Binzagr, House of Islamic Arts, Red Sea Museum, Tariq Abdulhakim Center, Tayebat Museum, Ithra Museum, Fatimah Museum, Abstract Art Gallery, Alajlan Art Gallery, Hewar, Naila, Athr Gallery, Hafez Gallery (Jeddah), Hayy Jameel, ATHR AlUla, Madrasat Addeera, Al-Muftaha Arts Village, Art Street Abha, Misk Art Institute, Art Education Department KFU, Hayy Learning, Ithra Academy. Now 145 drafts: 79 museums, 50 galleries, 16 institutes; 22 with low confidence
+- art_map.php: each card shows, only when they exist: photo (or a neat placeholder drawing), name, city, type, short text, address, phone (tap to call), Official website, Instagram, Google Maps. Filter by the 13 regions (?region=riyadh / makkah / eastern / madinah / qassim / hail / tabuk / jouf / northern / asir / jazan / najran / baha; OW_MAP_REGIONS); old ?city= links are turned into their region. The Institutes tab shows the older institutes table (unchanged, with courses) and the published art_places institutes
+- Photos: free-licence photos from Wikimedia Commons (public domain, CC BY, CC BY-SA) of the building or an empty interior, no faces, no flowers, no religious text; each checked by eye. 13 places have one (assets/img/places/<src_ref>.webp/.jpg, 480 px, 17 to 118 KB) with a small credit (author, licence, Wikimedia Commons, link); the rest show the placeholder
+- admin_art_map.php (admin only): filters (type, status, region, confidence, search), Publish / Back to draft, Edit (all fields, sources one per line), + New place; sources and confidence shown only there, "Low" confidence in red (badge and red card edge). Admin → Waiting for approval counts the art_places drafts
+- Menu: the Arabic label is «وجهات» (English stays "Art Map"); the page heading is unchanged
+- Files: art_places.sql (new), artmap_lib.php, art_map.php, admin_art_map.php, institutes.php, nav.php, assets/img/places/ (new). Tables: art_places (new), institutes, courses, activity_log
 
 ### Art Map replaces Art Institutes in the menu (12 Nov 2026, owner)
 - art_map.php «خريطة الفن»: the top menu item "Art Institutes" became "Art Map" (same place, same number of items; nav.php, desktop and ☰). institutes.php and training.php now answer 301 to art_map.php?tab=institutes (the old city becomes one of the Art Map cities, the language is kept). Sitemap and the iPhone early-load list name art_map.php
@@ -867,6 +876,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
+- art_places.sql — the Art Map's places table (12 Nov 2026). Only adds one table; safe to run more than once. Run on the live database 12 Nov 2026 after a full backup
 - database_update.sql — the 8 new tables for the 5 pillars (safe to run more than once). Already in place on the live database (checked 30 Oct 2026)
 - visitor_stats.sql — the visitor city statistics (date, country, city, count). Only adds one table; safe to run more than once. Run on the live database 9 Nov 2026 after a full backup
 - portfolio_update.sql — artworks.sold_at and the portfolio_images columns the code uses (artist_id, sort_order). Only adds; safe to run more than once. Run on the live database 9 Nov 2026 after a full backup
@@ -896,7 +906,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- Now (owner, 6 Nov 2026, night; Art Map since 12 Nov 2026): no Discover dropdown. Gallery · Art Styles («أساليب الرسم», renamed from Explore Art Styles) · Art Events · Art Education · Art Map («خريطة الفن», was Art Institutes) · Support ↓ (Artist Spotlights, Community and the Collect menu come back only when switched on). The lines below describe the older layout
+- Now (owner, 6 Nov 2026, night; Art Map since 12 Nov 2026): no Discover dropdown. Gallery · Art Styles («أساليب الرسم», renamed from Explore Art Styles) · Art Events · Art Education · Art Map (Arabic menu word «وجهات»; was Art Institutes) · Support ↓ (Artist Spotlights, Community and the Collect menu come back only when switched on). The lines below describe the older layout
 - Order (owner's choice): Gallery · Collect ↓ · Explore Art Styles · Discover ↓ · Community · Support ↓ (Community, Gifts, Commissions and Artist Spotlights are hidden for now, to bring back later, 6 Nov 2026: while hidden the menu is Gallery · Explore Art Styles · Discover ↓ (Art Events, Art Education, Art Institutes) · Support ↓, and the Collect menu is gone because all its pages are hidden) (Arabic, right to left: المعرض · اقتنِ · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
 - Collect ↓ / «اقتنِ» → Gifts / «هدايا» (gifts.php, hidden for now: then the top word opens commission.php), Commissions / «طلب لوحة خاصة» (commission.php), and Auctions / «المزاد» (auctions.php, with a small "Soon" tag) ONLY while the Auctions page is switched on in Admin → Settings (hidden since 5 Nov 2026). The top word opens gifts.php
 - Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)
