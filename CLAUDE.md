@@ -123,6 +123,13 @@
 
 ## Features
 
+### Art Map: places published, new "All" tab (12 Nov 2026, owner)
+- The owner's file oweili-art-map-places.json (sent again with oweili-art-map-review.xlsx, the same 148 places and the same confidence levels) was already imported that morning, so nothing new was imported
+- Published on the live database 12 Nov 2026 by a temporary locked page (removed straight after), after a full backup: every art_places draft whose confidence is not "low" (123 places: 70 museums, 44 galleries, 9 institutes). The 22 low-confidence places stay drafts for the owner to check in admin_art_map.php. The 11 hidden institutes of the older institutes list were not changed (still hidden)
+- art_map.php: a first tab "All" / «الكل», open by default (art_map.php with no tab), showing museums, galleries and institutes together (museums, then galleries, then institutes; owArtPlacesAllPublished() in artmap_lib.php); count "N places" / «N وجهة». Region opens on "All regions" / «كل المناطق». The Museums, Art Galleries and Institutes tabs (?tab=museums / galleries / institutes) and the Region filter work as before. On phones the four tabs take two lines
+- Places without a photo keep the neat placeholder drawing (13 places have a free-licence photo)
+- Files: art_map.php, artmap_lib.php. Tables: art_places (status only), institutes (read)
+
 ### Gallery: new search and filter bar, side panel, phone sheet (12 Nov 2026, owner)
 - marketplace.php only. The line «كل عمل هنا رسمته يد فنان، بصبر وحب» / "Every piece here was made by an artist’s own hand, with patience and love." now sits inside the title card under the description (.ph-note; also on collection pages); the separate pill under the card is gone
 - Laptops: one rounded frosted bar (.mp-bar): [search "Search artworks" / «ابحث عن عمل فني» | Topic ▾ | Status ▾ | Sort ▾ | filters button], thin lines between the parts. Status is now a dropdown (All / Available; Auction only while the Auctions page is on). Choosing a Topic, Status or Sort opens the Gallery at once; a new Topic drops a style from Art Styles, as before. When the page scrolls past it, the bar sticks under the menu, slimmer and still frosted (.stuck, its place kept so nothing jumps)

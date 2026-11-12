@@ -4,7 +4,8 @@ require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
  *  art_map.php: Art Map («خريطة الفن», owner, 12 Nov 2026). Replaces Art
  *  Institutes in the top menu (same place); institutes.php and training.php
  *  send old links here (Institutes tab).
- *  Three tabs: Museums, Art Galleries and Institutes (published places from
+ *  Tabs: All (the default since 12 Nov 2026, owner: museums, galleries and
+ *  institutes together), Museums, Art Galleries and Institutes (published places from
  *  the art_places table; the Institutes tab also shows the older institutes
  *  directory unchanged: cards, courses and the hidden "Upcoming Workshops").
  *  A filter by the 13 regions (?region=riyadh …; old ?city= links still work).
@@ -18,8 +19,8 @@ require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back
 require_once __DIR__ . '/article_lib.php';
 require_once __DIR__ . '/artmap_lib.php';
 
-$tab = (string) ($_GET['tab'] ?? 'museums');
-if (!in_array($tab, ['museums', 'galleries', 'institutes'], true)) $tab = 'museums';
+$tab = (string) ($_GET['tab'] ?? 'all');
+if (!in_array($tab, ['all', 'museums', 'galleries', 'institutes'], true)) $tab = 'all';   // "All" opens by default (owner, 12 Nov 2026)
 $region = (string) ($_GET['region'] ?? '');
 if ($region === '' && isset($_GET['city'])) $region = owMapRegionKey((string) $_GET['city']) ?: ['abha' => 'asir', 'alula' => 'madinah', 'jeddah' => 'makkah'][(string) $_GET['city']] ?? '';   // links from before the regions
 if (!isset(OW_MAP_REGIONS[$region])) $region = '';
@@ -27,8 +28,8 @@ $city = $region;   // the filter value, kept under its old name below
 $kind = ['galleries' => 'gallery', 'institutes' => 'institute'][$tab] ?? 'museum';
 
 $places = []; $institutes = []; $courses = [];
-try { $places = owArtPlacesPublished($kind, $region); } catch (Throwable $e) { $places = []; }
-if ($tab === 'institutes') {
+try { $places = $tab === 'all' ? owArtPlacesAllPublished($region) : owArtPlacesPublished($kind, $region); } catch (Throwable $e) { $places = []; }
+if ($tab === 'institutes' || $tab === 'all') {
     try {
         $db = getDB();
         $activeCourse = 'c.is_active = 1 AND (c.end_date IS NULL OR c.end_date >= CURDATE())';
@@ -62,7 +63,7 @@ function instContact(array $i, string $courseTitle): string {
     if (preg_match('#^https?://#i', $web) && filter_var($web, FILTER_VALIDATE_URL)) return $web;
     return '';
 }
-$q = fn(string $t, string $c) => 'art_map.php?' . http_build_query(array_filter(['tab' => $t === 'museums' ? '' : $t, 'region' => $c]));
+$q = fn(string $t, string $c) => 'art_map.php' . (($qs = http_build_query(array_filter(['tab' => $t === 'all' ? '' : $t, 'region' => $c]))) !== '' ? '?' . $qs : '');
 /* "Official website", "Instagram" and "Google Maps" buttons of one place (only the ones that exist) */
 function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''): string {
     $h = '<div class="m-acts">';
@@ -73,6 +74,9 @@ function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''
 }
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 $n = count($institutes) + count($places);
+/* the All tab: museums and galleries first, then the institutes (the older list, then the newer places) */
+$placesFirst = $tab === 'all' ? array_values(array_filter($places, fn($p) => $p['kind'] !== 'institute')) : [];
+$placesLast  = $tab === 'all' ? array_values(array_filter($places, fn($p) => $p['kind'] === 'institute')) : $places;
 /* One place card (art_places row): photo or placeholder, name, city, kind, text, address, phone, buttons. Empty fields are left out */
 $placeCard = function (array $p) use ($PIN): string {
     $K = OW_MAP_KINDS[$p['kind']] ?? OW_MAP_KINDS['museum'];
@@ -206,13 +210,14 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 
     <div class="m-bar">
     <nav class="m-tabs" aria-label="Art Map · خريطة الفن">
+      <a class="m-tab" href="<?= e($q('all', $city)) ?>"<?= $tab === 'all' ? ' aria-current="page"' : '' ?>><?= owBi('All', 'الكل') ?></a>
       <a class="m-tab" href="<?= e($q('museums', $city)) ?>"<?= $tab === 'museums' ? ' aria-current="page"' : '' ?>><?= owBi('Museums', 'المتاحف') ?></a>
       <a class="m-tab" href="<?= e($q('galleries', $city)) ?>"<?= $tab === 'galleries' ? ' aria-current="page"' : '' ?>><?= owBi('Art Galleries', 'المعارض الفنية') ?></a>
       <a class="m-tab" href="<?= e($q('institutes', $city)) ?>"<?= $tab === 'institutes' ? ' aria-current="page"' : '' ?>><?= owBi('Institutes', 'المعاهد') ?></a>
     </nav>
 
     <form class="filter" method="get" action="art_map.php">
-      <?php if ($tab !== 'museums'): ?><input type="hidden" name="tab" value="<?= e($tab) ?>"><?php endif; ?>
+      <?php if ($tab !== 'all'): ?><input type="hidden" name="tab" value="<?= e($tab) ?>"><?php endif; ?>
       <label for="region"><?= owBi('Region', 'المنطقة') ?></label>
       <select class="input" id="region" name="region" onchange="this.form.submit()">
         <option value="" class="nav-i18n" data-en="All regions" data-ar="كل المناطق">All regions</option>
@@ -224,9 +229,9 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
     </form>
     </div>
 
-<?php if ($tab === 'institutes'): ?>
+<?php if ($tab === 'institutes' || $tab === 'all'): ?>
     <?php /* Upcoming Workshops: hidden for now, to bring back later (owner, 6 Nov 2026): Admin → Settings → Upcoming workshops. */ ?>
-    <?php require_once __DIR__ . '/gallery_lib.php'; if (owWorkshopsOn()): ?>
+    <?php require_once __DIR__ . '/gallery_lib.php'; if ($tab === 'institutes' && owWorkshopsOn()): ?>
     <section class="ws" aria-labelledby="ws-h">
       
       <div class="ws-head reveal">
@@ -300,6 +305,16 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 
     <?php if (!$institutes && !$places): ?>
       <div class="card empty-state d-empty reveal">
+        <?php if ($tab === 'all'): ?>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
+        <?php if ($city !== ''): ?>
+          <?= owBi('No art places in this region on our map yet. Try another region.', 'لا وجهات فنية في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.') ?>
+          <div><a class="btn btn-secondary" href="<?= e($q('all', '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
+        <?php else: ?>
+          <?= owBi('We are gathering the best art places for you. Check back soon.', 'نجمع لك أجمل وجهات الفن. عد قريباً.') ?>
+          <div><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore the Gallery', 'تصفّح المعرض') ?></a></div>
+        <?php endif; ?>
+        <?php else: ?>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg>
         <?php if ($city !== ''): ?>
           <?= owBi('No institutes in this region yet. Try another region.', 'لا توجد معاهد في هذه المنطقة بعد. جرّب منطقة أخرى.') ?>
@@ -308,10 +323,14 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           <?= owBi('We are gathering the best art institutes for you. Check back soon.', 'نجمع لك أفضل المعاهد الفنية. عد قريباً.') ?>
           <div><a class="btn btn-primary" href="articles_list.php?type=art_education"><?= owBi('Learn about art styles', 'تعرّف على الأساليب الفنية') ?></a></div>
         <?php endif; ?>
+        <?php endif; ?>
       </div>
     <?php else: ?>
-      <p class="result-count"><?= owBi($n === 1 ? '1 institute' : $n . ' institutes', $n === 1 ? 'معهد واحد' : ($n === 2 ? 'معهدان' : $n . ($n <= 10 ? ' معاهد' : ' معهداً'))) ?></p>
+      <p class="result-count"><?= $tab === 'all'
+          ? owBi($n === 1 ? '1 place' : $n . ' places', $n === 1 ? 'وجهة واحدة' : ($n === 2 ? 'وجهتان' : $n . ($n <= 10 ? ' وجهات' : ' وجهة')))
+          : owBi($n === 1 ? '1 institute' : $n . ' institutes', $n === 1 ? 'معهد واحد' : ($n === 2 ? 'معهدان' : $n . ($n <= 10 ? ' معاهد' : ' معهداً'))) ?></p>
       <div class="i-grid">
+        <?php foreach ($placesFirst as $p) echo $placeCard($p); ?>
         <?php foreach ($institutes as $i):
           $iid = (int) $i['id'];
           $nameEn = $i['name_en'] ?: $i['name_ar'];
@@ -379,7 +398,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           </details>
         </article>
         <?php endforeach; ?>
-        <?php foreach ($places as $p) echo $placeCard($p); ?>
+        <?php foreach ($placesLast as $p) echo $placeCard($p); ?>
       </div>
     <?php endif; ?>
 

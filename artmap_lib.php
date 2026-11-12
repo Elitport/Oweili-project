@@ -71,6 +71,13 @@ function owArtPlacesPublished(string $kind, string $region = ''): array {
     $st->execute($region !== '' ? [':k' => $kind, ':r' => $region] : [':k' => $kind]);
     return $st->fetchAll();
 }
+/* All published places (museums, galleries, institutes), optionally one region: the Art Map's "All" tab (owner, 12 Nov 2026) */
+function owArtPlacesAllPublished(string $region = ''): array {
+    if (!owArtPlacesReady()) return [];
+    $st = getDB()->prepare("SELECT * FROM art_places WHERE status = 'published'" . ($region !== '' ? ' AND region = :r' : '') . " ORDER BY FIELD(kind, 'museum', 'gallery', 'institute'), name_en");
+    $st->execute($region !== '' ? [':r' => $region] : []);
+    return $st->fetchAll();
+}
 function owArtPlacesDrafts(): int {
     try { return owArtPlacesReady() ? (int) getDB()->query("SELECT COUNT(*) FROM art_places WHERE status <> 'published'")->fetchColumn() : 0; }
     catch (Throwable $e) { return 0; }
