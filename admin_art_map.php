@@ -91,6 +91,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
               'name_en' => $txt('name_en', 200), 'name_ar' => $txt('name_ar', 200), 'city_en' => $txt('city_en', 120), 'city_ar' => $txt('city_ar', 120),
               'desc_en' => $txt('desc_en', 800), 'desc_ar' => $txt('desc_ar', 800), 'address' => $txt('address', 300), 'phone' => $txt('phone', 40),
               'website' => owMapUrl($txt('website', 500)), 'instagram' => owInstaUrl($txt('instagram', 200)), 'maps_url' => owMapUrl($txt('maps_url', 500))];
+        if (owHasColumn('art_places', 'address_ar')) $v['address_ar'] = $txt('address_ar', 300);   // the address for Arabic pages (owner, 14 Nov 2026)
         $src = array_values(array_filter(array_map(fn($l) => owMapUrl(trim($l)), preg_split('/\R/', $txt('sources', 3000)))));
         $v['sources'] = json_encode($src, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         if (!isset(OW_MAP_KINDS[$v['kind']])) $errors[] = ['Please choose the type.', 'يرجى اختيار النوع.'];
@@ -159,6 +160,7 @@ $form = function (array $p) use ($opt, $field, $keep): void {
     <div class="g2"><?= $field('city_en', 'City (English)', 'المدينة (بالإنجليزية)', $val('city_en'), ' required maxlength="120"', false, $pid) ?><?= $field('city_ar', 'City (Arabic)', 'المدينة (بالعربية)', $val('city_ar'), ' required maxlength="120" dir="rtl"', false, $pid) ?></div>
     <div class="g2"><?= $field('desc_en', 'Short text (English)', 'نص قصير (بالإنجليزية)', $val('desc_en'), ' required maxlength="800"', true, $pid) ?><?= $field('desc_ar', 'Short text (Arabic)', 'نص قصير (بالعربية)', $val('desc_ar'), ' required maxlength="800" dir="rtl"', true, $pid) ?></div>
     <div class="g2"><?= $field('address', 'Address (optional)', 'العنوان (اختياري)', $val('address'), ' maxlength="300"', false, $pid) ?><?= $field('phone', 'Phone (optional)', 'الهاتف (اختياري)', $val('phone'), ' dir="ltr" maxlength="40"', false, $pid) ?></div>
+    <?php if (owHasColumn('art_places', 'address_ar')): ?><?= $field('address_ar', 'Address in Arabic, for Arabic pages (optional)', 'العنوان بالعربية للصفحات العربية (اختياري)', $val('address_ar'), ' maxlength="300" dir="rtl"', false, $pid) ?><?php endif; ?>
     <div class="g3"><?= $field('website', 'Official website (optional)', 'الموقع الرسمي (اختياري)', $val('website'), ' dir="ltr" maxlength="500"', false, $pid) ?>
       <?= $field('instagram', 'Instagram (optional)', 'إنستغرام (اختياري)', $val('instagram'), ' dir="ltr" maxlength="200"', false, $pid) ?>
       <?= $field('maps_url', 'Google Maps link (optional)', 'رابط خرائط Google (اختياري)', $val('maps_url'), ' dir="ltr" maxlength="500"', false, $pid) ?></div>

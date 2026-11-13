@@ -69,6 +69,8 @@ function owMapKindIcon(string $kind): string {
 }
 
 function owArtPlacesReady(): bool { return owHasTable('art_places'); }
+/* The address for Arabic pages: the Arabic one when it is saved (owner, 14 Nov 2026), else the English one */
+function owPlaceAddressAr(array $p): string { $a = trim((string) ($p['address_ar'] ?? '')); return $a !== '' ? $a : (string) ($p['address'] ?? ''); }
 
 /* Published places of one kind (optionally one region), for visitors */
 function owArtPlacesPublished(string $kind, string $region = ''): array {

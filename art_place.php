@@ -153,7 +153,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
       <span class="m-kind"><?= owBi($K[2], $K[3]) ?></span>
       <?php if ($dEn !== ''): ?><p class="ap-desc"><?= owBi(owMapPlain($dEn), owMapPlain($dAr)) ?></p><?php endif; ?>
       <?php $info = '';
-        if (trim((string) $place['address']) !== '') $info .= '<li><b>' . owBi('Address', 'العنوان') . '</b> <bdi>' . e((string) $place['address']) . '</bdi></li>';
+        if (trim((string) $place['address']) !== '') $info .= '<li><b>' . owBi('Address', 'العنوان') . '</b> <bdi>' . owBi((string) $place['address'], owPlaceAddressAr($place)) . '</bdi></li>';
         if (($tel = owTelHref((string) $place['phone'])) !== '') $info .= '<li><b>' . owBi('Phone', 'الهاتف') . '</b> <a href="' . e($tel) . '" dir="ltr">' . e((string) $place['phone']) . '</a></li>';
         if ($info !== '') echo '<ul class="ap-info">' . $info . '</ul>'; ?>
       <?= owMapActs($web, $maps, $nEn, $insta) ?>

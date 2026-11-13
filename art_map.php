@@ -104,7 +104,7 @@ $placeCard = function (array $p) use ($PIN): string {
     $h .= '<span class="m-kind">' . owBi($K[2], $K[3]) . '</span>';
     if (trim((string) $p['desc_en']) !== '' || trim((string) $p['desc_ar']) !== '') $h .= '<p class="i-desc">' . owBi((string) ($p['desc_en'] ?: $p['desc_ar']), (string) ($p['desc_ar'] ?: $p['desc_en'])) . '</p>';
     $info = '';
-    if (trim((string) $p['address']) !== '') $info .= '<li><span class="m-lbl">' . owBi('Address', 'العنوان') . '</span> <bdi>' . e((string) $p['address']) . '</bdi></li>';
+    if (trim((string) $p['address']) !== '') $info .= '<li><span class="m-lbl">' . owBi('Address', 'العنوان') . '</span> <bdi>' . owBi((string) $p['address'], owPlaceAddressAr($p)) . '</bdi></li>';
     if (($tel = owTelHref((string) $p['phone'])) !== '') $info .= '<li><span class="m-lbl">' . owBi('Phone', 'الهاتف') . '</span> <a href="' . e($tel) . '" dir="ltr">' . e((string) $p['phone']) . '</a></li>';
     if ($info !== '') $h .= '<ul class="m-info">' . $info . '</ul>';
     $h .= owMapActs(owMapUrl((string) $p['website']), owMapsLink($nEn, $cEn, (string) $p['maps_url']), $nEn, owInstaUrl((string) $p['instagram']));
