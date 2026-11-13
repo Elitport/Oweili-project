@@ -36,6 +36,15 @@ if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['
 $uid = (int) $me['id'];
 
 $TABS = ['works', 'certs', 'articles', 'commissions', 'account', 'activity', 'earnings', 'packing'];
+/* the Commissions tab follows the Commissions switch in Admin → Settings (owner, 14 Nov 2026); an artist who already
+   has a commission keeps the tab, so that work is never lost */
+require_once __DIR__ . '/gallery_lib.php';
+$commTabOn = owCommissionsPageOn();
+if (!$commTabOn) {
+    try { $q = getDB()->prepare("SELECT COUNT(*) FROM commissions WHERE artist_id = :u AND status <> 'cancelled'"); $q->execute([':u' => $uid]); $commTabOn = (int) $q->fetchColumn() > 0; }
+    catch (Throwable $e) { $commTabOn = false; }
+}
+if (!$commTabOn) $TABS = array_values(array_diff($TABS, ['commissions']));
 $tab  = in_array($_GET['tab'] ?? '', $TABS, true) ? $_GET['tab'] : 'works';
 $tabLink = fn(string $t) => 'artist_studio.php?tab=' . $t;
 
@@ -266,7 +275,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
-    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'articles' => ['My articles', 'مقالاتي'], 'commissions' => ['Commissions', 'الأعمال الخاصة'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات'], 'packing' => ['Packing guide', 'دليل التغليف']] as $t => $l): ?>
+    <?php foreach (['works' => ['My artworks', 'أعمالي'], 'certs' => ['Certificates', 'الشهادات'], 'articles' => ['My articles', 'مقالاتي'], 'commissions' => ['Commissions', 'الأعمال الخاصة'], 'account' => ['Account', 'الحساب'], 'activity' => ['Activity', 'النشاط'], 'earnings' => ['Sales & payouts', 'المبيعات والمدفوعات'], 'packing' => ['Packing guide', 'دليل التغليف']] as $t => $l): if (!in_array($t, $TABS, true)) continue; ?>
       <a class="tab<?= $tab === $t ? ' active' : '' ?>" href="<?= e($tabLink($t)) ?>"<?= $tab === $t ? ' aria-current="page"' : '' ?>><?= owBi($l[0], $l[1]) ?></a>
     <?php endforeach; ?>
   </nav>
