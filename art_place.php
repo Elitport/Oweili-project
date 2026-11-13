@@ -132,7 +132,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
 </style>
 </head>
 <body class="ow">
-<?= owStudioBackdrop('easels-corridor') ?>
+<?= ($place && ($ph ?? '') !== '') ? '' : owStudioBackdrop('easels-corridor') /* a place with its own photo gets a calm plain background, not a second photo (owner, 14 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main>
