@@ -212,7 +212,8 @@ function owMapDirectory(): array {
         if (owHasTable('institutes')) {
             $seen = [];
             foreach ($rows as $p) if ($p['kind'] !== 'institute') $seen[mb_strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', (string) $p['name_en'])))] = 1;
-            foreach (getDB()->query('SELECT id, name_en, name_ar, city_en, city_ar, description_en, description_ar, contact_phone, website_url, updated_at FROM institutes WHERE is_active = 1 ORDER BY name_en') as $i) {
+            $upd = owHasColumn('institutes', 'updated_at') ? 'updated_at' : 'NULL AS updated_at';   // the institutes table may have no updated_at
+            foreach (getDB()->query("SELECT id, name_en, name_ar, city_en, city_ar, description_en, description_ar, contact_phone, website_url, $upd FROM institutes WHERE is_active = 1 ORDER BY name_en") as $i) {
                 if (isset($seen[mb_strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', (string) $i['name_en'])))])) continue;
                 $rg = owMapRegionKey((string) ($i['city_en'] ?: $i['city_ar']));
                 if ($rg === '') continue;
