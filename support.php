@@ -11,7 +11,9 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
 .page{position:relative;z-index:10;width:100%;max-width:1000px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl);}
-.page-header{margin-bottom:48px;animation:riseUp .15s ease-out both;}
+.page-header{margin-bottom:48px;animation:riseUp .15s ease-out both;margin-inline:auto;text-align:center;}   /* the same centred title card as the other pages (owner, 14 Nov 2026) */
+.ow-backdrop ~ * .page-header h1#t-h1{font-size:clamp(28px,3vw,40px);}
+.page-header p{margin-inline:auto;}
 .page-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;margin-bottom:16px;background:rgba(var(--rgb-accent),0.05);border:1px solid rgba(var(--rgb-accent),0.15);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent);}
 .pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--color-accent);box-shadow:0 0 8px rgba(var(--rgb-accent),0.5);animation:pulse 2s infinite;}
 .page-header h1{font-size:clamp(28px,4vw,48px);font-weight:700;color:var(--color-dark);margin-bottom:12px;letter-spacing:-0.02em;}
@@ -48,7 +50,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 @keyframes riseUp {from{opacity:1}to{opacity:1}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 [dir="rtl"] .contact-grid,[dir="rtl"] .legal-grid{direction:rtl;}
-[dir="rtl"] .page-header p{text-align:right;}
+[dir="rtl"] .page-header p{text-align:center;}
 /* only "Write to Us" shown (Community hidden, owner 8 Nov 2026): it sits in the middle column */
 @media(min-width:769px){.contact-grid.one .contact-card{grid-column:2;}.contact-grid.one .sp-form-card{grid-column:1 / -1;width:100%;max-width:640px;margin:0 auto;}}
 .sp-form-card{cursor:default;text-align:center;}
@@ -75,8 +77,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 <?php include __DIR__ . "/nav.php"; ?>
 <div class="page" id="pg">
   <div class="page-header">
-    <div class="page-badge"><div class="pulse-dot"></div><span id="t-badge">We Are Here for You</span></div>
-    <h1 id="t-h1">Help &amp; <em>Support</em></h1>
+    <h1 id="t-h1">Help &amp; Support</h1>
     <p id="t-desc">Got a question? Just ask. A real person on our team will help you.</p>
   </div>
 
@@ -201,7 +202,7 @@ const FAQS={
 };
 const T={
   en:{dir:'ltr',lb:'العربية',explore:'Explore',community:'Community',support:'Support',login:'Sign In',
-    badge:'We Are Here for You',h1:'Help &amp; <em>Support</em>',desc:'Got a question? Just ask. A real person on our team will help you.',
+    badge:'We Are Here for You',h1:'Help &amp; Support',desc:'Got a question? Just ask. A real person on our team will help you.',
     ctTitle:'Get in Touch',c1:'Write to Us',c1d:'Send us a message. We reply within 24 hours, usually sooner.',c3:'Join the Community',c3d:'Create your free account and meet artists who share your love of art.',c3l:'Join Free →',
     faqTitle:'Questions We Hear Often',legalTitle:'Rights & Privacy',
     l1:'Your Art Stays Yours',l1d:'Everything you share on Oweili still belongs to you. Always.',
@@ -209,7 +210,7 @@ const T={
     l3:'Privacy',l3d:'We protect your personal data and your creative work. That is a promise.',
     l4:'Report Misuse of Your Art',l4d:'Someone used your art without asking? Tell us right away.'},
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
-    badge:'نحن هنا من أجلك',h1:'المساعدة و<em>الدعم</em>',desc:'لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.',
+    badge:'نحن هنا من أجلك',h1:'المساعدة والدعم',desc:'لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.',
     ctTitle:'تواصل معنا',c1:'اكتب لنا',c1d:'أرسل لنا رسالة. نرد خلال 24 ساعة، وغالباً أسرع.',c3:'انضم للمجتمع',c3d:'أنشئ حسابك المجاني والتقِ بفنانين يشاركونك حب الفن.',c3l:'انضم مجاناً →',
     faqTitle:'أسئلة تصلنا كثيراً',legalTitle:'الحقوق والخصوصية',
     l1:'فنك يبقى لك',l1d:'كل ما تشاركه على أويلي يبقى ملكك. دائماً.',

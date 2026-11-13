@@ -43,7 +43,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
 <div class="wrap">
   <div class="head">
-    <h1 id="t-h1">Join <em>Oweili</em></h1>
+    <h1 id="t-h1">Join Oweili</h1>
     <p id="t-sub">Choose how you would like to join us.</p>
   </div>
   <div class="choices">
@@ -67,13 +67,13 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
 <script>
 const T={
-  en:{dir:'ltr',lb:'العربية',h1:'Join <em>Oweili</em>',sub:'Choose how you would like to join us.',
+  en:{dir:'ltr',lb:'العربية',h1:'Join Oweili',sub:'Choose how you would like to join us.',
     aTitle:'I am an Artist',aDesc:'Share your work and sell it to people who care. We review every artist by hand. You will need a photo and a few artworks. A short video is optional.',aGo:'Join as Artist',
     cTitle:'I am a Collector',cDesc:'Find art made by real hands and bring it home. Signing up takes a minute.',cGo:'Join as Collector',
     have:'Already one of us?',login:'Sign In',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',h1:'انضم إلى <em>أويلي</em>',sub:'اختر كيف تحب أن تنضم إلينا.',
+  ar:{dir:'rtl',lb:'English',h1:'انضم إلى أويلي',sub:'اختر كيف تحب أن تنضم إلينا.',
     aTitle:'أنا فنان',aDesc:'شارك أعمالك وبِعها لمن يقدّرها. نراجع كل فنان بعناية. ستحتاج صورة وبعض أعمالك، والمقطع القصير اختياري.',aGo:'انضم كفنان',
     cTitle:'أنا مقتنٍ',cDesc:'اعثر على فن صنعته أيدٍ حقيقية، وخذه إلى بيتك. التسجيل يستغرق دقيقة.',cGo:'انضم كمقتنٍ',
     have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',

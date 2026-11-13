@@ -48,6 +48,11 @@ function owLegalPage(array $meta, array $sections): void {
 .legal .lead{font-size:var(--fs-subtitle);color:var(--color-body);margin:0 0 var(--space-md);}
 .legal .updated{font-size:var(--fs-caption);font-weight:600;color:var(--color-body);margin:0 0 var(--space-md);}
 .legal .card{padding:var(--space-lg);}
+.legal .card.lg-head{width:fit-content;max-width:min(620px,100%);margin:0 auto var(--space-md);padding:18px 26px;text-align:center;}
+.legal .lg-head h1{font-size:clamp(28px,3vw,40px);margin:0 0 6px;}
+.legal .lg-head .lead{font-size:15px;margin:0 0 6px;}
+.legal .lg-head .updated{margin:0;}
+.legal .lg-head + .toc{justify-content:center;}
 .toc{margin:0 0 var(--space-md);padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px;}
 .toc a{display:inline-block;padding:6px 12px;border:1px solid var(--color-border-strong);border-radius:var(--radius-pill);font-size:var(--fs-caption);font-weight:600;color:var(--color-dark);text-decoration:none;background:var(--color-surface);}
 .toc a:hover{border-color:var(--color-dark);}
@@ -66,9 +71,11 @@ html[dir="rtl"] .legal p,html[dir="rtl"] .legal li{line-height:1.7;}
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="legal">
+  <?php if (!empty($meta['centered_head'])): /* the same centred title card as the other pages (owner, 14 Nov 2026) */ ?><header class="card lg-head"><?php endif; ?>
   <h1><?= owBi($meta['title_en'], $meta['title_ar']) ?></h1>
   <p class="lead"><?= owBi($meta['lead_en'], $meta['lead_ar']) ?></p>
   <p class="updated"><?= owBi('Last updated: ' . $meta['updated_en'], 'آخر تحديث: ' . $meta['updated_ar']) ?></p>
+  <?php if (!empty($meta['centered_head'])): ?></header><?php endif; ?>
   <ul class="toc" aria-label="Contents · المحتويات">
     <?php foreach ($sections as $s): ?><li><a href="#<?= e($s[0]) ?>"><?= owBi($s[1], $s[2]) ?></a></li><?php endforeach; ?>
   </ul>

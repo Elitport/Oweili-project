@@ -70,8 +70,6 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <style>
 /* Art Styles — layout only. Colors, type and buttons come from oweili.css. */
 .ex-head { margin-bottom: var(--space-lg); }
-.ex-head h1 { font-weight: 300; letter-spacing: -0.02em; }
-[dir="rtl"] .ex-head h1 { letter-spacing: 0; }
 .ex-head p { color: var(--color-body); }
 
 /* filter bar: small refined pills */
