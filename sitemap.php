@@ -28,6 +28,13 @@ foreach ([['', 'daily', '1.0'], ['marketplace.php', 'daily', '0.9'], ['explore.p
     $add($p, null, $f, $pr);
 }
 /* Auctions only while the admin has the page switched on (gallery_lib.php owAuctionsPageOn) */
+/* the Art Map's region pages and every public place's own page (owner, 13 Nov 2026) */
+try {
+    require_once __DIR__ . '/artmap_lib.php';
+    $mapDir = owMapDirectory();
+    foreach (array_unique(array_column($mapDir, 'region')) as $rg) $add('art-map/' . $rg, null, 'weekly', '0.6');
+    foreach ($mapDir as $r) $add($r['url'], $r['updated_at'] ?? null, 'monthly', '0.6');
+} catch (Throwable $e) {}
 try { require_once __DIR__ . '/gallery_lib.php'; if (owAuctionsPageOn()) $add('auctions', null, 'weekly', '0.7'); } catch (Throwable $e) {}
 /* Community and Gifts only while switched on (hidden for now, 6 Nov 2026) */
 try { if (owCommunityPageOn()) $add('community.php', null, 'daily', '0.6'); if (owGiftsPageOn()) $add('gifts.php', null, 'weekly', '0.7'); if (owCommissionsPageOn()) $add('commission.php', null, 'monthly', '0.6'); if (owSpotlightsOn()) $add('articles_list.php?type=artist_spotlight', null, 'weekly', '0.6'); } catch (Throwable $e) {}

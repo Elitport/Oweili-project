@@ -23,6 +23,10 @@ Options -Indexes
   # (the QR code opens /verify?no=OW-…). verify.php stays the email-confirm page.
   RewriteRule ^verify/?$ cert_verify.php [L,QSA]
   RewriteRule ^auctions/?$ auctions.php [L,QSA]
+  # Art Map pages for Google (13 Nov 2026): /art-map/<region> and /art-map/<region>/<place>
+  RewriteRule ^art-map/?$ art_map.php [L,QSA]
+  RewriteRule ^art-map/([a-z]+)/?$ art_place.php?region=$1 [L,QSA]
+  RewriteRule ^art-map/([a-z]+)/([a-z0-9-]+)/?$ art_place.php?region=$1&slug=$2 [L,QSA]
 </IfModule>
 
 # A friendly page in English and Arabic for any address that does not exist

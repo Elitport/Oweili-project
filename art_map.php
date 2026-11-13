@@ -64,18 +64,6 @@ function instContact(array $i, string $courseTitle): string {
     return '';
 }
 $q = fn(string $t, string $c) => 'art_map.php' . (($qs = http_build_query(array_filter(['tab' => $t === 'all' ? '' : $t, 'region' => $c]))) !== '' ? '?' . $qs : '');
-/* "Official website", "Instagram" and "Google Maps" buttons of one place (only the ones that exist) */
-function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''): string {
-    $h = '<div class="m-acts">';
-    if ($web !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($web) . '" target="_blank" rel="noopener">' . owBi('Official website', 'الموقع الرسمي') . ' <span aria-hidden="true">↗</span></a>';
-    if ($insta !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($insta) . '" target="_blank" rel="noopener" aria-label="' . e('Instagram: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6"/></svg>Instagram</a>';
-    $h .= '<a class="btn btn-dark btn-sm" href="' . e($maps) . '" target="_blank" rel="noopener" aria-label="' . e('Google Maps: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' . owBi('Google Maps', 'خرائط Google') . '</a>';
-    return $h . '</div>';
-}
-/* "Is this your place?" under each card (owner, 13 Nov 2026) */
-function owMapClaimLink(string $q): string {
-    return '<a class="m-claim" href="place_claim.php?' . e($q) . '">' . owBi('Is this your place? Send us your photo and details', 'هل هذا مكانك؟ أرسل لنا صورتك وبياناتك') . '</a>';
-}
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 $n = count($institutes) + count($places);
 /* the All tab: museums and galleries first, then the institutes (the older list, then the newer places) */
@@ -111,7 +99,8 @@ $placeCard = function (array $p) use ($PIN): string {
         $h .= '<div class="m-band r-' . e($rg) . '"><svg viewBox="0 0 24 24" aria-hidden="true">' . owMapKindIcon((string) $p['kind']) . '</svg>'
             . ($cEn !== '' ? '<span>' . owBi($cEn, $cAr) . '</span>' : '') . '</div>';
     }
-    $h .= '<div><h2 class="i-name">' . owBi($nEn, $nAr) . '</h2>' . ($cEn !== '' ? '<div class="i-city">' . $PIN . owBi($cEn, $cAr) . '</div>' : '') . '</div>';
+    $url = owMapPlaceUrl('p', (int) $p['id']);   // the place's own page (owner, 13 Nov 2026)
+    $h .= '<div><h2 class="i-name">' . ($url !== '' ? '<a class="m-name" href="' . e(owBase() . $url) . '">' . owBi($nEn, $nAr) . '</a>' : owBi($nEn, $nAr)) . '</h2>' . ($cEn !== '' ? '<div class="i-city">' . $PIN . owBi($cEn, $cAr) . '</div>' : '') . '</div>';
     $h .= '<span class="m-kind">' . owBi($K[2], $K[3]) . '</span>';
     if (trim((string) $p['desc_en']) !== '' || trim((string) $p['desc_ar']) !== '') $h .= '<p class="i-desc">' . owBi((string) ($p['desc_en'] ?: $p['desc_ar']), (string) ($p['desc_ar'] ?: $p['desc_en'])) . '</p>';
     $info = '';
@@ -187,6 +176,8 @@ html.dark-mode .m-band{background:linear-gradient(120deg,hsl(var(--rh) 28% 22%),
 .m-band.r-qassim{--rh:265;--rs:22%;}.m-band.r-hail{--rh:150;--rs:20%;}.m-band.r-tabuk{--rh:330;--rs:32%;}.m-band.r-jouf{--rh:45;--rs:24%;}
 .m-band.r-northern{--rh:195;--rs:34%;}.m-band.r-asir{--rh:15;--rs:52%;}.m-band.r-jazan{--rh:175;--rs:28%;}.m-band.r-najran{--rh:5;--rs:30%;}
 .m-band.r-baha{--rh:95;--rs:18%;}.m-band.r-none{--rh:210;--rs:12%;}
+.m-name{color:inherit;text-decoration:none;}
+.m-name:hover,.m-name:focus-visible{text-decoration:underline;text-underline-offset:3px;}
 .m-claim{align-self:flex-start;font-size:var(--fs-caption);color:var(--color-body);text-decoration:underline;text-underline-offset:3px;padding:4px 0;}
 .m-claim:hover{color:var(--color-dark);}
 .m-info{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-caption);color:var(--color-body);}
@@ -380,7 +371,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
               <span class="i-logo none" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg></span>
             <?php endif; ?>
             <div>
-              <h2 class="i-name"><?= owBi($nameEn, $nameAr) ?></h2>
+              <h2 class="i-name"><?php $iurl = owMapPlaceUrl('i', $iid); ?><?= $iurl !== '' ? '<a class="m-name" href="' . e(owBase() . $iurl) . '">' . owBi($nameEn, $nameAr) . '</a>' : owBi($nameEn, $nameAr) ?></h2>
               <?php if ($cEn !== ''): ?><div class="i-city"><?= $PIN ?><?= owBi($cEn, $cAr) ?></div><?php endif; ?>
             </div>
           </div>

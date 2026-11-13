@@ -186,3 +186,71 @@ function owPlaceDropUpload(string $base): void {
     if (!preg_match('#^uploads/places/[a-z0-9-]+$#', $base)) return;
     foreach (['.jpg', '.webp'] as $x) if (is_file(__DIR__ . '/' . $base . $x)) @unlink(__DIR__ . '/' . $base . $x);
 }
+
+/* =====================================================================
+ *  Place pages for Google (owner, 13 Nov 2026): every public place has its
+ *  own page at /art-map/<region>/<name> (art_place.php, through .htaccess)
+ *  and every region a page at /art-map/<region> ("Museums and art galleries
+ *  in Riyadh"). Addresses are made from the English name; two places with
+ *  the same name in one region get -2, -3. No database change.
+ * ===================================================================== */
+function owMapSlug(string $s): string {
+    $s = preg_replace('/\s*\(.*?\)\s*/u', ' ', $s);
+    if (function_exists('iconv')) { $t = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s); if ($t !== false) $s = $t; }
+    $s = strtolower(trim(preg_replace('/[^A-Za-z0-9]+/', '-', $s), '-'));
+    return $s !== '' ? mb_substr($s, 0, 80) : 'place';
+}
+/* Every public place once: the published art_places and the shown older institutes (an older institute with the same
+   name as a museum or gallery is left out, like on the All tab). Each with region, slug and url. Kept for the request */
+function owMapDirectory(): array {
+    static $dir = null;
+    if ($dir !== null) return $dir;
+    $dir = [];
+    $rows = [];
+    try { foreach (owArtPlacesAllPublished() as $p) { $p['src'] = 'p'; $rows[] = $p; } } catch (Throwable $e) {}
+    try {
+        if (owHasTable('institutes')) {
+            $seen = [];
+            foreach ($rows as $p) if ($p['kind'] !== 'institute') $seen[mb_strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', (string) $p['name_en'])))] = 1;
+            foreach (getDB()->query('SELECT id, name_en, name_ar, city_en, city_ar, description_en, description_ar, contact_phone, website_url, updated_at FROM institutes WHERE is_active = 1 ORDER BY name_en') as $i) {
+                if (isset($seen[mb_strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', (string) $i['name_en'])))])) continue;
+                $rg = owMapRegionKey((string) ($i['city_en'] ?: $i['city_ar']));
+                if ($rg === '') continue;
+                $rows[] = ['src' => 'i', 'id' => $i['id'], 'kind' => 'institute', 'region' => $rg, 'name_en' => (string) ($i['name_en'] ?: $i['name_ar']), 'name_ar' => (string) ($i['name_ar'] ?: $i['name_en']),
+                           'city_en' => (string) ($i['city_en'] ?: $i['city_ar']), 'city_ar' => (string) ($i['city_ar'] ?: $i['city_en']), 'desc_en' => owMapPlain((string) ($i['description_en'] ?: $i['description_ar'])), 'desc_ar' => owMapPlain((string) ($i['description_ar'] ?: $i['description_en'])),
+                           'address' => '', 'phone' => (string) $i['contact_phone'], 'website' => (string) $i['website_url'], 'instagram' => '', 'maps_url' => '', 'lat' => null, 'lng' => null,
+                           'photo_path' => '', 'photo_credit' => '', 'photo_page' => '', 'updated_at' => $i['updated_at'] ?? null];
+            }
+        }
+    } catch (Throwable $e) {}
+    $used = [];
+    foreach ($rows as $r) {
+        if (!isset(OW_MAP_REGIONS[(string) $r['region']])) continue;
+        $base = owMapSlug((string) $r['name_en']); $slug = $base; $n = 2;
+        while (isset($used[$r['region'] . '/' . $slug])) $slug = $base . '-' . $n++;
+        $used[$r['region'] . '/' . $slug] = 1;
+        $r['slug'] = $slug; $r['url'] = 'art-map/' . $r['region'] . '/' . $slug;
+        $dir[$r['src'] . $r['id']] = $r;
+    }
+    return $dir;
+}
+function owMapPlain(string $s): string { return trim(preg_replace('/\s+/u', ' ', strip_tags($s))); }
+function owMapPlaceUrl(string $src, int $id): string { return owMapDirectory()[$src . $id]['url'] ?? ''; }
+/* The region page's title: "Museums and art galleries in Riyadh" / «متاحف ومعارض الرياض» */
+function owMapRegionTitle(string $rg): array {
+    $R = OW_MAP_REGIONS[$rg];
+    $in = in_array($rg, ['eastern', 'northern'], true) ? 'the ' . $R[0] : $R[0];
+    return ['Museums and art galleries in ' . $in, 'متاحف ومعارض ' . $R[1]];
+}
+/* "Official website", "Instagram" and "Google Maps" buttons of one place (only the ones that exist); shared by the Art Map and the place pages */
+function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''): string {
+    $h = '<div class="m-acts">';
+    if ($web !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($web) . '" target="_blank" rel="noopener">' . owBi('Official website', 'الموقع الرسمي') . ' <span aria-hidden="true">↗</span></a>';
+    if ($insta !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($insta) . '" target="_blank" rel="noopener" aria-label="' . e('Instagram: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6"/></svg>Instagram</a>';
+    $h .= '<a class="btn btn-dark btn-sm" href="' . e($maps) . '" target="_blank" rel="noopener" aria-label="' . e('Google Maps: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' . owBi('Google Maps', 'خرائط Google') . '</a>';
+    return $h . '</div>';
+}
+/* "Is this your place?" link (owner, 13 Nov 2026) */
+function owMapClaimLink(string $q): string {
+    return '<a class="m-claim" href="' . e(owBase() . 'place_claim.php?' . $q) . '">' . owBi('Is this your place? Send us your photo and details', 'هل هذا مكانك؟ أرسل لنا صورتك وبياناتك') . '</a>';
+}
