@@ -222,6 +222,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
 <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
 </head>
 <body>
+<?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('easels-class');   /* the classroom with easels, one of our approved photos (owner, 13 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 

@@ -120,6 +120,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('pink-palette');   /* the same photo as Sign in, one of our approved photos (owner, 13 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 

@@ -88,13 +88,19 @@ if (!headers_sent()) header('Cache-Control: no-store');
 .vf-how h2{font-size:20px;margin:0 0 var(--space-xs);}
 .vf-how ul{margin:0;padding-inline-start:20px;color:var(--color-body);line-height:1.8;}
 @media(max-width:640px){.vf-card{grid-template-columns:1fr;}.vf-dl{grid-template-columns:1fr 1fr;}}
+/* the heading and form on a frosted card over the background photo, like the other photo pages (owner, 13 Nov 2026) */
+.ow-backdrop ~ * .vf-head{background:var(--studio-glass);-webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);border:1px solid var(--studio-glass-edge);border-radius:var(--radius-card);padding:clamp(20px,4vw,32px);box-shadow:0 10px 30px rgba(var(--rgb-shadow),0.12);margin-bottom:var(--space-md);}
+.ow-backdrop ~ * .vf-head > :last-child{margin-bottom:0;}
+.ow-backdrop ~ * .vf-state.bad{background:linear-gradient(var(--color-tint-pink),var(--color-tint-pink)),var(--color-card);}   /* the same pink, on a solid card so the photo does not show through */
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('museum-walk');   /* the museum hall, one of our approved photos (owner, 13 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="vf">
+  <div class="vf-head">
   <h1><?= owBi('Verify a certificate', 'تحقق من شهادة') ?></h1>
   <p class="lead"><?= owBi('Every artwork approved on Oweili has a Certificate of Authenticity. Type its number, or scan the QR code on it.', 'لكل عمل معتمد في أويلي شهادة أصالة. اكتب رقمها، أو امسح رمز QR الموجود عليها.') ?></p>
   <form class="vf-form" method="get" action="verify" role="search">
@@ -105,6 +111,7 @@ if (!headers_sent()) header('Cache-Control: no-store');
     </div>
     <button class="btn btn-primary" type="submit"><?= owBi('Verify', 'تحقّق') ?></button>
   </form>
+  </div>
 
   <?php if ($state !== ''): ?>
   <section class="vf-res" aria-live="polite">

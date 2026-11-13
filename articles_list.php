@@ -31,8 +31,8 @@ $PAGE = [
                     'نكتب الآن أولى حكايات الفنانين. وتستحق الانتظار.'],
     ],
     'art_education' => [
-        'sub' => ['Why is a style called what it is? Discover the names and stories behind art.',
-                  'لماذا سُمّي كل أسلوب باسمه؟ اكتشف الأسماء والحكايات خلف الفن.'],
+        'sub' => ['Guides for buying and caring for art.',
+                  'أدلة لشراء الفن والعناية به.'],   // owner, 13 Nov 2026
         'empty' => ['Our first lessons are almost ready. Come back soon and learn with us.',
                     'دروسنا الأولى أوشكت أن تجهز. عد قريباً وتعلّم معنا.'],
     ],
