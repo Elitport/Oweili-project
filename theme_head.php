@@ -293,16 +293,17 @@ if(document.prerendering){document.addEventListener('prerenderingchange',go,{onc
   if (lite) d.classList.add('ow-lite');
   document.addEventListener('DOMContentLoaded', function(){
     if (lite) { document.querySelectorAll('video.bg-video, #vid').forEach(function(v){ if (v.getAttribute('src')) { v.removeAttribute('src'); v.load(); } }); return; }
-    /* the homepage video is the hero: it starts straight away (class bg-now) */
+  });
+  window.addEventListener('load', function(){
+    if (lite) return;
+    /* the homepage video (class bg-now) starts the moment the page has loaded, so its 1.3 MB never slows the page
+       itself; its still frame shows until then, so nothing looks different (owner, 13 Nov 2026) */
     document.querySelectorAll('video.bg-now[data-src]').forEach(function(v){
       /* phones get the tall (vertical) copy, computers and tablets the wide one */
       var ph = v.getAttribute('data-src-phone'), useP = ph && matchMedia('(max-width: 640px)').matches;
       v.src = useP ? ph : v.getAttribute('data-src'); v.removeAttribute('data-src');
       var p = v.play && v.play(); if (p && p.catch) p.catch(function(){});
     });
-  });
-  window.addEventListener('load', function(){
-    if (lite) return;
     document.querySelectorAll('video[data-src]').forEach(function(v){
       v.src = v.getAttribute('data-src'); v.removeAttribute('data-src');
       var p = v.play && v.play(); if (p && p.catch) p.catch(function(){});
