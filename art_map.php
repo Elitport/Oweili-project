@@ -85,25 +85,28 @@ if ($tab === 'all' && $institutes) {
     $institutes = array_values(array_filter($institutes, fn($i) => !isset($seen[$mapBase((string) $i['name_en'])])));
     $n = count($institutes) + count($places);
 }
+/* places with a real photo first, in every tab, then the others in their usual order (owner, 13 Nov 2026) */
+$hasPhoto = fn(array $p) => owPlacePhotoBase($p) !== '';
+$placesPhoto = array_values(array_filter($tab === 'all' ? array_merge($placesFirst, $placesLast) : $places, $hasPhoto));
+$placesFirst = array_values(array_filter($placesFirst, fn($p) => !$hasPhoto($p)));
+$placesLast  = array_values(array_filter($placesLast, fn($p) => !$hasPhoto($p)));
+$places      = array_merge($placesPhoto, array_values(array_filter($places, fn($p) => !$hasPhoto($p))));
 /* One place card (art_places row): photo or placeholder, name, city, kind, text, address, phone, buttons. Empty fields are left out */
 $placeCard = function (array $p) use ($PIN): string {
     $K = OW_MAP_KINDS[$p['kind']] ?? OW_MAP_KINDS['museum'];
     $nEn = (string) $p['name_en']; $nAr = (string) ($p['name_ar'] ?: $nEn);
     $cEn = (string) $p['city_en']; $cAr = (string) ($p['city_ar'] ?: $cEn);
-    $h = '<article class="card i-card m-card reveal">';
     $ph = owPlacePhotoBase($p);
+    $h = '<article class="card i-card m-card' . ($ph === '' ? ' m-nophoto' : '') . ' reveal">';
     if ($ph !== '') {
         $alt = e($nEn . ' · ' . $nAr);
         $h .= '<figure class="m-photo"><picture><source type="image/webp" srcset="' . e(owBase() . $ph . '.webp') . '"><img loading="lazy" decoding="async" width="480" height="300" src="' . e(owBase() . $ph . '.jpg') . '" alt="' . $alt . '"></picture>'
             . ((string) $p['photo_credit'] !== '' ? '<figcaption>' . owBi('Photo: ', 'الصورة: ') . ((string) $p['photo_page'] !== '' && owMapUrl((string) $p['photo_page']) !== '' ? '<a href="' . e((string) $p['photo_page']) . '" target="_blank" rel="noopener nofollow">' . e((string) $p['photo_credit']) . '</a>' : e((string) $p['photo_credit'])) . '</figcaption>' : '') . '</figure>';
-    } elseif (isset(OW_MAP_TYPE_PHOTO[$p['kind']]) && is_file(__DIR__ . '/' . OW_MAP_TYPE_PHOTO[$p['kind']][0] . '.jpg')) {
-        /* no photo of this place yet: one example photo for its type, clearly labelled, never presented as the place */
-        [$tb, $tc, $tp] = OW_MAP_TYPE_PHOTO[$p['kind']];
-        $h .= '<figure class="m-photo m-ex"><picture><source type="image/webp" srcset="' . e(owBase() . $tb . '.webp') . '"><img loading="lazy" decoding="async" width="480" height="300" src="' . e(owBase() . $tb . '.jpg') . '" alt="' . e('Example photo, not this place · صورة توضيحية، ليست لهذا المكان') . '"></picture>'
-            . '<span class="m-ex-tag">' . owBi('Example photo', 'صورة توضيحية') . '</span>'
-            . '<figcaption>' . owBi('Example photo: ', 'صورة توضيحية: ') . '<a href="' . e($tp) . '" target="_blank" rel="noopener nofollow">' . e($tc) . '</a></figcaption></figure>';
     } else {
-        $h .= '<div class="m-photo m-ph" aria-hidden="true"><svg viewBox="0 0 24 24">' . ($p['kind'] === 'institute' ? '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/>' : ($p['kind'] === 'gallery' ? '<rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="m3 15 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>' : '<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/>')) . '</svg></div>';
+        /* no real photo: a compact soft band in the region's own tint, with an outline icon of the kind and the city (owner, 13 Nov 2026) */
+        $rg = isset(OW_MAP_REGIONS[(string) $p['region']]) ? (string) $p['region'] : 'none';
+        $h .= '<div class="m-band r-' . e($rg) . '"><svg viewBox="0 0 24 24" aria-hidden="true">' . owMapKindIcon((string) $p['kind']) . '</svg>'
+            . ($cEn !== '' ? '<span>' . owBi($cEn, $cAr) . '</span>' : '') . '</div>';
     }
     $h .= '<div><h2 class="i-name">' . owBi($nEn, $nAr) . '</h2>' . ($cEn !== '' ? '<div class="i-city">' . $PIN . owBi($cEn, $cAr) . '</div>' : '') . '</div>';
     $h .= '<span class="m-kind">' . owBi($K[2], $K[3]) . '</span>';
@@ -170,10 +173,16 @@ $placeCard = function (array $p) use ($PIN): string {
 .m-photo img{display:block;width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;}
 .m-photo figcaption{font-size:12px;line-height:1.4;color:var(--color-body);padding:6px var(--space-md) 0;}
 .m-photo figcaption a{color:inherit;}
-.m-ex{position:relative;}
-.m-ex-tag{position:absolute;top:10px;inset-inline-start:10px;padding:3px 10px;border-radius:var(--radius-pill);background:rgba(var(--rgb-shadow),.62);color:#fff;font-size:12px;font-weight:700;line-height:1.5;}
-.m-ph{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--color-tint-pink),rgba(var(--rgb-neutral),0.10));}
-.m-ph svg{width:44px;height:44px;stroke:var(--color-dark);opacity:.55;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
+/* places without a real photo: a compact band in a soft tint of their region (13 tints, one per region; owner, 13 Nov 2026) */
+.m-band{--rh:350;--rs:45%;display:flex;align-items:center;gap:10px;min-height:56px;margin:calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) 0;padding:10px var(--space-md);
+  border-radius:var(--radius-card) var(--radius-card) 0 0;background:linear-gradient(120deg,hsl(var(--rh) var(--rs) 91%),hsl(calc(var(--rh) + 18) var(--rs) 95%));
+  border-bottom:1px solid hsl(var(--rh) var(--rs) 84%);color:var(--color-dark);font-size:var(--fs-caption);font-weight:700;}
+.m-band svg{width:26px;height:26px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.8;}
+html.dark-mode .m-band{background:linear-gradient(120deg,hsl(var(--rh) 28% 22%),hsl(calc(var(--rh) + 18) 24% 18%));border-bottom-color:hsl(var(--rh) 24% 30%);}
+.m-band.r-riyadh{--rh:356;}.m-band.r-makkah{--rh:218;--rs:32%;}.m-band.r-eastern{--rh:205;--rs:28%;}.m-band.r-madinah{--rh:32;--rs:42%;}
+.m-band.r-qassim{--rh:265;--rs:22%;}.m-band.r-hail{--rh:150;--rs:20%;}.m-band.r-tabuk{--rh:330;--rs:32%;}.m-band.r-jouf{--rh:45;--rs:24%;}
+.m-band.r-northern{--rh:195;--rs:34%;}.m-band.r-asir{--rh:15;--rs:52%;}.m-band.r-jazan{--rh:175;--rs:28%;}.m-band.r-najran{--rh:5;--rs:30%;}
+.m-band.r-baha{--rh:95;--rs:18%;}.m-band.r-none{--rh:210;--rs:12%;}
 .m-info{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-caption);color:var(--color-body);}
 .m-info a{color:var(--color-dark);}
 .m-lbl{font-weight:700;color:var(--color-dark);}
@@ -346,6 +355,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           ? owBi($n === 1 ? '1 place' : $n . ' places', $n === 1 ? 'وجهة واحدة' : ($n === 2 ? 'وجهتان' : $n . ($n <= 10 ? ' وجهات' : ' وجهة')))
           : owBi($n === 1 ? '1 institute' : $n . ' institutes', $n === 1 ? 'معهد واحد' : ($n === 2 ? 'معهدان' : $n . ($n <= 10 ? ' معاهد' : ' معهداً'))) ?></p>
       <div class="i-grid">
+        <?php foreach ($placesPhoto as $p) echo $placeCard($p); ?>
         <?php foreach ($placesFirst as $p) echo $placeCard($p); ?>
         <?php foreach ($institutes as $i):
           $iid = (int) $i['id'];

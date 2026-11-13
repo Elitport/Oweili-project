@@ -61,13 +61,12 @@ function owMapRegionKey(string $s): string {
     return '';
 }
 
-/* One example photo per type, shown (with an "Example photo" label) on a place that has no photo of its own,
-   so it never pretends to be the place (owner, 12 Nov 2026). Free licences, small copies in assets/img/places/type-*. */
-const OW_MAP_TYPE_PHOTO = [
-    'museum'    => ['assets/img/places/type-museum', 'Dale Cruse, CC BY 4.0, Flickr', 'https://www.flickr.com/photos/dalecruse/55192096411/'],
-    'gallery'   => ['assets/img/places/type-gallery', 'Dale Cruse, CC BY 4.0, Flickr', 'https://www.flickr.com/photos/dalecruse/53869486479/'],
-    'institute' => ['assets/img/places/type-institute', 'Michael Coghlan, CC BY-SA 2.0, Flickr', 'https://www.flickr.com/photos/mikecogh/6559129473/'],
-];
+/* The small outline icon of each kind (museum, gallery, institute), the inside of a 24 × 24 <svg> */
+function owMapKindIcon(string $kind): string {
+    if ($kind === 'institute') return '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/>';
+    if ($kind === 'gallery') return '<rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="m3 15 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>';
+    return '<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/>';
+}
 
 function owArtPlacesReady(): bool { return owHasTable('art_places'); }
 
