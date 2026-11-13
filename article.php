@@ -101,7 +101,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
 </style>
 </head>
 <body class="ow">
-<?= $cover !== '' ? '' /* an article with its own cover photo gets a calm plain background, not a second photo (owner, 14 Nov 2026) */ : owStudioBackdrop($type === 'art_education' ? 'open-books' : ($type === 'event' ? 'events-hall' : 'museum-walk')) /* the owner's wide photos: Art Education the open books (6 Nov 2026), Art Events the hall with posters (7 Nov 2026), the hidden Spotlights still the museum hall */ ?>
+<?= $cover !== '' ? '' /* an article with its own cover photo gets a calm plain background, not a second photo (owner, 13 Nov 2026) */ : owStudioBackdrop($type === 'art_education' ? 'open-books' : ($type === 'event' ? 'events-hall' : 'museum-walk')) /* the owner's wide photos: Art Education the open books (6 Nov 2026), Art Events the hall with posters (7 Nov 2026), the hidden Spotlights still the museum hall */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil strong" aria-hidden="true"></div>
 

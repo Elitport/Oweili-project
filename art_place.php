@@ -119,7 +119,7 @@ html.dark-mode .m-band{background:linear-gradient(120deg,hsl(var(--rh) 28% 22%),
 .rg-group h2{font-size:var(--fs-subtitle);margin:0 auto var(--space-sm);width:fit-content;padding:4px 16px;border-radius:var(--radius-card);background:var(--studio-glass);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
 .rg-list{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-sm);align-items:stretch;}
 .rg-list + .rg-list{margin-top:var(--space-sm);}
-.rg-list > .rg-item{flex:0 1 calc((100% - 2 * var(--space-sm)) / 3);min-width:0;}   /* photo places and the others in separate even rows (owner, 14 Nov 2026) */
+.rg-list > .rg-item{flex:0 1 calc((100% - 2 * var(--space-sm)) / 3);min-width:0;}   /* photo places and the others in separate even rows (owner, 13 Nov 2026) */
 .card.rg-item{display:flex;flex-direction:column;gap:6px;padding:0 0 var(--space-sm);overflow:hidden;text-decoration:none;color:inherit;}
 .rg-item .rg-img img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;}
 .rg-item .m-band{margin:0;border-radius:0;}
@@ -132,7 +132,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
 </style>
 </head>
 <body class="ow">
-<?= ($place && ($ph ?? '') !== '') ? '' : owStudioBackdrop('easels-corridor') /* a place with its own photo gets a calm plain background, not a second photo (owner, 14 Nov 2026) */ ?>
+<?= ($place && ($ph ?? '') !== '') ? '' : owStudioBackdrop('easels-corridor') /* a place with its own photo gets a calm plain background, not a second photo (owner, 13 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main>

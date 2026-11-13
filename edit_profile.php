@@ -23,7 +23,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
 
     $isArtist = ($u['role'] ?? '') === 'artist';
-    /* the public name (what visitors see) is its own field; the full names are private (owner, 14 Nov 2026) */
+    /* the public name (what visitors see) is its own field; the full names are private (owner, 13 Nov 2026) */
     $pubName = $isArtist ? sanitize($_POST['artist_name'] ?? '') : (string) ($u['artist_name'] ?? '');
     $nameEn = sanitize($_POST['full_name_en'] ?? '');
     $nameAr = sanitize($_POST['full_name_ar'] ?? '');

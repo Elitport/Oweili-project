@@ -36,7 +36,7 @@ if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['
 $uid = (int) $me['id'];
 
 $TABS = ['works', 'certs', 'articles', 'commissions', 'account', 'activity', 'earnings', 'packing'];
-/* the Commissions tab follows the Commissions switch in Admin → Settings (owner, 14 Nov 2026); an artist who already
+/* the Commissions tab follows the Commissions switch in Admin → Settings (owner, 13 Nov 2026); an artist who already
    has a commission keeps the tab, so that work is never lost */
 require_once __DIR__ . '/gallery_lib.php';
 $commTabOn = owCommissionsPageOn();

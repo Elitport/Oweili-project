@@ -91,7 +91,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
               'name_en' => $txt('name_en', 200), 'name_ar' => $txt('name_ar', 200), 'city_en' => $txt('city_en', 120), 'city_ar' => $txt('city_ar', 120),
               'desc_en' => $txt('desc_en', 800), 'desc_ar' => $txt('desc_ar', 800), 'address' => $txt('address', 300), 'phone' => $txt('phone', 40),
               'website' => owMapUrl($txt('website', 500)), 'instagram' => owInstaUrl($txt('instagram', 200)), 'maps_url' => owMapUrl($txt('maps_url', 500))];
-        if (owHasColumn('art_places', 'address_ar')) $v['address_ar'] = $txt('address_ar', 300);   // the address for Arabic pages (owner, 14 Nov 2026)
+        if (owHasColumn('art_places', 'address_ar')) $v['address_ar'] = $txt('address_ar', 300);   // the address for Arabic pages (owner, 13 Nov 2026)
         $src = array_values(array_filter(array_map(fn($l) => owMapUrl(trim($l)), preg_split('/\R/', $txt('sources', 3000)))));
         $v['sources'] = json_encode($src, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         if (!isset(OW_MAP_KINDS[$v['kind']])) $errors[] = ['Please choose the type.', 'يرجى اختيار النوع.'];

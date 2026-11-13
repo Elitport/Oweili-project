@@ -11,7 +11,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
 .page{position:relative;z-index:10;width:100%;max-width:1000px;margin:0 auto;padding:calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl);}
-.page-header{margin-bottom:48px;animation:riseUp .15s ease-out both;margin-inline:auto;text-align:center;}   /* the same centred title card as the other pages (owner, 14 Nov 2026) */
+.page-header{margin-bottom:48px;animation:riseUp .15s ease-out both;margin-inline:auto;text-align:center;}   /* the same centred title card as the other pages (owner, 13 Nov 2026) */
 .ow-backdrop ~ * .page-header h1#t-h1{font-size:clamp(28px,3vw,40px);}
 .page-header p{margin-inline:auto;}
 .page-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;margin-bottom:16px;background:rgba(var(--rgb-accent),0.05);border:1px solid rgba(var(--rgb-accent),0.15);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent);}

@@ -123,7 +123,7 @@ function owArtistNameSql(string $u = 'u'): string {
     // a name made only of digits (e.g. "82") is never shown: the next name is used
     $nm = fn(string $col): string => "CASE WHEN TRIM($u.$col) = '' OR TRIM($u.$col) REGEXP '^[0-9]+$' THEN NULL ELSE TRIM($u.$col) END";
     $en = "COALESCE(" . $nm('artist_name') . ", " . $nm('full_name_en') . ", " . $nm('full_name_ar') . ", 'Oweili Artist')";
-    /* Arabic pages show the same public name as English ones; the full names are private (owner, 14 Nov 2026) */
+    /* Arabic pages show the same public name as English ones; the full names are private (owner, 13 Nov 2026) */
     $ar = "COALESCE(" . $nm('artist_name') . ", " . $nm('full_name_en') . ", " . $nm('full_name_ar') . ", 'فنان أويلي')";
     return "$en AS artist_en, $ar AS artist_ar";
 }
@@ -397,7 +397,7 @@ function owBi(string $en, string $ar, string $tag = 'span'): string {
 }
 
 /* An artist's public name in English and Arabic, each kept whole with <bdi>, so a Latin name such as "Sara A."
-   reads correctly on an Arabic page (owner, 14 Nov 2026). $preEn / $preAr: a word before it, e.g. "by" / "بواسطة". */
+   reads correctly on an Arabic page (owner, 13 Nov 2026). $preEn / $preAr: a word before it, e.g. "by" / "بواسطة". */
 function owBiName(string $en, string $ar, string $preEn = '', string $preAr = ''): string {
     return '<span class="bi-en" lang="en">' . ($preEn !== '' ? e($preEn) . ' ' : '') . '<bdi>' . e($en) . '</bdi></span>'
          . '<span class="bi-ar" lang="ar">' . ($preAr !== '' ? e($preAr) . ' ' : '') . '<bdi>' . e($ar) . '</bdi></span>';

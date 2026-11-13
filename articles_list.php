@@ -71,7 +71,7 @@ $titleAr = $tAr . ' · أويلي';
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
-/* no card alone on a row (owner, 14 Nov 2026): when 4 per row would leave one card alone (5, 9, 13 …),
+/* no card alone on a row (owner, 13 Nov 2026): when 4 per row would leave one card alone (5, 9, 13 …),
    3 per row with the last row in the middle */
 .a-grid.a-even{display:flex;flex-wrap:wrap;justify-content:center;}
 .a-grid.a-even > .a-card{flex:0 1 calc((100% - 2 * var(--space-md)) / 3);min-width:0;}

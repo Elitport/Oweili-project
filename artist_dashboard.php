@@ -238,7 +238,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
   <div class="card empty-state">Artist not found.</div>
 <?php else: ?>
 
-  <?php if ($isSelf): /* on a frosted card, easy to read over the photo (owner, 14 Nov 2026) */ ?><div class="self-note" role="status"><?= owBi('This is your public page, as visitors see it.', 'هذه صفحتك العامة كما يراها الزوار.') ?> <a href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div><?php endif; ?>
+  <?php if ($isSelf): /* on a frosted card, easy to read over the photo (owner, 13 Nov 2026) */ ?><div class="self-note" role="status"><?= owBi('This is your public page, as visitors see it.', 'هذه صفحتك العامة كما يراها الزوار.') ?> <a href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div><?php endif; ?>
   <!-- SECTION 1: PROFILE HEADER -->
   <p class="section-title" id="t-profile-title">Artist Profile</p>
   <div class="card profile-head">

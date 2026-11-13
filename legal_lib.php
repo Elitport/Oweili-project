@@ -71,7 +71,7 @@ html[dir="rtl"] .legal p,html[dir="rtl"] .legal li{line-height:1.7;}
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 <main class="legal">
-  <?php if (!empty($meta['centered_head'])): /* the same centred title card as the other pages (owner, 14 Nov 2026) */ ?><header class="card lg-head"><?php endif; ?>
+  <?php if (!empty($meta['centered_head'])): /* the same centred title card as the other pages (owner, 13 Nov 2026) */ ?><header class="card lg-head"><?php endif; ?>
   <h1><?= owBi($meta['title_en'], $meta['title_ar']) ?></h1>
   <p class="lead"><?= owBi($meta['lead_en'], $meta['lead_ar']) ?></p>
   <p class="updated"><?= owBi('Last updated: ' . $meta['updated_en'], 'آخر تحديث: ' . $meta['updated_ar']) ?></p>
