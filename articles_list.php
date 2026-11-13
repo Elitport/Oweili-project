@@ -70,6 +70,14 @@ $titleAr = $tAr . ' · أويلي';
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
+<style>
+/* no card alone on a row (owner, 14 Nov 2026): when 4 per row would leave one card alone (5, 9, 13 …),
+   3 per row with the last row in the middle */
+.a-grid.a-even{display:flex;flex-wrap:wrap;justify-content:center;}
+.a-grid.a-even > .a-card{flex:0 1 calc((100% - 2 * var(--space-md)) / 3);min-width:0;}
+@media (max-width:768px){.a-grid.a-even > .a-card{flex-basis:calc((100% - var(--space-sm)) / 2);}}
+@media (max-width:560px){.a-grid.a-even > .a-card{flex-basis:100%;}}
+</style>
 </head>
 <body class="ow">
 <?= owStudioBackdrop($type === 'art_education' ? 'open-books' : ($type === 'event' ? 'events-hall' : 'museum-walk')) /* the owner's wide photos: Art Education the open books (6 Nov 2026), Art Events the hall with posters (7 Nov 2026), the hidden Spotlights still the museum hall */ ?>
@@ -95,7 +103,7 @@ $titleAr = $tAr . ' · أويلي';
         <div><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a></div>
       </div>
     <?php else: ?>
-      <div class="a-grid">
+      <div class="a-grid<?= count($items) > 1 && count($items) % 4 === 1 ? ' a-even' : '' ?>">
         <?php foreach ($items as $it):
           [$dEn, $dAr] = $type === 'event' ? owDateRangeBi($it['event_start_date'], $it['event_end_date']) : owDateBi($it['published_at']);
           $cover = (string) $it['cover_image_path'];
