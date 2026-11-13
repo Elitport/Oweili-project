@@ -17,7 +17,7 @@ owAdminGate();
 $actor = owAdminActor();
 $ready = owArtPlacesReady();
 $db = getDB();
-$errors = [];
+$errors = []; $photoErr = 0;
 $txt = fn(string $k, int $max) => mb_substr(trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', (string) ($_POST[$k] ?? ''))), 0, $max);
 $keep = function (): string {   // the list filters, kept after an action
     $f = array_intersect_key($_GET, array_flip(['k', 'st', 'rg', 'cf', 's']));
@@ -34,6 +34,24 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $nm = $db->prepare('SELECT name_en FROM art_places WHERE id = :id'); $nm->execute([':id' => $id]);
         owLog($do === 'publish' ? 'art_place_publish' : 'art_place_draft', 'art_place', $id, (string) $nm->fetchColumn(), $actor);
         header('Location: admin_art_map.php?ok=' . $do . $keep() . '#p' . $id); exit;
+    } elseif ($do === 'photo' && $id > 0) {
+        /* the admin's own photo for a place, e.g. one a museum sent (owner, 13 Nov 2026); replaces the old photo */
+        $cur = $db->prepare('SELECT name_en, photo_path FROM art_places WHERE id = :id'); $cur->execute([':id' => $id]); $cur = $cur->fetch();
+        if (!$cur) { header('Location: admin_art_map.php'); exit; }
+        $link = $txt('photo_page', 500);
+        if ($link !== '' && owMapUrl($link) === '') $errors[] = ['Please check the credit link (it must start with https://).', 'يرجى مراجعة رابط المصدر (يبدأ بـ https://).'];
+        if (!$errors) {
+            $r = owPlaceStorePhoto($_FILES['photo'] ?? [], $id);
+            if (!$r['ok']) $errors[] = $r['err'];
+            else {
+                $db->prepare("UPDATE art_places SET photo_path = :b, photo_credit = :c, photo_page = :l, photo_license = '' WHERE id = :id")
+                   ->execute([':b' => $r['base'], ':c' => $txt('photo_credit', 200), ':l' => owMapUrl($link), ':id' => $id]);
+                owPlaceDropUpload((string) $cur['photo_path']);   // an older uploaded photo of this place (our own search photos stay in the code)
+                owLog('art_place_photo', 'art_place', $id, (string) $cur['name_en'], $actor);
+                header('Location: admin_art_map.php?ok=photo' . $keep() . '#p' . $id); exit;
+            }
+        }
+        $photoErr = $id;
     } elseif ($do === 'save') {
         $v = ['kind' => (string) ($_POST['kind'] ?? ''), 'region' => (string) ($_POST['region'] ?? ''), 'confidence' => (string) ($_POST['confidence'] ?? 'medium'),
               'name_en' => $txt('name_en', 200), 'name_ar' => $txt('name_ar', 200), 'city_en' => $txt('city_en', 120), 'city_ar' => $txt('city_ar', 120),
@@ -71,7 +89,7 @@ if (isset(OW_MAP_KINDS[$fk])) { $where[] = 'kind = :k'; $args[':k'] = $fk; }
 if (in_array($fst, ['draft', 'published'], true)) { $where[] = 'status = :st'; $args[':st'] = $fst; }
 if (isset(OW_MAP_REGIONS[$frg])) { $where[] = 'region = :rg'; $args[':rg'] = $frg; }
 if (isset(OW_MAP_CONF[$fcf])) { $where[] = 'confidence = :cf'; $args[':cf'] = $fcf; }
-if ($fs !== '') { $where[] = '(name_en LIKE :s OR name_ar LIKE :s OR city_en LIKE :s)'; $args[':s'] = '%' . $fs . '%'; }
+if ($fs !== '') { $where[] = '(name_en LIKE :s1 OR name_ar LIKE :s2 OR city_en LIKE :s3)'; $args[':s1'] = $args[':s2'] = $args[':s3'] = '%' . $fs . '%'; }   // one name per place in the query (the same name three times stopped the page)
 $rows = []; $count = ['all' => 0, 'draft' => 0, 'low' => 0];
 if ($ready) {
     $st = $db->prepare('SELECT * FROM art_places' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . " ORDER BY FIELD(kind,'museum','gallery','institute'), status = 'published', FIELD(region,'" . implode("','", array_keys(OW_MAP_REGIONS)) . "'), name_en");
@@ -126,7 +144,7 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
   <h1><?= owBi('Art Map: museums, galleries and institutes', 'خريطة الفن: المتاحف والمعارض والمعاهد') ?></h1>
   <p class="mini"><?= owBi('Every place starts as a draft. Visitors see it only after you press Publish. Sources and confidence are shown only here, never to visitors. The older institutes (with courses) are in their own tool:', 'كل مكان يبدأ مسودة، ولا يراه الزوار إلا بعد أن تضغط «انشر». المصادر ودرجة الثقة تظهر هنا فقط، ولا يراها الزوار أبداً. المعاهد القديمة (مع الدورات) في أداتها الخاصة:') ?> <a href="admin_institutes.php"><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></a></p>
   <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The Art Map table is not set up yet (art_places.sql).', 'جدول خريطة الفن غير مُعدّ بعد (art_places.sql).') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهراً في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهراً للزوار.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['photo' => owBi('Photo saved.', 'تم حفظ الصورة.'), 'publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهراً في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهراً للزوار.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
   <?php if ($ready): ?>
   <p><span class="pillx warn"><?= owBi($count['draft'] . ' waiting for you', $count['draft'] . ' بانتظارك') ?></span> <span class="cf low"><?= owBi($count['low'] . ' with low confidence', $count['low'] . ' بثقة منخفضة') ?></span> <span class="mini"><?= owBi($count['all'] . ' places in all', 'المجموع ' . $count['all']) ?></span></p>
@@ -167,7 +185,15 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
           <?php if ($p['photo_credit'] !== ''): ?><span><?= owBi('Photo: ', 'الصورة: ') ?><?= e($p['photo_credit']) ?></span><?php endif; ?>
         </div>
         <?php if ($src): ?><div class="mini"><b><?= owBi('Sources (only you see these):', 'المصادر (تراها أنت فقط):') ?></b><ol class="src"><?php foreach ($src as $u): if (owMapUrl((string) $u) === '') continue; ?><li><a href="<?= e($u) ?>" target="_blank" rel="noopener nofollow"><?= e($u) ?></a></li><?php endforeach; ?></ol></div><?php endif; ?>
-        <details<?= $errors && (int) ($_POST['id'] ?? 0) === (int) $p['id'] ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $form($p); ?></details>
+        <details<?= $photoErr === (int) $p['id'] ? ' open' : '' ?>><summary><?= $ph !== '' ? owBi('Change the photo', 'غيّر الصورة') : owBi('Add a photo', 'أضف صورة') ?></summary>
+          <form method="post" enctype="multipart/form-data" action="admin_art_map.php?<?= e(ltrim($keep(), '&')) ?>"><?= csrfField() ?><input type="hidden" name="do" value="photo"><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+            <div class="field"><label for="ph-<?= (int) $p['id'] ?>"><?= owBi('Photo (JPG, PNG or WebP, up to 10 MB)', 'الصورة (JPG أو PNG أو WebP، حتى 10 ميغابايت)') ?></label><input id="ph-<?= (int) $p['id'] ?>" type="file" name="photo" accept="image/jpeg,image/png,image/webp" required></div>
+            <div class="g2"><?= $field('photo_credit', 'Credit line (optional), e.g. the museum or the photographer', 'سطر المصدر (اختياري)، مثل اسم المتحف أو المصوّر', $photoErr === (int) $p['id'] ? (string) ($_POST['photo_credit'] ?? '') : '', ' maxlength="200"', false, 'ph' . $p['id']) ?>
+              <?= $field('photo_page', 'Credit link (optional)', 'رابط المصدر (اختياري)', $photoErr === (int) $p['id'] ? (string) ($_POST['photo_page'] ?? '') : '', ' dir="ltr" maxlength="500"', false, 'ph' . $p['id']) ?></div>
+            <p class="mini"><?= owBi('It replaces the current photo and shows on the Art Map at once (a published place). Only use a photo you have the right to show.', 'تحلّ محل الصورة الحالية وتظهر في خريطة الفن فوراً (للمكان المنشور). استخدم فقط صورة يحق لك نشرها.') ?></p>
+            <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Upload the photo', 'ارفع الصورة') ?></button>
+          </form></details>
+        <details<?= $errors && !$photoErr && (int) ($_POST['id'] ?? 0) === (int) $p['id'] ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $form($p); ?></details>
       </div>
     </div>
   </div>

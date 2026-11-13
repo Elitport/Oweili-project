@@ -113,9 +113,49 @@ function owTelHref(string $v): string {
     $t = preg_replace('/[^0-9+]/', '', $v);
     return strlen($t) >= 7 ? 'tel:' . $t : '';
 }
-/* The place's photo (assets/img/places/<file>.webp + .jpg), or '' */
+/* The place's photo (assets/img/places/<file> from our own search, or uploads/places/<file> uploaded by the admin;
+   .jpg always, .webp when the server could make one), or '' */
 function owPlacePhotoBase(array $p): string {
     $b = (string) ($p['photo_path'] ?? '');
-    if ($b === '' || !preg_match('#^assets/img/places/[a-z0-9-]+$#', $b) || !is_file(__DIR__ . '/' . $b . '.jpg')) return '';
+    if ($b === '' || !preg_match('#^(assets/img/places|uploads/places)/[a-z0-9-]+$#', $b) || !is_file(__DIR__ . '/' . $b . '.jpg')) return '';
     return $b;
+}
+/* <picture> of a place photo (webp first when it exists) */
+function owPlacePicture(string $base, string $alt, int $w = 480, int $h = 300, bool $lazy = true): string {
+    $webp = is_file(__DIR__ . '/' . $base . '.webp') ? '<source type="image/webp" srcset="' . e(owBase() . $base . '.webp') . '">' : '';
+    return '<picture>' . $webp . '<img' . ($lazy ? ' loading="lazy"' : '') . ' decoding="async" width="' . $w . '" height="' . $h . '" src="' . e(owBase() . $base . '.jpg') . '" alt="' . e($alt) . '"></picture>';
+}
+/* Save a photo the admin uploads for a place (owner, 13 Nov 2026): JPG / PNG / WebP up to 10 MB, turned upright,
+   hidden data (GPS, camera) dropped by redrawing, at most 800 px wide, saved as JPG + WebP in uploads/places/ (kept by
+   deploys). Returns ['ok' => true, 'base' => 'uploads/places/…'] or ['ok' => false, 'err' => [en, ar]] */
+function owPlaceStorePhoto(array $file, int $placeId): array {
+    $bad = fn(string $en, string $ar) => ['ok' => false, 'err' => [$en, $ar]];
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE || empty($file['tmp_name'])) return $bad('Please choose a photo.', 'يرجى اختيار صورة.');
+    if (in_array($file['error'], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true) || (int) $file['size'] > 10 * 1024 * 1024) return $bad('The photo is too large (10 MB at most).', 'الصورة كبيرة جداً (10 ميغابايت كحد أقصى).');
+    if ($file['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($file['tmp_name'])) return $bad('The photo could not be received. Please try again.', 'تعذّر استلام الصورة. حاول مرة أخرى.');
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+    if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true) || !function_exists('imagecreatefromstring')) return $bad('Please send a JPG, PNG or WebP photo.', 'يرجى إرسال صورة JPG أو PNG أو WebP.');
+    $img = @imagecreatefromstring((string) file_get_contents($file['tmp_name']));
+    if (!$img) return $bad('Please send a JPG, PNG or WebP photo.', 'يرجى إرسال صورة JPG أو PNG أو WebP.');
+    if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
+        $o = (int) (@exif_read_data($file['tmp_name'])['Orientation'] ?? 1);
+        if ($o === 3) $img = imagerotate($img, 180, 0); elseif ($o === 6) $img = imagerotate($img, -90, 0); elseif ($o === 8) $img = imagerotate($img, 90, 0);
+    }
+    $w = imagesx($img); $h = imagesy($img);
+    if ($w < 200 || $h < 120) return $bad('The photo is too small (at least 200 × 120 pixels).', 'الصورة صغيرة جداً (200 × 120 بكسل على الأقل).');
+    $nw = min(800, $w); $nh = (int) round($h * $nw / $w);
+    $out = imagecreatetruecolor($nw, $nh);
+    imagefill($out, 0, 0, imagecolorallocate($out, 255, 255, 255));
+    imagecopyresampled($out, $img, 0, 0, 0, 0, $nw, $nh, $w, $h);
+    $dir = __DIR__ . '/uploads/places';
+    if (!is_dir($dir) && !@mkdir($dir, 0755, true)) return $bad('The photo could not be saved.', 'تعذّر حفظ الصورة.');
+    $base = 'uploads/places/p' . $placeId . '-' . bin2hex(random_bytes(5));
+    if (!@imagejpeg($out, __DIR__ . '/' . $base . '.jpg', 80)) return $bad('The photo could not be saved.', 'تعذّر حفظ الصورة.');
+    if (function_exists('imagewebp')) @imagewebp($out, __DIR__ . '/' . $base . '.webp', 78);
+    return ['ok' => true, 'base' => $base];
+}
+/* Remove an uploaded place photo's files (never our own assets/img/places files, which come with the code) */
+function owPlaceDropUpload(string $base): void {
+    if (!preg_match('#^uploads/places/[a-z0-9-]+$#', $base)) return;
+    foreach (['.jpg', '.webp'] as $x) if (is_file(__DIR__ . '/' . $base . $x)) @unlink(__DIR__ . '/' . $base . $x);
 }

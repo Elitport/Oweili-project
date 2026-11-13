@@ -99,8 +99,7 @@ $placeCard = function (array $p) use ($PIN): string {
     $ph = owPlacePhotoBase($p);
     $h = '<article class="card i-card m-card' . ($ph === '' ? ' m-nophoto' : '') . ' reveal">';
     if ($ph !== '') {
-        $alt = e($nEn . ' · ' . $nAr);
-        $h .= '<figure class="m-photo"><picture><source type="image/webp" srcset="' . e(owBase() . $ph . '.webp') . '"><img loading="lazy" decoding="async" width="480" height="300" src="' . e(owBase() . $ph . '.jpg') . '" alt="' . $alt . '"></picture>'
+        $h .= '<figure class="m-photo">' . owPlacePicture($ph, $nEn . ' · ' . $nAr)
             . ((string) $p['photo_credit'] !== '' ? '<figcaption>' . owBi('Photo: ', 'الصورة: ') . ((string) $p['photo_page'] !== '' && owMapUrl((string) $p['photo_page']) !== '' ? '<a href="' . e((string) $p['photo_page']) . '" target="_blank" rel="noopener nofollow">' . e((string) $p['photo_credit']) . '</a>' : e((string) $p['photo_credit'])) . '</figcaption>' : '') . '</figure>';
     } else {
         /* no real photo: a compact soft band in the region's own tint, with an outline icon of the kind and the city (owner, 13 Nov 2026) */
