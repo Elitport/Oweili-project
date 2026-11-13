@@ -21,7 +21,7 @@ $navType  = (string) ($_GET['type'] ?? '');
 if ($navPage === 'article.php') { $navType = ''; }
 $navSection = [
     'community.php' => 'community', 'marketplace.php' => 'marketplace', 'auctions.php' => 'collect', 'gifts.php' => 'collect', 'commission.php' => 'collect',
-    'explore.php' => 'explore', 'support.php' => 'support', 'art_map.php' => 'institutes', 'institutes.php' => 'institutes', 'training.php' => 'institutes', 'events.php' => 'art_event',
+    'explore.php' => 'explore', 'support.php' => 'support', 'art_map.php' => 'institutes', 'art_place.php' => 'institutes', 'institutes.php' => 'institutes', 'training.php' => 'institutes', 'events.php' => 'art_event',
 ][$navPage] ?? '';
 /* Art Events / Art Education / Artist Spotlights are their own menu items (6 Nov 2026): the list page
    by its ?type=, one article by its own type (article.php keeps it in $a) */
