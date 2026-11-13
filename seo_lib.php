@@ -41,7 +41,15 @@ function owSeo(array $o): void {
     echo '<title>' . $h($title) . "</title>\n";
     if ($desc !== '') echo '<meta name="description" content="' . $h(mb_substr($desc, 0, 300)) . "\">\n";
     if (!empty($o['noindex'])) echo "<meta name=\"robots\" content=\"noindex, follow\">\n";
-    echo '<link rel="canonical" href="' . $h($url) . "\">\n";
+    /* Arabic and English versions of the same page (owner, 13 Nov 2026): English is the plain address, Arabic the same
+       address with lang=ar (lang_lib.php reads it). Each version names itself as its main (canonical) address */
+    $urlAr = $url . (strpos($url, '?') === false ? '?' : '&') . 'lang=ar';
+    echo '<link rel="canonical" href="' . $h($isAr ? $urlAr : $url) . "\">\n";
+    if (empty($o['noindex'])) {
+        echo '<link rel="alternate" hreflang="en" href="' . $h($url) . "\">\n";
+        echo '<link rel="alternate" hreflang="ar" href="' . $h($urlAr) . "\">\n";
+        echo '<link rel="alternate" hreflang="x-default" href="' . $h($url) . "\">\n";
+    }
     echo '<meta property="og:site_name" content="Oweili · أويلي">' . "\n";
     echo '<meta property="og:type" content="' . $h($type) . "\">\n";
     echo '<meta property="og:title" content="' . $h($en . ' · ' . $ar) . "\">\n";
