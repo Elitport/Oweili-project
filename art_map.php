@@ -63,7 +63,16 @@ function instContact(array $i, string $courseTitle): string {
     if (preg_match('#^https?://#i', $web) && filter_var($web, FILTER_VALIDATE_URL)) return $web;
     return '';
 }
-$q = fn(string $t, string $c) => 'art_map.php' . (($qs = http_build_query(array_filter(['tab' => $t === 'all' ? '' : $t, 'region' => $c]))) !== '' ? '?' . $qs : '');
+/* Search by place name or city (owner, 14 Nov 2026): ?q=…, in English or Arabic, kept with the tabs and the region */
+$sq = trim(preg_replace('/\s+/u', ' ', mb_substr((string) ($_GET['q'] ?? ''), 0, 60)));
+if ($sq !== '') {
+    $fold = fn(string $t): string => mb_strtolower(strtr($t, ['أ' => 'ا', 'إ' => 'ا', 'آ' => 'ا', 'ة' => 'ه', 'ى' => 'ي', '-' => ' ', '’' => "'"]));
+    $want = $fold($sq);
+    $hit  = fn(array $r, array $cols): bool => (bool) array_filter($cols, fn($c) => $fold((string) ($r[$c] ?? '')) !== '' && mb_strpos($fold((string) ($r[$c] ?? '')), $want) !== false);
+    $places     = array_values(array_filter($places, fn($p) => $hit($p, ['name_en', 'name_ar', 'city_en', 'city_ar'])));
+    $institutes = array_values(array_filter($institutes, fn($i) => $hit($i, ['name_en', 'name_ar', 'city_en', 'city_ar'])));
+}
+$q = fn(string $t, string $c, ?string $s = null) => 'art_map.php' . (($qs = http_build_query(array_filter(['tab' => $t === 'all' ? '' : $t, 'region' => $c, 'q' => $s ?? $sq]))) !== '' ? '?' . $qs : '');
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 $n = count($institutes) + count($places);
 /* the All tab: museums and galleries first, then the institutes (the older list, then the newer places) */
@@ -144,6 +153,15 @@ $placeCard = function (array $p) use ($PIN): string {
 .m-bar .filter{padding:4px 6px 4px 14px;gap:var(--space-xs);flex-wrap:nowrap;}
 [dir="rtl"] .m-bar .filter{padding:4px 14px 4px 6px;}
 .m-bar .filter select{min-width:190px;min-height:36px;height:36px;padding-top:0;padding-bottom:0;}
+/* search a place or city, in the same frosted filter (owner, 14 Nov 2026) */
+.m-search{position:relative;display:inline-flex;align-items:center;}
+.m-bar .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.m-bar .filter .m-search input{width:210px;min-height:36px;height:36px;padding:0 40px 0 14px;}
+[dir="rtl"] .m-bar .filter .m-search input{padding:0 14px 0 40px;}
+.m-search button{position:absolute;inset-inline-end:2px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:0;background:none;color:var(--color-dark);cursor:pointer;border-radius:var(--radius-pill);}
+.m-search button:hover{color:var(--color-primary-dark);}
+.m-search button:focus-visible{outline:2px solid var(--color-accent);outline-offset:1px;}
+.m-search svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
 .result-count{text-align:center;font-size:var(--fs-caption);color:var(--color-dark);width:fit-content;margin:calc(-1 * var(--space-sm)) auto var(--space-md);padding:6px 16px;border-radius:var(--radius-card);background:var(--studio-glass);}
 .i-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);align-items:start;}
 .i-card{display:flex;flex-direction:column;gap:var(--space-sm);}
@@ -213,7 +231,7 @@ details[open] .when-closed{display:none;}
 .m-grid{align-items:stretch;}
 html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 @media (max-width:1024px){.i-grid{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:640px){.i-grid{grid-template-columns:1fr;}.filter select{min-width:0;flex:1 1 180px;}.m-tab{padding:0 14px;}.m-bar .filter select{min-width:0;flex:1 1 auto;}}
+@media (max-width:640px){.m-bar .filter{flex-wrap:wrap;justify-content:center;}.m-bar .filter .m-search{flex:1 1 100%;}.m-bar .filter .m-search input{width:100%;}.i-grid{grid-template-columns:1fr;}.filter select{min-width:0;flex:1 1 180px;}.m-tab{padding:0 14px;}.m-bar .filter select{min-width:0;flex:1 1 auto;}}
 </style>
 </head>
 <body class="ow">
@@ -248,6 +266,12 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
         <?php endforeach; ?>
       </select>
       <noscript><button class="btn btn-secondary" type="submit"><?= owBi('Show', 'عرض') ?></button></noscript>
+      <span class="m-search">
+        <label class="sr-only" for="m-q"><?= owBi('Search a place or city', 'ابحث عن مكان أو مدينة') ?></label>
+        <input class="input" id="m-q" type="search" name="q" maxlength="60" value="<?= e($sq) ?>" autocomplete="off" enterkeyhint="search"
+               placeholder="<?= e(owIsAr() ? 'مكان أو مدينة' : 'Place or city') ?>">
+        <button type="submit" aria-label="<?= e(owIsAr() ? 'ابحث' : 'Search') ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+      </span>
     </form>
     </div>
 
@@ -329,7 +353,10 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       <div class="card empty-state d-empty reveal">
         <?php if ($tab === 'all'): ?>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
-        <?php if ($city !== ''): ?>
+        <?php if ($sq !== ''): ?>
+          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسماً أو مدينة أخرى.') ?>
+          <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, '')) ?>"><?= owBi('Clear the search', 'امسح البحث') ?></a></div>
+        <?php elseif ($city !== ''): ?>
           <?= owBi('No art places in this region on our map yet. Try another region.', 'لا وجهات فنية في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q('all', '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
         <?php else: ?>
@@ -338,7 +365,10 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
         <?php endif; ?>
         <?php else: ?>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg>
-        <?php if ($city !== ''): ?>
+        <?php if ($sq !== ''): ?>
+          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسماً أو مدينة أخرى.') ?>
+          <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, '')) ?>"><?= owBi('Clear the search', 'امسح البحث') ?></a></div>
+        <?php elseif ($city !== ''): ?>
           <?= owBi('No institutes in this region yet. Try another region.', 'لا توجد معاهد في هذه المنطقة بعد. جرّب منطقة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q('institutes', '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
         <?php else: ?>
@@ -430,7 +460,10 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
     <?php if (!$places): ?>
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
-        <?php if ($city !== ''): ?>
+        <?php if ($sq !== ''): ?>
+          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسماً أو مدينة أخرى.') ?>
+          <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, '')) ?>"><?= owBi('Clear the search', 'امسح البحث') ?></a></div>
+        <?php elseif ($city !== ''): ?>
           <?= $kind === 'museum' ? owBi('No museums in this region on our map yet. Try another region.', 'لا متاحف في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.')
                                  : owBi('No art galleries in this region on our map yet. Try another region.', 'لا معارض فنية في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q($tab, '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
