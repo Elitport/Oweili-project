@@ -123,7 +123,8 @@ function owArtistNameSql(string $u = 'u'): string {
     // a name made only of digits (e.g. "82") is never shown: the next name is used
     $nm = fn(string $col): string => "CASE WHEN TRIM($u.$col) = '' OR TRIM($u.$col) REGEXP '^[0-9]+$' THEN NULL ELSE TRIM($u.$col) END";
     $en = "COALESCE(" . $nm('artist_name') . ", " . $nm('full_name_en') . ", " . $nm('full_name_ar') . ", 'Oweili Artist')";
-    $ar = "COALESCE(" . $nm('full_name_ar') . ", " . $nm('artist_name') . ", " . $nm('full_name_en') . ", 'فنان أويلي')";
+    /* Arabic pages show the same public name as English ones; the full names are private (owner, 14 Nov 2026) */
+    $ar = "COALESCE(" . $nm('artist_name') . ", " . $nm('full_name_en') . ", " . $nm('full_name_ar') . ", 'فنان أويلي')";
     return "$en AS artist_en, $ar AS artist_ar";
 }
 

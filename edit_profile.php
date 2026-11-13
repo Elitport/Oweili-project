@@ -22,6 +22,9 @@ if ($pendingProfile && array_keys($pendingProfile['data']) === ['signature']) $p
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
 
+    $isArtist = ($u['role'] ?? '') === 'artist';
+    /* the public name (what visitors see) is its own field; the full names are private (owner, 14 Nov 2026) */
+    $pubName = $isArtist ? sanitize($_POST['artist_name'] ?? '') : (string) ($u['artist_name'] ?? '');
     $nameEn = sanitize($_POST['full_name_en'] ?? '');
     $nameAr = sanitize($_POST['full_name_ar'] ?? '');
     $bioEn  = trim((string) ($_POST['bio_en'] ?? ''));
@@ -41,9 +44,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     $hasPhoto = !empty($_FILES['profile_picture']['name']);
 
-    if ($nameEn === '') {
+    if ($isArtist && $pubName === '') {
+        $err = 'pubname';
+    } elseif ($nameEn === '') {
         $err = 'name';
-    } elseif (owNameProblem($nameEn, true) !== '' || owNameProblem($nameAr, false) !== '') {
+    } elseif (($isArtist && owNameProblem($pubName, true) !== '') || owNameProblem($nameEn, true) !== '' || owNameProblem($nameAr, false) !== '') {
         $err = 'name_letters';
     } elseif (!$igOk || !$twOk || !$webOk) {
         $err = 'link';
@@ -63,7 +68,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $fname = safeUploadName($chk['ext']);
                 if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $dir . $fname)) $newPic = 'uploads/profiles/' . $fname;
             }
-            $want = ['full_name_en' => $nameEn, 'full_name_ar' => $nameAr, 'artist_name' => $nameEn, 'bio_en' => $bioEn, 'bio_ar' => $bioAr,
+            $want = ['full_name_en' => $nameEn, 'full_name_ar' => $nameAr, 'artist_name' => $pubName, 'bio_en' => $bioEn, 'bio_ar' => $bioAr,
                      'city' => $city, 'instagram' => $ig, 'twitter' => $tw, 'website' => $web];
             if (owHasColumn('users', 'country')) { $want['country'] = $country !== '' ? $country : null; $want['art_styles'] = $styles ? implode(',', $styles) : null; }
             if ($newPic !== '' && $newPic !== (string) $u['profile_picture']) $want['profile_picture'] = $newPic;
@@ -107,7 +112,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 profile_picture = :pic
              WHERE id = :id'
         )->execute([
-            ':nen' => $nameEn, ':nar' => $nameAr, ':aname' => $nameEn,
+            ':nen' => $nameEn, ':nar' => $nameAr, ':aname' => $pubName,
             ':ben' => $bioEn, ':bar' => $bioAr, ':city' => $city, ':phone' => $phone,
             ':ig' => $ig, ':tw' => $tw, ':web' => $web, ':pic' => $picRel,
             ':id' => $uid,
@@ -173,8 +178,8 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
   <div class="card">
     <?php if ($err): ?>
       <div class="err-box" id="err"
-           data-en="<?= $err==='name' ? 'Please enter your name.' : ($err==='phone' ? 'Please enter a valid phone number.' : ($err==='name_letters' ? 'Please write your name in letters, not only numbers or symbols.' : ($err==='link' ? 'Please check your links. Use a full web address, like https://instagram.com/yourname.' : 'Profile picture must be a JPG or PNG under 5 MB.'))) ?>"
-           data-ar="<?= $err==='name' ? 'يرجى إدخال اسمك.' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح.' : ($err==='name_letters' ? 'يرجى كتابة الاسم بالحروف، لا بالأرقام أو الرموز فقط.' : ($err==='link' ? 'يرجى مراجعة الروابط. استخدم عنواناً كاملاً مثل https://instagram.com/yourname.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت.'))) ?>">
+           data-en="<?= $err==='pubname' ? 'Please enter your public name. It is the name visitors see.' : ($err==='name' ? 'Please enter your name.' : ($err==='phone' ? 'Please enter a valid phone number.' : ($err==='name_letters' ? 'Please write your name in letters, not only numbers or symbols.' : ($err==='link' ? 'Please check your links. Use a full web address, like https://instagram.com/yourname.' : 'Profile picture must be a JPG or PNG under 5 MB.')))) ?>"
+           data-ar="<?= $err==='pubname' ? 'يرجى إدخال اسمك العام، وهو الاسم الذي يراه الزوار.' : ($err==='name' ? 'يرجى إدخال اسمك.' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح.' : ($err==='name_letters' ? 'يرجى كتابة الاسم بالحروف، لا بالأرقام أو الرموز فقط.' : ($err==='link' ? 'يرجى مراجعة الروابط. استخدم عنواناً كاملاً مثل https://instagram.com/yourname.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت.')))) ?>">
       </div>
     <?php endif; ?>
 
@@ -199,9 +204,12 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
         </div>
       </div>
 
+      <?php if (($u['role'] ?? '') === 'artist'): ?>
+      <div class="field"><label id="t-l-pub" for="p-pub">Public name: shown to visitors</label><input type="text" id="p-pub" name="artist_name" dir="auto" required maxlength="100" autocomplete="nickname" value="<?= $val('artist_name') ?>"></div>
+      <?php endif; ?>
       <div class="grid2">
-        <div class="field"><label id="t-l-nen">Artist name (English)</label><input type="text" name="full_name_en" required value="<?= $val('full_name_en') ?>"></div>
-        <div class="field"><label id="t-l-nar">Artist name (Arabic)</label><input type="text" name="full_name_ar" dir="rtl" autocomplete="off" value="<?= e(owRealName($u['full_name_ar'] ?? '')) ?>"></div>
+        <div class="field"><label id="t-l-nen"><?= ($u['role'] ?? '') === 'artist' ? 'Full name in English: private' : 'Artist name (English)' ?></label><input type="text" name="full_name_en" required value="<?= $val('full_name_en') ?>"></div>
+        <div class="field"><label id="t-l-nar"><?= ($u['role'] ?? '') === 'artist' ? 'Full name in Arabic: private' : 'Artist name (Arabic)' ?></label><input type="text" name="full_name_ar" dir="rtl" autocomplete="off" value="<?= e(owRealName($u['full_name_ar'] ?? '')) ?>"></div>
       </div>
 
       <div class="grid2">
@@ -256,13 +264,13 @@ function previewPhoto(inp){
 }
 const T={
   en:{dir:'ltr',lb:'العربية',title:'Edit Profile',sub:'Update your public artist profile.',
-    photo:'Profile picture (JPG/PNG, max 5MB)',nen:'Artist name (English)',nar:'Artist name (Arabic)',
+    photo:'Profile picture (JPG/PNG, max 5MB)',<?php if (($u['role'] ?? '') === 'artist'): ?>pub:'Public name: shown to visitors',nen:'Full name in English: private',nar:'Full name in Arabic: private',<?php else: ?>nen:'Artist name (English)',nar:'Artist name (Arabic)',<?php endif; ?>
     city:'City',phone:'Phone number',ben:'Bio (English)',bar:'Bio (Arabic)',ig:'Instagram',tw:'Twitter / X',web:'Website',
     save:'Save Changes',cancel:'Cancel',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',title:'تعديل الملف الشخصي',sub:'حدّث ملفك الشخصي العام كفنان.',
-    photo:'الصورة الشخصية (JPG/PNG، بحد أقصى 5 ميجابايت)',nen:'اسم الفنان (بالإنجليزية)',nar:'اسم الفنان (بالعربية)',
+    photo:'الصورة الشخصية (JPG/PNG، بحد أقصى 5 ميجابايت)',<?php if (($u['role'] ?? '') === 'artist'): ?>pub:'الاسم العام: يظهر للزوار',nen:'الاسم الكامل بالإنجليزية: خاص',nar:'الاسم الكامل بالعربية: خاص',<?php else: ?>nen:'اسم الفنان (بالإنجليزية)',nar:'اسم الفنان (بالعربية)',<?php endif; ?>
     city:'المدينة',phone:'رقم الهاتف',ben:'نبذة (بالإنجليزية)',bar:'نبذة (بالعربية)',ig:'إنستغرام',tw:'تويتر / X',web:'الموقع الإلكتروني',
     save:'حفظ التغييرات',cancel:'إلغاء',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
@@ -278,7 +286,7 @@ function apply(l){
   document.getElementById('topnav').setAttribute('dir',t.dir);
   document.getElementById('lb').textContent=t.lb;
   setTxt('t-title',t.title);setTxt('t-sub',t.sub);
-  setTxt('t-l-photo',t.photo);setTxt('t-l-nen',t.nen);setTxt('t-l-nar',t.nar);
+  setTxt('t-l-photo',t.photo);if(t.pub)setTxt('t-l-pub',t.pub);setTxt('t-l-nen',t.nen);setTxt('t-l-nar',t.nar);
   setTxt('t-l-city',t.city);setTxt('t-l-phone',t.phone);setTxt('t-l-ben',t.ben);setTxt('t-l-bar',t.bar);
   setTxt('t-l-ig',t.ig);setTxt('t-l-tw',t.tw);setTxt('t-l-web',t.web);
   setTxt('t-save',t.save);setTxt('t-cancel',t.cancel);
