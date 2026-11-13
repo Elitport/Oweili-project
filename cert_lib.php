@@ -19,8 +19,8 @@ require_once __DIR__ . '/platform_lib.php';
 
 const OW_CERT_DECLARATION = ['I confirm this artwork is my original work, made by my own hand.',
                              'أؤكد أن هذا العمل من إبداعي الأصلي، وقد صنعته بيدي.'];
-const OW_CERT_RIGHTS = ['The buyer owns the physical artwork. The copyright stays with the artist.',
-                        'يملك المشتري العمل الفني نفسه، وتبقى حقوق النشر والملكية الفكرية للفنان.'];
+const OW_CERT_RIGHTS = ['The collector owns the physical artwork. The copyright stays with the artist.',
+                        'يملك المقتني العمل الفني نفسه، وتبقى حقوق النشر والملكية الفكرية للفنان.'];
 const OW_CERT_FIELDS = ['medium', 'width_cm', 'height_cm', 'year_made', 'edition_type', 'edition_number', 'edition_size'];
 
 function owCertReady(): bool { return owHasTable('certificates') && owHasColumn('artworks', 'declared_at'); }

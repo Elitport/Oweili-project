@@ -18,8 +18,8 @@ owLegalPage([
     'title_en' => 'Terms of Use', 'title_ar' => 'شروط الاستخدام',
     'lead_en' => 'The simple rules that keep Oweili a trusted home for real, handmade art.',
     'lead_ar' => 'القواعد البسيطة التي تجعل أويلي بيتاً موثوقاً للفن الأصيل المصنوع باليد.',
-    'desc_en' => 'The rules for artists, buyers and visitors on Oweili, the gallery of handmade art.',
-    'desc_ar' => 'القواعد للفنانين والمشترين والزوار في أويلي، معرض الفن الأصيل المصنوع باليد.',
+    'desc_en' => 'The rules for artists, collectors and visitors on Oweili, the gallery of handmade art.',
+    'desc_ar' => 'القواعد للفنانين والمقتنين والزوار في أويلي، معرض الفن الأصيل المصنوع باليد.',
     'updated_en' => '11 November 2026', 'updated_ar' => '11 نوفمبر 2026',
     'other' => ['privacy.php', 'Privacy Policy', 'سياسة الخصوصية'],
 ], [
@@ -31,12 +31,12 @@ owLegalPage([
         'إن لم توافق، يرجى عدم استخدام الموقع.',
     ]],
     ['middle', 'Oweili is the middle party', 'أويلي هو الوسيط', [
-        'Oweili connects artists and buyers. When you press "I’m Interested", your request comes to the Oweili team, and we handle the contact between you and the artist.',
-        'Artists and buyers agree not to use Oweili to take a sale outside Oweili, and not to ask each other for private contact details through the site.',
+        'Oweili connects artists and collectors. When you press "I’m Interested", your request comes to the Oweili team, and we handle the contact between you and the artist.',
+        'Artists and collectors agree not to use Oweili to take a sale outside Oweili, and not to ask each other for private contact details through the site.',
         'Pressing "I’m Interested" is not a purchase and does not oblige you to buy. Online payments are not open yet. Until they open, our team agrees each sale with both sides.',
     ], [
-        'يربط أويلي بين الفنانين والمشترين. حين تضغط «أنا مهتم» يصل طلبك إلى فريق أويلي، ونتولى التواصل بينك وبين الفنان.',
-        'يتعهد الفنانون والمشترون بعدم استخدام أويلي لإتمام البيع خارجه، وعدم طلب بيانات التواصل الخاصة من بعضهم عبر الموقع.',
+        'يربط أويلي بين الفنانين والمقتنين. حين تضغط «أنا مهتم» يصل طلبك إلى فريق أويلي، ونتولى التواصل بينك وبين الفنان.',
+        'يتعهد الفنانون والمقتنون بعدم استخدام أويلي لإتمام البيع خارجه، وعدم طلب بيانات التواصل الخاصة من بعضهم عبر الموقع.',
         'الضغط على «أنا مهتم» ليس شراءً ولا يُلزمك بالشراء. المدفوعات الإلكترونية لم تُفتح بعد، وحتى تُفتح يتفق فريقنا على كل عملية بيع مع الطرفين.',
     ]],
     ['accounts', 'Your account', 'حسابك', [
@@ -77,11 +77,11 @@ owLegalPage([
     ['price', 'Prices and commission', 'الأسعار والعمولة', [
         'Artists set their own prices in Saudi riyals (SAR).',
         'When an artwork sells, Oweili keeps ' . owCommissionText() . ' of the price, before VAT. This covers shipping and advertising. Joining and showing your work is free.',
-        'Once online payments open, you are paid your share after the buyer receives the artwork. You are responsible for any tax that applies to your own income.',
+        'Once online payments open, you are paid your share after the collector receives the artwork. You are responsible for any tax that applies to your own income.',
     ], [
         'يحدد الفنان أسعار أعماله بالريال السعودي.',
         'حين يُباع عمل، يحتفظ أويلي بـ' . owCommissionText() . ' من السعر قبل ضريبة القيمة المضافة، وتغطي الشحن والإعلان. والانضمام وعرض أعمالك مجاني.',
-        'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يستلم المشتري العمل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
+        'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يستلم المقتني العمل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
     ]],
     ['buying', 'Buying an artwork', 'شراء عمل فني', [
         '- Prices are shown in Saudi riyals (SAR). Before you pay, our team confirms the full total with you in writing: the price, any VAT, any delivery cost, and the expected delivery date.',

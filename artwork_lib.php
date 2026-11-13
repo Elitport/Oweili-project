@@ -86,8 +86,8 @@ function owStageText(int $stage): array {
                 'ar' => 'صوّر عملك في بدايته — أول ضربات الريشة، أول طبقة، أول علامة.'],
         50  => ['en' => 'Your artwork is taking shape. Photograph it now at its halfway point.',
                 'ar' => 'عملك يأخذ شكله. صوّره الآن في منتصف الطريق.'],
-        100 => ['en' => 'Your artwork is complete. Take the final photograph — this is what buyers will see first.',
-                'ar' => 'اكتمل عملك. التقط الصورة النهائية — هذا ما سيراه المشترون أولاً.'],
+        100 => ['en' => 'Your artwork is complete. Take the final photograph — this is what collectors will see first.',
+                'ar' => 'اكتمل عملك. التقط الصورة النهائية — هذا ما سيراه المقتنون أولاً.'],
     ];
     return $t[$stage];
 }

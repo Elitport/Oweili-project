@@ -194,10 +194,10 @@ function owPhotoOk(int $artworkId): bool {
 function owAdminDeleteBlockers(int $uid): array {
     $checks = [
         ['gift_requests', 'user_id', 'gift requests', 'طلبات هدايا'],
-        ['commissions', 'user_id', 'commissions (as buyer)', 'أعمال خاصة (كمشترٍ)'],
+        ['commissions', 'user_id', 'commissions (as collector)', 'أعمال خاصة (كمقتنٍ)'],
         ['commissions', 'artist_id', 'commissions (as artist)', 'أعمال خاصة (كفنان)'],
         ['commission_nda', 'artist_id', 'confidentiality agreements', 'اتفاقيات سرية'],
-        ['orders', 'buyer_user_id', 'orders (as buyer)', 'طلبات شراء (كمشترٍ)'],
+        ['orders', 'buyer_user_id', 'orders (as collector)', 'طلبات شراء (كمقتنٍ)'],
         ['orders', 'artist_id', 'orders (as artist)', 'طلبات شراء (كفنان)'],
         ['payouts', 'artist_id', 'payouts', 'مدفوعات'],
         ['purchases', 'collector_id', 'purchases', 'مشتريات'],

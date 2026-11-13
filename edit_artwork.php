@@ -21,7 +21,7 @@ if (!$aw) { http_response_code(404); exit('Artwork not found or not yours.'); }
 if (!empty($aw['is_draft'])) { header('Location: upload_artwork.php?id=' . (int) $aw['id']); exit; }
 
 /* Artworks verified through the 3-stage process keep their main photo:
-   swapping it would break the proof that buyers and reviewers rely on. */
+   swapping it would break the proof that collectors and reviewers rely on. */
 $photoLocked = owGetStages((int) $aw['id']) !== [];
 
 $err = '';

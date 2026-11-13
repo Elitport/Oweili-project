@@ -56,7 +56,7 @@ function owInquiryArtwork(int $id): ?array {
 
 /* Saves one inquiry and emails the team. Returns true when it was saved.
    $buyerId: the signed-in buyer's account (0 for guests), so the request
-   shows in their Buyer dashboard. */
+   shows in their Collector dashboard. */
 function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
     owEnsureInquiryTable();
     /* the same person asking about the same artwork twice in a day is saved once */
@@ -88,7 +88,7 @@ function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
           . 'Artist / الفنان: ' . $aw['artist_en'] . "\r\n"
           . 'Price / السعر: ' . number_format((float) $aw['price']) . " SAR\r\n"
           . 'Link: https://' . $host . '/marketplace.php#artwork-' . (int) $aw['id'] . "\r\n\r\n"
-          . 'Buyer name / الاسم: ' . $v['name'] . "\r\n"
+          . 'Collector name / الاسم: ' . $v['name'] . "\r\n"
           . 'Phone / الهاتف: ' . $v['phone'] . "\r\n"
           . 'Email / البريد: ' . $v['email'] . "\r\n\r\n"
           . "All inquiries: https://$host/admin.php#inquiries\r\n";
@@ -133,10 +133,10 @@ function owNotifyArtistOfInterest(array $aw, string $host): void {
         $a = $st->fetch();
         if (!$a || ($hasPref && (int) $a['notify_inquiries'] !== 1) || !filter_var($a['email'], FILTER_VALIDATE_EMAIL)) return;
         $body = "Good news: someone is interested in your artwork \"" . $aw['title_en'] . "\" on Oweili.\r\n"
-              . "Our team will talk to them and keep you posted. Buyer details stay with Oweili.\r\n"
+              . "Our team will talk to them and keep you posted. Collector details stay with Oweili.\r\n"
               . "See your numbers: https://$host/artist_studio.php\r\n\r\n"
               . "خبر جميل: هناك من يهتم بعملك «" . $aw['title_ar'] . "» في أويلي.\r\n"
-              . "سيتواصل فريقنا معه ويطلعك على المستجدات. تبقى بيانات المشتري لدى أويلي.\r\n"
+              . "سيتواصل فريقنا معه ويطلعك على المستجدات. تبقى بيانات المقتني لدى أويلي.\r\n"
               . "شاهد أرقامك: https://$host/artist_studio.php\r\n\r\n"
               . "To stop these emails: My Studio → Account. لإيقاف هذه الرسائل: مرسمي ← الحساب.\r\n";
         if (!owSendMail((string) $a['email'], 'Someone loves your work · هناك من أعجبه عملك', $body)) {

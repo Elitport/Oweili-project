@@ -56,7 +56,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $newBuyer = (int) getDB()->lastInsertId();
             owSignupCounted($newBuyer, 'collector');
             require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
-            owAdminAlert('buyer', 'New buyer sign-up: ' . $fullName, 'مشترٍ جديد: ' . $fullName, 'admin.php?person=' . $newBuyer);
+            owAdminAlert('buyer', 'New collector sign-up: ' . $fullName, 'مقتنٍ جديد: ' . $fullName, 'admin.php?person=' . $newBuyer);
             if (is_file(__DIR__ . '/bashro_send.php')) { require_once __DIR__ . '/bashro_send.php'; owBashroSignup($newBuyer, 'buyer'); }   // off until Bashro accepts sign-ups
 
             $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
@@ -99,7 +99,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join as a Buyer', 'ar' => 'انضم كمشترٍ', 'desc_en' => 'Welcome. Real art made by real hands is waiting for you.', 'desc_ar' => 'أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.', 'path' => 'register_collector.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join as a Collector', 'ar' => 'انضم كمقتنٍ', 'desc_en' => 'Welcome. Real art made by real hands is waiting for you.', 'desc_ar' => 'أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.', 'path' => 'register_collector.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>

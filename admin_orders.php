@@ -35,8 +35,8 @@ if ($one) { $q = $db->prepare('SELECT * FROM order_events WHERE order_id = :o OR
 owAdminTop('Orders and payouts', 'الطلبات والمدفوعات', '.o-row{display:grid;grid-template-columns:1fr auto;gap:var(--space-sm);align-items:center;padding:var(--space-sm) 0;border-top:1px solid var(--color-border);text-decoration:none;color:inherit;}.o-row:first-of-type{border-top:0;}.miss li{margin-bottom:6px;}');
 ?>
   <h1 id="top"><?= owBi('Orders and payouts', 'الطلبات والمدفوعات') ?> <span class="pillx<?= $on ? ' on' : ' warn' ?>"><?= $on ? owBi('Payments on', 'الدفع يعمل') : owBi('Payments switched off', 'الدفع متوقف') ?></span></h1>
-  <p class="mini"><?= owBi('Escrow: the buyer’s money is held by Oweili and released to the artist after the buyer confirms receipt, or ' . OW_ESCROW_DAYS . ' days after delivery with no complaint, minus Oweili’s commission (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '%, before VAT).',
-                       'الضمان: يحتفظ أويلي بمال المشتري ويحوّله للفنان بعد تأكيد المشتري الاستلام، أو بعد ' . OW_ESCROW_DAYS . ' أيام من التسليم دون شكوى، مخصوماً منه عمولة أويلي (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '٪ قبل الضريبة).') ?></p>
+  <p class="mini"><?= owBi('Escrow: the collector’s money is held by Oweili and released to the artist after the collector confirms receipt, or ' . OW_ESCROW_DAYS . ' days after delivery with no complaint, minus Oweili’s commission (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '%, before VAT).',
+                       'الضمان: يحتفظ أويلي بمال المقتني ويحوّله للفنان بعد تأكيد المقتني الاستلام، أو بعد ' . OW_ESCROW_DAYS . ' أيام من التسليم دون شكوى، مخصوماً منه عمولة أويلي (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '٪ قبل الضريبة).') ?></p>
   <?php if (!$on): ?>
   <div class="card"><h2><?= owBi('What is needed to switch payments on', 'ما المطلوب لتشغيل الدفع') ?></h2>
     <ul class="miss"><?php foreach ($missing as [$en, $ar]): ?><li><?= owBi($en, $ar) ?></li><?php endforeach; ?></ul>
@@ -48,7 +48,7 @@ owAdminTop('Orders and payouts', 'الطلبات والمدفوعات', '.o-row{
     <h2><?= e($one['order_no']) ?> · <?= owBi(OW_ORDER_KINDS[$one['kind']][0], OW_ORDER_KINDS[$one['kind']][1]) ?> <?= owOrderPill((string) $one['status']) ?></h2>
     <dl class="kv"><dt><?= owBi('What', 'ماذا') ?></dt><dd><?= e((string) $one['title']) ?></dd>
       <dt><?= owBi('Amount', 'المبلغ') ?></dt><dd><?= number_format((float) $one['amount'], 2) ?> SAR · <?= owBi('Oweili', 'أويلي') ?> <?= number_format((float) $one['commission_amount'], 2) ?> (<?= e((string) $one['commission_rate']) ?>%) · <?= owBi('artist', 'الفنان') ?> <?= number_format((float) $one['artist_amount'], 2) ?></dd>
-      <dt><?= owBi('Buyer', 'المشتري') ?></dt><dd><?= e($one['buyer_name'] . ' · ' . $one['buyer_email'] . ' · ' . $one['buyer_phone']) ?></dd>
+      <dt><?= owBi('Collector', 'المقتني') ?></dt><dd><?= e($one['buyer_name'] . ' · ' . $one['buyer_email'] . ' · ' . $one['buyer_phone']) ?></dd>
       <dt><?= owBi('Release due', 'موعد التحويل') ?></dt><dd><?= e((string) ($one['release_due_at'] ?: '—')) ?></dd></dl>
     <div class="acts"><?php foreach (OW_ORDER_FLOW[$one['status']] ?? [] as $to): if ($to === 'paid' || $to === 'complaint') continue; ?>
       <form method="post" action="admin_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="<?= $to ?>"><input type="hidden" name="id" value="<?= (int) $one['id'] ?>"><input type="hidden" name="back" value="<?= (int) $one['id'] ?>">
@@ -62,7 +62,7 @@ owAdminTop('Orders and payouts', 'الطلبات والمدفوعات', '.o-row{
     <?php foreach ($complaints as $c): ?>
     <div class="o-row"><span><b><?= e($c['order_no'] . ' · ' . $c['title']) ?></b><span class="mini" style="display:block" dir="auto"><?= e((string) $c['reason']) ?></span></span>
       <span class="acts"><?php foreach (['released' => 'btn-accent', 'refunded' => 'btn-danger'] as $to => $cls): ?><form method="post" action="admin_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="<?= $to ?>"><input type="hidden" name="id" value="<?= (int) $c['order_id'] ?>">
-        <button class="btn btn-sm <?= $cls ?>"><?= $to === 'released' ? owBi('Release to the artist', 'حوّل للفنان') : owBi('Refund the buyer', 'أعد المبلغ للمشتري') ?></button></form><?php endforeach; ?></span></div>
+        <button class="btn btn-sm <?= $cls ?>"><?= $to === 'released' ? owBi('Release to the artist', 'حوّل للفنان') : owBi('Refund the collector', 'أعد المبلغ للمقتني') ?></button></form><?php endforeach; ?></span></div>
     <?php endforeach; ?></div>
 
   <div class="card"><h2><?= owBi('Orders', 'الطلبات') ?> (<?= count($orders) ?>)</h2>

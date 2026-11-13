@@ -131,7 +131,7 @@ try {
 
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $memberSince = !empty($me['created_at']) ? date('Y', strtotime($me['created_at'])) : '';
-$name   = owRealName($me['full_name_en']) ?: (owRealName($me['full_name_ar']) ?: 'Buyer');
+$name   = owRealName($me['full_name_en']) ?: (owRealName($me['full_name_ar']) ?: 'Collector');
 $val    = fn(string $k, string $col) => $old[$k] ?? (string) ($me[$col] ?? '');
 $prefL  = $old['lang'] ?? ((string) ($me['preferred_lang'] ?? '') === 'ar' ? 'ar' : 'en');
 
@@ -277,7 +277,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
     </div>
   <?php endif; ?>
 
-  <?php /* Gifts and private commissions this buyer sent (by account, or by the confirmed email) */
+  <?php /* Gifts and private commissions this collector sent (by account, or by the confirmed email) */
   $myGifts = $myComms = [];
   try {
       $byWho = 'user_id = :u' . ($verified ? ' OR buyer_email = :e' : '');

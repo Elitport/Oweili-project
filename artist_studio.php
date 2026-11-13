@@ -262,7 +262,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   <div class="st-mini">
     <span><b><?= number_format($tot['views']) ?></b> <?= owBi('views', 'مشاهدة') ?></span>
     <span><b><?= number_format($tot['favs']) ?></b> <?= owBi('favorites', 'إعجاب') ?></span>
-    <span><b><?= number_format($tot['inquiries']) ?></b> <?= owBi('interested buyers', 'مهتم بالشراء') ?></span>
+    <span><b><?= number_format($tot['inquiries']) ?></b> <?= owBi('interested collectors', 'مهتم بالشراء') ?></span>
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
@@ -272,7 +272,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </nav>
 
 <?php if ($tab === 'works'): ?>
-  <p class="note"><?= owBi('Oweili is the middle party: we talk to buyers for you and keep their details private. You see how many people are interested, never who they are.', 'أويلي هو الوسيط: نتواصل مع المشترين نيابة عنك ونحفظ بياناتهم. ترى عدد المهتمين، لا هوياتهم.') ?></p>
+  <p class="note"><?= owBi('Oweili is the middle party: we talk to collectors for you and keep their details private. You see how many people are interested, never who they are.', 'أويلي هو الوسيط: نتواصل مع المقتنين نيابة عنك ونحفظ بياناتهم. ترى عدد المهتمين، لا هوياتهم.') ?></p>
   <?php if (!$works): ?>
     <div class="card empty"><p><?= owBi('Your studio is ready for its first piece.', 'مرسمك جاهز لعملك الأول.') ?></p>
       <a class="btn btn-primary" href="upload_artwork.php"><?= owBi('Start New Artwork', 'ابدأ عملاً جديداً') ?></a></div>
@@ -358,7 +358,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   try { if (owCommReady()) { $q = getDB()->prepare("SELECT c.id, c.ref_no, c.subject, c.status, c.assigned_at, (SELECT COUNT(*) FROM commission_nda n WHERE n.commission_id = c.id AND n.artist_id = c.artist_id) AS nda
                                                      FROM commissions c WHERE c.artist_id = :u AND c.status <> 'cancelled' ORDER BY c.id DESC LIMIT 100"); $q->execute([':u' => $uid]); $myC = $q->fetchAll(); } } catch (Throwable $e) { $myC = []; }
   $cS = owCommSubjects(); ?>
-  <p class="note"><?= owBi('Private commissions the Oweili team chose you for: portraits and personal memories, painted from the buyer’s photos. Everything here is confidential.', 'أعمال خاصة اختارك لها فريق أويلي: بورتريهات وذكريات شخصية تُرسم من صور المشتري. كل ما هنا سرّي.') ?></p>
+  <p class="note"><?= owBi('Private commissions the Oweili team chose you for: portraits and personal memories, painted from the collector’s photos. Everything here is confidential.', 'أعمال خاصة اختارك لها فريق أويلي: بورتريهات وذكريات شخصية تُرسم من صور المقتني. كل ما هنا سرّي.') ?></p>
   <?php if (!$myC): ?>
     <div class="card empty"><p><?= owBi('No private commissions yet. When the team chooses you, you get an email.', 'لا أعمال خاصة بعد. عندما يختارك الفريق تصلك رسالة.') ?></p></div>
   <?php else: ?>
@@ -408,7 +408,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </form>
 
 <?php elseif ($tab === 'certs'): ?>
-  <p class="note"><?= owBi('Each approved artwork gets a Certificate of Authenticity with its own number. Open one to download it as a PDF, or share its verify page with a buyer.', 'يحصل كل عمل معتمد على شهادة أصالة برقم خاص. افتح الشهادة لتنزيلها بصيغة PDF، أو شارك صفحة التحقق مع المشتري.') ?></p>
+  <p class="note"><?= owBi('Each approved artwork gets a Certificate of Authenticity with its own number. Open one to download it as a PDF, or share its verify page with a collector.', 'يحصل كل عمل معتمد على شهادة أصالة برقم خاص. افتح الشهادة لتنزيلها بصيغة PDF، أو شارك صفحة التحقق مع المقتني.') ?></p>
   <?php require_once __DIR__ . '/sig_lib.php'; $sigOn = owSigExists((string) $uid); ?>
   <div class="card" style="display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;justify-content:space-between;margin-bottom:var(--space-sm)">
     <span><?= $sigOn ? owBi('✓ Your signature is on your certificates.', '✓ توقيعك على شهاداتك.') : owBi('Add your signature to your certificates: draw it once.', 'أضف توقيعك إلى شهاداتك: ارسمه مرة واحدة.') ?></span>

@@ -119,7 +119,7 @@ function owOrderConfirm(int $id, int $buyerId): bool {
     $o = owOrderGet($id);
     if (!$o || (int) $o['buyer_user_id'] !== $buyerId || $o['status'] !== 'delivered') return false;
     getDB()->prepare('UPDATE orders SET confirmed_at = NOW() WHERE id = :id')->execute([':id' => $id]);
-    return owOrderMove($id, 'released', ['type' => 'buyer', 'id' => $buyerId], 'the buyer confirmed receipt');
+    return owOrderMove($id, 'released', ['type' => 'buyer', 'id' => $buyerId], 'the collector confirmed receipt');
 }
 /* The buyer: "Something is wrong" (holds the money until the admin decides) */
 function owOrderComplain(int $id, int $buyerId, string $reason): bool {

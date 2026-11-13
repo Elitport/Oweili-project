@@ -17,7 +17,7 @@ if ($cfSize === '' && (float) $cv('width_cm') > 0 && (float) $cv('height_cm') > 
 ?>
 <fieldset class="cert-fields">
   <legend><?= owBi('Details for the Certificate of Authenticity', 'تفاصيل شهادة الأصالة') ?></legend>
-  <p class="cert-hint"><?= owBi('Every approved artwork gets a certificate that buyers can check. These details are printed on it.', 'يحصل كل عمل معتمد على شهادة يستطيع المشتري التحقق منها. تُطبع هذه التفاصيل عليها.') ?></p>
+  <p class="cert-hint"><?= owBi('Every approved artwork gets a certificate that collectors can check. These details are printed on it.', 'يحصل كل عمل معتمد على شهادة يستطيع المقتني التحقق منها. تُطبع هذه التفاصيل عليها.') ?></p>
   <div class="field">
     <label for="cf-medium"><?= owBi('Medium', 'الخامة') ?></label>
     <input id="cf-medium" name="medium" type="text" maxlength="150" required dir="auto" list="cf-mediums" value="<?= $cv('medium') ?>"

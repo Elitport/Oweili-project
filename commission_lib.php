@@ -29,7 +29,7 @@ const OW_COMM_MAX_REFS = 6;
 const OW_COMM_KEEP_DAYS = 30;
 const OW_COMM_NDA_VERSION = '1';
 const OW_COMM_PAY_DAYS = 60;      // not paid within 60 days of the request: the reference photos are deleted
-const OW_COMM_PAY_WARN_DAYS = 7;  // the buyer is told this many days before
+const OW_COMM_PAY_WARN_DAYS = 7;  // the collector is told this many days before
 
 function owCommReady(): bool { return owHasTable('commissions') && owHasTable('commission_files') && owHasTable('commission_nda'); }
 
@@ -56,18 +56,18 @@ const OW_COMM_STEPS = ['requested', 'assigned', 'quoted', 'quote_accepted', 'dra
 /* The confidentiality agreement the artist accepts before seeing any photo */
 function owCommNdaText(): array {
     return [
-        'en' => ['These photos are private. They belong to the buyer and the people in them.',
+        'en' => ['These photos are private. They belong to the collector and the people in them.',
                  'I will use them only to make this one artwork, and for nothing else.',
                  'I will not save, copy, share, post or show them to anyone, and I will delete any copy once the work is delivered.',
-                 'I will not show the finished artwork in public, on Oweili or anywhere else, unless Oweili tells me the buyer agreed in writing.',
-                 'I will not contact the buyer outside Oweili.',
-                 'If I break this, Oweili may close my account and the buyer may take legal action.'],
-        'ar' => ['هذه الصور خاصة، وهي ملك للمشتري وللأشخاص الظاهرين فيها.',
+                 'I will not show the finished artwork in public, on Oweili or anywhere else, unless Oweili tells me the collector agreed in writing.',
+                 'I will not contact the collector outside Oweili.',
+                 'If I break this, Oweili may close my account and the collector may take legal action.'],
+        'ar' => ['هذه الصور خاصة، وهي ملك للمقتني وللأشخاص الظاهرين فيها.',
                  'سأستخدمها فقط لصنع هذا العمل الفني، ولا شيء غيره.',
                  'لن أحفظها أو أنسخها أو أشاركها أو أنشرها أو أعرضها على أحد، وسأحذف أي نسخة منها بعد تسليم العمل.',
-                 'لن أعرض العمل المكتمل علناً، لا في أويلي ولا في أي مكان آخر، إلا إذا أبلغني أويلي أن المشتري وافق كتابياً.',
-                 'لن أتواصل مع المشتري خارج أويلي.',
-                 'إن خالفت ذلك، يحق لأويلي إغلاق حسابي، ويحق للمشتري اتخاذ إجراء قانوني.'],
+                 'لن أعرض العمل المكتمل علناً، لا في أويلي ولا في أي مكان آخر، إلا إذا أبلغني أويلي أن المقتني وافق كتابياً.',
+                 'لن أتواصل مع المقتني خارج أويلي.',
+                 'إن خالفت ذلك، يحق لأويلي إغلاق حسابي، ويحق للمقتني اتخاذ إجراء قانوني.'],
     ];
 }
 
@@ -165,8 +165,8 @@ function owCommMarkPaid(array $c, array $actor, string $note = ''): bool {
     owLog('commission_paid', 'commission', (int) $c['id'], mb_substr(trim($note), 0, 300), $actor);
     owCommTellBuyer($c, 'Payment received · وصلنا الدفع', 'Thank you: we received your payment. Your artist can now start your piece.', 'شكراً لك: وصلنا الدفع. يستطيع فنانك الآن البدء في قطعتك.');
     if (!empty($c['artist_id'])) owCommTellArtist($c, 'Payment confirmed, you can start · تم تأكيد الدفع، يمكنك البدء',
-        'The buyer has paid. The reference photos are now open for you, and you can start the piece and send a draft.',
-        'دفع المشتري. الصور المرجعية مفتوحة لك الآن، ويمكنك البدء في القطعة وإرسال مسودة.');
+        'The collector has paid. The reference photos are now open for you, and you can start the piece and send a draft.',
+        'دفع المقتني. الصور المرجعية مفتوحة لك الآن، ويمكنك البدء في القطعة وإرسال مسودة.');
     return true;
 }
 /* Days left before an unpaid request expires (null when paid, closed or photos gone) */
@@ -179,7 +179,7 @@ function owCommDaysToExpire(array $c): ?int {
 /* ---- Emails ---- */
 function owCommHost(): string { return 'oweili.com'; }   // links in emails: always the real site, never the visitor's Host header
 /* To the buyer. The private link key is only known at the request time, so later
-   emails send the buyer to the same link they got first (kept only in their email). */
+   emails send the collector to the same link they got first (kept only in their email). */
 function owCommTellBuyer(array $c, string $subject, string $en, string $ar, string $link = ''): void {
     try {
         if (!filter_var($c['buyer_email'], FILTER_VALIDATE_EMAIL)) return;

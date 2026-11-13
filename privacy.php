@@ -31,13 +31,13 @@ owLegalPage([
         "يمكنك التواصل معنا بخصوص أي شيء في هذه السياسة على $C.",
     ]],
     ['middle', 'Oweili is the middle party', 'أويلي هو الوسيط', [
-        'We stand between artists and buyers. When a buyer is interested in an artwork, the buyer’s details come to the Oweili team, not to the artist.',
-        'The artist only learns that someone is interested and how many people are interested. We never give the artist a buyer’s name, phone or email.',
-        'In the same way, we do not show an artist’s phone or email to buyers. Buyers see the artist’s public profile only.',
+        'We stand between artists and collectors. When a collector is interested in an artwork, the collector’s details come to the Oweili team, not to the artist.',
+        'The artist only learns that someone is interested and how many people are interested. We never give the artist a collector’s name, phone or email.',
+        'In the same way, we do not show an artist’s phone or email to collectors. Collectors see the artist’s public profile only.',
     ], [
-        'نحن نقف بين الفنانين والمشترين. حين يهتم مشترٍ بعمل فني، تصل بياناته إلى فريق أويلي لا إلى الفنان.',
-        'يعرف الفنان فقط أن هناك من يهتم وعدد المهتمين. لا نعطي الفنان اسم المشتري أو هاتفه أو بريده أبداً.',
-        'وبالمثل لا نُظهر هاتف الفنان أو بريده للمشترين. يرى المشترون الملف العام للفنان فقط.',
+        'نحن نقف بين الفنانين والمقتنين. حين يهتم مقتنٍ بعمل فني، تصل بياناته إلى فريق أويلي لا إلى الفنان.',
+        'يعرف الفنان فقط أن هناك من يهتم وعدد المهتمين. لا نعطي الفنان اسم المقتني أو هاتفه أو بريده أبداً.',
+        'وبالمثل لا نُظهر هاتف الفنان أو بريده للمقتنين. يرى المقتنون الملف العام للفنان فقط.',
     ]],
     ['collect', 'What we collect', 'ما الذي نجمعه', [
         '- Account details: your name, email address, phone number and password. Passwords are stored only as a secure one-way code, never as text.',
@@ -51,7 +51,7 @@ owLegalPage([
         '- Messages to us: when you use "Write to Us", your name, email, phone (if you give it) and your message.',
         '- "Is this your place?" (Art Map): your name, email, phone (if you give it), a photo (if you send one) and your corrections. We use them only to update that place on the Art Map. Your photo shows on the site only after our team approves it.',
         '- Artist signature: if an artist draws a signature for their certificates, we keep the picture in a private place. It is printed only on that artist’s certificates, after our team approves it.',
-        '- Buyer profile: country, city, preferred language, and the artworks you save as favorites.',
+        '- Collector profile: country, city, preferred language, and the artworks you save as favorites.',
         '- Activity: what you do in your account and when (for example signing in or saving a favorite). With it we keep a one-way code made from your internet address that changes every month. We never keep the address itself.',
         '- Visitor statistics: approximate visitor counts by country and city (from the internet address, using a location file on our own server, data by DB-IP). We keep only the country, city and date, never the address itself.',
         '- Photo consent records: for local artists featured in Artist Spotlights, a record of their approval (who, when and how).',
@@ -69,7 +69,7 @@ owLegalPage([
         '- رسائلك إلينا: حين تستخدم «اكتب لنا»، نحفظ اسمك وبريدك وهاتفك (إن أعطيته) ورسالتك.',
         '- «هل هذا مكانك؟» (وجهات الفن): اسمك وبريدك وهاتفك (إن أعطيته) وصورة (إن أرسلتها) وتصحيحاتك. نستخدمها فقط لتحديث هذا المكان في وجهات الفن، ولا تظهر صورتك في الموقع إلا بعد موافقة فريقنا.',
         '- توقيع الفنان: إن رسم الفنان توقيعاً لشهاداته، نحفظ صورته في مكان خاص. ولا يُطبع إلا على شهادات هذا الفنان، بعد موافقة فريقنا.',
-        '- ملف المشتري: الدولة والمدينة واللغة المفضلة والأعمال التي تحفظها في المفضلة.',
+        '- ملف المقتني: الدولة والمدينة واللغة المفضلة والأعمال التي تحفظها في المفضلة.',
         '- النشاط: ما تفعله في حسابك ومتى (مثل تسجيل الدخول أو حفظ عمل في المفضلة). ونحفظ معه رمزاً باتجاه واحد من عنوانك على الإنترنت يتغير كل شهر، ولا نحفظ العنوان نفسه أبداً.',
         '- إحصاءات الزوار: أعداد تقريبية للزوار حسب الدولة والمدينة (من عنوان الإنترنت، بملف مواقع على خادمنا، والبيانات من DB-IP). نحفظ الدولة والمدينة والتاريخ فقط، ولا نحفظ العنوان نفسه أبداً.',
         '- سجلات موافقة الصور: للفنانين المحليين في «أضواء على الفنانين»، سجل بموافقتهم (من ومتى وكيف).',
@@ -192,9 +192,9 @@ owLegalPage([
         'يمكنك حذف ملفات تعريف الارتباط من إعدادات متصفحك في أي وقت. ويبقى الموقع يعمل، لكن قد تحتاج إلى اختيار لغتك من جديد.',
     ]],
     ['young', 'Young people', 'صغار السن', [
-        'Oweili is for people aged 18 and over. Younger artists and buyers may use it only with a parent or guardian, who agrees for them.',
+        'Oweili is for people aged 18 and over. Younger artists and collectors may use it only with a parent or guardian, who agrees for them.',
     ], [
-        'أويلي لمن هم في الثامنة عشرة فما فوق. ويمكن لمن هم أصغر من الفنانين والمشترين استخدامه فقط مع ولي أمر يوافق عنهم.',
+        'أويلي لمن هم في الثامنة عشرة فما فوق. ويمكن لمن هم أصغر من الفنانين والمقتنين استخدامه فقط مع ولي أمر يوافق عنهم.',
     ]],
     ['changes', 'Changes to this policy', 'التغييرات على هذه السياسة', [
         'When we change this policy we update the date below. If a change is important, we tell you by email or on the site first.',

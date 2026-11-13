@@ -8519,7 +8519,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "Clear terms",
-     "Stating which rights the buyer receives."
+     "Stating which rights the collector receives."
     ]
    ],
    "signs": [
@@ -8535,7 +8535,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "Digital wallet",
-     "Holds the certificates the artist creates or the buyer owns."
+     "Holds the certificates the artist creates or the collector owns."
     ],
     [
      "Minting platform",
@@ -8547,7 +8547,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "Written license",
-     "Explains what the buyer may and may not do."
+     "Explains what the collector may and may not do."
     ]
    ],
    "time": "Same as the artwork itself, plus a short step to mint",
@@ -8612,7 +8612,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "شروط واضحة",
-     "توضيح الحقوق التي يحصل عليها المشتري."
+     "توضيح الحقوق التي يحصل عليها المقتني."
     ]
    ],
    "signs": [
@@ -8628,7 +8628,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "محفظة رقمية",
-     "تحفظ الشهادات التي يصدرها الفنان أو يملكها المشتري."
+     "تحفظ الشهادات التي يصدرها الفنان أو يملكها المقتني."
     ],
     [
      "منصة السكّ",
@@ -8640,7 +8640,7 @@ window.OW_ART_STYLES = [
     ],
     [
      "ترخيص مكتوب",
-     "يشرح ما يحق للمشتري فعله وما لا يحق."
+     "يشرح ما يحق للمقتني فعله وما لا يحق."
     ]
    ],
    "time": "مدة صنع العمل نفسه، مع خطوة قصيرة للسكّ",

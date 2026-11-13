@@ -98,7 +98,7 @@ function owAlertsTick(): void {
 function owAlertEmail(array $items): array {
     $base = 'https://oweili.com' . owBase();   // always the real site, never the visitor's Host header
     $kinds = ['artwork' => ['Waiting for approval', 'بانتظار الموافقة'], 'change' => ['Changes waiting for approval', 'تعديلات بانتظار الموافقة'],
-              'artist' => ['New artist sign-up', 'فنان جديد'], 'buyer' => ['New buyer sign-up', 'مشترٍ جديد'],
+              'artist' => ['New artist sign-up', 'فنان جديد'], 'buyer' => ['New collector sign-up', 'مقتنٍ جديد'],
               'gift' => ['Gift request', 'طلب هدية'], 'commission' => ['Private commission', 'طلب عمل خاص'], 'order' => ['Order', 'طلب شراء'], 'auction' => ['Auctions waiting list', 'قائمة انتظار المزاد']];
     $h = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
     $rows = '';

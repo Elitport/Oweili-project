@@ -56,7 +56,7 @@ $d = fn(?string $v) => $v ? e(date('Y-m-d H:i', strtotime($v))) : '—';
 $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
     if (!$rows) { echo '<p class="mini">' . owBi('None yet.', 'لا شيء بعد.') . '</p>'; return; }
     echo '<div style="overflow-x:auto"><table class="table"><thead><tr><th>' . owBi('Date', 'التاريخ') . '</th><th>' . owBi('Artwork', 'العمل') . '</th>'
-       . ($showBuyer ? '<th>' . owBi('Buyer', 'المشتري') . '</th>' : '') . '<th>' . owBi('Status', 'الحالة') . '</th></tr></thead><tbody>';
+       . ($showBuyer ? '<th>' . owBi('Collector', 'المقتني') . '</th>' : '') . '<th>' . owBi('Status', 'الحالة') . '</th></tr></thead><tbody>';
     foreach ($rows as $r) {
         $s = OW_INQUIRY_STATUS[$r['status'] ?? 'new'] ?? OW_INQUIRY_STATUS['new'];
         echo '<tr><td class="mini">' . $d($r['created_at']) . '</td><td>' . e((string) ($r['title_en'] ?? '#' . $r['artwork_id'])) . '</td>'
@@ -102,7 +102,7 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
   <div class="card">
     <?php $pEn = owRealName($p['full_name_en']) ?: $p['artist_en']; $pAr = owRealName($p['full_name_ar']); ?>
     <h1><?= e($pEn) ?><?php if ($pAr !== '' && $pAr !== $pEn): ?> · <span dir="rtl"><?= e($pAr) ?></span><?php endif; ?></h1>
-    <p class="mini"><?= owBi($p['role'] === 'collector' ? 'Buyer' : ucfirst(str_replace('_', ' ', $p['role'])), ['collector' => 'مشترٍ', 'artist' => 'فنان', 'admin' => 'مدير', 'sub_admin' => 'مشرف فرعي', 'institute' => 'معهد'][$p['role']] ?? $p['role']) ?>
+    <p class="mini"><?= owBi($p['role'] === 'collector' ? 'Collector' : ucfirst(str_replace('_', ' ', $p['role'])), ['collector' => 'مقتنٍ', 'artist' => 'فنان', 'admin' => 'مدير', 'sub_admin' => 'مشرف فرعي', 'institute' => 'معهد'][$p['role']] ?? $p['role']) ?>
       · <span class="pillx"><?= owBi($sw[0], $sw[1]) ?></span> · ID <span dir="ltr"><?= e((string) ($p['public_id'] ?? $p['id'])) ?></span></p>
     <div class="kv">
       <div><b><?= owBi('Email', 'البريد') ?></b><a href="mailto:<?= e($p['email']) ?>" dir="ltr"><?= e($p['email']) ?></a> <?= (int) $p['is_verified'] ? '✓' : owBi('(not confirmed)', '(غير مؤكد)') ?></div>
@@ -150,7 +150,7 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
     <?php if (!$log): ?><p class="mini"><?= owBi('No activity recorded yet.', 'لا نشاط مسجل بعد.') ?></p><?php else: ?>
     <div style="overflow-x:auto"><table class="table"><thead><tr><th><?= owBi('When', 'متى') ?></th><th><?= owBi('Who', 'من') ?></th><th><?= owBi('What', 'ماذا') ?></th></tr></thead><tbody>
     <?php foreach ($log as $l): $w = OW_ACTION_WORDS[$l['action']] ?? [$l['action'], $l['action']]; ?>
-      <tr><td class="mini"><?= $d($l['created_at']) ?></td><td><?= e($l['actor_type'] === 'buyer' ? 'Buyer' : ucfirst(str_replace('_', ' ', $l['actor_type']))) ?></td>
+      <tr><td class="mini"><?= $d($l['created_at']) ?></td><td><?= e($l['actor_type'] === 'buyer' ? 'Collector' : ucfirst(str_replace('_', ' ', $l['actor_type']))) ?></td>
         <td><?= owBi($w[0], $w[1]) ?><?= $l['target_type'] === 'artwork' ? ' <span class="mini">#' . (int) $l['target_id'] . '</span>' : '' ?><?= $l['details'] ? '<div class="mini">' . e($l['details']) . '</div>' : '' ?></td></tr>
     <?php endforeach; ?></tbody></table></div><?php endif; ?>
   </div>

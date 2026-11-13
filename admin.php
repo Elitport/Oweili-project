@@ -626,7 +626,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <div class="top">
     <div>
       <h1>Admin Dashboard</h1>
-      <div class="sub">Manage artists, buyers, artworks and requests.</div>
+      <div class="sub">Manage artists, collectors, artworks and requests.</div>
     </div>
   </div>
   <p class="adm-sec"><?= owBi('Today', 'اليوم') ?></p>
@@ -639,7 +639,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <p class="adm-sec"><?= owBi('All time', 'منذ البداية') ?></p>
   <div class="stat-grid ov-grid ov-small">
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['artists'] ?></span><span class="stat-lbl"><?= owBi('Artists', 'الفنانون') ?></span></div>
-    <div class="stat-card"><span class="stat-num"><?= (int) $overview['buyers'] ?></span><span class="stat-lbl"><?= owBi('Buyers', 'المشترون') ?></span></div>
+    <div class="stat-card"><span class="stat-num"><?= (int) $overview['buyers'] ?></span><span class="stat-lbl"><?= owBi('Collectors', 'المقتنون') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['artworks'] ?></span><span class="stat-lbl"><?= owBi('Artworks (' . (int) $overview['in_gallery'] . ' in the Gallery)', 'الأعمال (' . (int) $overview['in_gallery'] . ' في المعرض)') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['inquiries'] ?></span><span class="stat-lbl"><?= owBi('Interest requests (' . (int) $overview['new_inq'] . ' new)', 'طلبات الاهتمام (' . (int) $overview['new_inq'] . ' جديد)') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= (int) $overview['week'] ?></span><span class="stat-lbl"><?= owBi('New sign-ups this week', 'تسجيلات هذا الأسبوع') ?></span></div>
@@ -672,7 +672,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   </div>
   <div class="adm-sub" data-group="g-people">
     <button class="sub-btn" data-tab="artists" onclick="showTab('artists')"><?= owBi('Artists', 'الفنانون') ?> <span class="pill count"><?= count($artists) ?></span></button>
-    <button class="sub-btn" data-tab="collectors" onclick="showTab('collectors')"><?= owBi('Buyers', 'المشترون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
+    <button class="sub-btn" data-tab="collectors" onclick="showTab('collectors')"><?= owBi('Collectors', 'المقتنون') ?> <span class="pill count"><?= count($collectors) ?></span></button>
   </div>
   <div class="adm-sub" data-group="g-art">
     <button class="sub-btn" data-tab="artworks" onclick="showTab('artworks')"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
@@ -828,7 +828,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <!-- ===== TAB: COLLECTORS ===== -->
   <div class="tab-panel" id="tab-collectors">
   <div class="card">
-    <div class="field adm-search"><label for="s-buyers"><?= owBi('Search buyers (name, email, phone, city)', 'ابحث عن مشترٍ (الاسم، البريد، الهاتف، المدينة)') ?></label>
+    <div class="field adm-search"><label for="s-buyers"><?= owBi('Search collectors (name, email, phone, city)', 'ابحث عن مقتنٍ (الاسم، البريد، الهاتف، المدينة)') ?></label>
       <input id="s-buyers" type="search" data-search="#tab-collectors tbody tr" autocomplete="off"></div>
     <?php if (!$collectors): ?>
       <div class="empty">No collector accounts yet.</div>
@@ -888,7 +888,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <div style="overflow-x:auto;">
       <table class="table">
         <thead>
-          <tr><th>Date</th><th>Artwork</th><th>Artist</th><th>Buyer</th><th>Phone</th><th>Email</th><th><?= owBi('Status & private note', 'الحالة وملاحظة خاصة') ?></th></tr>
+          <tr><th>Date</th><th>Artwork</th><th>Artist</th><th>Collector</th><th>Phone</th><th>Email</th><th><?= owBi('Status & private note', 'الحالة وملاحظة خاصة') ?></th></tr>
         </thead>
         <tbody>
         <?php foreach ($inquiries as $q): ?>
@@ -904,7 +904,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
               <?php endif; ?>
             </td>
             <td><?php if (!empty($q['artist_id'])): ?><a href="admin.php?person=<?= (int) $q['artist_id'] ?>"><?= e($q['artist_en']) ?></a><?php else: ?><?= e($q['artist_en']) ?><?php endif; ?></td>
-            <td><strong><?= e($q['buyer_name']) ?></strong><?php if (!empty($q['buyer_id'])): ?><div class="mini"><a href="admin.php?person=<?= (int) $q['buyer_id'] ?>"><?= owBi('Buyer account', 'حساب المشتري') ?></a></div><?php else: ?><div class="mini"><?= owBi('Guest', 'زائر') ?></div><?php endif; ?></td>
+            <td><strong><?= e($q['buyer_name']) ?></strong><?php if (!empty($q['buyer_id'])): ?><div class="mini"><a href="admin.php?person=<?= (int) $q['buyer_id'] ?>"><?= owBi('Collector account', 'حساب المقتني') ?></a></div><?php else: ?><div class="mini"><?= owBi('Guest', 'زائر') ?></div><?php endif; ?></td>
             <td dir="ltr"><a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $q['buyer_phone'])) ?>"><?= e($q['buyer_phone']) ?></a></td>
             <td><a href="mailto:<?= e($q['buyer_email']) ?>"><?= e($q['buyer_email']) ?></a></td>
             <td class="inq-edit"><?php if (isset($q['status'])): ?>
@@ -1229,7 +1229,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php else: ?>
               <details class="rej-box"><summary class="btn btn-dark btn-sm"><?= owBi('Mark as sold…', 'علّمه كمباع…') ?></summary>
                 <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.dir==='rtl'?'تعليم هذا العمل كمباع؟ سيخرج من المعرض.':'Mark this artwork as sold? It leaves the Gallery.');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>">
-                  <div class="field"><label for="bn-<?= (int) $w['id'] ?>"><?= owBi('Buyer’s name for the certificate (optional)', 'اسم المشتري للشهادة (اختياري)') ?></label><input id="bn-<?= (int) $w['id'] ?>" name="buyer_name" maxlength="200" autocomplete="off"></div>
+                  <div class="field"><label for="bn-<?= (int) $w['id'] ?>"><?= owBi('Collector’s name for the certificate (optional)', 'اسم المقتني للشهادة (اختياري)') ?></label><input id="bn-<?= (int) $w['id'] ?>" name="buyer_name" maxlength="200" autocomplete="off"></div>
                   <button class="btn btn-dark btn-sm" name="action" value="sell_art"><?= owBi('Mark as sold', 'علّمه كمباع') ?></button></form></details>
             <?php endif; ?>
             <?php if ($stw === 'approved'): ?>
@@ -1290,13 +1290,13 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
    nodes, so the whole panel translates without per-element markup. */
 const ADICT = {
   "Admin Dashboard":"لوحة الإدارة",
-  "Manage artists, buyers, artworks and requests.":"إدارة الفنانين والمشترين والأعمال والطلبات.",
+  "Manage artists, collectors, artworks and requests.":"إدارة الفنانين والمقتنين والأعمال والطلبات.",
   "Log out":"تسجيل الخروج",
   "Articles":"المقالات",
   "Photo check":"فحص الصور",
   "Email check":"فحص البريد",
   "Error log":"سجل الأخطاء",
-  "Inquiries":"طلبات الاهتمام","Artwork":"العمل الفني","Buyer":"المشتري",
+  "Inquiries":"طلبات الاهتمام","Artwork":"العمل الفني","Collector":"المقتني",
   "No inquiries yet. They appear here when a visitor presses \"I'm Interested\" in the Gallery.":"لا توجد طلبات بعد. تظهر هنا عندما يضغط زائر «أنا مهتم» في المعرض.",
   "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.","Too many attempts. Please wait 10 minutes.":"محاولات كثيرة جداً. يرجى الانتظار 10 دقائق.",
   "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"أساليب الرسم",

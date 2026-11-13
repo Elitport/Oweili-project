@@ -166,7 +166,7 @@ if (!headers_sent()) header('Cache-Control: no-store');
       <li><?= owBi('The artist confirms each work is their own, made by hand.', 'يؤكد الفنان أن كل عمل من إبداعه ومن صنع يده.') ?></li>
       <li><?= owBi('Our team reviews the work and its creation photos.', 'يراجع فريقنا العمل وصور مراحل إنجازه.') ?></li>
       <li><?= owBi('Once approved, Oweili issues a certificate with its own number.', 'بعد الموافقة تصدر أويلي شهادة برقم خاص بها.') ?></li>
-      <li><?= owBi('The buyer’s name is never shown here.', 'لا يظهر اسم المشتري هنا أبداً.') ?></li>
+      <li><?= owBi('The collector’s name is never shown here.', 'لا يظهر اسم المقتني هنا أبداً.') ?></li>
     </ul>
   </section>
 </main>

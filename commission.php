@@ -47,30 +47,30 @@ if ($c && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) { $flash = ['This page was open for a long time. Please try again.', 'كانت الصفحة مفتوحة لوقت طويل. يرجى المحاولة مرة أخرى.', true]; }
     elseif ($do === 'accept_quote' && $c['status'] === 'quoted') {
         if (!owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => ''], ['type' => 'guest', 'id' => null], '', [$c['status']])) { header('Location: ' . $selfLink); exit; };
-        owCommAlert($c, 'The buyer accepted the price: arrange the payment, then press Mark as paid', 'وافق المشتري على السعر: رتّب الدفع ثم اضغط «سجّل الدفع»');
-        owCommTellArtist($c, 'The buyer accepted your price · وافق المشتري على سعرك', 'Good news: the buyer accepted your price. Please wait for the payment: you will get an email the moment you can see the photos and start.', 'خبر جميل: وافق المشتري على سعرك. يرجى انتظار الدفع: ستصلك رسالة فور أن تستطيع رؤية الصور والبدء.');
+        owCommAlert($c, 'The collector accepted the price: arrange the payment, then press Mark as paid', 'وافق المقتني على السعر: رتّب الدفع ثم اضغط «سجّل الدفع»');
+        owCommTellArtist($c, 'The collector accepted your price · وافق المقتني على سعرك', 'Good news: the collector accepted your price. Please wait for the payment: you will get an email the moment you can see the photos and start.', 'خبر جميل: وافق المقتني على سعرك. يرجى انتظار الدفع: ستصلك رسالة فور أن تستطيع رؤية الصور والبدء.');
         header('Location: ' . $selfLink . '&done=quote'); exit;
     } elseif ($do === 'other_quote' && $c['status'] === 'quoted') {
         if (!owCommSetStatus((int) $c['id'], 'assigned', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'asked for another price', [$c['status']])) { header('Location: ' . $selfLink); exit; };
-        owCommAlert($c, 'The buyer asked for another price', 'طلب المشتري سعراً آخر');
-        owCommTellArtist($c, 'The buyer asks about the price · المشتري يسأل عن السعر', 'The buyer would like another price. Their note: ' . ($note ?: '—'), 'يرغب المشتري في سعر آخر. ملاحظته: ' . ($note ?: '—'));
+        owCommAlert($c, 'The collector asked for another price', 'طلب المقتني سعراً آخر');
+        owCommTellArtist($c, 'The collector asks about the price · المقتني يسأل عن السعر', 'The collector would like another price. Their note: ' . ($note ?: '—'), 'يرغب المقتني في سعر آخر. ملاحظته: ' . ($note ?: '—'));
         header('Location: ' . $selfLink . '&done=asked'); exit;
     } elseif ($do === 'approve_draft' && $c['status'] === 'draft_sent') {
         if (!owCommSetStatus((int) $c['id'], 'draft_approved', ['buyer_note' => ''], ['type' => 'guest', 'id' => null], '', [$c['status']])) { header('Location: ' . $selfLink); exit; };
-        owCommAlert($c, 'The buyer approved the draft', 'وافق المشتري على المسودة');
-        owCommTellArtist($c, 'The draft is approved · تمت الموافقة على المسودة', 'The buyer approved your draft. Please finish the piece and send the final photo.', 'وافق المشتري على مسودتك. يرجى إنهاء العمل وإرسال الصورة النهائية.');
+        owCommAlert($c, 'The collector approved the draft', 'وافق المقتني على المسودة');
+        owCommTellArtist($c, 'The draft is approved · تمت الموافقة على المسودة', 'The collector approved your draft. Please finish the piece and send the final photo.', 'وافق المقتني على مسودتك. يرجى إنهاء العمل وإرسال الصورة النهائية.');
         header('Location: ' . $selfLink . '&done=draft'); exit;
     } elseif ($do === 'change_draft' && $c['status'] === 'draft_sent') {
         if (mb_strlen($note) < 3) { $flash = ['Please tell the artist what to change.', 'يرجى إخبار الفنان بما يجب تغييره.', true]; }
         else {
             if (!owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'changes asked', [$c['status']])) { header('Location: ' . $selfLink); exit; };
-            owCommAlert($c, 'The buyer asked for changes to the draft', 'طلب المشتري تعديلات على المسودة');
-            owCommTellArtist($c, 'Changes asked for the draft · تعديلات مطلوبة على المسودة', 'The buyer asks for changes: ' . $note, 'يطلب المشتري تعديلات: ' . $note);
+            owCommAlert($c, 'The collector asked for changes to the draft', 'طلب المقتني تعديلات على المسودة');
+            owCommTellArtist($c, 'Changes asked for the draft · تعديلات مطلوبة على المسودة', 'The collector asks for changes: ' . $note, 'يطلب المقتني تعديلات: ' . $note);
             header('Location: ' . $selfLink . '&done=asked'); exit;
         }
     } elseif ($do === 'received' && $c['status'] === 'final_sent') {
         if (!owCommSetStatus((int) $c['id'], 'delivered', ['delivered_at' => date('Y-m-d H:i:s')], ['type' => 'guest', 'id' => null], 'buyer confirmed receipt', [$c['status']])) { header('Location: ' . $selfLink); exit; };
-        owCommAlert($c, 'The buyer received the commission', 'استلم المشتري العمل الخاص');
+        owCommAlert($c, 'The collector received the commission', 'استلم المقتني العمل الخاص');
         header('Location: ' . $selfLink . '&done=received'); exit;
     }
     $c = owCommById((int) $c['id']);
