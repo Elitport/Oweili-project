@@ -72,6 +72,10 @@ function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''
     $h .= '<a class="btn btn-dark btn-sm" href="' . e($maps) . '" target="_blank" rel="noopener" aria-label="' . e('Google Maps: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' . owBi('Google Maps', 'خرائط Google') . '</a>';
     return $h . '</div>';
 }
+/* "Is this your place?" under each card (owner, 13 Nov 2026) */
+function owMapClaimLink(string $q): string {
+    return '<a class="m-claim" href="place_claim.php?' . e($q) . '">' . owBi('Is this your place? Send us your photo and details', 'هل هذا مكانك؟ أرسل لنا صورتك وبياناتك') . '</a>';
+}
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 $n = count($institutes) + count($places);
 /* the All tab: museums and galleries first, then the institutes (the older list, then the newer places) */
@@ -115,6 +119,7 @@ $placeCard = function (array $p) use ($PIN): string {
     if (($tel = owTelHref((string) $p['phone'])) !== '') $info .= '<li><span class="m-lbl">' . owBi('Phone', 'الهاتف') . '</span> <a href="' . e($tel) . '" dir="ltr">' . e((string) $p['phone']) . '</a></li>';
     if ($info !== '') $h .= '<ul class="m-info">' . $info . '</ul>';
     $h .= owMapActs(owMapUrl((string) $p['website']), owMapsLink($nEn, $cEn, (string) $p['maps_url']), $nEn, owInstaUrl((string) $p['instagram']));
+    $h .= owMapClaimLink('p=' . (int) $p['id']);
     return $h . '</article>';
 };
 ?>
@@ -182,6 +187,8 @@ html.dark-mode .m-band{background:linear-gradient(120deg,hsl(var(--rh) 28% 22%),
 .m-band.r-qassim{--rh:265;--rs:22%;}.m-band.r-hail{--rh:150;--rs:20%;}.m-band.r-tabuk{--rh:330;--rs:32%;}.m-band.r-jouf{--rh:45;--rs:24%;}
 .m-band.r-northern{--rh:195;--rs:34%;}.m-band.r-asir{--rh:15;--rs:52%;}.m-band.r-jazan{--rh:175;--rs:28%;}.m-band.r-najran{--rh:5;--rs:30%;}
 .m-band.r-baha{--rh:95;--rs:18%;}.m-band.r-none{--rh:210;--rs:12%;}
+.m-claim{align-self:flex-start;font-size:var(--fs-caption);color:var(--color-body);text-decoration:underline;text-underline-offset:3px;padding:4px 0;}
+.m-claim:hover{color:var(--color-dark);}
 .m-info{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-caption);color:var(--color-body);}
 .m-info a{color:var(--color-dark);}
 .m-lbl{font-weight:700;color:var(--color-dark);}
@@ -381,6 +388,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           <?php if ($dEn !== ''): ?><p class="i-desc"><?= owBi($dEn, $dAr) ?></p><?php endif; ?>
           <?php if ((int) $i['course_count'] > 0): /* only when there is an active course (owner, 12 Nov 2026) */ ?><span class="i-count"><?= owBi($nEn, $nAr) ?></span><?php endif; ?>
           <?= owMapActs(owMapUrl((string) $i['website_url']), owMapsLink((string) $nameEn, (string) $cEn), (string) $nameEn) ?>
+          <?= owMapClaimLink('i=' . $iid) ?>
 
           <details class="i-courses">
             <summary class="btn btn-dark">

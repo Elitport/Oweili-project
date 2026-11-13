@@ -24,6 +24,40 @@ $keep = function (): string {   // the list filters, kept after an action
     return $f ? '&' . http_build_query($f) : '';
 };
 
+/* "Is this your place?" photo, for the admin only (it waits in the private folder until approved) */
+if (isset($_GET['claimphoto']) && owClaimsReady()) {
+    $st = $db->prepare('SELECT photo_file FROM art_place_claims WHERE id = :id'); $st->execute([':id' => (int) $_GET['claimphoto']]);
+    $f = owClaimPhotoPath((string) $st->fetchColumn());
+    if ($f === '' || !is_file($f)) { http_response_code(404); exit; }
+    header('Content-Type: image/jpeg'); header('Cache-Control: private, no-store'); header('X-Robots-Tag: noindex');
+    readfile($f); exit;
+}
+/* approve or reject one "Is this your place?" message (owner, 13 Nov 2026) */
+if (owClaimsReady() && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array($_POST['do'] ?? '', ['claim_ok', 'claim_no'], true)) {
+    $cid = (int) ($_POST['claim'] ?? 0);
+    $st = $db->prepare("SELECT * FROM art_place_claims WHERE id = :id AND status = 'new'"); $st->execute([':id' => $cid]); $cl = $st->fetch();
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { header('Location: admin_art_map.php?ok=expired#claims'); exit; }
+    if ($cl) {
+        $ok = $_POST['do'] === 'claim_ok';
+        $usePhoto = $ok && $cl['place_kind'] === 'place' && !empty($_POST['use_photo']);
+        $f = owClaimPhotoPath((string) $cl['photo_file']);
+        if ($usePhoto && $f !== '' && is_file($f) && ($img = @imagecreatefromjpeg($f))) {
+            $r = owPlaceWriteImage($img, (int) $cl['place_id']);
+            if ($r['ok']) {
+                $old = $db->prepare('SELECT photo_path FROM art_places WHERE id = :id'); $old->execute([':id' => (int) $cl['place_id']]); $oldPath = (string) $old->fetchColumn();
+                $db->prepare("UPDATE art_places SET photo_path = :b, photo_credit = :c, photo_page = '', photo_license = '' WHERE id = :id")
+                   ->execute([':b' => $r['base'], ':c' => (string) ($cl['photo_credit'] !== '' ? $cl['photo_credit'] : $cl['place_name']), ':id' => (int) $cl['place_id']]);
+                owPlaceDropUpload($oldPath);
+            }
+        }
+        $db->prepare('UPDATE art_place_claims SET status = :s, decided_at = NOW() WHERE id = :id')->execute([':s' => $ok ? 'approved' : 'rejected', ':id' => $cid]);
+        if ($f !== '' && is_file($f)) @unlink($f);   // the waiting photo is not kept after the decision
+        owLog($ok ? 'place_claim_approve' : 'place_claim_reject', 'art_place_claim', $cid, (string) $cl['place_name'], $actor);
+        header('Location: admin_art_map.php?ok=' . ($ok ? ($usePhoto ? 'claim_photo' : 'claim_ok') : 'claim_no') . '#claims'); exit;
+    }
+    header('Location: admin_art_map.php#claims'); exit;
+}
+
 if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $id = (int) ($_POST['id'] ?? 0);
     $do = (string) ($_POST['do'] ?? '');
@@ -144,10 +178,37 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
   <h1><?= owBi('Art Map: museums, galleries and institutes', 'خريطة الفن: المتاحف والمعارض والمعاهد') ?></h1>
   <p class="mini"><?= owBi('Every place starts as a draft. Visitors see it only after you press Publish. Sources and confidence are shown only here, never to visitors. The older institutes (with courses) are in their own tool:', 'كل مكان يبدأ مسودة، ولا يراه الزوار إلا بعد أن تضغط «انشر». المصادر ودرجة الثقة تظهر هنا فقط، ولا يراها الزوار أبداً. المعاهد القديمة (مع الدورات) في أداتها الخاصة:') ?> <a href="admin_institutes.php"><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></a></p>
   <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The Art Map table is not set up yet (art_places.sql).', 'جدول خريطة الفن غير مُعدّ بعد (art_places.sql).') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['photo' => owBi('Photo saved.', 'تم حفظ الصورة.'), 'publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهراً في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهراً للزوار.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['claim_photo' => owBi('Approved. The photo is on the Art Map now.', 'تمت الموافقة. الصورة ظاهرة في وجهات الفن الآن.'), 'claim_ok' => owBi('Approved. Apply any corrections with Edit below.', 'تمت الموافقة. طبّق التصحيحات عبر «تعديل» أدناه.'), 'claim_no' => owBi('Rejected. Nothing was shown.', 'تم الرفض. لم يظهر شيء.'), 'expired' => owBi('The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'), 'photo' => owBi('Photo saved.', 'تم حفظ الصورة.'), 'publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهراً في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهراً للزوار.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
   <?php if ($ready): ?>
   <p><span class="pillx warn"><?= owBi($count['draft'] . ' waiting for you', $count['draft'] . ' بانتظارك') ?></span> <span class="cf low"><?= owBi($count['low'] . ' with low confidence', $count['low'] . ' بثقة منخفضة') ?></span> <span class="mini"><?= owBi($count['all'] . ' places in all', 'المجموع ' . $count['all']) ?></span></p>
+
+  <?php $claims = [];
+  if (owClaimsReady()) { try { $claims = $db->query("SELECT * FROM art_place_claims WHERE status = 'new' ORDER BY id")->fetchAll(); } catch (Throwable $e) { $claims = []; } } ?>
+  <div id="claims">
+  <?php if ($claims): ?>
+  <h2 style="font-size:20px;margin:var(--space-md) 0 var(--space-xs)"><?= owBi('"Is this your place?" messages', 'رسائل «هل هذا مكانك؟»') ?> <span class="pillx warn"><?= count($claims) ?></span></h2>
+  <p class="mini"><?= owBi('Sent by places from the Art Map. Nothing shows to visitors until you approve. Approve can put their photo on the place; apply text corrections yourself with Edit.', 'أرسلتها الأماكن من وجهات الفن. لا يظهر شيء للزوار حتى توافق. يمكن للموافقة وضع صورتهم على المكان؛ أما التصحيحات النصية فطبّقها بنفسك عبر «تعديل».') ?></p>
+  <?php foreach ($claims as $cl): $hasPh = owClaimPhotoPath((string) $cl['photo_file']) !== '' && is_file(owClaimPhotoPath((string) $cl['photo_file'])); ?>
+  <div class="card">
+    <div class="pl">
+      <?php if ($hasPh): ?><a href="admin_art_map.php?claimphoto=<?= (int) $cl['id'] ?>" target="_blank" rel="noopener"><img src="admin_art_map.php?claimphoto=<?= (int) $cl['id'] ?>" alt="<?= e('Photo sent for ' . $cl['place_name']) ?>"></a><?php else: ?><span class="noimg"><?= owBi('No photo sent', 'لم تُرسل صورة') ?></span><?php endif; ?>
+      <div>
+        <h3 style="font-size:17px;margin:0"><?= e($cl['place_name']) ?> <span class="mini">· <?= $cl['place_kind'] === 'place' ? '<a href="#p' . (int) $cl['place_id'] . '">' . owBi('see the place', 'شاهد المكان') . '</a>' : owBi('older institutes list (Institutes and courses tool)', 'قائمة المعاهد القديمة (أداة المعاهد والدورات)') ?></span></h3>
+        <div class="pl-links"><span><?= e($cl['name']) ?></span><a href="mailto:<?= e($cl['email']) ?>"><?= e($cl['email']) ?></a><?php if ($cl['phone'] !== ''): ?><a dir="ltr" href="<?= e(owTelHref((string) $cl['phone'])) ?>"><?= e($cl['phone']) ?></a><?php endif; ?><span><?= e((string) $cl['created_at']) ?></span></div>
+        <?php if ($hasPh && $cl['photo_credit'] !== ''): ?><p class="mini" style="margin:0"><?= owBi('Photo credit: ', 'مصدر الصورة: ') ?><?= e($cl['photo_credit']) ?></p><?php endif; ?>
+        <?php if (trim((string) $cl['message']) !== ''): ?><p style="white-space:pre-line;margin:6px 0"><?= e((string) $cl['message']) ?></p><?php endif; ?>
+        <form method="post" action="admin_art_map.php" class="acts" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><?= csrfField() ?><input type="hidden" name="claim" value="<?= (int) $cl['id'] ?>">
+          <?php if ($hasPh && $cl['place_kind'] === 'place'): ?><label class="mini" style="display:flex;gap:6px;align-items:center"><input type="checkbox" name="use_photo" value="1" checked> <?= owBi('Use their photo on the place', 'استخدم صورتهم على المكان') ?></label><?php endif; ?>
+          <button class="btn btn-accent btn-sm" name="do" value="claim_ok"><?= owBi('Approve', 'وافق') ?></button>
+          <button class="btn btn-danger btn-sm" name="do" value="claim_no" onclick="return confirm(document.documentElement.dir==='rtl'?'رفض هذه الرسالة؟':'Reject this message?')"><?= owBi('Reject', 'ارفض') ?></button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <?php endforeach; ?>
+  <?php endif; ?>
+  </div>
 
   <form class="card flt" method="get" action="admin_art_map.php">
     <div class="field"><label for="fk"><?= owBi('Type', 'النوع') ?></label><select id="fk" name="k"><?= $opt(OW_MAP_KINDS, $fk, 2, 'All · الكل') ?></select></div>

@@ -393,8 +393,9 @@ if ($isAdmin && owHasTable('articles')) {
 }
 /* Art Map museums and galleries saved as drafts, waiting for the owner to publish (owner, 12 Nov 2026) */
 $mapDrafts = 0;
-if ($isAdmin) { require_once __DIR__ . '/artmap_lib.php'; $mapDrafts = owArtPlacesDrafts(); }
-$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts;
+$mapClaims = 0;   // "Is this your place?" messages from the Art Map (owner, 13 Nov 2026)
+if ($isAdmin) { require_once __DIR__ . '/artmap_lib.php'; $mapDrafts = owArtPlacesDrafts(); $mapClaims = owClaimsWaiting(); }
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts + $mapClaims;
 $SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
 /* one value, as the admin should read it */
 $showVal = function (string $field, $v) use ($SALE_WORDS): string {
@@ -942,6 +943,15 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       </div>
       <?php endforeach; ?>
     </div>
+    <?php endif; ?>
+
+    <?php if ($mapClaims): ?>
+    <h3 class="wc-h"><?= owBi('Art Map: "Is this your place?" messages', 'وجهات الفن: رسائل «هل هذا مكانك؟»') ?> <span class="pill count"><?= (int) $mapClaims ?></span></h3>
+    <p class="mini"><?= owBi('Photos and corrections sent by museums, galleries and institutes. Nothing shows until you approve.', 'صور وتصحيحات أرسلتها المتاحف والمعارض والمعاهد. لا يظهر شيء حتى توافق.') ?></p>
+    <div class="wc-list"><div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+      <div><strong><?= owBi($mapClaims . ' waiting', $mapClaims . ' بانتظارك') ?></strong></div>
+      <a class="btn btn-accent btn-sm" href="admin_art_map.php#claims"><?= owBi('Review them', 'راجعها') ?></a>
+    </div></div>
     <?php endif; ?>
 
     <?php if ($mapDrafts): ?>
