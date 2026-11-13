@@ -885,7 +885,7 @@
 - Tables: none
 
 ## Shared Files
-- .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, hidden folders (.claude/, .agents/, .git/, .backups/, .logs/), log and backup files (.log, .bak, .old, .gz, .zip and similar) and the old resha-app/ and supabase/ folders. Visitors get 403 Forbidden. Keep it when changing hosting settings
+- .htaccess — blocks public access to private files: CLAUDE.md and all .md files, all .sql files, skills-lock.json, hidden folders (.claude/, .agents/, .git/, .backups/, .logs/), log and backup files (.log, .bak, .old, .gz, .zip and similar) and the old resha-app/ and supabase/ folders. Visitors get 403 Forbidden. Nothing inside uploads/ can run as a script (13 Nov 2026, owner): any uploads/ address whose name carries a script ending (.php, .phtml, .phar, .cgi, .py, .sh, .asp, .jsp and similar, also hidden inside a name like x.php.jpg) answers 403; photos, videos and PDFs there open as before (checked live). Keep it when changing hosting settings
 - assets/css/oweili.css — the design system (see Features). Applies to every page; pages keep only their own layout in their <style> blocks
 - assets/css/nav.css — styles for the shared menu. nav.php links it itself, so no page copies menu styles any more
 - oweili.css also loads the brand fonts (DM Sans + Tajawal from Google Fonts) and sets --font-en, --font-ar and --font-sans. --font-sans draws English letters in DM Sans and Arabic letters in Tajawal automatically. Every page uses it, including form fields and buttons; the welcome email in verify.php names the fonts directly because email apps cannot read CSS variables
