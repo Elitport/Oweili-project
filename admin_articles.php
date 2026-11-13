@@ -10,6 +10,14 @@
 require_once 'config.php';
 require_once __DIR__ . '/article_lib.php';
 require_once __DIR__ . '/approval_lib.php';   // a sub-admin's "publish" waits for the admin
+/* An article title for the admin: the page's language big, the other language small under it (owner, 13 Nov 2026) */
+if (!function_exists('owTitleStack')) {
+function owTitleStack(string $en, string $ar): string {
+    $en = $en !== '' ? $en : $ar; $ar = $ar !== '' ? $ar : $en;
+    return '<span class="bi-en" lang="en"><span class="ttl-big">' . e($en) . '</span><span class="ttl-sub" lang="ar" dir="rtl">' . e($ar) . '</span></span>'
+         . '<span class="bi-ar" lang="ar"><span class="ttl-big">' . e($ar) . '</span><span class="ttl-sub" lang="en" dir="ltr">' . e($en) . '</span></span>';
+}
+}
 
 $TYPES   = owArticleTypes();
 $METHODS = owConsentMethods();
@@ -383,6 +391,7 @@ $v = fn(string $k) => e((string) ($form[$k] ?? ''));
 .row:nth-of-type(even){background:rgba(var(--rgb-ink),0.02);}
 .row:first-of-type{border-top:0;}
 .row-title{font-size:var(--fs-body);font-weight:700;color:var(--color-dark);}
+.ttl-big{display:block;}.ttl-sub{display:block;font-size:var(--fs-caption);font-weight:400;color:var(--color-body);}
 .row-meta{display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;font-size:var(--fs-label);color:var(--color-body);margin-top:4px;}
 .pill.pub{background:rgba(var(--rgb-accent),0.1);color:var(--color-accent-dark);}
 .pill.draft{background:rgba(var(--rgb-ink),0.07);color:var(--color-dark);}
@@ -468,7 +477,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
       <?php foreach ($list as $r): [$dEn, $dAr] = owDateBi($r['created_at']); ?>
         <div class="row">
           <div>
-            <div class="row-title"><?= owBi($r['title_en'], $r['title_ar']) ?></div>
+            <div class="row-title"><?= owTitleStack((string) $r['title_en'], (string) $r['title_ar']) ?></div>
             <div class="row-meta">
               <?= $r['status'] === 'published' ? '<span class="pill pub">' . owBi('Published', 'منشور') . '</span>' : '<span class="pill draft">' . owBi('Draft', 'مسودة') . '</span>' ?>
               <?php if ($r['status'] !== 'published' && owPendingChange('article', (int) $r['id'])): ?><span class="pill draft"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></span><?php endif; ?>

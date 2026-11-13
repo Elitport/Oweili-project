@@ -1,6 +1,14 @@
 <?php
 require_once 'config.php';
 require_once __DIR__ . '/artwork_lib.php';
+/* An article title for the admin: the page's language big, the other language small under it (owner, 13 Nov 2026) */
+if (!function_exists('owTitleStack')) {
+function owTitleStack(string $en, string $ar): string {
+    $en = $en !== '' ? $en : $ar; $ar = $ar !== '' ? $ar : $en;
+    return '<span class="bi-en" lang="en"><span class="ttl-big">' . e($en) . '</span><span class="ttl-sub" lang="ar" dir="rtl">' . e($ar) . '</span></span>'
+         . '<span class="bi-ar" lang="ar"><span class="ttl-big">' . e($ar) . '</span><span class="ttl-sub" lang="en" dir="ltr">' . e($en) . '</span></span>';
+}
+}
 require_once __DIR__ . '/mail_lib.php';
 require_once __DIR__ . '/inquiry_lib.php';
 require_once __DIR__ . '/admin_lib.php';
@@ -503,6 +511,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 .pill.role-collector,.pill.role-admin{background:rgba(var(--rgb-accent),0.1);color:var(--color-accent-dark);}
 .acts{display:flex;gap:var(--space-xs);flex-wrap:wrap;}
 .name-ar{font-size:var(--fs-caption);color:var(--color-body);}
+.ttl-big{display:block;}.ttl-sub{display:block;font-size:var(--fs-caption);font-weight:400;color:var(--color-body);}
 .empty{padding:var(--space-lg);text-align:center;color:var(--color-body);}
 .sec-head{margin-bottom:var(--space-sm);}
 .sec-head h2{font-size:var(--fs-subtitle);display:flex;align-items:center;gap:var(--space-xs);margin:0;}
@@ -934,7 +943,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="wc-list">
       <?php foreach ($teamDrafts as $td): $tt = $ATYPE[$td['type']] ?? [$td['type'], $td['type']]; ?>
       <div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
-        <div><strong><?= e((string) $td['title_en']) ?></strong><div class="name-ar" dir="rtl"><?= e((string) $td['title_ar']) ?></div><div class="mini"><?= owBi($tt[0], $tt[1]) ?> · <?= owBi('Draft', 'مسودة') ?></div></div>
+        <div><strong><?= owTitleStack((string) $td['title_en'], (string) $td['title_ar']) ?></strong><div class="mini"><?= owBi($tt[0], $tt[1]) ?> · <?= owBi('Draft', 'مسودة') ?></div></div>
         <div class="acts" style="display:flex;flex-wrap:wrap;gap:6px">
           <a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode((string) $td['slug'])) ?>&amp;preview=1" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a>
           <a class="btn btn-secondary btn-sm" href="admin_articles.php?edit=<?= (int) $td['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a>
@@ -995,7 +1004,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
         <div class="wc-item">
           <div class="wc-top">
             <div><span class="pill off"><?= owBi($kind[0], $kind[1]) ?></span>
-              <strong><?php if ($wt === 'artwork'): ?><?= owBi((string) ($cur['title_en'] ?? '—'), (string) (($cur['title_ar'] ?? '') ?: ($cur['title_en'] ?? '—'))) ?><?php elseif ($wt === 'article'): ?><?= owBi((string) ($cur['title_en'] ?? '—'), (string) (($cur['title_ar'] ?? '') ?: ($cur['title_en'] ?? '—'))) ?><?php else: ?><?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?><?php endif; ?></strong>
+              <strong><?php if ($wt === 'artwork'): ?><?= owBi((string) ($cur['title_en'] ?? '—'), (string) (($cur['title_ar'] ?? '') ?: ($cur['title_en'] ?? '—'))) ?><?php elseif ($wt === 'article'): ?><?= owTitleStack((string) ($cur['title_en'] ?? '—'), (string) ($cur['title_ar'] ?? '')) ?><?php else: ?><?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?><?php endif; ?></strong>
               <div class="mini"><?= owBi('By', 'من') ?> <?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?> · <?php [$ce, $ca] = owDateBi($wc['created_at'], true); ?><?= owBi($ce, $ca) ?></div></div>
             <?php if ($wt === 'artwork'): ?><a class="btn btn-ghost btn-sm" href="artwork.php?id=<?= (int) $wc['target_id'] ?>" target="_blank" rel="noopener"><?= owBi('See it live', 'شاهده') ?></a>
             <?php elseif ($wt === 'profile'): ?><a class="btn btn-ghost btn-sm" href="admin.php?person=<?= (int) $wc['target_id'] ?>"><?= owBi('View', 'عرض') ?></a>
