@@ -396,6 +396,13 @@ function owBi(string $en, string $ar, string $tag = 'span'): string {
     return '<' . $tag . ' class="bi-en" lang="en">' . e($en) . '</' . $tag . '><' . $tag . ' class="bi-ar" lang="ar">' . e($ar) . '</' . $tag . '>';
 }
 
+/* An artist's public name in English and Arabic, each kept whole with <bdi>, so a Latin name such as "Sara A."
+   reads correctly on an Arabic page (owner, 14 Nov 2026). $preEn / $preAr: a word before it, e.g. "by" / "بواسطة". */
+function owBiName(string $en, string $ar, string $preEn = '', string $preAr = ''): string {
+    return '<span class="bi-en" lang="en">' . ($preEn !== '' ? e($preEn) . ' ' : '') . '<bdi>' . e($en) . '</bdi></span>'
+         . '<span class="bi-ar" lang="ar">' . ($preAr !== '' ? e($preAr) . ' ' : '') . '<bdi>' . e($ar) . '</bdi></span>';
+}
+
 /* A date (and optional time) in English and Arabic. */
 function owDateBi(?string $when, bool $withTime = false): array {
     if (!$when || !($ts = strtotime($when))) return ['Date unknown', 'التاريخ غير معروف'];

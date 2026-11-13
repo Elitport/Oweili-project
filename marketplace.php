@@ -752,7 +752,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
         </div>
         <div class="aw-body">
           <h2 class="aw-title"><?= e($ar ? $tAr : ($tEn ?: $tAr)) ?></h2>
-          <a class="aw-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>&amp;lang=<?= $lang ?>"><?= $ar ? 'بواسطة' : 'by' ?> <?= e($ar ? $aw['artist_ar'] : $aw['artist_en']) ?><?php if ((int) ($aw['verified'] ?? 0) === 1): ?> <?= owVerifiedBadge(true) ?><?php endif; ?></a>
+          <a class="aw-artist" href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>&amp;lang=<?= $lang ?>"><?= $ar ? 'بواسطة' : 'by' ?> <bdi><?= e($ar ? $aw['artist_ar'] : $aw['artist_en']) ?></bdi><?php if ((int) ($aw['verified'] ?? 0) === 1): ?> <?= owVerifiedBadge(true) ?><?php endif; ?></a>
           <div class="mp-meta">
             <?php if ($tlbl): ?><span class="type-pill"><?= e($ar ? $tlbl['ar'] : $tlbl['en']) ?></span><?php endif; ?>
             <?php if (owHasJourney($mpStages[$id] ?? [])): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
@@ -866,7 +866,8 @@ function openModal(id){
   /* one language per page: the page language, or the other one when the artist left it empty */
   document.getElementById('m-title').textContent = LANG==='ar' ? (a.title_ar || a.title_en) : (a.title_en || a.title_ar);
   const artist = document.getElementById('m-artist');
-  artist.textContent = (LANG==='ar' ? 'بواسطة ' : 'by ') + (LANG==='ar' ? a.artist_ar : a.artist_en);
+  artist.textContent = (LANG==='ar' ? 'بواسطة ' : 'by ');
+  const artistName = document.createElement('bdi'); artistName.textContent = LANG==='ar' ? a.artist_ar : a.artist_en; artist.appendChild(artistName);
   artist.href = 'artist_dashboard.php?id=' + a.artist_id + '&lang=' + LANG;
   document.getElementById('m-vf').hidden = !a.verified;
   const desc = esc(LANG==='ar' ? (a.desc_ar || a.desc_en) : (a.desc_en || a.desc_ar)).trim();

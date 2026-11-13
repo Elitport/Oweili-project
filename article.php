@@ -135,7 +135,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
       <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a>
       <h1><?= owBi($a['title_en'], $a['title_ar']) ?></h1>
       <?php if ($preview && $a['status'] !== 'published'): ?><p class="alert alert-error" role="status"><?= owBi('Preview for the team: visitors cannot see this article yet.', 'معاينة للفريق: لا يرى الزوار هذا المقال بعد.') ?></p><?php endif; ?>
-      <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <a href="artist_dashboard.php?id=<?= (int) $byArtist['id'] ?>"><?= owBi((string) $byArtist['artist_en'], (string) $byArtist['artist_ar']) ?></a><?php endif; ?></p>
+      <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <a href="artist_dashboard.php?id=<?= (int) $byArtist['id'] ?>"><?= owBiName((string) $byArtist['artist_en'], (string) $byArtist['artist_ar']) ?></a><?php endif; ?></p>
 
       <?php if ($type === 'event'): [$dEn, $dAr] = owDateRangeBi($a['event_start_date'], $a['event_end_date']); ?>
         <div class="event-box">

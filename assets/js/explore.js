@@ -133,7 +133,7 @@
       inner = '<a class="live-card" href="' + esc(href) + '"><span class="live-img"><img src="' + esc(img) + '" alt="' + esc(a.title_en + ' · ' + a.title_ar) + '" loading="lazy" data-fb="' + esc(String(a.image_fb || '').split('|').filter(safeImg).join('|')) + '" onerror="var l=(this.dataset.fb||\'\').split(\'|\').filter(Boolean);if(l.length){this.dataset.fb=l.slice(1).join(\'|\');this.src=l[0];}else{this.onerror=null;this.style.visibility=\'hidden\';}"></span>' +
         '<span class="live-txt"><span class="live-kick">' + bi('Newest in our Gallery', 'الأحدث في معرضنا') + '</span>' +
         '<span class="live-title">' + bi(a.title_en, a.title_ar) + '</span>' +
-        '<span class="live-by">' + bi('by ' + a.artist_en, 'بواسطة ' + a.artist_ar) + '</span></span></a>';
+        '<span class="live-by"><span class="bi-en" lang="en">by <bdi>' + esc(a.artist_en) + '</bdi></span><span class="bi-ar" lang="ar">بواسطة <bdi>' + esc(a.artist_ar) + '</bdi></span></span></span></a>';
     } else {
       inner = '<div class="live-card live-empty"><span class="live-img">' + cover(s, true) + '</span>' +
         '<span class="live-txt"><span class="live-title">' + bi('No ' + en.name + ' work in our Gallery yet.', 'لا يوجد عمل من ' + ar.name + ' في معرضنا بعد.') + '</span>' +

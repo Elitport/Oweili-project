@@ -218,6 +218,10 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
 @media(max-width:1024px){.art-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:768px){.profile-head{flex-direction:column;text-align:center;padding:var(--space-md);}.head-actions{align-items:center;}[dir="rtl"] .head-actions{align-items:center;}.stats-row{justify-content:center;}.art-grid{gap:var(--space-sm);}}
 @media(max-width:480px){.art-grid{grid-template-columns:1fr;}.draft .art-actions{width:100%;}}
+.self-note{margin:0 0 var(--space-sm);padding:12px 18px;border-radius:var(--radius-card);border:1px solid var(--studio-glass-edge);background:var(--studio-glass);
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);color:var(--color-dark);font-size:15px;line-height:1.5;}
+.self-note a{color:var(--color-dark);font-weight:700;text-decoration:underline;}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.self-note{background:var(--color-surface);}}
 </style>
 <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
 </head>
@@ -234,7 +238,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
   <div class="card empty-state">Artist not found.</div>
 <?php else: ?>
 
-  <?php if ($isSelf): ?><div class="alert alert-ok" role="status" style="margin-bottom:var(--space-sm)"><?= owBi('This is your public page, as visitors see it.', 'هذه صفحتك العامة كما يراها الزوار.') ?> <a href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div><?php endif; ?>
+  <?php if ($isSelf): /* on a frosted card, easy to read over the photo (owner, 14 Nov 2026) */ ?><div class="self-note" role="status"><?= owBi('This is your public page, as visitors see it.', 'هذه صفحتك العامة كما يراها الزوار.') ?> <a href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div><?php endif; ?>
   <!-- SECTION 1: PROFILE HEADER -->
   <p class="section-title" id="t-profile-title">Artist Profile</p>
   <div class="card profile-head">
@@ -245,7 +249,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
     <?php endif; ?>
 
     <div class="profile-info">
-      <h1><?= owBi((string) $artist['artist_en'], (string) ($artist['artist_ar'] ?: $artist['artist_en'])) /* the page language only (owner, 11 Nov 2026) */ ?></h1>
+      <h1><?= owBiName((string) $artist['artist_en'], (string) ($artist['artist_ar'] ?: $artist['artist_en'])) /* the page language only (owner, 11 Nov 2026) */ ?></h1>
       <?php if ((int) ($artist['is_verified_artist'] ?? 0) === 1): require_once __DIR__ . '/gallery_lib.php'; ?><div class="p-verified"><?= owVerifiedBadge() ?></div><?php endif; ?>
       <?php if (!empty($artist['city']) || !empty($artist['country'])): ?>
         <div class="city">📍 <?= e(implode(', ', array_filter([(string) ($artist['city'] ?? ''), (string) ($artist['country'] ?? '')]))) ?></div>

@@ -98,7 +98,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
   </div>
   <div class="aw-info card">
     <h1><?= owBi($tEn, $tAr) ?></h1>
-    <p class="by"><a href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>"><?= owBi('by ' . $aw['artist_en'], 'بواسطة ' . $aw['artist_ar']) ?></a><?php if ((int) ($aw['artist_verified'] ?? 0) === 1): ?> <?= owVerifiedBadge() ?><?php endif; ?></p>
+    <p class="by"><a href="artist_dashboard.php?id=<?= (int) $aw['artist_id'] ?>"><?= owBiName($aw['artist_en'], $aw['artist_ar'], 'by', 'بواسطة') ?></a><?php if ((int) ($aw['artist_verified'] ?? 0) === 1): ?> <?= owVerifiedBadge() ?><?php endif; ?></p>
     <div class="row">
       <?php if ($type): ?><span class="type-pill"><?= owBi($type['en'], $type['ar']) ?></span><?php endif; ?>
       <?php if (owHasJourney($stages)): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
