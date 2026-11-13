@@ -184,6 +184,7 @@ $placeCard = function (array $p) use ($PIN): string {
 .m-photo img{display:block;width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;}
 .m-photo figcaption{font-size:12px;line-height:1.4;color:var(--color-body);padding:6px var(--space-md) 0;}
 .m-photo figcaption a{color:inherit;}
+.m-grp .m-photo figcaption{min-height:calc(6px + 2.8em);}   /* one- and two-line credits keep the names in a row level (owner, 14 Nov 2026) */
 /* places without a real photo: a compact band in a soft tint of their region (13 tints, one per region; owner, 13 Nov 2026) */
 .m-band{--rh:350;--rs:45%;display:flex;align-items:center;gap:10px;min-height:56px;margin:calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) 0;padding:10px var(--space-md);
   border-radius:var(--radius-card) var(--radius-card) 0 0;background:linear-gradient(120deg,hsl(var(--rh) var(--rs) 91%),hsl(calc(var(--rh) + 18) var(--rs) 95%));
@@ -229,6 +230,12 @@ details[open] .when-closed{display:none;}
 .ws-soon{align-self:flex-start;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),0.35);}
 .ws-card .btn{margin-top:auto;align-self:flex-start;}
 .m-grid{align-items:stretch;}
+/* even rows: every card in a row has the same height, buttons at the bottom, a short last row in the middle (owner, 14 Nov 2026) */
+.m-grp{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;}
+.m-grp + .m-grp{margin-top:var(--space-md);}
+.m-grp > .i-card{flex:0 1 calc((100% - 2 * var(--space-md)) / 3);min-width:0;height:auto;}
+@media (max-width:1024px){.m-grp > .i-card{flex-basis:calc((100% - var(--space-md)) / 2);}}
+@media (max-width:640px){.m-grp > .i-card{flex-basis:100%;}}
 html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 @media (max-width:1024px){.i-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:640px){.m-bar .filter{flex-wrap:wrap;justify-content:center;}.m-bar .filter .m-search{flex:1 1 100%;}.m-bar .filter .m-search input{width:100%;}.i-grid{grid-template-columns:1fr;}.filter select{min-width:0;flex:1 1 180px;}.m-tab{padding:0 14px;}.m-bar .filter select{min-width:0;flex:1 1 auto;}}
@@ -381,8 +388,12 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       <p class="result-count"><?= $tab === 'all'
           ? owBi($n === 1 ? '1 place' : $n . ' places', $n === 1 ? 'وجهة واحدة' : ($n === 2 ? 'وجهتان' : $n . ($n <= 10 ? ' وجهات' : ' وجهة')))
           : owBi($n === 1 ? '1 institute' : $n . ' institutes', $n === 1 ? 'معهد واحد' : ($n === 2 ? 'معهدان' : $n . ($n <= 10 ? ' معاهد' : ' معهداً'))) ?></p>
-      <div class="i-grid">
+      <?php /* cards with a photo and cards without one sit in separate even rows (owner, 14 Nov 2026) */ if ($placesPhoto): ?>
+      <div class="i-grid m-grp">
         <?php foreach ($placesPhoto as $p) echo $placeCard($p); ?>
+      </div>
+      <?php endif; ?>
+      <div class="i-grid m-grp">
         <?php foreach ($placesFirst as $p) echo $placeCard($p); ?>
         <?php foreach ($institutes as $i):
           $iid = (int) $i['id'];
@@ -477,9 +488,9 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       <p class="result-count"><?= $kind === 'museum'
           ? owBi($n === 1 ? '1 museum' : $n . ' museums', $n === 1 ? 'متحف واحد' : ($n === 2 ? 'متحفان' : $n . ($n <= 10 ? ' متاحف' : ' متحفاً')))
           : owBi($n === 1 ? '1 art gallery' : $n . ' art galleries', $n === 1 ? 'معرض فني واحد' : ($n === 2 ? 'معرضان فنيان' : $n . ($n <= 10 ? ' معارض فنية' : ' معرضاً فنياً'))) ?></p>
-      <div class="i-grid m-grid">
-        <?php foreach ($places as $p) echo $placeCard($p); ?>
-      </div>
+      <?php $withPh = array_values(array_filter($places, $hasPhoto)); $noPh = array_values(array_filter($places, fn($p) => !$hasPhoto($p))); ?>
+      <?php if ($withPh): ?><div class="i-grid m-grid m-grp"><?php foreach ($withPh as $p) echo $placeCard($p); ?></div><?php endif; ?>
+      <?php if ($noPh): ?><div class="i-grid m-grid m-grp"><?php foreach ($noPh as $p) echo $placeCard($p); ?></div><?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>
   </div>

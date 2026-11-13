@@ -117,7 +117,9 @@ html.dark-mode .m-band{background:linear-gradient(120deg,hsl(var(--rh) 28% 22%),
 /* region page list */
 .rg-group{margin:0 0 var(--space-lg);}
 .rg-group h2{font-size:var(--fs-subtitle);margin:0 auto var(--space-sm);width:fit-content;padding:4px 16px;border-radius:var(--radius-card);background:var(--studio-glass);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
-.rg-list{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm);align-items:start;}
+.rg-list{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-sm);align-items:stretch;}
+.rg-list + .rg-list{margin-top:var(--space-sm);}
+.rg-list > .rg-item{flex:0 1 calc((100% - 2 * var(--space-sm)) / 3);min-width:0;}   /* photo places and the others in separate even rows (owner, 14 Nov 2026) */
 .card.rg-item{display:flex;flex-direction:column;gap:6px;padding:0 0 var(--space-sm);overflow:hidden;text-decoration:none;color:inherit;}
 .rg-item .rg-img img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;}
 .rg-item .m-band{margin:0;border-radius:0;}
@@ -125,8 +127,8 @@ html.dark-mode .m-band{background:linear-gradient(120deg,hsl(var(--rh) 28% 22%),
 .rg-item span.c{padding:0 var(--space-sm);font-size:var(--fs-caption);color:var(--color-body);}
 .rg-item:hover b{text-decoration:underline;}
 html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
-@media (max-width:900px){.rg-list{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:560px){.rg-list{grid-template-columns:1fr;}}
+@media (max-width:900px){.rg-list > .rg-item{flex-basis:calc((100% - var(--space-sm)) / 2);}}
+@media (max-width:560px){.rg-list > .rg-item{flex-basis:100%;}}
 </style>
 </head>
 <body class="ow">
@@ -177,8 +179,9 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
       if (!$list) continue; $KK = OW_MAP_KINDS[$k]; ?>
     <section class="rg-group">
       <h2><?= owBi($KK[0], $KK[1]) ?></h2>
+      <?php foreach ([array_values(array_filter($list, fn($r) => owPlacePhotoBase($r) !== '')), array_values(array_filter($list, fn($r) => owPlacePhotoBase($r) === ''))] as $part): if (!$part) continue; ?>
       <div class="rg-list">
-        <?php foreach ($list as $r): $rp = owPlacePhotoBase($r); ?>
+        <?php foreach ($part as $r): $rp = owPlacePhotoBase($r); ?>
         <a class="card rg-item" href="<?= e($r['url']) ?>">
           <?php if ($rp !== ''): ?><span class="rg-img"><?= owPlacePicture($rp, $r['name_en'] . ' · ' . $r['name_ar']) ?></span>
           <?php else: ?><span class="m-band r-<?= e($rg) ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><?= owMapKindIcon($k) ?></svg></span><?php endif; ?>
@@ -187,6 +190,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
         </a>
         <?php endforeach; ?>
       </div>
+      <?php endforeach; ?>
     </section>
     <?php endforeach; ?>
     <div style="text-align:center"><a class="btn btn-primary" href="art_map.php?region=<?= e($rg) ?>"><?= owBi('See them on the Art Map', 'شاهدها في وجهات الفن') ?></a></div>
