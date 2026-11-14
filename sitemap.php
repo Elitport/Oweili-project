@@ -55,6 +55,15 @@ try {
     }
 } catch (Throwable $e) { error_log('sitemap articles: ' . $e->getMessage()); }
 
+try {   // course pages (booking_lib.php): only while "Course booking and museum tickets" is switched on (owner, 14 Nov 2026)
+    require_once __DIR__ . '/booking_lib.php';
+    if (owBookingsReady() && owBookingsOn()) {
+        $st = getDB()->query("SELECT c.id, c.updated_at FROM courses c JOIN institutes i ON i.id = c.institute_id
+                              WHERE c.bookable = 1 AND c.status = 'approved' AND c.is_active = 1 AND i.is_active = 1 AND (c.end_date IS NULL OR c.end_date >= CURDATE()) ORDER BY c.id");
+        foreach ($st as $r) $add('course.php?id=' . (int) $r['id'], $r['updated_at'], 'weekly', '0.6');
+    }
+} catch (Throwable $e) { error_log('sitemap courses: ' . $e->getMessage()); }
+
 try {   // curated collections (made by the admin); never commissions: they are not artworks
     require_once __DIR__ . '/gallery_lib.php';
     foreach (owCollections() as $c) $add('marketplace.php?col=' . rawurlencode((string) $c['slug']), $c['updated_at'] ?? null, 'weekly', '0.6');

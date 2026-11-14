@@ -38,7 +38,7 @@ function owKey(string $name): string { return defined($name) ? trim((string) con
 function owPayTestKey(string $k): bool { return $k !== '' && stripos($k, 'test') !== false; }
 /* Which providers can be offered right now */
 function owPayGateways(): array {
-    $g = ['test'];
+    $g = owIsAdmin() ? ['test'] : [];   // Oweili's own test payment: only for the signed-in admin (owner, 14 Nov 2026), never for visitors
     if (owPayTestKey(owKey('OWEILI_MOYASAR_SK'))) $g[] = 'moyasar';
     if (owPayTestKey(owKey('OWEILI_TABBY_PK')) && owPayTestKey(owKey('OWEILI_TABBY_SK')) && owKey('OWEILI_TABBY_MERCHANT') !== '') $g[] = 'tabby';
     if (owKey('OWEILI_TAMARA_TOKEN') !== '') $g[] = 'tamara';
@@ -193,7 +193,7 @@ function owPayCheck(array $pay): string {
 }
 /* The test page: "Pay (test)" */
 function owPayTestApprove(array $pay): bool {
-    if ($pay['gateway'] !== 'test' || $pay['status'] !== 'created') return false;
+    if ($pay['gateway'] !== 'test' || $pay['status'] !== 'created' || !owIsAdmin()) return false;   // admin only
     owPaySetRef($pay, 'TEST-' . strtoupper(bin2hex(random_bytes(4))));
     return owBookingPaid($pay);
 }

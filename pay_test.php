@@ -11,7 +11,7 @@ $preview = owBookingGate();
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $me = currentUser();
 $pay = owPayByToken((string) ($_GET['t'] ?? ''));
-if (!$pay || !$me || (int) $pay['user_id'] !== (int) $me['id'] || $pay['gateway'] !== 'test') { http_response_code(404); require __DIR__ . '/404.php'; exit; }
+if (!$pay || !$me || (int) $pay['user_id'] !== (int) $me['id'] || $pay['gateway'] !== 'test' || !owIsAdmin()) { http_response_code(404); require __DIR__ . '/404.php'; exit; }   // the test payment is for the admin only (owner, 14 Nov 2026)
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && verifyCsrf($_POST['csrf_token'] ?? null) && $pay['status'] === 'created') {
     if (($_POST['do'] ?? '') === 'pay') owPayTestApprove($pay); else owPayFail($pay, 'test: payment refused');
     header('Location: pay_return.php?t=' . $pay['token'] . '&g=test'); exit;

@@ -46,6 +46,9 @@ owBookTop('Payment', 'الدفع', 'pay.php', $preview, '
   <?php if ($err): ?><div class="alert alert-error" role="alert" style="margin-top:var(--space-sm)"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>
   <?php if ($what && $what['ok'] && $pay['status'] === 'created'): ?>
   <?php if ($hold): ?><p class="mini"><?= owBi('Your place is held for ' . OW_BOOK_HOLD_MIN . ' minutes while you pay.', 'نحجز مكانك ' . OW_BOOK_HOLD_MIN . ' دقيقة أثناء الدفع.') ?></p><?php endif; ?>
+  <?php if (!owPayGateways()): /* no way to pay yet: the test payment is for the admin only (owner, 14 Nov 2026) */ ?>
+  <p><?= owBi('Online payment is not open yet. Please try again later.', 'الدفع الإلكتروني غير متاح بعد. يرجى المحاولة لاحقاً.') ?></p>
+  <?php else: ?>
   <form method="post" action="pay.php?t=<?= e($pay['token']) ?>"><?= csrfField() ?>
     <div class="g-list" role="radiogroup">
       <?php foreach (owPayGateways() as $i => $g): ?>
@@ -54,6 +57,7 @@ owBookTop('Payment', 'الدفع', 'pay.php', $preview, '
     </div>
     <button class="btn btn-primary" type="submit"><?= owBi('Pay ' . number_format((float) $pay['amount'], 2) . ' SAR', 'ادفع ' . number_format((float) $pay['amount'], 2) . ' ر.س') ?></button>
   </form>
+  <?php endif; ?>
   <?php else: ?><a class="btn btn-secondary" href="<?= e($what['back'] ?? 'art_map.php') ?>"><?= owBi('Back', 'رجوع') ?></a><?php endif; ?>
 </div>
 <?php owBookBottom();
