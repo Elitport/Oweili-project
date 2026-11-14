@@ -244,7 +244,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <ul>
         <li><?= owBi('Free to join.', 'الانضمام مجاني.') ?></li>
         <li><?= owBi('Oweili takes ' . owCommissionText() . ' only when a work sells.', 'تأخذ أويلي ' . owCommissionText() . ' فقط عند بيع العمل.') ?></li>
-        <li><?= owBi('You are paid after the collector receives the work.', 'تحصل على المبلغ بعد أن يستلم المقتني العمل.') ?></li>
+        <li><?= owBi('You are paid after the collector confirms receipt and Oweili approves the payment.', 'تحصل على المبلغ بعد أن يؤكد المقتني الاستلام ويعتمد أويلي الدفعة.') ?></li>
         <li><?= owBi('Every artist is reviewed by our team.', 'يراجع فريقنا كل فنان.') ?></li>
       </ul>
     </section>

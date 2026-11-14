@@ -38,7 +38,7 @@ if (is_file(__DIR__ . '/.logs/bashro_queue.json') && !function_exists('owBashroR
 }
 /* Once a day, after a page is delivered: private commission reference photos
    are deleted 30 days after delivery (commission_lib.php owCommCleanup), and
-   (only once payments are switched on) escrow releases orders 7 days after delivery */
+   (only once payments are switched on) escrow: reminders to collectors and payout requests to the owner, never a payment by itself (order_lib.php owOrderPayoutChecks) */
 if (!function_exists('owCommAfterPage')) {
     function owCommAfterPage(): void {
         if (function_exists('litespeed_finish_request')) litespeed_finish_request();

@@ -410,7 +410,10 @@ if ($isAdmin && owHasColumn('courses', 'bookable') && owHasColumn('institutes', 
                                                  + (SELECT COUNT(*) FROM institutes i JOIN users u ON u.id = i.user_id WHERE i.via_signup = 1 AND u.is_approved = 0)")->fetchColumn(); }
     catch (Throwable $e) { $bookWait = 0; }
 }
-$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts + $mapClaims + $bookWait;
+/* Artist payouts waiting for the owner's approval (owner, 14 Nov 2026; order_lib.php owOrderPayoutWaiting). Empty while payments are off */
+$payWait = [];
+if ($isAdmin) { try { require_once __DIR__ . '/order_lib.php'; $payWait = owOrderPayoutWaiting(); } catch (Throwable $e) { $payWait = []; } }
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts + $mapClaims + $bookWait + count($payWait);
 $SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
 /* one value, as the admin should read it */
 $showVal = function (string $field, $v) use ($SALE_WORDS): string {
@@ -969,6 +972,19 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <div><strong><?= owBi($mapClaims . ' waiting', $mapClaims . ' بانتظارك') ?></strong></div>
       <a class="btn btn-accent btn-sm" href="admin_art_map.php#claims"><?= owBi('Review them', 'راجعها') ?></a>
     </div></div>
+    <?php endif; ?>
+
+    <?php if ($payWait): ?>
+    <h3 class="wc-h" id="payouts"><?= owBi('Artist payouts waiting for your approval', 'دفعات الفنانين بانتظار موافقتك') ?> <span class="pill count"><?= count($payWait) ?></span></h3>
+    <p class="mini"><?= owBi('The artist is paid only after you approve. A collector who reports a problem holds the payout (Orders → complaints).', 'لا يُدفع للفنان إلا بعد موافقتك. وإن أبلغ المقتني عن مشكلة تتوقف الدفعة (الطلبات ← الشكاوى).') ?></p>
+    <div class="wc-list"><?php foreach ($payWait as $po): ?>
+      <div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+        <div><strong><?= e($po['title']) ?></strong> <span class="mini" dir="ltr"><?= e($po['order_no']) ?></span><br>
+          <span class="mini"><?= $po['confirmed_at'] !== null ? owBi('The collector pressed "Received"', 'ضغط المقتني «تم الاستلام»') : owBi('Delivered ' . OW_PAYOUT_ASK_DAYS . ' days ago, no complaint', 'سُلّم قبل يومين دون شكوى') ?> · <?= owBi('Artist’s share ', 'حصة الفنان ') ?><?= number_format((float) $po['artist_amount'], 2) ?> <?= owBi('SAR', 'ر.س') ?></span></div>
+        <form method="post" action="admin_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="released"><input type="hidden" name="id" value="<?= (int) $po['id'] ?>"><input type="hidden" name="note" value="payout approved by the admin">
+          <button class="btn btn-accent btn-sm"><?= owBi('Approve the payout', 'اعتمد الدفعة') ?></button></form>
+      </div>
+    <?php endforeach; ?></div>
     <?php endif; ?>
 
     <?php if ($bookWait): ?>

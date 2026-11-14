@@ -77,11 +77,11 @@ owLegalPage([
     ['price', 'Prices and commission', 'الأسعار والعمولة', [
         'Artists set their own prices in Saudi riyals (SAR).',
         'When an artwork sells, Oweili keeps ' . owCommissionText() . ' of the price, before VAT. This covers shipping and advertising. Joining and showing your work is free.',
-        'Once online payments open, you are paid your share after the collector receives the artwork. You are responsible for any tax that applies to your own income.',
+        'Once online payments open, you are paid your share after the collector confirms receipt (or 2 days after delivery with no complaint) and Oweili approves the payment. If the collector reports a problem, the payment is held until it is solved. You are responsible for any tax that applies to your own income.',
     ], [
         'يحدد الفنان أسعار أعماله بالريال السعودي.',
         'حين يُباع عمل، يحتفظ أويلي بـ' . owCommissionText() . ' من السعر قبل ضريبة القيمة المضافة، وتغطي الشحن والإعلان. والانضمام وعرض أعمالك مجاني.',
-        'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يستلم المقتني العمل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
+        'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يؤكد المقتني الاستلام (أو بعد يومين من التسليم دون شكوى) ويعتمد أويلي الدفعة. وإن أبلغ المقتني عن مشكلة، تبقى الدفعة موقوفة حتى تُحل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
     ]],
     ['buying', 'Buying an artwork', 'شراء عمل فني', [
         '- Prices are shown in Saudi riyals (SAR). Before you pay, our team confirms the full total with you in writing: the price, any VAT, any delivery cost, and the expected delivery date.',

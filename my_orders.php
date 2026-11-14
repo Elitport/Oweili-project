@@ -1,6 +1,7 @@
 <?php
 /* =====================================================================
- *  my_orders.php — a signed-in buyer's orders, with "I received it"
+ *  my_orders.php — a signed-in buyer's orders, with "Received" (sends the artist's payout
+ *  to the owner for approval; 14 Nov 2026)
  *  (releases the money to the artist) and "Something is wrong" (a
  *  complaint holds the money until the admin decides).
  *  SWITCHED OFF: while payments are off (order_lib.php owPaymentsOn) this
@@ -16,7 +17,7 @@ if (!$me || ($me['role'] ?? '') !== 'collector') { header('Location: ' . dashboa
 $uid = (int) $me['id']; $msg = null;
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && verifyCsrf($_POST['csrf_token'] ?? null)) {
     $id = (int) ($_POST['id'] ?? 0);
-    if (($_POST['do'] ?? '') === 'confirm') $msg = owOrderConfirm($id, $uid) ? ['Thank you. The artist will now be paid.', 'شكراً لك. سيُدفع للفنان الآن.'] : null;
+    if (($_POST['do'] ?? '') === 'confirm') $msg = owOrderConfirm($id, $uid) ? ['Thank you for confirming. The Oweili team will now pay the artist.', 'شكراً لتأكيدك. سيدفع فريق أويلي للفنان الآن.'] : null;
     if (($_POST['do'] ?? '') === 'complain') $msg = owOrderComplain($id, $uid, (string) ($_POST['reason'] ?? '')) ? ['Sent. The Oweili team will contact you, and the money stays held until it is solved.', 'تم الإرسال. سيتواصل معك فريق أويلي، ويبقى المبلغ محفوظاً حتى تُحل المشكلة.'] : ['Please describe the problem.', 'يرجى وصف المشكلة.'];
 }
 $st = getDB()->prepare('SELECT * FROM orders WHERE buyer_user_id = :u ORDER BY id DESC LIMIT 100'); $st->execute([':u' => $uid]); $orders = $st->fetchAll();
@@ -38,15 +39,16 @@ $st = getDB()->prepare('SELECT * FROM orders WHERE buyer_user_id = :u ORDER BY i
   <?php foreach ($orders as $o): ?>
   <div class="card o-card"><h2><?= e($o['title']) ?> <?= owOrderPill((string) $o['status']) ?></h2>
     <p class="mini"><?= e($o['order_no']) ?> · <?= number_format((float) $o['amount'], 2) ?> <?= owBi('SAR', 'ر.س') ?></p>
-    <?php if ($o['status'] === 'delivered'): ?>
+    <?php if ($o['status'] === 'delivered' && $o['confirmed_at'] !== null): ?><p class="mini"><?= owBi('Thank you, you confirmed receipt.', 'شكراً، أكدت الاستلام.') ?></p><?php endif; ?>
+    <?php if ($o['status'] === 'delivered' && $o['confirmed_at'] === null): ?>
     <div class="acts">
-      <form method="post" action="my_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="confirm"><input type="hidden" name="id" value="<?= (int) $o['id'] ?>"><button class="btn btn-primary btn-sm"><?= owBi('I received it', 'استلمته') ?></button></form>
+      <form method="post" action="my_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="confirm"><input type="hidden" name="id" value="<?= (int) $o['id'] ?>"><button class="btn btn-primary btn-sm"><?= owBi('Received', 'تم الاستلام') ?></button></form>
       <details><summary class="btn btn-danger btn-sm"><?= owBi('Something is wrong', 'هناك مشكلة') ?></summary>
         <form method="post" action="my_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="complain"><input type="hidden" name="id" value="<?= (int) $o['id'] ?>">
           <div class="field"><label for="r<?= (int) $o['id'] ?>"><?= owBi('What happened?', 'ماذا حدث؟') ?></label><textarea id="r<?= (int) $o['id'] ?>" name="reason" rows="3" required maxlength="3000" dir="auto"></textarea></div>
           <button class="btn btn-danger btn-sm"><?= owBi('Send complaint', 'أرسل الشكوى') ?></button></form></details>
     </div>
-    <p class="mini"><?= owBi('If we hear nothing within ' . OW_ESCROW_DAYS . ' days of delivery, the order is completed and the artist is paid.', 'إن لم يصلنا شيء خلال ' . OW_ESCROW_DAYS . ' أيام من التسليم، يكتمل الطلب ويُدفع للفنان.') ?></p>
+    <p class="mini"><?= owBi('Please press "Received" once it arrives safely. If something is wrong, tell us: the payment stays held until it is solved.', 'يرجى الضغط على «تم الاستلام» حين يصلك بسلام. وإن كانت هناك مشكلة فأخبرنا، ويبقى المبلغ محفوظاً حتى تُحل.') ?></p>
     <?php endif; ?>
   </div>
   <?php endforeach; ?>

@@ -13,8 +13,12 @@
  *
  *  How the money moves once it is on (escrow):
  *    created → paid (the provider confirms) → shipped → delivered
- *    → released: the buyer presses "I received it", or 7 days after
- *      delivery with no open complaint (owOrderAutoRelease, once a day)
+ *    → the collector presses "Received" (owOrderConfirm), or the order has been
+ *      "delivered" for OW_PAYOUT_ASK_DAYS (2) days with no complaint: a payout
+ *      approval request goes to the owner (Admin → Waiting for approval).
+ *      The collector gets one reminder after OW_PAYOUT_REMIND_DAYS (1) day.
+ *      (owOrderPayoutChecks, once a day; owner, 14 Nov 2026: no fixed 7-day wait)
+ *    → released ONLY when the admin approves (owOrderMove refuses anyone else)
  *    → a payout row for the artist: amount minus Oweili's commission
  *      (site_settings 'commission_rate', 15 by default, before VAT)
  *    delivered → complaint (the buyer's complaint button, before release)
@@ -35,7 +39,8 @@ const OW_ORDER_STATUS = ['created' => ['Waiting for payment', 'بانتظار ا
 /* Which status may follow which (anything else is refused) */
 const OW_ORDER_FLOW = ['created' => ['paid', 'cancelled'], 'paid' => ['shipped', 'delivered', 'refunded'], 'shipped' => ['delivered', 'refunded'],
                        'delivered' => ['released', 'complaint'], 'complaint' => ['released', 'refunded']];
-const OW_ESCROW_DAYS = 7;
+const OW_PAYOUT_ASK_DAYS = 2;      // "delivered" this many days with no complaint → the payout request goes to the owner anyway
+const OW_PAYOUT_REMIND_DAYS = 1;   // the collector's one reminder to press "Received"
 const OW_GATEWAYS = ['moyasar' => 'Moyasar', 'tap' => 'Tap Payments', 'hyperpay' => 'HyperPay'];
 
 function owOrdersReady(): bool { return owHasTable('orders') && owHasTable('order_events') && owHasTable('order_complaints'); }
@@ -96,10 +101,11 @@ function owOrderMove(int $id, string $to, ?array $actor, string $note = ''): boo
         $st = $db->prepare('SELECT * FROM orders WHERE id = :id FOR UPDATE'); $st->execute([':id' => $id]);
         $o = $st->fetch();
         if (!$o || !in_array($to, OW_ORDER_FLOW[$o['status']] ?? [], true)) { $db->rollBack(); return false; }
+        if ($to === 'released' && ($actor['type'] ?? '') !== 'admin') { $db->rollBack(); return false; }   // the artist is paid only after the owner approves (14 Nov 2026)
         $set = ['status = :s']; $args = [':s' => $to, ':id' => $id];
         if ($to === 'paid')      $set[] = 'paid_at = NOW()';
         if ($to === 'shipped')   $set[] = 'shipped_at = NOW()';
-        if ($to === 'delivered') { $set[] = 'delivered_at = NOW()'; $set[] = 'release_due_at = NOW() + INTERVAL ' . OW_ESCROW_DAYS . ' DAY'; }
+        if ($to === 'delivered') { $set[] = 'delivered_at = NOW()'; $set[] = 'release_due_at = NOW() + INTERVAL ' . OW_PAYOUT_ASK_DAYS . ' DAY'; }   // when the payout request goes to the owner if the collector says nothing
         if ($to === 'released')  $set[] = 'released_at = NOW()';
         $db->prepare('UPDATE orders SET ' . implode(', ', $set) . ' WHERE id = :id')->execute($args);
         if ($to === 'released' && $o['artist_id'] && (float) $o['artist_amount'] > 0 && owHasColumn('payouts', 'order_id')) {
@@ -114,12 +120,32 @@ function owOrderMove(int $id, string $to, ?array $actor, string $note = ''): boo
     owOrderEvent($id, (string) $o['status'], $to, $actor, $note);
     return true;
 }
-/* The buyer: "I received it" (releases the money to the artist) */
+/* The collector: "Received". Never pays the artist by itself: it sends the payout approval request to the owner */
 function owOrderConfirm(int $id, int $buyerId): bool {
     $o = owOrderGet($id);
-    if (!$o || (int) $o['buyer_user_id'] !== $buyerId || $o['status'] !== 'delivered') return false;
+    if (!$o || (int) $o['buyer_user_id'] !== $buyerId || $o['status'] !== 'delivered' || $o['confirmed_at'] !== null) return false;
     getDB()->prepare('UPDATE orders SET confirmed_at = NOW() WHERE id = :id')->execute([':id' => $id]);
-    return owOrderMove($id, 'released', ['type' => 'buyer', 'id' => $buyerId], 'the collector confirmed receipt');
+    owOrderEvent($id, 'delivered', 'delivered', ['type' => 'buyer', 'id' => $buyerId], 'the collector pressed Received');
+    owOrderPayoutAsk($o, 'the collector confirmed receipt');
+    return true;
+}
+/* The payout approval request to the owner (Admin → Waiting for approval). Sent once per order.
+   Ready for Bashro approvals later: the alert kind is 'payout' (alert_lib.php); Bashro has no type for it yet, so nothing is sent there. */
+function owOrderPayoutAsk(array $o, string $why): void {
+    if (owOrderLogged((int) $o['id'], 'order_payout_request')) return;
+    owLog('order_payout_request', 'order', (int) $o['id'], $why, ['type' => 'system', 'id' => null]);
+    try { require_once __DIR__ . '/alert_lib.php'; owAdminAlert('payout', 'Artist payout waiting for your approval: order ' . $o['order_no'], 'دفعة فنان بانتظار موافقتك: الطلب ' . $o['order_no'], 'admin.php#payouts'); } catch (Throwable $e) {}
+}
+function owOrderLogged(int $orderId, string $action): bool {
+    $st = getDB()->prepare("SELECT 1 FROM activity_log WHERE action = :a AND target_type = 'order' AND target_id = :id LIMIT 1");
+    $st->execute([':a' => $action, ':id' => $orderId]);
+    return (bool) $st->fetchColumn();
+}
+/* Orders whose artist payout waits for the owner: delivered, no open complaint, and the collector pressed Received or 2 days have passed */
+function owOrderPayoutWaiting(): array {
+    if (!owOrdersReady()) return [];
+    return getDB()->query("SELECT * FROM orders WHERE status = 'delivered' AND artist_id IS NOT NULL AND artist_amount > 0
+                           AND (confirmed_at IS NOT NULL OR (release_due_at IS NOT NULL AND release_due_at <= NOW())) ORDER BY delivered_at LIMIT 200")->fetchAll();
 }
 /* The buyer: "Something is wrong" (holds the money until the admin decides) */
 function owOrderComplain(int $id, int $buyerId, string $reason): bool {
@@ -131,14 +157,28 @@ function owOrderComplain(int $id, int $buyerId, string $reason): bool {
     try { require_once __DIR__ . '/alert_lib.php'; owAdminAlert('order', 'Complaint on order ' . $o['order_no'], 'شكوى على الطلب ' . $o['order_no'], 'admin_orders.php?id=' . $id); } catch (Throwable $e) {}
     return true;
 }
-/* 7 days after delivery with no open complaint: the money is released */
-function owOrderAutoRelease(): int {
+/* Once a day (theme_head.php): a reminder to collectors who have not pressed "Received", and the payout
+   request to the owner once an order has been delivered OW_PAYOUT_ASK_DAYS days with no complaint.
+   Never pays anyone: the artist is paid only when the owner approves. */
+function owOrderPayoutChecks(): int {
     if (!owPaymentsOn()) return 0;
-    $n = 0;
-    $rows = getDB()->query("SELECT id FROM orders WHERE status = 'delivered' AND release_due_at IS NOT NULL AND release_due_at <= NOW() LIMIT 100")->fetchAll(PDO::FETCH_COLUMN);
-    foreach ($rows as $id) if (owOrderMove((int) $id, 'released', ['type' => 'system', 'id' => null], OW_ESCROW_DAYS . ' days after delivery, no complaint')) $n++;
+    $db = getDB(); $n = 0;
+    $rows = $db->query("SELECT *, (release_due_at IS NOT NULL AND release_due_at <= NOW()) AS ask_due FROM orders WHERE status = 'delivered' AND confirmed_at IS NULL AND delivered_at IS NOT NULL
+                        AND delivered_at <= NOW() - INTERVAL " . OW_PAYOUT_REMIND_DAYS . " DAY LIMIT 200")->fetchAll();
+    foreach ($rows as $o) {
+        if (!owOrderLogged((int) $o['id'], 'order_received_reminder') && filter_var($o['buyer_email'], FILTER_VALIDATE_EMAIL)) {
+            owLog('order_received_reminder', 'order', (int) $o['id'], '', ['type' => 'system', 'id' => null]);
+            try { require_once __DIR__ . '/request_lib.php';
+                  owReqTellBuyer((string) $o['buyer_email'], 'Did your artwork arrive? · هل وصلك العمل الفني؟',
+                      'Your order ' . $o['order_no'] . ' (' . $o['title'] . ') shows as delivered. If it arrived safely, please press "Received" in your dashboard. If something is wrong, please tell us there.',
+                      'يظهر طلبك ' . $o['order_no'] . ' (' . $o['title'] . ') على أنه تم تسليمه. إن وصلك بسلام، يرجى الضغط على «تم الاستلام» في لوحتك. وإن كانت هناك مشكلة، أخبرنا من هناك.', 'my_orders.php'); } catch (Throwable $e) {}
+            $n++;
+        }
+        if ((int) $o['ask_due'] === 1) { owOrderPayoutAsk($o, OW_PAYOUT_ASK_DAYS . ' days after delivery, no complaint'); $n++; }
+    }
     return $n;
 }
+function owOrderAutoRelease(): int { return owOrderPayoutChecks(); }   // the old name, still called once a day by theme_head.php; it no longer releases anything
 function owOrderPill(string $s): string {
     $w = OW_ORDER_STATUS[$s] ?? [$s, $s];
     return '<span class="pillx' . (in_array($s, ['complaint', 'created'], true) ? ' warn' : (in_array($s, ['released'], true) ? ' on' : '')) . '">' . owBi($w[0], $w[1]) . '</span>';
