@@ -30,6 +30,7 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
     <nav aria-label="Footer · روابط الموقع">
       <ul class="ow-footer-links">
 <?php $owFtGift = false; try { if (function_exists('getDB')) { require_once __DIR__ . '/gallery_lib.php'; $owFtGift = owGiftsPageOn(); } } catch (Throwable $e) {} if ($owFtGift): ?>        <li><a href="gifts.php"><?= $owFt('Gifts', 'الهدايا') ?></a></li><?php endif; /* Gifts hidden for now (6 Nov 2026) */ ?>
+        <li><a href="about.php"><?= $owFt('About', 'من نحن') ?></a></li>
         <li><a href="privacy.php"><?= $owFt('Privacy', 'الخصوصية') ?></a></li>
         <li><a href="terms.php"><?= $owFt('Terms', 'الشروط') ?></a></li>
       </ul>
