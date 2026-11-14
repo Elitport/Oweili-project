@@ -141,6 +141,13 @@
 
 ## Features
 
+### Art Map: a real map with pins (14 Nov 2026, owner)
+- art_map.php: a map card under the tabs and the Region / search row (#m-map; 420 px tall on laptops, 220 px on phones), showing a pin (brand pink circle, navy edge) for every place on the current tab, region and search that has coordinates. Tapping a pin shows the name, the city and "See the place" / «صفحة المكان» (its page on oweili.com/art-map/…). Scrolling the page never zooms the map until it is clicked. No pins = no map (and no map files are loaded). Leaflet 1.9 kept on our own server (assets/vendor/leaflet/, BSD-2-Clause, LICENSE.txt); map pictures from tile.openstreetmap.org with "© OpenStreetMap contributors" in both languages (assets/js/art_map_pins.js)
+- Coordinates: art_places.lat / lng (already there) and two new columns institutes.lat / lng (institutes_coords.sql, add-only). Found on free sources: OpenStreetMap's address search (English and Arabic names, only when the result is in the right city) and Wikimedia Commons photo locations. Most Saudi galleries are not in OpenStreetMap by name, so 29 places have a pin now (27 museums and galleries + 2 institutes); the others get a pin once their coordinates are saved (Admin → Art Map has no Lat / Lng box yet; adding one is for the owner to decide). The Visual Arts Commission (programmes across Saudi Arabia) and Afaq Academy (Riyadh and Jeddah) have no single location
+- Saved on the live database 14 Nov 2026 by a temporary locked page (removed straight after), after a full backup (.backups/db-u405344949_contact-20261114-181221.sql.gz): the two columns and 24 coordinates
+- Privacy (privacy.php, Who can see it): one line in both languages: the map comes from OpenStreetMap, the browser loads its pictures straight from OpenStreetMap's servers, which see the visitor's internet address; nothing else is sent. "Last updated" 14 November 2026
+- Files: art_map.php, assets/js/art_map_pins.js (new), assets/vendor/leaflet/ (new), institutes_coords.sql (new), privacy.php. Tables: art_places (lat, lng), institutes (lat, lng new)
+
 ### New Art Education and Art Events drafts (14 Nov 2026, owner)
 - 5 Art Education drafts (not published), English and Arabic, each with its own free cover painting and a "Picture: …" / «الصورة: …» credit line: How to start your first art collection (Fitz Henry Lane, Brace's Rock, public domain); What a signed original painting means (Monet, Impression, Sunrise, public domain); Choosing paintings for your living room (Kandinsky, Composition VIII, public domain); Art as a gift: how to choose a painting for someone (Derain, Mountains at Collioure, public domain); Color in Saudi art: from Al-Qatt Al-Asiri to today (Rijal Alma painted pillar, photo Richard Mortel, CC BY 2.0). Covers copied from assets/img/styles/ to uploads/articles/
 - 2 new Art Events drafts from official sources: Highlights Exhibition at Ithra Winter (Dhahran Expo, 13 to 28 Nov 2026, ithra.com) and AlUla Arts Festival 2027 (15 Jan to 6 Feb 2027, experiencealula.com). Along the Way, Misk Art Week 2026 and Made With Your Magic were already drafts (11 Nov), so they were not added again
@@ -1005,6 +1012,7 @@
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
 - bookings_update.sql — course booking and museum tickets (14 Nov 2026). Only adds (two account-type values, columns, five tables); safe to run more than once
+- institutes_coords.sql — institutes.lat / lng for the Art Map's map (14 Nov 2026). Only adds two columns; safe to run more than once. Run on the live database 14 Nov 2026 after a full backup
 - art_places_address_ar.sql — the Art Map address in Arabic (13 Nov 2026). Only adds one column; safe to run more than once. Run on the live database 13 Nov 2026 after a full backup
 - art_place_claims.sql — the "Is this your place?" messages (13 Nov 2026). Only adds one table; safe to run more than once. Run on the live database 13 Nov 2026 after a full backup
 - art_places.sql — the Art Map's places table (12 Nov 2026). Only adds one table; safe to run more than once. Run on the live database 12 Nov 2026 after a full backup
