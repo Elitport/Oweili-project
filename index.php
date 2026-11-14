@@ -138,6 +138,14 @@ body { overflow-x: hidden; overflow-y: hidden; max-height: 100vh; max-height: 10
   .hero-btns { flex-direction: column; width: 100%; max-width: 320px; }
   .hero-btns .btn { width: 100%; min-width: 0; }
 }
+/* phones: the two buttons straight under the headline, so "Explore Gallery" is on the first screen;
+   the two lines and the trust points follow (owner, 13 Nov 2026). Laptops and the video are unchanged */
+@media (max-width: 640px) {
+  .hero-card .hero-btns { order: 1; margin: 0 0 var(--space-md); }
+  .hero-card .hero-what { order: 2; margin-top: 0; }
+  .hero-card .hero-sub, .hero-card .hero-trust { order: 3; }
+  .hero-card .hero-sub { margin-bottom: 0; }
+}
 @media (max-height: 640px) and (max-width: 768px) { .aotw-home { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .aotw-home:hover { transform: none; }
