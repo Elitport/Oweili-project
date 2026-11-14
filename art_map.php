@@ -233,6 +233,7 @@ details[open] .when-closed{display:none;}
 /* even rows: every card in a row has the same height, buttons at the bottom, a short last row in the middle (owner, 13 Nov 2026) */
 .m-grp{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;}
 .m-grp + .m-grp{margin-top:var(--space-md);}
+.m-old > .i-card > .i-top{align-items:flex-start;}   /* the name starts level with the logo's top, the same in every card of the row */
 .m-grp > .i-card{flex:0 1 calc((100% - 2 * var(--space-md)) / 3);min-width:0;height:auto;}
 @media (max-width:1024px){.m-grp > .i-card{flex-basis:calc((100% - var(--space-md)) / 2);}}
 @media (max-width:640px){.m-grp > .i-card{flex-basis:100%;}}
@@ -393,8 +394,11 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
         <?php foreach ($placesPhoto as $p) echo $placeCard($p); ?>
       </div>
       <?php endif; ?>
-      <div class="i-grid m-grp">
+      <?php if ($placesFirst): ?><div class="i-grid m-grp">
         <?php foreach ($placesFirst as $p) echo $placeCard($p); ?>
+      </div><?php endif; ?>
+      <?php /* the older institutes' cards (logo row) sit in their own rows, names lined up (owner, 14 Nov 2026) */ if ($institutes): ?>
+      <div class="i-grid m-grp m-old">
         <?php foreach ($institutes as $i):
           $iid = (int) $i['id'];
           $nameEn = $i['name_en'] ?: $i['name_ar'];
@@ -463,8 +467,10 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           </details>
         </article>
         <?php endforeach; ?>
+      </div><?php endif; ?>
+      <?php if ($placesLast): ?><div class="i-grid m-grp">
         <?php foreach ($placesLast as $p) echo $placeCard($p); ?>
-      </div>
+      </div><?php endif; ?>
     <?php endif; ?>
 
 <?php else: $K = OW_MAP_KINDS[$kind]; ?>

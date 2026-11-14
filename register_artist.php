@@ -257,7 +257,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <div class="field<?= owBadField($bad, 'last_name') ?>"><label id="t-l-last" for="f-last">Last name</label><input type="text" id="f-last" name="last_name"<?= owBadAttr($bad, 'last_name') ?> value="<?= e($old['last']) ?>"></div>
       </div>
       <div class="field<?= owBadField($bad, 'full_name_ar') ?>"><label for="full_name_ar"><?= owBi('Your name in Arabic (optional)', 'اسمك بالعربية (اختياري)') ?></label><input type="text" id="full_name_ar" name="full_name_ar"<?= owBadAttr($bad, 'full_name_ar') ?> dir="rtl" maxlength="150" autocomplete="off" value="<?= e($old['nameAr']) ?>"></div>
-      <div class="field<?= owBadField($bad, 'artist_name') ?>"><label id="t-l-artist" for="f-artist">Artist name (the name people will see)</label><input type="text" id="f-artist" name="artist_name"<?= owBadAttr($bad, 'artist_name') ?> required value="<?= e($old['artist']) ?>"></div>
+      <div class="field<?= owBadField($bad, 'artist_name') ?>"><label id="t-l-artist" for="f-artist">Public name: shown to visitors</label><input type="text" id="f-artist" name="artist_name"<?= owBadAttr($bad, 'artist_name') ?> required value="<?= e($old['artist']) ?>"></div>
       <div class="grid2">
         <div class="field<?= owBadField($bad, 'email') ?>"><label id="t-l-email" for="f-email">Email</label><input type="email" id="f-email" name="email"<?= owBadAttr($bad, 'email') ?> required value="<?= e($old['email']) ?>"></div>
         <div class="field<?= owBadField($bad, 'phone') ?>"><label id="t-l-phone" for="f-phone">Mobile number</label><input type="tel" id="f-phone" name="phone"<?= owBadAttr($bad, 'phone') ?> dir="ltr" required value="<?= e($old['phone']) ?>" placeholder="+966 5X XXX XXXX"></div>
@@ -297,7 +297,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 const LIM=<?= json_encode($LIM, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 const T={
   en:{dir:'ltr',lb:'العربية',title:'Join as an Artist',sub:'We are glad you are here. Our team reviews every profile by hand.',
-    first:'First name',last:'Last name',artist:'Artist name (the name people will see)',email:'Email',phone:'Mobile number',city:'City',
+    first:'First name',last:'Last name',artist:'Public name: shown to visitors',email:'Email',phone:'Mobile number',city:'City',
     bioen:'About you in English (optional)',bioar:'About you in Arabic (optional)',
     photo:'Your photo (required)',photoHint:'JPG or PNG, up to '+LIM.photo+'MB',port:'Your artworks (required, up to 5 photos)',portHint:'Pick the pieces you are most proud of. JPG or PNG, up to '+LIM.photo+'MB each.',
     video:'A short video of you at work',videoHint:'Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to '+LIM.video+'MB.',
@@ -310,7 +310,7 @@ const T={
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',title:'انضم إلينا كفنان',sub:'سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.',
-    first:'الاسم الأول',last:'اسم العائلة',artist:'اسمك الفني (الاسم الذي سيراه الناس)',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
+    first:'الاسم الأول',last:'اسم العائلة',artist:'الاسم العام: يظهر للزوار',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
     bioen:'نبذة عنك بالإنجليزية (اختياري)',bioar:'نبذة عنك بالعربية (اختياري)',
     photo:'صورتك (مطلوبة)',photoHint:'JPG أو PNG حتى '+LIM.photo+' ميغابايت',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر. JPG أو PNG حتى '+LIM.photo+' ميغابايت لكل صورة.',
     video:'مقطع قصير وأنت تعمل',videoHint:'صوّر يديك وهي ترسم أو تلوّن. هكذا نعرف أن الفن من صنعك. MP4 أو MOV حتى '+LIM.video+' ميغابايت.',

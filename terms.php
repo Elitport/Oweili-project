@@ -15,7 +15,7 @@ require_once __DIR__ . '/cert_lib.php';   // OW_CERT_RIGHTS: the rights line of 
 
 owLegalPage([
     'path' => 'terms.php',
-    'title_en' => 'Terms of Use', 'title_ar' => 'شروط الاستخدام',
+    'title_en' => 'Terms of Use', 'title_ar' => 'شروط الاستخدام', 'centered_head' => true,
     'lead_en' => 'The simple rules that keep Oweili a trusted home for real, handmade art.',
     'lead_ar' => 'القواعد البسيطة التي تجعل أويلي بيتاً موثوقاً للفن الأصيل المصنوع باليد.',
     'desc_en' => 'The rules for artists, collectors and visitors on Oweili, the gallery of handmade art.',
