@@ -13,8 +13,10 @@
  *
  *  How the money moves once it is on (escrow):
  *    created → paid (the provider confirms) → shipped → delivered
- *    → the collector presses "Received" (owOrderConfirm), or the order has been
- *      "delivered" for OW_PAYOUT_ASK_DAYS (2) days with no complaint: a payout
+ *    → the collector presses "I received the artwork" (owOrderConfirm) with 1 to 3 private
+ *      photos of the artwork as received and the tick "arrived in good condition"
+ *      (owner, 14 Nov 2026), or the order has been "delivered" for OW_PAYOUT_ASK_DAYS (7)
+ *      days with no complaint: a payout
  *      approval request goes to the owner (Admin → Waiting for approval).
  *      The collector gets one reminder after OW_PAYOUT_REMIND_DAYS (1) day.
  *      (owOrderPayoutChecks, once a day; owner, 14 Nov 2026: no fixed 7-day wait)
@@ -39,8 +41,11 @@ const OW_ORDER_STATUS = ['created' => ['Waiting for payment', 'بانتظار ا
 /* Which status may follow which (anything else is refused) */
 const OW_ORDER_FLOW = ['created' => ['paid', 'cancelled'], 'paid' => ['shipped', 'delivered', 'refunded'], 'shipped' => ['delivered', 'refunded'],
                        'delivered' => ['released', 'complaint'], 'complaint' => ['released', 'refunded']];
-const OW_PAYOUT_ASK_DAYS = 2;      // "delivered" this many days with no complaint → the payout request goes to the owner anyway
-const OW_PAYOUT_REMIND_DAYS = 1;   // the collector's one reminder to press "Received"
+const OW_PAYOUT_ASK_DAYS = 7;      // "delivered" this many days with no complaint → the payout request goes to the owner anyway
+const OW_PAYOUT_REMIND_DAYS = 1;   // the collector's one reminder to send "I received the artwork"
+/* Receipt photos: private (only the admin and the artist of the order, through receipt_photo.php), never public */
+const OW_RECEIPT_DIR = '.private/receipts/';
+const OW_RECEIPT_MAX = 3;
 const OW_GATEWAYS = ['moyasar' => 'Moyasar', 'tap' => 'Tap Payments', 'hyperpay' => 'HyperPay'];
 
 function owOrdersReady(): bool { return owHasTable('orders') && owHasTable('order_events') && owHasTable('order_complaints'); }
@@ -120,15 +125,54 @@ function owOrderMove(int $id, string $to, ?array $actor, string $note = ''): boo
     owOrderEvent($id, (string) $o['status'], $to, $actor, $note);
     return true;
 }
-/* The collector: "Received". Never pays the artist by itself: it sends the payout approval request to the owner */
-function owOrderConfirm(int $id, int $buyerId): bool {
+/* The collector: "I received the artwork" with 1 to 3 photos and the tick "arrived in good condition".
+   Never pays the artist by itself: it sends the payout approval request to the owner straight away.
+   Returns '' when done, else an error code: state, photo_none, photo_many, photo_type, photo_size, photo_save, condition */
+function owOrderConfirm(int $id, int $buyerId, array $files = [], bool $goodCondition = false, bool $shareOk = false): string {
     $o = owOrderGet($id);
-    if (!$o || (int) $o['buyer_user_id'] !== $buyerId || $o['status'] !== 'delivered' || $o['confirmed_at'] !== null) return false;
+    if (!$o || (int) $o['buyer_user_id'] !== $buyerId || $o['status'] !== 'delivered' || $o['confirmed_at'] !== null) return 'state';
+    if (!$goodCondition) return 'condition';
+    $list = [];
+    foreach ((array) ($files['tmp_name'] ?? []) as $i => $tmp) {
+        if (($files['error'][$i] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) continue;
+        $list[] = ['name' => $files['name'][$i] ?? '', 'type' => $files['type'][$i] ?? '', 'tmp_name' => $tmp, 'error' => $files['error'][$i] ?? 0, 'size' => $files['size'][$i] ?? 0];
+    }
+    if (!$list) return 'photo_none';
+    if (count($list) > OW_RECEIPT_MAX) return 'photo_many';
+    if (!owReceiptProtectDir()) return 'photo_save';
+    require_once __DIR__ . '/artwork_lib.php';
+    $saved = [];
+    foreach ($list as $f) {
+        $r = owStoreImage($f, OW_RECEIPT_DIR, true);   // real image check, 10 MB limit, turned upright, re-saved without GPS or other hidden data
+        if (!$r['ok']) { foreach ($saved as $n) @unlink(__DIR__ . '/' . OW_RECEIPT_DIR . $n); return 'photo_' . (in_array($r['err'], ['type', 'size'], true) ? $r['err'] : 'save'); }
+        $n = basename((string) $r['path']); @chmod(__DIR__ . '/' . OW_RECEIPT_DIR . $n, 0600); $saved[] = $n;
+    }
     getDB()->prepare('UPDATE orders SET confirmed_at = NOW() WHERE id = :id')->execute([':id' => $id]);
-    owOrderEvent($id, 'delivered', 'delivered', ['type' => 'buyer', 'id' => $buyerId], 'the collector pressed Received');
-    owOrderPayoutAsk($o, 'the collector confirmed receipt');
+    owLog('order_receipt', 'order', $id, json_encode(['photos' => $saved, 'good' => 1, 'share' => $shareOk ? 1 : 0]), ['type' => 'buyer', 'id' => $buyerId]);
+    owOrderEvent($id, 'delivered', 'delivered', ['type' => 'buyer', 'id' => $buyerId], 'the collector sent "I received the artwork" with ' . count($saved) . ' photo(s)');
+    owOrderPayoutAsk($o, 'the collector confirmed receipt with photos');
+    return '';
+}
+function owReceiptProtectDir(): bool {
+    $dir = __DIR__ . '/' . OW_RECEIPT_DIR;
+    if (!is_dir($dir) && !@mkdir($dir, 0700, true)) return false;
+    foreach ([dirname($dir), $dir] as $d) {
+        if (!is_file($d . '/.htaccess')) @file_put_contents($d . '/.htaccess', "Require all denied\nDeny from all\n");
+        if (!is_file($d . '/index.html')) @file_put_contents($d . '/index.html', '');
+    }
     return true;
 }
+/* The collector's receipt of one order: ['photos' => [...], 'good' => 1, 'share' => 0/1, 'at' => date] or null */
+function owOrderReceipt(int $orderId): ?array {
+    $st = getDB()->prepare("SELECT details, created_at FROM activity_log WHERE action = 'order_receipt' AND target_type = 'order' AND target_id = :id ORDER BY id DESC LIMIT 1");
+    $st->execute([':id' => $orderId]); $r = $st->fetch();
+    if (!$r) return null;
+    $d = json_decode((string) $r['details'], true) ?: [];
+    $d['photos'] = array_values(array_filter((array) ($d['photos'] ?? []), fn($n) => is_string($n) && preg_match('/^[a-f0-9]{16,64}\.(jpg|png|webp)$/', $n)));
+    $d['at'] = $r['created_at'];
+    return $d;
+}
+function owReceiptPhotoUrl(int $orderId, int $i): string { return 'receipt_photo.php?o=' . $orderId . '&n=' . $i; }
 /* The payout approval request to the owner (Admin → Waiting for approval). Sent once per order.
    Ready for Bashro approvals later: the alert kind is 'payout' (alert_lib.php); Bashro has no type for it yet, so nothing is sent there. */
 function owOrderPayoutAsk(array $o, string $why): void {
@@ -157,7 +201,7 @@ function owOrderComplain(int $id, int $buyerId, string $reason): bool {
     try { require_once __DIR__ . '/alert_lib.php'; owAdminAlert('order', 'Complaint on order ' . $o['order_no'], 'شكوى على الطلب ' . $o['order_no'], 'admin_orders.php?id=' . $id); } catch (Throwable $e) {}
     return true;
 }
-/* Once a day (theme_head.php): a reminder to collectors who have not pressed "Received", and the payout
+/* Once a day (theme_head.php): a reminder to collectors who have not sent "I received the artwork", and the payout
    request to the owner once an order has been delivered OW_PAYOUT_ASK_DAYS days with no complaint.
    Never pays anyone: the artist is paid only when the owner approves. */
 function owOrderPayoutChecks(): int {
@@ -170,8 +214,8 @@ function owOrderPayoutChecks(): int {
             owLog('order_received_reminder', 'order', (int) $o['id'], '', ['type' => 'system', 'id' => null]);
             try { require_once __DIR__ . '/request_lib.php';
                   owReqTellBuyer((string) $o['buyer_email'], 'Did your artwork arrive? · هل وصلك العمل الفني؟',
-                      'Your order ' . $o['order_no'] . ' (' . $o['title'] . ') shows as delivered. If it arrived safely, please press "Received" in your dashboard. If something is wrong, please tell us there.',
-                      'يظهر طلبك ' . $o['order_no'] . ' (' . $o['title'] . ') على أنه تم تسليمه. إن وصلك بسلام، يرجى الضغط على «تم الاستلام» في لوحتك. وإن كانت هناك مشكلة، أخبرنا من هناك.', 'my_orders.php'); } catch (Throwable $e) {}
+                      'Your order ' . $o['order_no'] . ' (' . $o['title'] . ') shows as delivered. If it arrived safely, please press "I received the artwork" in your dashboard and add a photo of it. If something is wrong, please tell us there.',
+                      'يظهر طلبك ' . $o['order_no'] . ' (' . $o['title'] . ') على أنه تم تسليمه. إن وصلك بسلام، يرجى الضغط على «استلمت العمل» في لوحتك وإضافة صورة له. وإن كانت هناك مشكلة، أخبرنا من هناك.', 'my_orders.php'); } catch (Throwable $e) {}
             $n++;
         }
         if ((int) $o['ask_due'] === 1) { owOrderPayoutAsk($o, OW_PAYOUT_ASK_DAYS . ' days after delivery, no complaint'); $n++; }

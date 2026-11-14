@@ -20,7 +20,7 @@ owLegalPage([
     'lead_ar' => 'القواعد البسيطة التي تجعل أويلي بيتاً موثوقاً للفن الأصيل المصنوع باليد.',
     'desc_en' => 'The rules for artists, collectors and visitors on Oweili, the gallery of handmade art.',
     'desc_ar' => 'القواعد للفنانين والمقتنين والزوار في أويلي، معرض الفن الأصيل المصنوع باليد.',
-    'updated_en' => '11 November 2026', 'updated_ar' => '11 نوفمبر 2026',
+    'updated_en' => '14 November 2026', 'updated_ar' => '14 نوفمبر 2026',
     'other' => ['privacy.php', 'Privacy Policy', 'سياسة الخصوصية'],
 ], [
     ['agree', 'Using Oweili', 'استخدام أويلي', [
@@ -77,15 +77,16 @@ owLegalPage([
     ['price', 'Prices and commission', 'الأسعار والعمولة', [
         'Artists set their own prices in Saudi riyals (SAR).',
         'When an artwork sells, Oweili keeps ' . owCommissionText() . ' of the price, before VAT. This covers shipping and advertising. Joining and showing your work is free.',
-        'Once online payments open, you are paid your share after the collector confirms receipt (or 2 days after delivery with no complaint) and Oweili approves the payment. If the collector reports a problem, the payment is held until it is solved. You are responsible for any tax that applies to your own income.',
+        'Once online payments open, you are paid your share after the collector confirms receipt with a photo of the artwork (or 7 days after delivery with no complaint) and Oweili approves the payment. If the collector reports a problem, the payment is held until it is solved. You are responsible for any tax that applies to your own income.',
     ], [
         'يحدد الفنان أسعار أعماله بالريال السعودي.',
         'حين يُباع عمل، يحتفظ أويلي بـ' . owCommissionText() . ' من السعر قبل ضريبة القيمة المضافة، وتغطي الشحن والإعلان. والانضمام وعرض أعمالك مجاني.',
-        'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يؤكد المقتني الاستلام (أو بعد يومين من التسليم دون شكوى) ويعتمد أويلي الدفعة. وإن أبلغ المقتني عن مشكلة، تبقى الدفعة موقوفة حتى تُحل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
+        'حين تُفتح المدفوعات الإلكترونية، تحصل على حصتك بعد أن يؤكد المقتني الاستلام مع صورة للعمل (أو بعد 7 أيام من التسليم دون شكوى) ويعتمد أويلي الدفعة. وإن أبلغ المقتني عن مشكلة، تبقى الدفعة موقوفة حتى تُحل. وأنت مسؤول عن أي ضريبة تنطبق على دخلك.',
     ]],
     ['buying', 'Buying an artwork', 'شراء عمل فني', [
         '- Prices are shown in Saudi riyals (SAR). Before you pay, our team confirms the full total with you in writing: the price, any VAT, any delivery cost, and the expected delivery date.',
         '- You receive an invoice for every sale.',
+        '- When the artwork arrives, please press "I received the artwork" in your dashboard, add 1 to 3 photos of the artwork as you received it, and tick that it arrived in good condition. Photograph the artwork only, with no people and no personal details. The photos stay private (only the Oweili team and the artist see them) unless you agree that Oweili may share them. If you send nothing and report no problem within 7 days of delivery, the order is treated as received.',
         '- Your right to cancel: under the Saudi E-Commerce Law, you may cancel within 7 days of receiving the artwork, if it is unused and in the condition you received it. You pay the return shipping, unless the artwork arrived damaged or different from its description.',
         '- This right to cancel does not apply to a private commission made to your own description.',
         '- If the artwork arrives damaged or different from its description, tell us within 7 days of delivery, with photos. We arrange its return and give you a full refund.',
@@ -94,6 +95,7 @@ owLegalPage([
     ], [
         '- تُعرض الأسعار بالريال السعودي. وقبل أن تدفع، يؤكد لك فريقنا كتابياً المبلغ الكامل: السعر وأي ضريبة قيمة مضافة وأي تكلفة توصيل وموعد التوصيل المتوقع.',
         '- تحصل على فاتورة لكل عملية بيع.',
+        '- حين يصلك العمل، يرجى الضغط على «استلمت العمل» في لوحتك، وإضافة من صورة إلى 3 صور للعمل كما استلمته، والتأشير على أنه وصل بحالة سليمة. صوّر العمل فقط، بدون أشخاص أو تفاصيل شخصية. وتبقى الصور خاصة (لا يراها إلا فريق أويلي والفنان) ما لم توافق على أن تنشرها أويلي. وإن لم ترسل شيئاً ولم تبلغ عن مشكلة خلال 7 أيام من التسليم، يُعدّ الطلب مستلَماً.',
         '- حقك في الإلغاء: وفق نظام التجارة الإلكترونية السعودي، يمكنك الإلغاء خلال 7 أيام من استلام العمل، إن لم يُستخدم وبقي بالحالة التي استلمته بها. وتتحمل تكلفة شحن الإرجاع، إلا إن وصل العمل تالفاً أو مختلفاً عن وصفه.',
         '- لا ينطبق حق الإلغاء على العمل الخاص المصنوع وفق وصفك أنت.',
         '- إن وصل العمل تالفاً أو مختلفاً عن وصفه، أخبرنا خلال 7 أيام من التسليم مع صور. ونرتب إرجاعه ونرد لك المبلغ كاملاً.',

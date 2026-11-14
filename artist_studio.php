@@ -490,6 +490,17 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
     </table>
     <?php endif; ?>
   </div>
+  <?php /* the collectors' "I received the artwork" photos: private, only the artist and the admin see them (owner, 14 Nov 2026; only once payments are switched on) */
+    $rcpts = [];
+    try { require_once __DIR__ . '/order_lib.php';
+          if (owPaymentsOn()) { $st = getDB()->prepare("SELECT id, order_no, title FROM orders WHERE artist_id = :u AND confirmed_at IS NOT NULL ORDER BY confirmed_at DESC LIMIT 50");
+                                $st->execute([':u' => $uid]); foreach ($st->fetchAll() as $ro) { $rc = owOrderReceipt((int) $ro['id']); if ($rc && $rc['photos']) $rcpts[] = [$ro, $rc]; } } } catch (Throwable $e) { $rcpts = []; }
+    if ($rcpts): ?>
+  <h2 style="font-size:var(--fs-subtitle);margin:var(--space-lg) 0 var(--space-sm)"><?= owBi('Your artworks as the collectors received them', 'أعمالك كما استلمها المقتنون') ?></h2>
+  <p class="st-sub" style="display:block;margin-bottom:var(--space-sm)"><?= owBi('Private photos: only you and the Oweili team see them.', 'صور خاصة: لا يراها إلا أنت وفريق أويلي.') ?></p>
+  <?php foreach ($rcpts as [$ro, $rc]): ?><div class="card" style="margin-bottom:var(--space-sm)"><strong><?= e($ro['title']) ?></strong> <span class="st-sub" dir="ltr" style="display:inline"><?= e($ro['order_no']) ?></span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><?php foreach ($rc['photos'] as $ri => $_): ?><a href="<?= e(owReceiptPhotoUrl((int) $ro['id'], $ri)) ?>" target="_blank" rel="noopener"><img src="<?= e(owReceiptPhotoUrl((int) $ro['id'], $ri)) ?>" alt="<?= e('Your artwork as received · عملك كما وصل') ?>" style="width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--color-border)"></a><?php endforeach; ?></div></div>
+  <?php endforeach; endif; ?>
   <h2 style="font-size:var(--fs-subtitle);margin:var(--space-lg) 0 var(--space-sm)"><?= owBi('Payouts', 'المدفوعات') ?></h2>
   <?php if (!$payouts): ?>
     <div class="card empty"><p><?= owBi('No payouts yet. Once payments open, every transfer to you will be listed here.', 'لا مدفوعات بعد. حين تفتح المدفوعات، ستظهر هنا كل تحويلاتك.') ?></p></div>

@@ -18,7 +18,7 @@ owLegalPage([
     'lead_ar' => 'ثقتك أهم ما لدينا. هنا نشرح بكلمات بسيطة ما نحفظه عنك ولماذا.',
     'desc_en' => 'How Oweili collects, uses, keeps and deletes personal data, under the Saudi Personal Data Protection Law.',
     'desc_ar' => 'كيف يجمع أويلي البيانات الشخصية ويستخدمها ويحفظها ويحذفها وفق نظام حماية البيانات الشخصية السعودي.',
-    'updated_en' => '13 November 2026', 'updated_ar' => '13 نوفمبر 2026',
+    'updated_en' => '14 November 2026', 'updated_ar' => '14 نوفمبر 2026',
     'other' => ['terms.php', 'Terms of Use', 'شروط الاستخدام'],
 ], [
     ['who', 'Who we are', 'من نحن', [
@@ -50,6 +50,7 @@ owLegalPage([
         '- Private commission requests: your name, phone and email, what you would like, and your reference photos. The photos are kept in a private place visitors can never open. Only the Oweili team and the one artist we assign (after they accept our confidentiality agreement) can see them. Please send only photos you have the right to share. If a photo shows another person, ask for their permission first.',
         '- Messages to us: when you use "Write to Us", your name, email, phone (if you give it) and your message.',
         '- "Is this your place?" (Art Map): your name, email, phone (if you give it), a photo (if you send one) and your corrections. We use them only to update that place on the Art Map. Your photo shows on the site only after our team approves it.',
+        '- Receipt photos: when your artwork arrives, you send us 1 to 3 photos of it with "I received the artwork". We keep them, with your "arrived in good condition" tick, as the record that the artwork arrived safely, so we can pay the artist and settle any later question. They are private: only the Oweili team and the artist of that artwork see them. We remove hidden data such as location before saving. We share a photo publicly only if you tick "Oweili may share my photo of the artwork". Please photograph the artwork only, with no people and no personal details.',
         '- Artist signature: if an artist draws a signature for their certificates, we keep the picture in a private place. It is printed only on that artist’s certificates, after our team approves it.',
         '- Collector profile: country, city, preferred language, and the artworks you save as favorites.',
         '- Activity: what you do in your account and when (for example signing in or saving a favorite). With it we keep a one-way code made from your internet address that changes every month. We never keep the address itself.',
@@ -68,6 +69,7 @@ owLegalPage([
         '- طلبات الأعمال الخاصة: اسمك وهاتفك وبريدك، وما ترغب فيه، وصورك المرجعية. تُحفظ الصور في مكان خاص لا يفتحه الزوار أبداً، ولا يراها إلا فريق أويلي والفنان الوحيد الذي نسند إليه العمل (بعد قبوله اتفاقية السرّية). يرجى إرسال الصور التي يحق لك مشاركتها فقط، وإن ظهر فيها شخص آخر فاطلب إذنه أولاً.',
         '- رسائلك إلينا: حين تستخدم «اكتب لنا»، نحفظ اسمك وبريدك وهاتفك (إن أعطيته) ورسالتك.',
         '- «هل هذا مكانك؟» (وجهات الفن): اسمك وبريدك وهاتفك (إن أعطيته) وصورة (إن أرسلتها) وتصحيحاتك. نستخدمها فقط لتحديث هذا المكان في وجهات الفن، ولا تظهر صورتك في الموقع إلا بعد موافقة فريقنا.',
+        '- صور الاستلام: حين يصلك العمل، ترسل لنا من صورة إلى 3 صور له مع «استلمت العمل». نحتفظ بها، مع تأشيرك «وصل العمل بحالة سليمة»، سجلاً يثبت وصول العمل بسلام، لندفع للفنان ونحسم أي سؤال لاحق. وهي خاصة: لا يراها إلا فريق أويلي وفنان ذلك العمل. ونزيل البيانات المخفية مثل الموقع قبل حفظها. ولا ننشر الصورة إلا إذا أشّرت على «أوافق أن تنشر أويلي صورة العمل». يرجى تصوير العمل فقط، بدون أشخاص أو تفاصيل شخصية.',
         '- توقيع الفنان: إن رسم الفنان توقيعاً لشهاداته، نحفظ صورته في مكان خاص. ولا يُطبع إلا على شهادات هذا الفنان، بعد موافقة فريقنا.',
         '- ملف المقتني: الدولة والمدينة واللغة المفضلة والأعمال التي تحفظها في المفضلة.',
         '- النشاط: ما تفعله في حسابك ومتى (مثل تسجيل الدخول أو حفظ عمل في المفضلة). ونحفظ معه رمزاً باتجاه واحد من عنوانك على الإنترنت يتغير كل شهر، ولا نحفظ العنوان نفسه أبداً.',

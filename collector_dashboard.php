@@ -393,7 +393,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
   </form>
 
 <?php else: /* purchases */ ?>
-  <?php /* "Received" for delivered orders (owner, 14 Nov 2026; only once payments are switched on, order_lib.php) */
+  <?php /* "I received the artwork" for delivered orders (owner, 14 Nov 2026; only once payments are switched on, order_lib.php) */
     $toConfirm = [];
     try { require_once __DIR__ . '/order_lib.php';
           if (owPaymentsOn()) { $st = getDB()->prepare("SELECT id, order_no, title FROM orders WHERE buyer_user_id = :u AND status = 'delivered' AND confirmed_at IS NULL ORDER BY delivered_at");
@@ -401,7 +401,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
     foreach ($toConfirm as $tc): ?>
     <div class="card" style="margin-bottom:var(--space-sm);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
       <div><strong><?= e($tc['title']) ?></strong> <span class="mini" dir="ltr"><?= e($tc['order_no']) ?></span><br><span class="mini"><?= owBi('Delivered. Did it arrive safely?', 'تم التسليم. هل وصلك بسلام؟') ?></span></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><form method="post" action="my_orders.php" style="margin:0"><?= csrfField() ?><input type="hidden" name="do" value="confirm"><input type="hidden" name="id" value="<?= (int) $tc['id'] ?>"><button class="btn btn-primary btn-sm"><?= owBi('Received', 'تم الاستلام') ?></button></form>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-primary btn-sm" href="my_orders.php?o=<?= (int) $tc['id'] ?>"><?= owBi('I received the artwork', 'استلمت العمل') ?></a>
         <a class="btn btn-secondary btn-sm" href="my_orders.php"><?= owBi('Report a problem', 'أبلغ عن مشكلة') ?></a></div>
     </div>
   <?php endforeach; ?>

@@ -122,8 +122,8 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <h2 id="rules"><?= owBi('The three payout rules (kept separate)', 'قواعد المستحقات الثلاث (منفصلة)') ?></h2>
 <div class="rules">
   <div class="card r-art"><h3><?= owBi('1. Artworks (artists)', '1. الأعمال الفنية (الفنانون)') ?></h3>
-    <p><?= owBi('Oweili holds the money. The artist is paid only after you approve the payout. The request reaches you when the collector presses "Received", or ' . OW_PAYOUT_ASK_DAYS . ' days after delivery with no complaint. A complaint holds it. Commission: ' . owCommissionText() . ' (Settings → Oweili’s commission).',
-                'يحتفظ أويلي بالمبلغ، ولا يُدفع للفنان إلا بعد موافقتك على الدفعة. يصلك الطلب حين يضغط المقتني «تم الاستلام»، أو بعد ' . OW_PAYOUT_ASK_DAYS . ' يومين من التسليم دون شكوى. والشكوى توقفه. العمولة: ' . owCommissionText() . ' (الإعدادات ← عمولة أويلي).') ?></p>
+    <p><?= owBi('Oweili holds the money. The artist is paid only after you approve the payout. The request reaches you when the collector sends "I received the artwork" with a photo, or ' . OW_PAYOUT_ASK_DAYS . ' days after delivery with no complaint. A complaint holds it. Commission: ' . owCommissionText() . ' (Settings → Oweili’s commission).',
+                'يحتفظ أويلي بالمبلغ، ولا يُدفع للفنان إلا بعد موافقتك على الدفعة. يصلك الطلب حين يرسل المقتني «استلمت العمل» مع صورة، أو بعد ' . OW_PAYOUT_ASK_DAYS . ' أيام من التسليم دون شكوى. والشكوى توقفه. العمولة: ' . owCommissionText() . ' (الإعدادات ← عمولة أويلي).') ?></p>
     <p class="mini"><?= owBi('Switched off until payments for artworks are ready (Settings → Payments and escrow). Not changed by this tool.', 'متوقف حتى يجهز الدفع للأعمال الفنية (الإعدادات ← الدفع والضمان). لا تغيّره هذه الأداة.') ?></p></div>
   <div class="card r-course"><h3><?= owBi('2. Courses (institutes)', '2. الدورات (المعاهد)') ?></h3>
     <p><?= owBi('Due to the institute once the course has started (on its start date). Commission: ' . rtrim(rtrim(number_format(owCourseCommission(), 2), '0'), '.') . '% (Settings → Course commission).',
