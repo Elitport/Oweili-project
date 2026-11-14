@@ -122,6 +122,23 @@
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
 
+## Rejected photos: never use again
+- RULE (owner, 14 Nov 2026): none of the photos below may ever be used again, anywhere on the site, in emails, on social media or in any other Oweili material. Before adding any photo, check this list. New rejections are added here
+- Page background photos (owner's studio photos):
+  - gallery-visit: a woman looking at framed paintings (a face, and paintings with people and nudity). Was the Gallery, then Art Events photo
+  - museum-walk: visitors walking through a museum hall with stone reliefs (people). Was the Art Events and Art Map photo. STILL USED on the certificate verify page (cert_verify.php) and the hidden Artist Spotlights list and articles (articles_list.php, article.php), so its files are NOT deleted yet; it needs a new photo there first
+  - palette-hand: a hand holding a palette, with a painting of roses on the easel (flowers). Was the Commissions photo
+  - home-painting: an artist painting a sunny landscape outdoors (tall photo, zoomed on computers). Was the Gallery photo
+  - brushes-jars: brushes in glass jars (tall photo, zoomed). Was the Join as an Artist photo
+  - paint-cloth: a paint-splattered cloth with bowls of colour (tall photo, zoomed). Was the 404 and empty-list photo
+  - art-book: a hand turning an art book beside a glass of tea (a drink; tall photo). Was the Art Education photo
+  - paint-buckets: a hand dipping a brush into paint buckets (replaced on Art Styles by pink-palette)
+- Homepage: bg.mp4 (made with AI, carried the Gemini mark; never use), the tall pink brush video and its still frame (hero-pink-tall, replaced on phones by the blue video), the vertical cut of the blue video (hero-tall)
+- Art Map: the three "Example photo" pictures (empty gallery room with a bench and white gallery with a sculpture by Dale Cruse, art studio with easels by Michael Coghlan; type-*.jpg); a National Museum hall photo with visitors' faces; a Madinah Railway Museum hall photo with a flag carrying religious writing
+- Art Styles pictures replaced: Marcel Duchamp's Fountain (Conceptual), the Lucky Strike painting (Pop Art, a cigarette brand), the first Gouache picture, the Métro entrance photo (Art Nouveau), the Alhambra panel with its carved writing band showing (Islamic ornament; the cut version without the writing stays), and no Pollock for Abstract Expressionism
+- Art Education covers replaced (the old copies in uploads/articles/ were deleted): Kuindzhi, Moonlit Night on the Dnieper (too dark), and the first five covers of 10 Nov 2026 (Van Gogh, Wheat Field with Cypresses; Cézanne, Mont Sainte-Victoire; Gijsbrechts, The Reverse of a Framed Painting; Ruisdael, The Windmill at Wijk bij Duurstede; Dürer, Young Hare). Note: these five paintings are still shown on Art Styles, where they were never rejected; ask the owner before using them on any other page
+- Deleted on 14 Nov 2026 (only files no page used): the 7 studio photos above except museum-walk (63 files) and the hero-pink-tall still frame (3 files) from the project and the live site, and the 6 old Art Education cover copies from the live site. Backups first: .backups/rejected-photos-20261114-155213 on the server (all 78 files) and a full database backup (.backups/db-u405344949_contact-20261114-155213.sql.gz); the project files also stay in the git history. The pink video file (assets/video/hero-pink-tall.mp4) is not used any more but was kept, because it is a video, not a photo (owner to decide). studio_lib.php no longer lists the deleted photos
+
 ## Features
 
 ### New Art Education and Art Events drafts (14 Nov 2026, owner)

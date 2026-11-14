@@ -36,43 +36,14 @@ require_once __DIR__ . '/ow_paths.php';
 
 const OW_STUDIO = [
     // key => [widths made, original width, original height, alt EN, alt AR, tiny copy (for the blurred fill)]
-    'home-painting' => [[480, 720, 1080], 1333, 2000,
-        'An artist painting a sunny landscape on an easel outdoors',
-        'فنانة ترسم منظراً طبيعياً مشمساً على حامل لوحات في الهواء الطلق',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAkABgDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAYEBQf/xAApEAABAwMCBQMFAAAAAAAAAAABAgMRAAQSBSEGEzFBUWFxgQcikcHh/8QAGAEAAwEBAAAAAAAAAAAAAAAAAAIEAwH/xAAfEQACAwAABwAAAAAAAAAAAAABAgADEQQTFCExQVP/2gAMAwEAAhEDEQA/AOfwtpFrrFi4+9zUKQoJBQQB032qhRw5bo2D9wQPVJ/VY/puUOaC6gxKX1fMgVWuraYbyWYTMSRUoNoclWyalamQB12T7fDjInN95ficRH4FK1v6tDxRbtpVBiZ2WI6g0oN1wOcyJ0/D/MSC4Av2rbVlsXCjy304pTjlK+o29gasNVuHCpvFuGHCUllOIJHlR7D29q8ubWhDwUgqRj0V3mutY687YuI5k3DY7FX3J9UnsfiK2essNEK7QpxpQa5f3NheN3Ftb8qzMgpyjJUCTHbaB/aVnvNZt9S1VhpTwOnOMqSptIjAqSTHmZjfzSkWrR3Ed7QD5km4AUbgbCs1KVSZIJpsU5PgEncgbUpSurBvU//Z'],
-    'brushes-jars' => [[480, 720, 1080], 1333, 2000,
-        'Well-used paint brushes standing in glass jars in a studio',
-        'فُرَش رسم مستعملة في برطمانات زجاجية داخل مرسم',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAkABgDASIAAhEBAxEB/8QAGgABAAMAAwAAAAAAAAAAAAAAAAQFBgECB//EACgQAAIBAwMDBAIDAAAAAAAAAAECAwAEEQUSITFBcRMiUWEVgZHR8P/EABgBAAMBAQAAAAAAAAAAAAAAAAABAgME/8QAGxEBAAIDAQEAAAAAAAAAAAAAABEhAQIxQVH/2gAMAwEAAhEDEQA/ANfcDEFR0Ax5qutdZje3FveMI5UUEt0XqcD5zxUtLiJmKLIu4EAj7PIrmlpGcO0yLtOR90rmRvafmlMPPItTNzdRR+ju6kjdy2MkCpejajfX12sBGI2xvYdl7jzxU2K1EGvG2S3VoowPTfZhmQ4Bb9c9qq7Jb2PU9lnC0ZeQRlmXIAzjJ+OKqvBLTflhHblAAXXK5c45xlQQP9xSqxtHMkk+ZdodiN3XkNnnnzSs7+rppLH2ahckDLJGoDHk43N3qSLO3vLpbu4j3TKNqnJGP480pRrxG/VFqMIi1kwIzbBIG5OTk4/ulKVRv//Z'],
-    'paint-cloth' => [[480, 720, 1080], 1499, 2000,
-        'A paint-splattered cloth with bowls of colour and brushes',
-        'قماش مرشوش بالألوان مع أوعية الألوان والفُرَش',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABgDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABgAFA//EAC0QAAIBAgUDAgQHAAAAAAAAAAECAwQRAAUSITEiQXETIwYUQrFRgZGhwdHw/8QAGAEAAgMAAAAAAAAAAAAAAAAAAgQAAQP/xAAfEQACAQQCAwAAAAAAAAAAAAABAgADERIxIUEEIqH/2gAMAwEAAhEDEQA/AF6zozW6trA7WA/PBzNs5lZ7UzelToWSSSUlN15t9t/xGEBX3UZj7gU7jgD/ABxm/EFBSzUrSywo85GhC56bkjkd+MAbbPUJb3svcGzVMs9qmlmYCNtQLjWLggkMOdP9fpYQZdQZW0c9EaSRZQ5uoc9INrG4237d8WNUq06gy5+SVUNJsBxNuVWqqR1grHgLAH1Yt7AH6b+P3wWzLN2zXNYqWmWUxOpTS5AU77sNubYQTT6culkQx6YtYu03SQB3P8YKzF6Q6ooYBVaRrZLkLq4C342I84DElWC7tLQhWDHV5tZFB8rPJRxkEuQzsRZivHUPt5xY50NHU5bOjKTJPLCyu0rbFgb6fF+/jFhWgjBfbcY8psmBE//Z'],
     'pink-palette' => [[640, 960, 1280, 1500], 1500, 1125,
         'A wooden palette with pink and orange paint beside paint brushes',
         'لوحة ألوان خشبية بألوان وردية وبرتقالية بجانب فُرَش الرسم',
         'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACADASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABQAEBv/EACUQAAIBAwQCAQUAAAAAAAAAAAECAwAEEQUSIVExQXEiMmGhsf/EABgBAAMBAQAAAAAAAAAAAAAAAAACBAED/8QAHREAAgICAwEAAAAAAAAAAAAAAAECAyEiBBESMf/aAAwDAQACEQMRAD8A7MGgdcvXJmto2KtwBilYL22nlaKOUGRWK7TwSR5x3QuswGfUWNvFul2gHB5bAzjHeKS1SktWdeN5jZsczLei3RndSSp+0Hkmkop1e0Goby1s4yCfR9jHdY9Vtr+Oe2mtrciSOQES427cVgMEt80jwkIUJaS3ORl/ZAHAJA+D+qE+nkps5E1LAzeZ0+0utV0pXixIsSZO7cCfqYZ8ZP8AKrB7trPaYmhljZlQxsTkg528+D7B+e6qqH8IUxO31WKZ99y4KSrsuEI46Dj8ej1Qd/aXGn69smZnhly0TqoJdccr8jr3VVWLMR3rZ0j/2Q=='],
-    'paint-buckets' => [[640, 1280, 1920, 2000], 2000, 1125,
-        'A hand dipping a brush into buckets of colourful paint, seen from above',
-        'يد تغمس فرشاة في علب ألوان زاهية، من الأعلى',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAQFAgMG/8QAKhAAAgEDAwIGAQUAAAAAAAAAAQIDBAURABIhMVEGExQiQWFCgZGx0eH/xAAXAQADAQAAAAAAAAAAAAAAAAAAAgMB/8QAHhEBAAMBAAIDAQAAAAAAAAAAAQACAyEREjFBUfD/2gAMAwEAAhEDEQA/AONyvVsioEprtA7SgYjeIDcB350pDPUwURqqTFVAISIg/HHXkfXPGrVw8G01ekfrap45xkIExnjqOevfUK5yT+GqympoI3NEYipMnJc9O2ARgY1O2fmvZYuD34k2erluVSrysnnqm1SBhdo5x/umqK7R2qtglnjMh2suxCMbTwTn9NJ1CMtWrQU7hnUY8obhu+Rx01Qjt1PVVCpXRMrKSQAShUdj31psZZ+rwi2xNdfep2eqirGum6CSnAo5FATnLSAgHP1jP7jUqqsNYKhxTyKsQPtEh92PvWYbhPZ630kssPl59pI27VI+O3GNVvUI3uguNOIzyu45OqL+RM2llLfX7GLg1JDOssdOsgTGJFc5QnjP38a53pjLalhgMb1KsNvIyO550aNagIxCzYsL/diVsZKQLW1oWmYIVkyMdvcdF1u9tuDwS0kizGPIMgXjqO4ydGjSbBZSNgpWvZCKSXS81jMVSJDhA35DIwSeuT/XGsTeHC8zstwjALE4aM5/nRo0efqFs6vWf//Z'],
-    'palette-hand' => [[480, 720, 1080], 1503, 2000,
-        'A hand holding a paint palette in a studio',
-        'يد تمسك لوحة الألوان داخل مرسم',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABgDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABgAFA//EACcQAAICAgAGAgEFAAAAAAAAAAECAxEABAUSEyExQQZRYTJScYHR/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EABsRAQACAgMAAAAAAAAAAAAAAAEAERIxAiFB/9oADAMBAAIRAxEAPwDlofOp1dYtxV6YNGV7ZiPfZfebmr8u0eIbKwao2Hvy/RIRf5PrAfBzwZ4nSeGWeV6sMgbkFdz5+/rvmxwfb2Ejk14dUKgt0RFPj2T9YDW4YqdRjt7MnLC8bN+kkcho3f8AmWF5ZtzahilEYQVyLIh7190SO2WQ3fU044BTuDODkx7RJJVStMVHevxm1KsPRPSlld1NiPwL80Rfi/OH162m46iuosqQw7gjzmhrk6+lHxKV7TYlaJlu2517lgP20R/ePkPkkTTEku5Hpab6mtJsO2xHzEpJUayEUVFCyAcsMbnE+qnT1VlQ0QZGqyPwPWWMuJxfJ//Z'],
-    'gallery-visit' => [[640, 1280, 1920, 2000], 2000, 1333,
-        'A woman looking at framed paintings in a gallery',
-        'امرأة تتأمل لوحات مؤطرة في معرض',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAQFBgID/8QAKRAAAgEDAgUCBwAAAAAAAAAAAQIDAAQRBSESExRBUTFhBiIyQnFy4f/EABcBAAMBAAAAAAAAAAAAAAAAAAABAwT/xAAcEQADAAEFAAAAAAAAAAAAAAAAAQIDERMhMVH/2gAMAwEAAhEDEQA/AMJbtcyMFjlkyfDGrKK0vmZR1MmD3Dk15aV8rGRIwxUZAOd9/ar2J55LTp7d1M8w2T6WDAbDPb0qVPkolwRrjSryGNWN7KoPdnOKq7+K9t/W6kcfvU+0utSubWWe5iaaCN+UQX+7I2x7DvXWoxpGzcChuo4WJ4TtuaOmPtGaaSVmyzsT+aVIaMB2HvSqaoloaL4ejsYHEk1wwbwBWo6nTuNXEpJHjGaUrJVNM3LHLRV6ALSytpkYuheYvjIOdh/an6jNZ3UHL5zjI80pSeSmCxSjNNoKsxZLlcE96UpS3K9Dbnw//9k='],
     'studio-table' => [[640, 1280, 1920, 2000], 2000, 1333,
         'A studio table with brushes and paints',
         'طاولة مرسم عليها فُرَش وألوان',
         'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACQDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAMGBQEH/8QAKRAAAQMDAwMDBQEAAAAAAAAAAQIDBAARIRITMQVBYQYiMiNRgaGxcf/EABcBAAMBAAAAAAAAAAAAAAAAAAABAwT/xAAdEQACAgIDAQAAAAAAAAAAAAAAAQIRAyESMUEi/9oADAMBAAIRAxEAPwC66gsCPzzj9GsppaeoKafjn2N2Cr845FP6q+rbbYSAHXb6So2AAwfzmpeNKkdNQUuPFWyEK0tDCgRnP2xYmpy1tDS5aZZQ2W0uJcAIS4j4nt3p6jo1q2gQDYWH6/lSfVPUDceFGWl16Opa9SQkg+0Yzfsb5/yuzvULnUVRobF4+6dzeQcoQBcq8d8+KL9GovqirjOOOtcDWglCwM2UDRXn3T/VEtthZbWXS46tal2vqN+fGAMUU7aDjZreqZTEpyFDS59QrWoHgJUACL357Y81g9McfeTPZ206nFJ0t6LgEcjPn+0UUZFT0GKVx2Ol9BkzGkIVoQppo7TSkatRvfm/t+1KhlSmX2fgqLHcbtf4kAkAkfYk+M0UVlyXjxpxfpVfUmmT8qMqC4lqRtx1FCVBO4ci1r/kg0UUVrIro//Z'],
-    // the owner's photos for Art Education and Art Institutes (6 Nov 2026)
-    'art-book' => [[480, 720, 1080], 1500, 2000,
-        'A hand turning the pages of an art book beside a glass of tea',
-        'يد تقلّب صفحات كتاب فني بجانب كوب شاي',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgABgDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAUGBP/EACkQAAIBAwMCBAcAAAAAAAAAAAECAwAEERIhMQUTQVFhgSIjMjNCcpH/xAAWAQEBAQAAAAAAAAAAAAAAAAACAwH/xAAYEQEBAQEBAAAAAAAAAAAAAAABABEhAv/aAAwDAQACEQMRAD8Ay9JWKW7EUsWpMEeI3pi1q0E+lpYo4y2IzK4Gry2pIvV5ReJaSzZ+PICjCjG3HhW3qjx/fADsycfkQDjn0qZ5m+pxDOYsoTpZdiPWilxnM0MVw65dxpk/ddj/AHY+9FZuWhtG2EVthpZbiSSVk2RV+k54yfTfyqghvOnXENuhurhZbdiSiRBtQI4ydh71G28vbk1OoKnnOa1hgiiFh8ptzjk00gdq4XEKxdmC3WGJm1kmTuMTjHPA9qKSWOIINCA6fDJzRUnrWOF//9k='],
     'easels-class' => [[640, 1280, 1920, 2000], 2000, 1297,
         'Easels with blank canvases ready for an art class in a studio',
         'حوامل رسم عليها لوحات بيضاء جاهزة لدرس فني في مرسم',
@@ -111,15 +82,8 @@ const OW_STUDIO = [
    6 Nov 2026): "x% y%" of the photo, aimed at its main subject. A phone (tall screen) keeps the
    middle of a wide photo around this point; a computer (wide screen) keeps the band around it. */
 const OW_STUDIO_FOCUS = [
-    'home-painting' => '62% 42%',   // the hand with the brush and the canvas
-    'brushes-jars'  => '45% 45%',   // the brushes in their jars
-    'paint-cloth'   => '50% 50%',
     'pink-palette'  => '58% 30%',   // the palette (top) and the brushes
-    'paint-buckets' => '42% 40%',   // the hand dipping the brush into the buckets
-    'palette-hand'  => '38% 52%',   // the hand and the palette
-    'gallery-visit' => '50% 58%',   // the woman and the paintings around her
     'studio-table'  => '55% 75%',   // the studio table with its brushes and jars (lower part of the photo)
-    'art-book'      => '50% 45%',   // the open art book and the hand turning its page
     'easels-class'  => '42% 55%',
     'museum-walk'   => '50% 0%',    // the arch (top of the photo) and the visitors walking under it; laptops trim only the floor
     'gallery-hall'  => '50% 50%',   // the framed photographs and the bench
@@ -135,7 +99,6 @@ const OW_STUDIO_SIDE = [];   // none for now: every page uses the same centred c
 /* The tiny first frames of the homepage videos (their blurred fill, index.php) */
 const OW_HERO_TINY = [
     'blue' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAYACsDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFBgH/xAAqEAACAgIABAUEAwEAAAAAAAABAgMRAAQFEiExEyJBUWEGgaGxMkJSwf/EABcBAQADAAAAAAAAAAAAAAAAAAQCAwX/xAAhEQEAAgIBAwUAAAAAAAAAAAABAAIDESEEgcESMVGhsf/aAAwDAQACEQMRAD8Azm3MX4gmyZD4kjHnu7u7B/GaqLk2+Hh5VpyLs/6HUEff/uQX1ojsLMjh0Leax/HNHuBORFiBaOx2F2AMQXo4tHPvKb4slMmrcSRLyzrsTT2spQEkC+ZifKOnb0GU5YJOHaEewdVN4EKXBUiiooEA9v3k7WjMwkiD8rtsleayD8X+MucK1pNOXZXbL+HNKfNI9+wUj0ArpXvhuqs1AHtL+k02VO8W4grLowbOqGSVgsnKOwPeqxeD6ijMKmaIK/qF6j7Xlrf1q12ROnlIHxmDl150kZTGRWFw5F3tjMuMtrROcO29DXtdjYZXK9f69b7XlMfUOpNJHBAXKAUGINhienX2wwx1h9SrBiaOI/peGnEVUx2Wk53PyfXFN/dk3Nbldm8NyrA3SsCW/QrDDIlS1i6cgeZKlmtLVH58Sto8RkSODX3G5hKKjaj5a6AEnvfe/nG5OHwSOXINn2OGGZduOZonH1+T/9k=',
-    'pink-tall' => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAuABgDASIAAhEBAxEB/8QAGgAAAwADAQAAAAAAAAAAAAAAAAIFAQMEBv/EACsQAAIBAwEGBQUBAAAAAAAAAAECAwAEERIFEyEiMUEUI1FxsTNSYYGh4f/EABcBAQEBAQAAAAAAAAAAAAAAAAQCAwb/xAAfEQACAgIDAAMAAAAAAAAAAAABAgADESESIkEEcbH/2gAMAwEAAhEDEQA/AJz7GV8m2k4KcEN60vhJIWUSDHtVNreXwwEL6G7E9q3c0UMMc8CGZV8wk5BP4ozdByM6AEL0UanmLlEWYg0VTvdoxBtC21ujBhzBMn+0Va2qNQl3xLXbIH5KaSK7FVYcvWum6dNMRPUr8VMtAIpGKjlYZ696eeY7tkVgCrA5PYHtWYdLF+4w1dhjyRdsQ+ZvE/Y9BRXdtCMbpsnjjGKKyY4YiLADDMzFOp0445GadYjPE8anBZdR985HxUqwl1WyE9QMVYtG5df3H/KjAqTUjOsiKYWuZCScR4B96K3wt9RuxIUD0FFIrr5LyPswe0g4E//Z',
 ];
 
 function owStudioFile(string $key, int $w, string $ext): string {
@@ -177,9 +140,7 @@ function owStudioTinyVar(string $key): string {
 /* Phones (owner, 7 Nov 2026): the whole photo sits at the top of the page at full width and fades into this colour,
    the average of the photo's own bottom edge, which then fills the rest of the page (oweili.css, 768 px and narrower) */
 const OW_STUDIO_UNDER = [
-    'art-book' => '#2a211b', 'brushes-jars' => '#b7ad90', 'easels-class' => '#7c9ca7', 'gallery-arch' => '#020202',
-    'gallery-visit' => '#895233', 'home-painting' => '#091b1c', 'museum-walk' => '#633f1b', 'events-hall' => '#4b6b6c', 'gallery-hall' => '#404040', 'easels-corridor' => '#8b7f73', 'open-books' => '#4f4f4f',
-    'paint-buckets' => '#787673', 'paint-cloth' => '#9a838f', 'palette-hand' => '#2a2629', 'pink-palette' => '#827d73',
+    'easels-class' => '#7c9ca7', 'gallery-arch' => '#020202', 'museum-walk' => '#633f1b', 'events-hall' => '#4b6b6c', 'gallery-hall' => '#404040', 'easels-corridor' => '#8b7f73', 'open-books' => '#4f4f4f', 'pink-palette' => '#827d73',
     'studio-table' => '#8c8572',
 ];
 function owStudioBackdrop(string ...$keys): string {
