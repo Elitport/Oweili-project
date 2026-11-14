@@ -2,24 +2,24 @@
 /* TEMPORARY (owner, 14 Nov 2026): rejected or replaced photos. Backs up the old studio photos on the server, finds the old
    Art Education cover copies no page uses any more, backs them up and deletes them; sets "Made With Your Magic" to open on
    5 December 2026. Full database backup first. Locked by a secret key, runs once. Removed straight after. */
-if (!hash_equals('de01eb032151b5f0857c6fa758a36a141babec369972bd62f18a0f95169ddc04', hash('sha256', (string) ($_GET['k'] ?? '')))) { http_response_code(404); exit; }
+if (!hash_equals('c57cd4c9cf92315c063ffb8037dff41b63d899246c0e4e26fb7f6fc7b5cd5587', hash('sha256', (string) ($_GET['k'] ?? '')))) { http_response_code(404); exit; }
 require_once __DIR__ . '/config.php';
 header('Content-Type: text/plain; charset=utf-8'); header('Cache-Control: no-store'); header('X-Robots-Tag: noindex');
 @set_time_limit(300);
 $db = getDB();
 $used = [];
-foreach ($db->query("SELECT cover_image_path FROM articles") as $r) $used[basename((string) $r[0])] = 1;
-foreach ($db->query("SELECT image_path FROM article_images") as $r) $used[basename((string) $r[0])] = 1;
+foreach ($db->query("SELECT cover_image_path FROM articles") as $r) $used[basename((string) reset($r))] = 1;
+foreach ($db->query("SELECT image_path FROM article_images") as $r) $used[basename((string) reset($r))] = 1;
 $pend = '';
-try { foreach ($db->query("SELECT data FROM pending_changes") as $r) $pend .= (string) $r[0]; } catch (Throwable $e) {}
+try { foreach ($db->query("SELECT data FROM pending_changes") as $r) $pend .= (string) reset($r); } catch (Throwable $e) {}
 $unused = [];
-foreach (glob(__DIR__ . '/uploads/articles/*') as $f) {
+foreach (glob(__DIR__ . "/uploads/articles/*") as $f) {
     $b = basename($f);
-    if (!is_file($f) || isset($used[$b]) || strpos($pend, $b) !== false) continue;
+    if (!is_file($f) || $b === '' || isset($used[$b]) || strpos($pend, $b) !== false) continue;
     $unused[] = $b;
     echo "not used: uploads/articles/$b (", filesize($f), " bytes, ", gmdate('Y-m-d', filemtime($f)), ")\n";
 }
-echo count($unused), " unused article pictures; ", count($used), " in use\n";
+unset($used[""]); echo count($unused), " unused article pictures; ", count($used), " in use\n"; if (($_GET["a"] ?? "") === "run" && count($used) < 5) { echo "stopped: too few pictures in use, something is wrong\n"; exit; }
 $st = $db->prepare("SELECT id, title_en, event_start_date, event_end_date, status FROM articles WHERE slug = 'made-with-your-magic-at-hayy-arts' OR title_en LIKE 'Made With Your Magic%'");
 $st->execute(); $mw = $st->fetchAll();
 foreach ($mw as $r) echo "event #", $r['id'], " ", $r['title_en'], " ", $r['event_start_date'], " to ", $r['event_end_date'], " ", $r['status'], "\n";
