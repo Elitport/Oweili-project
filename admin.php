@@ -403,7 +403,14 @@ if ($isAdmin && owHasTable('articles')) {
 $mapDrafts = 0;
 $mapClaims = 0;   // "Is this your place?" messages from the Art Map (owner, 13 Nov 2026)
 if ($isAdmin) { require_once __DIR__ . '/artmap_lib.php'; $mapDrafts = owArtPlacesDrafts(); $mapClaims = owClaimsWaiting(); }
-$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts + $mapClaims;
+/* Institutes and courses waiting for approval (course booking, owner, 14 Nov 2026; booking_lib.php) */
+$bookWait = 0;
+if ($isAdmin && owHasColumn('courses', 'bookable') && owHasColumn('institutes', 'via_signup')) {
+    try { $bookWait = (int) getDB()->query("SELECT (SELECT COUNT(*) FROM courses WHERE bookable = 1 AND status = 'pending')
+                                                 + (SELECT COUNT(*) FROM institutes i JOIN users u ON u.id = i.user_id WHERE i.via_signup = 1 AND u.is_approved = 0)")->fetchColumn(); }
+    catch (Throwable $e) { $bookWait = 0; }
+}
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts + $mapClaims + $bookWait;
 $SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
 /* one value, as the admin should read it */
 $showVal = function (string $field, $v) use ($SALE_WORDS): string {
@@ -693,6 +700,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <a class="card card-hover" href="admin_gallery.php"><b><?= owBi('Gallery', 'المعرض') ?></b><span><?= owBi('Collections, Artist of the week, verified artists.', 'المجموعات، فنان الأسبوع، الفنانون الموثّقون.') ?></span></a>
       <a class="card card-hover" href="admin_institutes.php"><b><?= owBi('Institutes', 'المعاهد') ?></b><span><?= owBi('Art institutes and their courses.', 'المعاهد الفنية ودوراتها.') ?></span></a>
       <a class="card card-hover" href="admin_art_map.php"><b><?= owBi('Art Map', 'خريطة الفن') ?></b><span><?= owBi('Museums and art galleries: drafts and published.', 'المتاحف والمعارض الفنية: المسودات والمنشور.') ?></span></a>
+      <a class="card card-hover" href="admin_bookings.php"><b><?= owBi('Courses and tickets', 'الدورات والتذاكر') ?></b><span><?= owBi('Institutes, courses, registrations, partner museums, tickets and payouts (hidden from visitors until switched on).', 'المعاهد والدورات والتسجيلات والمتاحف الشريكة والتذاكر والمستحقات (مخفية عن الزوار حتى التفعيل).') ?></span></a>
     </div>
   </div>
 
@@ -960,6 +968,14 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="wc-list"><div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
       <div><strong><?= owBi($mapClaims . ' waiting', $mapClaims . ' بانتظارك') ?></strong></div>
       <a class="btn btn-accent btn-sm" href="admin_art_map.php#claims"><?= owBi('Review them', 'راجعها') ?></a>
+    </div></div>
+    <?php endif; ?>
+
+    <?php if ($bookWait): ?>
+    <h3 class="wc-h"><?= owBi('Courses and institutes waiting for approval', 'دورات ومعاهد بانتظار الموافقة') ?> <span class="pill count"><?= (int) $bookWait ?></span></h3>
+    <div class="wc-list"><div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+      <div><strong><?= owBi($bookWait . ' waiting', $bookWait . ' بانتظارك') ?></strong></div>
+      <a class="btn btn-accent btn-sm" href="admin_bookings.php#courses"><?= owBi('Review them', 'راجعها') ?></a>
     </div></div>
     <?php endif; ?>
 

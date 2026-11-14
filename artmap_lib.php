@@ -215,7 +215,7 @@ function owMapDirectory(): array {
             $seen = [];
             foreach ($rows as $p) if ($p['kind'] !== 'institute') $seen[mb_strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', (string) $p['name_en'])))] = 1;
             $upd = owHasColumn('institutes', 'updated_at') ? 'updated_at' : 'NULL AS updated_at';   // the institutes table may have no updated_at
-            foreach (getDB()->query("SELECT id, name_en, name_ar, city_en, city_ar, description_en, description_ar, contact_phone, website_url, $upd FROM institutes WHERE is_active = 1 ORDER BY name_en") as $i) {
+            foreach (getDB()->query("SELECT id, name_en, name_ar, city_en, city_ar, description_en, description_ar, contact_phone, website_url, $upd FROM institutes WHERE is_active = 1 AND " . owSignupInstSql() . " ORDER BY name_en") as $i) {
                 if (isset($seen[mb_strtolower(trim(preg_replace('/\s*\(.*\)\s*$/u', '', (string) $i['name_en'])))])) continue;
                 $rg = owMapRegionKey((string) ($i['city_en'] ?: $i['city_ar']));
                 if ($rg === '') continue;
@@ -236,6 +236,18 @@ function owMapDirectory(): array {
         $dir[$r['src'] . $r['id']] = $r;
     }
     return $dir;
+}
+/* Institutes that joined through the sign-up page (booking_lib.php, 14 Nov 2026) stay off the Art Map until the bookings switch is on */
+function owSignupInstSql(string $a = ''): string {
+    if (!owHasColumn('institutes', 'via_signup')) return '1';
+    require_once __DIR__ . '/gallery_lib.php';
+    return owPartOn('bookings') ? '1' : $a . 'via_signup = 0';
+}
+/* Bookable courses (booking_lib.php) count only when approved and the bookings switch is on */
+function owBookableCourseSql(string $c = 'c.'): string {
+    if (!owHasColumn('courses', 'bookable')) return '1';
+    require_once __DIR__ . '/gallery_lib.php';
+    return owPartOn('bookings') ? "({$c}bookable = 0 OR {$c}status = 'approved')" : "{$c}bookable = 0";
 }
 function owMapPlain(string $s): string { return trim(preg_replace('/\s+/u', ' ', strip_tags($s))); }
 function owMapPlaceUrl(string $src, int $id): string { return owMapDirectory()[$src . $id]['url'] ?? ''; }

@@ -47,6 +47,8 @@ if (!defined('OW_HIDDEN_PARTS')) define('OW_HIDDEN_PARTS', [
     /* Art Styles is painting and drawing only for now (owner, 8 Nov 2026): the 15 other styles listed in
        art_types.php (OW_MORE_STYLES) are hidden everywhere, never deleted. One switch brings them all back */
     'more_styles' => ['more_styles_on', 'Other art styles (the 15 that are not painting or drawing: stained glass, mosaic, calligraphy…)', 'أساليب فنية أخرى (الخمسة عشر غير الرسم والتلوين: الزجاج المعشّق، الفسيفساء، الخط…)', 'explore.php'],
+    /* Course booking for institutes and ticket sales for partner museums (owner, 14 Nov 2026; booking_lib.php) */
+    'bookings'  => ['bookings_on', 'Course booking and museum tickets (institute and museum accounts, course pages, ticket sales, test payments, the booking rules in the Terms)', 'حجز الدورات وتذاكر المتاحف (حسابات المعاهد والمتاحف، صفحات الدورات، بيع التذاكر، الدفع التجريبي، قواعد الحجز في الشروط)', 'art_map.php'],
     'workshops' => ['workshops_on', 'Upcoming workshops (the 5 "Coming soon" cards on the Art Map, Institutes tab)', 'ورش العمل القادمة (البطاقات الخمس «قريباً» في خريطة الفن، تبويب المعاهد)', 'art_map.php?tab=institutes'],
 ]);
 function owPartOn(string $part): bool { $k = OW_HIDDEN_PARTS[$part][0] ?? ''; return $k !== '' && owSetting($k, '0') === '1'; }

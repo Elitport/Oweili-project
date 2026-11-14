@@ -100,6 +100,9 @@ owLegalPage([
         '- إن تأخر توصيل عمل جاهز أكثر من 15 يوماً عن الموعد المتفق عليه، يمكنك الإلغاء واسترداد مالك، إلا إن كان التأخير لسبب خارج عن إرادتنا. ولا ينطبق ذلك على الأعمال الخاصة، فلها شروطها الخاصة.',
         "- للأسئلة أو الشكاوى عن عملية شراء: راسلنا أولاً على $C. ويمكنك أيضاً التواصل مع وزارة التجارة.",
     ]],
+    /* Courses and museum tickets: cancellation and refunds, each rule with its official source. Shown only while the bookings switch is on (booking_lib.php, 14 Nov 2026) */
+    ...((function () { require_once __DIR__ . '/booking_lib.php'; return owBookingsReady() && owBookingsOn()
+        ? [['bookings', 'Courses and museum tickets: cancelling and refunds', 'الدورات وتذاكر المتاحف: الإلغاء والاسترداد', [], [], owBookingTermsHtml()]] : []; })()),
     ['site', 'Oweili’s own content', 'محتوى أويلي', [
         'The Oweili name, logo, design and our own texts belong to Oweili. Please do not copy them without our permission.',
         'Links to other websites are there to help you. We are not responsible for their content.',

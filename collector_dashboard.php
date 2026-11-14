@@ -24,6 +24,8 @@ if (!isLoggedIn()) { header('Location: login.php?next=collector_dashboard.php');
 $me = currentUser();
 if (!$me) { header('Location: login.php'); exit; }
 /* Artists and staff belong on their own dashboards */
+/* institute and museum accounts (booking_lib.php, 14 Nov 2026) have their own dashboards; dashboardUrl() in config.php sends them here */
+if (in_array($me['role'] ?? '', ['institute', 'museum'], true)) { header('Location: ' . ($me['role'] === 'institute' ? 'institute_dashboard.php' : 'museum_dashboard.php')); exit; }
 if (($me['role'] ?? '') !== 'collector') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 $uid = (int) $me['id'];
 

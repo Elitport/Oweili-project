@@ -83,7 +83,7 @@ function owIpHash(): string {
 /* The account role as an activity-log actor type */
 function owActorType(?string $role): string {
     return ['artist' => 'artist', 'collector' => 'buyer', 'admin' => 'admin', 'sub_admin' => 'sub_admin',
-            'institute' => 'institute'][(string) $role] ?? 'guest';
+            'institute' => 'institute', 'museum' => 'museum'][(string) $role] ?? 'guest';
 }
 
 /* Writes one line: $actor = ['type' => 'buyer', 'id' => 5]. Without it: the

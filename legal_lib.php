@@ -83,8 +83,10 @@ html[dir="rtl"] .legal p,html[dir="rtl"] .legal li{line-height:1.7;}
     <?php foreach ($sections as $s): ?>
     <section id="<?= e($s[0]) ?>">
       <h2><?= owBi($s[1], $s[2]) ?></h2>
+      <?php if (isset($s[5])): /* a section made of our own ready HTML, e.g. the booking rules with their source links (booking_lib.php, 14 Nov 2026) */ echo $s[5]; else: ?>
       <div class="bi-en" lang="en"><?= owLegalBlock($s[3]) ?></div>
       <div class="bi-ar" lang="ar"><?= owLegalBlock($s[4]) ?></div>
+      <?php endif; ?>
     </section>
     <?php endforeach; ?>
   </div>

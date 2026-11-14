@@ -94,6 +94,26 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     <?php if (count($comHist) > 1): ?><ul class="rows" style="margin-top:var(--space-sm)"><?php foreach (array_reverse($comHist) as [$cFrom, $cRate]): ?><li><span><?= e(owCommissionText((float) $cRate)) ?></span><span class="mini" dir="ltr"><?= $cFrom === '2000-01-01 00:00:00' ? owBi('before the first change', 'قبل أول تغيير') : e(substr((string) $cFrom, 0, 16)) ?></span></li><?php endforeach; ?></ul><?php endif; ?>
   </div>
 
+<?php /* Course commission: its own number, apart from the artwork commission above (owner, 14 Nov 2026; booking_lib.php) */
+  require_once __DIR__ . '/booking_lib.php'; $ccMsg = '';
+  if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'course_commission' && verifyCsrf($_POST['csrf_token'] ?? null)) {
+      $raw = str_replace(['٫', ','], '.', strtr(trim((string) ($_POST['rate'] ?? '')), ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9']));
+      $ccOld = owCourseCommission();
+      $ccMsg = (preg_match('/^\d{1,2}(\.\d{1,2})?$/', $raw) && (float) $raw >= 0 && (float) $raw <= 50 && owSetSetting('course_commission', rtrim(rtrim(number_format((float) $raw, 2, '.', ''), '0'), '.'))) ? 'ok' : 'bad';
+      if ($ccMsg === 'ok') owLog('setting_change', null, null, 'course_commission ' . $ccOld . ' -> ' . owCourseCommission(), ['type' => 'admin', 'id' => null]);
+  }
+  $ccText = rtrim(rtrim(number_format(owCourseCommission(), 2), '0'), '.') . '%'; ?>
+  <div class="card" id="course-commission"><h2><?= owBi('Course commission', 'عمولة الدورات') ?> <span class="pillx ok"><?= e($ccText) ?></span></h2>
+    <p><?= owBi('Oweili’s share of each course registration, before VAT. Separate from the artwork commission above. Registrations already paid keep the rate they were paid at. Museums have their own rate each (Admin → Art Map).',
+                'حصة أويلي من كل تسجيل في دورة، قبل ضريبة القيمة المضافة. مستقلة عن عمولة الأعمال الفنية أعلاه. وتبقى التسجيلات المدفوعة سابقاً على النسبة التي دُفعت بها. ولكل متحف نسبته الخاصة (الإدارة ← خريطة الفن).') ?></p>
+    <?php if ($ccMsg === 'ok'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. The course commission is now ' . $ccText . '.', 'تم الحفظ. عمولة الدورات الآن ' . $ccText . '.') ?></div>
+    <?php elseif ($ccMsg === 'bad'): ?><div class="alert alert-error" role="alert"><?= owBi('Please type a number from 0 to 50, for example 10.', 'يرجى كتابة رقم من 0 إلى 50، مثل 10.') ?></div><?php endif; ?>
+    <form method="post" action="admin.php?settings=1#course-commission" style="display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:flex-end"><?= csrfField() ?><input type="hidden" name="do" value="course_commission">
+      <div class="field" style="margin:0"><label for="cc-rate"><?= owBi('Course commission (%)', 'عمولة الدورات (٪)') ?></label><input id="cc-rate" name="rate" type="text" inputmode="decimal" dir="ltr" maxlength="5" style="max-width:120px" value="<?= e(rtrim($ccText, '%')) ?>"></div>
+      <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
+    <p class="mini" style="margin-top:var(--space-sm)"><a href="admin_bookings.php"><?= owBi('Courses, tickets and payouts →', 'الدورات والتذاكر والمستحقات ←') ?></a></p>
+  </div>
+
 <?php require_once __DIR__ . '/order_lib.php'; $payMiss = owPaymentsMissing(); ?>
   <div class="card"><h2><?= owBi('Payments and escrow', 'الدفع والضمان') ?> <?= !$payMiss ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Switched off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('Orders for artworks, gifts, commissions and course or workshop tickets are built, with escrow: Oweili holds the money and releases it to the artist after the collector confirms receipt, or ' . OW_ESCROW_DAYS . ' days after delivery with no complaint, minus Oweili’s commission (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '%, before VAT). Everything stays switched off and hidden until these are ready:',

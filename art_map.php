@@ -32,11 +32,11 @@ try { $places = $tab === 'all' ? owArtPlacesAllPublished($region) : owArtPlacesP
 if ($tab === 'institutes' || $tab === 'all') {
     try {
         $db = getDB();
-        $activeCourse = 'c.is_active = 1 AND (c.end_date IS NULL OR c.end_date >= CURDATE())';
+        $activeCourse = 'c.is_active = 1 AND (c.end_date IS NULL OR c.end_date >= CURDATE()) AND ' . owBookableCourseSql();   // bookable courses only when approved and switched on (14 Nov 2026)
         $institutes = $db->query("SELECT i.id, i.name_en, i.name_ar, i.city_en, i.city_ar, i.description_en, i.description_ar,
                        i.logo_path, i.contact_email, i.contact_phone, i.website_url,
                        (SELECT COUNT(*) FROM courses c WHERE c.institute_id = i.id AND $activeCourse) AS course_count
-                FROM institutes i WHERE i.is_active = 1 ORDER BY course_count DESC, i.name_en")->fetchAll();
+                FROM institutes i WHERE i.is_active = 1 AND " . owSignupInstSql('i.') . " ORDER BY course_count DESC, i.name_en")->fetchAll();
         if ($city !== '') $institutes = array_values(array_filter($institutes, fn($i) => owMapRegionKey((string) ($i['city_en'] ?: $i['city_ar'])) === $city));
         $ids = array_map('intval', array_column($institutes, 'id'));
         if ($ids) {
@@ -117,6 +117,7 @@ $placeCard = function (array $p) use ($PIN): string {
     if (($tel = owTelHref((string) $p['phone'])) !== '') $info .= '<li><span class="m-lbl">' . owBi('Phone', 'الهاتف') . '</span> <a href="' . e($tel) . '" dir="ltr">' . e((string) $p['phone']) . '</a></li>';
     if ($info !== '') $h .= '<ul class="m-info">' . $info . '</ul>';
     $h .= owMapActs(owMapUrl((string) $p['website']), owMapsLink($nEn, $cEn, (string) $p['maps_url']), $nEn, owInstaUrl((string) $p['instagram']));
+    if (is_file(__DIR__ . '/booking_lib.php')) { require_once __DIR__ . '/booking_lib.php'; $tb = owTicketButton($p); if ($tb !== '') $h .= '<div class="m-acts">' . $tb . '</div>'; }   // museums: Buy ticket / Official tickets, only once switched on (14 Nov 2026)
     $h .= owMapClaimLink('p=' . (int) $p['id']);
     return $h . '</article>';
 };
@@ -457,7 +458,9 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
                       else                 echo owBi($left . ' of ' . $total . ' seats left', 'متبقٍ ' . $left . ' من ' . $total . ' مقعداً');
                     ?></span>
                   </div>
-                  <?php if ($link !== ''): ?>
+                  <?php if ((int) ($c['bookable'] ?? 0) === 1): /* a course booked on Oweili (14 Nov 2026; shown only once switched on) */ ?>
+                    <a class="btn btn-primary btn-sm c-btn" href="course.php?id=<?= (int) $c['id'] ?>"><?= owBi('See the course and register', 'تفاصيل الدورة والتسجيل') ?></a>
+                  <?php elseif ($link !== ''): ?>
                     <a class="btn btn-primary btn-sm c-btn" href="<?= e($link) ?>"<?= strpos($link, 'http') === 0 ? ' target="_blank" rel="noopener"' : '' ?>><?= owBi('Register Interest', 'سجّل اهتمامك') ?></a>
                   <?php endif; ?>
                 </div>

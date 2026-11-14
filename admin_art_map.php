@@ -86,6 +86,44 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             }
         }
         $photoErr = $id;
+    } elseif ($do === 'tickets' && $id > 0 && is_file(__DIR__ . '/booking_lib.php')) {
+        /* Partner museum: ticket sales, commission, payout rule, its own account (owner, 14 Nov 2026; booking_lib.php). Hidden from visitors until the bookings switch is on. */
+        require_once __DIR__ . '/booking_lib.php';
+        $pl = owMuseumGet($id);
+        if ($pl && owBookingsReady()) {
+            $com = (float) str_replace(',', '.', (string) ($_POST['ticket_commission'] ?? '10'));
+            $rule = isset(OW_PAYOUT_RULES[$_POST['payout_rule'] ?? '']) ? (string) $_POST['payout_rule'] : 'after_visit';
+            $days = max(0, min(120, (int) ($_POST['payout_days'] ?? 7)));
+            $turl = $txt('tickets_url', 500); $turlOk = $turl === '' ? '' : owMapUrl($turl);
+            $mail = strtolower($txt('account_email', 190)); $uid = null;
+            if ($com < 0 || $com > 50) $errors[] = ['The commission must be from 0 to 50.', 'العمولة من 0 إلى 50.'];
+            if ($turl !== '' && $turlOk === '') $errors[] = ['Please check the official tickets link (https://).', 'يرجى مراجعة رابط التذاكر الرسمية (https://).'];
+            if ($mail !== '') {
+                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) $errors[] = ['Please check the account email.', 'يرجى مراجعة بريد الحساب.'];
+                else {
+                    $u = $db->prepare('SELECT id, role FROM users WHERE LOWER(TRIM(email)) = :e LIMIT 1'); $u->execute([':e' => $mail]); $u = $u->fetch();
+                    if ($u && $u['role'] !== 'museum') $errors[] = ['This email already belongs to another kind of account.', 'هذا البريد مستخدم لحساب من نوع آخر.'];
+                    elseif ($u) $uid = (int) $u['id'];
+                    elseif (!$errors) {
+                        $db->prepare("INSERT INTO users (email, password, full_name_en, full_name_ar, role, is_verified, is_approved) VALUES (:e, :p, :n, :na, 'museum', 1, 1)")
+                           ->execute([':e' => $mail, ':p' => hashPassword(bin2hex(random_bytes(24))), ':n' => mb_substr((string) $pl['name_en'], 0, 150), ':na' => mb_substr((string) $pl['name_ar'], 0, 150)]);
+                        $uid = (int) $db->lastInsertId();
+                        owLog('museum_account_new', 'user', $uid, (string) $pl['name_en'], $actor);
+                        require_once __DIR__ . '/request_lib.php';
+                        owReqTellBuyer($mail, 'Your Oweili museum account · حساب متحفك في أويلي',
+                            'Your museum account on Oweili is ready (' . $pl['name_en'] . '). To choose your password, open the page below and type this email.',
+                            'حساب متحفك في أويلي جاهز (' . $pl['name_ar'] . '). لاختيار كلمة المرور، افتح الصفحة أدناه واكتب هذا البريد.', 'forgot.php');
+                    }
+                }
+            }
+            if (!$errors) {
+                $db->prepare('UPDATE art_places SET partner = :pa, ticket_commission = :c, payout_rule = :r, payout_days = :d, payout_note = :n, tickets_url = :t, user_id = :u WHERE id = :id')
+                   ->execute([':pa' => !empty($_POST['partner']) ? 1 : 0, ':c' => round($com, 2), ':r' => $rule, ':d' => $days, ':n' => $txt('payout_note', 500), ':t' => $turlOk, ':u' => $uid, ':id' => $id]);
+                owLog('art_place_tickets', 'art_place', $id, 'partner=' . (!empty($_POST['partner']) ? 1 : 0) . ' com=' . $com . ' rule=' . $rule, $actor);
+                header('Location: admin_art_map.php?ok=save' . $keep() . '#p' . $id); exit;
+            }
+            $photoErr = -$id;
+        }
     } elseif ($do === 'save') {
         $v = ['kind' => (string) ($_POST['kind'] ?? ''), 'region' => (string) ($_POST['region'] ?? ''), 'confidence' => (string) ($_POST['confidence'] ?? 'medium'),
               'name_en' => $txt('name_en', 200), 'name_ar' => $txt('name_ar', 200), 'city_en' => $txt('city_en', 120), 'city_ar' => $txt('city_ar', 120),
@@ -257,6 +295,27 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
             <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Upload the photo', 'ارفع الصورة') ?></button>
           </form></details>
         <details<?= $errors && !$photoErr && (int) ($_POST['id'] ?? 0) === (int) $p['id'] ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $form($p); ?></details>
+        <?php if ($p['kind'] === 'museum' && isset($p['partner']) && is_file(__DIR__ . '/booking_lib.php')): require_once __DIR__ . '/booking_lib.php';
+          $acct = ''; if (!empty($p['user_id'])) { $ua = $db->prepare('SELECT email FROM users WHERE id = :u'); $ua->execute([':u' => (int) $p['user_id']]); $acct = (string) $ua->fetchColumn(); }
+          $mine = $photoErr === -(int) $p['id']; $tv = fn(string $k, string $d) => (string) ($mine ? ($_POST[$k] ?? $d) : $d); ?>
+        <details<?= $mine ? ' open' : '' ?>><summary><?= owBi('Tickets', 'التذاكر') ?> <?= (int) $p['partner'] ? '<span class="pillx on">' . owBi('Partner', 'شريك') . '</span>' : '' ?></summary>
+          <form method="post" action="admin_art_map.php?<?= e(ltrim($keep(), '&')) ?>"><?= csrfField() ?><input type="hidden" name="do" value="tickets"><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+            <p class="mini"><?= owBi('Hidden from visitors until "Course booking and museum tickets" is switched on (Settings). Partner: a "Buy ticket" button sold on Oweili. Not a partner: an "Official tickets" button to the link below (or the website).', 'مخفي عن الزوار حتى يُفعّل «حجز الدورات وتذاكر المتاحف» (الإعدادات). الشريك: زر «اشترِ تذكرتك» والبيع عبر أويلي. غير الشريك: زر «التذاكر الرسمية» إلى الرابط أدناه (أو الموقع).') ?></p>
+            <label class="chk"><input type="checkbox" name="partner" value="1"<?= (int) ($mine ? !empty($_POST['partner']) : $p['partner']) ? ' checked' : '' ?>> <?= owBi('Partner museum: sell tickets on Oweili', 'متحف شريك: بيع التذاكر عبر أويلي') ?></label>
+            <div class="g3">
+              <?= $field('ticket_commission', 'Oweili’s commission (%)', 'عمولة أويلي (٪)', $tv('ticket_commission', rtrim(rtrim((string) $p['ticket_commission'], '0'), '.')), ' inputmode="decimal" dir="ltr" maxlength="5"', false, 'tk' . $p['id']) ?>
+              <div class="field"><label for="tk-r<?= (int) $p['id'] ?>"><?= owBi('Payout rule (by agreement)', 'قاعدة المستحقات (حسب الاتفاقية)') ?></label><select id="tk-r<?= (int) $p['id'] ?>" name="payout_rule"><?php foreach (OW_PAYOUT_RULES as $rk => $rw): ?><option value="<?= $rk ?>"<?= ($mine ? ($_POST['payout_rule'] ?? '') : $p['payout_rule']) === $rk ? ' selected' : '' ?>><?= e(owIsAr() ? $rw[1] : $rw[0]) ?></option><?php endforeach; ?></select></div>
+              <?= $field('payout_days', 'Days after the visit (for that rule)', 'أيام بعد الزيارة (لتلك القاعدة)', $tv('payout_days', (string) $p['payout_days']), ' inputmode="numeric" dir="ltr" maxlength="3"', false, 'tk' . $p['id']) ?>
+            </div>
+            <?= $field('payout_note', 'Agreement note (optional, the museum sees it)', 'ملاحظة الاتفاقية (اختياري، يراها المتحف)', $tv('payout_note', (string) $p['payout_note']), ' maxlength="500"', false, 'tk' . $p['id']) ?>
+            <div class="g2">
+              <?= $field('tickets_url', 'Official tickets link, for non-partners (optional)', 'رابط التذاكر الرسمية، لغير الشركاء (اختياري)', $tv('tickets_url', (string) $p['tickets_url']), ' dir="ltr" maxlength="500"', false, 'tk' . $p['id']) ?>
+              <?= $field('account_email', 'Museum account email (its dashboard; empty = none)', 'بريد حساب المتحف (لوحته؛ فارغ = بلا حساب)', $tv('account_email', $acct), ' dir="ltr" maxlength="190" inputmode="email"', false, 'tk' . $p['id']) ?>
+            </div>
+            <p class="mini"><?= owBi('A new account email gets a message to choose its password. Ticket types and dates:', 'يصل بريد الحساب الجديد رسالة لاختيار كلمة المرور. أنواع التذاكر والتواريخ:') ?> <a href="admin_bookings.php?setup=<?= (int) $p['id'] ?>#setup"><?= owBi('Courses and tickets →', 'الدورات والتذاكر ←') ?></a></p>
+            <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save', 'حفظ') ?></button>
+          </form></details>
+        <?php endif; ?>
       </div>
     </div>
   </div>

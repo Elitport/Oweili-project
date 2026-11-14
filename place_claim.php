@@ -26,7 +26,7 @@ try {
     if ($pid > 0 && owArtPlacesReady()) {
         $st = getDB()->prepare("SELECT id, name_en, name_ar, city_en, city_ar FROM art_places WHERE id = :id AND status = 'published'"); $st->execute([':id' => $pid]); $place = $st->fetch() ?: null;
     } elseif ($iid > 0) {
-        $st = getDB()->prepare('SELECT id, name_en, name_ar, city_en, city_ar FROM institutes WHERE id = :id AND is_active = 1'); $st->execute([':id' => $iid]); $place = $st->fetch() ?: null;
+        $st = getDB()->prepare('SELECT id, name_en, name_ar, city_en, city_ar FROM institutes WHERE id = :id AND is_active = 1 AND ' . owSignupInstSql()); $st->execute([':id' => $iid]); $place = $st->fetch() ?: null;
     }
 } catch (Throwable $e) { $place = null; }
 if (!$place) { http_response_code(404); require __DIR__ . '/404.php'; exit; }
