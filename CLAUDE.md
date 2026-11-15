@@ -6,7 +6,7 @@
 - Founded: Saudi Arabia, open to the world
 - Mission: The home of real art («بيت الفن الأصيل») — where artists prove their work is handmade, and buyers purchase with full confidence
 - Stack: PHP, MySQL, HTML, CSS, JavaScript
-- Hosting: Hostinger — auto-deploy from GitHub main branch (now active)
+- Hosting: Hostinger — auto-deploy from GitHub main branch (now active). Repository: github.com/Elitport/Oweili-project (renamed from Resha-project; git remote updated 15 Nov 2026)
 
 ## Roles
 - Artist: registers, photographs artwork in 3 stages, sets price and art type
@@ -145,8 +145,8 @@
 
 ### About page (15 Nov 2026, owner)
 - about.php («من نحن»): the owner's own Arabic text, used exactly, with a matching English version. Title card "Oweili, the home of real art." / «أويلي بيت الفن الأصيل.» and its line; cards: Why Oweili? / «لماذا أويلي؟»; Our standards / «معاييرنا» (proof of process 25% 50% 100%, every artist and artwork reviewed, certificate with a number and QR code, a smart check for copied art); How we protect the collector / «كيف نحمي المقتني» and How we protect the artist / «كيف نحمي الفنان» side by side (stacked on phones); More than a shop / «أكثر من متجر»; last line "Oweili is run by Elitport Limited, a registered Saudi company." / «أويلي تديرها شركة إيليتبورت المحدودة، شركة سعودية مسجّلة.» with three buttons: Explore Gallery, Join as Artist, Verify a certificate / «تحقق من شهادة» (cert_verify.php)
-- The owner's photo art-supplies as the background (studio_lib.php), frosted cards like the other photo pages. Footer link "About" / «من نحن» before Privacy (footer.php). Not in the menu or the sitemap
-- Files: about.php (new), footer.php. Tables: none
+- The owner's photo art-supplies as the background (studio_lib.php), frosted cards like the other photo pages. Footer link "About" / «من نحن» before Privacy (footer.php). Not in the menu. In the sitemap in English and Arabic (about.php and about.php?lang=ar; sitemap.php, owner 15 Nov 2026)
+- Files: about.php (new), footer.php, sitemap.php. Tables: none
 
 ### Own photos for Verify, Terms, Privacy and the email-confirm page (15 Nov 2026, owner)
 - The owner's wide photos, used like the other photo pages (studio_lib.php OW_STUDIO, focus, phone colour, tiny copy; assets/img/studio/<key>-640/1280/1920/2000 .avif/.webp/.jpg): Verify a certificate (cert_verify.php) = cert-ribbons (rolled certificates with red ribbons; replaces museum-walk), Terms (terms.php) = pen-paper (a blank sheet and a wooden fountain pen), Privacy (privacy.php) = wax-seal (a letter with a bronze wax seal), email-confirm page (verify.php) = envelopes (a hand holding paper envelopes). Terms and Privacy pass 'photo' to owLegalPage() (legal_lib.php prints the backdrop). The About page (about.php) uses art-supplies (see the About page entry)

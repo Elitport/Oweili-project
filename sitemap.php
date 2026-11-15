@@ -27,6 +27,9 @@ foreach ([['', 'daily', '1.0'], ['marketplace.php', 'daily', '0.9'], ['explore.p
           ['register_collector.php', 'monthly', '0.4'], ['privacy.php', 'yearly', '0.2'], ['terms.php', 'yearly', '0.2']] as [$p, $f, $pr]) {
     $add($p, null, $f, $pr);
 }
+/* the About page, in English and Arabic (owner, 15 Nov 2026) */
+$add('about.php', null, 'yearly', '0.3');
+$add('about.php?lang=ar', null, 'yearly', '0.3');
 /* Auctions only while the admin has the page switched on (gallery_lib.php owAuctionsPageOn) */
 /* the Art Map's region pages and every public place's own page (owner, 13 Nov 2026) */
 try {
