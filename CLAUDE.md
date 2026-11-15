@@ -142,10 +142,11 @@
 
 ## Features
 
-### Admin → Art Map: map location box (15 Nov 2026, owner)
+### Admin → Art Map and Admin → Institutes: map location box (15 Nov 2026, owner)
 - admin_art_map.php: each place has a "Map location" / «الموقع على الخريطة» section (its own small form; the summary shows the saved numbers or "Not on the map yet"). Paste a Google Maps link: the latitude and longitude fill in by themselves (long links: the place pin !3d…!4d…, @lat,lng, ?q=lat,lng, /place/lat,lng; plain "lat, lng" and Arabic digits work too). Short share links (maps.app.goo.gl, goo.gl) are opened by our own server, which follows Google's own addresses only. A small OpenStreetMap preview shows the pin to confirm (a note when the point is outside Saudi Arabia); the numbers can also be typed by hand. "Save the location" saves art_places.lat / lng (checked: latitude −90 to 90, longitude −180 to 180); both boxes empty + Save takes the place off the map. Works without JavaScript too (the link is read on the server). Logged art_place_coords. The Edit form is unchanged and never touches the location
-- Only the art_places rows (Admin → Art Map). The older institutes (Admin → Institutes) have no such box
-- Files: admin_art_map.php, assets/js/admin_map_pick.js (new; Leaflet from assets/vendor/leaflet). Tables: art_places (lat, lng), activity_log
+- Same box in Admin → Institutes (admin_institutes.php, owner 15 Nov 2026) for the older institutes: saves institutes.lat / lng (art_map.php already shows their pins while they are shown), logged institute_coords. The Edit institute form is unchanged and never touches the location
+- The shared code lives in map_coords_lib.php (owCoordsFromText, owResolveMapsLink, owCoordsFromPost, owCoordsResolveEndpoint), used by both pages
+- Files: admin_art_map.php, admin_institutes.php, map_coords_lib.php (new), assets/js/admin_map_pick.js (new; Leaflet from assets/vendor/leaflet). Tables: art_places (lat, lng), institutes (lat, lng), activity_log
 
 ### Art Map: a real map with pins (14 Nov 2026, owner)
 - art_map.php: a map card under the tabs and the Region / search row (#m-map; 420 px tall on laptops, 220 px on phones), showing a pin (brand pink circle, navy edge) for every place on the current tab, region and search that has coordinates. Tapping a pin shows the name, the city and "See the place" / «صفحة المكان» (its page on oweili.com/art-map/…). Scrolling the page never zooms the map until it is clicked. No pins = no map (and no map files are loaded). Leaflet 1.9 kept on our own server (assets/vendor/leaflet/, BSD-2-Clause, LICENSE.txt); map pictures from tile.openstreetmap.org with "© OpenStreetMap contributors" in both languages (assets/js/art_map_pins.js)
