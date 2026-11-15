@@ -126,7 +126,7 @@
 - RULE (owner, 14 Nov 2026): none of the photos below may ever be used again, anywhere on the site, in emails, on social media or in any other Oweili material. Before adding any photo, check this list. New rejections are added here
 - Page background photos (owner's studio photos):
   - gallery-visit: a woman looking at framed paintings (a face, and paintings with people and nudity). Was the Gallery, then Art Events photo
-  - museum-walk: visitors walking through a museum hall with stone reliefs (people). Was the Art Events and Art Map photo. STILL USED on the certificate verify page (cert_verify.php) and the hidden Artist Spotlights list and articles (articles_list.php, article.php), so its files are NOT deleted yet; it needs a new photo there first
+  - museum-walk: visitors walking through a museum hall with stone reliefs (people). Was the Art Events, Art Map and certificate verify photo (the verify page got its own photo on 15 Nov 2026). STILL USED by the hidden Artist Spotlights list and articles (articles_list.php, article.php), so its files are NOT deleted yet; it needs a new photo there first
   - palette-hand: a hand holding a palette, with a painting of roses on the easel (flowers). Was the Commissions photo
   - home-painting: an artist painting a sunny landscape outdoors (tall photo, zoomed on computers). Was the Gallery photo
   - brushes-jars: brushes in glass jars (tall photo, zoomed). Was the Join as an Artist photo
@@ -141,6 +141,11 @@
 - Deleted on 15 Nov 2026 (owner): the pink brush video assets/video/hero-pink-tall.mp4 (no page used it), from the project and the live site. Backup first: .backups/rejected-video-20261115-083853/hero-pink-tall.mp4 on the server; the file also stays in the git history
 
 ## Features
+
+### Own photos for Verify, Terms, Privacy and the email-confirm page (15 Nov 2026, owner)
+- The owner's wide photos, used like the other photo pages (studio_lib.php OW_STUDIO, focus, phone colour, tiny copy; assets/img/studio/<key>-640/1280/1920/2000 .avif/.webp/.jpg): Verify a certificate (cert_verify.php) = cert-ribbons (rolled certificates with red ribbons; replaces museum-walk), Terms (terms.php) = pen-paper (a blank sheet and a wooden fountain pen), Privacy (privacy.php) = wax-seal (a letter with a bronze wax seal), email-confirm page (verify.php) = envelopes (a hand holding paper envelopes). Terms and Privacy pass 'photo' to owLegalPage() (legal_lib.php prints the backdrop). The About page photo (art-supplies) is ready in studio_lib.php but the About page itself is not live yet
+- Text cards unchanged (frosted title cards, solid cards in dark mode). Checked laptop and phone, English and Arabic, light and dark
+- Files: studio_lib.php, legal_lib.php, terms.php, privacy.php, cert_verify.php, verify.php, assets/img/studio/. Tables: none
 
 ### Admin → Art Map and Admin → Institutes: map location box (15 Nov 2026, owner)
 - admin_art_map.php: each place has a "Map location" / «الموقع على الخريطة» section (its own small form; the summary shows the saved numbers or "Not on the map yet"). Paste a Google Maps link: the latitude and longitude fill in by themselves (long links: the place pin !3d…!4d…, @lat,lng, ?q=lat,lng, /place/lat,lng; plain "lat, lng" and Arabic digits work too). Short share links (maps.app.goo.gl, goo.gl) are opened by our own server, which follows Google's own addresses only. A small OpenStreetMap preview shows the pin to confirm (a note when the point is outside Saudi Arabia); the numbers can also be typed by hand. "Save the location" saves art_places.lat / lng (checked: latitude −90 to 90, longitude −180 to 180); both boxes empty + Save takes the place off the map. Works without JavaScript too (the link is read on the server). Logged art_place_coords. The Edit form is unchanged and never touches the location

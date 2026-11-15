@@ -13,7 +13,7 @@ $CO = OW_COMPANY_NAME; $CR = function_exists('owCompanyCr') ? owCompanyCr() : ''
 
 owLegalPage([
     'path' => 'privacy.php',
-    'title_en' => 'Privacy Policy', 'title_ar' => 'سياسة الخصوصية', 'centered_head' => true,
+    'title_en' => 'Privacy Policy', 'title_ar' => 'سياسة الخصوصية', 'centered_head' => true, 'photo' => 'wax-seal',
     'lead_en' => 'Your trust matters more to us than anything. Here is, in plain words, what we keep about you and why.',
     'lead_ar' => 'ثقتك أهم ما لدينا. هنا نشرح بكلمات بسيطة ما نحفظه عنك ولماذا.',
     'desc_en' => 'How Oweili collects, uses, keeps and deletes personal data, under the Saudi Personal Data Protection Law.',
