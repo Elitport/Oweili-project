@@ -17,12 +17,72 @@ owAdminGate();
 $actor = owAdminActor();
 $ready = owArtPlacesReady();
 $db = getDB();
-$errors = []; $photoErr = 0;
+$errors = []; $photoErr = 0; $coordErr = 0;
 $txt = fn(string $k, int $max) => mb_substr(trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', (string) ($_POST[$k] ?? ''))), 0, $max);
 $keep = function (): string {   // the list filters, kept after an action
     $f = array_intersect_key($_GET, array_flip(['k', 'st', 'rg', 'cf', 's']));
     return $f ? '&' . http_build_query($f) : '';
 };
+
+/* Map location (owner, 15 Nov 2026): read the coordinates from a Google Maps link, or take them typed by hand.
+   owCoordsFromText() knows the usual link shapes (…!3dLAT!4dLNG, @LAT,LNG, ?q=LAT,LNG, /place/LAT,LNG) and plain "LAT, LNG".
+   owResolveMapsLink() opens a short share link (maps.app.goo.gl / goo.gl) on our server, following Google's own addresses only. */
+function owCoordNum(string $v): string {
+    $v = strtr(trim($v), ['٠'=>'0','١'=>'1','٢'=>'2','٣'=>'3','٤'=>'4','٥'=>'5','٦'=>'6','٧'=>'7','٨'=>'8','٩'=>'9','۰'=>'0','۱'=>'1','۲'=>'2','۳'=>'3','۴'=>'4','۵'=>'5','۶'=>'6','۷'=>'7','۸'=>'8','۹'=>'9','٫'=>'.','−'=>'-',' '=>'']);
+    return preg_match('/^-?\d{1,3}(\.\d{1,12})?$/', $v) ? $v : ($v === '' ? '' : 'x');
+}
+function owCoordsOk($la, $lo): ?array {
+    $la = (float) $la; $lo = (float) $lo;
+    if ($la < -90 || $la > 90 || $lo < -180 || $lo > 180 || ($la == 0.0 && $lo == 0.0)) return null;
+    return [round($la, 6), round($lo, 6)];
+}
+function owCoordsFromText(string $s): ?array {
+    $t = $s; for ($i = 0; $i < 3; $i++) { $d = rawurldecode($t); if ($d === $t) break; $t = $d; }
+    $t = html_entity_decode($t, ENT_QUOTES, 'UTF-8');
+    $n = '(-?\d{1,3}\.\d+)';
+    if (preg_match_all('/!3d' . $n . '!4d' . $n . '/', $t, $m, PREG_SET_ORDER)) { $x = end($m); if ($c = owCoordsOk($x[1], $x[2])) return $c; }
+    if (preg_match('/[?&](?:q|query|ll|sll|center|destination|daddr)=\s*\+?' . $n . '\s*,\s*\+?' . $n . '/', $t, $m) && ($c = owCoordsOk($m[1], $m[2]))) return $c;
+    if (preg_match('~/(?:place|search|dir)/+\+?' . $n . '\s*,\s*\+?' . $n . '~', $t, $m) && ($c = owCoordsOk($m[1], $m[2]))) return $c;
+    if (preg_match('/@' . $n . ',' . $n . '/', $t, $m) && ($c = owCoordsOk($m[1], $m[2]))) return $c;
+    $p = strtr($s, ['،' => ',', '٫' => '.']); $p = owCoordNumPair($p);
+    return $p;
+}
+function owCoordNumPair(string $s): ?array {
+    $parts = preg_split('/\s*[,;]\s*|\s+/', trim($s));
+    if (count($parts) !== 2) return null;
+    $a = owCoordNum($parts[0]); $b = owCoordNum($parts[1]);
+    return ($a === '' || $a === 'x' || $b === '' || $b === 'x') ? null : owCoordsOk($a, $b);
+}
+function owResolveMapsLink(string $u): ?array {
+    $u = trim($u);
+    if (!preg_match('~^https://(?:maps\.app\.goo\.gl|goo\.gl)/[A-Za-z0-9/_\-?=&.%]{3,300}$~', $u) || !function_exists('curl_init')) return null;
+    $okHost = fn(string $h) => (bool) preg_match('/^(?:maps\.app\.goo\.gl|goo\.gl|(?:www\.|maps\.|consent\.)?google\.com(?:\.sa)?)$/', strtolower($h));
+    for ($hop = 0; $hop < 6; $hop++) {
+        if ($c = owCoordsFromText($u)) return $c;
+        $pu = parse_url($u);
+        if (($pu['scheme'] ?? '') !== 'https' || !$okHost((string) ($pu['host'] ?? ''))) return null;
+        $body = '';
+        $ch = curl_init($u);
+        curl_setopt_array($ch, [CURLOPT_FOLLOWLOCATION => false, CURLOPT_RETURNTRANSFER => false, CURLOPT_TIMEOUT => 8, CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_USERAGENT => 'Mozilla/5.0 (compatible; OweiliAdmin/1.0)', CURLOPT_HTTPHEADER => ['Accept-Language: en'],
+            CURLOPT_WRITEFUNCTION => function ($h, $chunk) use (&$body) { $body .= $chunk; return strlen($body) > 800000 ? 0 : strlen($chunk); }]);
+        curl_exec($ch);
+        $next = (string) curl_getinfo($ch, CURLINFO_REDIRECT_URL);
+        curl_close($ch);
+        if ($next !== '') { $u = $next; continue; }
+        if ($body !== '' && preg_match('/(?:center=|markers=)(-?\d{1,3}\.\d+)(?:%2C|,)(-?\d{1,3}\.\d+)/', $body, $m) && ($c = owCoordsOk($m[1], $m[2]))) return $c;
+        return $body !== '' && preg_match('/!3d(-?\d{1,3}\.\d+)!4d(-?\d{1,3}\.\d+)/', $body, $m) ? owCoordsOk($m[1], $m[2]) : null;
+    }
+    return null;
+}
+/* the map preview asks the server to open a short Google Maps link (admin only, with the security token) */
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'resolve_link') {
+    header('Content-Type: application/json; charset=utf-8'); header('Cache-Control: no-store');
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { echo json_encode(['ok' => false, 'why' => 'expired']); exit; }
+    $link = mb_substr(trim((string) ($_POST['link'] ?? '')), 0, 2000);
+    $c = owCoordsFromText($link) ?? owResolveMapsLink($link);
+    echo json_encode($c ? ['ok' => true, 'lat' => $c[0], 'lng' => $c[1]] : ['ok' => false, 'why' => 'none']); exit;
+}
 
 /* "Is this your place?" photo, for the admin only (it waits in the private folder until approved) */
 if (isset($_GET['claimphoto']) && owClaimsReady()) {
@@ -86,6 +146,26 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             }
         }
         $photoErr = $id;
+    } elseif ($do === 'coords' && $id > 0) {
+        /* the place's pin on the Art Map (owner, 15 Nov 2026): typed numbers win; otherwise the pasted Google Maps link is read */
+        $cur = $db->prepare('SELECT name_en FROM art_places WHERE id = :id'); $cur->execute([':id' => $id]); $cur = $cur->fetchColumn();
+        if ($cur === false) { header('Location: admin_art_map.php'); exit; }
+        $la = owCoordNum((string) ($_POST['lat'] ?? '')); $lo = owCoordNum((string) ($_POST['lng'] ?? '')); $link = $txt('gmaps_link', 2000);
+        $c = null;
+        if ($la === '' && $lo === '' && $link !== '') {
+            $c = owCoordsFromText($link) ?? owResolveMapsLink($link);
+            if (!$c) $errors[] = ['We could not read a location from this link. Open the place in Google Maps, copy the link from the address bar (or Share), or type the two numbers.', 'لم نتمكن من قراءة الموقع من هذا الرابط. افتح المكان في خرائط Google وانسخ الرابط من شريط العنوان (أو «مشاركة»)، أو اكتب الرقمين.'];
+        } elseif ($la === '' && $lo === '') {
+            $c = false;   // both empty: the place leaves the map
+        } elseif ($la === 'x' || $lo === 'x' || $la === '' || $lo === '' || !($c = owCoordsOk($la, $lo))) {
+            $c = null; $errors[] = ['Please check the two numbers: latitude from -90 to 90, longitude from -180 to 180 (for example 24.647142 and 46.710704).', 'يرجى مراجعة الرقمين: خط العرض من -90 إلى 90، وخط الطول من -180 إلى 180 (مثلاً 24.647142 و 46.710704).'];
+        }
+        if (!$errors) {
+            $db->prepare('UPDATE art_places SET lat = :la, lng = :lo WHERE id = :id')->execute([':la' => $c ? $c[0] : null, ':lo' => $c ? $c[1] : null, ':id' => $id]);
+            owLog('art_place_coords', 'art_place', $id, (string) $cur . ($c ? ' ' . $c[0] . ',' . $c[1] : ' removed from the map'), $actor);
+            header('Location: admin_art_map.php?ok=' . ($c ? 'coords' : 'coords_off') . $keep() . '#p' . $id); exit;
+        }
+        $coordErr = $id;
     } elseif ($do === 'tickets' && $id > 0 && is_file(__DIR__ . '/booking_lib.php')) {
         /* Partner museum: ticket sales, commission, payout rule, its own account (owner, 14 Nov 2026; booking_lib.php). Hidden from visitors until the bookings switch is on. */
         require_once __DIR__ . '/booking_lib.php';
@@ -212,13 +292,15 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
 .pl-head{display:flex;justify-content:space-between;gap:var(--space-sm);align-items:flex-start;flex-wrap:wrap;}.pl-head h3{font-size:17px;margin:0;}.pl-links{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:var(--fs-caption);margin:6px 0;}.pl-links a{color:var(--color-accent-dark);}
 .cf{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;border:1px solid var(--color-border-strong);}.cf.low{background:#b42318;border-color:#b42318;color:#fff;}.cf.high{background:rgba(var(--rgb-accent),.1);}
 .card.is-low{border:2px solid #b42318;}.flt{display:flex;flex-wrap:wrap;gap:8px;align-items:end;}.flt .field{margin:0;min-width:150px;flex:1 1 150px;}.src{font-size:12px;margin:4px 0 0;padding-inline-start:18px;}.src a{color:var(--color-accent-dark);overflow-wrap:anywhere;}
+.mp-map{height:220px;border-radius:12px;border:1px solid var(--color-border);margin:0 0 var(--space-sm);z-index:0;}.mp-msg:empty{display:none;}.mp-msg.bad{color:var(--color-primary-dark);font-weight:700;}
 @media(max-width:600px){.pl{grid-template-columns:1fr;}.pl img,.pl .noimg{width:100%;height:auto;aspect-ratio:16/10;}}',
     '<a class="btn btn-ghost btn-sm" href="art_map.php" target="_blank" rel="noopener">' . owBi('See the Art Map', 'شاهد خريطة الفن') . ' ↗</a>');
 ?>
+  <link rel="stylesheet" href="<?= owAsset('assets/vendor/leaflet/leaflet.css') ?>"><script defer src="<?= owAsset('assets/vendor/leaflet/leaflet.js') ?>"></script><script defer src="<?= owAsset('assets/js/admin_map_pick.js') ?>"></script>
   <h1><?= owBi('Art Map: museums, galleries and institutes', 'خريطة الفن: المتاحف والمعارض والمعاهد') ?></h1>
   <p class="mini"><?= owBi('Every place starts as a draft. Visitors see it only after you press Publish. Sources and confidence are shown only here, never to visitors. The older institutes (with courses) are in their own tool:', 'كل مكان يبدأ مسودة، ولا يراه الزوار إلا بعد أن تضغط «انشر». المصادر ودرجة الثقة تظهر هنا فقط، ولا يراها الزوار أبداً. المعاهد القديمة (مع الدورات) في أداتها الخاصة:') ?> <a href="admin_institutes.php"><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></a></p>
   <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The Art Map table is not set up yet (art_places.sql).', 'جدول خريطة الفن غير مُعدّ بعد (art_places.sql).') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['claim_photo' => owBi('Approved. The photo is on the Art Map now.', 'تمت الموافقة. الصورة ظاهرة في وجهات الفن الآن.'), 'claim_ok' => owBi('Approved. Apply any corrections with Edit below.', 'تمت الموافقة. طبّق التصحيحات عبر «تعديل» أدناه.'), 'claim_no' => owBi('Rejected. Nothing was shown.', 'تم الرفض. لم يظهر شيء.'), 'expired' => owBi('The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'), 'photo' => owBi('Photo saved.', 'تم حفظ الصورة.'), 'publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهراً في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهراً للزوار.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['claim_photo' => owBi('Approved. The photo is on the Art Map now.', 'تمت الموافقة. الصورة ظاهرة في وجهات الفن الآن.'), 'claim_ok' => owBi('Approved. Apply any corrections with Edit below.', 'تمت الموافقة. طبّق التصحيحات عبر «تعديل» أدناه.'), 'claim_no' => owBi('Rejected. Nothing was shown.', 'تم الرفض. لم يظهر شيء.'), 'expired' => owBi('The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'), 'photo' => owBi('Photo saved.', 'تم حفظ الصورة.'), 'coords' => owBi('Location saved. The place is on the Art Map\'s map now (once published).', 'تم حفظ الموقع. المكان على خريطة وجهات الفن الآن (بعد نشره).'), 'coords_off' => owBi('Location removed. The place is no longer on the map.', 'تم حذف الموقع. لم يعد المكان على الخريطة.'), 'publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهراً في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهراً للزوار.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
   <?php if ($ready): ?>
   <p><span class="pillx warn"><?= owBi($count['draft'] . ' waiting for you', $count['draft'] . ' بانتظارك') ?></span> <span class="cf low"><?= owBi($count['low'] . ' with low confidence', $count['low'] . ' بثقة منخفضة') ?></span> <span class="mini"><?= owBi($count['all'] . ' places in all', 'المجموع ' . $count['all']) ?></span></p>
@@ -294,7 +376,21 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
             <p class="mini"><?= owBi('It replaces the current photo and shows on the Art Map at once (a published place). Only use a photo you have the right to show.', 'تحلّ محل الصورة الحالية وتظهر في خريطة الفن فوراً (للمكان المنشور). استخدم فقط صورة يحق لك نشرها.') ?></p>
             <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Upload the photo', 'ارفع الصورة') ?></button>
           </form></details>
-        <details<?= $errors && !$photoErr && (int) ($_POST['id'] ?? 0) === (int) $p['id'] ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $form($p); ?></details>
+        <?php $hasXY = is_numeric($p['lat'] ?? null) && is_numeric($p['lng'] ?? null); $mineXY = $coordErr === (int) $p['id'];
+              $xy = fn(string $k) => $mineXY ? (string) ($_POST[$k] ?? '') : ($hasXY ? rtrim(rtrim((string) $p[$k], '0'), '.') : ''); ?>
+        <details class="mp"<?= $mineXY ? ' open' : '' ?>><summary><?= owBi('Map location', 'الموقع على الخريطة') ?> <?= $hasXY ? '<span class="pillx on" dir="ltr">' . e(rtrim(rtrim((string) $p['lat'], '0'), '.') . ', ' . rtrim(rtrim((string) $p['lng'], '0'), '.')) . '</span>' : '<span class="pillx warn">' . owBi('Not on the map yet', 'ليس على الخريطة بعد') . '</span>' ?></summary>
+          <form method="post" class="mp-form" action="admin_art_map.php?<?= e(ltrim($keep(), '&')) ?>"><?= csrfField() ?><input type="hidden" name="do" value="coords"><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+            <div class="field"><label for="ml-<?= (int) $p['id'] ?>"><?= owBi('Paste a Google Maps link (optional)', 'الصق رابط خرائط Google (اختياري)') ?></label><input id="ml-<?= (int) $p['id'] ?>" class="mp-link" type="text" inputmode="url" name="gmaps_link" dir="ltr" maxlength="2000" value="<?= e($mineXY ? (string) ($_POST['gmaps_link'] ?? '') : '') ?>" placeholder="https://maps.app.goo.gl/…"></div>
+            <p class="mini mp-msg" role="status" aria-live="polite"></p>
+            <div class="g2">
+              <?= $field('lat', 'Latitude (for example 24.647142)', 'خط العرض (مثلاً 24.647142)', $xy('lat'), ' class="mp-lat" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"', false, 'xy' . $p['id']) ?>
+              <?= $field('lng', 'Longitude (for example 46.710704)', 'خط الطول (مثلاً 46.710704)', $xy('lng'), ' class="mp-lng" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"', false, 'xy' . $p['id']) ?>
+            </div>
+            <div class="mp-map" hidden role="img" aria-label="<?= e('Map preview of the location · معاينة الموقع على الخريطة') ?>"></div>
+            <p class="mini"><?= owBi('In Google Maps, open the place, press Share and copy the link (or copy the address bar), then paste it above: the two numbers fill in by themselves and the pin shows on the small map. Check the pin, then save. You can also type the numbers yourself. Empty numbers + Save takes the place off the map.', 'في خرائط Google افتح المكان واضغط «مشاركة» وانسخ الرابط (أو انسخ شريط العنوان)، ثم الصقه أعلاه: يُملأ الرقمان تلقائياً ويظهر الدبوس على الخريطة الصغيرة. تأكد من الدبوس ثم احفظ. ويمكنك أيضاً كتابة الرقمين بنفسك. حفظ الرقمين فارغين يُزيل المكان من الخريطة.') ?></p>
+            <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save the location', 'احفظ الموقع') ?></button>
+          </form></details>
+        <details<?= $errors && !$photoErr && !$coordErr && (int) ($_POST['id'] ?? 0) === (int) $p['id'] ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $form($p); ?></details>
         <?php if ($p['kind'] === 'museum' && isset($p['partner']) && is_file(__DIR__ . '/booking_lib.php')): require_once __DIR__ . '/booking_lib.php';
           $acct = ''; if (!empty($p['user_id'])) { $ua = $db->prepare('SELECT email FROM users WHERE id = :u'); $ua->execute([':u' => (int) $p['user_id']]); $acct = (string) $ua->fetchColumn(); }
           $mine = $photoErr === -(int) $p['id']; $tv = fn(string $k, string $d) => (string) ($mine ? ($_POST[$k] ?? $d) : $d); ?>
