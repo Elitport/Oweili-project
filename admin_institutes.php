@@ -24,7 +24,10 @@ if (!empty($_SESSION['user_id']) && ($cu = currentUser()) && ($cu['role'] ?? '')
 
 $db = getDB();
 $ready = owHasTable('institutes') && owHasTable('courses');
-$errors = []; $okMsg = '';
+$errors = []; $okMsg = ''; $coordErr = 0;
+require_once __DIR__ . '/map_coords_lib.php';   // the "Map location" box, as in Admin → Art Map (owner, 15 Nov 2026)
+$hasXYCols = $ready && owHasColumn('institutes', 'lat') && owHasColumn('institutes', 'lng');
+owCoordsResolveEndpoint();
 $txt = fn(string $k, int $max) => mb_substr(trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', (string) ($_POST[$k] ?? ''))), 0, $max);
 
 if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -59,6 +62,19 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             owLog('institute_save', 'institute', $id, $v['name_en'], $actor);
             header('Location: admin_institutes.php?ok=1&edit=' . $id . '#i' . $id); exit;
         }
+    } elseif (($_POST['do'] ?? '') === 'coords' && $hasXYCols) {
+        /* the institute's pin on the Art Map (owner, 15 Nov 2026) */
+        $id = (int) ($_POST['id'] ?? 0);
+        $nm = $db->prepare('SELECT name_en FROM institutes WHERE id = :id'); $nm->execute([':id' => $id]); $nm = $nm->fetchColumn();
+        if ($nm === false) { header('Location: admin_institutes.php'); exit; }
+        $r = owCoordsFromPost((string) ($_POST['lat'] ?? ''), (string) ($_POST['lng'] ?? ''), $txt('gmaps_link', 2000)); $c = $r['c'];
+        if ($r['err']) $errors[] = $r['err'];
+        if (!$errors) {
+            $db->prepare('UPDATE institutes SET lat = :la, lng = :lo WHERE id = :id')->execute([':la' => $c ? $c[0] : null, ':lo' => $c ? $c[1] : null, ':id' => $id]);
+            owLog('institute_coords', 'institute', $id, (string) $nm . ($c ? ' ' . $c[0] . ',' . $c[1] : ' removed from the map'), $actor);
+            header('Location: admin_institutes.php?ok=' . ($c ? 'coords' : 'coords_off') . '#i' . $id); exit;
+        }
+        $coordErr = $id;
     } elseif (($_POST['do'] ?? '') === 'course') {
         $id  = (int) ($_POST['id'] ?? 0);
         $iid = (int) ($_POST['institute_id'] ?? 0);
@@ -114,6 +130,23 @@ $instForm = function (array $i) use ($val): void { ?>
     <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save institute', 'احفظ المعهد') ?></button>
   </form>
 <?php };
+$coordForm = function (array $i) use ($coordErr): void {
+    $iid = (int) $i['id']; $hasXY = is_numeric($i['lat'] ?? null) && is_numeric($i['lng'] ?? null); $mine = $coordErr === $iid;
+    $num = fn($v) => rtrim(rtrim((string) $v, '0'), '.');
+    $xy = fn(string $k) => e($mine ? (string) ($_POST[$k] ?? '') : ($hasXY ? $num($i[$k]) : '')); ?>
+    <details class="mp"<?= $mine ? ' open' : '' ?>><summary><?= owBi('Map location', 'الموقع على الخريطة') ?> <?= $hasXY ? '<span class="pillx on" dir="ltr">' . e($num($i['lat']) . ', ' . $num($i['lng'])) . '</span>' : '<span class="pillx warn">' . owBi('Not on the map yet', 'ليس على الخريطة بعد') . '</span>' ?></summary>
+      <form method="post" class="mp-form" action="admin_institutes.php"><?= csrfField() ?><input type="hidden" name="do" value="coords"><input type="hidden" name="id" value="<?= $iid ?>">
+        <div class="field"><label for="ml-<?= $iid ?>"><?= owBi('Paste a Google Maps link (optional)', 'الصق رابط خرائط Google (اختياري)') ?></label><input id="ml-<?= $iid ?>" class="mp-link" type="text" inputmode="url" name="gmaps_link" dir="ltr" maxlength="2000" value="<?= e($mine ? (string) ($_POST['gmaps_link'] ?? '') : '') ?>" placeholder="https://maps.app.goo.gl/…"></div>
+        <p class="mini mp-msg" role="status" aria-live="polite"></p>
+        <div class="g2">
+          <div class="field"><label for="la-<?= $iid ?>"><?= owBi('Latitude (for example 24.647142)', 'خط العرض (مثلاً 24.647142)') ?></label><input id="la-<?= $iid ?>" class="mp-lat" type="text" name="lat" value="<?= $xy('lat') ?>" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"></div>
+          <div class="field"><label for="lo-<?= $iid ?>"><?= owBi('Longitude (for example 46.710704)', 'خط الطول (مثلاً 46.710704)') ?></label><input id="lo-<?= $iid ?>" class="mp-lng" type="text" name="lng" value="<?= $xy('lng') ?>" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"></div>
+        </div>
+        <div class="mp-map" hidden role="img" aria-label="<?= e('Map preview of the location · معاينة الموقع على الخريطة') ?>"></div>
+        <p class="mini"><?= owBi('In Google Maps, open the place, press Share and copy the link (or copy the address bar), then paste it above: the two numbers fill in by themselves and the pin shows on the small map. Check the pin, then save. You can also type the numbers yourself. Empty numbers + Save takes the institute off the map.', 'في خرائط Google افتح المكان واضغط «مشاركة» وانسخ الرابط (أو انسخ شريط العنوان)، ثم الصقه أعلاه: يُملأ الرقمان تلقائياً ويظهر الدبوس على الخريطة الصغيرة. تأكد من الدبوس ثم احفظ. ويمكنك أيضاً كتابة الرقمين بنفسك. حفظ الرقمين فارغين يُزيل المعهد من الخريطة.') ?></p>
+        <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save the location', 'احفظ الموقع') ?></button>
+      </form></details>
+<?php };
 $courseForm = function (int $iid, array $c) use ($val): void { ?>
   <form method="post" action="admin_institutes.php?edit=<?= $iid ?>" class="i-form">
     <?= csrfField() ?><input type="hidden" name="do" value="course"><input type="hidden" name="institute_id" value="<?= $iid ?>"><input type="hidden" name="id" value="<?= (int) ($c['id'] ?? 0) ?>">
@@ -153,7 +186,10 @@ $courseForm = function (int $iid, array $c) use ($val): void { ?>
 details > summary{cursor:pointer;font-weight:700;margin:var(--space-sm) 0;}
 .pillx{font-size:var(--fs-min);font-weight:700;padding:2px 10px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);}
 @media(max-width:700px){.g2,.g3{grid-template-columns:1fr;}}
+.pillx.on{background:rgba(var(--rgb-accent),.1);border-color:rgba(var(--rgb-accent),.35);}.pillx.warn{background:rgba(var(--rgb-primary),.18);border-color:rgba(var(--rgb-primary),.45);}
+.mp-map{height:220px;border-radius:12px;border:1px solid var(--color-border);margin:0 0 var(--space-sm);z-index:0;}.mp-msg:empty{display:none;}.mp-msg.bad{color:var(--color-primary-dark);font-weight:700;}
 </style>
+<?php if ($hasXYCols): ?><link rel="stylesheet" href="<?= owAsset('assets/vendor/leaflet/leaflet.css') ?>"><script defer src="<?= owAsset('assets/vendor/leaflet/leaflet.js') ?>"></script><script defer src="<?= owAsset('assets/js/admin_map_pick.js') ?>"></script><?php endif; ?>
 </head>
 <body>
 <div class="wrap dash role-admin">
@@ -164,7 +200,7 @@ details > summary{cursor:pointer;font-weight:700;margin:var(--space-sm) 0;}
   <h1><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></h1>
   <p class="mini"><?= owBi('Everything here appears on the Art Institutes page. Hide something instead of deleting it, so its history stays.', 'كل ما هنا يظهر في صفحة المعاهد الفنية. أخفِ العنصر بدل حذفه ليبقى تاريخه.') ?></p>
   <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The institutes tables are not set up yet.', 'جداول المعاهد غير مُعدّة بعد.') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['coords' => owBi('Location saved. The institute is on the Art Map\'s map now (while it is shown).', 'تم حفظ الموقع. المعهد على خريطة وجهات الفن الآن (ما دام ظاهراً).'), 'coords_off' => owBi('Location removed. The institute is no longer on the map.', 'تم حذف الموقع. لم يعد المعهد على الخريطة.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
 
   <?php if ($ready): ?>
@@ -177,6 +213,7 @@ details > summary{cursor:pointer;font-weight:700;margin:var(--space-sm) 0;}
     <div class="i-head"><h2><?= e($i['name_en']) ?> · <span dir="rtl"><?= e($i['name_ar']) ?></span></h2>
       <span><span class="pillx"><?= (int) $i['is_active'] === 1 ? owBi('Shown', 'ظاهر') : owBi('Hidden', 'مخفي') ?></span> <span class="mini"><?= e($i['city_en']) ?> · <?= count($cs) ?> <?= owBi('courses', 'دورات') ?></span></span></div>
     <details<?= $edit === $iid ? ' open' : '' ?>><summary><?= owBi('Edit institute', 'عدّل المعهد') ?></summary><?php $instForm($i); ?></details>
+    <?php if ($hasXYCols) $coordForm($i); ?>
     <details<?= $edit === $iid ? ' open' : '' ?>><summary><?= owBi('Courses', 'الدورات') ?> (<?= count($cs) ?>)</summary>
       <?php foreach ($cs as $c): ?><div class="c-row"><p class="mini"><b><?= e($c['title_en']) ?></b> · <?= e((string) $c['start_date']) ?> · <?= (int) $c['is_active'] === 1 ? owBi('Shown', 'ظاهرة') : owBi('Hidden', 'مخفية') ?></p><?php $courseForm($iid, $c); ?></div><?php endforeach; ?>
       <div class="c-row"><p class="mini"><b><?= owBi('New course', 'دورة جديدة') ?></b></p><?php $courseForm($iid, []); ?></div>

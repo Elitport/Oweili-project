@@ -67,6 +67,7 @@ html[dir="rtl"] .legal p,html[dir="rtl"] .legal li{line-height:1.7;}
 </style>
 </head>
 <body>
+<?php if (!empty($meta['photo'])) { require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop($meta['photo']); }   /* the page's photo: Terms the pen and paper, Privacy the wax seal (owner, 15 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>

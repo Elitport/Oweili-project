@@ -167,6 +167,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 </style>
 </head>
 <body>
+<?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('envelopes');   /* the owner's photo of paper envelopes (15 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 

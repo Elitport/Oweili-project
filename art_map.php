@@ -34,7 +34,7 @@ if ($tab === 'institutes' || $tab === 'all') {
         $db = getDB();
         $activeCourse = 'c.is_active = 1 AND (c.end_date IS NULL OR c.end_date >= CURDATE()) AND ' . owBookableCourseSql();   // bookable courses only when approved and switched on (14 Nov 2026)
         $institutes = $db->query("SELECT i.id, i.name_en, i.name_ar, i.city_en, i.city_ar, i.description_en, i.description_ar,
-                       i.logo_path, i.contact_email, i.contact_phone, i.website_url,
+                       i.logo_path, i.contact_email, i.contact_phone, i.website_url," . (owHasColumn('institutes', 'lat') ? ' i.lat, i.lng,' : '') . "
                        (SELECT COUNT(*) FROM courses c WHERE c.institute_id = i.id AND $activeCourse) AS course_count
                 FROM institutes i WHERE i.is_active = 1 AND " . owSignupInstSql('i.') . " ORDER BY course_count DESC, i.name_en")->fetchAll();
         if ($city !== '') $institutes = array_values(array_filter($institutes, fn($i) => owMapRegionKey((string) ($i['city_en'] ?: $i['city_ar'])) === $city));
@@ -92,6 +92,20 @@ $placesPhoto = array_values(array_filter($tab === 'all' ? array_merge($placesFir
 $placesFirst = array_values(array_filter($placesFirst, fn($p) => !$hasPhoto($p)));
 $placesLast  = array_values(array_filter($placesLast, fn($p) => !$hasPhoto($p)));
 $places      = array_merge($placesPhoto, array_values(array_filter($places, fn($p) => !$hasPhoto($p))));
+/* The map's pins (owner, 14 Nov 2026): every place shown in the cards below that has saved coordinates */
+require_once __DIR__ . '/lang_lib.php';
+$mapPins = [];
+$mapPin = function (array $r, string $src) use (&$mapPins): void {
+    $la = $r['lat'] ?? null; $lo = $r['lng'] ?? null;
+    if ($la === null || $lo === null || $la === '' || $lo === '' || (float) $la == 0.0) return;
+    $u = owMapPlaceUrl($src, (int) $r['id']);
+    $mapPins[] = ['lat' => round((float) $la, 6), 'lng' => round((float) $lo, 6),
+                  'name' => owIsAr() ? (string) ($r['name_ar'] ?: $r['name_en']) : (string) $r['name_en'],
+                  'city' => owIsAr() ? (string) ($r['city_ar'] ?: $r['city_en']) : (string) $r['city_en'],
+                  'url' => $u !== '' ? owBase() . $u : ''];
+};
+foreach ($places as $p) $mapPin($p, 'p');
+foreach ($institutes as $i) $mapPin($i, 'i');
 /* One place card (art_places row): photo or placeholder, name, city, kind, text, address, phone, buttons. Empty fields are left out */
 $placeCard = function (array $p) use ($PIN): string {
     $K = OW_MAP_KINDS[$p['kind']] ?? OW_MAP_KINDS['museum'];
@@ -135,6 +149,7 @@ $placeCard = function (array $p) use ($PIN): string {
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
+<?php if ($mapPins): /* the free OpenStreetMap map (owner, 14 Nov 2026) */ ?><link rel="stylesheet" href="<?= owAsset('assets/vendor/leaflet/leaflet.css') ?>"><script defer src="<?= owAsset('assets/vendor/leaflet/leaflet.js') ?>"></script><script defer src="<?= owAsset('assets/js/art_map_pins.js') ?>"></script><?php endif; ?>
 <style>
 /* Art Map — layout only; type, colors, buttons and cards come from oweili.css */
 .m-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-xs);margin:0 0 var(--space-md);}
@@ -242,6 +257,16 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 @media (max-width:1024px){.i-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:640px){.m-bar .filter{flex-wrap:wrap;justify-content:center;}.m-bar .filter .m-search{flex:1 1 100%;}.m-bar .filter .m-search input{width:100%;}.i-grid{grid-template-columns:1fr;}.filter select{min-width:0;flex:1 1 180px;}.m-tab{padding:0 14px;}.m-bar .filter select{min-width:0;flex:1 1 auto;}}
 </style>
+<style>
+/* the map above the cards (owner, 14 Nov 2026): short on phones so the cards still show soon */
+.m-map{height:420px;padding:0;overflow:hidden;margin:0 auto var(--space-lg);max-width:1200px;border-radius:16px;z-index:0;}
+.m-map .leaflet-container{font-family:var(--font-sans);}
+.m-pop strong{display:block;font-size:15px;color:#23314A;margin-bottom:2px;}
+.m-pop div{font-size:13px;color:#4A5568;margin-bottom:6px;}
+.m-pop a{font-size:14px;font-weight:700;color:#0047ab;}
+.m-map .leaflet-control-attribution{font-size:12px;}
+@media (max-width:768px){.m-map{height:220px;margin-bottom:var(--space-md);}}
+</style>
 </head>
 <body class="ow">
 <?= owStudioBackdrop('easels-corridor') /* the owner's photo of paintings on easels in a bright corridor (12 Nov 2026) */ ?>
@@ -283,6 +308,9 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       </span>
     </form>
     </div>
+    <?php if ($mapPins): ?>
+    <div class="card m-map" id="m-map" role="region" aria-label="<?= e(owIsAr() ? 'خريطة الأماكن' : 'Map of the places') ?>" data-pins="<?= e(json_encode($mapPins, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) ?>"></div>
+    <?php endif; ?>
 
 <?php if ($tab === 'institutes' || $tab === 'all'): ?>
     <?php /* Upcoming Workshops: hidden for now, to bring back later (owner, 6 Nov 2026): Admin → Settings → Upcoming workshops. */ ?>

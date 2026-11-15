@@ -95,7 +95,7 @@ if (!headers_sent()) header('Cache-Control: no-store');
 </style>
 </head>
 <body>
-<?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('museum-walk');   /* the museum hall, one of our approved photos (owner, 13 Nov 2026) */ ?>
+<?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('cert-ribbons');   /* the owner's photo of rolled certificates with red ribbons (15 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>

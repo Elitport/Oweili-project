@@ -13,7 +13,7 @@ $CO = OW_COMPANY_NAME; $CR = function_exists('owCompanyCr') ? owCompanyCr() : ''
 
 owLegalPage([
     'path' => 'privacy.php',
-    'title_en' => 'Privacy Policy', 'title_ar' => 'سياسة الخصوصية', 'centered_head' => true,
+    'title_en' => 'Privacy Policy', 'title_ar' => 'سياسة الخصوصية', 'centered_head' => true, 'photo' => 'wax-seal',
     'lead_en' => 'Your trust matters more to us than anything. Here is, in plain words, what we keep about you and why.',
     'lead_ar' => 'ثقتك أهم ما لدينا. هنا نشرح بكلمات بسيطة ما نحفظه عنك ولماذا.',
     'desc_en' => 'How Oweili collects, uses, keeps and deletes personal data, under the Saudi Personal Data Protection Law.',
@@ -107,6 +107,7 @@ owLegalPage([
         '- Companies that help us run the site, only for that job: our hosting and email provider (Hostinger). They may not use your data for anything else.',
         '- Bashro, Oweili’s own internal control center, so our team can answer you. When you send an "I’m Interested", gift or commission request or a "Write to Us" message, or join the Auctions waiting list, its details (your name, email, phone, what you asked for, and for gifts only the recipient’s city) go to Bashro through a private, signed connection. Commission photos and recipient addresses are never sent. A second, read-only connection is switched off until we turn it on.',
         '- Authorities, only when Saudi law requires it.',
+        '- OpenStreetMap: the map on the Art Map page comes from OpenStreetMap. When you open that page, your browser loads the map pictures straight from OpenStreetMap’s servers, which see your internet address, as any website does. We send them nothing else.',
         'Our hosting provider may keep data on servers outside the Kingdom. When that happens we follow the PDPL rules and safeguards for sending data abroad, and we send only what is needed.',
     ], [
         '- الجميع: ما يختار الفنان إظهاره (اسم الفنان والصورة الشخصية والنبذة والمدينة والدولة والأساليب الفنية وروابط التواصل والأعمال المعتمدة).',
@@ -114,6 +115,7 @@ owLegalPage([
         '- الشركات التي تساعدنا في تشغيل الموقع، لهذه المهمة فقط: مزود الاستضافة والبريد (Hostinger). ولا يحق لها استخدام بياناتك لأي غرض آخر.',
         '- «بشرو»، مركز التحكم الداخلي الخاص بأويلي، ليتمكن فريقنا من الرد عليك. عندما ترسل طلب «أنا مهتم» أو طلب هدية أو عمل خاص أو رسالة «اكتب لنا»، أو تنضم إلى قائمة انتظار المزاد، تصل تفاصيله (اسمك وبريدك وهاتفك وما طلبته، ومدينة المُهدى إليه فقط في الهدايا) إلى بشرو عبر ربط خاص وموقّع. ولا تُرسل صور الأعمال الخاصة ولا عناوين المُهدى إليهم أبداً. وهناك ربط ثانٍ للقراءة فقط، متوقف حتى نشغّله.',
         '- الجهات الرسمية، فقط حين يفرض النظام السعودي ذلك.',
+        '- OpenStreetMap: الخريطة في صفحة «وجهات الفن» من OpenStreetMap. حين تفتح تلك الصفحة، يحمّل متصفحك صور الخريطة مباشرة من خوادم OpenStreetMap، فترى عنوان الإنترنت الخاص بك كما يفعل أي موقع. ولا نرسل إليهم أي شيء آخر.',
         'قد يحفظ مزود الاستضافة البيانات على خوادم خارج المملكة. وحين يحدث ذلك نتبع قواعد نظام حماية البيانات الشخصية وضماناته لنقل البيانات إلى الخارج، ولا ننقل إلا ما يلزم.',
     ]],
     ['keep', 'How long we keep it', 'كم من الوقت نحفظها', [
