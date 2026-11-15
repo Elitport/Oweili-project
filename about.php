@@ -48,7 +48,7 @@ $P = fn(string $en, string $ar) => '<p>' . owBi($en, $ar) . '</p>';
 </style>
 </head>
 <body class="ow">
-<?= owStudioBackdrop('easels-corridor') ?>
+<?= owStudioBackdrop('art-supplies') /* the owner's photo of art supplies (15 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
 
