@@ -91,6 +91,7 @@
 - community.php — Community page: real counts and the newest artworks (see Features). HIDDEN FOR NOW, to bring back later (6 Nov 2026, Admin → Settings)
 - chat.php — retired: the Artist Chat Room was removed. The file only sends visitors to community.php (permanent redirect), so old links and bookmarks still work
 - support.php — Support and FAQ
+- about.php — About Oweili («من نحن»), the owner's own text (see Features). Linked from the footer
 - events.php — retired: sends old links to Art Events (articles_list.php?type=event) for good (301). The old events table was empty on the live site (checked 31 Oct 2026)
 - art_map.php — Art Map («خريطة الفن», menu «وجهات», 12 Nov 2026): Museums, Art Galleries and Institutes tabs with a filter by the 13 regions (see Features); places in the art_places table. admin_art_map.php — the admin's tool for its museums and galleries
 - art_place.php — the Art Map's pages for Google: /art-map/<region>/<place> and /art-map/<region> (13 Nov 2026); place_claim.php — "Is this your place?" form
@@ -142,8 +143,13 @@
 
 ## Features
 
+### About page (15 Nov 2026, owner)
+- about.php («من نحن»): the owner's own Arabic text, used exactly, with a matching English version. Title card "Oweili, the home of real art." / «أويلي بيت الفن الأصيل.» and its line; cards: Why Oweili? / «لماذا أويلي؟»; Our standards / «معاييرنا» (proof of process 25% 50% 100%, every artist and artwork reviewed, certificate with a number and QR code, a smart check for copied art); How we protect the collector / «كيف نحمي المقتني» and How we protect the artist / «كيف نحمي الفنان» side by side (stacked on phones); More than a shop / «أكثر من متجر»; last line "Oweili is run by Elitport Limited, a registered Saudi company." / «أويلي تديرها شركة إيليتبورت المحدودة، شركة سعودية مسجّلة.» with three buttons: Explore Gallery, Join as Artist, Verify a certificate / «تحقق من شهادة» (cert_verify.php)
+- The owner's photo art-supplies as the background (studio_lib.php), frosted cards like the other photo pages. Footer link "About" / «من نحن» before Privacy (footer.php). Not in the menu or the sitemap
+- Files: about.php (new), footer.php. Tables: none
+
 ### Own photos for Verify, Terms, Privacy and the email-confirm page (15 Nov 2026, owner)
-- The owner's wide photos, used like the other photo pages (studio_lib.php OW_STUDIO, focus, phone colour, tiny copy; assets/img/studio/<key>-640/1280/1920/2000 .avif/.webp/.jpg): Verify a certificate (cert_verify.php) = cert-ribbons (rolled certificates with red ribbons; replaces museum-walk), Terms (terms.php) = pen-paper (a blank sheet and a wooden fountain pen), Privacy (privacy.php) = wax-seal (a letter with a bronze wax seal), email-confirm page (verify.php) = envelopes (a hand holding paper envelopes). Terms and Privacy pass 'photo' to owLegalPage() (legal_lib.php prints the backdrop). The About page photo (art-supplies) is ready in studio_lib.php but the About page itself is not live yet
+- The owner's wide photos, used like the other photo pages (studio_lib.php OW_STUDIO, focus, phone colour, tiny copy; assets/img/studio/<key>-640/1280/1920/2000 .avif/.webp/.jpg): Verify a certificate (cert_verify.php) = cert-ribbons (rolled certificates with red ribbons; replaces museum-walk), Terms (terms.php) = pen-paper (a blank sheet and a wooden fountain pen), Privacy (privacy.php) = wax-seal (a letter with a bronze wax seal), email-confirm page (verify.php) = envelopes (a hand holding paper envelopes). Terms and Privacy pass 'photo' to owLegalPage() (legal_lib.php prints the backdrop). The About page (about.php) uses art-supplies (see the About page entry)
 - Text cards unchanged (frosted title cards, solid cards in dark mode). Checked laptop and phone, English and Arabic, light and dark
 - Files: studio_lib.php, legal_lib.php, terms.php, privacy.php, cert_verify.php, verify.php, assets/img/studio/. Tables: none
 
