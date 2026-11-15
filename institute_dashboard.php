@@ -8,7 +8,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
-$preview = owBookingGate();
+$preview = owCoursesGate();
 if (!isLoggedIn()) { header('Location: login.php?next=institute_dashboard.php'); exit; }
 $me = currentUser();
 if (!$me || ($me['role'] ?? '') !== 'institute') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
@@ -63,7 +63,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 }
 $st = $db->prepare('SELECT * FROM courses WHERE institute_id = :i AND bookable = 1 ORDER BY start_date DESC, id DESC'); $st->execute([':i' => $iid]); $courses = $st->fetchAll();
 $st = $db->prepare("SELECT r.*, c.title_en, c.title_ar, c.start_date FROM course_registrations r JOIN courses c ON c.id = r.course_id
-                    WHERE c.institute_id = :i AND c.bookable = 1 AND r.status IN ('confirmed','cancelled') AND (r.paid_at IS NOT NULL OR r.status = 'confirmed') ORDER BY r.id DESC LIMIT 500");
+                    WHERE c.institute_id = :i AND c.bookable = 1 AND ((r.status IN ('confirmed','cancelled') AND (r.paid_at IS NOT NULL OR r.status = 'confirmed')) OR (r.status = 'pending' AND r.hold_until IS NULL)) ORDER BY r.id DESC LIMIT 500");   /* + seats booked before online payment (owner, 15 Nov 2026) */
 $st->execute([':i' => $iid]); $regs = $st->fetchAll();
 $payouts = owPayoutsFor('institute', $iid); $tot = owPayoutTotals($payouts);
 $confirmed = count(array_filter($regs, fn($r) => $r['status'] === 'confirmed'));
@@ -164,7 +164,7 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
       <tr><td><b><?= e($r['student_name']) ?></b><br><span class="mini" dir="ltr"><?= e($r['student_phone']) ?> · <?= e($r['student_email']) ?></span><br><span class="mini" dir="ltr"><?= e($r['ref_no']) ?></span></td>
         <td><?= owBi($r['title_en'], $r['title_ar']) ?></td>
         <td><?= (float) $r['amount'] > 0 ? owSar((float) $r['amount']) : owBi('Free', 'مجاني') ?><?= (float) $r['refund_amount'] > 0 ? '<br><span class="mini">' . owBi('Refunded', 'مُسترد') . '</span>' : '' ?></td>
-        <td><?= owPill(OW_REG_STATUS, (string) $r['status']) ?></td></tr>
+        <td><?= owRegPill($r) ?></td></tr>
     <?php endforeach; ?></tbody></table>
     <p class="mini"><?= owBi('Use these details only for this course. To cancel a registration, write to Oweili.', 'استخدم هذه البيانات لهذه الدورة فقط. لإلغاء تسجيل، راسل أويلي.') ?></p>
     <?php endif; ?>

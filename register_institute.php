@@ -7,7 +7,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
-$preview = owBookingGate();
+$preview = owCoursesGate();
 $err = null; $ok = false;
 $v = ['name_en' => '', 'name_ar' => '', 'city_en' => '', 'city_ar' => '', 'person' => '', 'email' => '', 'phone' => '', 'website' => '', 'desc_en' => '', 'desc_ar' => ''];
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -55,7 +55,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         }
     }
 }
-owBookTop('Join as an art institute', 'انضم كمعهد فني', 'register_institute.php', $preview, '', !owBookingsOn(), 'role-institute');
+owBookTop('Join as an art institute', 'انضم كمعهد فني', 'register_institute.php', $preview, '', !owCoursesOn(), 'role-institute');
 ?>
 <div class="card">
   <h1><?= owBi('Join as an art institute', 'انضم كمعهد فني') ?></h1>

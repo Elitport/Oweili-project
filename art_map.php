@@ -130,7 +130,7 @@ $placeCard = function (array $p) use ($PIN): string {
     if (trim((string) $p['address']) !== '') $info .= '<li><span class="m-lbl">' . owBi('Address', 'العنوان') . '</span> <bdi>' . owBi((string) $p['address'], owPlaceAddressAr($p)) . '</bdi></li>';
     if (($tel = owTelHref((string) $p['phone'])) !== '') $info .= '<li><span class="m-lbl">' . owBi('Phone', 'الهاتف') . '</span> <a href="' . e($tel) . '" dir="ltr">' . e((string) $p['phone']) . '</a></li>';
     if ($info !== '') $h .= '<ul class="m-info">' . $info . '</ul>';
-    $h .= owMapActs(owMapUrl((string) $p['website']), owMapsLink($nEn, $cEn, (string) $p['maps_url']), $nEn, owInstaUrl((string) $p['instagram']));
+    $h .= owMapActs(owMapUrl((string) $p['website']), owMapsLink($nEn, $cEn, (string) $p['maps_url']), $nEn, owInstaUrl((string) $p['instagram']), $p['kind'] === 'institute' ? owInstCoursesUrl('p', (int) $p['id']) : '');
     if (is_file(__DIR__ . '/booking_lib.php')) { require_once __DIR__ . '/booking_lib.php'; $tb = owTicketButton($p); if ($tb !== '') $h .= '<div class="m-acts">' . $tb . '</div>'; }   // museums: Buy ticket / Official tickets, only once switched on (14 Nov 2026)
     $h .= owMapClaimLink('p=' . (int) $p['id']);
     return $h . '</article>';
@@ -452,9 +452,11 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
           <?php $dEn = owExcerpt((string) ($i['description_en'] ?: $i['description_ar']), 170); $dAr = owExcerpt((string) ($i['description_ar'] ?: $i['description_en']), 170); ?>
           <?php if ($dEn !== ''): ?><p class="i-desc"><?= owBi($dEn, $dAr) ?></p><?php endif; ?>
           <?php if ((int) $i['course_count'] > 0): /* only when there is an active course (owner, 12 Nov 2026) */ ?><span class="i-count"><?= owBi($nEn, $nAr) ?></span><?php endif; ?>
-          <?= owMapActs(owMapUrl((string) $i['website_url']), owMapsLink((string) $nameEn, (string) $cEn), (string) $nameEn) ?>
+          <?php $cUrl = owInstCoursesUrl('i', $iid);   /* courses on: one "View courses" button instead of the website and the course list (owner, 15 Nov 2026) */ ?>
+          <?= owMapActs(owMapUrl((string) $i['website_url']), owMapsLink((string) $nameEn, (string) $cEn), (string) $nameEn, '', $cUrl) ?>
           <?= owMapClaimLink('i=' . $iid) ?>
 
+          <?php if ($cUrl === ''): ?>
           <details class="i-courses">
             <summary class="btn btn-dark">
               <span class="when-closed"><?= owBi('View Courses', 'عرض الدورات') ?></span>
@@ -496,6 +498,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
               </div>
             <?php endif; ?>
           </details>
+          <?php endif; ?>
         </article>
         <?php endforeach; ?>
       </div><?php endif; ?>

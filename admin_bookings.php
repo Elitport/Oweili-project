@@ -55,6 +55,13 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } elseif ($do === 'reg_cancel' || $do === 'ticket_cancel') {
         $e2 = owBookingCancel($do === 'reg_cancel' ? 'course' : 'ticket', $id, $actor, !empty($_POST['refund']), $why);
         $e2 ? $bad = $e2 : $msg = ['Cancelled.' . (!empty($_POST['refund']) ? ' The money was refunded.' : ''), 'تم الإلغاء.' . (!empty($_POST['refund']) ? ' وأُعيد المبلغ.' : '')];
+    } elseif ($do === 'reg_paid') {   // a seat booked before online payment, paid to Oweili by hand (owner, 15 Nov 2026)
+        $e2 = owCourseMarkPaid($id, $actor, mb_substr(trim((string) ($_POST['reference'] ?? '')), 0, 300));
+        $e2 ? $bad = $e2 : $msg = ['Marked as paid. The student got the confirmation, and the institute’s payout was added.', 'تم التأشير بالدفع. وصل الطالبَ التأكيد، وأُضيف مستحق المعهد.'];
+    } elseif ($do === 'lead_status' && owCourseLeadsReady()) {
+        $st2 = in_array($_POST['status'] ?? '', ['new', 'contacted', 'closed'], true) ? $_POST['status'] : 'new';
+        $db->prepare('UPDATE course_leads SET status = :s WHERE id = :id')->execute([':s' => $st2, ':id' => $id]);
+        owLog('course_lead_status', 'course_lead', $id, $st2, $actor); $msg = ['Saved.', 'تم الحفظ.'];
     } elseif ($do === 'payout_paid') {
         $ref = mb_substr(trim((string) ($_POST['reference'] ?? '')), 0, 120);
         if ($ref === '') $bad = ['Please write the bank transfer reference.', 'يرجى كتابة مرجع التحويل البنكي.'];
@@ -72,7 +79,9 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 $K = fn(string $sql, array $a = []) => (function () use ($db, $sql, $a) { $s = $db->prepare($sql); $s->execute($a); return $s->fetchAll(); })();
 $insts = $ready ? $K("SELECT i.*, u.email, u.is_verified, u.is_approved, u.full_name_en AS person FROM institutes i JOIN users u ON u.id = i.user_id WHERE i.via_signup = 1 ORDER BY u.is_approved, i.id DESC") : [];
 $courses = $ready ? $K("SELECT c.*, i.name_en AS inst_en, i.name_ar AS inst_ar FROM courses c JOIN institutes i ON i.id = c.institute_id WHERE c.bookable = 1 ORDER BY (c.status = 'pending') DESC, c.start_date DESC LIMIT 300") : [];
-$regs = $ready ? $K("SELECT r.*, c.title_en, c.title_ar, c.start_date FROM course_registrations r JOIN courses c ON c.id = r.course_id WHERE c.bookable = 1 AND (r.status = 'confirmed' OR r.paid_at IS NOT NULL) ORDER BY r.id DESC LIMIT 300") : [];
+$regs = $ready ? $K("SELECT r.*, c.title_en, c.title_ar, c.start_date FROM course_registrations r JOIN courses c ON c.id = r.course_id WHERE c.bookable = 1 AND (r.status = 'confirmed' OR r.paid_at IS NOT NULL OR (r.status = 'pending' AND r.hold_until IS NULL)) ORDER BY (r.status = 'pending') DESC, r.id DESC LIMIT 300") : [];
+$leads = $ready && owCourseLeadsReady() ? $K("SELECT l.*, i.name_en AS inst_en, i.name_ar AS inst_ar, p.name_en AS pl_en, p.name_ar AS pl_ar FROM course_leads l
+                        LEFT JOIN institutes i ON i.id = l.institute_id LEFT JOIN art_places p ON p.id = l.place_id ORDER BY (l.status = 'new') DESC, l.id DESC LIMIT 300") : [];
 $museums = $ready ? $K("SELECT p.*, u.email AS acct_email, (SELECT COUNT(*) FROM museum_ticket_types t WHERE t.place_id = p.id AND t.is_active = 1) AS n_types,
                         (SELECT COUNT(*) FROM museum_ticket_dates d WHERE d.place_id = p.id AND d.is_active = 1 AND d.visit_date >= CURDATE()) AS n_dates
                         FROM art_places p LEFT JOIN users u ON u.id = p.user_id WHERE p.kind = 'museum' AND (p.partner = 1 OR p.user_id IS NOT NULL) ORDER BY p.name_en") : [];
@@ -98,8 +107,9 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 ');
 ?>
 <h1><?= owBi('Courses and tickets', 'الدورات والتذاكر') ?></h1>
-<p class="mini"><?= owBookingsOn() ? '<span class="pillx on">' . owBi('Shown to visitors', 'ظاهر للزوار') . '</span>' : '<span class="pillx warn">' . owBi('Hidden from visitors', 'مخفي عن الزوار') . '</span>' ?>
-  <?= owBi('One switch: Admin → Settings → "Hidden for now" → Course booking and museum tickets.', 'مفتاح واحد: الإدارة ← الإعدادات ← «مخفي حالياً» ← حجز الدورات وتذاكر المتاحف.') ?> <a href="admin.php?settings=1#hidden-parts"><?= owBi('Settings', 'الإعدادات') ?></a></p>
+<p class="mini"><?= owBi('Courses: ', 'الدورات: ') ?><?= owCoursesOn() ? '<span class="pillx on">' . owBi('Shown to visitors', 'ظاهر للزوار') . '</span>' : '<span class="pillx warn">' . owBi('Hidden from visitors', 'مخفي عن الزوار') . '</span>' ?>
+  · <?= owBi('Museum tickets: ', 'تذاكر المتاحف: ') ?><?= owBookingsOn() ? '<span class="pillx on">' . owBi('Shown to visitors', 'ظاهر للزوار') . '</span>' : '<span class="pillx warn">' . owBi('Hidden from visitors', 'مخفي عن الزوار') . '</span>' ?>
+  <?= owBi('Two switches: Admin → Settings → "Hidden for now".', 'مفتاحان: الإدارة ← الإعدادات ← «مخفي حالياً».') ?> <a href="admin.php?settings=1#hidden-parts"><?= owBi('Settings', 'الإعدادات') ?></a></p>
 <?php if (!$ready): ?><div class="card"><div class="alert alert-error"><?= owBi('The database part is not in place yet (bookings_update.sql).', 'جزء قاعدة البيانات غير موجود بعد (bookings_update.sql).') ?></div></div><?php owAdminBottom(); exit; endif; ?>
 <?php if ($msg): ?><div class="alert alert-ok" role="status"><?= owBi($msg[0], $msg[1]) ?></div><?php endif; ?>
 <?php if ($bad): ?><div class="alert alert-error" role="alert"><?= owBi($bad[0], $bad[1]) ?></div><?php endif; ?>
@@ -107,7 +117,8 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
   <a class="btn btn-secondary btn-sm" href="#rules"><?= owBi('Payout rules', 'قواعد المستحقات') ?></a>
   <a class="btn btn-secondary btn-sm" href="#institutes"><?= owBi('Institutes', 'المعاهد') ?><?= $waitI ? ' (' . $waitI . ')' : '' ?></a>
   <a class="btn btn-secondary btn-sm" href="#courses"><?= owBi('Courses', 'الدورات') ?><?= $waitC ? ' (' . $waitC . ')' : '' ?></a>
-  <a class="btn btn-secondary btn-sm" href="#registrations"><?= owBi('Registrations', 'التسجيلات') ?></a>
+  <a class="btn btn-secondary btn-sm" href="#registrations"><?= owBi('Registrations', 'التسجيلات') ?><?= ($nb = count(array_filter($regs, 'owRegIsBooking'))) ? ' (' . $nb . ')' : '' ?></a>
+  <a class="btn btn-secondary btn-sm" href="#leads"><?= owBi('Notify me', 'نبّهني') ?><?= ($nl = count(array_filter($leads, fn($l) => $l['status'] === 'new'))) ? ' (' . $nl . ')' : '' ?></a>
   <a class="btn btn-secondary btn-sm" href="#museums"><?= owBi('Partner museums', 'المتاحف الشريكة') ?></a>
   <a class="btn btn-secondary btn-sm" href="#tickets"><?= owBi('Tickets', 'التذاكر') ?></a>
   <a class="btn btn-secondary btn-sm" href="#payouts"><?= owBi('Payouts', 'المستحقات') ?></a>
@@ -166,9 +177,23 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <tr><td><b><?= e($r['student_name']) ?></b><br><span class="mini" dir="ltr"><?= e($r['ref_no']) ?> · <?= e($r['student_email']) ?> · <?= e($r['student_phone']) ?></span></td>
   <td><?= owBi($r['title_en'], $r['title_ar']) ?></td>
   <td class="mini"><?= owSar((float) $r['amount']) ?><br><?= owBi('Oweili ', 'أويلي ') ?><?= owSar((float) $r['commission_amount']) ?> (<?= rtrim(rtrim((string) $r['commission_rate'], '0'), '.') ?>%)<?= (float) $r['refund_amount'] > 0 ? '<br>' . owBi('Refunded', 'مُسترد') : '' ?></td>
-  <td><?= owPill(OW_REG_STATUS, (string) $r['status']) ?></td>
-  <td><?php if ($r['status'] === 'confirmed'): ?><form method="post" action="admin_bookings.php#registrations" onsubmit="return confirm(document.documentElement.dir==='rtl'?'إلغاء هذا التسجيل؟':'Cancel this registration?')"><?= csrfField() ?><input type="hidden" name="do" value="reg_cancel"><input type="hidden" name="id" value="<?= (int) $r['id'] ?>">
+  <td><?= owRegPill($r) ?></td>
+  <td><?php if (owRegIsBooking($r)): ?><form method="post" action="admin_bookings.php#registrations" onsubmit="return confirm(document.documentElement.dir==='rtl'?'هل استلمت الدفع لهذا الحجز؟':'Did you receive the payment for this booking?')"><?= csrfField() ?><input type="hidden" name="do" value="reg_paid"><input type="hidden" name="id" value="<?= (int) $r['id'] ?>">
+    <input type="text" name="reference" placeholder="<?= e(owIsAr() ? 'مرجع الدفع (اختياري)' : 'Payment reference (optional)') ?>" aria-label="<?= e('Payment reference · مرجع الدفع') ?>"><button class="btn btn-accent btn-sm"><?= owBi('Mark as paid', 'تم الدفع') ?></button></form>
+    <form method="post" action="admin_bookings.php#registrations" onsubmit="return confirm(document.documentElement.dir==='rtl'?'إلغاء هذا الحجز؟':'Cancel this booking?')"><?= csrfField() ?><input type="hidden" name="do" value="reg_cancel"><input type="hidden" name="id" value="<?= (int) $r['id'] ?>"><input type="text" name="reason" placeholder="<?= e(owIsAr() ? 'السبب' : 'Reason') ?>" aria-label="<?= e('Reason · السبب') ?>"><button class="btn btn-danger btn-sm"><?= owBi('Cancel', 'إلغاء') ?></button></form>
+  <?php elseif ($r['status'] === 'confirmed'): ?><form method="post" action="admin_bookings.php#registrations" onsubmit="return confirm(document.documentElement.dir==='rtl'?'إلغاء هذا التسجيل؟':'Cancel this registration?')"><?= csrfField() ?><input type="hidden" name="do" value="reg_cancel"><input type="hidden" name="id" value="<?= (int) $r['id'] ?>">
     <label class="mini"><input type="checkbox" name="refund" value="1" checked> <?= owBi('Refund', 'استرداد') ?></label><input type="text" name="reason" placeholder="<?= e(owIsAr() ? 'السبب' : 'Reason') ?>" aria-label="<?= e('Reason · السبب') ?>"><button class="btn btn-danger btn-sm"><?= owBi('Cancel', 'إلغاء') ?></button></form><?php endif; ?></td></tr>
+<?php endforeach; ?></tbody></table><?php endif; ?></div>
+
+<h2 id="leads"><?= owBi('Notify me: waiting for a course', 'نبّهني: بانتظار دورة') ?></h2>
+<div class="card"><?php if (!$leads): ?><p><?= owBi('No requests yet.', 'لا طلبات بعد.') ?></p><?php else: ?>
+<table class="tbl"><thead><tr><th><?= owBi('Person', 'الشخص') ?></th><th><?= owBi('Institute', 'المعهد') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
+<?php foreach ($leads as $l): $ln = $l['inst_en'] !== null ? [$l['inst_en'], $l['inst_ar'] ?: $l['inst_en']] : ($l['pl_en'] !== null ? [$l['pl_en'], $l['pl_ar'] ?: $l['pl_en']] : ['Any institute', 'أي معهد']); ?>
+<tr><td><b><?= e($l['name']) ?></b><br><span class="mini" dir="ltr"><a href="tel:<?= e(preg_replace('/[^0-9+]/', '', (string) $l['phone'])) ?>"><?= e($l['phone']) ?></a> · <a href="mailto:<?= e($l['email']) ?>"><?= e($l['email']) ?></a></span></td>
+  <td><?= owBi($ln[0], $ln[1]) ?></td><td class="mini" dir="ltr"><?= e(substr((string) $l['created_at'], 0, 16)) ?></td>
+  <td><form method="post" action="admin_bookings.php#leads"><?= csrfField() ?><input type="hidden" name="do" value="lead_status"><input type="hidden" name="id" value="<?= (int) $l['id'] ?>">
+    <select name="status" aria-label="<?= e('Status · الحالة') ?>" onchange="this.form.submit()"><?php foreach (['new' => ['New', 'جديد'], 'contacted' => ['Contacted', 'تم التواصل'], 'closed' => ['Closed', 'مغلق']] as $k => $w): ?><option value="<?= $k ?>"<?= $l['status'] === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select>
+    <noscript><button class="btn btn-secondary btn-sm"><?= owBi('Save', 'حفظ') ?></button></noscript></form></td></tr>
 <?php endforeach; ?></tbody></table><?php endif; ?></div>
 
 <h2 id="museums"><?= owBi('Partner museums', 'المتاحف الشريكة') ?></h2>

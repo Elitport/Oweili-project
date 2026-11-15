@@ -8,8 +8,8 @@ $navName  = $navUser ? (function_exists('owRealName') ? (owRealName($navUser['fu
 if ($navName === '') { $navName = 'Account'; }
 $navFirst = $navUser ? (explode(' ', $navName)[0]) : '';
 /* Auctions stays out of the menu until the admin switches the page on (gallery_lib.php) */
-$owAucOn = $owGiftOn = $owComOn = $owCommOn = $owSpotOn = false;
-try { if (function_exists('getDB')) { require_once __DIR__ . '/gallery_lib.php'; $owAucOn = owAuctionsPageOn(); $owGiftOn = owGiftsPageOn(); $owComOn = owCommunityPageOn(); $owCommOn = owCommissionsPageOn(); $owSpotOn = owSpotlightsOn(); } } catch (Throwable $e) { $owAucOn = $owGiftOn = $owComOn = $owCommOn = $owSpotOn = false; }
+$owAucOn = $owGiftOn = $owComOn = $owCommOn = $owSpotOn = $owInstOn = false;
+try { if (function_exists('getDB')) { require_once __DIR__ . '/gallery_lib.php'; $owAucOn = owAuctionsPageOn(); $owGiftOn = owGiftsPageOn(); $owComOn = owCommunityPageOn(); $owCommOn = owCommissionsPageOn(); $owSpotOn = owSpotlightsOn(); $owInstOn = owPartOn('courses'); } } catch (Throwable $e) { $owAucOn = $owGiftOn = $owComOn = $owCommOn = $owSpotOn = $owInstOn = false; }
 /* Hidden for now, to bring back later (6 Nov 2026): Gifts, Commissions, Community, Artist Spotlights.
    The Collect menu shows only while one of its pages is shown; its top word opens the first of them */
 $owCollectUrl = $owGiftOn ? 'gifts.php' : ($owCommOn ? 'commission.php' : ($owAucOn ? 'auctions.php' : ''));
@@ -21,7 +21,7 @@ $navType  = (string) ($_GET['type'] ?? '');
 if ($navPage === 'article.php') { $navType = ''; }
 $navSection = [
     'community.php' => 'community', 'marketplace.php' => 'marketplace', 'auctions.php' => 'collect', 'gifts.php' => 'collect', 'commission.php' => 'collect',
-    'explore.php' => 'explore', 'support.php' => 'support', 'art_map.php' => 'institutes', 'art_place.php' => 'institutes', 'institutes.php' => 'institutes', 'training.php' => 'institutes', 'events.php' => 'art_event',
+    'explore.php' => 'explore', 'support.php' => 'support', 'art_map.php' => 'institutes', 'art_place.php' => 'institutes', 'institutes.php' => 'courses', 'course.php' => 'courses', 'training.php' => 'institutes', 'events.php' => 'art_event',
 ][$navPage] ?? '';
 /* Art Events / Art Education / Artist Spotlights are their own menu items (6 Nov 2026): the list page
    by its ?type=, one article by its own type (article.php keeps it in $a) */
@@ -70,6 +70,7 @@ if (!function_exists('owLogoMark')) {
 <?php if ($owSpotOn): ?>    <div class="nav-item"><a href="articles_list.php?type=artist_spotlight"<?= navAct('art_artist_spotlight') ?>><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a></div><?php endif; ?>
     <div class="nav-item"><a href="articles_list.php?type=art_education" id="nav-education-link"<?= navAct('art_art_education') ?>><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a></div>
     <div class="nav-item"><a href="art_map.php" id="nav-institutes-link"<?= navAct('institutes') ?>><span class="nav-i18n" data-en="Art Map" data-ar="وجهات">Art Map</span></a></div>
+<?php if ($owInstOn): /* Art Institutes, back after Art Map (owner, 15 Nov 2026) */ ?>    <div class="nav-item"><a href="institutes.php" id="nav-courses-link"<?= navAct('courses') ?>><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a></div><?php endif; ?>
 <?php if ($owComOn): ?>    <div class="nav-item"><a href="community.php" id="nav-community-link"<?= navAct('community') ?>><span id="nav-community-label">Community</span></a></div><?php endif; ?>
     <div class="nav-item">
       <a href="support.php" id="nav-support-link"<?= navAct('support') ?>><span id="nav-support-label">Support</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
@@ -108,6 +109,7 @@ if (!function_exists('owLogoMark')) {
 <?php if ($owSpotOn): ?>    <a class="mnav-link" href="articles_list.php?type=artist_spotlight"<?= navAct('art_artist_spotlight') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a><?php endif; ?>
     <a class="mnav-link" href="articles_list.php?type=art_education"<?= navAct('art_art_education') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Education" data-ar="التثقيف الفني">Art Education</span></a>
     <a class="mnav-link" href="art_map.php"<?= navAct('institutes') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Map" data-ar="وجهات">Art Map</span></a>
+<?php if ($owInstOn): ?>    <a class="mnav-link" href="institutes.php"<?= navAct('courses') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Institutes" data-ar="المعاهد الفنية">Art Institutes</span></a><?php endif; ?>
 <?php if ($owComOn): ?>    <a class="mnav-link" href="community.php"<?= navAct('community') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Community" data-ar="المجتمع">Community</span></a><?php endif; ?>
     <a class="mnav-link" href="support.php"<?= navAct('support') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Support" data-ar="الدعم">Support</span></a>
     <div class="mnav-acct">

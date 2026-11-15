@@ -158,7 +158,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
         if (trim((string) $place['address']) !== '') $info .= '<li><b>' . owBi('Address', 'العنوان') . '</b> <bdi>' . owBi((string) $place['address'], owPlaceAddressAr($place)) . '</bdi></li>';
         if (($tel = owTelHref((string) $place['phone'])) !== '') $info .= '<li><b>' . owBi('Phone', 'الهاتف') . '</b> <a href="' . e($tel) . '" dir="ltr">' . e((string) $place['phone']) . '</a></li>';
         if ($info !== '') echo '<ul class="ap-info">' . $info . '</ul>'; ?>
-      <?= owMapActs($web, $maps, $nEn, $insta) ?>
+      <?= owMapActs($web, $maps, $nEn, $insta, ($place['src'] === 'i' || ($place['kind'] ?? '') === 'institute') ? owInstCoursesUrl((string) $place['src'], (int) $place['id']) : '') ?>
       <?php if ($place['src'] === 'p' && is_file(__DIR__ . '/booking_lib.php')) { require_once __DIR__ . '/booking_lib.php'; $tb = owTicketButton($place); if ($tb !== '') echo '<div class="m-acts">' . $tb . '</div>'; }   /* museums: Buy ticket / Official tickets, only once switched on (14 Nov 2026) */ ?>
       <?= owMapClaimLink(($place['src'] === 'p' ? 'p=' : 'i=') . (int) $place['id']) ?>
     </article>

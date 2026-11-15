@@ -48,7 +48,9 @@ if (!defined('OW_HIDDEN_PARTS')) define('OW_HIDDEN_PARTS', [
        art_types.php (OW_MORE_STYLES) are hidden everywhere, never deleted. One switch brings them all back */
     'more_styles' => ['more_styles_on', 'Other art styles (the 15 that are not painting or drawing: stained glass, mosaic, calligraphy…)', 'أساليب فنية أخرى (الخمسة عشر غير الرسم والتلوين: الزجاج المعشّق، الفسيفساء، الخط…)', 'explore.php'],
     /* Course booking for institutes and ticket sales for partner museums (owner, 14 Nov 2026; booking_lib.php) */
-    'bookings'  => ['bookings_on', 'Course booking and museum tickets (institute and museum accounts, course pages, ticket sales, test payments, the booking rules in the Terms)', 'حجز الدورات وتذاكر المتاحف (حسابات المعاهد والمتاحف، صفحات الدورات، بيع التذاكر، الدفع التجريبي، قواعد الحجز في الشروط)', 'art_map.php'],
+    'bookings'  => ['bookings_on', 'Museum tickets (museum accounts, ticket sales, the ticket rules in the Terms)', 'تذاكر المتاحف (حسابات المتاحف، بيع التذاكر، قواعد التذاكر في الشروط)', 'art_map.php'],
+    /* Art Institutes and course booking, split from museum tickets (owner, 15 Nov 2026) */
+    'courses'   => ['courses_on', 'Art Institutes and course booking (the Art Institutes page, course pages, institute sign-up and dashboard, the course rules in the Terms)', 'المعاهد الفنية وحجز الدورات (صفحة المعاهد الفنية، صفحات الدورات، تسجيل المعاهد ولوحتها، قواعد الدورات في الشروط)', 'institutes.php'],
     'workshops' => ['workshops_on', 'Upcoming workshops (the 5 "Coming soon" cards on the Art Map, Institutes tab)', 'ورش العمل القادمة (البطاقات الخمس «قريباً» في خريطة الفن، تبويب المعاهد)', 'art_map.php?tab=institutes'],
 ]);
 function owPartOn(string $part): bool { $k = OW_HIDDEN_PARTS[$part][0] ?? ''; return $k !== '' && owSetting($k, '0') === '1'; }

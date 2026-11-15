@@ -237,17 +237,23 @@ function owMapDirectory(): array {
     }
     return $dir;
 }
-/* Institutes that joined through the sign-up page (booking_lib.php, 14 Nov 2026) stay off the Art Map until the bookings switch is on */
+/* Institutes that joined through the sign-up page (booking_lib.php, 14 Nov 2026) stay off the Art Map until the courses switch is on (split from museum tickets 15 Nov 2026) */
 function owSignupInstSql(string $a = ''): string {
     if (!owHasColumn('institutes', 'via_signup')) return '1';
     require_once __DIR__ . '/gallery_lib.php';
-    return owPartOn('bookings') ? '1' : $a . 'via_signup = 0';
+    return owPartOn('courses') ? '1' : $a . 'via_signup = 0';
 }
-/* Bookable courses (booking_lib.php) count only when approved and the bookings switch is on */
+/* Bookable courses (booking_lib.php) count only when approved and the courses switch is on */
 function owBookableCourseSql(string $c = 'c.'): string {
     if (!owHasColumn('courses', 'bookable')) return '1';
     require_once __DIR__ . '/gallery_lib.php';
-    return owPartOn('bookings') ? "({$c}bookable = 0 OR {$c}status = 'approved')" : "{$c}bookable = 0";
+    return owPartOn('courses') ? "({$c}bookable = 0 OR {$c}status = 'approved')" : "{$c}bookable = 0";
+}
+/* The Art Institutes page of one institute, while the courses switch is on (owner, 15 Nov 2026): 'i' = institutes, 'p' = art_places */
+function owInstCoursesUrl(string $src, int $id): string {
+    require_once __DIR__ . '/gallery_lib.php';
+    if (!owPartOn('courses')) return '';
+    return owBase() . 'institutes.php?' . ($src === 'p' ? 'p=' : 'i=') . $id;
 }
 function owMapPlain(string $s): string { return trim(preg_replace('/\s+/u', ' ', strip_tags($s))); }
 function owMapPlaceUrl(string $src, int $id): string { return owMapDirectory()[$src . $id]['url'] ?? ''; }
@@ -257,9 +263,11 @@ function owMapRegionTitle(string $rg): array {
     $in = in_array($rg, ['eastern', 'northern'], true) ? 'the ' . $R[0] : $R[0];
     return ['Museums and art galleries in ' . $in, 'متاحف ومعارض ' . $R[1]];
 }
-/* "Official website", "Instagram" and "Google Maps" buttons of one place (only the ones that exist); shared by the Art Map and the place pages */
-function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''): string {
+/* "Official website", "Instagram" and "Google Maps" buttons of one place (only the ones that exist); shared by the Art Map and the place pages.
+   $courses: an institute's "View courses" button (owner, 15 Nov 2026), shown instead of "Official website" */
+function owMapActs(string $web, string $maps, string $nameEn, string $insta = '', string $courses = ''): string {
     $h = '<div class="m-acts">';
+    if ($courses !== '') { $h .= '<a class="btn btn-primary btn-sm" href="' . e($courses) . '">' . owBi('View courses', 'عرض الدورات') . '</a>'; $web = ''; }
     if ($web !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($web) . '" target="_blank" rel="noopener">' . owBi('Official website', 'الموقع الرسمي') . ' <span aria-hidden="true">↗</span></a>';
     if ($insta !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($insta) . '" target="_blank" rel="noopener" aria-label="' . e('Instagram: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6"/></svg>Instagram</a>';
     $h .= '<a class="btn btn-dark btn-sm" href="' . e($maps) . '" target="_blank" rel="noopener" aria-label="' . e('Google Maps: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' . owBi('Google Maps', 'خرائط Google') . '</a>';

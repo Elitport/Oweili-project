@@ -7,7 +7,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/pay_lib.php';
-$preview = owBookingGate();
+$preview = owPayGate();
 owBookingCleanup();
 if (!isLoggedIn()) { header('Location: login.php'); exit; }
 $me = currentUser();

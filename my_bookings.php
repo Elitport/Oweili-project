@@ -6,14 +6,14 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
-$preview = owBookingGate();
+$preview = owCoursesGate();
 if (!isLoggedIn()) { header('Location: login.php?next=my_bookings.php'); exit; }
 $me = currentUser();
 if (!$me || ($me['role'] ?? '') !== 'collector') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 owBookingCleanup();
 $db = getDB(); $uid = (int) $me['id'];
 $st = $db->prepare("SELECT r.*, c.title_en, c.title_ar, c.start_date, c.end_date, c.course_type, c.meeting_link, c.location_en, c.location_ar, c.schedule_en, c.schedule_ar
-                    FROM course_registrations r JOIN courses c ON c.id = r.course_id WHERE r.user_id = :u AND c.bookable = 1 AND (r.status = 'confirmed' OR r.paid_at IS NOT NULL) ORDER BY c.start_date DESC");
+                    FROM course_registrations r JOIN courses c ON c.id = r.course_id WHERE r.user_id = :u AND c.bookable = 1 AND (r.status = 'confirmed' OR r.paid_at IS NOT NULL OR (r.status = 'pending' AND r.hold_until IS NULL)) ORDER BY c.start_date DESC");
 $st->execute([':u' => $uid]); $regs = $st->fetchAll();
 $st = $db->prepare("SELECT t.*, p.name_en, p.name_ar FROM museum_tickets t JOIN art_places p ON p.id = t.place_id WHERE t.user_id = :u AND t.status IN ('paid','used','cancelled') ORDER BY t.visit_date DESC");
 $st->execute([':u' => $uid]); $tickets = $st->fetchAll();
@@ -26,7 +26,7 @@ owBookTop('My bookings', 'حجوزاتي', 'my_bookings.php', $preview);
   <?php if (!$regs): ?><p><?= owBi('No courses yet.', 'لا دورات بعد.') ?></p><?php endif; ?>
   <?php foreach ($regs as $r): [$de, $da] = owDateRangeBi($r['start_date'], $r['end_date']); ?>
   <div style="padding:10px 0;border-bottom:1px solid var(--color-border)">
-    <b><?= owBi($r['title_en'], $r['title_ar']) ?></b> <?= owPill(OW_REG_STATUS, (string) $r['status']) ?><br>
+    <b><?= owBi($r['title_en'], $r['title_ar']) ?></b> <?= owRegPill($r) ?><br>
     <span class="mini"><?= owBi($de, $da) ?> · <?= owBi((string) $r['schedule_en'], (string) $r['schedule_ar']) ?> · <span dir="ltr"><?= e($r['ref_no']) ?></span></span><br>
     <?php if ($r['status'] === 'confirmed'): ?>
       <?= $r['course_type'] === 'online' ? owBi('Meeting link: ', 'رابط الاجتماع: ') . '<a href="' . e($r['meeting_link']) . '" target="_blank" rel="noopener" dir="ltr">' . e($r['meeting_link']) . '</a>' : owBi((string) $r['location_en'], (string) $r['location_ar']) ?>

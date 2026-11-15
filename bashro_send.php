@@ -192,6 +192,28 @@ function owBashroCommission(int $cid): void {
                        . '. Photos stay on Oweili (private). Details for the team: ' . owBashroHost() . '/admin_commissions.php?id=' . (int) $c['id']]);
     } catch (Throwable $e) { error_log('owBashroCommission: ' . $e->getMessage()); }
 }
+/* A course seat booked before online payment → Sales, to collect the payment (owner, 15 Nov 2026) */
+function owBashroCourseBooking(int $regId): void {
+    if (!owBashroKindOn('quote')) return;
+    try {
+        require_once __DIR__ . '/booking_lib.php';
+        $st = getDB()->prepare('SELECT * FROM course_registrations WHERE id = :id'); $st->execute([':id' => $regId]); $r = $st->fetch();
+        if (!$r) return;
+        $c = owCourseGet((int) $r['course_id']); if (!$c) return;
+        $lang = str_contains((string) $r['notes'], 'lang ar') ? 'ar' : 'en';
+        owBashroQueue('quote', ['name' => $r['student_name'], 'email' => $r['student_email'], 'phone' => $r['student_phone'], 'company' => (string) $c['inst_en'],
+            'service' => 'Course booking: ' . $c['title_en'], 'city' => $c['course_type'] === 'online' ? 'Online' : (string) $c['inst_city_en'], 'lang' => $lang,
+            'message' => 'Course booking ' . $r['ref_no'] . ': ' . $c['title_en'] . ' at ' . $c['inst_en'] . ', starts ' . ($c['start_date'] ?? 'date to be set')
+                       . '. Price ' . number_format((float) $r['amount'], 2) . ' SAR, to collect. The seat is held until it is paid or cancelled. '
+                       . 'Course page: ' . owBashroHost() . '/course.php?id=' . (int) $c['id'] . '. For the team: ' . owBashroHost() . '/admin_bookings.php#registrations']);
+    } catch (Throwable $e) { error_log('owBashroCourseBooking: ' . $e->getMessage()); }
+}
+/* "Notify me" when an institute has no courses yet → Sales */
+function owBashroCourseLead(string $name, string $email, string $phone, string $lang, string $instEn): void {
+    if (!owBashroKindOn('quote')) return;
+    owBashroQueue('quote', ['name' => $name, 'email' => $email, 'phone' => $phone, 'company' => $instEn, 'service' => 'Course: notify me', 'lang' => $lang,
+        'message' => 'Wants to hear when a course opens' . ($instEn !== '' ? ' at ' . $instEn : '') . '. Saved on Oweili: ' . owBashroHost() . '/admin_bookings.php#leads']);
+}
 /* New artist or buyer account → signup (OFF until Bashro accepts the kind) */
 function owBashroSignup(int $userId, string $role): void {
     if (!owBashroKindOn('signup')) return;

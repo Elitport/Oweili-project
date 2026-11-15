@@ -6,7 +6,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/pay_lib.php';
-$preview = owBookingGate();
+$preview = owPayGate();
 $pay = owPayByToken((string) ($_GET['t'] ?? ''));
 if (!$pay) { http_response_code(404); require __DIR__ . '/404.php'; exit; }
 $x = (string) ($_GET['x'] ?? '');
