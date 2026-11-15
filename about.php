@@ -96,6 +96,7 @@ $L = fn(string $en1, string $en2, string $ar1, string $ar2) => '<li><b>' . owBi(
       <div class="btns">
         <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
         <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
+        <a class="btn btn-secondary" href="cert_verify.php"><?= owBi('Verify a certificate', 'تحقق من شهادة') ?></a>
       </div>
     </section>
   </div>
