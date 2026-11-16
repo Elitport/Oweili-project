@@ -1042,18 +1042,26 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <?php foreach ($waitChanges as $wc): $wt = $wc['target_type']; $cur = $wc['current']; $wid = (int) $wc['id'];
         $kind = ['artwork' => ['Artwork changes', 'تعديلات على عمل'], 'profile' => ['Profile changes', 'تعديلات على ملف فنان'], 'article' => ['Publish an article', 'نشر مقال']][$wt] ?? [$wt, $wt];
         $fromInst = ($wc['asker_role'] ?? '') === 'institute';   /* institutes send articles and profile changes too (owner, 16 Nov 2026) */
-        if ($fromInst && $wt === 'profile') $kind = ['Institute profile changes', 'تعديلات على ملف معهد']; ?>
+        if ($fromInst && $wt === 'profile') $kind = ['Institute profile changes', 'تعديلات على ملف معهد'];
+        $fromMus = ($wc['asker_role'] ?? '') === 'museum' && $wt === 'profile' && isset($wc['data']['museum_setup']);   /* a museum's ticket types and dates wait too (owner, 16 Nov 2026) */
+        if ($fromMus) { $kind = ['Museum ticket types and dates', 'أنواع تذاكر المتحف وتواريخها']; require_once __DIR__ . '/booking_lib.php'; } ?>
         <div class="wc-item">
           <div class="wc-top">
             <div><span class="pill off"><?= owBi($kind[0], $kind[1]) ?></span>
               <strong><?php if ($wt === 'artwork'): ?><?= owBi((string) ($cur['title_en'] ?? '—'), (string) (($cur['title_ar'] ?? '') ?: ($cur['title_en'] ?? '—'))) ?><?php elseif ($wt === 'article'): ?><?= owTitleStack((string) ($cur['title_en'] ?? '—'), (string) ($cur['title_ar'] ?? '')) ?><?php else: ?><?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?><?php endif; ?></strong>
               <div class="mini"><?= owBi('By', 'من') ?> <?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?> · <?php [$ce, $ca] = owDateBi($wc['created_at'], true); ?><?= owBi($ce, $ca) ?></div></div>
             <?php if ($wt === 'artwork'): ?><a class="btn btn-ghost btn-sm" href="artwork.php?id=<?= (int) $wc['target_id'] ?>" target="_blank" rel="noopener"><?= owBi('See it live', 'شاهده') ?></a>
+            <?php elseif ($fromMus): ?><a class="btn btn-ghost btn-sm" href="admin_bookings.php?setup=<?= (int) ($cur['id'] ?? 0) ?>#setup"><?= owBi('View', 'عرض') ?></a>
             <?php elseif ($wt === 'profile' && $fromInst): ?><a class="btn btn-ghost btn-sm" href="admin_bookings.php#institutes"><?= owBi('View', 'عرض') ?></a>
             <?php elseif ($wt === 'profile'): ?><a class="btn btn-ghost btn-sm" href="admin.php?person=<?= (int) $wc['target_id'] ?>"><?= owBi('View', 'عرض') ?></a>
             <?php else: ?><a class="btn btn-ghost btn-sm" href="admin_articles.php?edit=<?= (int) $wc['target_id'] ?>"><?= owBi('Open', 'فتح') ?></a><?php endif; ?>
           </div>
-          <?php if ($wt === 'article'): ?>
+          <?php if ($fromMus): ?>
+            <p class="mini"><?= owBi('The museum asks for these changes. Visitors keep the current ticket types and dates until you approve.', 'يطلب المتحف هذه التعديلات. يبقى الزوار على أنواع التذاكر والتواريخ الحالية حتى توافق.') ?></p>
+            <ol class="mini">
+              <?php foreach ((array) $wc['data']['museum_setup'] as $mop): [$me, $ma] = owMuseumSetupWords((array) $mop, (int) ($cur['id'] ?? 0)); ?><li><?= owBi($me, $ma) ?></li><?php endforeach; ?>
+            </ol>
+          <?php elseif ($wt === 'article'): ?>
             <?php if (in_array($wc['asker_role'] ?? '', ['artist', 'institute'], true)): ?>
             <p class="mini"><span class="pill <?= $fromInst ? 'off' : 'on' ?>"><?= $fromInst ? owBi('From an institute', 'من معهد') : owBi('From an artist', 'من فنان') ?></span>
               <?= $fromInst ? owBi('An institute wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب معهد هذا المقال ويطلب نشره. اقرأه أولاً عبر «معاينة». يبقى مخفياً حتى توافق.')

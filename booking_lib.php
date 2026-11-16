@@ -453,7 +453,8 @@ function owTicketLinesBi(array $t): array {
 }
 
 /* Ticket types and dates: the same form for the museum's dashboard and for the owner (admin_bookings.php) */
-function owMuseumSetupPost(array $p, array $in, array $actor): ?array {
+/* $dry = true only checks (a museum's request is checked, then waits for the owner's approval: approval_lib.php, owner 16 Nov 2026) */
+function owMuseumSetupPost(array $p, array $in, array $actor, bool $dry = false): ?array {
     $db = getDB(); $pid = (int) $p['id']; $do = (string) ($in['do'] ?? '');
     if ($do === 'type_save') {
         $id = (int) ($in['id'] ?? 0);
@@ -461,6 +462,8 @@ function owMuseumSetupPost(array $p, array $in, array $actor): ?array {
         $price = round((float) str_replace(',', '', (string) ($in['price'] ?? '')), 2); $people = max(1, min(10, (int) ($in['people'] ?? 1)));
         if ($ne === '' || $na === '') return ['The ticket name is needed in Arabic and English.', 'اسم التذكرة مطلوب بالعربية والإنجليزية.'];
         if ($price <= 0 || $price > 100000) return ['Please write a price above 0.', 'يرجى كتابة سعر أكبر من صفر.'];
+        if ($id && !owMuseumOwnRow('museum_ticket_types', $id, $pid)) return ['Not found.', 'غير موجود.'];
+        if ($dry) return null;
         $args = [':ne' => $ne, ':na' => $na, ':pr' => $price, ':pe' => $people, ':a' => !empty($in['is_active']) ? 1 : 0, ':p' => $pid];
         if ($id) $db->prepare('UPDATE museum_ticket_types SET name_en = :ne, name_ar = :na, price = :pr, people = :pe, is_active = :a WHERE id = :id AND place_id = :p')->execute($args + [':id' => $id]);
         else $db->prepare('INSERT INTO museum_ticket_types (place_id, name_en, name_ar, price, people, is_active) VALUES (:p, :ne, :na, :pr, :pe, :a)')->execute($args);
@@ -474,6 +477,7 @@ function owMuseumSetupPost(array $p, array $in, array $actor): ?array {
         if ($from < date('Y-m-d')) return ['The first date cannot be in the past.', 'لا يمكن أن يكون أول تاريخ في الماضي.'];
         if ((strtotime($to) - strtotime($from)) / 86400 > 366) return ['Please add at most one year at a time.', 'يرجى إضافة سنة واحدة كحد أقصى في كل مرة.'];
         if (!$days) return ['Please tick the open days.', 'يرجى تحديد أيام العمل.'];
+        if ($dry) return null;
         $ins = $db->prepare('INSERT INTO museum_ticket_dates (place_id, visit_date, capacity, is_active) VALUES (:p, :d, :c, 1) ON DUPLICATE KEY UPDATE capacity = GREATEST(sold, VALUES(capacity)), is_active = 1');
         $n = 0;
         for ($t = strtotime($from); $t <= strtotime($to); $t += 86400) if (in_array((int) date('w', $t), $days, true)) { $ins->execute([':p' => $pid, ':d' => date('Y-m-d', $t), ':c' => $cap]); $n++; }
@@ -482,12 +486,51 @@ function owMuseumSetupPost(array $p, array $in, array $actor): ?array {
     }
     if ($do === 'date_save') {
         $id = (int) ($in['id'] ?? 0); $cap = max(0, min(100000, (int) ($in['capacity'] ?? 0)));
+        if (!owMuseumOwnRow('museum_ticket_dates', $id, $pid)) return ['Not found.', 'غير موجود.'];
+        if ($dry) return null;
         $db->prepare('UPDATE museum_ticket_dates SET capacity = GREATEST(sold, :c), is_active = :a WHERE id = :id AND place_id = :p')
            ->execute([':c' => $cap, ':a' => !empty($in['is_active']) ? 1 : 0, ':id' => $id, ':p' => $pid]);
         owLog('ticket_date_save', 'art_place', $pid, "date $id cap $cap", $actor);
         return null;
     }
     return ['Unknown action.', 'إجراء غير معروف.'];
+}
+function owMuseumOwnRow(string $table, int $id, int $pid): bool {
+    if (!in_array($table, ['museum_ticket_types', 'museum_ticket_dates'], true)) return false;
+    $st = getDB()->prepare("SELECT COUNT(*) FROM $table WHERE id = :id AND place_id = :p"); $st->execute([':id' => $id, ':p' => $pid]);
+    return (int) $st->fetchColumn() > 0;
+}
+/* Only the fields of one ticket-types-and-dates request, kept for the owner's approval */
+function owMuseumSetupClean(array $in): array {
+    $op = ['do' => (string) ($in['do'] ?? '')];
+    foreach (['id', 'name_en', 'name_ar', 'price', 'people', 'from', 'to', 'capacity'] as $k) if (isset($in[$k]) && !is_array($in[$k])) $op[$k] = mb_substr(trim((string) $in[$k]), 0, 120);
+    $op['is_active'] = !empty($in['is_active']) ? 1 : 0;
+    if ($op['do'] === 'dates_add') { $op['wd'] = array_values(array_unique(array_filter(array_map('intval', (array) ($in['wd'] ?? [])), fn($d) => $d >= 0 && $d <= 6))); if (!empty($op['from'])) $op['from'] = owFormDate($op['from']); if (!empty($op['to'])) $op['to'] = owFormDate($op['to']); }
+    return $op;
+}
+/* One request in plain words [en, ar], for Admin and the museum's dashboard */
+function owMuseumSetupWords(array $op, int $pid): array {
+    $on = !empty($op['is_active']); $id = (int) ($op['id'] ?? 0);
+    if (($op['do'] ?? '') === 'type_save') {
+        $p = rtrim(rtrim(number_format((float) str_replace(',', '', (string) ($op['price'] ?? '0')), 2), '0'), '.');
+        $n = max(1, (int) ($op['people'] ?? 1));
+        $what = ($op['name_en'] ?? '') . ': ' . $p . ' SAR, ' . $n . ($n === 1 ? ' person' : ' people') . ($on ? ', on sale' : ', not on sale');
+        $whatAr = ($op['name_ar'] ?? '') . ': ' . $p . ' ر.س، ' . $n . ' ' . ($n === 1 ? 'شخص' : 'أشخاص') . ($on ? '، معروضة' : '، غير معروضة');
+        return $id ? ['Change ticket type ' . $what, 'تعديل نوع التذكرة ' . $whatAr] : ['New ticket type ' . $what, 'نوع تذكرة جديد ' . $whatAr];
+    }
+    if (($op['do'] ?? '') === 'dates_add') {
+        $wd = [['Sun', 'الأحد'], ['Mon', 'الاثنين'], ['Tue', 'الثلاثاء'], ['Wed', 'الأربعاء'], ['Thu', 'الخميس'], ['Fri', 'الجمعة'], ['Sat', 'السبت']];
+        $de = []; $da = []; foreach ((array) ($op['wd'] ?? []) as $d) if (isset($wd[$d])) { $de[] = $wd[$d][0]; $da[] = $wd[$d][1]; }
+        [$re, $ra] = owDateRangeBi((string) ($op['from'] ?? ''), (string) ($op['to'] ?? ''));
+        $c = (int) ($op['capacity'] ?? 0);
+        return ['Add dates ' . $re . ' (' . implode(', ', $de) . '), ' . $c . ' tickets per day', 'إضافة تواريخ ' . $ra . ' (' . implode('، ', $da) . ')، ' . $c . ' تذكرة في اليوم'];
+    }
+    if (($op['do'] ?? '') === 'date_save') {
+        $st = getDB()->prepare('SELECT visit_date FROM museum_ticket_dates WHERE id = :id AND place_id = :p'); $st->execute([':id' => $id, ':p' => $pid]);
+        [$de, $da] = owDateRangeBi((string) ($st->fetchColumn() ?: ''), null); $c = (int) ($op['capacity'] ?? 0);
+        return ['Change date ' . $de . ': ' . $c . ' tickets' . ($on ? ', on sale' : ', not on sale'), 'تعديل تاريخ ' . $da . ': ' . $c . ' تذكرة' . ($on ? '، معروض' : '، غير معروض')];
+    }
+    return ['Change', 'تعديل'];
 }
 function owMuseumSetupCss(): string {
     return '.ms-row{display:grid;grid-template-columns:1fr 1fr 110px 90px auto auto;gap:var(--space-xs);align-items:end;padding:8px 0;border-bottom:1px solid var(--color-border);}

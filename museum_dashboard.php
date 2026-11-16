@@ -9,6 +9,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
+require_once __DIR__ . '/approval_lib.php';
 $preview = owBookingGate();
 if (!isLoggedIn()) { header('Location: login.php?next=museum_dashboard.php'); exit; }
 $me = currentUser();
@@ -23,7 +24,12 @@ owBookingCleanup();
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $tab = 'setup';
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $err = ['The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'];
-    else { $err = owMuseumSetupPost($p, $_POST, $actor); if (!$err) { header('Location: museum_dashboard.php?tab=setup&done=1'); exit; } }
+    else {
+        /* the museum's ticket types and dates wait for the owner's approval (owner, 16 Nov 2026); checked first, then kept aside */
+        $err = owMuseumSetupPost($p, $_POST, $actor, true);
+        if (!$err && !owSubmitChange((int) $me['id'], 'profile', (int) $me['id'], ['museum_setup' => [owMuseumSetupClean($_POST)]])) $err = ['Something went wrong. Please try again.', 'حدث خطأ. يرجى المحاولة مرة أخرى.'];
+        if (!$err) { header('Location: museum_dashboard.php?tab=setup&done=wait'); exit; }
+    }
 }
 $day = owFormDate((string) ($_GET['day'] ?? '')) ?: '';
 $sql = "SELECT * FROM museum_tickets WHERE place_id = :p AND status IN ('paid','used','cancelled')" . ($day !== '' ? ' AND visit_date = :d' : '') . ' ORDER BY visit_date DESC, id DESC LIMIT 500';
@@ -49,7 +55,8 @@ owBookTop('My museum', 'متحفي', 'museum_dashboard.php', $preview, '
   <p class="mini" style="margin:0"><?= owBi('My museum', 'متحفي') ?></p>
   <h1><?= owBi($p['name_en'], $p['name_ar']) ?></h1>
   <?php if (!(int) $p['partner']): ?><div class="alert alert-error" role="status"><?= owBi('Ticket sales are not switched on for your museum yet. The Oweili team will let you know.', 'لم يُفعّل بيع التذاكر لمتحفك بعد. سيبلغك فريق أويلي.') ?></div><?php endif; ?>
-  <?php if ($done): ?><div class="alert alert-ok" role="status"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if ($done === 'wait'): ?><div class="alert alert-ok" role="status"><?= owBi('Sent. Your change waits for the Oweili team’s approval. Visitors see it once it is approved.', 'تم الإرسال. ينتظر تعديلك موافقة فريق أويلي. يراه الزوار بعد الموافقة.') ?></div>
+  <?php elseif ($done): ?><div class="alert alert-ok" role="status"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
   <?php if ($err): ?><div class="alert alert-error" role="alert"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>
 </div>
 <div class="stat-row">
@@ -104,7 +111,14 @@ owBookTop('My museum', 'متحفي', 'museum_dashboard.php', $preview, '
   })();
   </script>
 
-<?php elseif ($tab === 'setup'): ?>
+<?php elseif ($tab === 'setup'): $msWait = owPendingChange('profile', (int) $me['id']); $msOps = (array) ($msWait['data']['museum_setup'] ?? []); ?>
+  <div class="card">
+    <p class="mini" style="margin:0"><?= owBi('Every change to your ticket types and dates waits for the Oweili team’s approval. Visitors see the approved ones until then.', 'كل تعديل على أنواع التذاكر والتواريخ ينتظر موافقة فريق أويلي. يرى الزوار المعتمد منها حتى ذلك الحين.') ?></p>
+    <?php if ($msOps): ?>
+    <h2 style="margin-top:var(--space-sm)"><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></h2>
+    <ol class="mini"><?php foreach ($msOps as $mop): [$me1, $ma1] = owMuseumSetupWords((array) $mop, $pid); ?><li><?= owBi($me1, $ma1) ?></li><?php endforeach; ?></ol>
+    <?php endif; ?>
+  </div>
   <?= owMuseumSetupHtml($p, 'museum_dashboard.php?tab=setup') ?>
 
 <?php else: ?>

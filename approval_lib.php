@@ -71,7 +71,8 @@ function owSubmitChange(int $userId, string $type, int $targetId, array $data): 
     if ($old) {
         /* a waiting signature is kept when the artist sends other profile changes (and the other way round) */
         if ($type === 'profile') {
-            if (array_key_exists('signature', $data)) $data = array_merge($old['data'], $data);
+            if (array_key_exists('museum_setup', $data)) $data['museum_setup'] = array_slice(array_merge((array) ($old['data']['museum_setup'] ?? []), $data['museum_setup']), -60);   /* a museum's ticket requests add up until the owner decides */
+            elseif (array_key_exists('signature', $data)) $data = array_merge($old['data'], $data);
             elseif (array_key_exists('signature', $old['data'])) $data['signature'] = $old['data']['signature'];
         }
         getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $old['id']]);
@@ -90,6 +91,10 @@ function owSubmitChange(int $userId, string $type, int $targetId, array $data): 
         if (($inst = owInstituteOfUser($userId)) !== null) {
             $nm = ['artist_en' => $inst['name_en'], 'artist_ar' => $inst['name_ar'] ?: $inst['name_en']];
             if ($type === 'profile') $what = ['Institute profile changes', 'تعديلات على ملف معهد'];
+        }
+        if (($mus = owMuseumOfUser($userId)) !== null) {
+            $nm = ['artist_en' => $mus['name_en'], 'artist_ar' => $mus['name_ar'] ?: $mus['name_en']];
+            if ($type === 'profile') $what = ['Museum ticket types and dates', 'أنواع تذاكر المتحف وتواريخها'];
         }
         if ($type === 'profile' && array_keys($data) === ['signature']) $what = ['A signature for certificates', 'توقيع للشهادات'];
         $label = '';
@@ -118,6 +123,15 @@ function owDeletePendingArtworkPhoto(string $rel): void {
     $used = getDB()->prepare('SELECT COUNT(*) FROM artworks WHERE image_url = :p');
     $used->execute([':p' => $rel]);
     if ((int) $used->fetchColumn() === 0 && is_file(__DIR__ . '/' . $rel)) @unlink(__DIR__ . '/' . $rel);
+}
+/* The Art Map museum of a museum account, or null */
+function owMuseumOfUser(int $userId): ?array {
+    try {
+        if (!owHasColumn('art_places', 'user_id')) return null;
+        $st = getDB()->prepare("SELECT p.* FROM art_places p JOIN users u ON u.id = p.user_id WHERE p.user_id = :u AND u.role = 'museum' AND p.kind = 'museum' ORDER BY p.id LIMIT 1");
+        $st->execute([':u' => $userId]);
+        return $st->fetch() ?: null;
+    } catch (Throwable $e) { return null; }
 }
 /* The institute row of an institute account, or null */
 function owInstituteOfUser(int $userId): ?array {
@@ -150,6 +164,11 @@ function owWaitingChanges(): array {
         if (($r['asker_role'] ?? '') === 'institute' && ($inst = owInstituteOfUser((int) $r['user_id'])) !== null) {
             $r['artist_en'] = $inst['name_en']; $r['artist_ar'] = $inst['name_ar'] ?: $inst['name_en'];
             if ($r['target_type'] === 'profile') $r['current'] = $inst;
+        }
+        /* a museum account: its museum's name; its request is the ticket types and dates (owner, 16 Nov 2026) */
+        if (($r['asker_role'] ?? '') === 'museum' && ($mus = owMuseumOfUser((int) $r['user_id'])) !== null) {
+            $r['artist_en'] = $mus['name_en']; $r['artist_ar'] = $mus['name_ar'] ?: $mus['name_en'];
+            if ($r['target_type'] === 'profile') $r['current'] = $mus;
         }
     }
     return $rows;
@@ -197,6 +216,14 @@ function owApproveChange(int $id, array $actor): bool {
             if (array_key_exists('image_url', $d)) { $q = $db->prepare('SELECT image_url FROM artworks WHERE id = :id'); $q->execute([':id' => $tid]); $oldImg = (string) $q->fetchColumn(); }
             if ($set) $db->prepare('UPDATE artworks SET ' . implode(', ', $set) . ' WHERE id = :id')->execute($args);
             if ($oldImg !== '' && $oldImg !== (string) $d['image_url']) $GLOBALS['OW_APPROVE_OLD_IMG'] = $oldImg;   // deleted after the commit
+        } elseif ($p['target_type'] === 'profile' && array_key_exists('museum_setup', $d) && ($mus = owMuseumOfUser($tid)) !== null) {
+            /* a museum's ticket types and dates go live only now, one request after the other (owner, 16 Nov 2026) */
+            require_once __DIR__ . '/booking_lib.php';
+            foreach ((array) $d['museum_setup'] as $op) {
+                $e = owMuseumSetupPost($mus, (array) $op, $actor);
+                if ($e) owLog('museum_setup_skip', 'art_place', (int) $mus['id'], (string) ($op['do'] ?? '') . ': ' . $e[0], $actor);
+            }
+            $GLOBALS['OW_APPROVE_MUSEUM'] = true;
         } elseif ($p['target_type'] === 'profile' && ($inst = owInstituteOfUser($tid)) !== null) {
             $set = []; $args = [':id' => (int) $inst['id']];
             foreach (OW_INSTITUTE_FIELDS as $f) if (array_key_exists($f, $d) && owHasColumn('institutes', $f)) { $set[] = "$f = :$f"; $args[":$f"] = $d[$f]; }
@@ -252,11 +279,11 @@ function owApproveChange(int $id, array $actor): bool {
             'article.php?slug=' . rawurlencode((string) $art['slug']));
         return true;
     }
-    [$what, $whatAr] = array_keys($d) === ['signature'] ? ['signature', 'توقيعك'] : owChangeWords($p['target_type']);
+    [$what, $whatAr] = array_keys($d) === ['signature'] ? ['signature', 'توقيعك'] : (!empty($GLOBALS['OW_APPROVE_MUSEUM']) ? ['ticket types and dates', 'أنواع التذاكر والتواريخ'] : owChangeWords($p['target_type']));
     owTellUser((int) $p['user_id'], 'Approved · تمت الموافقة',
         "Good news: the changes to your $what are approved and now visible on Oweili.",
         "خبر جميل: تمت الموافقة على التعديلات على {$whatAr}، وهي ظاهرة الآن في أويلي.",
-        array_keys($d) === ['signature'] ? 'signature.php' : (!empty($GLOBALS['OW_APPROVE_INST']) ? 'institute_dashboard.php?tab=profile' : ($p['target_type'] === 'profile' ? 'artist_dashboard.php?id=' . $tid : ($p['target_type'] === 'artwork' ? 'artwork.php?id=' . $tid : 'admin_articles.php'))));
+        array_keys($d) === ['signature'] ? 'signature.php' : (!empty($GLOBALS['OW_APPROVE_MUSEUM']) ? 'museum_dashboard.php?tab=setup' : (!empty($GLOBALS['OW_APPROVE_INST']) ? 'institute_dashboard.php?tab=profile' : ($p['target_type'] === 'profile' ? 'artist_dashboard.php?id=' . $tid : ($p['target_type'] === 'artwork' ? 'artwork.php?id=' . $tid : 'admin_articles.php')))));
     return true;
 }
 
@@ -282,11 +309,12 @@ function owRejectChange(int $id, string $reason, array $actor): bool {
             'my_articles.php?edit=' . (int) $p['target_id']);
         return true;
     }
-    [$what, $whatAr] = array_keys($d) === ['signature'] ? ['signature', 'توقيعك'] : owChangeWords($p['target_type']);
+    $isMus = array_key_exists('museum_setup', $d);
+    [$what, $whatAr] = array_keys($d) === ['signature'] ? ['signature', 'توقيعك'] : ($isMus ? ['ticket types and dates', 'أنواع التذاكر والتواريخ'] : owChangeWords($p['target_type']));
     owTellUser((int) $p['user_id'], 'About your changes · بخصوص تعديلاتك',
         "The changes to your $what were not approved. The reason: $reason\r\nVisitors still see the approved version. You can make the changes again.",
         "لم تتم الموافقة على التعديلات على {$whatAr}. السبب: $reason\r\nما زال الزوار يرون النسخة المعتمدة. يمكنك إعادة التعديل.",
-        $p['target_type'] === 'artwork' ? 'artist_studio.php' : (array_keys($d) === ['signature'] ? 'signature.php' : 'edit_profile.php'));
+        $isMus ? 'museum_dashboard.php?tab=setup' : ($p['target_type'] === 'artwork' ? 'artist_studio.php' : (array_keys($d) === ['signature'] ? 'signature.php' : 'edit_profile.php')));
     return true;
 }
 
