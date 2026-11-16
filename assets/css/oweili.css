@@ -665,3 +665,63 @@ body:has(> .ow-backdrop):has(> .ow-footer) > main { flex: 1 0 auto; }
   .ow-backdrop[data-side="left"] ~ * :is(.d-head, .d-empty, .gallery-empty) { margin-left: 0; margin-right: auto; }
   .ow-backdrop[data-side="right"] ~ * :is(.d-head, .d-empty, .gallery-empty) { margin-right: 0; margin-left: auto; }
 }
+
+/* ══ The new look on every page: glass + soft colour shapes ("Sample B", chosen by the owner 16 Nov 2026) ══
+   The home page has its own copy (index.php, body.s-b), so it is left out here; so are the certificate and its
+   back label (always light, printed). Visual only: every text, link, button, form and photo stays as it was.
+   1. Soft, large pink / navy / grey-blue shapes behind the whole page (a fixed layer, a very slow drift on laptops).
+   2. The page's own studio photo (studio_lib.php owStudioBackdrop) sits clear and whole in its own glass box at the
+      top of the page, never zoomed or covered; the page starts under it.
+   3. Boxes are frosted glass: see-through, blurred, a thin light edge, a soft shadow (lighter blur on phones).
+   Artwork pictures sit on their own solid frames inside the boxes, so they are never blurred or covered. */
+:root { --sb-glass: rgba(255,255,255,0.55); --sb-edge: rgba(255,255,255,0.72); --sb-shine: rgba(255,255,255,0.5);
+  --sb-shadow: 0 16px 44px rgba(35,49,74,0.16), 0 2px 6px rgba(35,49,74,0.06); --sb-blur: blur(20px) saturate(165%); --ow-ph: 300px; }
+html.dark-mode { --sb-glass: rgba(15,21,32,0.55); --sb-edge: rgba(255,255,255,0.14); --sb-shine: rgba(255,255,255,0.08);
+  --sb-shadow: 0 16px 44px rgba(0,0,0,0.42), 0 2px 6px rgba(0,0,0,0.22); }
+@media (max-width: 640px) { :root { --sb-blur: blur(10px) saturate(150%); } }
+
+/* 1. the colour shapes */
+html:has(> body:not(.s-b):not(.cert-page):not(.label-page)) { background: #F4EEF0 !important; }
+html.dark-mode:has(> body:not(.s-b):not(.cert-page):not(.label-page)) { background: #0F1520 !important; }
+body:not(.s-b):not(.cert-page):not(.label-page) { background: transparent !important; }
+body:not(.s-b):not(.cert-page):not(.label-page)::before { content: ""; position: fixed; inset: -10%; z-index: -2; pointer-events: none; background:
+  radial-gradient(38% 42% at 12% 18%, rgba(219,128,132,0.85), rgba(219,128,132,0) 70%),
+  radial-gradient(40% 45% at 88% 82%, rgba(35,49,74,0.70), rgba(35,49,74,0) 70%),
+  radial-gradient(34% 38% at 78% 22%, rgba(143,161,177,0.75), rgba(143,161,177,0) 70%),
+  radial-gradient(36% 40% at 22% 86%, rgba(235,181,183,0.85), rgba(235,181,183,0) 70%),
+  radial-gradient(30% 30% at 52% 50%, rgba(219,128,132,0.35), rgba(219,128,132,0) 70%),
+  #F4EEF0; }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page)::before { background:
+  radial-gradient(38% 42% at 12% 18%, rgba(219,128,132,0.42), rgba(219,128,132,0) 70%),
+  radial-gradient(40% 45% at 88% 82%, rgba(70,96,140,0.55), rgba(70,96,140,0) 70%),
+  radial-gradient(34% 38% at 78% 22%, rgba(143,161,177,0.30), rgba(143,161,177,0) 70%),
+  radial-gradient(36% 40% at 22% 86%, rgba(201,106,110,0.30), rgba(201,106,110,0) 70%),
+  #0F1520; }
+@keyframes ow-sb-drift { 0% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(-2%,1.5%,0) scale(1.04); } 100% { transform: translate3d(0,0,0) scale(1); } }
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) { body:not(.s-b):not(.cert-page):not(.label-page)::before { animation: ow-sb-drift 28s ease-in-out infinite; } }
+
+/* 2. the page photo, whole and clear, in its own glass box at the top (at most 300 px tall on laptops, full width on phones) */
+body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) { --ow-pw: min(calc(100vw - 32px), calc(var(--ow-ph) / var(--ow-ratio, 0.5625)));
+  padding-top: calc(16px + min(calc((100vw - 32px) * var(--ow-ratio, 0.5625)), var(--ow-ph)) - var(--nav-h)) !important; }
+body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop { position: absolute !important; z-index: 0; top: calc(var(--nav-h) + 16px) !important; left: 50%; right: auto; bottom: auto;
+  transform: translateX(-50%); width: var(--ow-pw); height: auto !important; border-radius: 22px; overflow: hidden; border: 1px solid var(--sb-edge); box-shadow: var(--sb-shadow);
+  background: var(--ow-tiny, none) 50% 50% / cover no-repeat !important; filter: none; }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop { filter: brightness(0.72); }
+body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop::before, body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop::after { display: none !important; }
+body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop .ow-studio { position: relative; inset: auto; display: block; }
+body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop .ow-studio img { width: 100%; height: auto !important; object-fit: fill !important; }
+
+/* 3. glass boxes */
+body:not(.s-b):not(.cert-page):not(.label-page) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item):not(.m-map) {
+  background: var(--sb-glass) !important; -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur);
+  border-color: var(--sb-edge) !important; box-shadow: var(--sb-shadow), inset 0 1px 0 var(--sb-shine); }
+/* the small frosted headings, filter bars and labels of the photo pages use the same glass */
+body:not(.s-b):not(.cert-page):not(.label-page) { --studio-glass: var(--sb-glass); --studio-glass-edge: var(--sb-edge); }
+/* the footer: one glass band */
+body:not(.s-b):not(.cert-page):not(.label-page) .ow-footer { background: var(--sb-glass) !important; -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur); border-top: 1px solid var(--sb-edge); }
+body:not(.s-b):not(.cert-page):not(.label-page) .ow-footer :is(.ow-footer-in, .ow-footer-copy) { background: transparent !important; -webkit-backdrop-filter: none; backdrop-filter: none; border: 0 !important; }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  body:not(.s-b):not(.cert-page):not(.label-page) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .ow-footer):not(.m-map) { background: var(--color-surface) !important; } }
+@media (prefers-reduced-transparency: reduce) {
+  body:not(.s-b):not(.cert-page):not(.label-page) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .ow-footer):not(.m-map) { background: var(--color-surface) !important; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+@media print { body:not(.s-b)::before { display: none; } }
