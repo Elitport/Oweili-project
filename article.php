@@ -26,11 +26,8 @@ if ($slug !== '' && strlen($slug) <= 190 && preg_match('/^[a-z0-9-]+$/', $slug) 
         $st = getDB()->prepare('SELECT a.* FROM articles a WHERE a.slug = :s' . ($preview ? '' : ' AND ' . owArticlePublicSql('a')));
         $st->execute([':s' => $slug]);
         $a = $st->fetch() ?: null;
-        if ($a && $a['author_user_id']) {
-            require_once __DIR__ . '/artwork_lib.php';
-            $st = getDB()->prepare("SELECT u.id, " . owArtistNameSql('u') . " FROM users u WHERE u.id = :id AND u.role = 'artist' AND u.is_approved = 1 AND COALESCE(u.is_banned, 0) = 0");
-            $st->execute([':id' => $a['author_user_id']]);
-            $byArtist = $st->fetch() ?: null;
+        if ($a && $a['author_user_id']) {   // an artist or an institute (owner, 16 Nov 2026); team articles show no author
+            $byArtist = owArticleAuthors([(int) $a['author_user_id']])[(int) $a['author_user_id']] ?? null;
         }
         if ($a) {
             $st = getDB()->prepare('SELECT image_path, alt_en, alt_ar FROM article_images WHERE article_id = :id ORDER BY sort_order, id');
@@ -135,7 +132,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
       <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a>
       <h1><?= owBi($a['title_en'], $a['title_ar']) ?></h1>
       <?php if ($preview && $a['status'] !== 'published'): ?><p class="alert alert-error" role="status"><?= owBi('Preview for the team: visitors cannot see this article yet.', 'معاينة للفريق: لا يرى الزوار هذا المقال بعد.') ?></p><?php endif; ?>
-      <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <a href="artist_dashboard.php?id=<?= (int) $byArtist['id'] ?>"><?= owBiName((string) $byArtist['artist_en'], (string) $byArtist['artist_ar']) ?></a><?php endif; ?></p>
+      <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <?= $byArtist['url'] !== '' ? '<a href="' . e(owBase() . $byArtist['url']) . '">' . owBiName($byArtist['en'], $byArtist['ar']) . '</a>' : owBiName($byArtist['en'], $byArtist['ar']) ?><?php endif; ?></p>
 
       <?php if ($type === 'event'): [$dEn, $dAr] = owDateRangeBi($a['event_start_date'], $a['event_end_date']); ?>
         <div class="event-box">
@@ -143,7 +140,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
           <?php if ($a['event_location_en'] !== '' || $a['event_location_ar'] !== ''): ?>
             <div class="event-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><?= owBi($a['event_location_en'] ?: $a['event_location_ar'], $a['event_location_ar'] ?: $a['event_location_en']) ?></div>
           <?php endif; ?>
-          <div class="event-note"><?= $byArtist ? owBi('Shared by an Oweili artist, checked by the Oweili team', 'شاركه فنان من أويلي، وراجعه فريق أويلي') : owBi('Added by the Oweili team', 'أضافه فريق أويلي') ?></div>
+          <div class="event-note"><?= $byArtist ? ($byArtist['kind'] === 'institute' ? owBi('Shared by an art institute, checked by the Oweili team', 'شاركه معهد فني، وراجعه فريق أويلي') : owBi('Shared by an Oweili artist, checked by the Oweili team', 'شاركه فنان من أويلي، وراجعه فريق أويلي')) : owBi('Added by the Oweili team', 'أضافه فريق أويلي') ?></div>
         </div>
       <?php endif; ?>
 

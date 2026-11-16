@@ -13,7 +13,11 @@
  *    my_articles.php                  list of my articles
  *    my_articles.php?new=event        new article of that type
  *    my_articles.php?edit=12          edit one of my drafts
- *  Tables: articles, article_images, photo_consents, pending_changes,
+ *  Institutes (owner, 16 Nov 2026): an approved institute account uses the same
+ *  tool from its dashboard (institute_dashboard.php → My articles), for Art
+ *  Events and Art Education only (Artist Spotlights stay artist-only). Every
+ *  article waits for the admin exactly like an artist's.
+ *  Tables: articles, article_images, photo_consents, pending_changes, institutes,
  *          activity_log, users
  * ===================================================================== */
 require_once 'config.php';
@@ -25,10 +29,15 @@ require_once __DIR__ . '/approval_lib.php';
 if (!isLoggedIn()) { header('Location: login.php?next=my_articles.php'); exit; }
 $me = currentUser();
 if (!$me) { header('Location: login.php'); exit; }
-if (($me['role'] ?? '') !== 'artist') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
+$isInst = ($me['role'] ?? '') === 'institute';
+if (($me['role'] ?? '') !== 'artist' && !$isInst) { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 $uid      = (int) $me['id'];
 $approved = (int) ($me['is_approved'] ?? 0) === 1 && empty($me['is_banned']);
+if ($isInst) { $myInst = owInstituteOfUser($uid); $approved = $approved && $myInst && (int) $myInst['is_active'] === 1; }   // an approved, shown institute
+$ACTOR    = ['type' => $isInst ? 'institute' : 'artist', 'id' => $uid];
+$HOME     = $isInst ? ['institute_dashboard.php?tab=articles', 'Back to my dashboard', 'العودة إلى لوحتي'] : ['artist_studio.php?tab=articles', 'Back to My Studio', 'العودة إلى مرسمي'];
 $TYPES    = owArticleTypes();
+if ($isInst) unset($TYPES['artist_spotlight']);   // Artist Spotlights stay artist-only
 $METHODS  = owConsentMethods();
 const OW_MY_ARTICLE_MAX  = 40;   // articles one artist can keep
 const OW_MY_ARTICLE_IMGS = 6;    // extra photos per artist article
@@ -74,7 +83,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $db->prepare('DELETE FROM articles WHERE id = :id AND author_user_id = :u')->execute([':id' => $a['id'], ':u' => $uid]);
             owDeleteArticleFile((string) $a['cover_image_path']);
             foreach ($a['images'] as $im) owDeleteArticleFile((string) $im['image_path']);
-            owLog('article_delete', 'article', (int) $a['id'], '', ['type' => 'artist', 'id' => $uid]);
+            owLog('article_delete', 'article', (int) $a['id'], '', $ACTOR);
             myFlash('The article is deleted.', 'تم حذف المقال.');
         }
         header('Location: my_articles.php'); exit;
@@ -219,7 +228,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 foreach ($removed as $p) owDeleteArticleFile((string) $p);
                 /* Changed after it was sent: the waiting request is withdrawn, so the admin never approves a version they did not read */
                 if (!$send && $existing) $db->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE target_type = 'article' AND target_id = :id AND status = 'pending'")->execute([':id' => $id]);
-                owLog($existing ? 'article_edit' : 'article_new', 'article', $id, $type, ['type' => 'artist', 'id' => $uid]);
+                owLog($existing ? 'article_edit' : 'article_new', 'article', $id, $type, $ACTOR);
                 if ($send) {
                     if (owSubmitChange($uid, 'article', $id, ['publish' => 1])) myFlash('Sent. The Oweili team will read it and email you the result. Until then, visitors do not see it.', 'تم الإرسال. سيقرؤه فريق أويلي ويراسلك بالنتيجة. حتى ذلك الحين لا يراه الزوار.');
                     else myFlash('Saved as a draft, but it could not be sent. Please try again.', 'تم الحفظ كمسودة، لكن تعذّر الإرسال. يرجى المحاولة مرة أخرى.', true);
@@ -333,13 +342,13 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
 <div class="overlay"></div>
 <?php include __DIR__ . '/nav.php'; ?>
 
-<main class="page dash role-artist dash-wrap">
+<main class="page dash <?= $isInst ? 'role-institute' : 'role-artist' ?> dash-wrap">
   <div class="card ma-head">
     <div>
       <h1><?= owBi('My articles', 'مقالاتي') ?></h1>
       <p><?= owBi('Share what you know with art lovers. The Oweili team reads every article before it goes live.', 'شارك ما تعرفه مع محبي الفن. يقرأ فريق أويلي كل مقال قبل نشره.') ?></p>
     </div>
-    <a class="btn btn-ghost" href="artist_studio.php?tab=articles"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a>
+    <a class="btn btn-ghost" href="<?= e($HOME[0]) ?>"><?= owBi($HOME[1], $HOME[2]) ?></a>
   </div>
 
   <?php if ($flash): ?><div class="alert <?= $flash[2] ? 'alert-error' : 'alert-ok' ?>" role="status" style="margin-top:var(--space-md)"><?= owBi($flash[0], $flash[1]) ?></div><?php endif; ?>
@@ -347,8 +356,8 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
   <?php if (!$ready): ?>
     <div class="card empty" style="margin-top:var(--space-md)"><p><?= owBi('Articles are being set up. Please check back soon.', 'المقالات قيد التجهيز. يرجى العودة قريباً.') ?></p></div>
   <?php elseif (!$approved): ?>
-    <div class="card empty" style="margin-top:var(--space-md)"><p><?= owBi('You can write articles once your artist account is approved. We will email you.', 'يمكنك كتابة المقالات بعد الموافقة على حسابك كفنان. سنراسلك.') ?></p>
-      <a class="btn btn-secondary" href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div>
+    <div class="card empty" style="margin-top:var(--space-md)"><p><?= $isInst ? owBi('You can write articles once your institute is approved. We will email you.', 'يمكنك كتابة المقالات بعد الموافقة على معهدك. سنراسلك.') : owBi('You can write articles once your artist account is approved. We will email you.', 'يمكنك كتابة المقالات بعد الموافقة على حسابك كفنان. سنراسلك.') ?></p>
+      <a class="btn btn-secondary" href="<?= e($HOME[0]) ?>"><?= owBi($HOME[1], $HOME[2]) ?></a></div>
 
   <?php elseif ($mode === 'form'): $type = $form['type']; [$tEn, $tAr] = $TYPES[$type]; $isSpot = $type === 'artist_spotlight'; ?>
     <form class="card ma-form" method="post" action="my_articles.php" enctype="multipart/form-data" style="margin-top:var(--space-md)">

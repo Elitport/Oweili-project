@@ -28,12 +28,16 @@ function owApprovalsReady(): bool { return owHasTable('pending_changes'); }
 /* The profile fields visitors can see (changes to these wait for approval) */
 const OW_PUBLIC_PROFILE_FIELDS = ['full_name_en', 'full_name_ar', 'artist_name', 'bio_en', 'bio_ar', 'city', 'country',
                                   'art_styles', 'instagram', 'twitter', 'website', 'profile_picture'];
-/* The artwork fields that wait for approval (the photo does not, see above) */
-const OW_ARTWORK_FIELDS = ['title_en', 'title_ar', 'description_en', 'description_ar', 'price', 'type', 'status',
+/* The artwork fields that wait for approval. Since 16 Nov 2026 (owner) the photo of a live artwork waits too (image_url) */
+const OW_ARTWORK_FIELDS = ['image_url', 'title_en', 'title_ar', 'description_en', 'description_ar', 'price', 'type', 'status',
                            'medium', 'width_cm', 'height_cm', 'size_code', 'size_category', 'orientation', 'year_made', 'edition_type', 'edition_number', 'edition_size'];
 
 /* Field names for the admin list */
+/* The public parts of an institute's profile (institute_dashboard.php): changes wait for approval while the institute is shown (owner, 16 Nov 2026).
+   Kept as a 'profile' change of the institute's account (no database change); approving writes them to its institutes row */
+const OW_INSTITUTE_FIELDS = ['description_en', 'description_ar', 'contact_phone', 'website_url'];
 const OW_FIELD_WORDS = [
+    'image_url' => ['Photo', 'الصورة'], 'contact_phone' => ['Phone', 'الهاتف'], 'website_url' => ['Website', 'الموقع'],
     'title_en' => ['Title (English)', 'العنوان (إنجليزي)'], 'title_ar' => ['Title (Arabic)', 'العنوان (عربي)'],
     'description_en' => ['Description (English)', 'الوصف (إنجليزي)'], 'description_ar' => ['Description (Arabic)', 'الوصف (عربي)'],
     'price' => ['Price (SAR)', 'السعر (ر.س)'], 'type' => ['Art type', 'نوع الفن'], 'status' => ['For sale', 'حالة البيع'],
@@ -73,6 +77,8 @@ function owSubmitChange(int $userId, string $type, int $targetId, array $data): 
         getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $old['id']]);
         $oldPic = (string) ($old['data']['profile_picture'] ?? '');
         if ($oldPic !== '' && $oldPic !== (string) ($data['profile_picture'] ?? '')) owDeletePendingFile($oldPic);
+        $oldImg = (string) ($old['data']['image_url'] ?? '');
+        if ($oldImg !== '' && $oldImg !== (string) ($data['image_url'] ?? '')) owDeletePendingArtworkPhoto($oldImg);
     }
     getDB()->prepare('INSERT INTO pending_changes (user_id, target_type, target_id, data) VALUES (:u, :t, :i, :d)')
            ->execute([':u' => $userId, ':t' => $type, ':i' => $targetId, ':d' => json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)]);
@@ -81,6 +87,10 @@ function owSubmitChange(int $userId, string $type, int $targetId, array $data): 
         require_once __DIR__ . '/alert_lib.php';
         $q = getDB()->prepare('SELECT ' . owArtistNameSql('u') . ' FROM users u WHERE u.id = :id'); $q->execute([':id' => $userId]); $nm = $q->fetch() ?: ['artist_en' => '', 'artist_ar' => ''];
         $what = ['artwork' => ['Artwork changes', 'تعديلات على عمل'], 'profile' => ['Profile changes', 'تعديلات على ملف'], 'article' => ['An article to publish', 'مقال للنشر']][$type] ?? ['Changes', 'تعديلات'];
+        if (($inst = owInstituteOfUser($userId)) !== null) {
+            $nm = ['artist_en' => $inst['name_en'], 'artist_ar' => $inst['name_ar'] ?: $inst['name_en']];
+            if ($type === 'profile') $what = ['Institute profile changes', 'تعديلات على ملف معهد'];
+        }
         if ($type === 'profile' && array_keys($data) === ['signature']) $what = ['A signature for certificates', 'توقيع للشهادات'];
         $label = '';
         if ($type === 'artwork' || $type === 'article') {
@@ -101,6 +111,24 @@ function owDeletePendingFile(string $rel): void {
     if ((int) $used->fetchColumn() === 0 && is_file(__DIR__ . '/' . $rel)) @unlink(__DIR__ . '/' . $rel);
 }
 
+/* A photo uploaded for a waiting artwork change that was never used (rejected or replaced) */
+function owDeletePendingArtworkPhoto(string $rel): void {
+    $rel = ltrim($rel, '/');
+    if ($rel === '' || strpos($rel, '..') !== false || strpos($rel, 'uploads/artworks/') !== 0) return;
+    $used = getDB()->prepare('SELECT COUNT(*) FROM artworks WHERE image_url = :p');
+    $used->execute([':p' => $rel]);
+    if ((int) $used->fetchColumn() === 0 && is_file(__DIR__ . '/' . $rel)) @unlink(__DIR__ . '/' . $rel);
+}
+/* The institute row of an institute account, or null */
+function owInstituteOfUser(int $userId): ?array {
+    try {
+        if (!owHasColumn('institutes', 'via_signup')) return null;
+        $st = getDB()->prepare("SELECT i.* FROM institutes i JOIN users u ON u.id = i.user_id WHERE i.user_id = :u AND u.role = 'institute' ORDER BY i.id LIMIT 1");
+        $st->execute([':u' => $userId]);
+        return $st->fetch() ?: null;
+    } catch (Throwable $e) { return null; }
+}
+
 /* Everything waiting, newest first, with who asked and what it is about */
 function owWaitingChanges(): array {
     if (!owApprovalsReady()) return [];
@@ -117,6 +145,11 @@ function owWaitingChanges(): array {
             $st = getDB()->prepare('SELECT * FROM users WHERE id = :id'); $st->execute([':id' => $r['target_id']]); $r['current'] = $st->fetch() ?: [];
         } elseif ($r['target_type'] === 'article') {
             $st = getDB()->prepare('SELECT * FROM articles WHERE id = :id'); $st->execute([':id' => $r['target_id']]); $r['current'] = $st->fetch() ?: [];
+        }
+        /* an institute account: its institute's name is shown, never the person's; its profile change is compared with the institute (owner, 16 Nov 2026) */
+        if (($r['asker_role'] ?? '') === 'institute' && ($inst = owInstituteOfUser((int) $r['user_id'])) !== null) {
+            $r['artist_en'] = $inst['name_en']; $r['artist_ar'] = $inst['name_ar'] ?: $inst['name_en'];
+            if ($r['target_type'] === 'profile') $r['current'] = $inst;
         }
     }
     return $rows;
@@ -160,7 +193,15 @@ function owApproveChange(int $id, array $actor): bool {
             $set = []; $args = [':id' => $tid];
             foreach (OW_ARTWORK_FIELDS as $f) if (array_key_exists($f, $d) && owHasColumn('artworks', $f)) { $set[] = "$f = :$f"; $args[":$f"] = $d[$f]; }
             if (array_key_exists('status', $d)) $set[] = $d['status'] === 'sold' ? 'sold_at = COALESCE(sold_at, NOW())' : 'sold_at = NULL';
+            $oldImg = '';
+            if (array_key_exists('image_url', $d)) { $q = $db->prepare('SELECT image_url FROM artworks WHERE id = :id'); $q->execute([':id' => $tid]); $oldImg = (string) $q->fetchColumn(); }
             if ($set) $db->prepare('UPDATE artworks SET ' . implode(', ', $set) . ' WHERE id = :id')->execute($args);
+            if ($oldImg !== '' && $oldImg !== (string) $d['image_url']) $GLOBALS['OW_APPROVE_OLD_IMG'] = $oldImg;   // deleted after the commit
+        } elseif ($p['target_type'] === 'profile' && ($inst = owInstituteOfUser($tid)) !== null) {
+            $set = []; $args = [':id' => (int) $inst['id']];
+            foreach (OW_INSTITUTE_FIELDS as $f) if (array_key_exists($f, $d) && owHasColumn('institutes', $f)) { $set[] = "$f = :$f"; $args[":$f"] = $d[$f]; }
+            if ($set) $db->prepare('UPDATE institutes SET ' . implode(', ', $set) . ' WHERE id = :id')->execute($args);
+            $GLOBALS['OW_APPROVE_INST'] = true;
         } elseif ($p['target_type'] === 'profile') {
             $oldPic = '';
             if (array_key_exists('profile_picture', $d)) {
@@ -198,6 +239,7 @@ function owApproveChange(int $id, array $actor): bool {
         error_log('owApproveChange: ' . $e->getMessage());
         return false;
     }
+    if (!empty($GLOBALS['OW_APPROVE_OLD_IMG'])) { owDeletePendingArtworkPhoto((string) $GLOBALS['OW_APPROVE_OLD_IMG']); unset($GLOBALS['OW_APPROVE_OLD_IMG']); }   // the replaced photo, once nothing uses it
     /* the certificate follows the approved details (same number), or is made now if it was waiting for them */
     if ($p['target_type'] === 'artwork' && function_exists('owRefreshCertificate')) {
         try { owRefreshCertificate($tid); } catch (Throwable $e) { error_log('owRefreshCertificate: ' . $e->getMessage()); }
@@ -214,7 +256,7 @@ function owApproveChange(int $id, array $actor): bool {
     owTellUser((int) $p['user_id'], 'Approved · تمت الموافقة',
         "Good news: the changes to your $what are approved and now visible on Oweili.",
         "خبر جميل: تمت الموافقة على التعديلات على {$whatAr}، وهي ظاهرة الآن في أويلي.",
-        array_keys($d) === ['signature'] ? 'signature.php' : ($p['target_type'] === 'profile' ? 'artist_dashboard.php?id=' . $tid : ($p['target_type'] === 'artwork' ? 'artwork.php?id=' . $tid : 'admin_articles.php')));
+        array_keys($d) === ['signature'] ? 'signature.php' : (!empty($GLOBALS['OW_APPROVE_INST']) ? 'institute_dashboard.php?tab=profile' : ($p['target_type'] === 'profile' ? 'artist_dashboard.php?id=' . $tid : ($p['target_type'] === 'artwork' ? 'artwork.php?id=' . $tid : 'admin_articles.php'))));
     return true;
 }
 
@@ -230,6 +272,7 @@ function owRejectChange(int $id, string $reason, array $actor): bool {
     getDB()->prepare("UPDATE pending_changes SET status = 'rejected', reason = :r, decided_at = NOW(), decided_by = :by WHERE id = :id")
            ->execute([':r' => $reason, ':by' => $actor['id'], ':id' => $id]);
     if (!empty($d['profile_picture'])) owDeletePendingFile((string) $d['profile_picture']);
+    if (!empty($d['image_url'])) owDeletePendingArtworkPhoto((string) $d['image_url']);
     if ($p['target_type'] === 'profile' && array_key_exists('signature', $d)) { require_once __DIR__ . '/sig_lib.php'; owSigRemove((string) (int) $p['target_id'], true); }
     owLog('change_reject', $p['target_type'], (int) $p['target_id'], $reason, $actor);
     if ($p['target_type'] === 'article' && ($art = owArticleOfArtist((int) $p['target_id'], (int) $p['user_id']))) {
@@ -247,11 +290,11 @@ function owRejectChange(int $id, string $reason, array $actor): bool {
     return true;
 }
 
-/* An article written by this artist (my_articles.php), or null (a team member's article) */
+/* An article written by this artist or institute (my_articles.php), or null (a team member's article) */
 function owArticleOfArtist(int $articleId, int $userId): ?array {
     try {
         $st = getDB()->prepare("SELECT a.title_en, a.title_ar, a.slug FROM articles a JOIN users u ON u.id = a.author_user_id
-                                WHERE a.id = :a AND a.author_user_id = :u AND u.role = 'artist'");
+                                WHERE a.id = :a AND a.author_user_id = :u AND u.role IN ('artist', 'institute')");
         $st->execute([':a' => $articleId, ':u' => $userId]);
         return $st->fetch() ?: null;
     } catch (Throwable $e) { return null; }

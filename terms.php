@@ -68,11 +68,13 @@ owLegalPage([
         'When you delete an artwork, we stop showing it. Posts already shared may stay where they are.',
         'Visitors may not copy, download or reuse artwork photos without the artist’s permission.',
         'When an artwork is sold: ' . lcfirst(OW_CERT_RIGHTS[0]),
+        'Approved art institutes may also send articles (Art Events and Art Education). The institute must own the rights to every photo and all the text it sends. Each article is published only after the Oweili team approves it.',
     ], [
         'تبقى لك كل الحقوق في عملك. وتمنح أويلي الإذن بعرض صوره وعنوانه وقصته على الموقع وفي منشورات أويلي وإعلاناته، لتقديم عملك فقط، ما دام على أويلي.',
         'حين تحذف عملاً نتوقف عن عرضه. وقد تبقى المنشورات التي سبق نشرها في أماكنها.',
         'لا يحق للزوار نسخ صور الأعمال أو تنزيلها أو إعادة استخدامها دون إذن الفنان.',
         'عند بيع العمل: ' . OW_CERT_RIGHTS[1],
+        'يمكن للمعاهد الفنية المعتمدة أيضاً إرسال مقالات (الملتقيات الفنية والتثقيف الفني). ويجب أن يملك المعهد حقوق كل صورة وكل نص يرسله. ولا يُنشر أي مقال إلا بعد موافقة فريق أويلي.',
     ]],
     ['price', 'Prices and commission', 'الأسعار والعمولة', [
         'Artists set their own prices in Saudi riyals (SAR).',

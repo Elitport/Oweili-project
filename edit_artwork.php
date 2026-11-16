@@ -63,8 +63,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $aw['declared_at'] = date('Y-m-d H:i:s');
         }
         $imageUrl = $aw['image_url'];
-        /* live in the Gallery right now? Then a new photo stays live, but the team is told
-           and the old photo is kept so they can compare (admin.php → Photo changes) */
+        /* live in the Gallery right now? Then a new photo waits for the admin like every other change
+           (owner, 16 Nov 2026): visitors and the certificate keep the approved photo until then */
         $isLive = (int) $aw['is_approved'] === 1 && (int) ($aw['is_draft'] ?? 0) === 0;
         $photoChanged = false;
 
@@ -92,9 +92,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             }
         }
 
-        /* Live artwork: the new text, price, type and status wait for the admin.
-           Visitors keep seeing the approved version until then. The photo
-           (if changed) still goes live straight away with the alert, as before. */
+        /* Live artwork: the new photo, text, price, type and status wait for the admin.
+           Visitors keep seeing the approved version until then (the photo too, since 16 Nov 2026). */
         if ($err === '' && $isLive && owApprovalsReady()) {
             $want = ['title_en' => $tEn, 'title_ar' => $tAr, 'description_en' => $dEn, 'description_ar' => $dAr,
                      'price' => (string) (float) $price, 'type' => $type, 'status' => $status];
@@ -108,11 +107,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                       : ((string) ($v ?? '') === (string) ($aw[$k] ?? ''));
                 if (!$same) $diff[$k] = $v;
             }
-            if ($photoChanged) {
-                getDB()->prepare('UPDATE artworks SET image_url = :img WHERE id = :id AND artist_id = :uid')
-                       ->execute([':img' => $imageUrl, ':id' => $artId, ':uid' => $viewerId]);
-                owPhotoChanged($aw, (string) $aw['image_url'], $imageUrl, $viewerId);
-            }
+            if ($photoChanged) $diff['image_url'] = $imageUrl;   // the new photo waits too (owner, 16 Nov 2026)
+            elseif (($pend0 = owPendingChange('artwork', $artId)) && !empty($pend0['data']['image_url'])) $diff['image_url'] = (string) $pend0['data']['image_url'];   // a photo already waiting stays with the request
             $sent = false;
             if ($diff) {
                 $sent = owSubmitChange($viewerId, 'artwork', $artId, $diff);
@@ -157,7 +153,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 require_once __DIR__ . '/alert_lib.php';
                 owAdminAlert('artwork', 'Artwork sent back for review after changes: ' . $tEn, 'عمل أُعيد للمراجعة بعد التعديل: ' . ($tAr ?: $tEn), 'admin.php#pending');
             }
-            if ($photoChanged && $isLive) owPhotoChanged($aw, (string) $aw['image_url'], $imageUrl, $viewerId);
+            /* "Photo changed, needs a look" is switched off (owner, 16 Nov 2026): a live artwork's new photo waits for approval above */
             header('Location: artist_studio.php?done=saved');   // My Studio is the artist's home (11 Nov 2026)
             exit;
         }
@@ -220,7 +216,7 @@ $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
     <?php if ($pendingAw): ?>
       <div class="ok-box" role="status"><?= owBi('Your last changes are waiting for approval. Visitors still see the approved version. Saving again replaces the waiting changes.', 'تعديلاتك الأخيرة بانتظار الموافقة. ما زال الزوار يرون النسخة المعتمدة. الحفظ مرة أخرى يستبدل التعديلات المنتظرة.') ?></div>
     <?php elseif ($waitNote): ?>
-      <div class="lock-note wait-note" role="note"><?= owBi('This artwork is in the Gallery. Changes to its text, price, type or status wait for the team’s approval before visitors see them. A new photo shows straight away.', 'هذا العمل في المعرض. التعديلات على النص أو السعر أو النوع أو الحالة تنتظر موافقة الفريق قبل أن يراها الزوار. الصورة الجديدة تظهر فوراً.') ?></div>
+      <div class="lock-note wait-note" role="note"><?= owBi('This artwork is in the Gallery. Changes to its photo, text, price, type or status wait for the team’s approval before visitors see them.', 'هذا العمل في المعرض. التعديلات على الصورة أو النص أو السعر أو النوع أو الحالة تنتظر موافقة الفريق قبل أن يراها الزوار.') ?></div>
     <?php endif; ?>
 
     <?php if (($curImg = owImgSrc($aw['image_url'])) !== ''): ?>

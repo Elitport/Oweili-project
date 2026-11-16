@@ -94,6 +94,36 @@ function owUniqueSlug(string $title, int $exceptId = 0): string {
 /* SQL condition: what visitors may see. Only published articles — and an
    artist spotlight that has photos also needs a consent record that was
    not withdrawn (business rule: no local artist photo without consent). */
+/* Who wrote an article, for visitors (owner, 16 Nov 2026): an approved artist (public name, link to their
+   public page) or an approved, shown institute (its name, link to its Art Map page; never its own website).
+   Team articles (and anyone else) give nothing. $ids = author_user_id values; returns [user id => author] */
+function owArticleAuthors(array $ids): array {
+    $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+    if (!$ids) return [];
+    $out = [];
+    try {
+        $in = implode(',', array_fill(0, count($ids), '?'));
+        $st = getDB()->prepare("SELECT u.id, " . owArtistNameSql('u') . " FROM users u
+                                WHERE u.id IN ($in) AND u.role = 'artist' AND u.is_approved = 1 AND COALESCE(u.is_banned, 0) = 0");
+        $st->execute($ids);
+        foreach ($st->fetchAll() as $r)
+            $out[(int) $r['id']] = ['kind' => 'artist', 'en' => (string) $r['artist_en'], 'ar' => (string) $r['artist_ar'], 'url' => 'artist_dashboard.php?id=' . (int) $r['id']];
+        if (owHasColumn('institutes', 'via_signup')) {
+            $st = getDB()->prepare("SELECT u.id AS uid, i.id, i.name_en, i.name_ar FROM users u JOIN institutes i ON i.user_id = u.id
+                                    WHERE u.id IN ($in) AND u.role = 'institute' AND u.is_approved = 1 AND COALESCE(u.is_banned, 0) = 0 AND i.is_active = 1 ORDER BY i.id");
+            $st->execute($ids);
+            require_once __DIR__ . '/artmap_lib.php';
+            foreach ($st->fetchAll() as $r) {
+                if (isset($out[(int) $r['uid']])) continue;
+                $u = owMapPlaceUrl('i', (int) $r['id']);
+                $out[(int) $r['uid']] = ['kind' => 'institute', 'en' => (string) ($r['name_en'] ?: $r['name_ar']), 'ar' => (string) ($r['name_ar'] ?: $r['name_en']),
+                                         'url' => $u !== '' ? ltrim($u, '/') : ''];
+            }
+        }
+    } catch (Throwable $e) { error_log('owArticleAuthors: ' . $e->getMessage()); }
+    return $out;
+}
+
 function owArticlePublicSql(string $a = 'a'): string {
     /* Artist Spotlights are hidden for now, to bring back later (6 Nov 2026): while hidden, no
        spotlight is listed, opened or in the sitemap for visitors; a signed-in admin still sees them */

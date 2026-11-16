@@ -139,6 +139,20 @@ $artColors = owGetColorsFor(array_column($artworks, 'id'));
 $memberSince = $artist && !empty($artist['created_at']) ? date('Y', strtotime($artist['created_at'])) : 'N/A';
 $totalCount  = count($artworks);
 
+/* "Articles by this artist" (owner, 16 Nov 2026): only their published articles; no section when there are none */
+$byArts = [];
+if ($artist) {
+    try {
+        require_once __DIR__ . '/article_lib.php';
+        if (owArticlesReady()) {
+            $stmt = getDB()->prepare('SELECT a.slug, a.type, a.title_en, a.title_ar, a.published_at FROM articles a
+                                      WHERE a.author_user_id = :id AND ' . owArticlePublicSql('a') . ' ORDER BY a.published_at DESC, a.id DESC LIMIT 24');
+            $stmt->execute([':id' => $profileId]);
+            $byArts = $stmt->fetchAll();
+        }
+    } catch (Throwable $e) { error_log('artist articles: ' . $e->getMessage()); $byArts = []; }
+}
+
 /* helpers for optional social columns (may not exist in older schemas) */
 $ig  = $artist['instagram'] ?? '';
 $tw  = $artist['twitter']   ?? '';
@@ -218,6 +232,13 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
 @media(max-width:1024px){.art-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:768px){.profile-head{flex-direction:column;text-align:center;padding:var(--space-md);}.head-actions{align-items:center;}[dir="rtl"] .head-actions{align-items:center;}.stats-row{justify-content:center;}.art-grid{gap:var(--space-sm);}}
 @media(max-width:480px){.art-grid{grid-template-columns:1fr;}.draft .art-actions{width:100%;}}
+.by-arts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-sm);margin-bottom:var(--space-lg);}
+.by-art{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;padding:var(--space-md);}
+.by-type{font-size:var(--fs-caption);font-weight:700;color:var(--color-body);}
+.by-title{font-size:16px;font-weight:700;color:var(--color-dark);line-height:1.4;}
+.by-date{font-size:var(--fs-caption);color:var(--color-body);}
+@media (max-width:900px){.by-arts{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (max-width:560px){.by-arts{grid-template-columns:1fr;}}
 .self-note{margin:0 0 var(--space-sm);padding:12px 18px;border-radius:var(--radius-card);border:1px solid var(--studio-glass-edge);background:var(--studio-glass);
   -webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15);color:var(--color-dark);font-size:15px;line-height:1.5;}
 .self-note a{color:var(--color-dark);font-weight:700;text-decoration:underline;}
@@ -338,6 +359,20 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
       </article>
       <?php endforeach; ?>
     </div>
+  <?php endif; ?>
+
+  <?php if ($byArts): $BYT = ['event' => ['Art Event', 'ملتقى فني'], 'art_education' => ['Art Education', 'تثقيف فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان']]; ?>
+  <!-- SECTION 3: ARTICLES BY THIS ARTIST (owner, 16 Nov 2026) -->
+  <p class="section-title"><?= owBi('Articles by this artist', 'مقالات بقلم هذا الفنان') ?></p>
+  <div class="by-arts">
+    <?php foreach ($byArts as $ba): $bt = $BYT[$ba['type']] ?? ['Article', 'مقال']; [$bde, $bda] = owDateBi((string) $ba['published_at']); ?>
+    <a class="card card-hover by-art" href="article.php?slug=<?= e(rawurlencode((string) $ba['slug'])) ?>">
+      <span class="by-type"><?= owBi($bt[0], $bt[1]) ?></span>
+      <span class="by-title"><?= owBi((string) ($ba['title_en'] ?: $ba['title_ar']), (string) ($ba['title_ar'] ?: $ba['title_en'])) ?></span>
+      <span class="by-date"><?= owBi($bde, $bda) ?></span>
+    </a>
+    <?php endforeach; ?>
+  </div>
   <?php endif; ?>
 
 <?php endif; ?>

@@ -380,7 +380,10 @@ if ($isAdmin) {
              WHERE 1" . owNotDraftSql('a') . " ORDER BY a.created_at DESC, a.id DESC LIMIT 1000")->fetchAll();
     } catch (Throwable $e) { error_log('admin all artworks: ' . $e->getMessage()); }
 }
-$photoChanges = $isAdmin ? owPhotoChangesPending() : [];
+/* "Photo changed, needs a look" is switched off (owner, 16 Nov 2026): a live artwork's new photo now waits in
+   Waiting for approval like every other change. The code is kept; set OW_PHOTO_CHANGES_ON to true to bring it back */
+if (!defined('OW_PHOTO_CHANGES_ON')) define('OW_PHOTO_CHANGES_ON', false);
+$photoChanges = $isAdmin && OW_PHOTO_CHANGES_ON ? owPhotoChangesPending() : [];
 /* "Waiting for approval": changes to public things + new artist accounts */
 /* Certificates of Authenticity, and approved artworks still waiting for theirs */
 $allCerts = $isAdmin ? owAllCerts() : [];
@@ -424,6 +427,8 @@ $showVal = function (string $field, $v) use ($SALE_WORDS): string {
     if ($field === 'status') { $w = $SALE_WORDS[$v] ?? null; return $w ? owBi($w[0], $w[1]) : e($v); }
     if ($field === 'price') return e(number_format((float) $v)) . ' ' . owBi('SAR', 'ر.س');
     if ($field === 'edition_type') { [$a1, $a2] = owCertEdition($v); return owBi($v === 'limited' ? 'Limited print' : $a1, $v === 'limited' ? 'نسخة مطبوعة محدودة' : $a2); }
+    if ($field === 'image_url') { $src = owImgSrc($v); return $src !== '' ? '<a href="' . e($src) . '" target="_blank" rel="noopener"><img class="wc-pic" src="' . e($src) . '" alt="Artwork photo · صورة العمل"></a>' : e($v); }   /* a live artwork's new photo (16 Nov 2026) */
+    if (in_array($field, ['website_url'], true)) return '<span dir="ltr">' . e($v) . '</span>';
     if ($field === 'profile_picture') { $src = owImgSrc($v); return $src !== '' ? '<a href="' . e($src) . '" target="_blank" rel="noopener"><img class="wc-pic" src="' . e($src) . '" alt="Photo · صورة"></a>' : e($v); }
     if (in_array($field, ['instagram', 'twitter', 'website'], true)) return '<span dir="ltr">' . e($v) . '</span>';
     return '<span dir="auto">' . nl2br(e(mb_strimwidth($v, 0, 600, '…'))) . '</span>';
@@ -686,7 +691,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   </div>
   <div class="adm-sub" data-group="g-art">
     <button class="sub-btn" data-tab="artworks" onclick="showTab('artworks')"><?= owBi('All artworks', 'كل الأعمال') ?> <span class="pill count"><?= count($allArt) ?></span></button>
-    <button class="sub-btn" data-tab="photos" onclick="showTab('photos')"><?= owBi('Photo changes', 'تغيير الصور') ?> <span class="pill count"><?= count($photoChanges) ?></span></button>
+    <?php if (OW_PHOTO_CHANGES_ON): ?><button class="sub-btn" data-tab="photos" onclick="showTab('photos')"><?= owBi('Photo changes', 'تغيير الصور') ?> <span class="pill count"><?= count($photoChanges) ?></span></button><?php endif; ?>
     <button class="sub-btn" data-tab="certs" onclick="showTab('certs')"><?= owBi('Certificates', 'الشهادات') ?> <span class="pill count"><?= count($allCerts) ?></span></button>
   </div>
   <div class="adm-sub" data-group="g-req">
@@ -1035,19 +1040,24 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <h3 class="wc-h"><?= owBi('Changes to live things', 'تعديلات على ما هو ظاهر') ?> <span class="pill count"><?= count($waitChanges) ?></span></h3>
     <div class="wc-list">
       <?php foreach ($waitChanges as $wc): $wt = $wc['target_type']; $cur = $wc['current']; $wid = (int) $wc['id'];
-        $kind = ['artwork' => ['Artwork changes', 'تعديلات على عمل'], 'profile' => ['Profile changes', 'تعديلات على ملف فنان'], 'article' => ['Publish an article', 'نشر مقال']][$wt] ?? [$wt, $wt]; ?>
+        $kind = ['artwork' => ['Artwork changes', 'تعديلات على عمل'], 'profile' => ['Profile changes', 'تعديلات على ملف فنان'], 'article' => ['Publish an article', 'نشر مقال']][$wt] ?? [$wt, $wt];
+        $fromInst = ($wc['asker_role'] ?? '') === 'institute';   /* institutes send articles and profile changes too (owner, 16 Nov 2026) */
+        if ($fromInst && $wt === 'profile') $kind = ['Institute profile changes', 'تعديلات على ملف معهد']; ?>
         <div class="wc-item">
           <div class="wc-top">
             <div><span class="pill off"><?= owBi($kind[0], $kind[1]) ?></span>
               <strong><?php if ($wt === 'artwork'): ?><?= owBi((string) ($cur['title_en'] ?? '—'), (string) (($cur['title_ar'] ?? '') ?: ($cur['title_en'] ?? '—'))) ?><?php elseif ($wt === 'article'): ?><?= owTitleStack((string) ($cur['title_en'] ?? '—'), (string) ($cur['title_ar'] ?? '')) ?><?php else: ?><?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?><?php endif; ?></strong>
               <div class="mini"><?= owBi('By', 'من') ?> <?= owBi((string) $wc['artist_en'], (string) $wc['artist_ar']) ?> · <?php [$ce, $ca] = owDateBi($wc['created_at'], true); ?><?= owBi($ce, $ca) ?></div></div>
             <?php if ($wt === 'artwork'): ?><a class="btn btn-ghost btn-sm" href="artwork.php?id=<?= (int) $wc['target_id'] ?>" target="_blank" rel="noopener"><?= owBi('See it live', 'شاهده') ?></a>
+            <?php elseif ($wt === 'profile' && $fromInst): ?><a class="btn btn-ghost btn-sm" href="admin_bookings.php#institutes"><?= owBi('View', 'عرض') ?></a>
             <?php elseif ($wt === 'profile'): ?><a class="btn btn-ghost btn-sm" href="admin.php?person=<?= (int) $wc['target_id'] ?>"><?= owBi('View', 'عرض') ?></a>
             <?php else: ?><a class="btn btn-ghost btn-sm" href="admin_articles.php?edit=<?= (int) $wc['target_id'] ?>"><?= owBi('Open', 'فتح') ?></a><?php endif; ?>
           </div>
           <?php if ($wt === 'article'): ?>
-            <?php if (($wc['asker_role'] ?? '') === 'artist'): ?>
-            <p class="mini"><?= owBi('An artist wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب فنان هذا المقال ويطلب نشره. اقرأه أولاً عبر «معاينة». يبقى مخفياً حتى توافق.') ?>
+            <?php if (in_array($wc['asker_role'] ?? '', ['artist', 'institute'], true)): ?>
+            <p class="mini"><span class="pill <?= $fromInst ? 'off' : 'on' ?>"><?= $fromInst ? owBi('From an institute', 'من معهد') : owBi('From an artist', 'من فنان') ?></span>
+              <?= $fromInst ? owBi('An institute wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب معهد هذا المقال ويطلب نشره. اقرأه أولاً عبر «معاينة». يبقى مخفياً حتى توافق.')
+                            : owBi('An artist wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب فنان هذا المقال ويطلب نشره. اقرأه أولاً عبر «معاينة». يبقى مخفياً حتى توافق.') ?>
               <?php if (!empty($cur['slug'])): ?><a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode((string) $cur['slug'])) ?>&amp;preview=1" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a><?php endif; ?></p>
             <?php else: ?>
             <p class="mini"><?= owBi('A team member asks to publish this article. It stays a draft until you approve.', 'يطلب أحد أعضاء الفريق نشر هذا المقال. يبقى مسودة حتى توافق.') ?></p>

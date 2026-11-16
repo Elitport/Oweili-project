@@ -38,15 +38,16 @@ $PAGE = [
     ],
 ];
 
-$items = [];
+$items = []; $authors = [];
 if (owArticlesReady()) {
     try {
         $order = $type === 'event' ? 'a.event_start_date DESC, a.id DESC' : 'a.published_at DESC, a.id DESC';
         $st = getDB()->prepare('SELECT a.slug, a.title_en, a.title_ar, a.cover_image_path, a.published_at, a.event_start_date, a.event_end_date,
-                                       a.event_location_en, a.event_location_ar
+                                       a.event_location_en, a.event_location_ar, a.author_user_id
                                 FROM articles a WHERE a.type = :t AND ' . owArticlePublicSql('a') . ' ORDER BY ' . $order . ' LIMIT 200');
         $st->execute([':t' => $type]);
         $items = $st->fetchAll();
+        $authors = owArticleAuthors(array_column($items, 'author_user_id'));   // artist or institute names on the cards (owner, 16 Nov 2026)
     } catch (Throwable $e) {
         error_log('articles_list: ' . $e->getMessage());
         $items = [];
@@ -74,6 +75,7 @@ $titleAr = $tAr . ' · أويلي';
 /* no card alone on a row (owner, 13 Nov 2026): when 4 per row would leave one card alone (5, 9, 13 …),
    3 per row with the last row in the middle */
 .a-grid.a-even{display:flex;flex-wrap:wrap;justify-content:center;}
+.a-by{font-size:var(--fs-caption);font-weight:700;color:var(--color-dark);}   /* the author: an artist or an institute (16 Nov 2026) */
 .a-grid.a-even > .a-card{flex:0 1 calc((100% - 2 * var(--space-md)) / 3);min-width:0;}
 @media (max-width:768px){.a-grid.a-even > .a-card{flex-basis:calc((100% - var(--space-sm)) / 2);}}
 @media (max-width:560px){.a-grid.a-even > .a-card{flex-basis:100%;}}
@@ -116,6 +118,7 @@ $titleAr = $tAr . ' · أويلي';
           <?php endif; ?>
           <span class="a-body">
             <span class="a-title"><?= owBi($it['title_en'], $it['title_ar']) ?></span>
+            <?php if ($au = ($authors[(int) $it['author_user_id']] ?? null)): ?><span class="a-by"><?= owBi('By ', 'بقلم ') ?><?= owBiName($au['en'], $au['ar']) ?></span><?php endif; ?>
             <span class="a-date"><?= owBi($dEn, $dAr) ?><?php if ($type === 'event' && ($it['event_location_en'] !== '' || $it['event_location_ar'] !== '')): ?> · <?= owBi($it['event_location_en'], $it['event_location_ar']) ?><?php endif; ?></span>
             <span class="a-more"><?= owBi('Read more →', 'اقرأ المزيد ←') ?></span>
           </span>

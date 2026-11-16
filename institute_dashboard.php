@@ -8,6 +8,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
+require_once __DIR__ . '/approval_lib.php';   // profile changes and articles wait for the admin (owner, 16 Nov 2026)
 $preview = owCoursesGate();
 if (!isLoggedIn()) { header('Location: login.php?next=institute_dashboard.php'); exit; }
 $me = currentUser();
@@ -16,7 +17,7 @@ $inst = owMyInstitute((int) $me['id']);
 if (!$inst) { http_response_code(404); require __DIR__ . '/404.php'; exit; }
 $iid = (int) $inst['id']; $db = getDB();
 $actor = ['type' => 'institute', 'id' => (int) $me['id']];
-$TABS = ['courses' => ['Courses', 'الدورات'], 'registrations' => ['Registrations', 'التسجيلات'], 'money' => ['Earnings and payouts', 'الأرباح والمستحقات'], 'profile' => ['Profile', 'الملف']];
+$TABS = ['courses' => ['Courses', 'الدورات'], 'registrations' => ['Registrations', 'التسجيلات'], 'money' => ['Earnings and payouts', 'الأرباح والمستحقات'], 'profile' => ['Profile', 'الملف'], 'articles' => ['My articles', 'مقالاتي']];
 $tab = isset($TABS[$_GET['tab'] ?? '']) ? $_GET['tab'] : 'courses';
 $err = []; $done = (string) ($_GET['done'] ?? '');
 
@@ -51,6 +52,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $p = ['description_en' => $t('description_en', 1500), 'description_ar' => $t('description_ar', 1500), 'contact_phone' => $t('contact_phone', 30), 'website_url' => $t('website_url', 200), 'payout_note' => $t('payout_note', 500)];
         if ($p['contact_phone'] !== '' && !preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $p['contact_phone'])) $err[] = ['Please check the phone number.', 'يرجى مراجعة رقم الهاتف.'];
         if ($p['website_url'] !== '') { [$l, $ok] = owSafeLink($p['website_url'], 'web'); if ($ok) $p['website_url'] = $l; else $err[] = ['Please check the website address.', 'يرجى مراجعة عنوان الموقع.']; }
+        /* A shown institute: the description, phone and website wait for the admin; visitors keep the approved
+           version until then (owner, 16 Nov 2026). The payout details are private, so they save straight away */
+        if (!$err && (int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1 && owApprovalsReady()) {
+            $db->prepare('UPDATE institutes SET payout_note = :pn WHERE id = :id')->execute([':pn' => $p['payout_note'], ':id' => $iid]);
+            $diff = [];
+            foreach (OW_INSTITUTE_FIELDS as $f) if ($p[$f] !== (string) ($inst[$f] ?? '')) $diff[$f] = $p[$f];
+            $sent = false;
+            if ($diff) $sent = owSubmitChange((int) $me['id'], 'profile', (int) $me['id'], $diff);
+            elseif (($pend = owPendingChange('profile', (int) $me['id']))) getDB()->prepare("UPDATE pending_changes SET status = 'replaced', decided_at = NOW() WHERE id = :id")->execute([':id' => (int) $pend['id']]);
+            owLog('institute_profile', 'institute', $iid, $sent ? 'waiting' : '', $actor);
+            header('Location: institute_dashboard.php?tab=profile&done=' . ($sent ? 'profile_wait' : 'profile')); exit;
+        }
         if (!$err) {
             $db->prepare('UPDATE institutes SET description_en = :de, description_ar = :da, contact_phone = :ph, website_url = :w, payout_note = :pn WHERE id = :id')
                ->execute([':de' => $p['description_en'], ':da' => $p['description_ar'], ':ph' => $p['contact_phone'], ':w' => $p['website_url'], ':pn' => $p['payout_note'], ':id' => $iid]);
@@ -92,6 +105,7 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
   <?php if (!(int) $me['is_approved'] || !(int) $inst['is_active']): ?><div class="alert alert-error" role="status"><?= owBi('Your institute is waiting for the Oweili team’s review. You can already add courses; they show once both are approved.', 'معهدك بانتظار مراجعة فريق أويلي. يمكنك إضافة الدورات الآن، وتظهر بعد اعتماد المعهد والدورة.') ?></div><?php endif; ?>
   <?php if ($done === 'course'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. The course waits for the Oweili team’s approval before it shows.', 'تم الحفظ. تنتظر الدورة موافقة فريق أويلي قبل ظهورها.') ?></div><?php endif; ?>
   <?php if ($done === 'profile'): ?><div class="alert alert-ok" role="status"><?= owBi('Profile saved.', 'تم حفظ الملف.') ?></div><?php endif; ?>
+  <?php if ($done === 'profile_wait'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. Your changes wait for the Oweili team’s approval. Until then, visitors see your current profile.', 'تم الحفظ. تنتظر تعديلاتك موافقة فريق أويلي، وحتى ذلك الحين يرى الزوار ملفك الحالي.') ?></div><?php endif; ?>
   <?php foreach ($err as $x): ?><div class="alert alert-error" role="alert"><?= owBi($x[0], $x[1]) ?></div><?php endforeach; ?>
 </div>
 <div class="stat-row">
@@ -194,9 +208,38 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
     <?php endforeach; ?></tbody></table><?php endif; ?>
   </div>
 
-<?php else: ?>
+<?php elseif ($tab === 'articles'): /* My articles (owner, 16 Nov 2026): written in my_articles.php, every one waits for the admin */
+  $myArts = []; $artWait = [];
+  try {
+    if (owHasTable('articles')) { $q = $db->prepare('SELECT id, type, slug, title_en, title_ar, status FROM articles WHERE author_user_id = :u ORDER BY updated_at DESC, id DESC LIMIT 50'); $q->execute([':u' => (int) $me['id']]); $myArts = $q->fetchAll(); }
+    foreach ($myArts as $ma) if (owPendingChange('article', (int) $ma['id'])) $artWait[(int) $ma['id']] = true;
+  } catch (Throwable $e) { $myArts = []; }
+  $ATY = ['event' => ['Art Event', 'ملتقى فني'], 'art_education' => ['Art Education', 'تثقيف فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان']]; ?>
+  <div class="card">
+    <h2><?= owBi('My articles', 'مقالاتي') ?></h2>
+    <p class="mini"><?= owBi('Share your exhibitions and events, or teach something you know. The Oweili team reads every article before it goes live. Published articles show your institute’s name.', 'شارك معارضك وفعالياتك، أو علّم شيئاً تعرفه. يقرأ فريق أويلي كل مقال قبل نشره. وتظهر المقالات المنشورة باسم معهدك.') ?></p>
+    <div class="acts">
+      <a class="btn btn-primary" href="my_articles.php?new=event"><?= owBi('New Art Event', 'ملتقى فني جديد') ?></a>
+      <a class="btn btn-secondary" href="my_articles.php?new=art_education"><?= owBi('New Art Education article', 'مقال تثقيف فني جديد') ?></a>
+    </div>
+  </div>
+  <div class="card">
+    <?php if (!$myArts): ?><p><?= owBi('No articles yet.', 'لا مقالات بعد.') ?></p>
+    <?php else: ?><table class="tbl" style="width:100%"><tbody>
+      <?php foreach ($myArts as $ma): $tw = $ATY[$ma['type']] ?? ['Article', 'مقال'];
+        $sw = $ma['status'] === 'published' ? '<span class="pillx on">' . owBi('Published', 'منشور') . '</span>' : (isset($artWait[(int) $ma['id']]) ? '<span class="pillx warn">' . owBi('Waiting for approval', 'بانتظار الموافقة') . '</span>' : '<span class="pillx">' . owBi('Draft', 'مسودة') . '</span>'); ?>
+      <tr><td><b><?= owBi((string) ($ma['title_en'] ?: $ma['title_ar']), (string) ($ma['title_ar'] ?: $ma['title_en'])) ?></b><br><span class="mini"><?= owBi($tw[0], $tw[1]) ?></span></td><td><?= $sw ?></td>
+        <td><?php if ($ma['status'] === 'published'): ?><a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode((string) $ma['slug'])) ?>"><?= owBi('View', 'عرض') ?></a><?php else: ?><a class="btn btn-secondary btn-sm" href="my_articles.php?edit=<?= (int) $ma['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a><?php endif; ?></td></tr>
+      <?php endforeach; ?></tbody></table>
+    <?php endif; ?>
+    <p class="mini" style="margin-top:var(--space-sm)"><a href="my_articles.php"><?= owBi('Open all my articles', 'افتح كل مقالاتي') ?></a></p>
+  </div>
+
+<?php else: $pendProf = (int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1 && owApprovalsReady() ? owPendingChange('profile', (int) $me['id']) : null;
+  if ($pendProf) foreach (OW_INSTITUTE_FIELDS as $f) if (array_key_exists($f, $pendProf['data'])) $inst[$f] = $pendProf['data'][$f];   // the waiting version, so it is edited, not lost ?>
   <form method="post" action="institute_dashboard.php?tab=profile" class="card"><?= csrfField() ?><input type="hidden" name="do" value="profile">
     <p class="mini"><?= owBi('The name and city are changed by the Oweili team. Write to us if they need a change.', 'يغيّر فريق أويلي الاسم والمدينة. راسلنا إن احتاجا تعديلاً.') ?></p>
+    <?php if ((int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1): ?><p class="mini"><?= $pendProf ? owBi('Your last changes are waiting for the Oweili team’s approval. Visitors see your current profile until then.', 'تعديلاتك الأخيرة بانتظار موافقة فريق أويلي. يرى الزوار ملفك الحالي حتى ذلك الحين.') : owBi('Changes to the description, phone and website wait for the Oweili team’s approval before visitors see them.', 'تنتظر التعديلات على الوصف والهاتف والموقع موافقة فريق أويلي قبل أن يراها الزوار.') ?></p><?php endif; ?>
     <dl class="kv" style="margin-bottom:var(--space-sm)"><dt><?= owBi('Name', 'الاسم') ?></dt><dd><?= owBi($inst['name_en'], $inst['name_ar']) ?></dd><dt><?= owBi('City', 'المدينة') ?></dt><dd><?= owBi($inst['city_en'], $inst['city_ar']) ?></dd><dt><?= owBi('Sign-in email', 'بريد الدخول') ?></dt><dd dir="ltr"><?= e($me['email']) ?></dd></dl>
     <div class="g2">
       <div class="field"><label for="p-de"><?= owBi('Short description (English)', 'وصف قصير (بالإنجليزية)') ?></label><textarea id="p-de" name="description_en" rows="4" maxlength="1500" dir="ltr"><?= e($_POST['description_en'] ?? $inst['description_en']) ?></textarea></div>
