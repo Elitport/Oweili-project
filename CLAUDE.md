@@ -150,6 +150,7 @@
 - Art Institutes (institutes.php), Arabic: a no-break space between «عبر» and «أويلي.» in the line under the title, so «أويلي.» never sits alone on its own line (same words)
 - Art Institutes, "Notify me" form: the "Privacy Policy" link uses the lighter text colour in dark mode (.ci-priv, --color-body)
 - Not done (waits for the owner): 14 px text on the Art Map institute cards' "View courses" and "Google Maps" buttons. Tested: in English the two buttons no longer fit side by side and stack, which changes the card layout (Arabic still fits)
+- Owner's decision (16 Nov 2026): keep the Art Map buttons as they are (12 px text). Never raise this again
 - Checked on the test copy with before / after screenshots (laptop and phone, English and Arabic, light and dark): only these four spots changed. Files: register_institute.php, terms.php, institutes.php. Tables: none
 
 ### Institutes write articles, authors on cards, artist's articles, photo changes wait, institute profile waits (16 Nov 2026, owner)
