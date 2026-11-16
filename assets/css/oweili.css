@@ -702,7 +702,7 @@ html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page)::before { backgro
 
 /* 2. the page photo, whole and clear, in its own glass box at the top (at most 300 px tall on laptops, full width on phones) */
 body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) { --ow-pw: min(calc(100vw - 32px), calc(var(--ow-ph) / var(--ow-ratio, 0.5625)));
-  padding-top: calc(16px + min(calc((100vw - 32px) * var(--ow-ratio, 0.5625)), var(--ow-ph)) - var(--nav-h)) !important; }
+  padding-top: calc(16px + min(calc((100vw - 32px) * var(--ow-ratio, 0.5625)), var(--ow-ph))) !important; }
 body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop { position: absolute !important; z-index: 0; top: calc(var(--nav-h) + 16px) !important; left: 50%; right: auto; bottom: auto;
   transform: translateX(-50%); width: var(--ow-pw); height: auto !important; border-radius: 22px; overflow: hidden; border: 1px solid var(--sb-edge); box-shadow: var(--sb-shadow);
   background: var(--ow-tiny, none) 50% 50% / cover no-repeat !important; filter: none; }
@@ -715,6 +715,8 @@ body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop .ow-studio img { 
    the form now starts right under the photo box instead of half a screen lower */
 body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) .auth-wrap { min-height: 0 !important; align-items: flex-start !important; }
 body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) > .wrap { min-height: 0 !important; justify-content: flex-start !important; }
+/* the 404 page: its box no longer needs to keep clear of the person in the full-screen photo, so it sits centred under the photo box */
+body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) .nf { min-height: 0 !important; align-items: flex-start !important; justify-content: center !important; }
 
 /* 3. glass boxes */
 body:not(.s-b):not(.cert-page):not(.label-page) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item):not(.m-map) {
