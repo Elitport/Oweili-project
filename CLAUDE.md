@@ -83,7 +83,7 @@
 - The orders and escrow structure exists but stays switched off (see Payments and escrow) until Sprint 4
 
 ## Pages Built
-- index.php — Homepage: one full-screen hero (see Features)
+- index.php — Homepage: the new glass + Bento look ("Sample B", 16 Nov 2026): soft pink / navy colour shapes behind the page, frosted glass boxes (title and buttons, the painting video, Artist of the week, the three trust points, and six boxes linking to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education) (see Features)
 - nav.php — Shared navbar (used across all pages)
 - explore.php — Art Styles: an art encyclopedia (50 styles shown: painting and drawing) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
