@@ -27,7 +27,7 @@ owLegalPage([
         "Oweili (oweili.com) is run by $CO, Jeddah, Saudi Arabia" . ($CR !== '' ? ", commercial registration $CR" : '') . ". You can reach us at $C. By using the site or opening an account, you agree to these terms and to our Privacy Policy.",
         'If you do not agree, please do not use the site.',
     ], [
-        "يُدار أويلي (oweili.com) من قِبل $CO في جدة، المملكة العربية السعودية" . ($CR !== '' ? "، سجل تجاري رقم $CR" : '') . ". ويمكنك التواصل معنا على $C. باستخدامك الموقع أو فتح حساب، فإنك توافق على هذه الشروط وعلى سياسة الخصوصية.",
+        "يُدار أويلي (oweili.com) من قِبل " . str_replace(' ', "\u{00A0}", $CO) . " في جدة، المملكة العربية السعودية" . ($CR !== '' ? "، سجل تجاري رقم $CR" : '') . ". ويمكنك التواصل معنا على $C. باستخدامك الموقع أو فتح حساب، فإنك توافق على هذه الشروط وعلى سياسة الخصوصية.",
         'إن لم توافق، يرجى عدم استخدام الموقع.',
     ]],
     ['middle', 'Oweili is the middle party', 'أويلي هو الوسيط', [

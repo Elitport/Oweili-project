@@ -144,6 +144,14 @@
 
 ## Features
 
+### Fixes from the UI review of 16 Nov 2026 (owner, same day)
+- Join as an art institute (register_institute.php): the hidden robot-trap box is hidden the safe way (1 px, clipped) instead of 9,999 px to the left, which made the Arabic page about 11,000 px wide (blank on iPhones, a long sideways scroll on laptops). Never hide a field with a big left offset: on Arabic pages it widens the page
+- Terms (terms.php), Arabic "Using Oweili" line: the company name keeps a no-break space, so "Elitport Limited" never splits across two lines
+- Art Institutes (institutes.php), Arabic: a no-break space between «عبر» and «أويلي.» in the line under the title, so «أويلي.» never sits alone on its own line (same words)
+- Art Institutes, "Notify me" form: the "Privacy Policy" link uses the lighter text colour in dark mode (.ci-priv, --color-body)
+- Not done (waits for the owner): 14 px text on the Art Map institute cards' "View courses" and "Google Maps" buttons. Tested: in English the two buttons no longer fit side by side and stack, which changes the card layout (Arabic still fits)
+- Checked on the test copy with before / after screenshots (laptop and phone, English and Arabic, light and dark): only these four spots changed. Files: register_institute.php, terms.php, institutes.php. Tables: none
+
 ### Institutes write articles, authors on cards, artist's articles, photo changes wait, institute profile waits (16 Nov 2026, owner)
 - Institutes write articles: an approved, shown institute account uses "My articles" (my_articles.php) from its dashboard (institute_dashboard.php → "My articles" / «مقالاتي» tab: New Art Event, New Art Education article, its list with Published / Waiting for approval / Draft). Art Event and Art Education only (Artist Spotlights stay artist-only, refused on the server too). Every article waits for the admin exactly like an artist's (pending_changes 'article'); the institute gets the same emails (owArticleOfArtist now also accepts institute accounts)
 - Author on the article page (article.php): "Written by [institute name]" linked to the institute's Art Map page (oweili.com/art-map/<region>/<name>), never its own website; the event note says "Shared by an art institute, checked by the Oweili team". Artists unchanged (public name, link to their profile). One shared helper: owArticleAuthors() in article_lib.php (approved artists and approved, shown institutes only; team articles give nothing)

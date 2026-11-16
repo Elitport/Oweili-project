@@ -68,7 +68,7 @@ owBookTop('Join as an art institute', 'انضم كمعهد فني', 'register_in
 <?php else: ?>
 <?php if ($err): ?><div class="alert alert-error" role="alert"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>
 <form method="post" action="register_institute.php" class="card"><?= csrfField() ?>
-  <div style="position:absolute;left:-9999px" aria-hidden="true"><input name="website_hp" tabindex="-1" autocomplete="off"></div>
+  <div style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap" aria-hidden="true"><input name="website_hp" tabindex="-1" autocomplete="off"></div>
   <div class="g2">
     <div class="field"><label for="ri-ne"><?= owBi('Institute name (English)', 'اسم المعهد (بالإنجليزية)') ?></label><input id="ri-ne" name="name_en" required maxlength="200" dir="ltr" value="<?= e($v['name_en']) ?>"></div>
     <div class="field"><label for="ri-na"><?= owBi('Institute name (Arabic)', 'اسم المعهد (بالعربية)') ?></label><input id="ri-na" name="name_ar" required maxlength="200" dir="rtl" value="<?= e($v['name_ar']) ?>"></div>

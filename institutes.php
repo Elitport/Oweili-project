@@ -144,6 +144,7 @@ $titleAr = $inst ? 'دورات ' . $inst['name_ar'] : 'المعاهد الفني
 .ci-form form{text-align:start;}
 .ci-form .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 var(--space-sm);}
 .ci-back{text-align:center;margin-top:var(--space-md);}
+html.dark-mode .ci-priv{color:var(--color-body);}   /* the "Privacy Policy" link under Notify me: lighter in dark mode (owner, 16 Nov 2026) */
 .ci-trap{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
 html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
 @media (max-width:1024px){.c-grid > .c-card{flex-basis:calc((100% - var(--space-md)) / 2);}}
@@ -168,7 +169,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
         <p><?= owBi('Courses you can book on Oweili.', 'دورات يمكنك حجزها عبر أويلي.') ?></p>
       <?php else: ?>
         <h1><?= owBi('Art Institutes', 'المعاهد الفنية') ?></h1>
-        <p><?= owBi('Art courses from approved institutes. Book your seat on Oweili.', 'دورات فنية من معاهد معتمدة. احجز مقعدك عبر أويلي.') ?></p>
+        <p><?= owBi('Art courses from approved institutes. Book your seat on Oweili.', 'دورات فنية من معاهد معتمدة. احجز مقعدك عبر أويلي.') ?></p>
       <?php endif; ?>
     </header>
 
@@ -242,7 +243,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
               </div>
               <div class="field"><label for="n-email"><?= owBi('Email', 'البريد الإلكتروني') ?></label><input id="n-email" name="email" type="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($nVals['email']) ?>"></div>
               <div class="ci-trap" aria-hidden="true"><label for="n-web">Website</label><input id="n-web" name="website" tabindex="-1" autocomplete="off"></div>
-              <p class="mini" style="font-size:var(--fs-caption)"><?= owBi('We use these details only to tell you about courses. See our', 'نستخدم هذه البيانات فقط لإخبارك عن الدورات. اطّلع على') ?> <a href="privacy.php"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>
+              <p class="mini" style="font-size:var(--fs-caption)"><?= owBi('We use these details only to tell you about courses. See our', 'نستخدم هذه البيانات فقط لإخبارك عن الدورات. اطّلع على') ?> <a class="ci-priv" href="privacy.php"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>
               <button class="btn btn-primary" type="submit"><?= owBi('Notify me', 'نبّهني عند توفر دورة') ?></button>
             </form>
           </details>
