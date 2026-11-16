@@ -144,6 +144,12 @@
 
 ## Features
 
+### New look: glass + Bento, "Sample B" (16 Nov 2026, owner)
+- OWNER'S CHOICE: Sample B (glass + Bento grid, soft pink / navy colour shapes behind the page) is the new look for the WHOLE site. It is applied page by page; each page is shown to the owner (before / after screenshots) and goes live only after the owner approves it. Sample A (the painting fixed behind the page) was not chosen
+- Done so far: the home page only (index.php). Soft, large brand colour shapes (pink #DB8084, navy #23314A, grey-blue #8FA1B1; .ow-blobs, fixed behind the whole page, a very slow drift on laptops only, none with reduced motion). Every box is frosted glass (.gl: see-through, backdrop blur 22px, 10px on phones, thin light edge, soft shadow, a solid fallback without blur support or with reduced transparency). Bento grid (.bento: 4 columns on laptops, 2 on tablets and phones): the big box (badge, headline, the two lines, Explore Gallery and Join as Artist; on phones the buttons straight under the headline), the painting video in its own clear box (same files, still frame first), "Artist of the week" (only when picked; the artwork photo large, whole and never blurred), the three trust points, and six NEW section boxes with an icon and the top menu's names: Gallery, Art Styles, Art Map (وجهات), Art Institutes (only while it is in the menu), Art Events, Art Education. Boxes take two places where needed so every row is full
+- Checked: nothing lost against the live home page (every text, link, button, photo, the video, the menu and the hidden Google tags; only the six section boxes and their icons are new), contrast measured on the real pixels behind every text and button (light and dark), 16 screen sizes from 320 to 1920 px in English and Arabic (nothing cut off, no sideways scroll, "Explore Gallery" on the first phone screen), Arabic right to left. "QR" stays with the word before it; the artist name in Arabic uses owBiName
+- Files: index.php. Tables: site_settings, users, artworks (read, as before)
+
 ### Fixes from the UI review of 16 Nov 2026 (owner, same day)
 - Join as an art institute (register_institute.php): the hidden robot-trap box is hidden the safe way (1 px, clipped) instead of 9,999 px to the left, which made the Arabic page about 11,000 px wide (blank on iPhones, a long sideways scroll on laptops). Never hide a field with a big left offset: on Arabic pages it widens the page
 - Terms (terms.php), Arabic "Using Oweili" line: the company name keeps a no-break space, so "Elitport Limited" never splits across two lines
