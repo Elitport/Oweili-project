@@ -680,44 +680,26 @@ html.dark-mode { --sb-glass: rgba(15,21,32,0.62); --sb-edge: rgba(255,255,255,0.
   --sb-shadow: 0 16px 44px rgba(0,0,0,0.42), 0 2px 6px rgba(0,0,0,0.22); }
 @media (max-width: 640px) { :root { --sb-blur: blur(10px) saturate(150%); } }
 
-/* 1. the colour shapes */
-html:has(> body:not(.s-b):not(.cert-page):not(.label-page)) { background: #F4EEF0 !important; }
-html.dark-mode:has(> body:not(.s-b):not(.cert-page):not(.label-page)) { background: #0F1520 !important; }
-body:not(.s-b):not(.cert-page):not(.label-page) { background: transparent !important; }
+/* 1. the colour shapes (pages without their own background photo; photo pages keep the photo as the full-page background, owner 17 Nov 2026) */
+html:has(> body:not(.s-b):not(.cert-page):not(.label-page):not(:has(> .ow-backdrop))) { background: #F4EEF0 !important; }
+html.dark-mode:has(> body:not(.s-b):not(.cert-page):not(.label-page):not(:has(> .ow-backdrop))) { background: #0F1520 !important; }
+body:not(.s-b):not(.cert-page):not(.label-page):not(:has(> .ow-backdrop)) { background: transparent !important; }
 /* a little softer than on the home page, so the grey text that sits straight on the page (not in a box) stays easy to read */
-body:not(.s-b):not(.cert-page):not(.label-page)::before { content: ""; position: fixed; inset: -10%; z-index: -2; pointer-events: none; background:
+body:not(.s-b):not(.cert-page):not(.label-page):not(:has(> .ow-backdrop))::before { content: ""; position: fixed; inset: -10%; z-index: -2; pointer-events: none; background:
   radial-gradient(38% 42% at 12% 18%, rgba(219,128,132,0.40), rgba(219,128,132,0) 70%),
   radial-gradient(40% 45% at 88% 82%, rgba(35,49,74,0.20), rgba(35,49,74,0) 70%),
   radial-gradient(34% 38% at 78% 22%, rgba(143,161,177,0.30), rgba(143,161,177,0) 70%),
   radial-gradient(36% 40% at 22% 86%, rgba(235,181,183,0.55), rgba(235,181,183,0) 70%),
   radial-gradient(30% 30% at 52% 50%, rgba(219,128,132,0.20), rgba(219,128,132,0) 70%),
   #F4EEF0; }
-html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page)::before { background:
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(:has(> .ow-backdrop))::before { background:
   radial-gradient(38% 42% at 12% 18%, rgba(219,128,132,0.42), rgba(219,128,132,0) 70%),
   radial-gradient(40% 45% at 88% 82%, rgba(70,96,140,0.55), rgba(70,96,140,0) 70%),
   radial-gradient(34% 38% at 78% 22%, rgba(143,161,177,0.30), rgba(143,161,177,0) 70%),
   radial-gradient(36% 40% at 22% 86%, rgba(201,106,110,0.30), rgba(201,106,110,0) 70%),
   #0F1520; }
 @keyframes ow-sb-drift { 0% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(-2%,1.5%,0) scale(1.04); } 100% { transform: translate3d(0,0,0) scale(1); } }
-@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) { body:not(.s-b):not(.cert-page):not(.label-page)::before { animation: ow-sb-drift 28s ease-in-out infinite; } }
-
-/* 2. the page photo, whole and clear, in its own glass box at the top (at most 300 px tall on laptops, full width on phones) */
-body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) { --ow-pw: min(calc(100vw - 32px), calc(var(--ow-ph) / var(--ow-ratio, 0.5625)));
-  padding-top: calc(16px + min(calc((100vw - 32px) * var(--ow-ratio, 0.5625)), var(--ow-ph))) !important; }
-body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop { position: absolute !important; z-index: 0; top: calc(var(--nav-h) + 16px) !important; left: 50%; right: auto; bottom: auto;
-  transform: translateX(-50%); width: var(--ow-pw); height: auto !important; border-radius: 22px; overflow: hidden; border: 1px solid var(--sb-edge); box-shadow: var(--sb-shadow);
-  background: var(--ow-tiny, none) 50% 50% / cover no-repeat !important; filter: none; }
-html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop { filter: brightness(0.72); }
-body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop::before, body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop::after { display: none !important; }
-body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop .ow-studio { position: relative; inset: auto; display: block; }
-body:not(.s-b):not(.cert-page):not(.label-page) > .ow-backdrop .ow-studio img { width: 100%; height: auto !important; object-fit: fill !important; }
-
-/* photo pages whose form used to sit in the middle of a full screen (Sign in, Join, Forgot password and similar):
-   the form now starts right under the photo box instead of half a screen lower */
-body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) .auth-wrap { min-height: 0 !important; align-items: flex-start !important; }
-body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) > .wrap { min-height: 0 !important; justify-content: flex-start !important; }
-/* the 404 page: its box no longer needs to keep clear of the person in the full-screen photo, so it sits centred under the photo box */
-body:not(.s-b):not(.cert-page):not(.label-page):has(> .ow-backdrop) .nf { min-height: 0 !important; align-items: flex-start !important; justify-content: center !important; }
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) { body:not(.s-b):not(.cert-page):not(.label-page):not(:has(> .ow-backdrop))::before { animation: ow-sb-drift 28s ease-in-out infinite; } }
 
 /* 3. glass boxes */
 body:not(.s-b):not(.cert-page):not(.label-page) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item):not(.m-map) {
