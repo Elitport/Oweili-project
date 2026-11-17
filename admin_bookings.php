@@ -237,7 +237,7 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
   <ul class="rows">
     <li><span><?= owBi('Oweili test page', 'صفحة أويلي التجريبية') ?></span><span class="pillx on"><?= owBi('Ready', 'جاهزة') ?></span></li>
     <?php foreach (['moyasar' => 'Moyasar (mada, cards, Apple Pay)', 'tabby' => 'Tabby', 'tamara' => 'Tamara'] as $g => $n): ?>
-    <li><span><?= e($n) ?></span><?= $keys[$g] === '' ? '<span class="pillx on">' . owBi('Test keys found', 'المفاتيح التجريبية موجودة') . '</span>' : '<span class="pillx warn">' . owBi('Needs: ', 'يحتاج: ') . '<span dir="ltr">' . e($keys[$g]) . '</span></span>' ?></li>
+    <li><span><?= e($n) ?></span><?= $keys[$g] === '' ? '<span class="pillx on">' . owBi('Test keys found', 'المفاتيح التجريبية موجودة') . '</span>' : '<span class="pillx warn" style="white-space:normal;overflow-wrap:anywhere;max-width:100%">' . owBi('Needs: ', 'يحتاج: ') . '<span dir="ltr">' . e($keys[$g]) . '</span></span>' ?></li>
     <?php endforeach; ?>
   </ul>
 </div>
