@@ -679,6 +679,9 @@ body:has(> .ow-backdrop):has(> .ow-footer) > main { flex: 1 0 auto; }
 html.dark-mode { --sb-glass: rgba(15,21,32,0.62); --sb-edge: rgba(255,255,255,0.14); --sb-shine: rgba(255,255,255,0.08);
   --sb-shadow: 0 16px 44px rgba(0,0,0,0.42), 0 2px 6px rgba(0,0,0,0.22); }
 @media (max-width: 640px) { :root { --sb-blur: blur(10px) saturate(150%); } }
+/* pages with their own full-page background photo (owner, 17 Nov 2026): the glass is less see-through, so text over darker parts of the photo stays easy to read */
+body:has(> .ow-backdrop) { --sb-glass: rgba(255,255,255,0.92); }
+html.dark-mode body:has(> .ow-backdrop) { --sb-glass: rgba(15,21,32,0.88); }
 
 /* 1. the colour shapes (pages without their own background photo; photo pages keep the photo as the full-page background, owner 17 Nov 2026) */
 html:has(> body:not(.s-b):not(.cert-page):not(.label-page):not(:has(> .ow-backdrop))) { background: #F4EEF0 !important; }
