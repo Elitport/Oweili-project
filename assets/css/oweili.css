@@ -674,9 +674,9 @@ body:has(> .ow-backdrop):has(> .ow-footer) > main { flex: 1 0 auto; }
       top of the page, never zoomed or covered; the page starts under it.
    3. Boxes are frosted glass: see-through, blurred, a thin light edge, a soft shadow (lighter blur on phones).
    Artwork pictures sit on their own solid frames inside the boxes, so they are never blurred or covered. */
-:root { --sb-glass: rgba(255,255,255,0.55); --sb-edge: rgba(255,255,255,0.72); --sb-shine: rgba(255,255,255,0.5);
+:root { --sb-glass: rgba(255,255,255,0.72); --sb-edge: rgba(255,255,255,0.72); --sb-shine: rgba(255,255,255,0.5);
   --sb-shadow: 0 16px 44px rgba(35,49,74,0.16), 0 2px 6px rgba(35,49,74,0.06); --sb-blur: blur(20px) saturate(165%); --ow-ph: 300px; }
-html.dark-mode { --sb-glass: rgba(15,21,32,0.55); --sb-edge: rgba(255,255,255,0.14); --sb-shine: rgba(255,255,255,0.08);
+html.dark-mode { --sb-glass: rgba(15,21,32,0.62); --sb-edge: rgba(255,255,255,0.14); --sb-shine: rgba(255,255,255,0.08);
   --sb-shadow: 0 16px 44px rgba(0,0,0,0.42), 0 2px 6px rgba(0,0,0,0.22); }
 @media (max-width: 640px) { :root { --sb-blur: blur(10px) saturate(150%); } }
 
@@ -684,12 +684,13 @@ html.dark-mode { --sb-glass: rgba(15,21,32,0.55); --sb-edge: rgba(255,255,255,0.
 html:has(> body:not(.s-b):not(.cert-page):not(.label-page)) { background: #F4EEF0 !important; }
 html.dark-mode:has(> body:not(.s-b):not(.cert-page):not(.label-page)) { background: #0F1520 !important; }
 body:not(.s-b):not(.cert-page):not(.label-page) { background: transparent !important; }
+/* a little softer than on the home page, so the grey text that sits straight on the page (not in a box) stays easy to read */
 body:not(.s-b):not(.cert-page):not(.label-page)::before { content: ""; position: fixed; inset: -10%; z-index: -2; pointer-events: none; background:
-  radial-gradient(38% 42% at 12% 18%, rgba(219,128,132,0.85), rgba(219,128,132,0) 70%),
-  radial-gradient(40% 45% at 88% 82%, rgba(35,49,74,0.70), rgba(35,49,74,0) 70%),
-  radial-gradient(34% 38% at 78% 22%, rgba(143,161,177,0.75), rgba(143,161,177,0) 70%),
-  radial-gradient(36% 40% at 22% 86%, rgba(235,181,183,0.85), rgba(235,181,183,0) 70%),
-  radial-gradient(30% 30% at 52% 50%, rgba(219,128,132,0.35), rgba(219,128,132,0) 70%),
+  radial-gradient(38% 42% at 12% 18%, rgba(219,128,132,0.40), rgba(219,128,132,0) 70%),
+  radial-gradient(40% 45% at 88% 82%, rgba(35,49,74,0.20), rgba(35,49,74,0) 70%),
+  radial-gradient(34% 38% at 78% 22%, rgba(143,161,177,0.30), rgba(143,161,177,0) 70%),
+  radial-gradient(36% 40% at 22% 86%, rgba(235,181,183,0.55), rgba(235,181,183,0) 70%),
+  radial-gradient(30% 30% at 52% 50%, rgba(219,128,132,0.20), rgba(219,128,132,0) 70%),
   #F4EEF0; }
 html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page)::before { background:
   radial-gradient(38% 42% at 12% 18%, rgba(219,128,132,0.42), rgba(219,128,132,0) 70%),
