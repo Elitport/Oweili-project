@@ -1,0 +1,190 @@
+/* ══ Glass + Bento on the photo pages (owner, 18 Nov 2026): Gallery, Art Map, Art Institutes ══
+   Only pages whose <body> has the class "bx" load this file. Visual only: every text, link, button, form, filter,
+   card, photo and piece of data stays as it was; the page's own studio photo stays the full-page background.
+   1. Real glass, the same as the home page: 40% see-through, a strong backdrop blur, a thin light edge, a soft
+      shadow, a light sweep and a brighter edge. Text stays easy to read because the blur also evens out the
+      photo behind each box (softer contrast, lighter in light mode, darker in dark mode), never by making the
+      box solid.
+   2. Bento: the page's parts sit in boxes of different sizes on one grid (a big box for the title and intro,
+      medium and small boxes for the search, the filters, the map and the count).
+   Artwork pictures, place photos and the map sit on their own solid frames, so they are never blurred or covered. */
+
+body.bx.bx {
+  --sb-glass: rgba(255,255,255,0.40);
+  --sb-edge: rgba(255,255,255,0.72);
+  --sb-shine: rgba(255,255,255,0.55);
+  --sb-shadow: 0 18px 50px rgba(35,49,74,0.22), 0 2px 6px rgba(35,49,74,0.08);
+  --sb-blur: blur(24px) saturate(125%) contrast(0.5) brightness(1.8);
+  --bx-chip: rgba(255,255,255,0.55);
+  --bx-gap: 16px;
+}
+html.dark-mode body.bx.bx {
+  --sb-glass: rgba(15,21,32,0.46);
+  --sb-edge: rgba(255,255,255,0.16);
+  --sb-shine: rgba(255,255,255,0.10);
+  --sb-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.25);
+  --sb-blur: blur(24px) saturate(140%) contrast(0.6) brightness(0.6);
+  --bx-chip: rgba(255,255,255,0.10);
+}
+@media (max-width: 640px) {
+  body.bx.bx { --sb-blur: blur(12px) saturate(125%) contrast(0.5) brightness(1.8); --bx-gap: 12px; }
+  html.dark-mode body.bx.bx { --sb-blur: blur(12px) saturate(130%) contrast(0.6) brightness(0.6); }
+}
+/* boxes with small reading text (artwork, place and course cards, "no results" boxes) even out the photo a little more,
+   so their small grey text stays easy to read over the darkest parts of a photo; still 40% see-through */
+body.bx.bx { --bx-read: blur(24px) saturate(120%) contrast(0.33) brightness(2); }
+html.dark-mode body.bx.bx { --bx-read: var(--sb-blur); }
+@media (max-width: 640px) { body.bx.bx { --bx-read: blur(12px) saturate(120%) contrast(0.33) brightness(2); } html.dark-mode body.bx.bx { --bx-read: var(--sb-blur); } }
+/* the footer keeps the look it has on every other page */
+body.bx.bx .ow-footer { --sb-glass: rgba(255,255,255,0.92); --sb-blur: blur(20px) saturate(165%); }
+html.dark-mode body.bx.bx .ow-footer { --sb-glass: rgba(15,21,32,0.88); }
+@media (max-width: 640px) { body.bx.bx .ow-footer { --sb-blur: blur(10px) saturate(150%); } }
+
+/* ---- the glass boxes of these pages ---- */
+body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back) ,
+body.bx.bx :is(.card, .aw-card, .c-card, .i-card):not(.m-map) {
+  position: relative; isolation: isolate; border-radius: 22px;
+  background: var(--sb-glass) !important; -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur);
+  border: 1px solid var(--sb-edge) !important;
+  box-shadow: var(--sb-shadow), inset 0 1px 0 var(--sb-shine);
+  color: var(--color-body); text-shadow: none;
+}
+html body.bx.bx.bx :is(.aw-card, .c-card, .i-card, .ci-none, .gallery-empty, .d-empty):not(.m-map):not(.m-map) { -webkit-backdrop-filter: var(--bx-read); backdrop-filter: var(--bx-read); }
+/* a soft light sweep along the top edge, and a brighter edge that catches the light (as on the home page);
+   both sit behind the box's content, so nothing inside is ever covered */
+body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back, .card, .aw-card, .c-card, .i-card):not(.m-map)::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(160deg, var(--sb-shine) 0%, rgba(255,255,255,0) 38%); opacity: .55; }
+body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back, .mp-tools, .card, .aw-card, .c-card, .i-card):not(.m-map)::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.05) 40%, rgba(219,128,132,0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+html.dark-mode body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back, .mp-tools, .card, .aw-card, .c-card, .i-card):not(.m-map)::after {
+  background: linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.02) 40%, rgba(219,128,132,0.45)); }
+/* the Gallery's search box holds the search bar, which sticks under the menu when the page scrolls: its glass is
+   drawn on a layer behind it, so the stuck bar can still sit under the menu */
+body.bx.bx .mp-tools { position: relative; isolation: isolate; border-radius: 22px; border: 1px solid var(--sb-edge);
+  box-shadow: var(--sb-shadow), inset 0 1px 0 var(--sb-shine); }
+body.bx.bx .mp-tools::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(160deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 38%), var(--sb-glass);
+  -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur); }
+/* small parts that sit inside a glass box: a lighter chip, no second blur */
+body.bx.bx :is(.m-tab, .filter, .mp-chip, .c-tag) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.bx.bx .m-tab:not([aria-current="page"]), body.bx.bx .m-bar .filter, body.bx.bx .mp-chip { background: var(--bx-chip); border-color: var(--sb-edge); }
+/* the search bar (not stuck) inside its box */
+body.bx.bx .mp-barwrap:not(.stuck) .mp-bar { background: var(--bx-chip); border-color: var(--sb-edge); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* the stuck bar floats over the artworks: the same glass as the boxes */
+body.bx.bx .mp-barwrap.stuck .mp-bar { background: var(--sb-glass); -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur); border-color: var(--sb-edge); }
+
+/* no blur support, or the visitor asks for less see-through: solid boxes */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back, .card, .aw-card, .c-card, .i-card):not(.m-map),
+  body.bx.bx .mp-tools::before, body.bx.bx .mp-barwrap.stuck .mp-bar { background: var(--color-surface) !important; } }
+@media (prefers-reduced-transparency: reduce) {
+  body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back, .card, .aw-card, .c-card, .i-card):not(.m-map),
+  body.bx.bx .mp-tools::before, body.bx.bx .mp-barwrap.stuck .mp-bar { background: var(--color-surface) !important; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* ---- the big box: the page title and its intro (like the home page's big box) ---- */
+body.bx.bx :is(.d-head, .page-header) { width: auto; max-width: none; margin: 0; padding: 36px 40px 34px; text-align: start;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+body.bx.bx :is(.d-head, .page-header) h1 { font-size: 48px; font-weight: 300; letter-spacing: -0.025em; line-height: 1.08; color: var(--color-dark); margin: 0 0 16px; text-wrap: balance; }
+[dir="rtl"] body.bx.bx :is(.d-head, .page-header) h1 { letter-spacing: 0; line-height: 1.3; }
+body.bx.bx :is(.d-head, .page-header) p { font-size: 17px; line-height: 1.6; color: var(--color-body); max-width: 520px; margin: 0; text-align: start; }
+[dir="rtl"] body.bx.bx :is(.d-head, .page-header) p { line-height: 1.75; }
+body.bx.bx .page-header .ph-note { margin: 12px 0 0 !important; font-size: 15px; font-weight: 600; color: var(--color-dark); }
+body.bx.bx .d-head .ci-head { justify-content: flex-start; }
+body.bx.bx .d-head .ci-city { justify-content: flex-start; margin: 0 0 10px; }
+
+/* ---- one grid per page ---- */
+body.bx.bx .d-wrap, body.bx.bx .main-content { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); align-items: stretch; }
+body.bx.bx :is(.d-wrap, .main-content) > * { grid-column: 1 / -1; min-width: 0; margin: 0 !important; }
+body.bx.bx :is(.d-wrap, .main-content) > :is(script, noscript, style) { display: none; }
+
+/* Gallery: big title box | search box, and the count (or the "no artworks" box) under the search box; then the artworks */
+body.bx.bx .main-content > .page-header { grid-column: span 2; grid-row: span 2; }
+body.bx.bx .main-content > .mp-tools { grid-column: span 2; padding: 22px; justify-content: center; }
+body.bx.bx .main-content > .mp-count, body.bx.bx .main-content > .gallery-empty { grid-column: span 2; }
+body.bx.bx .main-content:has(> :is(.aotw, .cols, .mp-promos)) > .page-header { grid-column: 1 / -1; grid-row: auto; }
+body.bx.bx .main-content > .mp-count { display: flex; align-items: center; justify-content: center; width: auto; padding: 18px 24px; text-align: center;
+  font-size: 30px; font-weight: 300; letter-spacing: -0.01em; line-height: 1.2; color: var(--color-dark); }
+[dir="rtl"] body.bx.bx .main-content > .mp-count { letter-spacing: 0; }
+body.bx.bx .main-content > .gallery-empty { max-width: none !important; padding: 28px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+body.bx.bx .main-content > .gallery-empty h2 { color: var(--color-dark); }
+body.bx.bx .main-content > .pagination { padding: 14px 18px; }
+body.bx.bx .main-content > .cols { padding: 22px; }
+body.bx.bx .main-content > .aotw .aotw-art { border-radius: 22px 0 0 22px; overflow: hidden; }
+[dir="rtl"] body.bx.bx .main-content > .aotw .aotw-art { border-radius: 0 22px 22px 0; }
+/* the search bar in a box half the page wide: the search on the first line, Topic, Status, Sort and the filters button on the second */
+@media (min-width: 769px) {
+  body.bx.bx .mp-barwrap:not(.stuck) .mp-bar { flex-wrap: wrap; max-width: none; border-radius: 22px; row-gap: 2px; }
+  body.bx.bx .mp-barwrap:not(.stuck) .mb-q { flex: 1 1 100%; }
+  body.bx.bx .mp-barwrap:not(.stuck) :is(.mb-topic, .mb-status, .mb-sort) { flex: 1 1 120px; width: auto; min-width: 110px; }
+  body.bx.bx .mp-barwrap:not(.stuck) .mb-q + .mb-seg::before { opacity: 0; }
+}
+body.bx.bx .mp-tools .mp-chips { justify-content: flex-start; }
+/* the artworks: the same grid and gap as the boxes above them */
+body.bx.bx .art-grid { --g: var(--bx-gap); }
+body.bx.bx .mp-card { border-radius: 18px; overflow: hidden; }
+body.bx.bx .mp-card .aw-img { border-radius: 0; }
+
+/* Art Map: big title box | tabs and filters; the map wide with the count beside it; then the places */
+body.bx.bx .d-wrap > .d-head { grid-column: span 2; }
+body.bx.bx .d-wrap > .m-bar { grid-column: span 2; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 14px; padding: 24px; }
+body.bx.bx .m-bar .m-tabs { justify-content: flex-start; }
+body.bx.bx .m-bar .filter { margin: 0; flex-wrap: wrap; width: auto; }
+body.bx.bx .d-wrap > .m-map { grid-column: span 3; border-radius: 22px; }
+body.bx.bx .d-wrap > .result-count { display: flex; align-items: center; justify-content: center; width: auto; padding: 18px 24px; text-align: center;
+  font-size: 30px; font-weight: 300; line-height: 1.2; color: var(--color-dark); }
+body.bx.bx .d-wrap:has(> .m-map) > .result-count { grid-column: span 1; }
+body.bx.bx .d-wrap > .d-empty { max-width: none; padding: 28px 24px; color: var(--color-dark); }
+body.bx.bx .m-grp { gap: var(--bx-gap); }
+body.bx.bx .m-grp + .m-grp { margin-top: 0; }
+body.bx.bx .d-wrap > .m-grp + .m-grp { margin-top: 0 !important; }
+/* places with a photo three to a row; places without one, smaller, four to a row */
+body.bx.bx .m-grp > .i-card { flex-basis: calc((100% - 2 * var(--bx-gap)) / 3); }
+body.bx.bx .m-grp > .m-nophoto { flex-basis: calc((100% - 3 * var(--bx-gap)) / 4); }
+body.bx.bx .m-photo { border-radius: 21px 21px 0 0; }
+body.bx.bx .m-band { border-radius: 21px 21px 0 0; }
+
+/* Art Institutes: big title box | the filters (or "No courses right now" and Notify me); then the courses */
+body.bx.bx.bx-3 .d-wrap { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+body.bx.bx.bx-3 .d-wrap > .d-head { grid-column: span 2; }
+body.bx.bx.bx-3 .d-wrap > :is(.ci-bar, .ci-none) { grid-column: span 1; }
+body.bx.bx.bx-3 .d-wrap:not(:has(> :is(.ci-bar, .ci-none))) > .d-head { grid-column: 1 / -1; }
+body.bx.bx .ci-bar { flex-direction: column; align-items: stretch; justify-content: center; padding: 24px; max-width: none; }
+body.bx.bx .ci-bar .field { flex: 0 0 auto; min-width: 0; }
+body.bx.bx .ci-none { max-width: none; padding: 30px 26px; display: flex; flex-direction: column; justify-content: center; color: var(--color-body); }
+body.bx.bx .ci-none h2 { color: var(--color-dark); }
+body.bx.bx .ci-none .ci-form .g2 { grid-template-columns: 1fr; }
+body.bx.bx.bx-3 .d-wrap > .result-count { justify-self: center; width: fit-content; font-size: var(--fs-caption); font-weight: 700; padding: 8px 18px; }
+body.bx.bx .c-grid { gap: var(--bx-gap); }
+body.bx.bx .c-grid > .c-card { flex-basis: calc((100% - 2 * var(--bx-gap)) / 3); }
+body.bx.bx .ci-back { padding: 16px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+/* ---- tablets: two columns ---- */
+@media (max-width: 1023px) {
+  body.bx.bx .d-wrap, body.bx.bx .main-content, body.bx.bx.bx-3 .d-wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body.bx.bx :is(.d-wrap, .main-content) > :is(.d-head, .page-header, .mp-tools, .m-bar, .m-map) { grid-column: 1 / -1 !important; grid-row: auto !important; }
+  body.bx.bx .main-content > :is(.mp-count, .gallery-empty) { grid-column: 1 / -1; }
+  body.bx.bx .d-wrap:has(> .m-map) > .result-count { grid-column: 1 / -1; }
+  body.bx.bx.bx-3 .d-wrap > :is(.ci-bar, .ci-none) { grid-column: 1 / -1; }
+  body.bx.bx .m-grp > :is(.i-card, .m-nophoto) { flex-basis: calc((100% - var(--bx-gap)) / 2); }
+  body.bx.bx .c-grid > .c-card { flex-basis: calc((100% - var(--bx-gap)) / 2); }
+  body.bx.bx .m-bar .m-tabs { justify-content: flex-start; }
+}
+/* ---- phones ---- */
+@media (max-width: 640px) {
+  body.bx.bx :is(.d-head, .page-header) { padding: 24px 20px 22px; }
+  body.bx.bx :is(.d-head, .page-header) h1 { font-size: 34px; margin-bottom: 12px; }
+  body.bx.bx :is(.d-head, .page-header) p { font-size: 16px; }
+  body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back, .mp-tools, .card, .aw-card, .c-card, .i-card):not(.m-map) { border-radius: 18px; }
+  body.bx.bx .mp-card { border-radius: 16px; }
+  body.bx.bx .main-content > .mp-tools { padding: 12px; }
+  body.bx.bx .d-wrap > .m-bar { padding: 16px; align-items: stretch; }
+  body.bx.bx .m-bar .m-tabs { justify-content: center; }
+  body.bx.bx .m-bar .filter { justify-content: center; }
+  body.bx.bx .main-content > .mp-count, body.bx.bx .d-wrap > .result-count { font-size: 24px; padding: 14px 18px; }
+  body.bx.bx .m-grp > :is(.i-card, .m-nophoto), body.bx.bx .c-grid > .c-card { flex-basis: 100%; }
+  body.bx.bx .m-photo, body.bx.bx .m-band { border-radius: 17px 17px 0 0; }
+  body.bx.bx .ci-bar { padding: 16px; }
+}

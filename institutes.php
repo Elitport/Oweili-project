@@ -106,6 +106,7 @@ $titleAr = $inst ? 'دورات ' . $inst['name_ar'] : 'المعاهد الفني
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/bento.css') ?>">
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
 /* Art Institutes — layout only; type, colors, buttons and cards come from oweili.css */
@@ -151,7 +152,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
 @media (max-width:640px){.c-grid > .c-card{flex-basis:100%;}.ci-form .g2{grid-template-columns:1fr;}.ci-bar{padding:var(--space-sm);}.ci-bar .field{flex-basis:100%;}}
 </style>
 </head>
-<body class="ow">
+<body class="ow bx bx-3">
 <?= owStudioBackdrop('easels-class') /* the easels ready for a class (owner, 6 Nov 2026; back 15 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>

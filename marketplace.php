@@ -215,6 +215,7 @@ foreach ($modalArtworks as $aw) {
   <?php include __DIR__ . '/theme_head.php'; ?>
   <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
   <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
+  <link rel="stylesheet" href="<?= owAsset('assets/css/bento.css') ?>">
   <style>
     /* Gallery (marketplace.php) layout only — colors, type sizes and buttons come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
@@ -466,7 +467,7 @@ foreach ($modalArtworks as $aw) {
     }
   </style>
 </head>
-<body>
+<body class="bx">
 <?= owStudioBackdrop('gallery-hall') /* the owner's gallery hall with the bench, always (owner, 8 Nov 2026) */ ?>
 
 <div class="bg-wrap">

@@ -148,6 +148,7 @@ $placeCard = function (array $p) use ($PIN): string {
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
+<link rel="stylesheet" href="<?= owAsset('assets/css/bento.css') ?>">
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <?php if ($mapPins): /* the free OpenStreetMap map (owner, 14 Nov 2026) */ ?><link rel="stylesheet" href="<?= owAsset('assets/vendor/leaflet/leaflet.css') ?>"><script defer src="<?= owAsset('assets/vendor/leaflet/leaflet.js') ?>"></script><script defer src="<?= owAsset('assets/js/art_map_pins.js') ?>"></script><?php endif; ?>
 <style>
@@ -268,7 +269,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
 @media (max-width:768px){.m-map{height:220px;margin-bottom:var(--space-md);}}
 </style>
 </head>
-<body class="ow">
+<body class="ow bx">
 <?= owStudioBackdrop('easels-corridor') /* the owner's photo of paintings on easels in a bright corridor (12 Nov 2026) */ ?>
 <div class="bg-wrap" aria-hidden="true"></div>
 <div class="veil" aria-hidden="true"></div>
