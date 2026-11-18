@@ -49,7 +49,7 @@ body.bx.bx :is(.card, .aw-card, .c-card, .i-card):not(.m-map) {
   box-shadow: var(--sb-shadow), inset 0 1px 0 var(--sb-shine);
   color: var(--color-body); text-shadow: none;
 }
-html body.bx.bx.bx :is(.aw-card, .c-card, .i-card, .ci-none, .gallery-empty, .d-empty):not(.m-map):not(.m-map) { -webkit-backdrop-filter: var(--bx-read); backdrop-filter: var(--bx-read); }
+html body.bx.bx.bx :is(.aw-card, .c-card, .i-card, .ci-none, .d-empty):not(.m-map):not(.m-map) { -webkit-backdrop-filter: var(--bx-read); backdrop-filter: var(--bx-read); }
 /* a soft light sweep along the top edge, and a brighter edge that catches the light (as on the home page);
    both sit behind the box's content, so nothing inside is ever covered */
 body.bx.bx :is(.d-head, .page-header, .m-bar, .ci-bar, .result-count, .mp-count, .gallery-empty, .d-empty, .ci-none, .pagination, .cols, .ci-back, .card, .aw-card, .c-card, .i-card):not(.m-map)::before {
@@ -72,7 +72,7 @@ body.bx.bx .mp-tools::before { content: ""; position: absolute; inset: 0; z-inde
 body.bx.bx :is(.m-tab, .filter, .mp-chip, .c-tag) { -webkit-backdrop-filter: none; backdrop-filter: none; }
 body.bx.bx .m-tab:not([aria-current="page"]), body.bx.bx .m-bar .filter, body.bx.bx .mp-chip { background: var(--bx-chip); border-color: var(--sb-edge); }
 /* the search bar (not stuck) inside its box */
-body.bx.bx .mp-barwrap:not(.stuck) .mp-bar { background: var(--bx-chip); border-color: var(--sb-edge); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.bx.bx .mp-barwrap:not(.stuck) .mp-bar { background: transparent; border-color: var(--sb-edge); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }   /* as see-through as the title box (owner, 18 Nov 2026) */
 /* the stuck bar floats over the artworks: the same glass as the boxes */
 body.bx.bx .mp-barwrap.stuck .mp-bar { background: var(--sb-glass); -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur); border-color: var(--sb-edge); }
 

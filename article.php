@@ -129,10 +129,12 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
 <main>
   <div class="art-wrap<?= $cover ? '' : ' no-cover' ?>">
     <article class="card art-card">
+      <header class="art-hd">
       <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a>
       <h1><?= owBi($a['title_en'], $a['title_ar']) ?></h1>
       <?php if ($preview && $a['status'] !== 'published'): ?><p class="alert alert-error" role="status"><?= owBi('Preview for the team: visitors cannot see this article yet.', 'معاينة للفريق: لا يرى الزوار هذا المقال بعد.') ?></p><?php endif; ?>
       <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <?= $byArtist['url'] !== '' ? '<a href="' . e(owBase() . $byArtist['url']) . '">' . owBiName($byArtist['en'], $byArtist['ar']) . '</a>' : owBiName($byArtist['en'], $byArtist['ar']) ?><?php endif; ?></p>
+      </header>
 
       <?php if ($type === 'event'): [$dEn, $dAr] = owDateRangeBi($a['event_start_date'], $a['event_end_date']); ?>
         <div class="event-box">

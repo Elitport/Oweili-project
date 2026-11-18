@@ -186,8 +186,10 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <h1><span class="bi-en">Please wait a little</span><span class="bi-ar">انتظر قليلاً من فضلك</span></h1>
       <p><span class="bi-en">We already sent several links in the last hour. Please check your inbox and spam folder, or try again in an hour.</span><span class="bi-ar">أرسلنا عدة روابط خلال الساعة الأخيرة. راجع البريد الوارد ومجلد الرسائل غير المرغوب فيها، أو حاول بعد ساعة.</span></p>
     <?php elseif (in_array($state, ['resend', 'resend_old', 'resend_bad'], true)): ?>
+      <div class="auth-head">
       <h1><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></h1>
       <p><span class="bi-en">Type the email you joined with. We will send you a new confirmation link.</span><span class="bi-ar">اكتب البريد الذي سجّلت به، وسنرسل لك رابط تأكيد جديداً.</span></p>
+      </div>
       <?php if ($state === 'resend_old'): ?><div class="err-box" style="display:block"><span class="bi-en">This page was open for a long time. Please press the button again.</span><span class="bi-ar">بقيت الصفحة مفتوحة وقتاً طويلاً. اضغط الزر مرة أخرى من فضلك.</span></div><?php endif; ?>
       <?php if ($state === 'resend_bad'): ?><div class="err-box" style="display:block"><span class="bi-en">Please enter a valid email address.</span><span class="bi-ar">يرجى إدخال بريد إلكتروني صالح.</span></div><?php endif; ?>
       <form method="post" action="verify.php" class="v-resend">

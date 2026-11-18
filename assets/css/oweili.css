@@ -718,3 +718,239 @@ body:not(.s-b):not(.cert-page):not(.label-page) .ow-footer :is(.ow-footer-in, .o
 @media (prefers-reduced-transparency: reduce) {
   body:not(.s-b):not(.cert-page):not(.label-page) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .ow-footer):not(.m-map) { background: var(--color-surface) !important; -webkit-backdrop-filter: none; backdrop-filter: none; } }
 @media print { body:not(.s-b)::before { display: none; } }
+
+/* ══ Glass + Bento on every other page (owner, 18 Nov 2026), the same style as the approved Gallery, Art Map and Art Institutes
+   (those three keep their own file, assets/css/bento.css). Left out: the home page (its own copy), the certificate and its back label.
+   Visual only: every text, link, button, form, filter, card, photo and piece of data stays as it was; each page's own photo stays
+   the full-page background, not changed, cropped or recoloured.
+   1. Real glass like the home page: 40% see-through, a strong backdrop blur, a thin light edge, a soft shadow, a light sweep and a
+      brighter edge. On photo pages the blur also evens out the photo behind each box (lighter in light mode, darker in dark mode),
+      so text stays easy to read without making the box solid; boxes with small reading text even it out a little more.
+   2. Bento: each page's parts sit in boxes of different sizes on one grid (a big box for the title, medium and small boxes for the rest).
+   Artwork pictures, the map, the signature pad and the certificate sit on their own solid frames, never blurred or covered. ══ */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --sb-glass: rgba(255,255,255,0.40); --sb-edge: rgba(255,255,255,0.72); --sb-shine: rgba(255,255,255,0.55);
+  --sb-shadow: 0 18px 50px rgba(35,49,74,0.20), 0 2px 6px rgba(35,49,74,0.07); --sb-blur: blur(22px) saturate(170%); --bx-read: var(--sb-blur); --bx-gap: 16px; }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --sb-glass: rgba(15,21,32,0.46); --sb-edge: rgba(255,255,255,0.16); --sb-shine: rgba(255,255,255,0.10);
+  --sb-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.25); }
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(24px) saturate(125%) contrast(0.5) brightness(1.8); --bx-read: blur(24px) saturate(120%) contrast(0.33) brightness(2); }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(24px) saturate(140%) contrast(0.6) brightness(0.6); --bx-read: var(--sb-blur); }
+@media (max-width: 640px) {
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --sb-blur: blur(10px) saturate(150%); --bx-gap: 12px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(12px) saturate(125%) contrast(0.5) brightness(1.8); --bx-read: blur(12px) saturate(120%) contrast(0.33) brightness(2); }
+  html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(12px) saturate(130%) contrast(0.6) brightness(0.6); --bx-read: var(--sb-blur); }
+}
+/* the footer keeps the look it has had since 17 Nov 2026 */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .ow-footer { --sb-glass: rgba(255,255,255,0.92); --sb-blur: blur(20px) saturate(165%); }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .ow-footer { --sb-glass: rgba(15,21,32,0.88); }
+@media (max-width: 640px) { html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .ow-footer { --sb-blur: blur(10px) saturate(150%); } }
+
+/* the glass boxes: the shared cards plus the title boxes and filter boxes of each page */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item):not(.m-map),
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count),
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > :is(form, .auth-foot, .ja-get),
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > :is(.head, .foot), html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg > .head, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > :is(.toc, .next),
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card > :is(form, .sig-now), html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .gc:has(> form) > form, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > :is(.event-box, .article-body, .gallery, .art-actions),
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > :is(.num, h1, p, .acts), html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.wrap > .progress, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash > .top, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap > .top,
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg > .section-title, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap > .section-title, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .ab-two > .card {
+  position: relative; isolation: isolate; border-radius: 22px;
+  background: var(--sb-glass) !important; -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur);
+  border: 1px solid var(--sb-edge) !important; box-shadow: var(--sb-shadow), inset 0 1px 0 var(--sb-shine); text-shadow: none; }
+/* boxes with small reading text: the photo behind them is evened out a little more (photo pages only; the same elsewhere) */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .rg-group, .ex-end, .auth-foot, .ja-get, .foot, .next, .toc, .sig-now, .event-box, .article-body, .gallery, .art-actions, .acts, .num, .progress, .section-title):not(.m-map):not(.lg-head),
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > form, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > p, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card > form, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .gc:has(> form) > form { -webkit-backdrop-filter: var(--bx-read) !important; backdrop-filter: var(--bx-read) !important; }
+/* a soft light sweep along the top edge and a brighter edge that catches the light, as on the home page; both sit behind the content */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count, .toc, .next, .sig-now, .top, .section-title, .progress):not(.m-map):not(.cert-frame)::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(160deg, var(--sb-shine) 0%, rgba(255,255,255,0) 38%); opacity: .55; }
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count, .toc, .next, .sig-now, .top, .section-title, .progress):not(.m-map):not(.cert-frame)::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.05) 40%, rgba(219,128,132,0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count, .toc, .next, .sig-now, .top, .section-title, .progress):not(.m-map):not(.cert-frame)::after {
+  background: linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.02) 40%, rgba(219,128,132,0.45)); }
+/* a card that holds the page's boxes is no box itself */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.auth-card:has(> .auth-head), main.nf > .card, .sig-card, .gc:has(> form), .art-card) {
+  background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; padding: 0 !important; }
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.auth-card:has(> .auth-head), main.nf > .card, .sig-card, .gc:has(> form), .art-card)::before,
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.auth-card:has(> .auth-head), main.nf > .card, .sig-card, .gc:has(> form), .art-card)::after { content: none; }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count, .toc, .next, .sig-now, .top, .section-title, .progress) { background: var(--color-surface) !important; } }
+@media (prefers-reduced-transparency: reduce) {
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count, .toc, .next, .sig-now, .top, .section-title, .progress) { background: var(--color-surface) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; } }
+/* small parts inside a box: a lighter chip, no second blur */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.sc-pill, .sc-filters button, .m-tab, .art-type) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* ---- the big title boxes: like the home page's big box ---- */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd) { width: auto; max-width: none; margin: 0; padding: 34px 38px 32px; text-align: start;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd) > h1, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > .head h1, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg > .head h1, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > .lg-head h1 {
+  font-size: 44px; font-weight: 300; letter-spacing: -0.025em; line-height: 1.1; color: var(--color-dark); margin: 0 0 14px; text-wrap: balance; }
+html[dir="rtl"] body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd) > h1, html[dir="rtl"] body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > .head h1, html[dir="rtl"] body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg > .head h1, html[dir="rtl"] body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > .lg-head h1 { letter-spacing: 0; line-height: 1.3; }
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head) > p { font-size: 17px; line-height: 1.6; color: var(--color-body); max-width: 520px; margin: 0; text-align: start; }
+
+/* ---- one grid per page ---- */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-wrap, main.legal, main.vf, #pg.page, .dash-wrap, .bk, .wrap.dash, .dash.role-admin, .art-card, main.aw-page) { --bx-cols: 4; }
+@media (min-width: 1024px) {
+  /* Art Styles: big title box | the style filters, and the count under them; then the styles */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .ex-head) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .ex-head) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .ex-head) > .ex-head { grid-column: span 2; grid-row: span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .ex-head) > :is(.sc-filters, .sc-count) { grid-column: span 2; width: auto; max-width: none; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .ex-head) > .sc-filters { padding: 20px; justify-content: flex-start; align-content: center; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .ex-head) > .sc-count { display: flex; align-items: center; justify-content: center; padding: 16px 22px; font-size: 30px; font-weight: 300; color: var(--color-dark); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .ex-head) > .ex-end { grid-column: 2 / span 2; padding: 24px; }
+  /* Art Events and Art Education: big title box beside the first cards, then the cards four to a row */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .a-grid) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .a-grid) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .a-grid) > .d-head { grid-column: span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap > .a-grid { display: contents; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap > .a-grid > .a-card { grid-column: span 1; margin: 0; min-width: 0; }
+  /* Art Map region page: big title box | the breadcrumb and "See them on the Art Map"; then the groups */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .rg-group) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .rg-group) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .rg-group) > .d-head { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .rg-group) > .ap-crumbs { grid-column: 3 / span 2; grid-row: 1; width: auto; align-self: stretch; align-items: center; padding: 18px 22px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .rg-group) > div:last-child { grid-column: 3 / span 2; grid-row: 2; display: flex; align-items: center; justify-content: center; padding: 18px;
+    border-radius: 22px; background: var(--sb-glass); -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur); border: 1px solid var(--sb-edge); box-shadow: var(--sb-shadow), inset 0 1px 0 var(--sb-shine); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .rg-group) > .rg-group { padding: 24px; }
+  /* Art Map place page: the place wide, "more" beside it */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.ap) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--bx-gap); max-width: 1100px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.ap) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.ap) > .card.ap { grid-column: span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.ap) > .ap-more { grid-column: span 1; align-self: start; padding: 22px; border-radius: 22px; justify-content: center;
+    background: var(--sb-glass); -webkit-backdrop-filter: var(--sb-blur); backdrop-filter: var(--sb-blur); border: 1px solid var(--sb-edge); box-shadow: var(--sb-shadow), inset 0 1px 0 var(--sb-shine); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.ap) > .ap-crumbs { justify-self: start; width: fit-content; padding: 8px 16px; }
+  /* "Is this your place?": title box | the form, wider */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.pc) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--bx-gap); max-width: 1100px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.pc) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; max-width: none; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.pc) > .d-head { grid-column: span 1; align-self: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap:has(> .card.pc) > .card.pc { grid-column: span 2; }
+  /* About: two columns of boxes, the title box first */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap.ab-wrap { max-width: 1200px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap.ab-wrap > * { grid-column: span 2; margin: 0 !important; min-width: 0; max-width: none; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap.ab-wrap > .ab-two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap.ab-wrap > .ab-two > * { margin: 0 !important; }
+  /* one article: title box | the event's date and place (or the two buttons); the text wide under them */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-wrap { max-width: 1100px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > .art-hd { grid-column: 1 / span 2; grid-row: 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > .event-box { grid-column: 3; grid-row: 1; align-content: center; padding: 22px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card:not(:has(> .event-box)) > .art-actions { grid-column: 3; grid-row: 1; align-content: center; justify-content: center; flex-direction: column; border-top: 1px solid var(--sb-edge); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > .art-actions { padding: 22px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > :is(.article-body, .gallery) { padding: 32px 38px; }
+  /* Terms and Privacy: title box | contents box; the text wide under them */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal { max-width: 1040px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > .lg-head { grid-column: 1; width: auto !important; max-width: none !important; text-align: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > .toc { grid-column: 2; align-content: center; padding: 22px 26px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > .next { padding: 16px 22px; }
+  /* Verify a certificate: the title and form | how it works */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.vf { max-width: 1100px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.vf > * { margin: 0 !important; min-width: 0; max-width: none !important; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.vf > .vf-head { grid-column: span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.vf > .vf-how { grid-column: span 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.vf > :not(.vf-head):not(.vf-how) { grid-column: 1 / -1; }
+  /* Help & Support: title box and the questions | the "Write to Us" form; then the legal links */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .faq-section) { max-width: 1200px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); align-items: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .faq-section) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; max-width: none; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .faq-section) > .page-header { grid-column: 1 / span 2; grid-row: 1; align-self: stretch; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .faq-section) > .contact-grid { grid-column: 3 / span 2; grid-row: 1 / span 3; display: block; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .faq-section) > .contact-grid > * { max-width: none; width: 100%; margin: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .faq-section) > .section-title:first-of-type { grid-column: 1 / span 2; grid-row: 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .faq-section) > .faq-section { grid-column: 1 / span 2; grid-row: 3; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg > .section-title { width: fit-content; padding: 10px 20px; justify-self: center; }
+  /* Sign in, Forgot password, Join as an Artist / a Collector, a new confirmation link: title box (and the small boxes) | the form */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-wrap { align-items: flex-start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) { max-width: 920px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-auto-rows: auto; gap: var(--bx-gap); align-items: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card.wide:has(> .auth-head) { max-width: 1040px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > * { grid-column: 1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > .auth-head { align-self: stretch; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > form { grid-column: 2; grid-row: 1 / span 6; padding: 30px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > :is(.auth-foot, .ja-get) { padding: 18px 22px; }
+  /* Join: title box | the two ways to join; "Already one of us?" under the title */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--bx-gap); max-width: 1100px; margin: 0 auto; align-content: center; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > * { margin: 0 !important; min-width: 0; max-width: none; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > .head { grid-column: 1; grid-row: 1; padding: 34px; display: flex; flex-direction: column; justify-content: center; text-align: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > .choices { grid-column: 2; grid-row: 1 / span 2; width: auto; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > .foot { grid-column: 1; grid-row: 2; padding: 18px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  /* the 404 page: the big number box | the title, the line and the buttons (still on the side away from the visitor in the photo) */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card { max-width: 640px; width: 100%; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: var(--bx-gap); text-align: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > * { grid-column: 2; margin: 0 !important; min-width: 0; padding: 18px 22px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > .num { grid-column: 1; grid-row: 1 / span 3; display: flex; align-items: center; justify-content: center; }
+  /* My signature, Edit artwork: the page's words | the form (the signature pad and the artwork picture stay clear) */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .gc:has(> form) { max-width: 1100px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--bx-gap); align-items: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card > *, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .gc:has(> form) > * { grid-column: 1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card > form, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .gc:has(> form) > form { grid-column: 2; grid-row: 1 / span 12; padding: 28px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card > .sig-now { padding: 18px 22px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .gc) { max-width: 1100px; }
+  /* Edit profile: title box | the form */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .head + .card) { max-width: 1100px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--bx-gap); align-items: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .head + .card) > * { margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg.page:has(> .head + .card) > .head { padding: 34px; }
+  /* Upload artwork: the steps box beside the title; the step wide under them */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.wrap:has(> .progress) { max-width: 1000px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.wrap:has(> .progress) > * { grid-column: 1 / -1; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.wrap:has(> .progress) > h1 { grid-column: 1 / span 2; grid-row: 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.wrap:has(> .progress) > .lead { grid-column: 1 / span 2; grid-row: 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.wrap:has(> .progress) > .progress { grid-column: 3; grid-row: 1 / span 2; align-self: stretch; padding: 18px; margin: 0 0 var(--bx-gap) !important; display: flex; flex-direction: column; justify-content: center; }
+  /* dashboards: title box | the numbers; then the tabs and the lists */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.dash-wrap, .bk, .wrap.dash, .dash.role-admin):has(> :is(.st-head, .bd-head, .ma-head, .stat-row, .today-grid, .stat-grid)) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.dash-wrap, .bk, .wrap.dash, .dash.role-admin):has(> :is(.st-head, .bd-head, .ma-head, .stat-row, .today-grid, .stat-grid)) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.dash-wrap, .bk, .wrap.dash):has(> :is(.st-head, .bd-head, .ma-head, .stat-row, .stat-grid)) > :is(.st-head, .bd-head, .ma-head, .top, .card:first-child) { grid-column: span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.dash-wrap, .bk, .wrap.dash):has(> :is(.st-head, .bd-head, .ma-head, .stat-row, .stat-grid)) > :is(.stat-grid, .stat-row, .ma-new) { grid-column: span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap > .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .bk:has(> .stat-row) { max-width: 1100px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .bk > .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash.role-admin:has(> .today-grid) > .top { grid-column: 1 / span 2; grid-row: 1 / span 4; padding: 30px; align-items: center; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash.role-admin:has(> .today-grid) > :is(.adm-sec, .stat-grid) { grid-column: 3 / span 2; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash.role-admin:has(> .today-grid) > .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap.dash.role-subadmin > .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* My bookings, Join as an art institute: the first box beside the second; the rest wide */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .bk:not(:has(> .stat-row)) { max-width: 1100px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--bx-gap); align-items: start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .bk:not(:has(> .stat-row)) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .bk:not(:has(> .stat-row)) > :first-child { grid-column: span 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .bk:not(:has(> .stat-row)) > :nth-child(2) { grid-column: span 2; }
+  /* the public artist page: the profile box beside the first artworks */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap:has(> .profile-head) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--bx-gap); grid-auto-flow: row dense; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap:has(> .profile-head) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap:has(> .profile-head) > .section-title:first-of-type { grid-column: 1 / span 2; grid-row: 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap:has(> .profile-head) > .profile-head { grid-column: 1 / span 2; grid-row: 2; flex-direction: column; align-items: flex-start; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap:has(> .profile-head) > .section-title:nth-of-type(2) { grid-column: 3 / span 2; grid-row: 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap:has(> .profile-head) > .art-grid { display: contents; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap:has(> .profile-head) > .art-grid > * { grid-column: span 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash-wrap > .section-title { width: fit-content; padding: 10px 20px; align-self: center; }
+  /* the admin pages: small boxes two to a row, boxes with tables or long lists the full width */
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap.dash.role-admin:not(:has(> .today-grid)) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--bx-gap); grid-auto-flow: row dense; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap.dash.role-admin:not(:has(> .today-grid)) > * { grid-column: 1 / -1; margin: 0 !important; min-width: 0; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap.dash.role-admin:not(:has(> .today-grid)) > .card:not(:has(table, .tbl, .table-wrap, .aw-list, textarea, pre)) { grid-column: span 1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap.dash.role-admin:not(:has(> .card ~ .card)) > .card { grid-column: 1 / -1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.dash-wrap, .wrap.dash, .bk) > :is(.stat-grid, .stat-row) > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .top) > .top, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .dash > .top { padding: 18px 22px; }
+}
+/* tablets: the same boxes, two to a row */
+@media (min-width: 769px) and (max-width: 1023px) {
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .d-wrap > .a-grid:not(.a-even) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.dash-wrap, .wrap.dash) > .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* phones: one box under the other, each with its own size */
+@media (max-width: 1023px) {
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) { display: flex; flex-direction: column; gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > * { margin: 0 !important; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > form { padding: 22px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .auth-card:has(> .auth-head) > :is(.auth-foot, .ja-get) { padding: 14px 18px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .gc:has(> form), html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card { display: flex; flex-direction: column; gap: var(--bx-gap); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > *, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .sig-card > *, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .gc:has(> form) > *, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > * { margin: 0 !important; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > * { padding: 14px 18px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.sig-card, .gc:has(> form)) > form, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .art-card > :is(.article-body, .gallery, .art-actions, .event-box) { padding: 20px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > :is(.head, .foot) { padding: 20px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > :is(.toc, .next) { padding: 16px 18px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd) { padding: 24px 20px 22px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd) > h1, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .wrap:has(> .choices) > .head h1, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) #pg > .head h1, html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.legal > .lg-head h1 { font-size: 32px; margin-bottom: 10px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head) > p { font-size: 16px; }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .rg-group { padding: 16px; }
+}
+@media (max-width: 640px) {
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item):not(.m-map),
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count, .toc, .next, .sig-now, .top, .section-title, .progress) { border-radius: 18px; }
+}
