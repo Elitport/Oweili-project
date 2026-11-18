@@ -732,12 +732,16 @@ html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --sb-glass: rgba
   --sb-shadow: 0 18px 50px rgba(35,49,74,0.20), 0 2px 6px rgba(35,49,74,0.07); --sb-blur: blur(22px) saturate(170%); --bx-read: var(--sb-blur); --bx-gap: 16px; }
 html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --sb-glass: rgba(15,21,32,0.46); --sb-edge: rgba(255,255,255,0.16); --sb-shine: rgba(255,255,255,0.10);
   --sb-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.25); }
-html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(24px) saturate(125%) contrast(0.5) brightness(1.8); --bx-read: blur(24px) saturate(120%) contrast(0.33) brightness(2); }
-html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(24px) saturate(140%) contrast(0.6) brightness(0.6); --bx-read: var(--sb-blur); }
+/* light pages without a photo: reading boxes a touch brighter, dark ones a touch darker */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --bx-read: blur(22px) saturate(140%) brightness(1.1); }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --bx-read: blur(22px) saturate(130%) brightness(0.7); }
+/* photo pages: the blur evens out the photo behind every box, so all text stays easy to read; the photo still shows through as soft colour */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(24px) saturate(120%) contrast(0.3) brightness(2.1); --bx-read: var(--sb-blur); }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(24px) saturate(130%) contrast(0.5) brightness(0.45); --bx-read: var(--sb-blur); }
 @media (max-width: 640px) {
   html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) { --sb-blur: blur(10px) saturate(150%); --bx-gap: 12px; }
-  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(12px) saturate(125%) contrast(0.5) brightness(1.8); --bx-read: blur(12px) saturate(120%) contrast(0.33) brightness(2); }
-  html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(12px) saturate(130%) contrast(0.6) brightness(0.6); --bx-read: var(--sb-blur); }
+  html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(12px) saturate(120%) contrast(0.3) brightness(2.1); --bx-read: var(--sb-blur); }
+  html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx):has(> .ow-backdrop) { --sb-blur: blur(12px) saturate(130%) contrast(0.5) brightness(0.45); --bx-read: var(--sb-blur); }
 }
 /* the footer keeps the look it has had since 17 Nov 2026 */
 html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) .ow-footer { --sb-glass: rgba(255,255,255,0.92); --sb-blur: blur(20px) saturate(165%); }
@@ -768,8 +772,13 @@ html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-c
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
 html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.card, .stat-card, .auth-card, .art-item, .aw-card, .contact-card, .faq-item, .gc, .cert-fields, .wc-item, .table-wrap, .glass-card, .legal-card, .comm-card, .inspo-card, .acard, .choice, .c-item, .d-head, .page-header, .vf-head, .auth-head, .art-hd, .rg-group, .ap-crumbs, .ex-end, .sc-filters, .sc-count, .toc, .next, .sig-now, .top, .section-title, .progress):not(.m-map):not(.cert-frame)::after {
   background: linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.02) 40%, rgba(219,128,132,0.45)); }
+/* wrappers around glass boxes: no fade-in (it went from full to full, so nothing visible changes), because a running fade stops the blur behind the boxes */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :has(> :is(.card, .stat-card, .aw-card, .contact-card, .faq-item, .legal-card, .comm-card, .inspo-card, .acard, .choice, .a-card, .ab-card)) { animation: none !important; }
+/* the 404 page's big number: the blur evens the dark photo out to near white behind it, so the pink number stays easy to read */
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > .num:not(#ow-x) { -webkit-backdrop-filter: blur(24px) contrast(0.2) brightness(2.6) !important; backdrop-filter: blur(24px) contrast(0.2) brightness(2.6) !important; }
+html.dark-mode body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) main.nf > .card > .num:not(#ow-x) { -webkit-backdrop-filter: var(--sb-blur) !important; backdrop-filter: var(--sb-blur) !important; }
 /* a card that holds the page's boxes is no box itself */
-html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.auth-card:has(> .auth-head), main.nf > .card, .sig-card, .gc:has(> form), .art-card) {
+html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.auth-card:has(> .auth-head), main.nf > .card, .sig-card, .gc:has(> form), .art-card):not(#ow-x) {
   background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; padding: 0 !important; }
 html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.auth-card:has(> .auth-head), main.nf > .card, .sig-card, .gc:has(> form), .art-card)::before,
 html body:not(.s-b):not(.cert-page):not(.label-page):not(.bx) :is(.auth-card:has(> .auth-head), main.nf > .card, .sig-card, .gc:has(> form), .art-card)::after { content: none; }
