@@ -106,7 +106,6 @@ $titleAr = $inst ? 'دورات ' . $inst['name_ar'] : 'المعاهد الفني
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
-<link rel="stylesheet" href="<?= owAsset('assets/css/bento.css') ?>">
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <style>
 /* Art Institutes — layout only; type, colors, buttons and cards come from oweili.css */

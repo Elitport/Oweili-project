@@ -83,7 +83,7 @@
 - The orders and escrow structure exists but stays switched off (see Payments and escrow) until Sprint 4
 
 ## Pages Built
-- index.php — Homepage: the new glass + Bento look ("Sample B", 16 Nov 2026): soft pink / navy colour shapes behind the page, frosted glass boxes (title and buttons, the painting video, Artist of the week, the three trust points, and six boxes linking to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education) (see Features)
+- index.php — Homepage in the calm style (19 Nov 2026): the painting video as the hero with the title, the two lines, the two buttons and the three trust points; under it Artist of the week and a row of links to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education (see Features)
 - nav.php — Shared navbar (used across all pages)
 - explore.php — Art Styles: an art encyclopedia (50 styles shown: painting and drawing) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
@@ -144,14 +144,18 @@
 
 ## Features
 
-### New look: glass + Bento, "Sample B" (16 Nov 2026, owner)
-- OWNER'S CHOICE: Sample B (glass + Bento grid, soft pink / navy colour shapes behind the page) is the new look for the WHOLE site. It is applied page by page; each page is shown to the owner (before / after screenshots) and goes live only after the owner approves it. Sample A (the painting fixed behind the page) was not chosen
-- LIVE ON ALL PAGES since 17 Nov 2026 (owner): the new glass look (glass boxes on every page; soft pink / navy colour shapes behind the page only on pages WITHOUT their own photo) is live on every page; the other pages get it from one shared layer at the end of assets/css/oweili.css (the home page keeps its own copy in index.php). RULE: any new page must use the same look
-- PAGE PHOTOS ARE FULL-PAGE BACKGROUNDS AGAIN (owner's decision, 17 Nov 2026): each page that has its own studio photo shows it as the full-page background, exactly as before 17 Nov (same photo, position and size; on phones the whole photo on top fading into its colour), with the glass boxes on top (less see-through there: 92% white in light mode, 88% navy in dark mode, so text stays easy to read). RULE: never put these photos back in a box. The colour shapes are only on pages without a photo
-- GLASS + BENTO LIVE ON ALL PAGES since 18 Nov 2026 (owner): each page's photo is the full-page background, boxes are 40% see-through glass with a strong blur, and each page's parts sit in Bento boxes of different sizes. RULE: any new page must use the same style
-- Done so far: the home page only (index.php). Soft, large brand colour shapes (pink #DB8084, navy #23314A, grey-blue #8FA1B1; .ow-blobs, fixed behind the whole page, a very slow drift on laptops only, none with reduced motion). Every box is frosted glass (.gl: see-through, backdrop blur 22px, 10px on phones, thin light edge, soft shadow, a solid fallback without blur support or with reduced transparency). Bento grid (.bento: 4 columns on laptops, 2 on tablets and phones): the big box (badge, headline, the two lines, Explore Gallery and Join as Artist; on phones the buttons straight under the headline), the painting video in its own clear box (same files, still frame first), "Artist of the week" (only when picked; the artwork photo large, whole and never blurred), the three trust points, and six NEW section boxes with an icon and the top menu's names: Gallery, Art Styles, Art Map (وجهات), Art Institutes (only while it is in the menu), Art Events, Art Education. Boxes take two places where needed so every row is full
-- Checked: nothing lost against the live home page (every text, link, button, photo, the video, the menu and the hidden Google tags; only the six section boxes and their icons are new), contrast measured on the real pixels behind every text and button (light and dark), 16 screen sizes from 320 to 1920 px in English and Arabic (nothing cut off, no sideways scroll, "Explore Gallery" on the first phone screen), Arabic right to left. "QR" stays with the word before it; the artist name in Arabic uses owBiName
-- Files: index.php. Tables: site_settings, users, artworks (read, as before)
+### New look: the calm style (19 Nov 2026, owner) — replaces the glass + Bento look of 16 to 18 Nov 2026
+- OWNER'S DECISION: the whole site has one CALM, elegant style. The glass boxes, the Bento grids and the soft colour shapes are gone. RULE: any new page must use this style
+- Hero at the top of every public page: the page's own photo (the same photos as before, studio_lib.php) fills the full width and most of the first screen (780 px tall on laptops and PCs, about 70% of the screen on iPads, 680 px on phones), under a warm soft dark layer (linear-gradient(180deg, rgba(40,28,22,.55) 0%, rgba(40,28,22,.45) 55%, rgba(40,28,22,.60) 100%)). No boxes in the hero: the page's title part sits straight on the photo, centred, in white: the big title in Amiri bold (about 104 px on laptops, 68 px on phones), the short paragraph (about 21 px), the page's own buttons (the pink one stays pink, the others become white outlines). The home page uses the painting video as its hero instead of a photo
+- The top menu is see-through over the hero with white links (the current page underlined) and turns solid off-white once the page scrolls (a small script at the end of nav.php adds ow-scrolled and makes the photo layer exactly as tall as the title part). Phones and iPads keep the ☰ menu button
+- Under the hero: warm off-white #F6F1EB (dark mode: Oweili navy #1A2538, cards #23314A), clean simple white cards (16 px corners, a thin line, a soft shadow) with a lot of space between them. Text font IBM Plex Sans Arabic (also for English), titles in Amiri (both kept on our own server in assets/fonts/, SIL Open Font Licence: OFL-amiri.txt, OFL-ibmplexarabic.txt). Main button: Oweili pink #E2A29C with dark text #2B1F1C
+- Gallery: one slim white search bar (about half a laptop screen wide, one line, rounded, soft shadow) overlapping the bottom of the hero, with one "Filter" / «تصفية» button; Topic, Status and Sort moved into the filter panel with every other filter (same filters, same values, same web addresses). Art Map, Art Styles and Art Institutes: their filter rows sit in one slim white rounded bar overlapping the hero
+- Empty states: calm, centred, a lot of space, the title in Amiri. Footer: simple, a thin top line
+- Home page (index.php): the painting video as the hero (still frame first; alone on slow connections, Data Saver or reduced motion); the badge, headline, two lines, Explore Gallery and Join as Artist and the three trust points (one small line) on it; under it Artist of the week (only when picked; the artwork photo whole) and a simple row of links to the six sections (the same links the Bento boxes had)
+- Dashboards and admin pages (artist, collector, institute, museum, sub-admin, admin): no photo, the same colours and fonts, a small calm header (titles in Amiri), clean cards; their layouts are the practical ones they had before the glass look
+- Terms, Privacy, About: after the hero, a narrow reading column (760 px) with large line spacing (18 px text, line height 1.95)
+- The certificate and its printed label are left exactly as they were (body.cert-page / body.label-page are left out of every calm rule)
+- Code: one calm layer at the end of assets/css/oweili.css (it replaces the old photo-page rules and the glass layer); index.php has its own small block for the video hero and the row of links; assets/css/bento.css was removed; the Gallery's filter button has a visible "Filter" word (marketplace.php)
 
 ### Fixes from the UI review of 16 Nov 2026 (owner, same day)
 - Join as an art institute (register_institute.php): the hidden robot-trap box is hidden the safe way (1 px, clipped) instead of 9,999 px to the left, which made the Arabic page about 11,000 px wide (blank on iPhones, a long sideways scroll on laptops). Never hide a field with a big left offset: on Arabic pages it widens the page
@@ -1089,11 +1093,11 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 
 ## Design System
 - Style: Luxury white minimal
-- Background: one real Pexels video on the homepage (blue on computers, pink on phones), WIDE studio photos only behind the other pages (cover, sized to the screen, centre kept in view on phones); no veil, text on small frosted-glass cards (6 Nov 2026)
+- Background: the calm style (19 Nov 2026, see Features): the painting video (home) or the page's own photo as the hero at the top, then warm off-white #F6F1EB (dark mode Oweili navy) with clean white cards
 - Primary color: #DB8084 (warm pink)
 - Accent color: #23314A (deep navy)
 - Dark mode: the sun / moon button in the menu; before a choice it follows the visitor's device (see "Light / dark mode button" under Features)
-- Font: DM Sans (English) + Tajawal (Arabic), from Google Fonts — loaded once in oweili.css (see rule 30)
+- Font: since 19 Nov 2026 IBM Plex Sans Arabic for text (Arabic and English) and Amiri bold for titles, kept on our own server in assets/fonts/ (DM Sans and Tajawal are still used by the certificate)
 - Cards: border-radius 16px, white, 1px border, soft shadow, 24px padding
 - Buttons: 8px corners (not pill), 48px tall, bold 14px uppercase. Chips, tags and badges stay rounded
 - Navbar: fixed top, 64px, frosted glass, dropdown menus, pink underline on the current page

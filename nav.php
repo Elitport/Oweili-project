@@ -225,3 +225,23 @@ if (!function_exists('owLogoMark')) {
   setLabel(false);
 })();
 </script>
+<script>
+/* Calm style (owner, 19 Nov 2026): the menu is see-through over the page's photo and solid once the page scrolls;
+   the photo layer is exactly as tall as the page's title part (it starts at the top of the page) */
+(function(){
+  var h = document.documentElement;
+  var MAIN = 'main.nf > .card, .auth-card > .auth-head, .wrap > .head, main.vf > .vf-head, main.legal > .lg-head, .art-card > .art-hd, .dash-wrap > .profile-head, .d-wrap > .d-head, .main-content > .page-header, #pg > .page-header';
+  function hero(){
+    if (!document.querySelector('body > .ow-backdrop')) return null;
+    return document.querySelector(MAIN) || document.querySelector('.d-wrap > .ap-crumbs');
+  }
+  function fit(){ var el = hero(); if (!el) return; var r = el.getBoundingClientRect(); h.style.setProperty('--hero-real', Math.ceil(r.bottom + window.scrollY) + 'px'); }
+  function sc(){ h.classList.toggle('ow-scrolled', window.scrollY > 24); }
+  sc(); fit();
+  window.addEventListener('scroll', sc, { passive: true });
+  window.addEventListener('resize', fit);
+  window.addEventListener('load', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  document.addEventListener('DOMContentLoaded', function(){ fit(); var el = hero(); if (el && window.ResizeObserver) new ResizeObserver(fit).observe(el); });
+})();
+</script>

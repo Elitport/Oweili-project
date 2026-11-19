@@ -215,7 +215,6 @@ foreach ($modalArtworks as $aw) {
   <?php include __DIR__ . '/theme_head.php'; ?>
   <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
   <link rel="stylesheet" href="<?= owAsset('assets/css/proof.css') ?>">
-  <link rel="stylesheet" href="<?= owAsset('assets/css/bento.css') ?>">
   <style>
     /* Gallery (marketplace.php) layout only — colors, type sizes and buttons come from oweili.css */
     .main-content { position: relative; z-index: 10; width:100%; max-width: 1200px; margin: 0 auto; padding: calc(var(--nav-h) + var(--space-xl)) var(--space-lg) var(--space-2xl); }
@@ -607,7 +606,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
         <label class="mb-seg mb-sort"><span class="mb-l"><?= $ar ? 'الترتيب' : 'Sort' ?></span>
           <select id="mpSort" name="sort"><?php foreach ($sortOpts as $ok => $ol): ?><option value="<?= $ok ?>"<?= $sort === $ok ? ' selected' : '' ?>><?= $ol[$ar ? 1 : 0] ?></option><?php endforeach; ?></select></label>
         <noscript><button type="submit" class="mb-noscript btn btn-secondary btn-sm"><?= $ar ? 'عرض' : 'Show' ?></button></noscript>
-        <button type="button" class="mb-filt" id="mpFiltBtn" aria-controls="mpPanel" aria-expanded="false" aria-label="<?= $ar ? 'تصفية أدق' : 'More filters' ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><?php if ($filtN): ?><span class="mp-n"><?= $filtN ?></span><?php endif; ?></button>
+        <button type="button" class="mb-filt" id="mpFiltBtn" aria-controls="mpPanel" aria-expanded="false" aria-label="<?= $ar ? 'تصفية أدق' : 'More filters' ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span class="mb-flabel"><?= $ar ? 'تصفية' : 'Filter' ?></span><?php if ($filtN): ?><span class="mp-n"><?= $filtN ?></span><?php endif; ?></button>
       </form>
     </div>
     <?php if ($mpChips): ?>

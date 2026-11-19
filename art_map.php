@@ -148,7 +148,6 @@ $placeCard = function (array $p) use ($PIN): string {
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/discover.css') ?>">
-<link rel="stylesheet" href="<?= owAsset('assets/css/bento.css') ?>">
 <script>document.documentElement.classList.add('js')</script><script defer src="<?= owAsset('assets/js/discover.js') ?>"></script>
 <?php if ($mapPins): /* the free OpenStreetMap map (owner, 14 Nov 2026) */ ?><link rel="stylesheet" href="<?= owAsset('assets/vendor/leaflet/leaflet.css') ?>"><script defer src="<?= owAsset('assets/vendor/leaflet/leaflet.js') ?>"></script><script defer src="<?= owAsset('assets/js/art_map_pins.js') ?>"></script><?php endif; ?>
 <style>
