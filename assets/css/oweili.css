@@ -639,14 +639,15 @@ html body:not(.cert-page):not(.label-page) .ow-footer :is(.ow-footer-in, .ow-foo
 /* short pages: the footer at the bottom of the screen */
 body:not(.cert-page):not(.label-page):has(> .ow-footer) { display: flex; flex-direction: column; min-height: 100vh; min-height: 100svh; }
 body:not(.cert-page):not(.label-page):has(> .ow-footer) > :is(main, .page, .auth-wrap, .wrap, .d-wrap) { flex: 1 0 auto; }
+body:not(.cert-page):not(.label-page):has(> .ow-footer) > * { min-width: 0; max-width: 100%; box-sizing: border-box; }
 
 /* ---- the top menu: solid and calm; see-through with white links over the hero ---- */
 html body:not(.cert-page):not(.label-page) .topnav { background: rgba(246,241,235,0.96); border-bottom: 1px solid var(--calm-line); box-shadow: none; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .25s ease, border-color .25s ease; }
-html.dark-mode body:not(.cert-page):not(.label-page) .topnav { background: rgba(26,37,56,0.96); }
+html.dark-mode:is(.ow-scrolled, :not(:has(> body > .ow-backdrop, .c-hero))) body:not(.cert-page):not(.label-page) .topnav { background: rgba(26,37,56,0.96); }
 html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav { background: transparent; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
-html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav :is(.nav-item > a, .nav-word, .nav-logo) { color: #fff; }
+html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav :is(.nav-item > a, .nav-word, .nav-logo) { color: #fff; text-shadow: 0 1px 3px rgba(20,12,8,0.55); }
 html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav .nav-item > a:hover { color: #fff; opacity: .85; }
-html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav :is(.nav-btn:not(.primary), button.ow-ctl.ow-ctl, .mnav-btn) { background: transparent; border-color: rgba(255,255,255,0.85); color: #fff; }
+html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav :is(.nav-btn:not(.primary), button.ow-ctl.ow-ctl, .mnav-btn) { background: rgba(20,12,8,0.18); text-shadow: 0 1px 3px rgba(20,12,8,0.55); border-color: rgba(255,255,255,0.85); color: #fff; }
 html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav :is(.nav-btn:not(.primary), button.ow-ctl.ow-ctl, .mnav-btn):hover { background: rgba(255,255,255,0.16); color: #fff; }
 html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav .nav-item > a.active { border-bottom-color: #fff; }
 html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav .mnav-btn svg { stroke: #fff; }
@@ -667,7 +668,7 @@ html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-
   padding: calc(var(--nav-h) + 48px) 8px 88px !important; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
   background: none !important; border: 0 !important; border-radius: 0; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; color: #fff; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) :is(h1, h2, h3, p, span:not(.btn *), label, small, li, div, b, strong, a:not(.btn)) {
-  color: #fff !important; text-shadow: 0 1px 14px rgba(0,0,0,0.28); }
+  color: #fff !important; text-shadow: 0 1px 3px rgba(20,12,8,0.5), 0 1px 14px rgba(0,0,0,0.28); }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) h1 {
   font-family: var(--calm-serif); font-weight: 700; font-size: clamp(56px, 7.6vw, 104px); line-height: 1.25; letter-spacing: 0; margin: 0 0 18px; max-width: 18ch; text-wrap: balance; overflow-wrap: normal; word-break: keep-all; hyphens: none; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) > p,
@@ -680,7 +681,7 @@ html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-head, .pag
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-head, .page-header, .lg-head, .vf-head, .auth-head, .wrap > .head, main.nf > .card, .art-hd, .profile-head) .btn { min-height: 48px; }
 /* small parts that sit above the title on the photo */
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs { position: relative; z-index: 1; background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; margin: 0 auto !important; padding: calc(var(--nav-h) + 24px) 0 0 !important; width: fit-content; }
-html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs :is(a, span) { color: #fff !important; text-shadow: 0 1px 10px rgba(0,0,0,0.3); }
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs :is(a, span) { color: #fff !important; text-shadow: 0 1px 3px rgba(20,12,8,0.5), 0 1px 10px rgba(0,0,0,0.3); }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs + .d-head { min-height: calc(var(--hero-h) - var(--nav-h) - 58px); padding-top: 24px !important; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap:not(:has(> .d-head)) > .ap-crumbs { min-height: calc(var(--hero-h) * 0.62); display: flex; align-items: center; padding-bottom: 120px !important; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap:not(:has(> .d-head)) > .ap-crumbs + .card { margin-top: -96px !important; position: relative; z-index: 2; }
@@ -720,7 +721,7 @@ html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .art-card:has(> .
 /* the home page: the painting video fills the hero */
 html body.s-b .c-home .c-hero { min-height: var(--hero-h); box-sizing: border-box; display: flex; align-items: center; justify-content: center; text-align: center; padding: calc(var(--nav-h) + 48px) 20px 80px; color: #fff; }
 html body.s-b .c-home .c-hero-in { position: relative; z-index: 1; max-width: 980px; display: flex; flex-direction: column; align-items: center; }
-html body.s-b .c-home .c-hero :is(h1, p, span:not(.btn *), li) { color: #fff; text-shadow: 0 1px 14px rgba(0,0,0,0.28); }
+html body.s-b .c-home .c-hero :is(h1, p, span:not(.btn *), li) { color: #fff; text-shadow: 0 1px 3px rgba(20,12,8,0.5), 0 1px 14px rgba(0,0,0,0.28); }
 html body.s-b .c-home .c-hero h1 { font-family: var(--calm-serif); font-weight: 700; font-size: clamp(56px, 7.6vw, 104px); line-height: 1.25; margin: 0 0 18px; max-width: 18ch; text-wrap: balance; word-break: keep-all; }
 html body.s-b .c-home .hero-badge { display: inline-block; font-size: 15px; font-weight: 500; letter-spacing: .04em; margin-bottom: 18px; color: #fff; }
 html body.s-b .c-home .c-hero .btn-secondary { background: transparent !important; border: 1px solid rgba(255,255,255,0.9) !important; color: #fff !important; }
@@ -820,4 +821,8 @@ html.dark-mode body:not(.cert-page):not(.label-page) .adm-bar { background: rgba
   html body:not(.cert-page):not(.label-page) :is(.gallery-empty, .d-empty, .empty-state, .ci-none, .card.empty) { padding: 44px 22px !important; }
   html body:not(.cert-page):not(.label-page) :is(.art-grid, .a-grid, .i-grid, .c-grid) { gap: 16px; }
 }
+/* very small phones: admin rows with buttons wrap (the new text font is a little wider) */
+@media (max-width: 420px) { html body:not(.cert-page):not(.label-page) .wc-top { flex-wrap: wrap; } html body:not(.cert-page):not(.label-page) .rej-box { max-width: 100%; } html body:not(.cert-page):not(.label-page) .rej-box > summary { max-width: 100%; white-space: normal; } }
 @media (prefers-reduced-motion: reduce) { html body:not(.cert-page):not(.label-page) .topnav { transition: none; } }
+/* dark mode: links inside the light-blue notes stay readable on the calm navy cards */
+html.dark-mode body:not(.cert-page):not(.label-page) .w-wait a { color: var(--color-dark); text-decoration: underline; }
