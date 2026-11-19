@@ -826,3 +826,12 @@ html.dark-mode body:not(.cert-page):not(.label-page) .adm-bar { background: rgba
 @media (prefers-reduced-motion: reduce) { html body:not(.cert-page):not(.label-page) .topnav { transition: none; } }
 /* dark mode: links inside the light-blue notes stay readable on the calm navy cards */
 html.dark-mode body:not(.cert-page):not(.label-page) .w-wait a { color: var(--color-dark); text-decoration: underline; }
+/* tap targets at least 44 px (owner, 19 Nov 2026): same look, only the size grows */
+html body:not(.cert-page):not(.label-page) { --btn-h-sm: 44px; }
+html body:not(.cert-page):not(.label-page) :is(.nav-btn, .pill-f) { min-height: 44px; }
+html body:not(.cert-page):not(.label-page) :is(button.ow-ctl.ow-ctl, .mb-go, .fav-btn, .m-search > button, .pw-toggle) { min-width: 44px; min-height: 44px; }
+html body:not(.cert-page):not(.label-page) .pw-toggle { display: inline-flex; align-items: center; justify-content: center; }
+/* readable labels (owner, 19 Nov 2026): same look, only the text colour is a little stronger */
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head .avatar.avatar:not(#ow-none) { color: #2B1F1C !important; text-shadow: none; }
+html.dark-mode body:not(.cert-page):not(.label-page) :is(.human-badge, .verified-badge) { color: #A3B3C2; }
+html body:not(.cert-page):not(.label-page) .leaflet-control-attribution a { color: #005f86; }
