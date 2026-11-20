@@ -142,18 +142,23 @@ $owSecs[] = ['articles_list.php?type=art_education', 'Art Education', 'التث�
       <span class="hero-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span>
       <h1><?= owBi('Everything here started with real hands', 'كل ما تراه هنا، بدأ بيدٍ حقيقية') ?></h1>
       <p class="hero-what"><?= owBi('Oweili is an online gallery where you buy original handmade paintings straight from real artists.', 'أويلي معرض إلكتروني تقتني فيه لوحات أصلية مرسومة باليد، مباشرة من فنانين حقيقيين.') ?></p>
+<?php ob_start(); ?>
       <p class="hero-sub"><?= owBi('Every piece here was made by real hands. And you can see how.', 'كل قطعة هنا صنعتها يد حقيقية. وتستطيع أن ترى كيف.') ?></p>
+<?php $owHeroSub = ob_get_clean(); echo $owHeroSub; ?>
       <div class="hero-btns">
         <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
         <a class="btn btn-secondary" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
       </div>
+<?php ob_start(); ?>
       <ul class="c-trust">
         <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="14" width="5" height="7" rx="1"/><rect x="9.5" y="9" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="18" rx="1"/></svg></span><p><?= owBi('Proof of process: 25%, 50%, 100%', 'إثبات مراحل العمل: 25% و50% و100%') ?></p></li>
         <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h7v-4"/></svg></span><p><?= owBi("Certificate of authenticity with\u{00A0}QR", "شهادة أصالة برمز\u{00A0}QR") ?></p></li>
         <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l7.5 3v6c0 4.6-3.2 8.6-7.5 10-4.3-1.4-7.5-5.4-7.5-10v-6z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></span><p><?= owBi('Every artist reviewed', 'نراجع كل فنان') ?></p></li>
       </ul>
+<?php $owHeroTrust = ob_get_clean(); echo $owHeroTrust; /* the second line and the trust points: in the hero on iPads and laptops, just under it on phones (owner, 20 Nov 2026) */ ?>
     </div>
   </section>
+  <div class="c-under"><?= $owHeroSub . $owHeroTrust ?></div>
   <div class="c-below">
     <?php if ($aotw): $aImg = $aotw['art'] ? owImgSrc((string) $aotw['art']['image_url']) : ''; if ($aImg === '') $aImg = owImgSrc((string) ($aotw['profile_picture'] ?? '')); ?>
     <a class="card b-aotw" href="artist_dashboard.php?id=<?= (int) $aotw['id'] ?>">
