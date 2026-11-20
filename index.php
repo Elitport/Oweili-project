@@ -41,11 +41,15 @@ body { overflow-x: hidden; }
 /* ---- the hero: the painting video behind the centred text ---- */
 .c-home .c-hero { position: relative; isolation: isolate; overflow: hidden; }
 .c-home .c-hero .hero-bg { position: absolute; inset: 0; z-index: -2; overflow: hidden; background-color: #2B1F1C; }
-.hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 66% 50%; opacity: 0; transition: opacity 1.6s ease; }
+.hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 50%; opacity: 0; transition: opacity 1.6s ease; }
 .hero-bg video.on { opacity: 1; }
 .hero-still, .hero-still img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero-still img { object-fit: cover; object-position: 66% 50%; display: block; }
+.hero-still img { object-fit: cover; object-position: 40% 50%; display: block; }
+/* phones get their own upright cut of the video and still, with the brush and canvas in the middle (owner, 20 Nov 2026) */
+@media (max-width: 640px) { .hero-bg video, .hero-still img { object-position: 50% 50%; } }
 .c-home .c-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--calm-veil); }
+/* the home video since 20 Nov 2026 has a bright white canvas: the same warm dark layer, a little stronger, so every white word stays clear (owner) */
+.c-home .c-hero::after { background: linear-gradient(180deg, rgba(40,28,22,.60) 0%, rgba(40,28,22,.54) 55%, rgba(40,28,22,.64) 100%); }
 .c-home .hero-what { font-size: 21px; font-weight: 500; line-height: 1.6; max-width: 640px; margin: 0 auto 8px; color: #fff; }
 .c-home .hero-sub { font-size: 17px; line-height: 1.7; max-width: 560px; margin: 0 auto 30px; color: rgba(255,255,255,0.92); }
 .c-home .hero-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
@@ -107,12 +111,13 @@ body { overflow-x: hidden; }
 /* the painting: the still frame first (its tiny copy shows at once), then the looping video, behind the hero */
 ob_start(); ?>
 <div class="hero-bg" aria-hidden="true">
-  <style>.hero-bg{background:url(<?= OW_HERO_TINY['blue'] ?>) 66% 50% / cover no-repeat}</style>
+  <style>.hero-bg{background:url(<?= OW_HERO_TINY['paint'] ?>) 40% 50% / cover no-repeat}</style>
   <picture class="hero-still">
-    <source type="image/avif" srcset="<?= owAsset('assets/img/hero/hero-wide.avif') ?>"><source type="image/webp" srcset="<?= owAsset('assets/img/hero/hero-wide.webp') ?>">
-    <img src="<?= owAsset('assets/img/hero/hero-wide.jpg') ?>" alt="A hand painting white dots on a colourful canvas · يد ترسم نقاطاً بيضاء على لوحة ملونة" width="1280" height="720" fetchpriority="high" decoding="sync">
+    <source media="(max-width: 640px)" type="image/avif" srcset="<?= owAsset('assets/img/hero/hero-paint-phone.avif') ?>"><source media="(max-width: 640px)" type="image/webp" srcset="<?= owAsset('assets/img/hero/hero-paint-phone.webp') ?>"><source media="(max-width: 640px)" srcset="<?= owAsset('assets/img/hero/hero-paint-phone.jpg') ?>">
+    <source type="image/avif" srcset="<?= owAsset('assets/img/hero/hero-paint.avif') ?>"><source type="image/webp" srcset="<?= owAsset('assets/img/hero/hero-paint.webp') ?>">
+    <img src="<?= owAsset('assets/img/hero/hero-paint.jpg') ?>" alt="A hand painting with a brush on an abstract canvas · يد ترسم بالفرشاة على لوحة تجريدية" width="1280" height="720" fetchpriority="high" decoding="sync">
   </picture>
-  <video id="vid" class="bg-now" autoplay muted loop playsinline preload="none" data-src="<?= owAsset('assets/video/hero-wide.mp4') ?>"></video>
+  <video id="vid" class="bg-now" autoplay muted loop playsinline preload="none" data-src="<?= owAsset('assets/video/hero-paint.mp4') ?>" data-src-phone="<?= owAsset('assets/video/hero-paint-phone.mp4') ?>"></video>
 </div>
 <?php $owPainting = ob_get_clean();
 
