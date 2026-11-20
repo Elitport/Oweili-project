@@ -106,7 +106,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
 
 <?php if (!$a): ?>
 <main>
-  <div class="d-wrap">
+  <div class="d-wrap a-nf">
     <div class="card empty-state d-empty">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <h1 style="font-size:var(--fs-card);margin:0 0 var(--space-xs);"><?= owBi('We could not find this article', 'لم نجد هذا المقال') ?></h1>

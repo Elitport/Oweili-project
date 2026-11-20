@@ -583,7 +583,7 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
       (780 px on laptops and PCs, about 70% of the screen on iPads, about 680 px on phones), under a warm soft dark layer.
       The page's title part sits straight on it, centred, in white: a big title in Amiri, a short paragraph, its buttons.
    2. The top menu is see-through over the hero, white links, and turns solid once the page scrolls (nav.php sets ow-scrolled).
-   3. Under the hero: warm off-white (#F6F1EB; Oweili navy in dark mode), clean simple cards with space between them,
+   3. Under the hero: pure white (#FFFFFF since 20 Nov 2026, was warm off-white #F6F1EB; Oweili navy in dark mode), clean simple cards with space between them,
       IBM Plex Sans Arabic for the text, the main button in Oweili pink #E2A29C with dark text #2B1F1C.
    4. Search and filter rows: one slim white rounded bar overlapping the bottom of the hero. Empty states calm and centred.
    5. Dashboards and admin pages: no photo, a small calm header, clean cards. Terms, Privacy, About: a narrow reading column.
@@ -611,14 +611,14 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
 html body:not(.cert-page):not(.label-page) {
   --font-sans: var(--calm-sans); --font-en: var(--calm-sans); --font-ar: var(--calm-sans);
   --color-primary: #E2A29C; --color-primary-dark: #D48C85; --color-on-primary: #2B1F1C; --rgb-primary: 226,162,156;
-  --calm-bg: #F6F1EB; --calm-card: #FFFFFF; --calm-line: rgba(43,31,28,0.10);
+  --calm-bg: #FFFFFF; --calm-card: #FFFFFF; --calm-line: #ECECEC;
   --calm-shadow: 0 1px 2px rgba(43,31,28,0.04), 0 10px 30px rgba(43,31,28,0.06);
   --color-bg: var(--calm-bg); --color-card: var(--calm-card); --color-surface: var(--calm-card);
   font-family: var(--calm-sans); background: var(--calm-bg) !important; }
 html.dark-mode body:not(.cert-page):not(.label-page) {
   --calm-bg: #1A2538; --calm-card: #23314A; --calm-line: rgba(255,255,255,0.10);
   --calm-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 10px 30px rgba(0,0,0,0.25); }
-html:has(> body:not(.cert-page):not(.label-page)) { background: #F6F1EB !important; }
+html:has(> body:not(.cert-page):not(.label-page)) { background: #FFFFFF !important; }
 html.dark-mode:has(> body:not(.cert-page):not(.label-page)) { background: #1A2538 !important; }
 html body:not(.cert-page):not(.label-page) :is(input, select, textarea, button) { font-family: var(--calm-sans); }
 html body:not(.cert-page):not(.label-page) :is(h1, .aotw-n) { font-family: var(--calm-serif); font-weight: 700; letter-spacing: 0; }
@@ -642,7 +642,7 @@ body:not(.cert-page):not(.label-page):has(> .ow-footer) > :is(main, .page, .auth
 body:not(.cert-page):not(.label-page):has(> .ow-footer) > * { min-width: 0; max-width: 100%; box-sizing: border-box; }
 
 /* ---- the top menu: solid and calm; see-through with white links over the hero ---- */
-html body:not(.cert-page):not(.label-page) .topnav { background: rgba(246,241,235,0.96); border-bottom: 1px solid var(--calm-line); box-shadow: none; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .25s ease, border-color .25s ease; }
+html body:not(.cert-page):not(.label-page) .topnav { background: rgba(255,255,255,0.96); border-bottom: 1px solid var(--calm-line); box-shadow: none; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .25s ease, border-color .25s ease; }
 html.dark-mode:is(.ow-scrolled, :not(:has(> body > .ow-backdrop, .c-hero))) body:not(.cert-page):not(.label-page) .topnav { background: rgba(26,37,56,0.96); }
 html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav { background: transparent; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 html:not(.ow-scrolled):has(> body > .ow-backdrop, .c-hero) body .topnav :is(.nav-item > a, .nav-word, .nav-logo) { color: #fff; text-shadow: 0 1px 3px rgba(20,12,8,0.55); }
@@ -800,7 +800,7 @@ html body:not(.cert-page):not(.label-page):not(:has(> .ow-backdrop)) :is(.d-head
 html body:not(.cert-page):not(.label-page):not(:has(> .ow-backdrop)) :is(.dash, .wrap, .page, .bk, .art-card) > h1,
 html body:not(.cert-page):not(.label-page):not(:has(> .ow-backdrop)) :is(.top, .head, .art-hd, .gc, .sig-card) h1 { font-family: var(--calm-serif); font-weight: 700; line-height: 1.35; }
 html body:not(.cert-page):not(.label-page) .staff-page, html body:not(.cert-page):not(.label-page) .adm-bar { --font-sans: var(--calm-sans); }
-html body:not(.cert-page):not(.label-page) .adm-bar { background: rgba(246,241,235,0.96) !important; border-bottom: 1px solid var(--calm-line) !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
+html body:not(.cert-page):not(.label-page) .adm-bar { background: rgba(255,255,255,0.96) !important; border-bottom: 1px solid var(--calm-line) !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
 html.dark-mode body:not(.cert-page):not(.label-page) .adm-bar { background: rgba(26,37,56,0.96) !important; }
 
 /* ---- iPads and phones ---- */
@@ -908,3 +908,9 @@ html.dark-mode body:not(.cert-page):not(.label-page) .mp-bar .mb-q input::placeh
   html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head .avatar { width: 84px; height: 84px; font-size: 32px; }  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head .stats-row { gap: 8px 20px; }
 }
 
+/* light mode on white (owner, 20 Nov 2026): the Filter panel keeps a thin light grey edge */
+html:not(.dark-mode) body:not(.cert-page):not(.label-page) .mp-panel { border: 1px solid #ECECEC; }
+/* "Article not found" (owner, 20 Nov 2026): the message card sits in the middle of the photo, below the menu; the footer starts under the photo, on the plain background */
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap.a-nf:not(#ow-none) { box-sizing: border-box; min-height: var(--hero-h); padding: calc(var(--nav-h) + 24px) 16px 48px !important; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap.a-nf > .d-empty { margin: 0 auto !important; width: 100%; }
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop .d-wrap.a-nf) .ow-footer, html body:not(.cert-page):not(.label-page):has(.d-wrap.a-nf) .ow-footer { margin-top: 0; }
