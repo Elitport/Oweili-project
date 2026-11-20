@@ -75,7 +75,7 @@ if (!function_exists('owLogoMark')) {
     <div class="nav-item">
       <a href="support.php" id="nav-support-link"<?= navAct('support') ?>><span id="nav-support-label">Support</span><svg class="chevron" viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></a>
       <div class="dropdown" id="dd-support">
-        <a href="mailto:<?= e(owContactEmail()) ?>"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span id="dd-sp1">Contact Us</span></a>
+        <a href="support.php#sp-form"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span id="dd-sp1">Contact Us</span></a>
         <a href="support.php#how"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-2.9 2.6-2.9 4"/><path d="M12 17.5h.01"/></svg><span id="dd-sp2">How It Works</span></a>
         <a href="terms.php"><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span id="dd-sp3">Terms of Use</span></a>
       </div>
@@ -237,11 +237,25 @@ if (!function_exists('owLogoMark')) {
   }
   function fit(){ var el = hero(); if (!el) return; var r = el.getBoundingClientRect(); h.style.setProperty('--hero-real', Math.ceil(r.bottom + window.scrollY) + 'px'); }
   function sc(){ h.classList.toggle('ow-scrolled', window.scrollY > 24); }
-  sc(); fit();
+  /* a small "scroll down" arrow at the bottom of every hero (owner, 20 Nov 2026) */
+  function arrow(){
+    var el = hero() || document.querySelector('.c-home .c-hero'); if (!el || el.querySelector(':scope > .ow-down')) return;
+    var ar = (h.getAttribute('lang') || '').indexOf('ar') === 0, b = document.createElement('button');
+    b.type = 'button'; b.className = 'ow-down'; b.setAttribute('aria-label', ar ? 'انزل إلى المحتوى' : 'Scroll down to the content');
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    b.addEventListener('click', function(){
+      var nav = document.querySelector('.topnav'), nh = nav ? nav.getBoundingClientRect().height : 64;
+      var top = el.getBoundingClientRect().bottom + window.scrollY - nh - 48;
+      var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: Math.max(0, top), behavior: rm ? 'auto' : 'smooth' });
+    });
+    el.appendChild(b);
+  }
+  sc(); fit(); arrow();
   window.addEventListener('scroll', sc, { passive: true });
   window.addEventListener('resize', fit);
   window.addEventListener('load', fit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-  document.addEventListener('DOMContentLoaded', function(){ fit(); var el = hero(); if (el && window.ResizeObserver) new ResizeObserver(fit).observe(el); });
+  document.addEventListener('DOMContentLoaded', function(){ arrow(); fit(); var el = hero(); if (el && window.ResizeObserver) new ResizeObserver(fit).observe(el); });
 })();
 </script>

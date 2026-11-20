@@ -282,7 +282,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       <p><?= owBi('Museums, art galleries and art institutes across Saudi Arabia, in one place.', 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد.') ?></p>
     </header>
 
-    <div class="m-bar">
+    <div class="m-bar" id="results">
     <nav class="m-tabs" aria-label="Art Map · خريطة الفن">
       <a class="m-tab" href="<?= e($q('all', $city)) ?>"<?= $tab === 'all' ? ' aria-current="page"' : '' ?>><?= owBi('All', 'الكل') ?></a>
       <a class="m-tab" href="<?= e($q('museums', $city)) ?>"<?= $tab === 'museums' ? ' aria-current="page"' : '' ?>><?= owBi('Museums', 'المتاحف') ?></a>
@@ -290,7 +290,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       <a class="m-tab" href="<?= e($q('institutes', $city)) ?>"<?= $tab === 'institutes' ? ' aria-current="page"' : '' ?>><?= owBi('Institutes', 'المعاهد') ?></a>
     </nav>
 
-    <form class="filter" method="get" action="art_map.php">
+    <form class="filter" method="get" action="art_map.php#results">
       <?php if ($tab !== 'all'): ?><input type="hidden" name="tab" value="<?= e($tab) ?>"><?php endif; ?>
       <label for="region"><?= owBi('Region', 'المنطقة') ?></label>
       <select class="input" id="region" name="region" onchange="this.form.submit()">
@@ -536,6 +536,16 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
   </div>
 </main>
 
+<?php /* back to top, phones and iPads (owner, 20 Nov 2026) */ ?>
+<button type="button" class="m-top" id="m-top" hidden aria-label="<?= e(owIsAr() ? 'إلى الأعلى' : 'Back to top') ?>" title="<?= e(owIsAr() ? 'إلى الأعلى' : 'Back to top') ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
+<script>
+(function(){
+  var b = document.getElementById('m-top'); if (!b) return;
+  function upd(){ b.hidden = !(window.scrollY > window.innerHeight * 1.6 && window.innerWidth <= 1180); }
+  b.addEventListener('click', function(){ var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches; window.scrollTo({ top: 0, behavior: rm ? 'auto' : 'smooth' }); });
+  window.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); upd();
+})();
+</script>
 <?php include __DIR__ . '/footer.php'; ?>
 </body>
 </html>

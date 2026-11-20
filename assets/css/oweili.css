@@ -604,10 +604,10 @@ button.ow-ctl.ow-ctl:active { transform: translateY(1px); }
 @font-face{font-family:'IBM Plex Sans Arabic';font-style:normal;font-weight:700;font-display:swap;src:url('../fonts/plexar-700-arabic.woff2') format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;}
 @font-face{font-family:'IBM Plex Sans Arabic';font-style:normal;font-weight:700;font-display:swap;src:url('../fonts/plexar-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
 @font-face{font-family:'IBM Plex Sans Arabic';font-style:normal;font-weight:700;font-display:swap;src:url('../fonts/plexar-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
-:root { --hero-h: 780px; --calm-veil: linear-gradient(180deg, rgba(40,28,22,.55) 0%, rgba(40,28,22,.45) 55%, rgba(40,28,22,.60) 100%);
+:root { --hero-h: 100vh; --calm-veil: linear-gradient(180deg, rgba(40,28,22,.55) 0%, rgba(40,28,22,.45) 55%, rgba(40,28,22,.60) 100%);
   --calm-serif: 'Amiri', 'Times New Roman', serif; --calm-sans: 'IBM Plex Sans Arabic', system-ui, -apple-system, 'Segoe UI', sans-serif; }
-@media (min-width: 641px) and (max-width: 1180px) { :root { --hero-h: max(520px, 70vh); } }
-@media (max-width: 640px) { :root { --hero-h: 680px; } }
+/* the hero is exactly one screen tall on every device (owner, 20 Nov 2026); phones use the visible height, without the browser bars */
+@supports (height: 100svh) { :root { --hero-h: 100svh; } }
 html body:not(.cert-page):not(.label-page) {
   --font-sans: var(--calm-sans); --font-en: var(--calm-sans); --font-ar: var(--calm-sans);
   --color-primary: #E2A29C; --color-primary-dark: #D48C85; --color-on-primary: #2B1F1C; --rgb-primary: 226,162,156;
@@ -665,15 +665,15 @@ html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) main.nf { display
 /* the title part itself: no box, straight on the photo, centred, white */
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head):not(.x) {
   position: relative; z-index: 1; box-sizing: border-box; min-height: var(--hero-h); width: auto; max-width: 980px; margin: 0 auto !important;
-  padding: calc(var(--nav-h) + 48px) 8px 88px !important; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  padding: calc(var(--nav-h) + clamp(12px, 3vh, 40px)) 8px 96px !important; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
   background: none !important; border: 0 !important; border-radius: 0; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; color: #fff; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) :is(h1, h2, h3, p, span:not(.btn *), label, small, li, div, b, strong, a:not(.btn)) {
   color: #fff !important; text-shadow: 0 1px 3px rgba(20,12,8,0.5), 0 1px 14px rgba(0,0,0,0.28); }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) h1 {
-  font-family: var(--calm-serif); font-weight: 700; font-size: clamp(56px, 7.6vw, 104px); line-height: 1.25; letter-spacing: 0; margin: 0 0 18px; max-width: 18ch; text-wrap: balance; overflow-wrap: normal; word-break: keep-all; hyphens: none; }
+  font-family: var(--calm-serif); font-weight: 700; font-size: clamp(40px, min(7.6vw, 11vh), 104px); line-height: 1.22; letter-spacing: 0; margin: 0 0 clamp(8px, 1.6vh, 18px); max-width: 18ch; text-wrap: balance; overflow-wrap: normal; word-break: keep-all; hyphens: none; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) > p,
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .main-content > .page-header > p, html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) main.vf > .vf-head > .lead {
-  font-size: 21px; line-height: 1.7; max-width: 640px; margin: 0 auto 10px; text-align: center; font-weight: 400; }
+  font-size: clamp(16px, 2.6vh, 21px); line-height: 1.65; max-width: 640px; margin: 0 auto 10px; text-align: center; font-weight: 400; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .main-content > .page-header > .ph-note { font-size: 15px; font-weight: 600; margin: 8px auto 0 !important; }
 /* buttons on the photo: the pink button stays pink; the others are white outlines */
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-head, .page-header, .lg-head, .vf-head, .auth-head, .wrap > .head, main.nf > .card, .art-hd, .profile-head) :is(.btn-secondary, .btn-ghost, .btn-dark) { background: transparent !important; border: 1px solid rgba(255,255,255,0.9) !important; color: #fff !important; }
@@ -682,12 +682,12 @@ html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-head, .pag
 /* small parts that sit above the title on the photo */
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs { position: relative; z-index: 1; background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; margin: 0 auto !important; padding: calc(var(--nav-h) + 24px) 0 0 !important; width: fit-content; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs :is(a, span) { color: #fff !important; text-shadow: 0 1px 3px rgba(20,12,8,0.5), 0 1px 10px rgba(0,0,0,0.3); }
-html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs + .d-head { min-height: calc(var(--hero-h) - var(--nav-h) - 58px); padding-top: 24px !important; }
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs + .d-head:not(#ow-none):not(.x) { min-height: calc(var(--hero-h) - var(--nav-h) - 46px); padding-top: 12px !important; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap:not(:has(> .d-head)) > .ap-crumbs { min-height: calc(var(--hero-h) * 0.62); display: flex; align-items: center; padding-bottom: 120px !important; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap:not(:has(> .d-head)) > .ap-crumbs + .card { margin-top: -96px !important; position: relative; z-index: 2; }
-html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .section-title:first-child { position: relative; z-index: 1; margin: 0 auto !important; padding: calc(var(--nav-h) + 40px) 0 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; color: #fff !important; text-align: center; width: auto; }
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .section-title:first-child { position: relative; z-index: 1; margin: 0 auto !important; padding: calc(var(--nav-h) + 16px) 0 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; color: #fff !important; text-align: center; width: auto; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .section-title:first-child * { color: #fff !important; }
-html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .section-title:first-child + .profile-head { min-height: calc(var(--hero-h) - var(--nav-h) - 100px); padding-top: 24px !important; }
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .section-title:first-child + .profile-head:not(#ow-none):not(.x) { min-height: calc(var(--hero-h) - var(--nav-h) - 16px - var(--ow-st-h, 31px)); padding-top: 12px !important; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head { flex-direction: column; gap: 18px; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head .avatar { border: 3px solid rgba(255,255,255,0.85); }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head :is(.stat, .p-stats, .profile-stats) { justify-content: center; }
@@ -719,15 +719,15 @@ html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .art-card:has(> .
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .art-card:has(> .art-hd) > .art-hd > .art-type { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.6); }
 
 /* the home page: the painting video fills the hero */
-html body.s-b .c-home .c-hero { min-height: var(--hero-h); box-sizing: border-box; display: flex; align-items: center; justify-content: center; text-align: center; padding: calc(var(--nav-h) + 48px) 20px 80px; color: #fff; }
+html body.s-b .c-home .c-hero { position: relative; min-height: var(--hero-h); box-sizing: border-box; display: flex; align-items: center; justify-content: center; text-align: center; padding: calc(var(--nav-h) + clamp(12px, 3vh, 48px)) 20px 92px; color: #fff; }
 html body.s-b .c-home .c-hero-in { position: relative; z-index: 1; max-width: 980px; display: flex; flex-direction: column; align-items: center; }
 html body.s-b .c-home .c-hero :is(h1, p, span:not(.btn *), li) { color: #fff; text-shadow: 0 1px 3px rgba(20,12,8,0.5), 0 1px 14px rgba(0,0,0,0.28); }
-html body.s-b .c-home .c-hero h1 { font-family: var(--calm-serif); font-weight: 700; font-size: clamp(56px, 7.6vw, 104px); line-height: 1.25; margin: 0 0 18px; max-width: 18ch; text-wrap: balance; word-break: keep-all; }
+html body.s-b .c-home .c-hero h1 { font-family: var(--calm-serif); font-weight: 700; font-size: clamp(40px, min(7.6vw, 10vh), 104px); line-height: 1.22; margin: 0 0 clamp(8px, 1.6vh, 18px); max-width: 18ch; text-wrap: balance; word-break: keep-all; }
 html body.s-b .c-home .hero-badge { display: inline-block; font-size: 15px; font-weight: 500; letter-spacing: .04em; margin-bottom: 18px; color: #fff; }
 html body.s-b .c-home .c-hero .btn-secondary { background: transparent !important; border: 1px solid rgba(255,255,255,0.9) !important; color: #fff !important; }
 html body.s-b .c-home .c-hero .btn-secondary:hover { background: rgba(255,255,255,0.16) !important; }
-@media (max-width: 1180px) { html body.s-b .c-home .c-hero { padding: calc(var(--nav-h) + 32px) 16px 64px; } }
-@media (max-width: 640px) { html body.s-b .c-home .c-hero h1 { font-size: clamp(44px, 16vw, 68px); line-height: 1.3; max-width: 100%; } }
+@media (max-width: 1180px) { html body.s-b .c-home .c-hero { padding: calc(var(--nav-h) + clamp(12px, 2.5vh, 32px)) 16px 88px; } }
+@media (max-width: 640px) { html body.s-b .c-home .c-hero h1 { font-size: clamp(36px, min(16vw, 8.5vh), 68px); line-height: 1.3; max-width: 100%; } }
 
 /* ---- under the hero ---- */
 /* space after the title part */
@@ -805,12 +805,12 @@ html.dark-mode body:not(.cert-page):not(.label-page) .adm-bar { background: rgba
 
 /* ---- iPads and phones ---- */
 @media (max-width: 1180px) {
-  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head):not(.x) { padding: calc(var(--nav-h) + 32px) 8px 72px !important; }
+  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head):not(.x) { padding: calc(var(--nav-h) + clamp(12px, 2.5vh, 32px)) 8px 92px !important; }
 }
 @media (max-width: 640px) {
-  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) h1 { font-size: clamp(44px, 16vw, 68px); line-height: 1.3; max-width: 100%; }
+  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) h1 { font-size: clamp(36px, min(16vw, 9.5vh), 68px); line-height: 1.25; max-width: 100%; }
   html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, .main-content > .page-header, #pg > .page-header, main.legal > .lg-head, main.vf > .vf-head, .auth-card > .auth-head, .wrap > .head, main.nf > .card, .art-card > .art-hd, .dash-wrap > .profile-head) > p,
-  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) main.vf > .vf-head > .lead { font-size: 18px; }
+  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) main.vf > .vf-head > .lead { font-size: clamp(15px, 2.6vh, 18px); }
   html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) :is(.d-wrap > .d-head, #pg > .page-header, main.vf > .vf-head, .dash-wrap > .profile-head) + * { margin-top: 48px !important; }
   html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .main-content > .mp-tools { margin: -30px auto 28px !important; padding: 0 4px; }
   html body:not(.cert-page):not(.label-page) .mp-bar .mb-filt { padding: 0 14px; font-size: 14px; }
@@ -835,3 +835,76 @@ html body:not(.cert-page):not(.label-page) .pw-toggle { display: inline-flex; al
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head .avatar.avatar:not(#ow-none) { color: #2B1F1C !important; text-shadow: none; }
 html.dark-mode body:not(.cert-page):not(.label-page) :is(.human-badge, .verified-badge) { color: #A3B3C2; }
 html body:not(.cert-page):not(.label-page) .leaflet-control-attribution a { color: #005f86; }
+
+/* ==== Hero = exactly one screen (owner, 20 Nov 2026) ==== */
+/* the small "scroll down" arrow at the bottom of every hero (added by nav.php) */
+.ow-down { position: absolute; left: 50%; bottom: 22px; z-index: 2; transform: translateX(-50%); width: 44px; height: 44px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.85); background: rgba(20,12,8,0.18); color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; animation: owDown 2.4s ease-in-out infinite; }
+.ow-down svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ow-down:hover { background: rgba(255,255,255,0.16); }
+.ow-down:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@keyframes owDown { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 5px); } }
+@media (prefers-reduced-motion: reduce) { .ow-down { animation: none; } }
+/* pages whose search or filter bar overlaps the bottom of the hero: the arrow sits just above the bar */
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .main-content > .page-header > .ow-down,
+html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .d-head:has(+ :is(.m-bar, .sc-filters, form.ci-bar, .ci-bar)) > .ow-down { bottom: 42px; }
+/* Join: the two ways to join, as buttons in the hero too */
+.j-hero-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: clamp(12px, 2.4vh, 24px); }
+.j-hero-btns .btn { min-width: 190px; }
+@media (max-width: 640px) { .j-hero-btns { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; margin-left: auto; margin-right: auto; } .j-hero-btns .btn { min-width: 0; } }
+/* results: when the page opens at the results, they sit just under the menu */
+#results { scroll-margin-top: calc(var(--nav-h) + 12px); }
+#sp-form { scroll-margin-top: calc(var(--nav-h) + 140px); }
+/* Gallery search in dark mode: the bar is navy and the typed words are light (owner, 20 Nov 2026) */
+html.dark-mode body:not(.cert-page):not(.label-page) .mp-barwrap .mp-bar { background: var(--calm-card) !important; border-color: rgba(255,255,255,0.14) !important; }
+html.dark-mode body:not(.cert-page):not(.label-page) .mp-bar .mb-q input { color: #F0F4F8; }
+html.dark-mode body:not(.cert-page):not(.label-page) .mp-bar .mb-q input::placeholder { color: #A9B6C4; opacity: 1; }
+/* Art Map on phones and iPads: the tabs and Region bar stay in view while scrolling; a small "back to top" button */
+@media (max-width: 1180px) {
+  html body:not(.cert-page):not(.label-page) .d-wrap > .m-bar#results { position: sticky !important; top: calc(var(--nav-h) + 8px); z-index: 5; }
+}
+.m-top { position: fixed; bottom: 18px; inset-inline-end: 16px; z-index: 50; width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--calm-line); background: var(--calm-card); color: var(--color-dark); box-shadow: var(--calm-shadow); cursor: pointer; }
+.m-top[hidden] { display: none; }
+.m-top svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.m-top:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+/* Region pages on phones: a slightly smaller title (same words) */
+@media (max-width: 640px) {
+  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs + .d-head:not(#ow-none) h1 { font-size: clamp(32px, min(11vw, 7vh), 46px); }
+}
+/* Home on phones, English: a slightly smaller title so the words sit well and both buttons show */
+@media (max-width: 640px) {
+  html[lang="en"] body.s-b .c-home .c-hero h1 { font-size: clamp(32px, min(11.5vw, 6.6vh), 48px); }
+}
+/* Home hero on short phone screens: slightly smaller text and spacing so everything fits in one screen (owner, 20 Nov 2026) */
+@media (max-width: 640px) and (max-height: 820px) {
+  html body.s-b .c-home .c-hero { padding: calc(var(--nav-h) + 8px) 16px 70px; }
+  html body.s-b .c-home .c-hero > .ow-down { bottom: 14px; }
+  html body.s-b .c-home .hero-badge { margin-bottom: 8px; font-size: 13px; }
+  html body.s-b .c-home .c-hero h1 { margin-bottom: 8px; line-height: 1.18; }
+  html body.s-b .c-home .hero-what { font-size: 15px; line-height: 1.5; margin-bottom: 6px; }
+  html body.s-b .c-home .hero-sub { font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
+  html body.s-b .c-home .hero-btns { gap: 8px; }
+  html body.s-b .c-home .c-trust { gap: 2px; margin-top: 12px; }
+  html body.s-b .c-home .c-trust li { font-size: 12.5px; gap: 6px; }
+  html body.s-b .c-home .c-trust .ico { width: 18px; height: 18px; }
+  html body.s-b .c-home .c-trust svg { width: 15px; height: 15px; }
+}
+@media (max-width: 640px) and (max-height: 640px) {
+  html body.s-b .c-home .c-hero h1 { font-size: clamp(28px, min(13vw, 7vh), 44px); }
+  html[lang="en"] body.s-b .c-home .c-hero h1 { font-size: clamp(26px, min(9.5vw, 5.6vh), 40px); }
+  html body.s-b .c-home .hero-what { font-size: 14px; line-height: 1.45; }
+  html body.s-b .c-home .hero-sub { font-size: 13px; margin-bottom: 10px; }
+  html body.s-b .c-home .hero-btns .btn { min-height: 44px; }
+  html body.s-b .c-home .c-hero { padding-bottom: 64px; }
+  html body.s-b .c-home .c-trust { margin-top: 8px; }
+  html body.s-b .c-home .c-trust li { font-size: 12px; }
+}
+/* the smallest phones (about 320 px wide): long hero titles a little smaller so they fit in one screen */
+@media (max-width: 360px) {
+  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap > .ap-crumbs + .d-head:not(#ow-none) h1 { font-size: 30px; }
+  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) main.nf > .card > .num { font-size: 60px; }  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) main.nf > .card:not(#ow-none) h1 { font-size: 34px; }
+}
+/* the artist's public page on short phones: a smaller round photo so the hero fits in one screen */
+@media (max-width: 640px) and (max-height: 640px) {
+  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head .avatar { width: 84px; height: 84px; font-size: 32px; }  html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .dash-wrap > .profile-head .stats-row { gap: 8px 20px; }
+}
+

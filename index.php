@@ -168,6 +168,7 @@ $owSecs[] = ['articles_list.php?type=art_education', 'Art Education', 'التث�
     </nav>
   </div>
 </main>
+<?php include __DIR__ . '/footer.php'; ?>
 
 <script>
 /* Language button in the shared menu: flip the page direction; nav.php then

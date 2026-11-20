@@ -589,9 +589,9 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
       return $h . '</div></fieldset>';
   };
   ?>
-  <div class="mp-tools">
+  <div class="mp-tools" id="results">
     <div class="mp-barwrap" id="mpBarWrap">
-      <form class="mp-bar" method="get" action="marketplace.php" role="search" id="mpForm">
+      <form class="mp-bar" method="get" action="marketplace.php#results" role="search" id="mpForm">
         <?= mpHidden(['q', 'cat', 'status', 'sort']) ?>
         <div class="mb-q">
           <button type="submit" class="mb-go" aria-label="<?= $ar ? 'ابحث' : 'Search' ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
@@ -619,7 +619,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
   <!-- MORE FILTERS: a side panel on laptops, a bottom sheet with every filter on phones -->
   <div class="mp-scrim" id="mpScrim" hidden></div>
   <div class="mp-panel" id="mpPanel" role="dialog" aria-modal="true" aria-labelledby="mpPanelT" hidden>
-    <form id="mpPanelForm" method="get" action="marketplace.php">
+    <form id="mpPanelForm" method="get" action="marketplace.php#results">
       <div class="pn-head">
         <span class="pn-grab" aria-hidden="true"></span>
         <h2 id="mpPanelT"><span class="pn-t-lap"><?= $ar ? 'تصفية أدق' : 'More filters' ?></span><span class="pn-t-ph"><?= $ar ? 'التصفية' : 'Filters' ?></span></h2>
@@ -675,7 +675,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
     function go(form){
       var p = new URLSearchParams();
       new FormData(form).forEach(function(v, k){ v = String(v); if (v === '' || DEF[k] === v) return; p.append(k, v); });
-      var s = p.toString(); location.href = 'marketplace.php' + (s ? '?' + s : '');
+      var s = p.toString(); location.href = 'marketplace.php' + (s ? '?' + s : '') + '#results';   /* open straight at the results (owner, 20 Nov 2026) */
     }
     f.addEventListener('submit', function(e){ e.preventDefault(); go(f); });
     pf.addEventListener('submit', function(e){ e.preventDefault(); go(pf); });

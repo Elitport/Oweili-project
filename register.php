@@ -45,6 +45,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   <div class="head">
     <h1 id="t-h1">Join Oweili</h1>
     <p id="t-sub">Choose how you would like to join us.</p>
+    <div class="j-hero-btns"><a class="btn btn-primary" id="t-hb-a" href="register_artist.php">I am an Artist</a><a class="btn btn-secondary" id="t-hb-c" href="register_collector.php">I am a Collector</a></div>
   </div>
   <div class="choices">
     <a class="choice artist" href="register_artist.php">
@@ -91,7 +92,7 @@ function apply(l){
   document.getElementById('topnav').setAttribute('dir',t.dir);
   document.getElementById('lb').textContent=t.lb;
   setHtml('t-h1',t.h1);setTxt('t-sub',t.sub);
-  setTxt('t-a-title',t.aTitle);setTxt('t-a-desc',t.aDesc);setTxt('t-a-go',t.aGo);
+  setTxt('t-a-title',t.aTitle);setTxt('t-hb-a',t.aTitle);setTxt('t-hb-c',t.cTitle);setTxt('t-a-desc',t.aDesc);setTxt('t-a-go',t.aGo);
   setTxt('t-c-title',t.cTitle);setTxt('t-c-desc',t.cDesc);setTxt('t-c-go',t.cGo);
   setTxt('t-have',t.have);setTxt('t-login',t.login);
   const n=t.nav;
