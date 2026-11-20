@@ -157,6 +157,14 @@
 - The certificate and its printed label are left exactly as they were (body.cert-page / body.label-page are left out of every calm rule)
 - Code: one calm layer at the end of assets/css/oweili.css (it replaces the old photo-page rules and the glass layer); index.php has its own small block for the video hero and the row of links; assets/css/bento.css was removed; the Gallery's filter button has a visible "Filter" word (marketplace.php)
 
+### The Gallery grid is the model for all card grids (20 Nov 2026, owner)
+- RULE (owner): the Gallery grid (marketplace.php .art-grid / .mp-card) is the model for all card grids. Any new card grid must work exactly like it
+- Art Institutes (course cards), Art Map (place cards, every tab), the region pages (art_place.php), Art Events and Art Education now use it: 4 cards per row above 1024 px (laptop, PC), 3 up to 1024 px (iPad both ways), 2 up to 640 px (phones); gaps 28 px (16 px on phones); the grid is as wide as the Gallery's (page width minus 32 px on each side, 16 px on phones), so the cards have the Gallery's width; fewer than 4 cards keep that width and sit centred, and a short last row starts at the reading side like the Gallery (before, the Art Map, region and Art Events rows centred their last row). Corners 16 px, the light line and soft shadow were already the same
+- Inside each card: the Gallery card's spacing (16 px, 12 px on phones up to 420 px; 6 px between lines), title 15 px bold, short descriptions 13 px, course price 16 px bold; pictures stay on top; a word too long for a narrow phone card breaks onto the next line. Every text, link, button, badge, picture credit and filter kept
+- Why there were only 2 per row: the calm style made the gaps 28 px, but these pages still worked out the card width from the old 24 px gap, so the third card no longer fitted
+- Everything else on those pages keeps its place and width (title, filter bars, the Art Map map, counts, region headings, links; checked element by element). The Gallery itself is unchanged
+- Code: one block in assets/css/oweili.css ("the Gallery grid is the model for all card grids"). Files: assets/css/oweili.css, CLAUDE.md. Tables: none
+
 ### Demo content for the admin only (20 Nov 2026, owner)
 - CHANGED the same day (owner, temporary): the demo content is now shown to EVERYONE, also signed out (owDemoOn() in demo_lib.php no longer asks for the admin). Kept: the "Demo" / «تجريبي» badge on every demo item; nothing can be bought, booked or sent (no emails, no Bashro leads, no certificates); the demo items are never in the database or the sitemap, and the demo article pages are noindex; Admin → Settings → "Delete all demo content" still removes everything at once. The lines below describe the first, admin-only version
 - So the owner can see the pages "full": 8 demo artworks in the Gallery (first page, no filter), 4 Art Events, 4 Art Education articles (each opens its own demo page, article.php?slug=demo-event-1 … demo-education-4, never indexed) and 4 courses in Art Institutes (Riyadh, Jeddah and two online; they follow the City, Level and Price filters). Each shows a "Demo" / «تجريبي» badge. Artist "Demo Artist" / «فنان تجريبي», institute "Demo Institute" / «معهد تجريبي». Pictures: public-domain paintings already on Art Styles (assets/img/styles/), each credited in its text; not the five Art Education covers the owner must approve, and not the current Art Education covers
@@ -1203,6 +1211,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - Never mix too many font sizes — keep a clear hierarchy
 
 ### 4. Better Layouts
+- The Gallery grid is the model for all card grids (owner, 20 Nov 2026): 4 per row on laptops and PCs, 3 on iPads, 2 on phones, the same gaps, card width, spacing and text sizes (see Features)
 - Use CSS Grid for card galleries (4 columns desktop, 2 tablet, 1-2 mobile)
 - Consistent padding: 32px desktop, 16px mobile
 - Cards: border-radius 16px, subtle shadow, white background
