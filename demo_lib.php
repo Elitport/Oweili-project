@@ -21,6 +21,8 @@ function owDemoOn(): bool {
     return $on;
 }
 function owDemoDelete(): bool { return owSetSetting('demo_content', '0'); }
+/* Brings the demo back after a delete (owner, 20 Nov 2026): one row back to '1' */
+function owDemoRestore(): bool { return owSetSetting('demo_content', '1'); }
 
 /* The "Demo" badge, in the page language */
 function owDemoBadge(): string {

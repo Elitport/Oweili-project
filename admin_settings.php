@@ -155,11 +155,36 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
   if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'demo_delete' && verifyCsrf($_POST['csrf_token'] ?? null)) {
       if (owDemoDelete()) { owLog('setting_change', null, null, 'demo_content=0', ['type' => 'admin', 'id' => null]); $demoMsg = true; }
   }
+  $demoBack = false;
+  if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'demo_restore' && verifyCsrf($_POST['csrf_token'] ?? null)) {
+      if (owDemoRestore()) { owLog('setting_change', null, null, 'demo_content=1', ['type' => 'admin', 'id' => null]); $demoBack = true; }
+  }
   $demoLeft = owSetting('demo_content', '1') !== '0'; ?>
   <div class="card" id="demo"><h2><?= owBi('Demo content', 'المحتوى التجريبي') ?> <?= $demoLeft ? '<span class="pillx ok">' . owBi('Shown to you only', 'ظاهر لك فقط') . '</span>' : '<span class="pillx no">' . owBi('Deleted', 'محذوف') . '</span>' ?></h2>
     <p><?= owBi('8 demo artworks in the Gallery, 4 Art Events, 4 Art Education articles and 4 courses in Art Institutes, each with a "Demo" badge. Only you see them while signed in as the admin. Visitors, other accounts and Google never see them, and nothing can be bought, booked or sent.',
                 'ثمانية أعمال تجريبية في المعرض، وأربعة ملتقيات فنية، وأربعة مقالات في التثقيف الفني، وأربع دورات في المعاهد الفنية، وعلى كل منها شارة «تجريبي». تراها أنت فقط وأنت مسجّل كمدير. لا يراها الزوار ولا الحسابات الأخرى ولا Google، ولا يمكن شراء شيء أو حجزه أو إرساله.') ?></p>
     <?php if ($demoMsg): ?><div class="alert alert-ok" role="status"><?= owBi('All demo content is deleted.', 'حُذف كل المحتوى التجريبي.') ?></div><?php endif; ?>
+    <?php if ($demoBack): ?><div class="alert alert-ok" role="status"><?= owBi('The demo content is shown again.', 'عاد المحتوى التجريبي للظهور.') ?></div><?php endif; ?>
+    <?php /* a check for THIS browser (owner, 20 Nov 2026): is the demo shown here, and on which address */
+      $dHost = preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+      $dAdm = owIsAdmin(); $dOn = owDemoOn(); ?>
+    <ul class="rows">
+      <li><span><?= owBi('This browser is signed in as the admin', 'هذا المتصفح مسجّل دخوله كمدير') ?></span><?= $yes($dAdm) ?></li>
+      <li><span><?= owBi('Demo items are shown in this browser', 'المحتوى التجريبي ظاهر في هذا المتصفح') ?></span><?= $yes($dOn) ?></li>
+      <li><span><?= owBi('You are signed in on this address', 'أنت مسجّل الدخول على هذا العنوان') ?></span><b dir="ltr"><?= e($dHost) ?></b></li>
+    </ul>
+    <p class="mini"><?= owBi('The sign-in works only on the address you used to sign in. Open the pages with these buttons, so you stay on the same address. The demo items are under the big photo at the top: scroll down a little.',
+                            'تسجيل الدخول يعمل فقط على العنوان الذي سجّلت الدخول منه. افتح الصفحات من هذه الأزرار لتبقى على العنوان نفسه. المحتوى التجريبي تحت الصورة الكبيرة في أعلى الصفحة: انزل قليلاً.') ?></p>
+    <div style="display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-bottom:var(--space-sm)">
+      <a class="btn btn-secondary btn-sm" href="marketplace.php#results"><?= owBi('Gallery', 'المعرض') ?></a>
+      <a class="btn btn-secondary btn-sm" href="articles_list.php?type=event"><?= owBi('Art Events', 'الملتقيات الفنية') ?></a>
+      <a class="btn btn-secondary btn-sm" href="articles_list.php?type=art_education"><?= owBi('Art Education', 'التثقيف الفني') ?></a>
+      <a class="btn btn-secondary btn-sm" href="institutes.php"><?= owBi('Art Institutes', 'المعاهد الفنية') ?></a>
+    </div>
+    <?php if (!$demoLeft): ?>
+    <form method="post" action="admin.php?settings=1#demo"><?= csrfField() ?><input type="hidden" name="do" value="demo_restore">
+      <button class="btn btn-primary" type="submit"><?= owBi('Show the demo content again', 'إظهار المحتوى التجريبي مجدداً') ?></button></form>
+    <?php endif; ?>
     <?php if ($demoLeft): ?>
     <form method="post" action="admin.php?settings=1#demo" onsubmit="return confirm(<?= e(json_encode(owIsAr() ? 'حذف كل المحتوى التجريبي؟' : 'Delete all demo content?', JSON_UNESCAPED_UNICODE)) ?>)"><?= csrfField() ?><input type="hidden" name="do" value="demo_delete">
       <button class="btn btn-danger" type="submit"><?= owBi('Delete all demo content', 'حذف كل المحتوى التجريبي') ?></button></form>
