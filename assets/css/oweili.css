@@ -785,14 +785,14 @@ html body:not(.cert-page):not(.label-page) .m-grp + .m-grp { margin-top: 28px; }
    Art Events and Art Education use the same columns, gaps, card width, inner spacing and text sizes as the Gallery
    (marketplace.php .art-grid / .mp-card): 4 per row above 1024 px, 3 up to 1024 px, 2 up to 640 px; fewer than 4 cards
    keep the same width and sit centred. The grid is as wide as the Gallery's; everything else on the page keeps its place ---- */
-html body:not(.cert-page):not(.label-page) .d-wrap:has(> :is(.c-grid, .m-grp, .a-grid, .rg-group)) { max-width: none; }
-html body:not(.cert-page):not(.label-page) .d-wrap:has(> :is(.c-grid, .m-grp, .a-grid, .rg-group)) > :not(.c-grid, .m-grp, .a-grid, .rg-group, .d-head) { max-width: min(100%, 1136px); margin-left: auto; margin-right: auto; }
+html body:not(.cert-page):not(.label-page) .d-wrap:has(> :is(.c-grid, .m-grp, .a-grid, .rg-group, .sc-grid)) { max-width: none; }
+html body:not(.cert-page):not(.label-page) .d-wrap:has(> :is(.c-grid, .m-grp, .a-grid, .rg-group, .sc-grid)) > :not(.c-grid, .m-grp, .a-grid, .rg-group, .sc-grid, .d-head, .ex-end) { max-width: min(100%, 1136px); margin-left: auto; margin-right: auto; }
 html body:not(.cert-page):not(.label-page) .rg-group > :not(.rg-list) { max-width: min(100%, 1136px); margin-left: auto; margin-right: auto; }
-html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid) {
+html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid, .d-wrap > .sc-grid) {
   --cols: 4; --g: var(--space-md); display: grid !important; grid-template-columns: repeat(var(--cols), 1fr); gap: 28px; align-items: stretch; justify-content: normal; }
-html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid):not(:has(> :nth-child(4))) { display: flex !important; flex-wrap: wrap; justify-content: center; }
-html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid) > * { min-width: 0; height: auto; margin: 0; }
-html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid):not(:has(> :nth-child(4))) > * { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--g)) / var(--cols)); }
+html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid, .d-wrap > .sc-grid):not(:has(> :nth-child(4))) { display: flex !important; flex-wrap: wrap; justify-content: center; }
+html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid, .d-wrap > .sc-grid) > * { min-width: 0; height: auto; margin: 0; }
+html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid, .d-wrap > .sc-grid):not(:has(> :nth-child(4))) > * { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--g)) / var(--cols)); }
 /* inside the cards: the Gallery card's spacing (16 px, 12 px on small phones; 6 px between lines) and text sizes
    (title 15 px bold, other lines 13 px, price 16 px bold); the picture stays on top */
 html body:not(.cert-page):not(.label-page) :is(.c-grid > .c-card, .m-grp > .i-card, .a-grid > .a-card) { --space-md: 16px; padding: 16px; gap: 6px; }
@@ -803,12 +803,20 @@ html body:not(.cert-page):not(.label-page) .rg-list > .rg-item { --space-md: 16p
 html body:not(.cert-page):not(.label-page) :is(.c-grid > .c-card h2, .m-grp > .i-card .i-name, .a-grid > .a-card .a-title, .rg-list > .rg-item b) { font-size: 15px; line-height: 1.4; font-weight: 700; }
 html body:not(.cert-page):not(.label-page) .m-grp > .i-card .i-desc { font-size: var(--fs-caption); }
 html body:not(.cert-page):not(.label-page) .c-grid > .c-card .c-price { font-size: 16px; font-weight: 700; }
-@media (max-width: 1024px) { html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid) { --cols: 3; } }
-@media (max-width: 768px) { html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid) { --g: var(--space-sm); } }
-@media (max-width: 640px) { html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid) { --cols: 2; gap: 16px; } }
+/* Art Styles (explore.php, owner 20 Nov 2026): the same card look as the Gallery (white card, light line, soft shadow),
+   the Gallery's inner spacing and text sizes (name 15 px bold, feeling word 13 px); the picture stays on top */
+html body:not(.cert-page):not(.label-page) .sc-grid > .sc-item > .sc { background: var(--calm-card); border: 1px solid var(--calm-line); border-radius: 16px; box-shadow: var(--calm-shadow); }
+html body:not(.cert-page):not(.label-page) .sc-grid > .sc-item > .sc .sc-body { padding: 16px; }
+html body:not(.cert-page):not(.label-page) .sc-grid > .sc-item > .sc .sc-name { font-size: 15px; line-height: 1.4; font-weight: 700; }
+html body:not(.cert-page):not(.label-page) .sc-grid > .sc-item > .sc .sc-feel { font-size: var(--fs-caption); }
+html body:not(.cert-page):not(.label-page) .sc-grid > .sc-item > .sc:hover { border-color: var(--color-primary); }
+@media (max-width: 1024px) { html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid, .d-wrap > .sc-grid) { --cols: 3; } }
+@media (max-width: 768px) { html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid, .d-wrap > .sc-grid) { --g: var(--space-sm); } }
+@media (max-width: 640px) { html body:not(.cert-page):not(.label-page) :is(.d-wrap > .c-grid, .d-wrap > .m-grp, .rg-group > .rg-list, .d-wrap > .a-grid, .d-wrap > .sc-grid) { --cols: 2; gap: 16px; } }
 @media (max-width: 420px) {
   html body:not(.cert-page):not(.label-page) :is(.c-grid > .c-card, .m-grp > .i-card, .a-grid > .a-card) { --space-md: 12px; padding: 12px; }
   html body:not(.cert-page):not(.label-page) .rg-list > .rg-item { --space-md: 12px; --space-sm: 12px; }
+  html body:not(.cert-page):not(.label-page) .sc-grid > .sc-item > .sc .sc-body { padding: 12px; }
   html body:not(.cert-page):not(.label-page) :is(.c-grid > .c-card, .m-grp > .i-card) .btn { padding: 0 8px; }
 }
 
