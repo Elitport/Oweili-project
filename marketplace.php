@@ -144,6 +144,10 @@ $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $artworks = $stmt->fetchAll();
 $filtered = $cat !== 'all' || $initType !== '' || $status !== 'all' || $q !== '' || $moreOn > 0 || $col !== '';
+/* DEMO artworks (owner, 20 Nov 2026): only for the signed-in admin, on the first page with no filter; never in the database (demo_lib.php) */
+require_once __DIR__ . '/demo_lib.php';
+$demoArt = (owDemoOn() && !$filtered && $page === 1) ? owDemoArtworks() : [];
+$total += count($demoArt);
 /* Above the grid, on the first unfiltered page: curated collections and the Artist of the week */
 $showcase  = !$filtered && $page === 1;
 $cols      = $showcase ? owCollections() : [];
@@ -204,6 +208,11 @@ foreach ($modalArtworks as $aw) {
         'size'      => ($szw = owArtworkSizeWords($mpDims[(int) $aw['id']] ?? [])) ? $szw[$ar ? 1 : 0] : '',
         'cert'      => isset($mpCerts[(int) $aw['id']]) ? owCertBadgeHtml($mpCerts[(int) $aw['id']]) : '',
     ];
+}
+foreach ($demoArt as $d) {   // demo: the window opens, but nothing can be bought, shared or counted
+    $modalData[$d['id']] = ['title_en' => $d['title_en'], 'title_ar' => $d['title_ar'], 'desc_en' => $d['desc_en'], 'desc_ar' => $d['desc_ar'],
+        'artist_en' => OW_DEMO_ARTIST[0], 'artist_ar' => OW_DEMO_ARTIST[1], 'artist_id' => 0, 'verified' => false, 'price' => (float) $d['price'],
+        'image' => $d['image'], 'image_fb' => [], 'status' => 'available', 'journey' => false, 'size' => '', 'cert' => '', 'demo' => true];
 }
 ?>
 <!DOCTYPE html>
@@ -738,7 +747,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
 
   <?php if ($total > 0): ?>
   <p class="mp-count"><?= $ar ? ('عدد الأعمال: ' . $total) : ($total === 1 ? '1 artwork' : $total . ' artworks') ?></p>
-  <div class="art-grid" id="artGrid"<?= count($artworks) < 4 ? ' data-few' : '' ?>>
+  <div class="art-grid" id="artGrid"<?= count($artworks) + count($demoArt) < 4 ? ' data-few' : '' ?>>
     <?php $cardNo = 0; foreach ($artworks as $aw):
       $id  = (int) $aw['id'];
       $img = $mpImg((string) $aw['image_url']);
@@ -759,6 +768,22 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
           </div>
           <div class="aw-price"><?= number_format((float) $aw['price']) ?> <?= $ar ? 'ر.س' : 'SAR' ?></div>
           <button type="button" class="btn btn-dark btn-block" onclick="openModal(<?= $id ?>)"><?= $ar ? 'شاهد القصة' : 'See the Story' ?></button>
+        </div>
+      </article>
+    <?php endforeach; ?>
+    <?php foreach ($demoArt as $d): /* DEMO cards, admin only (demo_lib.php) */ ?>
+      <article class="aw-card mp-card is-demo">
+        <div class="aw-img">
+          <?= owArtImgHtml($d['image_s'], $d['title_en'] . ' · ' . $d['title_ar']) ?>
+          <span class="aw-status"><?= $ar ? 'متاح' : 'Available' ?></span>
+          <?= owDemoBadge() ?>
+        </div>
+        <div class="aw-body">
+          <h2 class="aw-title"><?= e($ar ? $d['title_ar'] : $d['title_en']) ?></h2>
+          <span class="aw-artist"><?= $ar ? 'بواسطة' : 'by' ?> <bdi><?= e(OW_DEMO_ARTIST[$ar ? 1 : 0]) ?></bdi></span>
+          <div class="mp-meta"><?php if ($tl = ($ART_TYPES[$d['type']] ?? null)): ?><span class="type-pill"><?= e($ar ? $tl['ar'] : $tl['en']) ?></span><?php endif; ?></div>
+          <div class="aw-price"><?= number_format((float) $d['price']) ?> <?= $ar ? 'ر.س' : 'SAR' ?></div>
+          <button type="button" class="btn btn-dark btn-block" onclick="openModal('<?= e($d['id']) ?>')"><?= $ar ? 'شاهد القصة' : 'See the Story' ?></button>
         </div>
       </article>
     <?php endforeach; ?>
@@ -808,6 +833,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
       <?php if (owGiftsPageOn()): ?><a class="m-share m-gift" id="m-gift" href="gifts.php"><?= $ar ? 'قدّمه هدية' : 'Give it as a gift' ?></a><?php endif; ?>
       <!-- I'm Interested: name, phone, email → inquire.php -->
       <div class="m-interest">
+        <?php if ($demoArt): ?><p class="demo-note" id="m-demo" hidden><?= owDemoBadge() ?> <?= owBi(OW_DEMO_NOTE[0], OW_DEMO_NOTE[1]) ?></p><?php endif; ?>
         <button type="button" class="btn btn-primary btn-block" id="mi-open" onclick="openInterest()"><?= $ar ? 'أنا مهتم' : 'I’m Interested' ?></button>
         <form id="mi-form" class="mi-form" hidden novalidate onsubmit="return sendInterest(event)">
           <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
@@ -883,6 +909,13 @@ function openModal(id){
   document.getElementById('m-verified').hidden = !a.journey;
   document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });
   resetInterest(id);
+  /* DEMO (admin only): no buying, sharing, gift, favourite, artist link or view count */
+  const isDemo = !!a.demo, md = document.getElementById('m-demo');
+  if (md) md.hidden = !isDemo;
+  document.getElementById('mi-open').hidden = isDemo;
+  document.getElementById('m-share').hidden = isDemo;
+  { const g = document.getElementById('m-gift'); if (g) g.hidden = isDemo; const f = document.getElementById('m-fav'); if (f) f.hidden = isDemo; }
+  if (isDemo) { artist.removeAttribute('href'); document.getElementById('modalBg').classList.add('open'); return; }
   document.getElementById('m-share').dataset.id = id;
   const mg = document.getElementById('m-gift'); if (mg) mg.href = 'gifts.php?artwork=' + id;
   /* one view for the artist's numbers (counted once a day per visitor) */
@@ -934,6 +967,7 @@ function miMark(boxes){
 }
 function sendInterest(ev){
   ev.preventDefault();
+  if (!/^\d+$/.test(ev.target.elements.artwork_id.value)) return false;   /* demo artworks can never be sent */
   const f = ev.target, btn = document.getElementById('mi-send');
   document.getElementById('mi-err').hidden = true; miMark([]);
   const v = n => f.elements[n].value.trim();

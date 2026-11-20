@@ -54,6 +54,9 @@ if (owArticlesReady()) {
     }
 }
 
+/* DEMO articles (owner, 20 Nov 2026): only for the signed-in admin, never in the database (demo_lib.php) */
+require_once __DIR__ . '/demo_lib.php';
+if (owDemoOn()) $items = array_merge($items, owDemoArticles($type));
 [$tEn, $tAr] = $TYPES[$type];
 $titleEn = $tEn . ' · Oweili';
 $titleAr = $tAr . ' · أويلي';
@@ -108,17 +111,18 @@ $titleAr = $tAr . ' · أويلي';
       <div class="a-grid<?= count($items) > 1 && count($items) % 4 === 1 ? ' a-even' : '' ?>">
         <?php foreach ($items as $it):
           [$dEn, $dAr] = $type === 'event' ? owDateRangeBi($it['event_start_date'], $it['event_end_date']) : owDateBi($it['published_at']);
-          $cover = (string) $it['cover_image_path'];
+          $cover = (string) $it['cover_image_path']; $isDemo = !empty($it['demo']);
         ?>
-        <a class="card card-hover a-card reveal" href="article.php?slug=<?= e(rawurlencode($it['slug'])) ?>">
-          <?php if ($cover !== '' && owSafeArticlePath($cover)): ?>
+        <a class="card card-hover a-card reveal<?= $isDemo ? ' is-demo' : '' ?>" href="article.php?slug=<?= e(rawurlencode($it['slug'])) ?>">
+          <?php if ($isDemo): ?><span class="card-media"><img loading="lazy" src="<?= e($cover) ?>" alt="<?= e($it['title_en'] . ' · ' . $it['title_ar']) ?>"><?= owDemoBadge() ?></span>
+          <?php elseif ($cover !== '' && owSafeArticlePath($cover)): ?>
             <span class="card-media"><img loading="lazy" src="<?= e($cover) ?>" alt="<?= e($it['title_en'] . ' · ' . $it['title_ar']) ?>"></span>
           <?php else: ?>
             <span class="card-media none" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 3.58-9 8 0 4.4 3.5 8 8 8 1 0 1.5-.6 1.5-1.4 0-.8-.6-1.1-.6-1.9 0-.8.6-1.4 1.4-1.4H15c3.3 0 6-2.3 6-5.3C21 5.9 17 3 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="15.5" cy="8" r="1"/></svg></span>
           <?php endif; ?>
           <span class="a-body">
             <span class="a-title"><?= owBi($it['title_en'], $it['title_ar']) ?></span>
-            <?php if ($au = ($authors[(int) $it['author_user_id']] ?? null)): ?><span class="a-by"><?= owBi('By ', 'بقلم ') ?><?= owBiName($au['en'], $au['ar']) ?></span><?php endif; ?>
+            <?php if ($au = ($authors[(int) ($it['author_user_id'] ?? 0)] ?? null)): ?><span class="a-by"><?= owBi('By ', 'بقلم ') ?><?= owBiName($au['en'], $au['ar']) ?></span><?php endif; ?>
             <span class="a-date"><?= owBi($dEn, $dAr) ?><?php if ($type === 'event' && ($it['event_location_en'] !== '' || $it['event_location_ar'] !== '')): ?> · <?= owBi($it['event_location_en'], $it['event_location_ar']) ?><?php endif; ?></span>
             <span class="a-more"><?= owBi('Read more →', 'اقرأ المزيد ←') ?></span>
           </span>

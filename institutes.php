@@ -92,6 +92,19 @@ $q = function (array $over = []) use ($inst, $fCity, $fLevel, $fPrice): string {
     return 'institutes.php' . ($a ? '?' . http_build_query($a) : '');
 };
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+/* DEMO courses (owner, 20 Nov 2026): only for the signed-in admin, on the main list, never in the database (demo_lib.php).
+   They follow the same City, Level and Price filters; nothing can be booked. */
+require_once __DIR__ . '/demo_lib.php';
+if (!$inst && owDemoOn()) {
+    foreach (owDemoCourses() as $dc) {
+        if ($dc['course_type'] === 'in_person' && !in_array($dc['inst_city_en'], array_column($cities, 'city_en'), true)) $cities[] = ['city_en' => $dc['inst_city_en'], 'city_ar' => $dc['inst_city_ar']];
+        if ($fCity === 'online' && $dc['course_type'] !== 'online') continue;
+        if ($fCity !== '' && $fCity !== 'online' && ($dc['course_type'] !== 'in_person' || $dc['inst_city_en'] !== $fCity)) continue;
+        if ($fLevel !== '' && $dc['level'] !== $fLevel) continue;
+        if ($fPrice !== '' && ($dc['price'] < OW_INST_PRICES[$fPrice][2] || $dc['price'] > OW_INST_PRICES[$fPrice][3])) continue;
+        $courses[] = $dc;
+    }
+}
 $n = count($courses);
 $titleEn = $inst ? $inst['name_en'] . ': courses' : 'Art Institutes';
 $titleAr = $inst ? 'دورات ' . $inst['name_ar'] : 'المعاهد الفنية';
@@ -205,9 +218,10 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
           $left = (int) $c['seats_remaining'];
           $pTxt = number_format($price, $price == floor($price) ? 0 : 2);
         ?>
-        <article class="card c-card reveal">
+        <?php $isDemo = !empty($c['demo']); ?>
+        <article class="card c-card reveal<?= $isDemo ? ' is-demo' : '' ?>">
           <div class="c-inst"><?php if (trim((string) $c['inst_logo']) !== '' && owSafeLogo((string) $c['inst_logo'])): ?><img loading="lazy" src="<?= e($c['inst_logo']) ?>" alt=""><?php endif; ?>
-            <a href="institutes.php?i=<?= (int) $c['institute_id'] ?>"><?= owBi((string) ($c['inst_en'] ?: $c['inst_ar']), (string) ($c['inst_ar'] ?: $c['inst_en'])) ?></a></div>
+            <?php if ($isDemo): ?><span><?= owBi($c['inst_en'], $c['inst_ar']) ?></span> <?= owDemoBadge() ?><?php else: ?><a href="institutes.php?i=<?= (int) $c['institute_id'] ?>"><?= owBi((string) ($c['inst_en'] ?: $c['inst_ar']), (string) ($c['inst_ar'] ?: $c['inst_en'])) ?></a><?php endif; ?></div>
           <h2><?= owBi((string) ($c['title_en'] ?: $c['title_ar']), (string) ($c['title_ar'] ?: $c['title_en'])) ?></h2>
           <div class="c-tags">
             <span class="c-tag"><?= owBi($lvl[0], $lvl[1]) ?></span>
@@ -216,7 +230,8 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
           <p class="c-meta"><span><?= owBi($wEn, $wAr) ?></span>
             <span><?= $left > 0 ? owBi($left === 1 ? '1 seat left' : $left . ' seats left', $left === 1 ? 'بقي مقعد واحد' : 'متبقٍ ' . $left . ' مقاعد') : owBi('Full', 'اكتمل العدد') ?></span></p>
           <div class="c-price"><?= $price > 0 ? owBi($pTxt . ' SAR', $pTxt . ' ر.س') : owBi('Free', 'مجاني') ?></div>
-          <a class="btn btn-primary" href="course.php?id=<?= (int) $c['id'] ?>"><?= owBi('View the course', 'عرض الدورة') ?></a>
+          <?php if ($isDemo): ?><button type="button" class="btn btn-primary" disabled aria-disabled="true" title="<?= e(owIsAr() ? OW_DEMO_NOTE[1] : OW_DEMO_NOTE[0]) ?>"><?= owBi('View the course', 'عرض الدورة') ?></button>
+          <?php else: ?><a class="btn btn-primary" href="course.php?id=<?= (int) $c['id'] ?>"><?= owBi('View the course', 'عرض الدورة') ?></a><?php endif; ?>
         </article>
         <?php endforeach; ?>
       </div>

@@ -149,6 +149,22 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
       <button class="btn <?= $aucOn ? 'btn-secondary' : 'btn-primary' ?> btn-sm" type="submit"><?= $aucOn ? owBi('Hide the Auctions page', 'إخفاء صفحة المزاد') : owBi('Show the Auctions page', 'إظهار صفحة المزاد') ?></button>
       <a class="btn btn-ghost btn-sm" href="auctions.php" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a></form>
   </div>
+<?php /* DEMO content, admin only (owner, 20 Nov 2026; demo_lib.php): one button deletes all of it */
+  require_once __DIR__ . '/demo_lib.php';
+  $demoMsg = false;
+  if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'demo_delete' && verifyCsrf($_POST['csrf_token'] ?? null)) {
+      if (owDemoDelete()) { owLog('setting_change', null, null, 'demo_content=0', ['type' => 'admin', 'id' => null]); $demoMsg = true; }
+  }
+  $demoLeft = owSetting('demo_content', '1') !== '0'; ?>
+  <div class="card" id="demo"><h2><?= owBi('Demo content', 'المحتوى التجريبي') ?> <?= $demoLeft ? '<span class="pillx ok">' . owBi('Shown to you only', 'ظاهر لك فقط') . '</span>' : '<span class="pillx no">' . owBi('Deleted', 'محذوف') . '</span>' ?></h2>
+    <p><?= owBi('8 demo artworks in the Gallery, 4 Art Events, 4 Art Education articles and 4 courses in Art Institutes, each with a "Demo" badge. Only you see them while signed in as the admin. Visitors, other accounts and Google never see them, and nothing can be bought, booked or sent.',
+                'ثمانية أعمال تجريبية في المعرض، وأربعة ملتقيات فنية، وأربعة مقالات في التثقيف الفني، وأربع دورات في المعاهد الفنية، وعلى كل منها شارة «تجريبي». تراها أنت فقط وأنت مسجّل كمدير. لا يراها الزوار ولا الحسابات الأخرى ولا Google، ولا يمكن شراء شيء أو حجزه أو إرساله.') ?></p>
+    <?php if ($demoMsg): ?><div class="alert alert-ok" role="status"><?= owBi('All demo content is deleted.', 'حُذف كل المحتوى التجريبي.') ?></div><?php endif; ?>
+    <?php if ($demoLeft): ?>
+    <form method="post" action="admin.php?settings=1#demo" onsubmit="return confirm(<?= e(json_encode(owIsAr() ? 'حذف كل المحتوى التجريبي؟' : 'Delete all demo content?', JSON_UNESCAPED_UNICODE)) ?>)"><?= csrfField() ?><input type="hidden" name="do" value="demo_delete">
+      <button class="btn btn-danger" type="submit"><?= owBi('Delete all demo content', 'حذف كل المحتوى التجريبي') ?></button></form>
+    <?php endif; ?>
+  </div>
 <?php /* Hidden for now, to bring back later (owner, 6 Nov 2026): one switch each (gallery_lib.php OW_HIDDEN_PARTS) */
   $hidMsg = [];
   if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'part_switch' && verifyCsrf($_POST['csrf_token'] ?? null)) {

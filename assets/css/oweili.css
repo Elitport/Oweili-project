@@ -914,3 +914,10 @@ html:not(.dark-mode) body:not(.cert-page):not(.label-page) .mp-panel { border: 1
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap.a-nf:not(#ow-none) { box-sizing: border-box; min-height: var(--hero-h); padding: calc(var(--nav-h) + 24px) 16px 48px !important; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop) .d-wrap.a-nf > .d-empty { margin: 0 auto !important; width: 100%; }
 html body:not(.cert-page):not(.label-page):has(> .ow-backdrop .d-wrap.a-nf) .ow-footer, html body:not(.cert-page):not(.label-page):has(.d-wrap.a-nf) .ow-footer { margin-top: 0; }
+/* DEMO content, admin only (owner, 20 Nov 2026; demo_lib.php): a clear "Demo / تجريبي" badge */
+.demo-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; background: #23314A; color: #fff; font-size: 12px; font-weight: 700; line-height: 1.5; letter-spacing: .02em; white-space: nowrap; vertical-align: middle; }
+html.dark-mode .demo-badge { background: #F0F4F8; color: #1A2538; }
+.card-media > .demo-badge { position: absolute; top: 10px; inset-inline-start: 10px; z-index: 2; }
+.aw-img > .demo-badge { position: absolute; top: 10px; inset-inline-end: 10px; z-index: 2; }
+.card-media:has(> .demo-badge) { position: relative; }
+.demo-note { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; padding: 10px 14px; border-radius: 12px; border: 1px dashed var(--calm-line, #ECECEC); font-size: 14px; color: var(--color-dark); }

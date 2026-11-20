@@ -39,10 +39,14 @@ if ($slug !== '' && strlen($slug) <= 190 && preg_match('/^[a-z0-9-]+$/', $slug) 
         $a = null;
     }
 }
+/* DEMO article (owner, 20 Nov 2026): only for the signed-in admin, never in the database (demo_lib.php) */
+require_once __DIR__ . '/demo_lib.php';
+$isDemoArt = false;
+if (!$a && owDemoOn() && ($d = owDemoArticle($slug))) { $a = $d; $isDemoArt = true; }
 if (!$a) http_response_code(404);
 
 $type    = $a['type'] ?? 'event';
-$cover   = $a && owSafeArticlePath((string) $a['cover_image_path']) ? $a['cover_image_path'] : '';
+$cover   = $a && ($isDemoArt || owSafeArticlePath((string) $a['cover_image_path'])) ? $a['cover_image_path'] : '';
 $titleEn = $a ? $a['title_en'] . ' · Oweili' : 'Article not found · Oweili';
 $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موجود · أويلي';
 ?>
@@ -53,7 +57,7 @@ $titleAr = $a ? $a['title_ar'] . ' · أويلي' : 'المقال غير موج�
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php require_once __DIR__ . '/seo_lib.php';
 if ($a) owSeo(['en' => (string) $a['title_en'], 'ar' => (string) $a['title_ar'], 'desc_en' => owExcerpt((string) $a['body_en'], 150), 'desc_ar' => owExcerpt((string) $a['body_ar'], 150),
-               'image' => (string) ($cover ?? ''), 'path' => 'article.php?slug=' . rawurlencode((string) $a['slug']), 'type' => 'article'] + ($preview ? ['noindex' => true] : []));
+               'image' => (string) ($cover ?? ''), 'path' => 'article.php?slug=' . rawurlencode((string) $a['slug']), 'type' => 'article'] + ($preview || $isDemoArt ? ['noindex' => true] : []));
 else owSeo(['en' => 'Article not found', 'ar' => 'المقال غير موجود', 'path' => 'articles_list.php', 'noindex' => true]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
@@ -130,7 +134,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
   <div class="art-wrap<?= $cover ? '' : ' no-cover' ?>">
     <article class="card art-card">
       <header class="art-hd">
-      <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a>
+      <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a><?php if ($isDemoArt): ?> <?= owDemoBadge() ?><?php endif; ?>
       <h1><?= owBi($a['title_en'], $a['title_ar']) ?></h1>
       <?php if ($preview && $a['status'] !== 'published'): ?><p class="alert alert-error" role="status"><?= owBi('Preview for the team: visitors cannot see this article yet.', 'معاينة للفريق: لا يرى الزوار هذا المقال بعد.') ?></p><?php endif; ?>
       <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <?= $byArtist['url'] !== '' ? '<a href="' . e(owBase() . $byArtist['url']) . '">' . owBiName($byArtist['en'], $byArtist['ar']) . '</a>' : owBiName($byArtist['en'], $byArtist['ar']) ?><?php endif; ?></p>
@@ -157,6 +161,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
         </div>
       <?php endif; ?>
 
+      <?php if ($isDemoArt): ?><p class="demo-note"><?= owDemoBadge() ?> <?= owBi(OW_DEMO_NOTE[0], OW_DEMO_NOTE[1]) ?></p><?php endif; ?>
       <div class="art-actions">
         <a class="btn btn-secondary" href="articles_list.php?type=<?= e($type) ?>"><?= owBi('← Back to ' . $typeEn, '→ العودة إلى ' . $typeAr) ?></a>
         <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
