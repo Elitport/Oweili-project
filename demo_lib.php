@@ -1,6 +1,7 @@
 <?php
 /* =====================================================================
- *  demo_lib.php — DEMO content that ONLY the signed-in admin sees (owner, 20 Nov 2026)
+ *  demo_lib.php — DEMO content (owner, 20 Nov 2026). Shown to EVERYONE for now (owner, 20 Nov 2026, temporary);
+ *  it was admin only before, so the lines below about "the admin is signed in" describe the first version
  *  Purpose: let the owner see the Gallery, Art Events, Art Education and Art Institutes "full".
  *  Safety by design: NOTHING is in the database. The demo items live only in this file and are
  *  added to those four pages (and the demo article pages) only when owDemoOn() is true:
@@ -17,7 +18,8 @@ require_once __DIR__ . '/gallery_lib.php';
 
 function owDemoOn(): bool {
     static $on = null;
-    if ($on === null) $on = owIsAdmin() && owSetting('demo_content', '1') !== '0';
+    /* shown to EVERYONE for now (owner, 20 Nov 2026, temporary; was admin only). Still never in the database, the sitemap or Google (demo article pages are noindex) */
+    if ($on === null) $on = owSetting('demo_content', '1') !== '0';
     return $on;
 }
 function owDemoDelete(): bool { return owSetSetting('demo_content', '0'); }
