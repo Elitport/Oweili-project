@@ -37,10 +37,26 @@ try {
 } catch (Throwable $e) { $inst = null; }
 
 /* ---- "Notify me" (owner, 15 Nov 2026) ---- */
-$nErr = null; $nVals = ['name' => '', 'email' => '', 'phone' => ''];
+/* "City or Online" choices (owner, 21 Nov 2026): the cities used by in-person courses, else the cities of the shown institutes,
+   plus this institute's own city; 'online' is added in the form. Key = English name (saved), value = [English, Arabic]. */
+$leadCities = [];
+function owLeadCityOk(string $c): bool { return (bool) preg_match("/^[A-Za-z][A-Za-z' -]*$/", $c) && !preg_match('/ and /i', $c); }   // one city per choice (not "Riyadh and Jeddah")
+try {
+    foreach ([
+        "SELECT i.city_en, MIN(i.city_ar) AS city_ar FROM courses c JOIN institutes i ON i.id = c.institute_id
+         WHERE c.bookable = 1 AND c.status = 'approved' AND c.course_type = 'in_person' AND i.is_active = 1 AND i.city_en <> '' GROUP BY i.city_en ORDER BY i.city_en",
+        "SELECT city_en, MIN(city_ar) AS city_ar FROM institutes WHERE is_active = 1 AND city_en <> '' GROUP BY city_en ORDER BY city_en",
+    ] as $sql) {
+        foreach ($db->query($sql)->fetchAll() as $r) if (owLeadCityOk((string) $r['city_en']))
+            $leadCities[(string) $r['city_en']] = [(string) $r['city_en'], (string) ($r['city_ar'] ?: $r['city_en'])];
+        if ($leadCities) break;
+    }
+} catch (Throwable $e) { $leadCities = []; }
+if ($inst && owLeadCityOk($inst['city_en']) && !isset($leadCities[$inst['city_en']])) $leadCities[$inst['city_en']] = [$inst['city_en'], $inst['city_ar']];
+$nErr = null; $nVals = ['name' => '', 'email' => '', 'phone' => '', 'city' => ''];
 $selfUrl = 'institutes.php' . ($inst ? '?' . ($inst['src'] === 'i' ? 'i=' : 'p=') . $inst['id'] : '');
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'notify') {
-    $nVals = ['name' => mb_substr(trim((string) ($_POST['name'] ?? '')), 0, 150), 'email' => strtolower(trim((string) ($_POST['email'] ?? ''))), 'phone' => trim((string) ($_POST['phone'] ?? ''))];
+    $nVals = ['name' => mb_substr(trim((string) ($_POST['name'] ?? '')), 0, 150), 'email' => strtolower(trim((string) ($_POST['email'] ?? ''))), 'phone' => trim((string) ($_POST['phone'] ?? '')), 'city' => trim((string) ($_POST['city'] ?? ''))];
     $back = $selfUrl . (str_contains($selfUrl, '?') ? '&' : '?') . 'notified=1#notify';
     if (trim((string) ($_POST['website'] ?? '')) !== '') { header('Location: ' . $back); exit; }   // the hidden robot trap
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $nErr = ['The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'];
@@ -48,10 +64,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') ===
     elseif (owNameProblem($nVals['name'], true) !== '') $nErr = ['Please write your name in letters.', 'يرجى كتابة اسمك بالحروف.'];
     elseif (!filter_var($nVals['email'], FILTER_VALIDATE_EMAIL) || mb_strlen($nVals['email']) > 190) $nErr = ['Please write a valid email address.', 'يرجى كتابة بريد إلكتروني صحيح.'];
     elseif (!preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $nVals['phone'])) $nErr = ['Please enter a valid mobile number.', 'يرجى إدخال رقم جوال صالح.'];
+    elseif ($nVals['city'] !== 'online' && !isset($leadCities[$nVals['city']])) $nErr = ['Please choose a city or Online.', 'يرجى اختيار مدينة أو «عن بعد».'];
     else {
         owReqCounted('course_lead');
         $nErr = owCourseLeadSave($inst && $inst['src'] === 'i' ? $inst['id'] : null, $inst && $inst['src'] === 'p' ? $inst['id'] : null,
-                                 $nVals['name'], $nVals['email'], $nVals['phone'], owIsAr() ? 'ar' : 'en', $inst['name_en'] ?? '', $inst['name_ar'] ?? '');
+                                 $nVals['name'], $nVals['email'], $nVals['phone'], owIsAr() ? 'ar' : 'en', $inst['name_en'] ?? '', $inst['name_ar'] ?? '', $nVals['city']);
         if (!$nErr) { header('Location: ' . $back); exit; }
     }
 }
@@ -106,6 +123,7 @@ if (!$inst && owDemoOn()) {
     }
 }
 $n = count($courses);
+$instHasCourses = $inst && ($n > 0 || $filtered);   // an institute page with no courses hides its 'courses you can book' line and 'All courses' (21 Nov 2026)
 $titleEn = $inst ? $inst['name_en'] . ': courses' : 'Art Institutes';
 $titleAr = $inst ? 'دورات ' . $inst['name_ar'] : 'المعاهد الفنية';
 ?>
@@ -179,7 +197,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
         <div class="ci-head"><?php if ($inst['logo'] !== '' && owSafeLogo($inst['logo'])): ?><img src="<?= e($inst['logo']) ?>" alt="<?= e('Logo of ' . $inst['name_en'] . ' · شعار ' . $inst['name_ar']) ?>"><?php endif; ?>
           <h1><?= owBi($inst['name_en'], $inst['name_ar']) ?></h1></div>
         <?php if ($inst['city_en'] !== ''): ?><div class="ci-city"><?= $PIN ?><?= owBi($inst['city_en'], $inst['city_ar']) ?></div><?php endif; ?>
-        <p><?= owBi('Courses you can book on Oweili.', 'دورات يمكنك حجزها عبر أويلي.') ?></p>
+        <?php if ($instHasCourses): ?><p><?= owBi('Courses you can book on Oweili.', 'دورات يمكنك حجزها عبر أويلي.') ?></p><?php endif; ?>
       <?php else: ?>
         <h1><?= owBi('Art Institutes', 'المعاهد الفنية') ?></h1>
         <p><?= owBi('Art courses from approved institutes. Book your seat on Oweili.', 'دورات فنية من معاهد معتمدة. احجز مقعدك عبر أويلي.') ?></p>
@@ -254,9 +272,14 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
             <form method="post" action="<?= e($selfUrl) ?>#notify" style="margin-top:var(--space-sm)"><?= csrfField() ?><input type="hidden" name="do" value="notify">
               <div class="g2">
                 <div class="field"><label for="n-name"><?= owBi('Your name', 'اسمك') ?></label><input id="n-name" name="name" required maxlength="150" autocomplete="name" dir="auto" value="<?= e($nVals['name']) ?>"></div>
-                <div class="field"><label for="n-phone"><?= owBi('Mobile number', 'رقم الجوال') ?></label><input id="n-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" dir="ltr" value="<?= e($nVals['phone']) ?>"></div>
+                <div class="field"><label for="n-phone"><?= owBi('Mobile number', 'رقم الجوال') ?></label><input id="n-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" dir="ltr" placeholder="+966 5X XXX XXXX" value="<?= e($nVals['phone']) ?>"></div>
               </div>
               <div class="field"><label for="n-email"><?= owBi('Email', 'البريد الإلكتروني') ?></label><input id="n-email" name="email" type="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($nVals['email']) ?>"></div>
+              <div class="field"><label for="n-city"><?= owBi('City or Online', 'المدينة أو عن بعد') ?></label>
+                <select id="n-city" name="city" required><option value=""><?= owIsAr() ? 'اختر' : 'Choose' ?></option>
+                  <?php foreach ($leadCities as $ck => $cv): ?><option value="<?= e($ck) ?>"<?= $nVals['city'] === $ck ? ' selected' : '' ?>><?= e(owIsAr() ? $cv[1] : $cv[0]) ?></option><?php endforeach; ?>
+                  <option value="online"<?= $nVals['city'] === 'online' ? ' selected' : '' ?>><?= owIsAr() ? 'عن بعد' : 'Online' ?></option>
+                </select></div>
               <div class="ci-trap" aria-hidden="true"><label for="n-web">Website</label><input id="n-web" name="website" tabindex="-1" autocomplete="off"></div>
               <p class="mini" style="font-size:var(--fs-caption)"><?= owBi('We use these details only to tell you about courses. See our', 'نستخدم هذه البيانات فقط لإخبارك عن الدورات. اطّلع على') ?> <a class="ci-priv" href="privacy.php"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>
               <button class="btn btn-primary" type="submit"><?= owBi('Notify me', 'نبّهني عند توفر دورة') ?></button>
@@ -266,7 +289,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
       </div>
     <?php endif; ?>
 
-    <?php if ($inst): ?><p class="ci-back"><a class="btn btn-secondary" href="institutes.php"><?= owBi('All courses', 'كل الدورات') ?></a>
+    <?php if ($inst): ?><p class="ci-back"><?php if ($instHasCourses): ?><a class="btn btn-secondary" href="institutes.php"><?= owBi('All courses', 'كل الدورات') ?></a><?php endif; ?>
       <a class="btn btn-secondary" href="art_map.php?tab=institutes"><?= owBi('Institutes on the Art Map', 'المعاهد في وجهات الفن') ?></a></p><?php endif; ?>
   </div>
 </main>

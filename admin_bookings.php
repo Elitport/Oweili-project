@@ -187,10 +187,11 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 
 <h2 id="leads"><?= owBi('Notify me: waiting for a course', 'نبّهني: بانتظار دورة') ?></h2>
 <div class="card"><?php if (!$leads): ?><p><?= owBi('No requests yet.', 'لا طلبات بعد.') ?></p><?php else: ?>
-<table class="tbl"><thead><tr><th><?= owBi('Person', 'الشخص') ?></th><th><?= owBi('Institute', 'المعهد') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
-<?php foreach ($leads as $l): $ln = $l['inst_en'] !== null ? [$l['inst_en'], $l['inst_ar'] ?: $l['inst_en']] : ($l['pl_en'] !== null ? [$l['pl_en'], $l['pl_ar'] ?: $l['pl_en']] : ['Any institute', 'أي معهد']); ?>
+<?php $leadCityAr = []; try { foreach ($K("SELECT city_en, MIN(city_ar) AS city_ar FROM institutes WHERE city_en <> '' GROUP BY city_en") as $r) $leadCityAr[$r['city_en']] = $r['city_ar'] ?: $r['city_en']; } catch (Throwable $e) {} ?>
+<table class="tbl"><thead><tr><th><?= owBi('Person', 'الشخص') ?></th><th><?= owBi('Institute', 'المعهد') ?></th><th><?= owBi('City or Online', 'المدينة أو عن بعد') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
+<?php foreach ($leads as $l): $lc = (string) ($l['city'] ?? ''); $ln = $l['inst_en'] !== null ? [$l['inst_en'], $l['inst_ar'] ?: $l['inst_en']] : ($l['pl_en'] !== null ? [$l['pl_en'], $l['pl_ar'] ?: $l['pl_en']] : ['Any institute', 'أي معهد']); ?>
 <tr><td><b><?= e($l['name']) ?></b><br><span class="mini" dir="ltr"><a href="tel:<?= e(preg_replace('/[^0-9+]/', '', (string) $l['phone'])) ?>"><?= e($l['phone']) ?></a> · <a href="mailto:<?= e($l['email']) ?>"><?= e($l['email']) ?></a></span></td>
-  <td><?= owBi($ln[0], $ln[1]) ?></td><td class="mini" dir="ltr"><?= e(substr((string) $l['created_at'], 0, 16)) ?></td>
+  <td><?= owBi($ln[0], $ln[1]) ?></td><td><?= $lc === '' ? '' : ($lc === 'online' ? owBi('Online', 'عن بعد') : owBi($lc, $leadCityAr[$lc] ?? $lc)) ?></td><td class="mini" dir="ltr"><?= e(substr((string) $l['created_at'], 0, 16)) ?></td>
   <td><form method="post" action="admin_bookings.php#leads"><?= csrfField() ?><input type="hidden" name="do" value="lead_status"><input type="hidden" name="id" value="<?= (int) $l['id'] ?>">
     <select name="status" aria-label="<?= e('Status · الحالة') ?>" onchange="this.form.submit()"><?php foreach (['new' => ['New', 'جديد'], 'contacted' => ['Contacted', 'تم التواصل'], 'closed' => ['Closed', 'مغلق']] as $k => $w): ?><option value="<?= $k ?>"<?= $l['status'] === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select>
     <noscript><button class="btn btn-secondary btn-sm"><?= owBi('Save', 'حفظ') ?></button></noscript></form></td></tr>

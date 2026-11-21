@@ -148,7 +148,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
         <figure class="ap-photo"><?= owPlacePicture($ph, $nEn . ' · ' . $nAr, 800, 450, false) ?>
           <?php if ((string) $place['photo_credit'] !== ''): ?><figcaption><?= owBi('Photo: ', 'الصورة: ') ?><?= owMapUrl((string) $place['photo_page']) !== '' ? '<a href="' . e((string) $place['photo_page']) . '" target="_blank" rel="noopener nofollow">' . e((string) $place['photo_credit']) . '</a>' : e((string) $place['photo_credit']) ?></figcaption><?php endif; ?></figure>
       <?php else: ?>
-        <div class="m-band r-<?= e($rg) ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><?= owMapKindIcon((string) $place['kind']) ?></svg><span><?= owBi($cEn, $cAr) ?></span></div>
+        <div class="m-band r-<?= e($rg) ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><?= owMapKindIcon((string) $place['kind']) ?></svg></div><?php /* city shown once, in .ap-city below (21 Nov 2026) */ ?>
       <?php endif; ?>
       <h1><?= owBi($nEn, $nAr) ?></h1>
       <div class="ap-city"><?= $PIN ?><?= mb_strtolower($cEn) === mb_strtolower($R[0]) ? owBi($cEn, $cAr) : owBi($cEn . ', ' . $R[0], $cAr . '، ' . $R[1]) ?></div>

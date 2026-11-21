@@ -261,7 +261,7 @@ function owMapPlaceUrl(string $src, int $id): string { return owMapDirectory()[$
 function owMapRegionTitle(string $rg): array {
     $R = OW_MAP_REGIONS[$rg];
     $in = in_array($rg, ['eastern', 'northern'], true) ? 'the ' . $R[0] : $R[0];
-    return ['Museums and art galleries in ' . $in, 'متاحف ومعارض ' . $R[1]];
+    return ['Museums, art galleries and art institutes in ' . $in, 'متاحف ومعارض ومعاهد فنية في ' . $R[1]];   // institutes added (21 Nov 2026)
 }
 /* "Official website", "Instagram" and "Google Maps" buttons of one place (only the ones that exist); shared by the Art Map and the place pages.
    $courses: an institute's "View courses" button (owner, 15 Nov 2026), shown instead of "Official website" */
@@ -270,7 +270,7 @@ function owMapActs(string $web, string $maps, string $nameEn, string $insta = ''
     if ($courses !== '') { $h .= '<a class="btn btn-primary btn-sm" href="' . e($courses) . '">' . owBi('View courses', 'عرض الدورات') . '</a>'; $web = ''; }
     if ($web !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($web) . '" target="_blank" rel="noopener">' . owBi('Official website', 'الموقع الرسمي') . ' <span aria-hidden="true">↗</span></a>';
     if ($insta !== '') $h .= '<a class="btn btn-secondary btn-sm" href="' . e($insta) . '" target="_blank" rel="noopener" aria-label="' . e('Instagram: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6"/></svg>Instagram</a>';
-    $h .= '<a class="btn btn-dark btn-sm" href="' . e($maps) . '" target="_blank" rel="noopener" aria-label="' . e('Google Maps: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' . owBi('Google Maps', 'خرائط Google') . '</a>';
+    $h .= '<a class="btn btn-dark btn-sm ow-gmaps" href="' . e($maps) . '" target="_blank" rel="noopener" aria-label="' . e('Google Maps: ' . $nameEn) . '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' . owBi('Google Maps', 'خرائط Google') . '</a>';
     return $h . '</div>';
 }
 /* "Is this your place?" link (owner, 13 Nov 2026) */

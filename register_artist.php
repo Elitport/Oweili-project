@@ -272,7 +272,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <p class="hint" id="t-photo-hint">JPG or PNG, up to <?= e($LIM['photo']) ?>MB</p></div>
       <div class="field<?= owBadField($bad, 'portfolio') ?>"><label id="t-l-port" for="f-port">Your artworks (required, up to 5 photos)</label>
         <input type="file" id="f-port" name="portfolio[]"<?= owBadAttr($bad, 'portfolio') ?> accept="image/jpeg,image/png" multiple required data-max="<?= (int) $arPhotoMax ?>">
-        <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each.</p></div>
+        <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each.</p>
+        <p class="hint" id="t-port-note">These are samples for our review. After approval, you add each artwork with its 3 stage photos (25%, 50%, 100%).</p></div>
       <div class="field<?= owBadField($bad, 'art_video') ?>"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt"><?= owIsAr() ? 'اختياري' : 'Optional' ?></span></label>
         <input type="file" id="f-video" name="art_video"<?= owBadAttr($bad, 'art_video') ?> accept="video/mp4,video/quicktime,.mp4,.mov" data-max="<?= (int) $arVideoMax ?>">
         <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to <?= e($LIM['video']) ?>MB.</p></div>
@@ -299,7 +300,7 @@ const T={
   en:{dir:'ltr',lb:'العربية',title:'Join as an Artist',sub:'We are glad you are here. Our team reviews every profile by hand.',
     first:'First name',last:'Last name',artist:'Public name: shown to visitors',email:'Email',phone:'Mobile number',city:'City',
     bioen:'About you in English (optional)',bioar:'About you in Arabic (optional)',
-    photo:'Your photo (required)',photoHint:'JPG or PNG, up to '+LIM.photo+'MB',port:'Your artworks (required, up to 5 photos)',portHint:'Pick the pieces you are most proud of. JPG or PNG, up to '+LIM.photo+'MB each.',
+    photo:'Your photo (required)',photoHint:'JPG or PNG, up to '+LIM.photo+'MB',port:'Your artworks (required, up to 5 photos)',portHint:'Pick the pieces you are most proud of. JPG or PNG, up to '+LIM.photo+'MB each.',portNote:'These are samples for our review. After approval, you add each artwork with its 3 stage photos (25%, 50%, 100%).',
     video:'A short video of you at work',videoHint:'Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to '+LIM.video+'MB.',
     totalHint:'All files together: up to '+LIM.total+'MB.',
     tooBigFile:function(n,mb){return '“'+n+'” is larger than '+mb+'MB. Please choose a smaller file.';},
@@ -312,7 +313,7 @@ const T={
   ar:{dir:'rtl',lb:'English',title:'انضم إلينا كفنان',sub:'سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.',
     first:'الاسم الأول',last:'اسم العائلة',artist:'الاسم العام: يظهر للزوار',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
     bioen:'نبذة عنك بالإنجليزية (اختياري)',bioar:'نبذة عنك بالعربية (اختياري)',
-    photo:'صورتك (مطلوبة)',photoHint:'JPG أو PNG حتى '+LIM.photo+' ميغابايت',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر. JPG أو PNG حتى '+LIM.photo+' ميغابايت لكل صورة.',
+    photo:'صورتك (مطلوبة)',photoHint:'JPG أو PNG حتى '+LIM.photo+' ميغابايت',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر. JPG أو PNG حتى '+LIM.photo+' ميغابايت لكل صورة.',portNote:'هذه نماذج لمراجعتنا. بعد الموافقة، تضيف كل عمل مع صور مراحله الثلاث (25%، 50%، 100%).',
     video:'مقطع قصير وأنت تعمل',videoHint:'صوّر يديك وهي ترسم أو تلوّن. هكذا نعرف أن الفن من صنعك. MP4 أو MOV حتى '+LIM.video+' ميغابايت.',
     totalHint:'كل الملفات معاً: حتى '+LIM.total+' ميغابايت.',
     tooBigFile:function(n,mb){return '«'+n+'» أكبر من '+mb+' ميغابايت. يرجى اختيار ملف أصغر.';},
@@ -347,7 +348,7 @@ function apply(l){
   setTxt('t-title',t.title);setTxt('t-sub',t.sub);
   setTxt('t-l-first',t.first);setTxt('t-l-last',t.last);setTxt('t-l-artist',t.artist);setTxt('t-l-email',t.email);setTxt('t-l-phone',t.phone);setTxt('t-l-city',t.city);
   setTxt('t-l-bioen',t.bioen);setTxt('t-l-bioar',t.bioar);
-  setTxt('t-l-photo',t.photo);setTxt('t-l-port',t.port);setTxt('t-port-hint',t.portHint);
+  setTxt('t-l-photo',t.photo);setTxt('t-l-port',t.port);setTxt('t-port-hint',t.portHint);setTxt('t-port-note',t.portNote);
   setTxt('t-l-video',t.video);setTxt('t-video-hint',t.videoHint);setTxt('t-photo-hint',t.photoHint);setTxt('t-total-hint',t.totalHint);
   setTxt('t-l-pass',t.pass);setTxt('t-l-confirm',t.confirm);
   setTxt('t-r-len',t.rlen);setTxt('t-r-upper',t.rupper);setTxt('t-r-num',t.rnum);setTxt('t-r-spec',t.rspec);

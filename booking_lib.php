@@ -337,21 +337,26 @@ function owCourseMarkPaid(int $regId, array $actor, string $note = ''): ?array {
 
 /* ---------------- "Notify me" leads for an institute with no courses yet (owner, 15 Nov 2026) ---------------- */
 function owCourseLeadsReady(): bool { return owHasTable('course_leads'); }
-function owCourseLeadSave(?int $instId, ?int $placeId, string $name, string $email, string $phone, string $lang, string $instEn, string $instAr): ?array {
+function owCourseLeadSave(?int $instId, ?int $placeId, string $name, string $email, string $phone, string $lang, string $instEn, string $instAr, string $city = ''): ?array {
     if (!owCourseLeadsReady()) return ['Something went wrong. Please try again.', 'حدث خطأ. يرجى المحاولة مرة أخرى.'];
     try {
         $db = getDB();
         $dup = $db->prepare('SELECT id FROM course_leads WHERE phone = :p AND institute_id <=> :i AND place_id <=> :pl AND created_at > (NOW() - INTERVAL 1 DAY) LIMIT 1');
         $dup->execute([':p' => $phone, ':i' => $instId, ':pl' => $placeId]);
         if ($dup->fetchColumn()) return null;   // the same request today: saved once
-        $db->prepare('INSERT INTO course_leads (institute_id, place_id, name, email, phone, lang) VALUES (:i, :pl, :n, :e, :p, :l)')
-           ->execute([':i' => $instId, ':pl' => $placeId, ':n' => mb_substr($name, 0, 150), ':e' => mb_substr(strtolower($email), 0, 190), ':p' => mb_substr($phone, 0, 30), ':l' => $lang === 'ar' ? 'ar' : 'en']);
+        $vals = [':i' => $instId, ':pl' => $placeId, ':n' => mb_substr($name, 0, 150), ':e' => mb_substr(strtolower($email), 0, 190), ':p' => mb_substr($phone, 0, 30), ':l' => $lang === 'ar' ? 'ar' : 'en'];
+        if (owHasColumn('course_leads', 'city')) {   // "City or Online" (21 Nov 2026; course_leads_city.sql)
+            $vals[':c'] = mb_substr($city, 0, 120);
+            $db->prepare('INSERT INTO course_leads (institute_id, place_id, name, email, phone, city, lang) VALUES (:i, :pl, :n, :e, :p, :c, :l)')->execute($vals);
+        } else {
+            $db->prepare('INSERT INTO course_leads (institute_id, place_id, name, email, phone, lang) VALUES (:i, :pl, :n, :e, :p, :l)')->execute($vals);
+        }
         $id = (int) $db->lastInsertId();
         owLog('course_lead', 'course_lead', $id, $instEn !== '' ? $instEn : 'any institute', ['type' => 'system', 'id' => null]);
         require_once __DIR__ . '/alert_lib.php';
         owAdminAlert('booking', 'Notify me (courses): ' . ($instEn !== '' ? $instEn : 'any institute'), 'نبّهني (الدورات): ' . ($instAr !== '' ? $instAr : 'أي معهد'), 'admin_bookings.php#leads');
         require_once __DIR__ . '/bashro_send.php';
-        owBashroCourseLead($name, $email, $phone, $lang, $instEn);
+        owBashroCourseLead($name, $email, $phone, $lang, $instEn, $city);
         return null;
     } catch (Throwable $e) { error_log('owCourseLeadSave: ' . $e->getMessage()); return ['Something went wrong. Please try again.', 'حدث خطأ. يرجى المحاولة مرة أخرى.']; }
 }

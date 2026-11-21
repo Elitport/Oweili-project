@@ -157,6 +157,18 @@
 - The certificate and its printed label are left exactly as they were (body.cert-page / body.label-page are left out of every calm rule)
 - Code: one calm layer at the end of assets/css/oweili.css (it replaces the old photo-page rules and the glass layer); index.php has its own small block for the video hero and the row of links; assets/css/bento.css was removed; the Gallery's filter button has a visible "Filter" word (marketplace.php)
 
+### Small UX fixes: "City or Online", artist sign-up note, institute page with no courses, footer Contact (21 Nov 2026, owner)
+- Art Institutes "Notify me" form (institutes.php): one more required choice "City or Online" / «المدينة أو عن بعد»: the cities of approved in-person courses (if there are none yet, the cities of the shown institutes; one city per choice, so "Riyadh and Jeddah" is left out), the institute's own city, and "Online" / «عن بعد»; checked on the server. Saved in the new column course_leads.city (English city name or 'online'; older requests stay empty; the code also works before the column exists), shown in Admin → Courses and tickets → "Notify me" (new column "City or Online") and added to the Bashro lead's message ("City or Online: Riyadh.")
+- Database (course_leads_city.sql, add-only, safe to run twice): course_leads.city. Run on the live database 21 Nov 2026 by a temporary locked page (removed straight after), after a full backup
+- Join as an Artist (register_artist.php): under the "Your artworks" box: "These are samples for our review. After approval, you add each artwork with its 3 stage photos (25%, 50%, 100%)." / «هذه نماذج لمراجعتنا. بعد الموافقة، تضيف كل عمل مع صور مراحله الثلاث (25%، 50%، 100%).»
+- An institute's page (institutes.php?i= / ?p=) with no courses hides "Courses you can book on Oweili." and the "All courses" button; both come back when it has courses. "Institutes on the Art Map" stays
+- Footer (footer.php): "Contact" / «تواصل معنا» after Terms, to the Support form (support.php#sp-form)
+- Mobile boxes in "Book your seat" (course.php) and "Notify me" show the example "+966 5X XXX XXXX"
+- Place page without its own photo (art_place.php): the coloured band keeps only its icon, so the city shows once (under the name, with the region)
+- Arabic Art Map button «خرائط Google» keeps "Google" as written (.btn.ow-gmaps .bi-ar; the English "GOOGLE MAPS" unchanged)
+- Region page title (owMapRegionTitle in artmap_lib.php; page title, heading, link preview): "Museums, art galleries and art institutes in Riyadh" / «متاحف ومعارض ومعاهد فنية في الرياض»
+- Files: institutes.php, booking_lib.php, bashro_send.php, admin_bookings.php, course_leads_city.sql (new), register_artist.php, footer.php, course.php, art_place.php, artmap_lib.php, assets/css/oweili.css. Tables: course_leads (city, new)
+
 ### Hero text room: line spacing, space between parts, phone home hero lighter (20 Nov 2026, owner)
 - Every page hero with the Amiri title and the home hero: the title has more line height so its lines never touch (Arabic 1.6, English 1.3; was 1.22, 1.25 on phones, 1.18 on short phones; the hamza of «بدأ» no longer touches the line above). Measured line by line (each title line coloured, the closest letters of two lines compared) on 23 hero pages, 7 sizes, Arabic and English: at least 9 px of clear space everywhere (smallest phone, Arabic home)
 - Hero paragraphs: line height 1.85 (was 1.6 to 1.7). Clear space: small top line → title and title → paragraph clamp(14px, 2.6vh, 28px); paragraph → buttons / form: a little more (home: the line before the buttons clamp(22px, 3.6vh, 38px))
@@ -1124,6 +1136,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
+- course_leads_city.sql — "City or Online" on the Art Institutes "Notify me" form (21 Nov 2026): course_leads.city. Only adds one column; safe to run more than once. Run on the live database 21 Nov 2026 after a full backup
 - courses_update.sql — Art Institutes and "Book your seat" (15 Nov 2026): course_registrations.user_id may be empty, new table course_leads. Safe to run more than once. Run on the live database 15 Nov 2026 after a full backup
 - bookings_update.sql — course booking and museum tickets (14 Nov 2026). Only adds (two account-type values, columns, five tables); safe to run more than once
 - institutes_coords.sql — institutes.lat / lng for the Art Map's map (14 Nov 2026). Only adds two columns; safe to run more than once. Run on the live database 14 Nov 2026 after a full backup

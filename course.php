@@ -126,7 +126,7 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
     <form method="post" action="course.php?id=<?= (int) $c['id'] ?>#register" novalidate><?= csrfField() ?>
       <div class="g2">
         <div class="field"><label for="st-name"><?= owBi('Student’s full name', 'اسم الطالب كاملاً') ?></label><input id="st-name" name="name" required maxlength="150" autocomplete="name" dir="auto" value="<?= e($_POST['name'] ?? ($me ? owRealName($me['full_name_en'] ?? '') : '')) ?>"></div>
-        <div class="field"><label for="st-phone"><?= owBi('Mobile number', 'رقم الجوال') ?></label><input id="st-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" dir="ltr" value="<?= e($_POST['phone'] ?? ($me['phone'] ?? '')) ?>"></div>
+        <div class="field"><label for="st-phone"><?= owBi('Mobile number', 'رقم الجوال') ?></label><input id="st-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" dir="ltr" placeholder="+966 5X XXX XXXX" value="<?= e($_POST['phone'] ?? ($me['phone'] ?? '')) ?>"></div>
       </div>
       <div class="field"><label for="st-email"><?= owBi('Email', 'البريد الإلكتروني') ?></label><input id="st-email" name="email" type="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($_POST['email'] ?? ($me['email'] ?? '')) ?>"></div>
       <div style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap" aria-hidden="true"><label for="st-web">Website</label><input id="st-web" name="website" tabindex="-1" autocomplete="off"></div>
@@ -142,7 +142,7 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
     <form method="post" action="course.php?id=<?= (int) $c['id'] ?>#register"><?= csrfField() ?>
       <div class="g2">
         <div class="field"><label for="st-name"><?= owBi('Student’s full name', 'اسم الطالب كاملاً') ?></label><input id="st-name" name="name" required maxlength="150" dir="auto" value="<?= e($_POST['name'] ?? owRealName($me['full_name_en'] ?? '')) ?>"></div>
-        <div class="field"><label for="st-phone"><?= owBi('Mobile number', 'رقم الجوال') ?></label><input id="st-phone" name="phone" type="tel" required maxlength="30" dir="ltr" value="<?= e($_POST['phone'] ?? ($me['phone'] ?? '')) ?>"></div>
+        <div class="field"><label for="st-phone"><?= owBi('Mobile number', 'رقم الجوال') ?></label><input id="st-phone" name="phone" type="tel" required maxlength="30" dir="ltr" placeholder="+966 5X XXX XXXX" value="<?= e($_POST['phone'] ?? ($me['phone'] ?? '')) ?>"></div>
       </div>
       <p class="mini"><?= owBi('The confirmation goes to ' . $me['email'] . '.', 'يصل التأكيد إلى ' . $me['email'] . '.') ?></p>
       <details style="margin:var(--space-xs) 0"><summary><?= owBi('Booking and refund rules', 'قواعد الحجز والاسترداد') ?></summary><?= owBookingTermsHtml() ?></details>
