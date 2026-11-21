@@ -32,7 +32,7 @@
     var c = {}; for (var k in s) c[k] = s[k]; c.cat = 'traditional'; return c;
   });
   /* painting first, then drawing, then Sculpture and Handmade jewellery (21 Nov 2026) */
-  var LATER = function (s) { return s.cat === 'sculpture' || s.cat === 'jewellery'; };
+  var LATER = function (s) { return s.cat === 'sculpture' || s.cat === 'jewellery' || s.cat === 'pottery' || s.cat === 'textiles'; };
   STYLES = STYLES.filter(function (s) { return DRAWING.indexOf(s.id) < 0 && !LATER(s); })
     .concat(DRAWING.map(function (id) { return STYLES.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean))
     .concat(STYLES.filter(LATER));
@@ -47,11 +47,15 @@
     ['contemporary', 'Contemporary', 'معاصر'],
     ['nature', 'Nature & Portrait', 'طبيعة وبورتريه'],
     ['sculpture', 'Sculpture', 'النحت'],
-    ['jewellery', 'Handmade Jewellery', 'المجوهرات اليدوية']
+    ['jewellery', 'Handmade Jewellery', 'المجوهرات اليدوية'],
+    ['pottery', 'Pottery & Ceramics', 'الفخار والخزف'],
+    ['textiles', 'Textiles', 'النسيج والخياطة']
   ];
   /* Sculpture and Handmade jewellery (owner, 21 Nov 2026): on Art Styles only, never sold in the Gallery,
      so their window has no "From Our Gallery" part */
-  var NOT_IN_GALLERY = ['sculpture', 'jewellery'];
+  var NOT_IN_GALLERY = ['sculpture', 'jewellery', 'pottery', 'textiles'];
+  /* + Pottery & ceramics and Textiles, and three painting styles that are on Art Styles only (owner, 21 Nov 2026; art_types.php OW_STYLES_ONLY) */
+  var STYLES_ONLY = ['glass_painting', 'fabric_painting', 'murals'];
   if (MORE_OFF) CATS = CATS.filter(function (c) { return c[0] !== 'heritage'; });
   var LEVELS = {
     beginner: ['Beginner', 'مبتدئ', 1],
@@ -191,7 +195,7 @@
       section('Difficulty & Time', 'الصعوبة والوقت', facts, 'm-facts') +
       (artists ? section('Famous Artists', 'فنانون صنعوا هذا الأسلوب', list(artists, 'ul'), 'm-artists') : '') +
       section('Collector’s Guide: How to recognize authentic ' + en.name + (/work$/i.test(en.name) ? '' : ' work'), 'دليل المقتني: كيف تتعرّف على عمل أصيل في ' + ar.name, list(guide, 'ol'), 'm-guide') +
-      (NOT_IN_GALLERY.indexOf(s.cat) < 0 ? liveHtml(s) : (window.OW_COURSES_ON ? '<p class="m-courses"><a class="link" href="institutes.php?art=' + encodeURIComponent(s.cat) + '">' + bi('Courses in this art', 'دورات في هذا الفن') + '</a></p>' : '')) +
+      (NOT_IN_GALLERY.indexOf(s.cat) < 0 && STYLES_ONLY.indexOf(s.id) < 0 ? liveHtml(s) : (window.OW_COURSES_ON && NOT_IN_GALLERY.indexOf(s.cat) >= 0 ? '<p class="m-courses"><a class="link" href="institutes.php?art=' + encodeURIComponent(s.cat) + '">' + bi('Courses in this art', 'دورات في هذا الفن') + '</a></p>' : '')) +
       '</div>';
   }
   function openStyle(id, push) {

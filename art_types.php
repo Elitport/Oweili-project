@@ -19,6 +19,9 @@ if (!defined('OW_MORE_STYLES')) define('OW_MORE_STYLES', [
     'stained_glass', 'mosaic', 'islamic_mosaic', 'islamic_geometric', 'islamic_ornament', 'egyptian_linen', 'textile',
     'manuscript', 'collage', 'conceptual', 'performance', 'architectural', 'printmaking', 'ukiyo_e', 'calligraphy',
 ]);
+/* Three painting styles added to Art Styles on 21 Nov 2026 (owner) that are on Art Styles only, like Sculpture: the Gallery,
+   the upload, the artist profile and the admin lists stay as they were, so they are never offered there */
+if (!defined('OW_STYLES_ONLY')) define('OW_STYLES_ONLY', ['glass_painting', 'fabric_painting', 'murals']);
 /* The two Gallery / upload topics that belong to the same hidden styles (owner, 8 Nov 2026), under the same switch */
 if (!defined('OW_MORE_TOPICS')) define('OW_MORE_TOPICS', ['calligraphy', 'islamic_ornament']);
 if (!function_exists('owMoreStylesOn')) {
@@ -54,7 +57,7 @@ if (!function_exists('owLoadArtTypes')) {
                 if (in_array((string) $s['id'], OW_MORE_STYLES, true) && !owMoreStylesOn()) $types[(string) $s['id']]['legacy'] = true;
                 /* Sculpture and Handmade jewellery (owner, 21 Nov 2026) are on Art Styles only: the Gallery, the upload,
                    the artist profile and the admin lists stay painting only, so they are never offered there */
-                if (in_array((string) $s['cat'], ['sculpture', 'jewellery'], true)) $types[(string) $s['id']]['legacy'] = true;
+                if (in_array((string) $s['cat'], ['sculpture', 'jewellery', 'pottery', 'textiles'], true) || in_array((string) $s['id'], OW_STYLES_ONLY, true)) $types[(string) $s['id']]['legacy'] = true;   // + Pottery & ceramics, Textiles and the 3 Art Styles-only painting styles (21 Nov 2026)
             }
         }
         /* two topics of the upload form that are not an Explore style (owner, 6 Nov 2026) */

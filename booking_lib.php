@@ -37,18 +37,19 @@ const OW_BOOK_HOLD_MIN = 30;   // a seat or a ticket is held this long while the
 const OW_COURSE_TYPES  = ['in_person' => ['In person', 'حضوري'], 'online' => ['Online', 'عن بُعد']];
 const OW_COURSE_LEVELS = ['beginner' => ['Beginner', 'مبتدئ'], 'intermediate' => ['Intermediate', 'متوسط'], 'advanced' => ['Advanced', 'متقدم']];
 /* Art type of a course (owner, 21 Nov 2026, Stage 2): painting, sculpture or handmade jewellery; the keys match the Art Styles groups */
-const OW_COURSE_ARTS = ['painting' => ['Painting', 'الرسم'], 'sculpture' => ['Sculpture', 'النحت'], 'jewellery' => ['Handmade jewellery', 'المجوهرات اليدوية']];
+const OW_COURSE_ARTS = ['painting' => ['Painting', 'الرسم'], 'sculpture' => ['Sculpture', 'النحت'], 'jewellery' => ['Handmade jewellery', 'المجوهرات اليدوية'],
+                        'pottery' => ['Pottery & ceramics', 'الفخار والخزف'], 'textiles' => ['Textiles', 'النسيج والخياطة']];   // + Pottery & ceramics and Textiles (owner, 21 Nov 2026)
 function owCourseArtReady(): bool { return owHasColumn('courses', 'art_type') && owHasColumn('courses', 'art_style'); }
 /* The Art Styles a course may name, per art type: [art => [style id => [en, ar]]]. Painting = the painting and drawing styles shown on Art Styles */
 function owCourseArtStyles(): array {
     static $out = null;
     if ($out !== null) return $out;
-    $out = ['painting' => [], 'sculpture' => [], 'jewellery' => []];
+    $out = array_fill_keys(array_keys(OW_COURSE_ARTS), []);
     $types = require __DIR__ . '/art_types.php';
     foreach ($types as $id => $t) {
         $cat = (string) ($t['cat'] ?? '');
-        if ($cat === 'sculpture' || $cat === 'jewellery') $out[$cat][$id] = [$t['en'], $t['ar']];
-        elseif (empty($t['legacy']) && empty($t['topic_only']) && $cat !== '') $out['painting'][$id] = [$t['en'], $t['ar']];
+        if (isset($out[$cat]) && $cat !== 'painting') $out[$cat][$id] = [$t['en'], $t['ar']];
+        elseif ((empty($t['legacy']) || in_array((string) $id, OW_STYLES_ONLY, true)) && empty($t['topic_only']) && $cat !== '') $out['painting'][$id] = [$t['en'], $t['ar']];
     }
     return $out;
 }

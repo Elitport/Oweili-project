@@ -79,14 +79,14 @@
 - Sprint 4: payments (last — after everything else is complete)
 
 ## What NOT to build yet
-- Selling sculptures or jewellery: Art Styles shows Sculpture and Handmade jewellery (owner, 21 Nov 2026, a first step toward courses in these arts), but the Gallery and the artwork upload stay painting only
+- Selling sculptures, jewellery, pottery or textiles: Art Styles shows them (owner, 21 Nov 2026, a first step toward courses in these arts), but the Gallery and the artwork upload stay painting only
 - Any real payment provider, checkout or live money movement
 - The orders and escrow structure exists but stays switched off (see Payments and escrow) until Sprint 4
 
 ## Pages Built
 - index.php — Homepage in the calm style (19 Nov 2026): the painting video as the hero with the title, the two lines, the two buttons and the three trust points; under it Artist of the week and a row of links to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education (see Features)
 - nav.php — Shared navbar (used across all pages)
-- explore.php — Art Styles («الأساليب الفنية» since 21 Nov 2026): an art encyclopedia (62 styles shown: 50 painting and drawing, 7 Sculpture, 5 Handmade jewellery) with a rich window for each (see Features)
+- explore.php — Art Styles («الأساليب الفنية» since 21 Nov 2026): an art encyclopedia (73 styles shown: 53 painting and drawing, 8 Sculpture, 5 Handmade jewellery, 2 Pottery & ceramics, 5 Textiles) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
 - community.php — Community page: real counts and the newest artworks (see Features). HIDDEN FOR NOW, to bring back later (6 Nov 2026, Admin → Settings)
@@ -120,7 +120,7 @@
 - admin_institutes.php — team tool for institutes and courses
 - bashro_api.php — the Bashro data connection (off by default)
 - bashro_send.php — sends requests to Bashro's receive-only door (needs BASHRO_DOOR_SITE / BASHRO_DOOR_KEY in config.php; see Features)
-- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (89 styles, 62 shown; the 12 Sculpture and Handmade jewellery styles are never Gallery types)
+- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (100 styles, 73 shown; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 3 OW_STYLES_ONLY painting styles are never Gallery types)
 - art_types.php — the art type list: the styles (names from art_styles.js; hidden ones marked legacy, OW_MORE_STYLES) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
@@ -157,6 +157,13 @@
 - Terms, Privacy, About: after the hero, a narrow reading column (760 px) with large line spacing (18 px text, line height 1.95)
 - The certificate and its printed label are left exactly as they were (body.cert-page / body.label-page are left out of every calm rule)
 - Code: one calm layer at the end of assets/css/oweili.css (it replaces the old photo-page rules and the glass layer); index.php has its own small block for the video hero and the row of links; assets/css/bento.css was removed; the Gallery's filter button has a visible "Filter" word (marketplace.php)
+
+### Art Styles: 11 more styles, Pottery & ceramics and Textiles groups, two more course types (21 Nov 2026, owner, evening)
+- 11 new styles with the same card, window, picture and credit rules (assets/js/art_styles.js; pictures in assets/js/art_photos.js and assets/img/styles/): Glass Painting / الرسم على الزجاج, Fabric Painting / الرسم على القماش, Murals / الجداريات (Traditional pill); Wood Engraving / الحفر على الخشب (Sculpture); new pill Pottery & Ceramics / الفخار والخزف: Pottery Making / صناعة الفخار, Ceramic Painting / الرسم على الخزف; new pill Textiles / النسيج والخياطة: Sadu Weaving / السدو, Embroidery / التطريز, Crochet and Knitting / الكروشيه والتريكو, Macramé / المكرمية, Handmade Rugs / السجاد اليدوي. Art Styles now shows 73 styles (100 in the file)
+- Not added twice: Charcoal and Pencil Drawing were already 2 shown styles (Charcoal, Pencil Drawing); Arabic Calligraphy, Islamic Geometric Art and Islamic Ornamental Art already exist but stay hidden behind the "Other art styles" switch (not changed, waiting for the owner)
+- All 11 are on Art Styles only, never Gallery types: art_types.php marks the cats pottery and textiles, and the 3 painting styles in OW_STYLES_ONLY (glass_painting, fabric_painting, murals), legacy, so the Gallery filters, the upload and edit forms, the artist profile and the admin lists are unchanged. Their windows have no "From Our Gallery" part (explore.js NOT_IN_GALLERY, STYLES_ONLY)
+- Courses: two more art types, Pottery & ceramics / الفخار والخزف (pottery) and Textiles / النسيج والخياطة (textiles) in OW_COURSE_ARTS (booking_lib.php): the course form (with their styles in "Style from Art Styles"; the 3 new painting styles are offered under Painting), the Art Institutes filter, the badges, "Which art?" in Notify me, Admin, the Bashro lead and the "Courses in this art" link in the Pottery and Textiles windows. No database change (art_type is text)
+- Files: assets/js/art_styles.js, assets/js/art_photos.js, assets/img/styles/, assets/js/explore.js, art_types.php, booking_lib.php, bashro_send.php, CLAUDE.md. Tables: none
 
 ### Courses by art type: painting, sculpture, handmade jewellery (21 Nov 2026, owner, Stage 2)
 - Course form (institute_dashboard.php): a required "Art type" / «نوع الفن» (Painting / الرسم, Sculpture / النحت, Handmade jewellery / المجوهرات اليدوية; OW_COURSE_ARTS in booking_lib.php) and an optional "Style from Art Styles" (owCourseArtStyles(): the shown painting and drawing styles, the 7 Sculpture and 5 Jewellery styles; a style must belong to the chosen type, checked on the server). The change waits for approval like every course change. Existing courses became Painting

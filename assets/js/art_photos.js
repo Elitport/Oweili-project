@@ -665,5 +665,108 @@ window.OW_ART_PHOTO = {
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:%22Moth%22_Pendant_and_Box_MET_DT4659.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "glass_painting": {
+  "w": 800,
+  "h": 587,
+  "en": "Petrus Cornelius Weyts, the sloop Zwarte Zwolm, reverse glass painting, about 1855 (MAS, Antwerp)",
+  "ar": "بيتروس كورنيليوس فايتس، المركب «زفارته زفولم»، رسم عكسي على الزجاج، نحو 1855 (متحف MAS، أنتويرب)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Achterglasschildering_met_de_voorstelling_van_de_sloep_%27Zwarte_Zwolm_Courrier_van_Antwerpen%27%2C_Petrus_Cornelius_Weyts%2C_ca_1855%2C_MAS.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "fabric_painting": {
+  "w": 673,
+  "h": 449,
+  "en": "Painted cotton panel, Chancay culture, Peru, 1100–1400 (detail, Metropolitan Museum of Art)",
+  "ar": "لوح قطني مرسوم، حضارة تشانكاي، بيرو، 1100–1400 (جزء، متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Panel_MET_1979_206_459_EX_01.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "murals": {
+  "w": 800,
+  "h": 533,
+  "en": "Geese of Meidum, tomb of Nefermaat and Itet, Egypt, about 2575–2551 BC (facsimile, detail, Metropolitan Museum of Art)",
+  "ar": "إوزّ ميدوم، مقبرة نفرماعت وإيتت، مصر، نحو 2575–2551 قبل الميلاد (نسخة مطابقة، جزء، متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Facsimile_Painting_of_Geese%2C_Tomb_of_Nefermaat_and_Itet_MET_DT226227.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "wood_engraving": {
+  "w": 800,
+  "h": 349,
+  "en": "Carved wooden door panel, late 15th century (Metropolitan Museum of Art)",
+  "ar": "لوح باب خشبي محفور، أواخر القرن الخامس عشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Carved_Door_Panel_MET_DT254702.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "pottery_making": {
+  "w": 710,
+  "h": 468,
+  "en": "Clay pots from Liloan, Cebu, Philippines",
+  "ar": "أوانٍ فخارية من ليلوان، سيبو، الفلبين",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Clay_Pot_from_Liloan_1.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "ceramic_painting": {
+  "w": 771,
+  "h": 800,
+  "en": "Painted storage jar, 7th century (Metropolitan Museum of Art)",
+  "ar": "جرّة تخزين مرسومة، القرن السابع الميلادي (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Storage_Jar_MET_DP291635.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "sadu": {
+  "w": 800,
+  "h": 736,
+  "en": "Camel bag in Sadu weaving, 19th–20th century (National Museum of Qatar)",
+  "ar": "خُرج جمل منسوج بالسدو، القرن التاسع عشر إلى العشرين (متحف قطر الوطني)",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Qatar%2C_borsa_da_cammello_a%27del%2C_in_tessitura_sadu%2C_xix-xx_secolo%2C_01.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Francesco Bini"
+ },
+ "embroidery": {
+  "w": 800,
+  "h": 469,
+  "en": "Cross-stitch cushions from Palestine: Gaza, Ramallah, Nablus, Beit Jala and Bethlehem",
+  "ar": "مساند مطرّزة بالغرزة المتصالبة من فلسطين: غزة ورام الله ونابلس وبيت جالا وبيت لحم",
+  "lic": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Six_cushions_from_Palestine.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "by": "Padres Hana"
+ },
+ "crochet_knitting": {
+  "w": 800,
+  "h": 560,
+  "en": "Crochet antimacassar, Victorian era (Auckland Museum)",
+  "ar": "غطاء مسند من الكروشيه، العصر الفيكتوري (متحف أوكلاند)",
+  "lic": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Antimacassar_%28AM_1967.119-1%29.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "by": "Auckland War Memorial Museum"
+ },
+ "macrame": {
+  "w": 800,
+  "h": 600,
+  "en": "Woman's macramé handbag, 1850–1880 (Auckland Museum)",
+  "ar": "حقيبة يد نسائية من المكرمية، 1850–1880 (متحف أوكلاند)",
+  "lic": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Handbag%2C_woman%27s_%28AM_1967.119-2%29.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "by": "Auckland War Memorial Museum"
+ },
+ "handmade_rugs": {
+  "w": 522,
+  "h": 800,
+  "en": "Yomut main carpet, Turkmen, probably late 18th century (Metropolitan Museum of Art)",
+  "ar": "سجادة يموت، تركمانية، غالباً أواخر القرن الثامن عشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Yomut_Main_Carpet_MET_DP272802.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  }
 };

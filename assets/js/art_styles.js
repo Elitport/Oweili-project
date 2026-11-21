@@ -1,12 +1,12 @@
 /* =====================================================================
- *  art_styles.js: the single source for all art style content (89 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now; the 12 Sculpture and Handmade jewellery styles, 21 Nov 2026, are on Art Styles only, never Gallery types).
+ *  art_styles.js: the single source for all art style content (100 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 3 painting styles in art_types.php OW_STYLES_ONLY, 21 Nov 2026, are on Art Styles only, never Gallery types).
  *  Used by explore.php (cards + the style window), and read by
  *  art_types.php for the art type names. Never copy this data into a
  *  page: load this file instead.
  *
  *  Each style:
  *    id     short name, also used in the web address (explore.php#watercolor)
- *    cat    traditional | digital | heritage | contemporary | nature | photography | sculpture | jewellery
+ *    cat    traditional | digital | heritage | contemporary | nature | photography | sculpture | jewellery | pottery | textiles
  *    type   the Gallery type for this style (same as id). art_types.php reads
  *           the names from this file, so every style is a Gallery type
  *    level  beginner | intermediate | advanced
@@ -18335,6 +18335,1612 @@ window.OW_ART_STYLES = [
     "اسأل عن التقنية المستعملة: المحجّرة أو المحفورة أو غيرها.",
     "انظر عن قرب: المينا الحقيقية زجاج ناعم صلب، لا طلاء.",
     "تجنّب الصدمات والحرارة المفاجئة، فالمينا قد تتشظى كالزجاج."
+   ]
+  }
+ },
+ {
+  "id": "glass_painting",
+  "cat": "traditional",
+  "type": "glass_painting",
+  "level": "intermediate",
+  "en": {
+   "name": "Glass Painting",
+   "feel": "Glowing",
+   "essence": "Colours painted by hand on glass, often on the back, so light shines through.",
+   "story": [
+    "Painting on glass is an old craft. In Europe, artists painted on the back of glass from the Middle Ages.",
+    "In reverse glass painting the picture is painted backwards: the small details first, the background last.",
+    "It became a folk art in Central Europe, and later a loved tradition in places such as China and Senegal."
+   ],
+   "tech": [
+    [
+     "Reverse painting",
+     "Painting on the back of the glass, so the picture is seen through it."
+    ],
+    [
+     "Outlining",
+     "Drawing the fine lines first with a thin brush or liner."
+    ],
+    [
+     "Layering in reverse",
+     "Adding colours from the front details to the background."
+    ],
+    [
+     "Transparent colour",
+     "Glass paints that let light pass through, like stained glass."
+    ],
+    [
+     "Mirror image",
+     "Words and shapes are painted backwards so they read correctly from the front."
+    ]
+   ],
+   "signs": [
+    "Fine lines that change a little in thickness.",
+    "Brush marks you can see on the painted side.",
+    "Small differences in how thick the colour is.",
+    "Repeated patterns that are close, but never exactly the same."
+   ],
+   "tools": [
+    [
+     "Clean glass",
+     "A smooth sheet, washed and free of grease."
+    ],
+    [
+     "Glass or oil paints",
+     "Paints that hold well on a smooth surface."
+    ],
+    [
+     "Fine brushes",
+     "For lines and small details."
+    ],
+    [
+     "Liner",
+     "A tube of thick paint for raised outlines."
+    ],
+    [
+     "Frame and backing",
+     "Protect the glass and the painted side."
+    ]
+   ],
+   "time": "One day to a few weeks",
+   "bestFor": "Patient painters who love light and colour.",
+   "artists": [],
+   "guide": [
+    "Look at the back. Hand painting shows layers of paint, not one flat print.",
+    "Printed glass looks too even, with tiny dots under a magnifier.",
+    "Hold it by the frame, and keep it away from strong heat."
+   ]
+  },
+  "ar": {
+   "name": "الرسم على الزجاج",
+   "feel": "متوهّج",
+   "essence": "ألوان تُرسم باليد على الزجاج، وغالباً على ظهره، فيمرّ الضوء من خلالها.",
+   "story": [
+    "الرسم على الزجاج حرفة قديمة. في أوروبا رسم الفنانون على ظهر الزجاج منذ العصور الوسطى.",
+    "وفي الرسم العكسي على الزجاج تُرسم الصورة بالمقلوب: التفاصيل الصغيرة أولاً، ثم الخلفية في النهاية.",
+    "وأصبح فناً شعبياً في وسط أوروبا، ثم تقليداً محبوباً في أماكن مثل الصين والسنغال."
+   ],
+   "tech": [
+    [
+     "الرسم العكسي",
+     "الرسم على ظهر الزجاج، فتُرى الصورة من خلاله."
+    ],
+    [
+     "التحديد",
+     "رسم الخطوط الدقيقة أولاً بفرشاة رفيعة أو أنبوب تحديد."
+    ],
+    [
+     "الطبقات بالمقلوب",
+     "إضافة الألوان من تفاصيل الواجهة حتى الخلفية."
+    ],
+    [
+     "الألوان الشفافة",
+     "ألوان زجاج تسمح بمرور الضوء، مثل الزجاج المعشّق."
+    ],
+    [
+     "الصورة المعكوسة",
+     "تُرسم الكلمات والأشكال معكوسة لتُقرأ صحيحة من الأمام."
+    ]
+   ],
+   "signs": [
+    "خطوط دقيقة يتغيّر سمكها قليلاً.",
+    "آثار فرشاة تراها على الجهة المرسومة.",
+    "اختلافات بسيطة في كثافة اللون.",
+    "نقوش متكررة متقاربة، لكنها لا تتطابق تماماً."
+   ],
+   "tools": [
+    [
+     "زجاج نظيف",
+     "لوح أملس، مغسول وخالٍ من الدهون."
+    ],
+    [
+     "ألوان زجاج أو زيت",
+     "ألوان تثبت جيداً على السطح الأملس."
+    ],
+    [
+     "فرش رفيعة",
+     "للخطوط والتفاصيل الصغيرة."
+    ],
+    [
+     "أنبوب التحديد",
+     "لون كثيف لعمل خطوط بارزة."
+    ],
+    [
+     "إطار وظهر",
+     "لحماية الزجاج والجهة المرسومة."
+    ]
+   ],
+   "time": "من يوم إلى بضعة أسابيع",
+   "bestFor": "الرسامون الصبورون الذين يحبون الضوء واللون.",
+   "artists": [],
+   "guide": [
+    "انظر إلى الظهر. الرسم اليدوي يُظهر طبقات من اللون، لا طباعة مسطحة واحدة.",
+    "الزجاج المطبوع يبدو متساوياً أكثر من اللازم، وتظهر فيه نقاط صغيرة تحت العدسة المكبّرة.",
+    "أمسكه من الإطار، وأبعده عن الحرارة القوية."
+   ]
+  }
+ },
+{
+  "id": "fabric_painting",
+  "cat": "traditional",
+  "type": "fabric_painting",
+  "level": "beginner",
+  "en": {
+   "name": "Fabric Painting",
+   "feel": "Lively",
+   "essence": "Pictures and patterns painted by hand straight onto cloth.",
+   "story": [
+    "People have painted cloth for thousands of years, for clothes, hangings and covers.",
+    "In India, kalamkari artists painted cotton with a pen made of bamboo, using natural dyes. Kalam means pen.",
+    "Today artists use fabric paints that are fixed with heat, so the colours survive washing."
+   ],
+   "tech": [
+    [
+     "Stretching",
+     "Pinning the fabric on a frame so it stays flat."
+    ],
+    [
+     "Outlining",
+     "A line of resist or outliner that stops colours running into each other."
+    ],
+    [
+     "Wet blending",
+     "Painting on damp silk so colours melt softly together."
+    ],
+    [
+     "Layering",
+     "Building light colours first, then darker details."
+    ],
+    [
+     "Heat setting",
+     "Ironing the dry painting to fix the colour."
+    ]
+   ],
+   "signs": [
+    "Small brush marks and changes in colour strength.",
+    "Paint that sits in the weave of the cloth.",
+    "Edges that are a little uneven, as a hand made them.",
+    "Repeated motifs that differ slightly from each other."
+   ],
+   "tools": [
+    [
+     "Fabric",
+     "Cotton, linen or silk, washed before painting."
+    ],
+    [
+     "Fabric paints or dyes",
+     "Colours made to stay in cloth."
+    ],
+    [
+     "Brushes",
+     "Soft brushes in several sizes."
+    ],
+    [
+     "Frame",
+     "Holds the fabric tight while you paint."
+    ],
+    [
+     "Iron",
+     "Fixes the colour once the paint is dry."
+    ]
+   ],
+   "time": "A few hours to a few weeks",
+   "bestFor": "Beginners and anyone who wants art they can wear or use.",
+   "artists": [],
+   "guide": [
+    "Look at the back. Painted cloth often shows the colour soaking through unevenly.",
+    "Printed cloth repeats its pattern perfectly, again and again.",
+    "Ask how to wash it, and keep it out of strong sun."
+   ]
+  },
+  "ar": {
+   "name": "الرسم على القماش",
+   "feel": "حيوي",
+   "essence": "صور ونقوش تُرسم باليد مباشرة على القماش.",
+   "story": [
+    "رسم الناس على القماش منذ آلاف السنين، للملابس والستائر والأغطية.",
+    "وفي الهند رسم فنانو «الكلمكاري» على القطن بقلم من الخيزران وبأصباغ طبيعية. وكلمة «قلم» أصل التسمية.",
+    "واليوم يستعمل الفنانون ألوان قماش تُثبَّت بالحرارة، فتبقى الألوان بعد الغسيل."
+   ],
+   "tech": [
+    [
+     "الشدّ",
+     "تثبيت القماش على إطار حتى يبقى مستوياً."
+    ],
+    [
+     "التحديد",
+     "خط عازل يمنع الألوان من الاختلاط ببعضها."
+    ],
+    [
+     "المزج الرطب",
+     "الرسم على حرير مبلل فتذوب الألوان برفق في بعضها."
+    ],
+    [
+     "الطبقات",
+     "البدء بالألوان الفاتحة ثم التفاصيل الداكنة."
+    ],
+    [
+     "التثبيت بالحرارة",
+     "كيّ الرسم بعد جفافه لتثبيت اللون."
+    ]
+   ],
+   "signs": [
+    "آثار فرشاة صغيرة وتغيّر في قوة اللون.",
+    "لون يستقر داخل نسيج القماش.",
+    "حواف غير مستوية قليلاً، كما تصنعها اليد.",
+    "نقوش متكررة يختلف بعضها عن بعض قليلاً."
+   ],
+   "tools": [
+    [
+     "القماش",
+     "قطن أو كتان أو حرير، يُغسل قبل الرسم."
+    ],
+    [
+     "ألوان أو أصباغ القماش",
+     "ألوان مصنوعة لتبقى في النسيج."
+    ],
+    [
+     "الفرش",
+     "فرش ناعمة بأحجام مختلفة."
+    ],
+    [
+     "الإطار",
+     "يشدّ القماش أثناء الرسم."
+    ],
+    [
+     "المكواة",
+     "تثبّت اللون بعد أن يجف."
+    ]
+   ],
+   "time": "من بضع ساعات إلى بضعة أسابيع",
+   "bestFor": "المبتدئون، وكل من يحب فناً يلبسه أو يستعمله.",
+   "artists": [],
+   "guide": [
+    "انظر إلى ظهر القماش. القماش المرسوم يُظهر اللون نافذاً بشكل غير متساوٍ غالباً.",
+    "القماش المطبوع يكرر نقشه بتطابق تام مرة بعد مرة.",
+    "اسأل عن طريقة غسله، وأبعده عن الشمس القوية."
+   ]
+  }
+ },
+{
+  "id": "murals",
+  "cat": "traditional",
+  "type": "murals",
+  "level": "advanced",
+  "en": {
+   "name": "Murals",
+   "feel": "Grand",
+   "essence": "Large paintings made straight on walls and ceilings.",
+   "story": [
+    "Painting on walls is one of the oldest arts. Ancient Egyptians painted tomb walls more than 4,000 years ago.",
+    "Fresco is one way to paint a mural: the colour goes into wet plaster and becomes part of the wall.",
+    "Today murals bring colour to schools, streets and city walls around the world, including in Saudi cities."
+   ],
+   "tech": [
+    [
+     "Wall preparation",
+     "Cleaning, repairing and priming the wall first."
+    ],
+    [
+     "Grid transfer",
+     "Drawing a grid to scale a small sketch up to the wall."
+    ],
+    [
+     "Fresco",
+     "Painting into fresh, wet plaster."
+    ],
+    [
+     "Wall paints",
+     "Acrylic or mineral paints that last outdoors."
+    ],
+    [
+     "Protective coat",
+     "A clear layer that guards against sun and rain."
+    ]
+   ],
+   "signs": [
+    "Brush or roller marks across large areas.",
+    "Small changes where the painter stopped and started again.",
+    "Hand-drawn lines that are never perfectly straight.",
+    "Faint traces of the grid or sketch under the paint."
+   ],
+   "tools": [
+    [
+     "Ladder or scaffold",
+     "To reach high parts of the wall safely."
+    ],
+    [
+     "Large brushes and rollers",
+     "For big areas of colour."
+    ],
+    [
+     "Wall paints",
+     "Strong paints made for walls."
+    ],
+    [
+     "Chalk and string",
+     "To mark the grid and guide lines."
+    ],
+    [
+     "Clear varnish",
+     "Protects the finished mural."
+    ]
+   ],
+   "time": "A few days to several months",
+   "bestFor": "Bold painters who love working big and in public.",
+   "artists": [
+    [
+     "Diego Rivera",
+     "Mexican, 1886–1957",
+     "Painted huge murals about the life and history of Mexico."
+    ],
+    [
+     "José Clemente Orozco",
+     "Mexican, 1883–1949",
+     "Known for powerful fresco murals in public buildings."
+    ]
+   ],
+   "guide": [
+    "A mural belongs to its wall. Ask who made it, when, and with which paints.",
+    "A movable mural is painted on panels or canvas, then fixed to the wall.",
+    "Outdoor murals need a protective coat and care to last for years."
+   ]
+  },
+  "ar": {
+   "name": "الجداريات",
+   "feel": "مهيب",
+   "essence": "لوحات كبيرة تُرسم مباشرة على الجدران والأسقف.",
+   "story": [
+    "الرسم على الجدران من أقدم الفنون. رسم المصريون القدماء على جدران المقابر قبل أكثر من 4,000 عام.",
+    "والفريسكو إحدى طرق رسم الجدارية: يدخل اللون في الجص الرطب ويصبح جزءاً من الجدار.",
+    "واليوم تضيف الجداريات اللون إلى المدارس والشوارع وجدران المدن حول العالم، ومنها المدن السعودية."
+   ],
+   "tech": [
+    [
+     "تجهيز الجدار",
+     "تنظيف الجدار وإصلاحه ووضع طبقة أساس أولاً."
+    ],
+    [
+     "النقل بالشبكة",
+     "رسم شبكة لتكبير رسم صغير على الجدار."
+    ],
+    [
+     "الفريسكو",
+     "الرسم في الجص الطري الرطب."
+    ],
+    [
+     "ألوان الجدران",
+     "ألوان أكريليك أو معدنية تتحمل الأجواء الخارجية."
+    ],
+    [
+     "طبقة الحماية",
+     "طبقة شفافة تحمي من الشمس والمطر."
+    ]
+   ],
+   "signs": [
+    "آثار فرشاة أو أسطوانة على مساحات كبيرة.",
+    "تغيّرات بسيطة حيث توقف الرسام ثم عاد.",
+    "خطوط مرسومة باليد لا تكون مستقيمة تماماً.",
+    "آثار خفيفة للشبكة أو الرسم الأولي تحت اللون."
+   ],
+   "tools": [
+    [
+     "سلّم أو سقالة",
+     "للوصول إلى أعلى الجدار بأمان."
+    ],
+    [
+     "فرش وأسطوانات كبيرة",
+     "للمساحات الواسعة من اللون."
+    ],
+    [
+     "ألوان الجدران",
+     "ألوان قوية مصنوعة للجدران."
+    ],
+    [
+     "طباشير وخيط",
+     "لتحديد الشبكة وخطوط الإرشاد."
+    ],
+    [
+     "ورنيش شفاف",
+     "يحمي الجدارية بعد انتهائها."
+    ]
+   ],
+   "time": "من بضعة أيام إلى عدة أشهر",
+   "bestFor": "الرسامون الجريئون الذين يحبون العمل الكبير وفي الأماكن العامة.",
+   "artists": [
+    [
+     "دييغو ريفيرا",
+     "مكسيكي، 1886–1957",
+     "رسم جداريات ضخمة عن حياة المكسيك وتاريخها."
+    ],
+    [
+     "خوسيه كليمنتي أوروزكو",
+     "مكسيكي، 1883–1949",
+     "عُرف بجداريات فريسكو قوية في المباني العامة."
+    ]
+   ],
+   "guide": [
+    "الجدارية تنتمي إلى جدارها. اسأل من رسمها، ومتى، وبأي ألوان.",
+    "الجدارية القابلة للنقل تُرسم على ألواح أو قماش ثم تُثبَّت على الجدار.",
+    "الجداريات الخارجية تحتاج طبقة حماية وعناية لتدوم سنوات."
+   ]
+  }
+ },
+{
+  "id": "wood_engraving",
+  "cat": "sculpture",
+  "type": "wood_engraving",
+  "level": "intermediate",
+  "en": {
+   "name": "Wood Engraving",
+   "feel": "Detailed",
+   "essence": "Patterns and pictures cut by hand into the surface of wood.",
+   "story": [
+    "Cutting patterns into wood is found in many cultures, on doors, chests, boxes and ceilings.",
+    "In the Islamic world, craftsmen cut deep arabesque and geometric patterns into wooden doors and panels.",
+    "In Arabia, the old wooden doors of Najd and Hejaz are known for their cut and painted patterns. In printmaking, wood engraving also means cutting a picture into a block to print it."
+   ],
+   "tech": [
+    [
+     "Incising",
+     "Cutting fine lines into the surface with a knife or V-tool."
+    ],
+    [
+     "Chip carving",
+     "Lifting small triangular chips to make geometric patterns."
+    ],
+    [
+     "Low relief",
+     "Lowering the background so the pattern stands up a little."
+    ],
+    [
+     "Pattern transfer",
+     "Drawing the design on the wood with pencil, ruler and compass."
+    ],
+    [
+     "Finishing",
+     "Oil, wax or paint to protect and colour the wood."
+    ]
+   ],
+   "signs": [
+    "Small knife and chisel marks inside the cuts.",
+    "Lines that follow, or carefully cross, the grain.",
+    "Repeated shapes that are close but not identical.",
+    "Clean, sharp edges with tiny changes in depth."
+   ],
+   "tools": [
+    [
+     "Carving knife",
+     "For fine lines and chips."
+    ],
+    [
+     "V-tool and gouges",
+     "Cut grooves and curves."
+    ],
+    [
+     "Chisel and mallet",
+     "For deeper cuts in hard wood."
+    ],
+    [
+     "Hard, dry wood",
+     "Walnut, oak, teak or similar."
+    ],
+    [
+     "Pencil, ruler and compass",
+     "To draw the pattern first."
+    ]
+   ],
+   "time": "A few days to several weeks",
+   "bestFor": "Careful hands who love patterns and natural wood.",
+   "artists": [],
+   "guide": [
+    "Look inside the cuts. Hand tools leave small marks; machine routing is too smooth.",
+    "Ask which wood was used and how it was finished.",
+    "Keep it away from damp, heat and direct sun so the wood does not crack."
+   ]
+  },
+  "ar": {
+   "name": "الحفر على الخشب",
+   "feel": "دقيق",
+   "essence": "نقوش وصور تُحفر باليد في سطح الخشب.",
+   "story": [
+    "الحفر على الخشب موجود في ثقافات كثيرة، على الأبواب والصناديق والعلب والأسقف.",
+    "وفي العالم الإسلامي حفر الحرفيون نقوشاً عميقة من الأرابيسك والأشكال الهندسية في الأبواب والألواح الخشبية.",
+    "وفي الجزيرة العربية تشتهر الأبواب الخشبية القديمة في نجد والحجاز بنقوشها المحفورة والملوّنة. وفي فن الطباعة يعني الحفر على الخشب أيضاً حفر صورة في قالب لطباعتها."
+   ],
+   "tech": [
+    [
+     "الحزّ",
+     "قطع خطوط دقيقة في السطح بسكين أو أداة على شكل V."
+    ],
+    [
+     "حفر الشظايا",
+     "رفع شظايا مثلثة صغيرة لعمل نقوش هندسية."
+    ],
+    [
+     "البارز الخفيف",
+     "خفض الخلفية ليبرز النقش قليلاً."
+    ],
+    [
+     "نقل النقش",
+     "رسم التصميم على الخشب بالقلم والمسطرة والفرجار."
+    ],
+    [
+     "التشطيب",
+     "زيت أو شمع أو لون لحماية الخشب وتلوينه."
+    ]
+   ],
+   "signs": [
+    "آثار سكين وإزميل صغيرة داخل الحفر.",
+    "خطوط تتبع ألياف الخشب أو تعبرها بعناية.",
+    "أشكال متكررة متقاربة لكنها غير متطابقة.",
+    "حواف نظيفة وحادة مع اختلاف بسيط في العمق."
+   ],
+   "tools": [
+    [
+     "سكين الحفر",
+     "للخطوط الدقيقة والشظايا."
+    ],
+    [
+     "أداة V والأزاميل المجوّفة",
+     "لحفر الأخاديد والمنحنيات."
+    ],
+    [
+     "الإزميل والمطرقة الخشبية",
+     "للحفر الأعمق في الخشب الصلب."
+    ],
+    [
+     "خشب صلب وجاف",
+     "الجوز أو البلوط أو الساج أو ما يشبهها."
+    ],
+    [
+     "قلم ومسطرة وفرجار",
+     "لرسم النقش أولاً."
+    ]
+   ],
+   "time": "من بضعة أيام إلى عدة أسابيع",
+   "bestFor": "الأيدي الدقيقة التي تحب النقوش والخشب الطبيعي.",
+   "artists": [],
+   "guide": [
+    "انظر داخل الحفر. أدوات اليد تترك آثاراً صغيرة، أما الحفر الآلي فأملس أكثر من اللازم.",
+    "اسأل عن نوع الخشب وطريقة تشطيبه.",
+    "أبعده عن الرطوبة والحرارة والشمس المباشرة حتى لا يتشقق الخشب."
+   ]
+  }
+ },
+{
+  "id": "pottery_making",
+  "cat": "pottery",
+  "type": "pottery_making",
+  "level": "intermediate",
+  "en": {
+   "name": "Pottery Making",
+   "feel": "Grounded",
+   "essence": "Pots and vessels shaped from clay by hand or on a wheel, then fired.",
+   "story": [
+    "Pottery is one of the oldest crafts. Some of the earliest known pots, found in China, are about 20,000 years old.",
+    "The potter's wheel appeared in Mesopotamia more than 5,000 years ago, and made round pots faster.",
+    "In Saudi Arabia, potters in Al-Ahsa still shape clay jars and pots by hand, as their families did before them."
+   ],
+   "tech": [
+    [
+     "Pinching",
+     "Pressing a ball of clay between the fingers to make a small pot."
+    ],
+    [
+     "Coiling",
+     "Building walls from long rolls of clay, one on top of another."
+    ],
+    [
+     "Throwing",
+     "Shaping clay on a spinning wheel."
+    ],
+    [
+     "Trimming",
+     "Cutting a neat foot and shape once the clay is firm."
+    ],
+    [
+     "Firing",
+     "Baking the clay in a kiln so it becomes hard and lasting."
+    ]
+   ],
+   "signs": [
+    "Throwing rings you can feel inside a wheel-made pot.",
+    "Walls that are a little uneven in thickness.",
+    "Finger marks or a maker's stamp on the base.",
+    "Small differences between pots of the same set."
+   ],
+   "tools": [
+    [
+     "Clay",
+     "Earthenware, stoneware or porcelain."
+    ],
+    [
+     "Potter's wheel",
+     "A spinning plate for round shapes."
+    ],
+    [
+     "Ribs and loop tools",
+     "Smooth, shape and trim the clay."
+    ],
+    [
+     "Wire cutter",
+     "Lifts a finished pot off the wheel."
+    ],
+    [
+     "Kiln",
+     "A very hot oven that fires the clay."
+    ]
+   ],
+   "time": "A few hours to shape, then days to dry and fire",
+   "bestFor": "Calm hands who enjoy working with earth and water.",
+   "artists": [
+    [
+     "Bernard Leach",
+     "British, 1887–1979",
+     "A founder of modern studio pottery."
+    ],
+    [
+     "Shoji Hamada",
+     "Japanese, 1894–1978",
+     "Made simple, strong pots that inspired potters worldwide."
+    ]
+   ],
+   "guide": [
+    "Turn the pot over. A handmade base often shows the maker's mark and tool lines.",
+    "Gently tap it. Well-fired pottery gives a clear ring.",
+    "Ask whether it is safe for food and water before using it."
+   ]
+  },
+  "ar": {
+   "name": "صناعة الفخار",
+   "feel": "أصيل",
+   "essence": "أوانٍ وجِرار تُشكَّل من الطين باليد أو على الدولاب، ثم تُحرق.",
+   "story": [
+    "صناعة الفخار من أقدم الحرف. يعود عمر بعض أقدم الأواني المعروفة، التي وُجدت في الصين، إلى نحو 20,000 عام.",
+    "وظهر دولاب الفخار في بلاد الرافدين قبل أكثر من 5,000 عام، فصار صنع الأواني المستديرة أسرع.",
+    "وفي السعودية ما زال الفخّارون في الأحساء يشكّلون الجِرار والأواني الطينية باليد، كما فعل آباؤهم من قبل."
+   ],
+   "tech": [
+    [
+     "القرص",
+     "ضغط كرة طين بين الأصابع لصنع إناء صغير."
+    ],
+    [
+     "الحبال",
+     "بناء الجدران من لفائف طويلة من الطين، واحدة فوق الأخرى."
+    ],
+    [
+     "التشكيل على الدولاب",
+     "تشكيل الطين على عجلة دوّارة."
+    ],
+    [
+     "التهذيب",
+     "قطع قاعدة وشكل أنيقين بعد تماسك الطين."
+    ],
+    [
+     "الحرق",
+     "شيّ الطين في الفرن ليصبح صلباً ويدوم."
+    ]
+   ],
+   "signs": [
+    "حلقات الدولاب التي تحسّها داخل الإناء.",
+    "جدران يختلف سمكها قليلاً.",
+    "آثار أصابع أو ختم الصانع على القاعدة.",
+    "اختلافات بسيطة بين أواني الطقم الواحد."
+   ],
+   "tools": [
+    [
+     "الطين",
+     "فخار أو حجري أو بورسلين."
+    ],
+    [
+     "دولاب الفخار",
+     "قرص دوّار للأشكال المستديرة."
+    ],
+    [
+     "أدوات التنعيم والتهذيب",
+     "لتنعيم الطين وتشكيله وتهذيبه."
+    ],
+    [
+     "سلك القطع",
+     "لرفع الإناء عن الدولاب."
+    ],
+    [
+     "الفرن",
+     "فرن شديد الحرارة لحرق الطين."
+    ]
+   ],
+   "time": "بضع ساعات للتشكيل، ثم أيام للتجفيف والحرق",
+   "bestFor": "الأيدي الهادئة التي تحب العمل بالتراب والماء.",
+   "artists": [
+    [
+     "برنارد ليتش",
+     "بريطاني، 1887–1979",
+     "من مؤسسي الفخار الحديث في المراسم."
+    ],
+    [
+     "شوجي هامادا",
+     "ياباني، 1894–1978",
+     "صنع أواني بسيطة وقوية ألهمت الفخّارين حول العالم."
+    ]
+   ],
+   "guide": [
+    "اقلب الإناء. القاعدة المصنوعة باليد تُظهر غالباً ختم الصانع وآثار الأدوات.",
+    "انقر عليه برفق. الفخار المحروق جيداً يعطي رنيناً واضحاً.",
+    "اسأل إن كان آمناً للطعام والماء قبل استعماله."
+   ]
+  }
+ },
+{
+  "id": "ceramic_painting",
+  "cat": "pottery",
+  "type": "ceramic_painting",
+  "level": "intermediate",
+  "en": {
+   "name": "Ceramic Painting",
+   "feel": "Bright",
+   "essence": "Pictures and patterns painted on pots, plates and tiles, then fired.",
+   "story": [
+    "Painted pottery is thousands of years old, from the first coloured pots to fine tiles.",
+    "In the 9th century, potters in Iraq invented lustre, a glaze that shines like metal.",
+    "From the 14th century, Chinese blue-and-white porcelain, painted with cobalt blue, travelled across the world."
+   ],
+   "tech": [
+    [
+     "Underglaze painting",
+     "Painting on the clay, then covering it with clear glaze."
+    ],
+    [
+     "Overglaze painting",
+     "Painting on top of the fired glaze, then firing again."
+    ],
+    [
+     "Painting on tin glaze",
+     "Painting on an unfired white glaze, as in majolica."
+    ],
+    [
+     "Sgraffito",
+     "Scratching through a coloured layer to show the clay below."
+    ],
+    [
+     "Firing",
+     "Heating in the kiln so the colours fuse with the glaze."
+    ]
+   ],
+   "signs": [
+    "Brush strokes that change in thickness.",
+    "Colour that pools a little in some places.",
+    "Repeated motifs that are close, but not identical.",
+    "Soft blurring at the edges after firing."
+   ],
+   "tools": [
+    [
+     "Fired clay pieces",
+     "Pots, plates or tiles ready to paint."
+    ],
+    [
+     "Ceramic colours",
+     "Oxides and stains that survive the kiln."
+    ],
+    [
+     "Fine brushes",
+     "For lines, dots and details."
+    ],
+    [
+     "Glaze",
+     "A glassy coat that protects the painting."
+    ],
+    [
+     "Kiln",
+     "Fires the piece to fix the colours."
+    ]
+   ],
+   "time": "A few hours to several days, plus firing",
+   "bestFor": "Painters who love pattern, colour and useful objects.",
+   "artists": [],
+   "guide": [
+    "Look closely at the lines. Hand painting varies; printed transfers show tiny even dots.",
+    "Check the base for the maker's or workshop's mark.",
+    "Ask whether it is safe for food and for the dishwasher."
+   ]
+  },
+  "ar": {
+   "name": "الرسم على الخزف",
+   "feel": "زاهٍ",
+   "essence": "صور ونقوش تُرسم على الأواني والأطباق والبلاط، ثم تُحرق.",
+   "story": [
+    "الفخار المرسوم عمره آلاف السنين، من أول الأواني الملوّنة حتى البلاط الدقيق.",
+    "وفي القرن التاسع الميلادي ابتكر الخزّافون في العراق البريق المعدني، وهو طلاء يلمع كالمعدن.",
+    "ومنذ القرن الرابع عشر انتشر الخزف الصيني الأزرق والأبيض، المرسوم بأزرق الكوبالت، في أنحاء العالم."
+   ],
+   "tech": [
+    [
+     "الرسم تحت الطلاء",
+     "الرسم على الطين ثم تغطيته بطلاء شفاف."
+    ],
+    [
+     "الرسم فوق الطلاء",
+     "الرسم فوق الطلاء المحروق ثم الحرق مرة أخرى."
+    ],
+    [
+     "الرسم على الطلاء القصديري",
+     "الرسم على طلاء أبيض لم يُحرق، كما في المايوليكا."
+    ],
+    [
+     "الحك",
+     "حكّ طبقة ملوّنة لإظهار الطين تحتها."
+    ],
+    [
+     "الحرق",
+     "التسخين في الفرن ليلتحم اللون بالطلاء."
+    ]
+   ],
+   "signs": [
+    "ضربات فرشاة يتغيّر سمكها.",
+    "لون يتجمّع قليلاً في بعض المواضع.",
+    "نقوش متكررة متقاربة لكنها غير متطابقة.",
+    "ليونة خفيفة في الحواف بعد الحرق."
+   ],
+   "tools": [
+    [
+     "قطع خزف محروقة",
+     "أوانٍ أو أطباق أو بلاط جاهزة للرسم."
+    ],
+    [
+     "ألوان الخزف",
+     "أكاسيد وصبغات تتحمل حرارة الفرن."
+    ],
+    [
+     "فرش رفيعة",
+     "للخطوط والنقاط والتفاصيل."
+    ],
+    [
+     "الطلاء الزجاجي",
+     "طبقة لامعة تحمي الرسم."
+    ],
+    [
+     "الفرن",
+     "يحرق القطعة لتثبيت الألوان."
+    ]
+   ],
+   "time": "من بضع ساعات إلى عدة أيام، مع الحرق",
+   "bestFor": "الرسامون الذين يحبون النقوش واللون والقطع النافعة.",
+   "artists": [],
+   "guide": [
+    "انظر إلى الخطوط عن قرب. الرسم اليدوي يتفاوت، أما الطباعة فتُظهر نقاطاً صغيرة متساوية.",
+    "افحص القاعدة بحثاً عن علامة الصانع أو المرسم.",
+    "اسأل إن كانت القطعة آمنة للطعام ولغسالة الأطباق."
+   ]
+  }
+ },
+{
+  "id": "sadu",
+  "cat": "textiles",
+  "type": "sadu",
+  "level": "advanced",
+  "en": {
+   "name": "Sadu Weaving",
+   "feel": "Proud",
+   "essence": "Bedouin weaving with bold geometric patterns, made on a ground loom.",
+   "story": [
+    "Sadu is the traditional weaving of Bedouin women in the Arabian Peninsula.",
+    "They spun sheep, camel and goat hair, dyed it, and wove tent walls, rugs, cushions and camel bags.",
+    "In 2020, UNESCO added the Sadu weaving of Saudi Arabia and Kuwait to its list of intangible cultural heritage."
+   ],
+   "tech": [
+    [
+     "Hand spinning",
+     "Twisting wool and hair into yarn with a spindle."
+    ],
+    [
+     "Dyeing",
+     "Colouring the yarn, often deep red, black and white."
+    ],
+    [
+     "Ground loom",
+     "A long loom stretched low on the ground between pegs."
+    ],
+    [
+     "Warp patterns",
+     "Designs made by the lengthwise threads, row after row."
+    ],
+    [
+     "Beating",
+     "Pressing each row tight so the cloth is strong."
+    ]
+   ],
+   "signs": [
+    "Yarn that changes a little in thickness, as hand-spun yarn does.",
+    "Small shifts in the rhythm of the pattern.",
+    "Natural differences in colour from dyeing by hand.",
+    "A very tight, strong and heavy weave."
+   ],
+   "tools": [
+    [
+     "Wool and hair",
+     "From sheep, camels and goats."
+    ],
+    [
+     "Spindle",
+     "For spinning the yarn by hand."
+    ],
+    [
+     "Ground loom",
+     "Wooden bars and pegs set on the ground."
+    ],
+    [
+     "Beating tool",
+     "Presses the threads tight."
+    ],
+    [
+     "Dyes",
+     "To colour the yarn."
+    ]
+   ],
+   "time": "Several weeks to a few months",
+   "bestFor": "Patient weavers who want to keep a living heritage alive.",
+   "artists": [],
+   "guide": [
+    "Feel the weave. Real Sadu is thick, tight and heavy.",
+    "Look for hand-spun yarn that is slightly uneven.",
+    "Ask where and by whom it was woven, and store it dry, away from moths."
+   ]
+  },
+  "ar": {
+   "name": "السدو",
+   "feel": "أصيل",
+   "essence": "نسيج بدوي بنقوش هندسية جريئة، يُصنع على نول أرضي.",
+   "story": [
+    "السدو هو النسيج التقليدي للنساء البدويات في شبه الجزيرة العربية.",
+    "غزلن صوف الغنم ووبر الإبل وشعر الماعز وصبغنه، ونسجن منه جدران بيوت الشعر والبُسط والمساند وأخراج الإبل.",
+    "وفي عام 2020 أدرجت اليونسكو نسيج السدو في السعودية والكويت في قائمة التراث الثقافي غير المادي."
+   ],
+   "tech": [
+    [
+     "الغزل اليدوي",
+     "فتل الصوف والوبر إلى خيوط بالمغزل."
+    ],
+    [
+     "الصباغة",
+     "تلوين الخيوط، وغالباً بالأحمر الداكن والأسود والأبيض."
+    ],
+    [
+     "النول الأرضي",
+     "نول طويل يُمدّ قريباً من الأرض بين أوتاد."
+    ],
+    [
+     "نقوش السدى",
+     "تصاميم تصنعها الخيوط الطولية صفاً بعد صف."
+    ],
+    [
+     "الدقّ",
+     "ضغط كل صف بإحكام ليقوى النسيج."
+    ]
+   ],
+   "signs": [
+    "خيوط يتغيّر سمكها قليلاً، كما في الغزل اليدوي.",
+    "تحوّلات بسيطة في إيقاع النقش.",
+    "اختلافات طبيعية في اللون بسبب الصباغة اليدوية.",
+    "نسيج محكم جداً وقوي وثقيل."
+   ],
+   "tools": [
+    [
+     "الصوف والوبر",
+     "من الغنم والإبل والماعز."
+    ],
+    [
+     "المغزل",
+     "لغزل الخيوط باليد."
+    ],
+    [
+     "النول الأرضي",
+     "أعواد خشبية وأوتاد تُثبَّت على الأرض."
+    ],
+    [
+     "أداة الدقّ",
+     "تضغط الخيوط بإحكام."
+    ],
+    [
+     "الأصباغ",
+     "لتلوين الخيوط."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى بضعة أشهر",
+   "bestFor": "النسّاجون الصبورون الذين يريدون أن يبقى تراث حيّ حاضراً.",
+   "artists": [],
+   "guide": [
+    "تحسّس النسيج. السدو الحقيقي سميك ومحكم وثقيل.",
+    "ابحث عن خيوط مغزولة باليد غير متساوية قليلاً.",
+    "اسأل أين نُسج ومن نسجه، واحفظه في مكان جاف بعيداً عن العثّ."
+   ]
+  }
+ },
+{
+  "id": "embroidery",
+  "cat": "textiles",
+  "type": "embroidery",
+  "level": "intermediate",
+  "en": {
+   "name": "Embroidery",
+   "feel": "Delicate",
+   "essence": "Pictures and patterns stitched by hand with needle and thread.",
+   "story": [
+    "Embroidery is found in almost every culture, on clothes, cushions, covers and hangings.",
+    "In Arabia, women decorated dresses, sleeves and necklines with fine stitches, beads and metal threads.",
+    "Palestinian tatreez and Indian chikankari are famous traditions passed from mothers to daughters."
+   ],
+   "tech": [
+    [
+     "Cross stitch",
+     "Small X-shaped stitches that build patterns."
+    ],
+    [
+     "Satin stitch",
+     "Close, smooth stitches that fill a shape."
+    ],
+    [
+     "Chain stitch",
+     "Loops linked together like a chain."
+    ],
+    [
+     "Couching",
+     "Laying metal thread on the cloth and holding it with tiny stitches."
+    ],
+    [
+     "Running stitch",
+     "Simple in-and-out stitches in a line."
+    ]
+   ],
+   "signs": [
+    "The back shows knots, thread ends and changes of colour.",
+    "Stitches that differ slightly in length and tension.",
+    "A raised texture you can feel with your fingers.",
+    "Small differences between repeated motifs."
+   ],
+   "tools": [
+    [
+     "Needles",
+     "Different sizes for fine or thick thread."
+    ],
+    [
+     "Threads",
+     "Silk, cotton, wool or metal thread."
+    ],
+    [
+     "Hoop or frame",
+     "Keeps the fabric tight while stitching."
+    ],
+    [
+     "Fabric",
+     "Linen, cotton, silk or velvet."
+    ],
+    [
+     "Small scissors",
+     "For clean thread ends."
+    ]
+   ],
+   "time": "A few hours to several months",
+   "bestFor": "Patient hands who enjoy quiet, careful work.",
+   "artists": [],
+   "guide": [
+    "Turn it over. Machine embroidery looks too even, often with a backing sheet.",
+    "Ask about the thread: silk and metal thread need special care.",
+    "Store it flat or rolled, away from sun and damp."
+   ]
+  },
+  "ar": {
+   "name": "التطريز",
+   "feel": "رقيق",
+   "essence": "صور ونقوش تُخاط باليد بالإبرة والخيط.",
+   "story": [
+    "التطريز موجود في كل ثقافة تقريباً، على الملابس والمساند والأغطية والستائر.",
+    "وفي الجزيرة العربية زيّنت النساء الأثواب والأكمام وفتحات الرقبة بغرز دقيقة وخرز وخيوط معدنية.",
+    "والتطريز الفلسطيني و«الشيكانكاري» الهندي تقليدان مشهوران تتوارثهما البنات عن الأمهات."
+   ],
+   "tech": [
+    [
+     "الغرزة المتصالبة",
+     "غرز صغيرة على شكل X تبني النقوش."
+    ],
+    [
+     "غرزة الساتان",
+     "غرز متلاصقة ناعمة تملأ الشكل."
+    ],
+    [
+     "غرزة السلسلة",
+     "حلقات متصلة كالسلسلة."
+    ],
+    [
+     "التثبيت",
+     "وضع الخيط المعدني على القماش وتثبيته بغرز صغيرة."
+    ],
+    [
+     "الغرزة الجارية",
+     "غرز بسيطة تدخل وتخرج في خط."
+    ]
+   ],
+   "signs": [
+    "الظهر يُظهر عقداً وأطراف خيوط وتغيّراً في الألوان.",
+    "غرز يختلف طولها وشدّها قليلاً.",
+    "ملمس بارز تحسّه بأصابعك.",
+    "اختلافات بسيطة بين النقوش المتكررة."
+   ],
+   "tools": [
+    [
+     "الإبر",
+     "أحجام مختلفة للخيوط الرفيعة والسميكة."
+    ],
+    [
+     "الخيوط",
+     "حرير أو قطن أو صوف أو خيط معدني."
+    ],
+    [
+     "الطارة أو الإطار",
+     "يشدّ القماش أثناء التطريز."
+    ],
+    [
+     "القماش",
+     "كتان أو قطن أو حرير أو مخمل."
+    ],
+    [
+     "مقص صغير",
+     "لقص أطراف الخيوط بنظافة."
+    ]
+   ],
+   "time": "من بضع ساعات إلى عدة أشهر",
+   "bestFor": "الأيدي الصبورة التي تحب العمل الهادئ الدقيق.",
+   "artists": [],
+   "guide": [
+    "اقلب القطعة. التطريز الآلي متساوٍ أكثر من اللازم، وغالباً تحته طبقة دعم.",
+    "اسأل عن الخيط: الحرير والخيط المعدني يحتاجان عناية خاصة.",
+    "احفظها مفرودة أو ملفوفة، بعيداً عن الشمس والرطوبة."
+   ]
+  }
+ },
+{
+  "id": "crochet_knitting",
+  "cat": "textiles",
+  "type": "crochet_knitting",
+  "level": "beginner",
+  "en": {
+   "name": "Crochet and Knitting",
+   "feel": "Cosy",
+   "essence": "Soft fabric built loop by loop from yarn, with a hook or two needles.",
+   "story": [
+    "Knitting is old: knitted socks found in Egypt are about 1,000 years old.",
+    "Crochet, made with a single hook, became popular in Europe in the 1800s.",
+    "During hard times in Ireland, crochet lace helped many families earn a living."
+   ],
+   "tech": [
+    [
+     "Casting on",
+     "Making the first row of loops on the needle."
+    ],
+    [
+     "Knit and purl",
+     "The two basic knitting stitches that make every pattern."
+    ],
+    [
+     "Chain stitch",
+     "The first crochet stitch, a line of linked loops."
+    ],
+    [
+     "Colourwork",
+     "Changing yarn colours to make patterns."
+    ],
+    [
+     "Blocking",
+     "Wetting and shaping the finished piece so it lies neatly."
+    ]
+   ],
+   "signs": [
+    "Stitches that change a little in size and tension.",
+    "Yarn ends woven in by hand on the back.",
+    "Small differences between the two sleeves or sides.",
+    "A soft, slightly uneven surface."
+   ],
+   "tools": [
+    [
+     "Yarn",
+     "Wool, cotton or other fibres."
+    ],
+    [
+     "Knitting needles",
+     "A pair, or a round needle."
+    ],
+    [
+     "Crochet hook",
+     "One hook in the right size for the yarn."
+    ],
+    [
+     "Scissors",
+     "For cutting yarn."
+    ],
+    [
+     "Stitch markers",
+     "Help count and follow the pattern."
+    ]
+   ],
+   "time": "A few hours to several weeks",
+   "bestFor": "Beginners, and anyone who likes calm work for their hands.",
+   "artists": [],
+   "guide": [
+    "Machine knits are perfectly even. Look for the small changes of a hand.",
+    "Ask about the fibre and how to wash it.",
+    "Store knits folded, not hanging, so they keep their shape."
+   ]
+  },
+  "ar": {
+   "name": "الكروشيه والتريكو",
+   "feel": "دافئ",
+   "essence": "نسيج ناعم يُبنى حلقة حلقة من الخيط، بإبرة كروشيه أو بإبرتين.",
+   "story": [
+    "التريكو قديم: عمر جوارب محبوكة وُجدت في مصر نحو 1,000 عام.",
+    "وانتشر الكروشيه، الذي يُصنع بإبرة واحدة معقوفة، في أوروبا في القرن التاسع عشر.",
+    "وفي الأوقات الصعبة في أيرلندا ساعدت دانتيل الكروشيه عائلات كثيرة على كسب رزقها."
+   ],
+   "tech": [
+    [
+     "التركيب",
+     "صنع الصف الأول من الحلقات على الإبرة."
+    ],
+    [
+     "الغرزة السادة والمقلوبة",
+     "غرزتا التريكو الأساسيتان اللتان تصنعان كل نقش."
+    ],
+    [
+     "غرزة السلسلة",
+     "أول غرزة في الكروشيه، خط من الحلقات المتصلة."
+    ],
+    [
+     "تعدد الألوان",
+     "تغيير ألوان الخيط لعمل النقوش."
+    ],
+    [
+     "التشكيل بالبلّ",
+     "ترطيب القطعة وتشكيلها لتستقر بأناقة."
+    ]
+   ],
+   "signs": [
+    "غرز يختلف حجمها وشدّها قليلاً.",
+    "أطراف خيوط مُخفاة باليد على الظهر.",
+    "اختلافات بسيطة بين الكمّين أو الجانبين.",
+    "سطح ناعم غير متساوٍ قليلاً."
+   ],
+   "tools": [
+    [
+     "الخيط",
+     "صوف أو قطن أو ألياف أخرى."
+    ],
+    [
+     "إبر التريكو",
+     "زوج، أو إبرة دائرية."
+    ],
+    [
+     "إبرة الكروشيه",
+     "إبرة معقوفة بالمقاس المناسب للخيط."
+    ],
+    [
+     "المقص",
+     "لقص الخيط."
+    ],
+    [
+     "علامات الغرز",
+     "تساعد على العدّ واتباع النقش."
+    ]
+   ],
+   "time": "من بضع ساعات إلى عدة أسابيع",
+   "bestFor": "المبتدئون، وكل من يحب عملاً هادئاً لليدين.",
+   "artists": [],
+   "guide": [
+    "القطع المصنوعة آلياً متساوية تماماً. ابحث عن الاختلافات الصغيرة التي تتركها اليد.",
+    "اسأل عن نوع الخيط وطريقة الغسيل.",
+    "احفظ القطع مطوية لا معلّقة، لتحافظ على شكلها."
+   ]
+  }
+ },
+{
+  "id": "macrame",
+  "cat": "textiles",
+  "type": "macrame",
+  "level": "beginner",
+  "en": {
+   "name": "Macramé",
+   "feel": "Earthy",
+   "essence": "Patterns made only by tying knots in cords, by hand.",
+   "story": [
+    "Decorative knotting is very old. The word macramé is often linked to an Arabic word for a fringe.",
+    "Weavers knotted the loose threads at the ends of towels and shawls into fringes. Sailors later knotted covers and decorations on long voyages.",
+    "Macramé became popular again in the 1970s, and today it is loved for wall hangings and plant hangers."
+   ],
+   "tech": [
+    [
+     "Lark's head knot",
+     "Fixing each cord to a rod or ring."
+    ],
+    [
+     "Square knot",
+     "The main knot, tied with four cords."
+    ],
+    [
+     "Half hitch",
+     "Wrapping one cord around another to make lines."
+    ],
+    [
+     "Spiral knot",
+     "A half square knot repeated so it twists."
+    ],
+    [
+     "Fringe",
+     "Combing and trimming the cord ends."
+    ]
+   ],
+   "signs": [
+    "Knots that differ slightly in tightness.",
+    "Cords cut by hand to slightly different lengths.",
+    "Small shifts in spacing between rows.",
+    "A soft, natural look rather than perfect sameness."
+   ],
+   "tools": [
+    [
+     "Cord",
+     "Cotton, jute or other strong cord."
+    ],
+    [
+     "Rod or ring",
+     "To hang the work from."
+    ],
+    [
+     "Scissors",
+     "For cutting cords."
+    ],
+    [
+     "Comb",
+     "Brushes out the fringe."
+    ],
+    [
+     "Tape measure",
+     "Keeps cords the right length."
+    ]
+   ],
+   "time": "A few hours to a few days",
+   "bestFor": "Beginners who enjoy simple, repeating work with their hands.",
+   "artists": [],
+   "guide": [
+    "Look at the knots. Hand-tied work has small, honest differences.",
+    "Ask which cord was used; cotton is soft, jute is rough and strong.",
+    "Dust it gently and keep it away from damp."
+   ]
+  },
+  "ar": {
+   "name": "المكرمية",
+   "feel": "ترابي",
+   "essence": "نقوش تُصنع فقط بعقد الحبال باليد.",
+   "story": [
+    "العقد الزخرفية قديمة جداً. وكثيراً ما تُنسب كلمة «مكرمية» إلى كلمة عربية تعني الحاشية أو الشرّابة.",
+    "عقد النسّاجون أطراف الخيوط في نهايات المناشف والشالات على شكل شرّابات. ثم عقد البحّارة الأغطية والزينة في رحلاتهم الطويلة.",
+    "وعادت المكرمية إلى الانتشار في سبعينيات القرن العشرين، وهي اليوم محبوبة في معلّقات الجدران وحوامل النباتات."
+   ],
+   "tech": [
+    [
+     "عقدة رأس القُبّرة",
+     "تثبيت كل حبل على عصا أو حلقة."
+    ],
+    [
+     "العقدة المربعة",
+     "العقدة الأساسية، تُعقد بأربعة حبال."
+    ],
+    [
+     "نصف العقدة",
+     "لفّ حبل حول آخر لعمل خطوط."
+    ],
+    [
+     "العقدة الحلزونية",
+     "نصف عقدة مربعة تتكرر فتلتف."
+    ],
+    [
+     "الشرّابة",
+     "تمشيط أطراف الحبال وقصّها."
+    ]
+   ],
+   "signs": [
+    "عقد يختلف إحكامها قليلاً.",
+    "حبال مقصوصة باليد بأطوال مختلفة قليلاً.",
+    "تحوّلات بسيطة في المسافات بين الصفوف.",
+    "مظهر طبيعي ناعم لا تطابق تام."
+   ],
+   "tools": [
+    [
+     "الحبال",
+     "قطن أو جوت أو حبل قوي آخر."
+    ],
+    [
+     "عصا أو حلقة",
+     "لتعليق العمل عليها."
+    ],
+    [
+     "المقص",
+     "لقص الحبال."
+    ],
+    [
+     "المشط",
+     "لتمشيط الشرّابة."
+    ],
+    [
+     "شريط القياس",
+     "لضبط أطوال الحبال."
+    ]
+   ],
+   "time": "من بضع ساعات إلى بضعة أيام",
+   "bestFor": "المبتدئون الذين يحبون العمل البسيط المتكرر باليدين.",
+   "artists": [],
+   "guide": [
+    "انظر إلى العقد. العمل اليدوي فيه اختلافات صغيرة صادقة.",
+    "اسأل عن نوع الحبل: القطن ناعم، والجوت خشن وقوي.",
+    "انفض عنها الغبار برفق وأبعدها عن الرطوبة."
+   ]
+  }
+ },
+{
+  "id": "handmade_rugs",
+  "cat": "textiles",
+  "type": "handmade_rugs",
+  "level": "advanced",
+  "en": {
+   "name": "Handmade Rugs",
+   "feel": "Timeless",
+   "essence": "Rugs knotted or woven by hand, one thread at a time.",
+   "story": [
+    "The oldest known knotted carpet, the Pazyryk carpet, is about 2,400 years old.",
+    "Weavers in Persia, Anatolia, the Caucasus and Central Asia made famous carpets with deep, rich colours.",
+    "Flat-woven rugs such as kilims have no pile: their pattern is woven, not knotted."
+   ],
+   "tech": [
+    [
+     "Hand knotting",
+     "Tying each knot by hand around the warp threads."
+    ],
+    [
+     "Flat weaving",
+     "Weaving the pattern with no pile, as in kilims."
+    ],
+    [
+     "Natural dyeing",
+     "Colouring wool with plants and minerals."
+    ],
+    [
+     "Shearing",
+     "Cutting the pile to an even height."
+    ],
+    [
+     "Finishing",
+     "Securing the ends so the rug does not unravel."
+    ]
+   ],
+   "signs": [
+    "Each knot shows clearly on the back.",
+    "The fringe is the end of the warp threads, not sewn on.",
+    "Soft bands of slightly different colour from hand dyeing.",
+    "A pattern that is not perfectly the same on both sides."
+   ],
+   "tools": [
+    [
+     "Loom",
+     "A frame that holds the warp threads tight."
+    ],
+    [
+     "Wool or silk",
+     "For the pile and the weave."
+    ],
+    [
+     "Knife",
+     "Cuts each knot's yarn."
+    ],
+    [
+     "Beater comb",
+     "Presses rows down tight."
+    ],
+    [
+     "Shears",
+     "Trim the pile evenly."
+    ]
+   ],
+   "time": "Several weeks to more than a year",
+   "bestFor": "Very patient weavers who think in rows and colours.",
+   "artists": [],
+   "guide": [
+    "Turn the rug over. Hand-knotted rugs show every knot on the back.",
+    "More knots in each square centimetre usually means finer work.",
+    "Ask about the wool and the dyes, and keep it out of strong sun."
+   ]
+  },
+  "ar": {
+   "name": "السجاد اليدوي",
+   "feel": "خالد",
+   "essence": "سجاد يُعقد أو يُنسج باليد، خيطاً بعد خيط.",
+   "story": [
+    "أقدم سجادة معقودة معروفة، سجادة بازيريك، عمرها نحو 2,400 عام.",
+    "وصنع النسّاجون في بلاد فارس والأناضول والقوقاز وآسيا الوسطى سجاداً مشهوراً بألوان عميقة وغنية.",
+    "أما البُسط المنسوجة المسطحة مثل الكليم فليس لها وبر: نقشها منسوج لا معقود."
+   ],
+   "tech": [
+    [
+     "العقد اليدوي",
+     "عقد كل عقدة باليد حول خيوط السدى."
+    ],
+    [
+     "النسج المسطح",
+     "نسج النقش بلا وبر، كما في الكليم."
+    ],
+    [
+     "الصباغة الطبيعية",
+     "تلوين الصوف بالنباتات والمعادن."
+    ],
+    [
+     "القصّ",
+     "قصّ الوبر إلى ارتفاع متساوٍ."
+    ],
+    [
+     "التشطيب",
+     "تثبيت الأطراف حتى لا تنحلّ السجادة."
+    ]
+   ],
+   "signs": [
+    "كل عقدة تظهر بوضوح على الظهر.",
+    "الأهداب هي نهايات خيوط السدى، لا تُخاط لاحقاً.",
+    "أشرطة ناعمة بألوان مختلفة قليلاً بسبب الصباغة اليدوية.",
+    "نقش لا يتطابق تماماً على الجانبين."
+   ],
+   "tools": [
+    [
+     "النول",
+     "إطار يشدّ خيوط السدى."
+    ],
+    [
+     "الصوف أو الحرير",
+     "للوبر والنسيج."
+    ],
+    [
+     "السكين",
+     "يقص خيط كل عقدة."
+    ],
+    [
+     "مشط الدقّ",
+     "يضغط الصفوف بإحكام."
+    ],
+    [
+     "المقص الكبير",
+     "يقص الوبر بالتساوي."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى أكثر من عام",
+   "bestFor": "النسّاجون الصبورون جداً الذين يفكرون بالصفوف والألوان.",
+   "artists": [],
+   "guide": [
+    "اقلب السجادة. السجاد المعقود باليد يُظهر كل عقدة على ظهره.",
+    "كثرة العقد في كل سنتيمتر مربع تعني غالباً عملاً أدق.",
+    "اسأل عن الصوف والأصباغ، وأبعدها عن الشمس القوية."
    ]
   }
  }
