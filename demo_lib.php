@@ -109,19 +109,21 @@ function owDemoArticle(string $slug): ?array {
     return null;
 }
 
-/* ---- Art Institutes: 4 demo courses (two cities and two online) ---- */
+/* ---- Art Institutes: 6 demo courses (two cities and two online, all painting; + one wood carving and one beadwork, owner 21 Nov 2026) ---- */
 function owDemoCourses(): array {
     $L = [
-        ['Watercolor Basics', 'أساسيات الألوان المائية', 'in_person', 'Riyadh', 'الرياض', 'beginner', 450, 8, '2027-01-10', '2027-01-31'],
-        ['Charcoal Drawing', 'الرسم بالفحم', 'in_person', 'Jeddah', 'جدة', 'intermediate', 750, 5, '2027-01-18', '2027-02-15'],
-        ['Oil Painting from Home', 'الرسم الزيتي من المنزل', 'online', '', '', 'beginner', 300, 20, '2027-02-01', '2027-02-28'],
-        ['Colour Theory for Painters', 'نظرية الألوان للرسامين', 'online', '', '', 'advanced', 1200, 12, '2027-02-14', '2027-03-14'],
+        ['Watercolor Basics', 'أساسيات الألوان المائية', 'in_person', 'Riyadh', 'الرياض', 'beginner', 450, 8, '2027-01-10', '2027-01-31', 'painting', 'watercolor'],
+        ['Charcoal Drawing', 'الرسم بالفحم', 'in_person', 'Jeddah', 'جدة', 'intermediate', 750, 5, '2027-01-18', '2027-02-15', 'painting', 'charcoal'],
+        ['Oil Painting from Home', 'الرسم الزيتي من المنزل', 'online', '', '', 'beginner', 300, 20, '2027-02-01', '2027-02-28', 'painting', 'oil'],
+        ['Colour Theory for Painters', 'نظرية الألوان للرسامين', 'online', '', '', 'advanced', 1200, 12, '2027-02-14', '2027-03-14', 'painting', ''],
+        ['Wood Carving for Beginners', 'نحت الخشب للمبتدئين', 'in_person', 'Riyadh', 'الرياض', 'beginner', 650, 6, '2027-02-07', '2027-03-07', 'sculpture', 'wood_carving'],
+        ['Beadwork Jewellery', 'مجوهرات الخرز', 'online', '', '', 'beginner', 250, 15, '2027-02-21', '2027-03-14', 'jewellery', 'beadwork'],
     ];
     $out = [];
-    foreach ($L as $i => [$tEn, $tAr, $type, $cEn, $cAr, $lvl, $price, $seats, $s, $e]) {
+    foreach ($L as $i => [$tEn, $tAr, $type, $cEn, $cAr, $lvl, $price, $seats, $s, $e, $art, $sty]) {
         $out[] = ['id' => 0, 'demo' => true, 'institute_id' => 0, 'inst_en' => OW_DEMO_INSTITUTE[0], 'inst_ar' => OW_DEMO_INSTITUTE[1], 'inst_logo' => '',
                   'inst_city_en' => $cEn, 'inst_city_ar' => $cAr, 'title_en' => $tEn, 'title_ar' => $tAr, 'course_type' => $type,
-                  'level' => $lvl, 'price' => $price, 'seats_remaining' => $seats, 'start_date' => $s, 'end_date' => $e];
+                  'level' => $lvl, 'price' => $price, 'seats_remaining' => $seats, 'start_date' => $s, 'end_date' => $e, 'art_type' => $art, 'art_style' => $sty];
     }
     return $out;
 }

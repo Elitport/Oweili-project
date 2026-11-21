@@ -36,6 +36,22 @@ require_once __DIR__ . '/lang_lib.php';     // owIsAr
 const OW_BOOK_HOLD_MIN = 30;   // a seat or a ticket is held this long while the payment is made
 const OW_COURSE_TYPES  = ['in_person' => ['In person', 'حضوري'], 'online' => ['Online', 'عن بُعد']];
 const OW_COURSE_LEVELS = ['beginner' => ['Beginner', 'مبتدئ'], 'intermediate' => ['Intermediate', 'متوسط'], 'advanced' => ['Advanced', 'متقدم']];
+/* Art type of a course (owner, 21 Nov 2026, Stage 2): painting, sculpture or handmade jewellery; the keys match the Art Styles groups */
+const OW_COURSE_ARTS = ['painting' => ['Painting', 'الرسم'], 'sculpture' => ['Sculpture', 'النحت'], 'jewellery' => ['Handmade jewellery', 'المجوهرات اليدوية']];
+function owCourseArtReady(): bool { return owHasColumn('courses', 'art_type') && owHasColumn('courses', 'art_style'); }
+/* The Art Styles a course may name, per art type: [art => [style id => [en, ar]]]. Painting = the painting and drawing styles shown on Art Styles */
+function owCourseArtStyles(): array {
+    static $out = null;
+    if ($out !== null) return $out;
+    $out = ['painting' => [], 'sculpture' => [], 'jewellery' => []];
+    $types = require __DIR__ . '/art_types.php';
+    foreach ($types as $id => $t) {
+        $cat = (string) ($t['cat'] ?? '');
+        if ($cat === 'sculpture' || $cat === 'jewellery') $out[$cat][$id] = [$t['en'], $t['ar']];
+        elseif (empty($t['legacy']) && empty($t['topic_only']) && $cat !== '') $out['painting'][$id] = [$t['en'], $t['ar']];
+    }
+    return $out;
+}
 const OW_COURSE_LANGS  = ['ar' => ['Arabic', 'العربية'], 'en' => ['English', 'الإنجليزية'], 'both' => ['Arabic and English', 'العربية والإنجليزية']];
 const OW_COURSE_STATUS = ['pending' => ['Waiting for approval', 'بانتظار الموافقة'], 'approved' => ['Approved', 'معتمدة'], 'rejected' => ['Not approved', 'غير معتمدة']];
 const OW_REG_STATUS    = ['pending' => ['Waiting for payment', 'بانتظار الدفع'], 'confirmed' => ['Confirmed', 'مؤكد'], 'cancelled' => ['Cancelled', 'ملغى']];
@@ -177,6 +193,12 @@ function owCourseFromPost(array $p): array {
         'age_max' => ($b = (int) ($p['age_max'] ?? 0)) > 0 ? min(99, $b) : null,
     ];
     $err = [];
+    if (owCourseArtReady()) {   // art type (required) and the exact style (optional), owner 21 Nov 2026
+        $art = (string) ($p['art_type'] ?? ''); $sty = (string) ($p['art_style'] ?? '');
+        if (!isset(OW_COURSE_ARTS[$art])) { $err[] = ['Please choose the art type.', 'يرجى اختيار نوع الفن.']; $art = 'painting'; }
+        if ($sty !== '' && !isset(owCourseArtStyles()[$art][$sty])) { $err[] = ['Please choose a style of this art type, or leave the style empty.', 'يرجى اختيار أسلوب من نوع الفن نفسه، أو ترك الأسلوب فارغاً.']; $sty = ''; }
+        $v['art_type'] = $art; $v['art_style'] = $sty;
+    }
     if ($v['title_en'] === '' || $v['title_ar'] === '') $err[] = ['The title is needed in Arabic and English.', 'العنوان مطلوب بالعربية والإنجليزية.'];
     if ($v['description_en'] === '' || $v['description_ar'] === '') $err[] = ['The short description is needed in Arabic and English.', 'الوصف القصير مطلوب بالعربية والإنجليزية.'];
     if ($v['learn_en'] === '' || $v['learn_ar'] === '') $err[] = ['Please write what students will learn, in Arabic and English.', 'يرجى كتابة ما سيتعلمه الطلاب، بالعربية والإنجليزية.'];
@@ -337,7 +359,7 @@ function owCourseMarkPaid(int $regId, array $actor, string $note = ''): ?array {
 
 /* ---------------- "Notify me" leads for an institute with no courses yet (owner, 15 Nov 2026) ---------------- */
 function owCourseLeadsReady(): bool { return owHasTable('course_leads'); }
-function owCourseLeadSave(?int $instId, ?int $placeId, string $name, string $email, string $phone, string $lang, string $instEn, string $instAr, string $city = ''): ?array {
+function owCourseLeadSave(?int $instId, ?int $placeId, string $name, string $email, string $phone, string $lang, string $instEn, string $instAr, string $city = '', string $art = ''): ?array {
     if (!owCourseLeadsReady()) return ['Something went wrong. Please try again.', 'حدث خطأ. يرجى المحاولة مرة أخرى.'];
     try {
         $db = getDB();
@@ -345,7 +367,10 @@ function owCourseLeadSave(?int $instId, ?int $placeId, string $name, string $ema
         $dup->execute([':p' => $phone, ':i' => $instId, ':pl' => $placeId]);
         if ($dup->fetchColumn()) return null;   // the same request today: saved once
         $vals = [':i' => $instId, ':pl' => $placeId, ':n' => mb_substr($name, 0, 150), ':e' => mb_substr(strtolower($email), 0, 190), ':p' => mb_substr($phone, 0, 30), ':l' => $lang === 'ar' ? 'ar' : 'en'];
-        if (owHasColumn('course_leads', 'city')) {   // "City or Online" (21 Nov 2026; course_leads_city.sql)
+        if (owHasColumn('course_leads', 'city') && owHasColumn('course_leads', 'art_type')) {   // + "Which art?" (21 Nov 2026; courses_art_type.sql)
+            $vals[':c'] = mb_substr($city, 0, 120); $vals[':a'] = $art === 'any' || isset(OW_COURSE_ARTS[$art]) ? $art : '';
+            $db->prepare('INSERT INTO course_leads (institute_id, place_id, name, email, phone, city, art_type, lang) VALUES (:i, :pl, :n, :e, :p, :c, :a, :l)')->execute($vals);
+        } elseif (owHasColumn('course_leads', 'city')) {   // "City or Online" (21 Nov 2026; course_leads_city.sql)
             $vals[':c'] = mb_substr($city, 0, 120);
             $db->prepare('INSERT INTO course_leads (institute_id, place_id, name, email, phone, city, lang) VALUES (:i, :pl, :n, :e, :p, :c, :l)')->execute($vals);
         } else {
@@ -356,7 +381,7 @@ function owCourseLeadSave(?int $instId, ?int $placeId, string $name, string $ema
         require_once __DIR__ . '/alert_lib.php';
         owAdminAlert('booking', 'Notify me (courses): ' . ($instEn !== '' ? $instEn : 'any institute'), 'نبّهني (الدورات): ' . ($instAr !== '' ? $instAr : 'أي معهد'), 'admin_bookings.php#leads');
         require_once __DIR__ . '/bashro_send.php';
-        owBashroCourseLead($name, $email, $phone, $lang, $instEn, $city);
+        owBashroCourseLead($name, $email, $phone, $lang, $instEn, $city, $art);
         return null;
     } catch (Throwable $e) { error_log('owCourseLeadSave: ' . $e->getMessage()); return ['Something went wrong. Please try again.', 'حدث خطأ. يرجى المحاولة مرة أخرى.']; }
 }

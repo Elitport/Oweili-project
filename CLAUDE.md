@@ -158,6 +158,17 @@
 - The certificate and its printed label are left exactly as they were (body.cert-page / body.label-page are left out of every calm rule)
 - Code: one calm layer at the end of assets/css/oweili.css (it replaces the old photo-page rules and the glass layer); index.php has its own small block for the video hero and the row of links; assets/css/bento.css was removed; the Gallery's filter button has a visible "Filter" word (marketplace.php)
 
+### Courses by art type: painting, sculpture, handmade jewellery (21 Nov 2026, owner, Stage 2)
+- Course form (institute_dashboard.php): a required "Art type" / «نوع الفن» (Painting / الرسم, Sculpture / النحت, Handmade jewellery / المجوهرات اليدوية; OW_COURSE_ARTS in booking_lib.php) and an optional "Style from Art Styles" (owCourseArtStyles(): the shown painting and drawing styles, the 7 Sculpture and 5 Jewellery styles; a style must belong to the chosen type, checked on the server). The change waits for approval like every course change. Existing courses became Painting
+- Admin → Courses and tickets (admin_bookings.php#courses): each course shows its art type and style and can change them ("Save art type"; logged course_art; the approval status is not touched). The older institutes' courses in Admin → Institutes (not bookable, not on Art Institutes) were not changed
+- Art Institutes (institutes.php): a filter "Art type" / «نوع الفن» next to City, Level and Price (?art=painting / sculpture / jewellery; the demo courses follow it), and each course card shows its type as a small badge (.c-art). On iPad the filter bar now has 4 boxes, so Price sits on a second line
+- "Notify me": an optional "Which art?" / «أي فن؟» (Any / أي فن, Painting, Sculpture, Handmade jewellery), saved in course_leads.art_type ('any' or the type; older requests empty), shown in Admin → "Notify me" (column "Which art?") and added to the Bashro lead's message ("Which art: Sculpture.")
+- Art Styles (explore.js): the Sculpture and Jewellery windows have a small link "Courses in this art" / «دورات في هذا الفن» to institutes.php?art=sculpture / jewellery, only while the Art Institutes switch is on (window.OW_COURSES_ON from explore.php)
+- Demo: the 4 demo courses are Painting; 2 more demo courses: Wood Carving for Beginners / نحت الخشب للمبتدئين (Sculpture, Riyadh) and Beadwork Jewellery / مجوهرات الخرز (Handmade jewellery, online), with the same Demo badge and safeguards; "Delete all demo content" removes them too (Admin → Settings text now says 6 courses)
+- The Gallery and the artwork upload stay painting only (no change there)
+- Database (courses_art_type.sql, add-only, safe to run twice): courses.art_type (default 'painting'), courses.art_style, course_leads.art_type. The code also works before the columns exist
+- Files: booking_lib.php, institute_dashboard.php, admin_bookings.php, institutes.php, bashro_send.php, demo_lib.php, admin_settings.php, explore.php, assets/js/explore.js, courses_art_type.sql (new), CLAUDE.md. Tables: courses (art_type, art_style new), course_leads (art_type new)
+
 ### Art Styles: Sculpture and Handmade jewellery, Arabic name «الأساليب الفنية» (21 Nov 2026, owner)
 - OWNER'S DECISION: Art Styles grows to sculpture and handmade jewellery, a first step toward courses in these arts. Selling sculptures or jewellery is NOT part of it: the Gallery, the artwork upload and edit forms, the artist profile style choices and the admin lists stay painting only (art_types.php marks the cats 'sculpture' and 'jewellery' legacy, so they are never offered; explore.js shows no "From Our Gallery" part in their windows)
 - Arabic name of the menu item and the page: «الأساليب الفنية» (was «أساليب الرسم») everywhere: menu (computer and ☰), page title and heading, link previews, the home page link, the older pages' own menu words and the admin label. English "Art Styles" unchanged
@@ -1156,6 +1167,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
+- courses_art_type.sql — courses by art type (21 Nov 2026): courses.art_type, courses.art_style, course_leads.art_type. Only adds columns; safe to run more than once
 - course_leads_city.sql — "City or Online" on the Art Institutes "Notify me" form (21 Nov 2026): course_leads.city. Only adds one column; safe to run more than once. Run on the live database 21 Nov 2026 after a full backup
 - courses_update.sql — Art Institutes and "Book your seat" (15 Nov 2026): course_registrations.user_id may be empty, new table course_leads. Safe to run more than once. Run on the live database 15 Nov 2026 after a full backup
 - bookings_update.sql — course booking and museum tickets (14 Nov 2026). Only adds (two account-type values, columns, five tables); safe to run more than once

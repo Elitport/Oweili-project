@@ -209,10 +209,11 @@ function owBashroCourseBooking(int $regId): void {
     } catch (Throwable $e) { error_log('owBashroCourseBooking: ' . $e->getMessage()); }
 }
 /* "Notify me" when an institute has no courses yet → Sales */
-function owBashroCourseLead(string $name, string $email, string $phone, string $lang, string $instEn, string $city = ''): void {
+function owBashroCourseLead(string $name, string $email, string $phone, string $lang, string $instEn, string $city = '', string $art = ''): void {
     if (!owBashroKindOn('quote')) return;
+    $artWord = ['any' => 'Any', 'painting' => 'Painting', 'sculpture' => 'Sculpture', 'jewellery' => 'Handmade jewellery'][$art] ?? '';   // "Which art?" (21 Nov 2026)
     owBashroQueue('quote', ['name' => $name, 'email' => $email, 'phone' => $phone, 'company' => $instEn, 'service' => 'Course: notify me', 'lang' => $lang,
-        'message' => 'Wants to hear when a course opens' . ($instEn !== '' ? ' at ' . $instEn : '') . '.' . ($city !== '' ? ' City or Online: ' . ($city === 'online' ? 'Online' : $city) . '.' : '') . ' Saved on Oweili: ' . owBashroHost() . '/admin_bookings.php#leads']);
+        'message' => 'Wants to hear when a course opens' . ($instEn !== '' ? ' at ' . $instEn : '') . '.' . ($city !== '' ? ' City or Online: ' . ($city === 'online' ? 'Online' : $city) . '.' : '') . ($artWord !== '' ? ' Which art: ' . $artWord . '.' : '') . ' Saved on Oweili: ' . owBashroHost() . '/admin_bookings.php#leads']);
 }
 /* New artist or buyer account → signup (OFF until Bashro accepts the kind) */
 function owBashroSignup(int $userId, string $role): void {

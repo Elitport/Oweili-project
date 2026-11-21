@@ -65,6 +65,8 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <script defer src="<?= owAsset('assets/js/art_styles.js') ?>"></script>
 <script defer src="<?= owAsset('assets/js/art_covers.js') ?>"></script>
 <script>window.OW_STYLE_IMG = <?= json_encode(owBase() . 'assets/img/styles/') ?>;</script>
+<?php require_once __DIR__ . '/gallery_lib.php'; /* "Courses in this art" in the Sculpture and Jewellery windows, only while Art Institutes is switched on (owner, 21 Nov 2026) */ ?>
+<script>window.OW_COURSES_ON = <?= owPartOn('courses') ? 'true' : 'false' ?>;</script>
 <script defer src="<?= owAsset('assets/js/art_photos.js') ?>"></script>
 <script defer src="<?= owAsset('assets/js/explore.js') ?>"></script>
 <style>
@@ -151,6 +153,7 @@ html.m-open { overflow: hidden; }
 [dir="rtl"] .m-kicker, [dir="rtl"] .m-title { letter-spacing: 0; }
 [dir="rtl"] .m-kicker { font-size: 13px; }
 .m-sec { margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--color-border); }
+.m-courses { margin: var(--space-lg) 0 0; padding-top: var(--space-md); border-top: 1px solid var(--color-border); font-weight: 700; }   /* "Courses in this art" (21 Nov 2026) */
 .m-h { margin: 0 0 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-dark); line-height: 1.5; }
 [dir="rtl"] .m-h { letter-spacing: 0; font-size: 15px; }
 .m-story p { font-size: 16px; line-height: 1.75; margin: 0 0 12px; }

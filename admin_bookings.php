@@ -52,6 +52,15 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 : $mailTo($c['inst_email'], 'About your course · بخصوص دورتك', 'Your course "' . $c['title_en'] . '" was not approved. Reason: ' . $why, 'لم تُعتمد دورتك «' . $c['title_ar'] . '». السبب: ' . $why, 'institute_dashboard.php');
             $msg = $s === 'approved' ? ['Course approved.', 'تم اعتماد الدورة.'] : ['Course not approved. The institute was told the reason.', 'لم تُعتمد الدورة، وأُبلغ المعهد بالسبب.'];
         }
+    } elseif ($do === 'course_art' && owCourseArtReady()) {   // the admin sets a course's art type and style (owner, 21 Nov 2026); its status is not changed
+        $c = owCourseGet($id); $art = (string) ($_POST['art_type'] ?? ''); $sty = (string) ($_POST['art_style'] ?? '');
+        if (!$c || (int) $c['bookable'] !== 1) $bad = ['Not found.', 'غير موجود.'];
+        elseif (!isset(OW_COURSE_ARTS[$art])) $bad = ['Please choose the art type.', 'يرجى اختيار نوع الفن.'];
+        elseif ($sty !== '' && !isset(owCourseArtStyles()[$art][$sty])) $bad = ['Please choose a style of this art type, or leave the style empty.', 'يرجى اختيار أسلوب من نوع الفن نفسه، أو ترك الأسلوب فارغاً.'];
+        else {
+            $db->prepare('UPDATE courses SET art_type = :a, art_style = :s WHERE id = :id')->execute([':a' => $art, ':s' => $sty, ':id' => $id]);
+            owLog('course_art', 'course', $id, $art . ($sty !== '' ? ' / ' . $sty : ''), $actor); $msg = ['Saved.', 'تم الحفظ.'];
+        }
     } elseif ($do === 'reg_cancel' || $do === 'ticket_cancel') {
         $e2 = owBookingCancel($do === 'reg_cancel' ? 'course' : 'ticket', $id, $actor, !empty($_POST['refund']), $why);
         $e2 ? $bad = $e2 : $msg = ['Cancelled.' . (!empty($_POST['refund']) ? ' The money was refunded.' : ''), 'تم الإلغاء.' . (!empty($_POST['refund']) ? ' وأُعيد المبلغ.' : '')];
@@ -164,7 +173,13 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <table class="tbl"><thead><tr><th><?= owBi('Course', 'الدورة') ?></th><th><?= owBi('Details', 'التفاصيل') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th></th></tr></thead><tbody>
 <?php foreach ($courses as $c): [$de, $da] = owDateRangeBi($c['start_date'], $c['end_date']); $ty = OW_COURSE_TYPES[$c['course_type']] ?? ['', '']; $lv = OW_COURSE_LEVELS[$c['level']] ?? ['', '']; ?>
 <tr><td><b><?= owBi($c['title_en'], $c['title_ar']) ?></b><br><span class="mini"><?= owBi($c['inst_en'], $c['inst_ar']) ?></span><br><a class="mini" href="course.php?id=<?= (int) $c['id'] ?>"><?= owBi('Preview the page', 'معاينة الصفحة') ?></a></td>
-  <td class="mini"><?= owBi($de, $da) ?> · <?= owBi($ty[0], $ty[1]) ?> · <?= owBi($lv[0], $lv[1]) ?><br><?= (float) $c['price'] > 0 ? owSar((float) $c['price']) : owBi('Free', 'مجاني') ?> · <?= (int) $c['seats_total'] - (int) $c['seats_remaining'] ?>/<?= (int) $c['seats_total'] ?> <?= owBi('seats', 'مقعد') ?></td>
+  <td class="mini"><?= owBi($de, $da) ?> · <?= owBi($ty[0], $ty[1]) ?> · <?= owBi($lv[0], $lv[1]) ?><br><?= (float) $c['price'] > 0 ? owSar((float) $c['price']) : owBi('Free', 'مجاني') ?> · <?= (int) $c['seats_total'] - (int) $c['seats_remaining'] ?>/<?= (int) $c['seats_total'] ?> <?= owBi('seats', 'مقعد') ?>
+    <?php if (owCourseArtReady()): $ca = (string) ($c['art_type'] ?? 'painting'); $cs = (string) ($c['art_style'] ?? ''); /* art type and style: shown and editable (owner, 21 Nov 2026) */ ?>
+    <form method="post" action="admin_bookings.php#courses" style="margin-top:6px"><?= csrfField() ?><input type="hidden" name="do" value="course_art"><input type="hidden" name="id" value="<?= (int) $c['id'] ?>">
+      <select name="art_type" aria-label="<?= e('Art type · نوع الفن') ?>"><?php foreach (OW_COURSE_ARTS as $k => $w): ?><option value="<?= $k ?>"<?= $ca === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select>
+      <select name="art_style" aria-label="<?= e('Style · الأسلوب') ?>"><option value=""><?= owIsAr() ? 'الأسلوب: بدون تحديد' : 'Style: not set' ?></option><?php foreach (owCourseArtStyles() as $ak => $list): ?><optgroup label="<?= e(owIsAr() ? OW_COURSE_ARTS[$ak][1] : OW_COURSE_ARTS[$ak][0]) ?>"><?php foreach ($list as $sk => $sw): ?><option value="<?= e($sk) ?>"<?= $cs === $sk ? ' selected' : '' ?>><?= e(owIsAr() ? $sw[1] : $sw[0]) ?></option><?php endforeach; ?></optgroup><?php endforeach; ?></select>
+      <button class="btn btn-secondary btn-sm"><?= owBi('Save art type', 'حفظ نوع الفن') ?></button></form>
+    <?php endif; ?></td>
   <td><?= owPill(OW_COURSE_STATUS, (string) $c['status']) ?><?= !(int) $c['is_active'] ? ' <span class="pillx">' . owBi('Hidden by the institute', 'أخفاها المعهد') . '</span>' : '' ?></td>
   <td><?php if ($c['status'] !== 'approved'): ?><form method="post" action="admin_bookings.php#courses"><?= csrfField() ?><input type="hidden" name="do" value="course_approve"><input type="hidden" name="id" value="<?= (int) $c['id'] ?>"><button class="btn btn-primary btn-sm"><?= owBi('Approve', 'اعتماد') ?></button></form><?php endif; ?>
     <?php if ($c['status'] !== 'rejected'): ?><form method="post" action="admin_bookings.php#courses"><?= csrfField() ?><input type="hidden" name="do" value="course_reject"><input type="hidden" name="id" value="<?= (int) $c['id'] ?>"><input type="text" name="reason" placeholder="<?= e(owIsAr() ? 'السبب' : 'Reason') ?>" aria-label="<?= e('Reason · السبب') ?>"><button class="btn btn-danger btn-sm"><?= owBi('Not approved', 'رفض') ?></button></form><?php endif; ?></td></tr>
@@ -188,10 +203,10 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <h2 id="leads"><?= owBi('Notify me: waiting for a course', 'نبّهني: بانتظار دورة') ?></h2>
 <div class="card"><?php if (!$leads): ?><p><?= owBi('No requests yet.', 'لا طلبات بعد.') ?></p><?php else: ?>
 <?php $leadCityAr = []; try { foreach ($K("SELECT city_en, MIN(city_ar) AS city_ar FROM institutes WHERE city_en <> '' GROUP BY city_en") as $r) $leadCityAr[$r['city_en']] = $r['city_ar'] ?: $r['city_en']; } catch (Throwable $e) {} ?>
-<table class="tbl"><thead><tr><th><?= owBi('Person', 'الشخص') ?></th><th><?= owBi('Institute', 'المعهد') ?></th><th><?= owBi('City or Online', 'المدينة أو عن بعد') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
+<table class="tbl"><thead><tr><th><?= owBi('Person', 'الشخص') ?></th><th><?= owBi('Institute', 'المعهد') ?></th><th><?= owBi('City or Online', 'المدينة أو عن بعد') ?></th><th><?= owBi('Which art?', 'أي فن؟') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
 <?php foreach ($leads as $l): $lc = (string) ($l['city'] ?? ''); $ln = $l['inst_en'] !== null ? [$l['inst_en'], $l['inst_ar'] ?: $l['inst_en']] : ($l['pl_en'] !== null ? [$l['pl_en'], $l['pl_ar'] ?: $l['pl_en']] : ['Any institute', 'أي معهد']); ?>
 <tr><td><b><?= e($l['name']) ?></b><br><span class="mini" dir="ltr"><a href="tel:<?= e(preg_replace('/[^0-9+]/', '', (string) $l['phone'])) ?>"><?= e($l['phone']) ?></a> · <a href="mailto:<?= e($l['email']) ?>"><?= e($l['email']) ?></a></span></td>
-  <td><?= owBi($ln[0], $ln[1]) ?></td><td><?= $lc === '' ? '' : ($lc === 'online' ? owBi('Online', 'عن بعد') : owBi($lc, $leadCityAr[$lc] ?? $lc)) ?></td><td class="mini" dir="ltr"><?= e(substr((string) $l['created_at'], 0, 16)) ?></td>
+  <td><?= owBi($ln[0], $ln[1]) ?></td><td><?= $lc === '' ? '' : ($lc === 'online' ? owBi('Online', 'عن بعد') : owBi($lc, $leadCityAr[$lc] ?? $lc)) ?></td><td><?php $la = (string) ($l['art_type'] ?? ''); echo $la === 'any' ? owBi('Any', 'أي فن') : (isset(OW_COURSE_ARTS[$la]) ? owBi(OW_COURSE_ARTS[$la][0], OW_COURSE_ARTS[$la][1]) : ''); ?></td><td class="mini" dir="ltr"><?= e(substr((string) $l['created_at'], 0, 16)) ?></td>
   <td><form method="post" action="admin_bookings.php#leads"><?= csrfField() ?><input type="hidden" name="do" value="lead_status"><input type="hidden" name="id" value="<?= (int) $l['id'] ?>">
     <select name="status" aria-label="<?= e('Status · الحالة') ?>" onchange="this.form.submit()"><?php foreach (['new' => ['New', 'جديد'], 'contacted' => ['Contacted', 'تم التواصل'], 'closed' => ['Closed', 'مغلق']] as $k => $w): ?><option value="<?= $k ?>"<?= $l['status'] === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select>
     <noscript><button class="btn btn-secondary btn-sm"><?= owBi('Save', 'حفظ') ?></button></noscript></form></td></tr>

@@ -53,10 +53,11 @@ try {
     }
 } catch (Throwable $e) { $leadCities = []; }
 if ($inst && owLeadCityOk($inst['city_en']) && !isset($leadCities[$inst['city_en']])) $leadCities[$inst['city_en']] = [$inst['city_en'], $inst['city_ar']];
-$nErr = null; $nVals = ['name' => '', 'email' => '', 'phone' => '', 'city' => ''];
+$nErr = null; $nVals = ['name' => '', 'email' => '', 'phone' => '', 'city' => '', 'art' => 'any'];
 $selfUrl = 'institutes.php' . ($inst ? '?' . ($inst['src'] === 'i' ? 'i=' : 'p=') . $inst['id'] : '');
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'notify') {
-    $nVals = ['name' => mb_substr(trim((string) ($_POST['name'] ?? '')), 0, 150), 'email' => strtolower(trim((string) ($_POST['email'] ?? ''))), 'phone' => trim((string) ($_POST['phone'] ?? '')), 'city' => trim((string) ($_POST['city'] ?? ''))];
+    $nVals = ['name' => mb_substr(trim((string) ($_POST['name'] ?? '')), 0, 150), 'email' => strtolower(trim((string) ($_POST['email'] ?? ''))), 'phone' => trim((string) ($_POST['phone'] ?? '')), 'city' => trim((string) ($_POST['city'] ?? '')), 'art' => (string) ($_POST['art'] ?? 'any')];
+    if ($nVals['art'] !== 'any' && !isset(OW_COURSE_ARTS[$nVals['art']])) $nVals['art'] = 'any';   // "Which art?" is optional (owner, 21 Nov 2026)
     $back = $selfUrl . (str_contains($selfUrl, '?') ? '&' : '?') . 'notified=1#notify';
     if (trim((string) ($_POST['website'] ?? '')) !== '') { header('Location: ' . $back); exit; }   // the hidden robot trap
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $nErr = ['The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'];
@@ -68,7 +69,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') ===
     else {
         owReqCounted('course_lead');
         $nErr = owCourseLeadSave($inst && $inst['src'] === 'i' ? $inst['id'] : null, $inst && $inst['src'] === 'p' ? $inst['id'] : null,
-                                 $nVals['name'], $nVals['email'], $nVals['phone'], owIsAr() ? 'ar' : 'en', $inst['name_en'] ?? '', $inst['name_ar'] ?? '', $nVals['city']);
+                                 $nVals['name'], $nVals['email'], $nVals['phone'], owIsAr() ? 'ar' : 'en', $inst['name_en'] ?? '', $inst['name_ar'] ?? '', $nVals['city'], $nVals['art']);
         if (!$nErr) { header('Location: ' . $back); exit; }
     }
 }
@@ -80,6 +81,8 @@ const OW_INST_PRICES = ['free' => ['Free', 'مجاني', 0, 0], 'u500' => ['Unde
 $fCity = (string) ($_GET['city'] ?? '');
 $fLevel = (string) ($_GET['level'] ?? '');
 $fPrice = (string) ($_GET['price'] ?? '');
+$fArt = (string) ($_GET['art'] ?? '');   // art type (owner, 21 Nov 2026): painting, sculpture or handmade jewellery
+if (!isset(OW_COURSE_ARTS[$fArt]) || !owCourseArtReady()) $fArt = '';
 if (!isset(OW_COURSE_LEVELS[$fLevel])) $fLevel = '';
 if (!isset(OW_INST_PRICES[$fPrice])) $fPrice = '';
 if (mb_strlen($fCity) > 120) $fCity = '';
@@ -94,6 +97,7 @@ try {
         if ($inst) { $where .= ' AND c.institute_id = :inst'; $args[':inst'] = $inst['id']; }
         if ($fCity === 'online') $where .= " AND c.course_type = 'online'";
         elseif ($fCity !== '') { $where .= " AND c.course_type = 'in_person' AND i.city_en = :city"; $args[':city'] = $fCity; }
+        if ($fArt !== '') { $where .= ' AND c.art_type = :art'; $args[':art'] = $fArt; }
         if ($fLevel !== '') { $where .= ' AND c.level = :lvl'; $args[':lvl'] = $fLevel; }
         if ($fPrice !== '') { $where .= ' AND c.price BETWEEN :p1 AND :p2'; $args[':p1'] = OW_INST_PRICES[$fPrice][2]; $args[':p2'] = OW_INST_PRICES[$fPrice][3]; }
         $st = $db->prepare("SELECT c.*, i.name_en AS inst_en, i.name_ar AS inst_ar, i.city_en AS inst_city_en, i.city_ar AS inst_city_ar, i.logo_path AS inst_logo
@@ -102,10 +106,10 @@ try {
         $courses = $st->fetchAll();
     }
 } catch (Throwable $e) { error_log('institutes.php: ' . $e->getMessage()); $courses = []; }
-$filtered = $fCity !== '' || $fLevel !== '' || $fPrice !== '';
+$filtered = $fCity !== '' || $fLevel !== '' || $fPrice !== '' || $fArt !== '';
 if ($fCity !== '' && $fCity !== 'online' && !in_array($fCity, array_column($cities, 'city_en'), true)) $cities[] = ['city_en' => $fCity, 'city_ar' => $fCity];
-$q = function (array $over = []) use ($inst, $fCity, $fLevel, $fPrice): string {
-    $a = array_filter(array_merge(['i' => $inst && $inst['src'] === 'i' ? $inst['id'] : '', 'p' => $inst && $inst['src'] === 'p' ? $inst['id'] : '', 'city' => $fCity, 'level' => $fLevel, 'price' => $fPrice], $over), fn($v) => $v !== '' && $v !== null);
+$q = function (array $over = []) use ($inst, $fCity, $fLevel, $fPrice, $fArt): string {
+    $a = array_filter(array_merge(['i' => $inst && $inst['src'] === 'i' ? $inst['id'] : '', 'p' => $inst && $inst['src'] === 'p' ? $inst['id'] : '', 'city' => $fCity, 'art' => $fArt, 'level' => $fLevel, 'price' => $fPrice], $over), fn($v) => $v !== '' && $v !== null);
     return 'institutes.php' . ($a ? '?' . http_build_query($a) : '');
 };
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
@@ -117,6 +121,7 @@ if (!$inst && owDemoOn()) {
         if ($dc['course_type'] === 'in_person' && !in_array($dc['inst_city_en'], array_column($cities, 'city_en'), true)) $cities[] = ['city_en' => $dc['inst_city_en'], 'city_ar' => $dc['inst_city_ar']];
         if ($fCity === 'online' && $dc['course_type'] !== 'online') continue;
         if ($fCity !== '' && $fCity !== 'online' && ($dc['course_type'] !== 'in_person' || $dc['inst_city_en'] !== $fCity)) continue;
+        if ($fArt !== '' && $dc['art_type'] !== $fArt) continue;
         if ($fLevel !== '' && $dc['level'] !== $fLevel) continue;
         if ($fPrice !== '' && ($dc['price'] < OW_INST_PRICES[$fPrice][2] || $dc['price'] > OW_INST_PRICES[$fPrice][3])) continue;
         $courses[] = $dc;
@@ -212,6 +217,10 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
           <?php foreach ($cities as $ct): ?><option value="<?= e($ct['city_en']) ?>"<?= $fCity === $ct['city_en'] ? ' selected' : '' ?>><?= e(owIsAr() ? ($ct['city_ar'] ?: $ct['city_en']) : $ct['city_en']) ?></option><?php endforeach; ?>
           <option value="online"<?= $fCity === 'online' ? ' selected' : '' ?>><?= owIsAr() ? 'عن بعد' : 'Online' ?></option>
         </select></div>
+      <?php if (owCourseArtReady()): ?><div class="field"><label for="f-art"><?= owBi('Art type', 'نوع الفن') ?></label>
+        <select id="f-art" name="art"><option value=""><?= owIsAr() ? 'كل الأنواع' : 'All types' ?></option>
+          <?php foreach (OW_COURSE_ARTS as $k => $l): ?><option value="<?= e($k) ?>"<?= $fArt === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $l[1] : $l[0]) ?></option><?php endforeach; ?>
+        </select></div><?php endif; ?>
       <div class="field"><label for="f-level"><?= owBi('Level', 'المستوى') ?></label>
         <select id="f-level" name="level"><option value=""><?= owIsAr() ? 'كل المستويات' : 'All levels' ?></option>
           <?php foreach (OW_COURSE_LEVELS as $k => $l): ?><option value="<?= e($k) ?>"<?= $fLevel === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $l[1] : $l[0]) ?></option><?php endforeach; ?>
@@ -242,6 +251,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
             <?php if ($isDemo): ?><span><?= owBi($c['inst_en'], $c['inst_ar']) ?></span> <?= owDemoBadge() ?><?php else: ?><a href="institutes.php?i=<?= (int) $c['institute_id'] ?>"><?= owBi((string) ($c['inst_en'] ?: $c['inst_ar']), (string) ($c['inst_ar'] ?: $c['inst_en'])) ?></a><?php endif; ?></div>
           <h2><?= owBi((string) ($c['title_en'] ?: $c['title_ar']), (string) ($c['title_ar'] ?: $c['title_en'])) ?></h2>
           <div class="c-tags">
+            <?php if (owCourseArtReady() || $isDemo): $art = OW_COURSE_ARTS[$c['art_type'] ?? ''] ?? OW_COURSE_ARTS['painting']; ?><span class="c-tag c-art"><?= owBi($art[0], $art[1]) ?></span><?php endif; ?>
             <span class="c-tag"><?= owBi($lvl[0], $lvl[1]) ?></span>
             <span class="c-tag"><?php if ($online): ?><?= owBi('Online', 'عن بعد') ?><?php else: ?><?= $PIN ?><?= owBi((string) ($c['inst_city_en'] ?: $c['inst_city_ar']), (string) ($c['inst_city_ar'] ?: $c['inst_city_en'])) ?><?php endif; ?></span>
           </div>
@@ -256,7 +266,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
     <?php elseif ($filtered): ?>
       <div class="card empty-state d-empty reveal">
         <?= owBi('No courses match these choices. Try another city, level or price.', 'لا توجد دورات تطابق هذه الاختيارات. جرّب مدينة أو مستوى أو سعراً آخر.') ?>
-        <div><a class="btn btn-secondary" href="<?= e($q(['city' => '', 'level' => '', 'price' => ''])) ?>"><?= owBi('Show all courses', 'اعرض كل الدورات') ?></a></div>
+        <div><a class="btn btn-secondary" href="<?= e($q(['city' => '', 'art' => '', 'level' => '', 'price' => ''])) ?>"><?= owBi('Show all courses', 'اعرض كل الدورات') ?></a></div>
       </div>
     <?php else: ?>
       <div class="card ci-none reveal" id="notify">
@@ -279,6 +289,10 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
                 <select id="n-city" name="city" required><option value=""><?= owIsAr() ? 'اختر' : 'Choose' ?></option>
                   <?php foreach ($leadCities as $ck => $cv): ?><option value="<?= e($ck) ?>"<?= $nVals['city'] === $ck ? ' selected' : '' ?>><?= e(owIsAr() ? $cv[1] : $cv[0]) ?></option><?php endforeach; ?>
                   <option value="online"<?= $nVals['city'] === 'online' ? ' selected' : '' ?>><?= owIsAr() ? 'عن بعد' : 'Online' ?></option>
+                </select></div>
+              <div class="field"><label for="n-art"><?= owBi('Which art? (optional)', 'أي فن؟ (اختياري)') ?></label>
+                <select id="n-art" name="art"><option value="any"<?= $nVals['art'] === 'any' ? ' selected' : '' ?>><?= owIsAr() ? 'أي فن' : 'Any' ?></option>
+                  <?php foreach (OW_COURSE_ARTS as $ak => $aw): ?><option value="<?= e($ak) ?>"<?= $nVals['art'] === $ak ? ' selected' : '' ?>><?= e(owIsAr() ? $aw[1] : $aw[0]) ?></option><?php endforeach; ?>
                 </select></div>
               <div class="ci-trap" aria-hidden="true"><label for="n-web">Website</label><input id="n-web" name="website" tabindex="-1" autocomplete="off"></div>
               <p class="mini" style="font-size:var(--fs-caption)"><?= owBi('We use these details only to tell you about courses. See our', 'نستخدم هذه البيانات فقط لإخبارك عن الدورات. اطّلع على') ?> <a class="ci-priv" href="privacy.php"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>

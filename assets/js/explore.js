@@ -191,7 +191,7 @@
       section('Difficulty & Time', 'الصعوبة والوقت', facts, 'm-facts') +
       (artists ? section('Famous Artists', 'فنانون صنعوا هذا الأسلوب', list(artists, 'ul'), 'm-artists') : '') +
       section('Collector’s Guide: How to recognize authentic ' + en.name + (/work$/i.test(en.name) ? '' : ' work'), 'دليل المقتني: كيف تتعرّف على عمل أصيل في ' + ar.name, list(guide, 'ol'), 'm-guide') +
-      (NOT_IN_GALLERY.indexOf(s.cat) < 0 ? liveHtml(s) : '') +
+      (NOT_IN_GALLERY.indexOf(s.cat) < 0 ? liveHtml(s) : (window.OW_COURSES_ON ? '<p class="m-courses"><a class="link" href="institutes.php?art=' + encodeURIComponent(s.cat) + '">' + bi('Courses in this art', 'دورات في هذا الفن') + '</a></p>' : '')) +
       '</div>';
   }
   function openStyle(id, push) {

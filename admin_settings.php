@@ -161,8 +161,8 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
   }
   $demoLeft = owSetting('demo_content', '1') !== '0'; ?>
   <div class="card" id="demo"><h2><?= owBi('Demo content', 'المحتوى التجريبي') ?> <?= $demoLeft ? '<span class="pillx ok">' . owBi('Shown to everyone for now', 'ظاهر للجميع مؤقتاً') . '</span>' : '<span class="pillx no">' . owBi('Deleted', 'محذوف') . '</span>' ?></h2>
-    <p><?= owBi('8 demo artworks in the Gallery, 4 Art Events, 4 Art Education articles and 4 courses in Art Institutes, each with a "Demo" badge. For now everyone can see them (also when signed out). Google never indexes them, and nothing can be bought, booked or sent.',
-                'ثمانية أعمال تجريبية في المعرض، وأربعة ملتقيات فنية، وأربعة مقالات في التثقيف الفني، وأربع دورات في المعاهد الفنية، وعلى كل منها شارة «تجريبي». يراها الجميع مؤقتاً (حتى دون تسجيل الدخول). لا يفهرسها Google، ولا يمكن شراء شيء أو حجزه أو إرساله.') ?></p>
+    <p><?= owBi('8 demo artworks in the Gallery, 4 Art Events, 4 Art Education articles and 6 courses in Art Institutes, each with a "Demo" badge. For now everyone can see them (also when signed out). Google never indexes them, and nothing can be bought, booked or sent.',
+                'ثمانية أعمال تجريبية في المعرض، وأربعة ملتقيات فنية، وأربعة مقالات في التثقيف الفني، وست دورات في المعاهد الفنية، وعلى كل منها شارة «تجريبي». يراها الجميع مؤقتاً (حتى دون تسجيل الدخول). لا يفهرسها Google، ولا يمكن شراء شيء أو حجزه أو إرساله.') ?></p>
     <?php if ($demoMsg): ?><div class="alert alert-ok" role="status"><?= owBi('All demo content is deleted.', 'حُذف كل المحتوى التجريبي.') ?></div><?php endif; ?>
     <?php if ($demoBack): ?><div class="alert alert-ok" role="status"><?= owBi('The demo content is shown again.', 'عاد المحتوى التجريبي للظهور.') ?></div><?php endif; ?>
     <?php /* a check for THIS browser (owner, 20 Nov 2026): is the demo shown here, and on which address */
