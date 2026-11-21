@@ -46,4 +46,10 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
   </div>
   <div class="ow-footer-copy"><span><?= $owFt('© ' . date('Y') . ' Oweili · The home of real art', '© ' . date('Y') . ' أويلي · بيت الفن الأصيل') ?></span>
     <a class="ow-footer-mail" href="mailto:<?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?>" dir="ltr"><?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?></a></div>
+  <?php $owUnn = defined('OW_COMPANY_UNN') ? OW_COMPANY_UNN : '7053193244'; /* legal company line (owner, 21 Nov 2026) */ ?>
+  <p class="ow-footer-legal"><?= $owFt('Oweili is a service of Elitport Company Ltd. · Unified National Number ' . $owUnn . ' · Saudi Arabia', 'أويلي إحدى خدمات شركة إيليتبورت المحدودة · الرقم الوطني الموحد ' . $owUnn . ' · المملكة العربية السعودية') ?></p>
+  <?php /* E-commerce authentication badge and certificate number (Saudi Business Center / maroof): ready, HIDDEN until the owner has them.
+           To show it: put the badge image path and the certificate number below; it appears only when both are filled in. */
+  $owEcomBadge = ''; $owEcomNo = ''; ?>
+  <div class="ow-footer-ecom"<?= ($owEcomBadge === '' || $owEcomNo === '') ? ' hidden' : '' ?>><?php if ($owEcomBadge !== '' && $owEcomNo !== ''): ?><img src="<?= htmlspecialchars($owEcomBadge, ENT_QUOTES, 'UTF-8') ?>" alt="E-commerce authentication · توثيق التجارة الإلكترونية" width="56" height="56" loading="lazy"><span><?= $owFt('E-commerce authentication certificate no. ' . $owEcomNo, 'شهادة توثيق التجارة الإلكترونية رقم ' . $owEcomNo) ?></span><?php endif; ?></div>
 </footer>

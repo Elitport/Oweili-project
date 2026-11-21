@@ -1005,3 +1005,9 @@ html body.s-b .c-home .c-hero:not(#ow-none) .hero-sub { margin-bottom: clamp(22p
 
 /* Arabic "خرائط Google" button keeps "Google" as written, not GOOGLE (owner, 21 Nov 2026; the English label stays as before) */
 .btn.ow-gmaps .bi-ar { text-transform: none; }
+
+/* Footer: legal company line and the (hidden for now) e-commerce badge place (owner, 21 Nov 2026) */
+.ow-footer-legal { max-width: 1200px; margin: var(--space-xs) auto 0; font-size: 12px; line-height: 1.7; color: var(--color-body); text-align: start; }
+.ow-footer-ecom { max-width: 1200px; margin: var(--space-xs) auto 0; display: flex; align-items: center; gap: var(--space-xs); font-size: 12px; color: var(--color-body); }
+.ow-footer-ecom[hidden] { display: none; }
+.ow-footer-ecom img { width: 56px; height: 56px; object-fit: contain; }

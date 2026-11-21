@@ -51,6 +51,7 @@ if (!function_exists('owContactEmail')) {
 if (!defined('OW_COMPANY_NAME')) define('OW_COMPANY_NAME', 'Elitport Limited');
 if (!defined('OW_COMPANY_CITY')) define('OW_COMPANY_CITY', 'Jeddah, Saudi Arabia');
 if (!defined('OW_COMPANY_CR'))   define('OW_COMPANY_CR', '');
+if (!defined('OW_COMPANY_UNN'))  define('OW_COMPANY_UNN', '7053193244');   // Unified National Number (owner, 21 Nov 2026): footer, Privacy, Terms
 if (!function_exists('owCompanyCr')) {
     function owCompanyCr(): string {
         $c = defined('OWEILI_COMPANY_CR') ? trim((string) OWEILI_COMPANY_CR) : '';

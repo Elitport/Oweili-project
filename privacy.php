@@ -23,11 +23,11 @@ owLegalPage([
 ], [
     ['who', 'Who we are', 'من نحن', [
         'Oweili (oweili.com) is an online gallery for real, handmade art, founded in Saudi Arabia and open to the world.',
-        "Oweili is run by $CO, Jeddah, Saudi Arabia" . ($CR !== '' ? ", commercial registration $CR" : '') . '. We are the party responsible for your personal data under the Saudi Personal Data Protection Law (PDPL) and its regulations.',
+        "Oweili is run by $CO, Jeddah, Saudi Arabia, Unified National Number " . OW_COMPANY_UNN . ($CR !== '' ? ", commercial registration $CR" : '') . '. We are the party responsible for your personal data under the Saudi Personal Data Protection Law (PDPL) and its regulations.',
         "You can reach us about anything in this policy at $C.",
     ], [
         'أويلي (oweili.com) معرض إلكتروني للفن الأصيل المصنوع باليد، انطلق من المملكة العربية السعودية ومفتوح للعالم.',
-        "يُدار أويلي من قِبل $CO في جدة، المملكة العربية السعودية" . ($CR !== '' ? "، سجل تجاري رقم $CR" : '') . '. ونحن الجهة المسؤولة عن بياناتك الشخصية وفق نظام حماية البيانات الشخصية السعودي ولوائحه.',
+        "يُدار أويلي من قِبل $CO في جدة، المملكة العربية السعودية، الرقم الوطني الموحد " . OW_COMPANY_UNN . ($CR !== '' ? "، سجل تجاري رقم $CR" : '') . '. ونحن الجهة المسؤولة عن بياناتك الشخصية وفق نظام حماية البيانات الشخصية السعودي ولوائحه.',
         "يمكنك التواصل معنا بخصوص أي شيء في هذه السياسة على $C.",
     ]],
     ['middle', 'Oweili is the middle party', 'أويلي هو الوسيط', [
