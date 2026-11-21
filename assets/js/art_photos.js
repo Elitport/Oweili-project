@@ -598,7 +598,8 @@ window.OW_ART_PHOTO = {
   "lic": "CC BY-SA 4.0",
   "page": "https://commons.wikimedia.org/wiki/File:Hot_wire_foam_cutter.jpg",
   "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "Fox89"
+  "by": "Fox89",
+  "v": "2"
  },
  "metal_sculpture": {
   "w": 600,

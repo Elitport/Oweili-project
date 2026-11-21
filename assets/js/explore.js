@@ -80,7 +80,8 @@
     if (!p) return '';
     var b = window.OW_STYLE_IMG || '/assets/img/styles/';
     var f = b + s.id + (big ? '' : '-s');   // cards get the small copy, the window the larger one
-    return '<picture><source type="image/webp" srcset="' + f + '.webp"><img class="' + (big ? 'm-photo' : 'sc-photo') + '" src="' + f + '.jpg" width="' + p.w + '" height="' + p.h +
+    var q = p.v ? '?v=' + encodeURIComponent(p.v) : '';   // a replaced picture carries a version, so cached copies are not reused
+    return '<picture><source type="image/webp" srcset="' + f + '.webp' + q + '"><img class="' + (big ? 'm-photo' : 'sc-photo') + '" src="' + f + '.jpg' + q + '" width="' + p.w + '" height="' + p.h +
       '" alt="' + esc(p.en + ' · ' + p.ar) + '" loading="lazy" decoding="async"></picture>';
   }
   function credit(s) {
