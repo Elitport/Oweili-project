@@ -553,5 +553,116 @@ window.OW_ART_PHOTO = {
   "ar": "جان دونان، «الصيد»، لوحة من اللَّك، 1935 (جزء)",
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:%27La_Chasse_%28The_Hunt%29%27_by_Jean_Dunand%2C_1935%2C_Wolfsonian-FIU_Museum.jpg"
+ },
+ "wood_carving": {
+  "w": 800,
+  "h": 541,
+  "en": "Carved wooden panel in the bevelled style, Egypt or Iraq, 10th century (Metropolitan Museum of Art)",
+  "ar": "لوح خشبي منحوت بالأسلوب المشطوف، مصر أو العراق، القرن العاشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Panel_Carved_in_the_%22Beveled_Style%22_with_Remains_of_Later_Polychromy_MET_DP356284.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "stone_carving": {
+  "w": 757,
+  "h": 800,
+  "en": "Limestone statue of a seated lion, Cyprus, 4th century BC (Metropolitan Museum of Art)",
+  "ar": "تمثال أسد جالس من الحجر الجيري، قبرص، القرن الرابع قبل الميلاد (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Limestone_statue_of_a_seated_lion_MET_DP145561.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "plaster_sculpture": {
+  "w": 789,
+  "h": 800,
+  "en": "Carved stucco (gypsum plaster) panel, Iran, probably Nishapur, 10th century (Metropolitan Museum of Art)",
+  "ar": "لوح من الجص المنحوت، إيران، غالباً نيسابور، القرن العاشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Carved_Stucco_Panel_from_Between_Two_Arches_MET_DP253145.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "clay_sculpture": {
+  "w": 800,
+  "h": 629,
+  "en": "Terracotta figure of a kneeling horse, Ptolemaic Egypt, 2nd to 1st century BC (Metropolitan Museum of Art)",
+  "ar": "تمثال حصان جاثٍ من الطين المحروق، مصر البطلمية، القرنان الثاني والأول قبل الميلاد (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Terracotta_figure_of_a_kneeling_horse_MET_DP145568.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "foam_carving": {
+  "w": 800,
+  "h": 573,
+  "en": "Loes Diephuis, Hier waak ik (guard dog carved from polystyrene foam), Amsterdam",
+  "ar": "لوس ديبهاوس، «هنا أحرس» (كلب حراسة منحوت من الفوم)، أمستردام",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Waakhond_van_Loes_Diephuis.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Agaath"
+ },
+ "metal_sculpture": {
+  "w": 600,
+  "h": 800,
+  "en": "Bronze statuette of a horse, Greek, 2nd to 1st century BC (Metropolitan Museum of Art)",
+  "ar": "تمثال صغير لحصان من البرونز، يوناني، القرنان الثاني والأول قبل الميلاد (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Bronze_statuette_of_a_horse_MET_DP120125.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "relief_sculpture": {
+  "w": 800,
+  "h": 522,
+  "en": "Stone relief of a lion attacking a bull, Apadana staircase, Persepolis, 5th century BC",
+  "ar": "نقش بارز في الحجر لأسد يهاجم ثوراً، درج الأبادانا، برسبوليس، القرن الخامس قبل الميلاد",
+  "lic": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Bas-relief_of_Lion_Attacking_a_Bull_Apadana_Staircase_Persepolis.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "by": "Yong Woo Park"
+ },
+ "silver_jewellery": {
+  "w": 800,
+  "h": 423,
+  "en": "Silver necklace with bell pendants, Sana'a, Yemen, about 1775–1809 (Walters Art Museum)",
+  "ar": "قلادة فضية بمعلّقات على شكل أجراس، صنعاء، اليمن، نحو 1775–1809 (متحف والترز)",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Sana_-_Necklace_-_Walters_572315.jpg"
+ },
+ "beadwork": {
+  "w": 609,
+  "h": 800,
+  "en": "Shell-bead bag, Chimú or Chancay, Peru, 14th to 15th century (Metropolitan Museum of Art)",
+  "ar": "حقيبة من خرز الصدف، حضارة شيمو أو تشانكاي، بيرو، القرنان الرابع عشر والخامس عشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Beaded_Bag_MET_DP216781.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "resin_jewellery": {
+  "w": 800,
+  "h": 556,
+  "en": "Brian Adam, earrings in paua shell, silver and polyester resin, New Zealand, 1980s (Auckland Museum)",
+  "ar": "براين آدم، أقراط من صدف الباوا والفضة وراتنج البوليستر، نيوزيلندا، ثمانينيات القرن العشرين (متحف أوكلاند)",
+  "lic": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Earrings_%28AM_2016.68.1-1%29.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "by": "Auckland War Memorial Museum"
+ },
+ "wire_wrapping": {
+  "w": 600,
+  "h": 800,
+  "en": "Naomi Hinds, wire-wrapped pendant in gold and silver with an opal and sapphires",
+  "ar": "نعومي هايندز، قلادة بلفّ الأسلاك من الذهب والفضة مع حجر أوبال وياقوت أزرق",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Wire_wrapped_Ethiopian_Opal_%26_Sapphire.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Naomi Hinds"
+ },
+ "enamel_jewellery": {
+  "w": 800,
+  "h": 640,
+  "en": "Lucien Gaillard, Moth pendant in gold, horn, enamel and citrine, Paris, about 1900 (Metropolitan Museum of Art)",
+  "ar": "لوسيان غايار، قلادة «الفراشة الليلية» من الذهب والقرن والمينا والسترين، باريس، نحو 1900 (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:%22Moth%22_Pendant_and_Box_MET_DT4659.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  }
 };
