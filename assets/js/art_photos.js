@@ -592,13 +592,13 @@ window.OW_ART_PHOTO = {
  },
  "foam_carving": {
   "w": 800,
-  "h": 573,
-  "en": "Loes Diephuis, Hier waak ik (guard dog carved from polystyrene foam), Amsterdam",
-  "ar": "لوس ديبهاوس، «هنا أحرس» (كلب حراسة منحوت من الفوم)، أمستردام",
+  "h": 450,
+  "en": "A hot-wire foam cutter, the main tool for carving foam",
+  "ar": "قاطع الفوم بالسلك الساخن، الأداة الأساسية لنحت الفوم",
   "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Waakhond_van_Loes_Diephuis.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Hot_wire_foam_cutter.jpg",
   "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "Agaath"
+  "by": "Fox89"
  },
  "metal_sculpture": {
   "w": 600,
