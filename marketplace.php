@@ -490,7 +490,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
 <?php if ($ar): ?>
 (function(){
   var t = {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
-    'nav-explore-label':'أساليب الرسم','nav-support-label':'الدعم',
+    'nav-explore-label':'الأساليب الفنية','nav-support-label':'الدعم',
     
     'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام',
     'n-login-t':'تسجيل الدخول','n-reg-t':'انضم مجاناً','lb':'English'};

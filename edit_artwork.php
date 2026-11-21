@@ -301,7 +301,7 @@ const NAV={
     ten:'Title in English',tar:'Title in Arabic',den:'Description in English',dar:'Description in Arabic',
     price:'Price in SAR',type:'Type',status:'Status',img:'Replace Image (optional, JPG/PNG/WEBP, max 5MB)',
     save:'Save Changes',cancel:'Cancel'},
-  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
+  ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً',
     title:'تعديل العمل الفني',sub:'حدّث تفاصيل عملك الفني.',
     ten:'العنوان بالإنجليزية',tar:'العنوان بالعربية',den:'الوصف بالإنجليزية',dar:'الوصف بالعربية',

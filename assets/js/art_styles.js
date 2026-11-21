@@ -1,12 +1,12 @@
 /* =====================================================================
- *  art_styles.js: the single source for all art style content (77 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now).
+ *  art_styles.js: the single source for all art style content (89 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now; the 12 Sculpture and Handmade jewellery styles, 21 Nov 2026, are on Art Styles only, never Gallery types).
  *  Used by explore.php (cards + the style window), and read by
  *  art_types.php for the art type names. Never copy this data into a
  *  page: load this file instead.
  *
  *  Each style:
  *    id     short name, also used in the web address (explore.php#watercolor)
- *    cat    traditional | digital | heritage | contemporary | nature | photography
+ *    cat    traditional | digital | heritage | contemporary | nature | photography | sculpture | jewellery
  *    type   the Gallery type for this style (same as id). art_types.php reads
  *           the names from this file, so every style is a Gallery type
  *    level  beginner | intermediate | advanced
@@ -16445,6 +16445,1896 @@ window.OW_ART_STYLES = [
     "اطلب رؤية صور المصدر الأصلية. الفنانون الحقيقيون يصوّرون صورهم بأنفسهم.",
     "اسأل عن الطبقات. يستطيع الفنان شرح كيف وُصل كل جزء.",
     "افحص التوقيع ورقم الإصدار وتفاصيل الطباعة الأرشيفية."
+   ]
+  }
+ },
+ {
+  "id": "wood_carving",
+  "cat": "sculpture",
+  "type": "wood_carving",
+  "level": "intermediate",
+  "en": {
+   "name": "Wood Carving",
+   "feel": "Warm",
+   "essence": "Shapes cut by hand from a block of wood, following its grain.",
+   "story": [
+    "Wood carving is one of the oldest crafts. Ancient Egyptians carved wooden figures more than 4,000 years ago.",
+    "In Europe, carvers made fine panels and figures in limewood and oak for centuries.",
+    "In Saudi Arabia, the carved wooden rawashin windows and doors of historic Jeddah still show this skill."
+   ],
+   "tech": [
+    [
+     "Roughing out",
+     "Removing big pieces to find the main shape."
+    ],
+    [
+     "Working with the grain",
+     "Cutting along the wood fibres so it does not split."
+    ],
+    [
+     "Chip carving",
+     "Small cuts that lift out tiny chips to make patterns."
+    ],
+    [
+     "Relief carving",
+     "Carving a picture that rises from a flat board."
+    ],
+    [
+     "Finishing",
+     "Sanding, then oil or wax to protect the wood."
+    ]
+   ],
+   "signs": [
+    "Small tool marks you can feel on the surface.",
+    "Lines that follow the direction of the wood grain.",
+    "Slight differences between repeated details.",
+    "Deep cuts with clean, sharp edges."
+   ],
+   "tools": [
+    [
+     "Gouges and chisels",
+     "Curved and flat blades for cutting."
+    ],
+    [
+     "Mallet",
+     "A wooden hammer that drives the chisel."
+    ],
+    [
+     "Carving knife",
+     "For small details by hand."
+    ],
+    [
+     "Seasoned wood",
+     "Dry wood such as lime, walnut or oak."
+    ],
+    [
+     "Sharpening stone",
+     "Keeps every blade sharp and safe."
+    ]
+   ],
+   "time": "A few days to several months",
+   "bestFor": "Patient hands who enjoy natural materials.",
+   "artists": [
+    [
+     "Grinling Gibbons",
+     "Dutch-born English, 1648–1721",
+     "Famous for very fine carvings in limewood."
+    ],
+    [
+     "Tilman Riemenschneider",
+     "German, about 1460–1531",
+     "He left his limewood figures unpainted to show the wood."
+    ]
+   ],
+   "guide": [
+    "Look for tool marks. Machine-made pieces are often too smooth and too even.",
+    "Ask which wood was used and how it was dried.",
+    "Keep it away from heat and direct sun, so it does not crack."
+   ]
+  },
+  "ar": {
+   "name": "نحت الخشب",
+   "feel": "دافئ",
+   "essence": "أشكال تُقطع باليد من كتلة خشب، تتبع اتجاه أليافه.",
+   "story": [
+    "نحت الخشب من أقدم الحرف. نحت المصريون القدماء تماثيل خشبية قبل أكثر من 4,000 عام.",
+    "وفي أوروبا صنع النحاتون ألواحاً وتماثيل دقيقة من خشب الزيزفون والبلوط لقرون.",
+    "وفي السعودية ما زالت الرواشين والأبواب الخشبية المنحوتة في جدة التاريخية تشهد على هذه المهارة."
+   ],
+   "tech": [
+    [
+     "التشكيل الأولي",
+     "إزالة القطع الكبيرة للوصول إلى الشكل العام."
+    ],
+    [
+     "العمل مع الألياف",
+     "القطع باتجاه ألياف الخشب حتى لا يتشقق."
+    ],
+    [
+     "نحت الشظايا",
+     "قطع صغيرة ترفع شظايا دقيقة لصنع النقوش."
+    ],
+    [
+     "النحت البارز",
+     "نحت صورة تبرز من لوح مسطح."
+    ],
+    [
+     "التشطيب",
+     "الصنفرة ثم الزيت أو الشمع لحماية الخشب."
+    ]
+   ],
+   "signs": [
+    "آثار أدوات صغيرة تحسّها على السطح.",
+    "خطوط تتبع اتجاه ألياف الخشب.",
+    "اختلافات بسيطة بين التفاصيل المتكررة.",
+    "قطع عميقة بحواف نظيفة وحادة."
+   ],
+   "tools": [
+    [
+     "الأزاميل المجوّفة والمسطحة",
+     "شفرات منحنية ومستقيمة للقطع."
+    ],
+    [
+     "المطرقة الخشبية",
+     "تدفع الإزميل."
+    ],
+    [
+     "سكين النحت",
+     "للتفاصيل الصغيرة باليد."
+    ],
+    [
+     "خشب مجفّف",
+     "خشب جاف مثل الزيزفون أو الجوز أو البلوط."
+    ],
+    [
+     "حجر السنّ",
+     "يبقي كل شفرة حادة وآمنة."
+    ]
+   ],
+   "time": "من أيام قليلة إلى عدة أشهر",
+   "bestFor": "اليد الصبورة التي تحب الخامات الطبيعية.",
+   "artists": [
+    [
+     "غرينلينغ غيبونز",
+     "إنجليزي مولود في هولندا، 1648–1721",
+     "اشتهر بمنحوتات دقيقة جداً من خشب الزيزفون."
+    ],
+    [
+     "تيلمان ريمنشنايدر",
+     "ألماني، نحو 1460–1531",
+     "ترك منحوتاته من خشب الزيزفون دون تلوين ليظهر الخشب."
+    ]
+   ],
+   "guide": [
+    "ابحث عن آثار الأدوات. القطع المصنوعة بالآلات غالباً ناعمة ومتساوية أكثر من اللازم.",
+    "اسأل عن نوع الخشب وطريقة تجفيفه.",
+    "أبعدها عن الحرارة والشمس المباشرة حتى لا تتشقق."
+   ]
+  }
+ },
+{
+  "id": "stone_carving",
+  "cat": "sculpture",
+  "type": "stone_carving",
+  "level": "advanced",
+  "en": {
+   "name": "Stone Carving",
+   "feel": "Timeless",
+   "essence": "Removing stone, piece by piece, until the form inside appears.",
+   "story": [
+    "Stone carving goes back to the earliest cultures. Ancient Egypt, Greece and Rome left statues that still stand.",
+    "In the Renaissance, Michelangelo carved great figures from single blocks of marble.",
+    "In AlUla, the Nabataeans carved tomb fronts straight into the sandstone cliffs of Hegra about 2,000 years ago."
+   ],
+   "tech": [
+    [
+     "Pointing",
+     "Taking measurements from a model to the stone."
+    ],
+    [
+     "Roughing with a point chisel",
+     "Breaking away large pieces of stone."
+    ],
+    [
+     "Claw chisel work",
+     "Toothed chisel marks that shape the surface."
+    ],
+    [
+     "Rasping",
+     "Files that smooth the form."
+    ],
+    [
+     "Polishing",
+     "Fine stones and powders for a glowing finish."
+    ]
+   ],
+   "signs": [
+    "Chisel and claw marks in less finished areas.",
+    "Slight changes in surface between rough and polished parts.",
+    "The natural veins of the stone running through the form.",
+    "Weight and cold touch of real stone."
+   ],
+   "tools": [
+    [
+     "Point, claw and flat chisels",
+     "Each one removes stone differently."
+    ],
+    [
+     "Hammer",
+     "A heavy mallet that strikes the chisel."
+    ],
+    [
+     "Rasps and files",
+     "For shaping and smoothing."
+    ],
+    [
+     "Stone",
+     "Marble, limestone, sandstone or soapstone."
+    ],
+    [
+     "Safety glasses and mask",
+     "Protect the eyes and lungs from dust."
+    ]
+   ],
+   "time": "Several weeks to more than a year",
+   "bestFor": "Strong, patient hands and a clear plan.",
+   "artists": [
+    [
+     "Michelangelo Buonarroti",
+     "Italian, 1475–1564",
+     "He carved marble figures of great power and detail."
+    ],
+    [
+     "Antonio Canova",
+     "Italian, 1757–1822",
+     "Known for very smooth, finely polished marble."
+    ],
+    [
+     "Barbara Hepworth",
+     "British, 1903–1975",
+     "She carved simple, open forms in stone and wood."
+    ]
+   ],
+   "guide": [
+    "Ask what kind of stone it is and where it comes from.",
+    "Look at the base and back. Hand tool marks often remain there.",
+    "Clean only with a soft dry brush. Water and chemicals can stain stone."
+   ]
+  },
+  "ar": {
+   "name": "نحت الحجر",
+   "feel": "خالد",
+   "essence": "إزالة الحجر قطعة بعد قطعة حتى يظهر الشكل الكامن في داخله.",
+   "story": [
+    "يعود نحت الحجر إلى أقدم الحضارات. وتركت مصر القديمة واليونان وروما تماثيل ما زالت قائمة.",
+    "وفي عصر النهضة نحت مايكل أنجلو تماثيل عظيمة من كتل رخام واحدة.",
+    "وفي العُلا نحت الأنباط واجهات المقابر مباشرة في صخور الحِجر الرملية قبل نحو 2,000 عام."
+   ],
+   "tech": [
+    [
+     "نقل القياسات",
+     "نقل القياسات من النموذج إلى الحجر."
+    ],
+    [
+     "التكسير بالإزميل المدبّب",
+     "إزالة القطع الكبيرة من الحجر."
+    ],
+    [
+     "الإزميل المسنّن",
+     "آثار أسنان تشكّل السطح."
+    ],
+    [
+     "البَرد",
+     "مبارد تنعّم الشكل."
+    ],
+    [
+     "الصقل",
+     "أحجار ومساحيق ناعمة لسطح لامع."
+    ]
+   ],
+   "signs": [
+    "آثار الأزاميل في المناطق الأقل تشطيباً.",
+    "تغيّر بسيط في السطح بين الأجزاء الخشنة والمصقولة.",
+    "عروق الحجر الطبيعية تمر عبر الشكل.",
+    "وزن الحجر الحقيقي وبرودته عند اللمس."
+   ],
+   "tools": [
+    [
+     "أزاميل مدببة ومسننة ومسطحة",
+     "كل واحد منها يزيل الحجر بطريقة مختلفة."
+    ],
+    [
+     "المطرقة",
+     "مطرقة ثقيلة تضرب الإزميل."
+    ],
+    [
+     "المبارد",
+     "للتشكيل والتنعيم."
+    ],
+    [
+     "الحجر",
+     "رخام أو حجر جيري أو رملي أو حجر صابوني."
+    ],
+    [
+     "نظارات وكمامة",
+     "لحماية العينين والرئتين من الغبار."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى أكثر من سنة",
+   "bestFor": "اليد القوية الصبورة والخطة الواضحة.",
+   "artists": [
+    [
+     "مايكل أنجلو بوناروتي",
+     "إيطالي، 1475–1564",
+     "نحت تماثيل رخامية مليئة بالقوة والتفاصيل."
+    ],
+    [
+     "أنطونيو كانوفا",
+     "إيطالي، 1757–1822",
+     "اشتهر برخامه الناعم المصقول بدقة."
+    ],
+    [
+     "باربرا هيبوورث",
+     "بريطانية، 1903–1975",
+     "نحتت أشكالاً بسيطة مفتوحة من الحجر والخشب."
+    ]
+   ],
+   "guide": [
+    "اسأل عن نوع الحجر ومصدره.",
+    "انظر إلى القاعدة والظهر، فغالباً تبقى هناك آثار الأدوات اليدوية.",
+    "نظّفه بفرشاة ناعمة جافة فقط، فالماء والمواد الكيميائية قد تبقّع الحجر."
+   ]
+  }
+ },
+{
+  "id": "plaster_sculpture",
+  "cat": "sculpture",
+  "type": "plaster_sculpture",
+  "level": "beginner",
+  "en": {
+   "name": "Plaster (Gypsum) Sculpture",
+   "feel": "Pure",
+   "essence": "White gypsum shaped wet, carved dry, or cast in a mould.",
+   "story": [
+    "Plaster is made from gypsum, a soft mineral. Builders and artists have used it since ancient Egypt.",
+    "For centuries sculptors made full-size plaster models before carving marble or casting bronze.",
+    "Carved gypsum decoration is also an old craft in Arab and Islamic buildings, full of fine geometric patterns."
+   ],
+   "tech": [
+    [
+     "Direct modelling",
+     "Building the form with wet plaster over a frame."
+    ],
+    [
+     "Casting",
+     "Pouring liquid plaster into a mould."
+    ],
+    [
+     "Carving",
+     "Shaping a dry plaster block with knives and rasps."
+    ],
+    [
+     "Armature",
+     "A frame of wire or wood inside the sculpture."
+    ],
+    [
+     "Patina",
+     "Paint or wax that gives the white surface a colour."
+    ]
+   ],
+   "signs": [
+    "Small tool marks and fine scraping lines.",
+    "Seam lines where mould parts met, cleaned by hand.",
+    "Slight differences between copies from the same mould.",
+    "A light, chalky surface when it is not sealed."
+   ],
+   "tools": [
+    [
+     "Plaster of Paris",
+     "Gypsum powder mixed with water."
+    ],
+    [
+     "Mixing bowl",
+     "Flexible, so dried plaster pops out."
+    ],
+    [
+     "Spatulas and knives",
+     "For building and cutting the form."
+    ],
+    [
+     "Rasps and sandpaper",
+     "For shaping and smoothing."
+    ],
+    [
+     "Wire or wood frame",
+     "Holds larger pieces together."
+    ]
+   ],
+   "time": "A few hours to a few weeks",
+   "bestFor": "Beginners who want to learn form quickly.",
+   "artists": [
+    [
+     "Antonio Canova",
+     "Italian, 1757–1822",
+     "His full-size plaster models are still shown in his home town of Possagno."
+    ],
+    [
+     "Auguste Rodin",
+     "French, 1840–1917",
+     "He worked out many of his famous figures first in plaster."
+    ]
+   ],
+   "guide": [
+    "Ask if it is a unique piece or one cast from a mould, and how many casts exist.",
+    "Keep it dry. Plaster takes in water and can soften or stain.",
+    "Handle it with clean, dry hands, and hold it from the base."
+   ]
+  },
+  "ar": {
+   "name": "النحت بالجبس",
+   "feel": "نقي",
+   "essence": "جبس أبيض يُشكَّل رطباً أو يُنحت جافاً أو يُصب في قالب.",
+   "story": [
+    "الجبس معدن طري. واستعمله البناؤون والفنانون منذ مصر القديمة.",
+    "ولقرون صنع النحاتون نماذج جبسية بالحجم الكامل قبل نحت الرخام أو صب البرونز.",
+    "والزخرفة المحفورة في الجبس حرفة قديمة أيضاً في المباني العربية والإسلامية، مليئة بالنقوش الهندسية الدقيقة."
+   ],
+   "tech": [
+    [
+     "التشكيل المباشر",
+     "بناء الشكل بالجبس الرطب فوق هيكل."
+    ],
+    [
+     "الصب",
+     "صب الجبس السائل في قالب."
+    ],
+    [
+     "النحت",
+     "تشكيل كتلة جبس جافة بالسكاكين والمبارد."
+    ],
+    [
+     "الهيكل الداخلي",
+     "إطار من السلك أو الخشب داخل المنحوتة."
+    ],
+    [
+     "التلوين",
+     "طلاء أو شمع يعطي السطح الأبيض لوناً."
+    ]
+   ],
+   "signs": [
+    "آثار أدوات صغيرة وخطوط كشط دقيقة.",
+    "خطوط التقاء أجزاء القالب، منظّفة باليد.",
+    "اختلافات بسيطة بين النسخ المصبوبة من القالب نفسه.",
+    "سطح خفيف طباشيري الملمس إذا لم يُعزل."
+   ],
+   "tools": [
+    [
+     "جبس باريس",
+     "مسحوق جبس يُخلط بالماء."
+    ],
+    [
+     "وعاء خلط",
+     "مرن ليخرج منه الجبس الجاف بسهولة."
+    ],
+    [
+     "ملاعق وسكاكين",
+     "لبناء الشكل وقطعه."
+    ],
+    [
+     "مبارد وورق صنفرة",
+     "للتشكيل والتنعيم."
+    ],
+    [
+     "هيكل من سلك أو خشب",
+     "يمسك القطع الكبيرة."
+    ]
+   ],
+   "time": "من ساعات قليلة إلى أسابيع قليلة",
+   "bestFor": "المبتدئين الذين يريدون تعلّم الشكل بسرعة.",
+   "artists": [
+    [
+     "أنطونيو كانوفا",
+     "إيطالي، 1757–1822",
+     "ما زالت نماذجه الجبسية بالحجم الكامل معروضة في بلدته بوساني."
+    ],
+    [
+     "أوغست رودان",
+     "فرنسي، 1840–1917",
+     "صاغ كثيراً من تماثيله الشهيرة بالجبس أولاً."
+    ]
+   ],
+   "guide": [
+    "اسأل إن كانت قطعة فريدة أم مصبوبة من قالب، وكم نسخة منها.",
+    "احفظها جافة، فالجبس يمتص الماء وقد يلين أو يتبقّع.",
+    "أمسكها بيدين نظيفتين جافتين ومن القاعدة."
+   ]
+  }
+ },
+{
+  "id": "clay_sculpture",
+  "cat": "sculpture",
+  "type": "clay_sculpture",
+  "level": "beginner",
+  "en": {
+   "name": "Clay and Ceramic Sculpture",
+   "feel": "Earthy",
+   "essence": "Soft clay shaped by hand, then fired until it turns hard as stone.",
+   "story": [
+    "Clay is one of the first materials people shaped. Fired clay figures are among the oldest artworks found.",
+    "In China, thousands of life-size clay soldiers were made for the first emperor more than 2,000 years ago.",
+    "In 15th-century Florence, Luca della Robbia covered clay reliefs with bright glazes that still shine today."
+   ],
+   "tech": [
+    [
+     "Pinching",
+     "Shaping the clay between the fingers."
+    ],
+    [
+     "Coiling",
+     "Building walls with rolls of clay."
+    ],
+    [
+     "Slab building",
+     "Joining flat sheets of clay."
+    ],
+    [
+     "Glazing",
+     "A glassy coat that melts in the kiln."
+    ],
+    [
+     "Firing",
+     "Baking the clay in a kiln so it becomes ceramic."
+    ]
+   ],
+   "signs": [
+    "Finger marks or tool marks left in the clay.",
+    "Small changes in the glaze where it pooled or ran.",
+    "Slightly uneven walls and edges.",
+    "The maker's mark or signature cut under the base."
+   ],
+   "tools": [
+    [
+     "Clay",
+     "Earthenware, stoneware or porcelain."
+    ],
+    [
+     "Modelling tools",
+     "Wooden and wire tools to shape and cut."
+    ],
+    [
+     "Sponge and water",
+     "Keep the clay soft and smooth."
+    ],
+    [
+     "Glazes",
+     "Colour and shine after firing."
+    ],
+    [
+     "Kiln",
+     "The oven that fires the clay."
+    ]
+   ],
+   "time": "A few days to several weeks, with drying and firing",
+   "bestFor": "Anyone who loves working directly with their hands.",
+   "artists": [
+    [
+     "Luca della Robbia",
+     "Italian, about 1400–1482",
+     "He made glazed terracotta reliefs in white and blue."
+    ],
+    [
+     "Peter Voulkos",
+     "American, 1924–2002",
+     "He turned pottery into bold, free ceramic sculpture."
+    ]
+   ],
+   "guide": [
+    "Ask if the piece was fired. Unfired clay is fragile and can break down with water.",
+    "Turn it over. Handmade pieces often carry the artist's mark under the base.",
+    "Check for cracks by lightly tapping. A clear ring is a good sign."
+   ]
+  },
+  "ar": {
+   "name": "النحت بالطين والخزف",
+   "feel": "ترابي",
+   "essence": "طين طري يُشكَّل باليد، ثم يُحرق حتى يصبح صلباً كالحجر.",
+   "story": [
+    "الطين من أول الخامات التي شكّلتها الأيدي، والتماثيل الطينية المحروقة من أقدم الأعمال الفنية المكتشفة.",
+    "وفي الصين صُنع آلاف الجنود الطينيين بالحجم الطبيعي للإمبراطور الأول قبل أكثر من 2,000 عام.",
+    "وفي فلورنسا في القرن الخامس عشر غطّى لوكا ديلا روبيا ألواحاً طينية بارزة بطلاء زجاجي زاهٍ ما زال يلمع حتى اليوم."
+   ],
+   "tech": [
+    [
+     "القرص",
+     "تشكيل الطين بين الأصابع."
+    ],
+    [
+     "الحبال",
+     "بناء الجدران بلفائف من الطين."
+    ],
+    [
+     "الشرائح",
+     "وصل ألواح مسطحة من الطين."
+    ],
+    [
+     "التزجيج",
+     "طبقة زجاجية تذوب في الفرن."
+    ],
+    [
+     "الحرق",
+     "خبز الطين في الفرن ليصبح خزفاً."
+    ]
+   ],
+   "signs": [
+    "آثار الأصابع أو الأدوات في الطين.",
+    "تغيرات بسيطة في الطلاء الزجاجي حيث تجمّع أو سال.",
+    "جدران وحواف غير متساوية قليلاً.",
+    "علامة الصانع أو توقيعه محفور تحت القاعدة."
+   ],
+   "tools": [
+    [
+     "الطين",
+     "فخار أو خزف حجري أو بورسلين."
+    ],
+    [
+     "أدوات التشكيل",
+     "أدوات خشبية وسلكية للتشكيل والقطع."
+    ],
+    [
+     "إسفنجة وماء",
+     "تحفظ الطين طرياً وناعماً."
+    ],
+    [
+     "الطلاءات الزجاجية",
+     "لون ولمعان بعد الحرق."
+    ],
+    [
+     "الفرن",
+     "الفرن الذي يُحرق فيه الطين."
+    ]
+   ],
+   "time": "من أيام قليلة إلى عدة أسابيع مع التجفيف والحرق",
+   "bestFor": "كل من يحب العمل بيديه مباشرة.",
+   "artists": [
+    [
+     "لوكا ديلا روبيا",
+     "إيطالي، نحو 1400–1482",
+     "صنع ألواحاً بارزة من الطين المزجج بالأبيض والأزرق."
+    ],
+    [
+     "بيتر فولكوس",
+     "أمريكي، 1924–2002",
+     "حوّل الفخار إلى منحوتات خزفية جريئة وحرة."
+    ]
+   ],
+   "guide": [
+    "اسأل إن كانت القطعة محروقة. الطين غير المحروق هش وقد يتلف بالماء.",
+    "اقلبها، فغالباً تحمل القطع اليدوية علامة الفنان تحت القاعدة.",
+    "افحص الشقوق بنقرة خفيفة. الرنين الصافي علامة جيدة."
+   ]
+  }
+ },
+{
+  "id": "foam_carving",
+  "cat": "sculpture",
+  "type": "foam_carving",
+  "level": "beginner",
+  "en": {
+   "name": "Foam Carving",
+   "feel": "Bold",
+   "essence": "Large, light forms carved from blocks of foam, then coated and painted.",
+   "story": [
+    "Foam carving is a young art. Plastic foams became common in the middle of the 20th century.",
+    "Because foam is light and easy to cut, it is used for big sculptures, stage sets, film props and models.",
+    "Artists usually cover the carved foam with plaster, resin or fibreglass to make it strong, then paint it."
+   ],
+   "tech": [
+    [
+     "Hot wire cutting",
+     "A heated wire slices smooth curves."
+    ],
+    [
+     "Rasping",
+     "Coarse files shape the form."
+    ],
+    [
+     "Laminating",
+     "Gluing blocks together for a bigger piece."
+    ],
+    [
+     "Hard coating",
+     "Plaster, resin or fibreglass over the foam."
+    ],
+    [
+     "Painting",
+     "Colour and texture on the hard coat."
+    ]
+   ],
+   "signs": [
+    "Hand-sanded curves rather than perfect machine shapes.",
+    "Joins between glued blocks, hidden by hand.",
+    "Brush marks in the paint and coating.",
+    "Surprising lightness for its size."
+   ],
+   "tools": [
+    [
+     "Foam blocks",
+     "Polystyrene or polyurethane foam."
+    ],
+    [
+     "Hot wire cutter",
+     "Cuts foam cleanly with heat."
+    ],
+    [
+     "Rasps and sandpaper",
+     "For shaping and smoothing."
+    ],
+    [
+     "Coating materials",
+     "Plaster, resin or fibreglass."
+    ],
+    [
+     "Mask and good air",
+     "Foam dust and fumes must not be breathed in."
+    ]
+   ],
+   "time": "A few days to several weeks",
+   "bestFor": "Makers of large pieces, sets and outdoor displays.",
+   "artists": [],
+   "guide": [
+    "Ask what coating protects the foam. Uncoated foam is easily dented.",
+    "Ask if it is made for indoors or outdoors.",
+    "Keep it away from heat and solvents, which can melt foam."
+   ]
+  },
+  "ar": {
+   "name": "نحت الفوم",
+   "feel": "جريء",
+   "essence": "أشكال كبيرة خفيفة تُنحت من كتل الفوم، ثم تُغطّى وتُلوّن.",
+   "story": [
+    "نحت الفوم فن حديث، فقد انتشرت مواد الفوم البلاستيكية في منتصف القرن العشرين.",
+    "ولأن الفوم خفيف وسهل القطع، يُستعمل للمنحوتات الكبيرة وديكورات المسرح ومجسمات الأفلام والنماذج.",
+    "وعادة يغطي الفنانون الفوم المنحوت بالجبس أو الريزن أو الألياف الزجاجية ليقوى، ثم يلوّنونه."
+   ],
+   "tech": [
+    [
+     "القطع بالسلك الحار",
+     "سلك ساخن يقطع منحنيات ناعمة."
+    ],
+    [
+     "البَرد",
+     "مبارد خشنة تشكّل الهيئة."
+    ],
+    [
+     "التطبيق",
+     "لصق الكتل معاً لقطعة أكبر."
+    ],
+    [
+     "التغطية الصلبة",
+     "جبس أو ريزن أو ألياف زجاجية فوق الفوم."
+    ],
+    [
+     "التلوين",
+     "لون وملمس فوق الطبقة الصلبة."
+    ]
+   ],
+   "signs": [
+    "منحنيات مصنفرة باليد لا أشكال آلية مثالية.",
+    "وصلات بين الكتل الملصوقة أُخفيت باليد.",
+    "آثار الفرشاة في الطلاء والتغطية.",
+    "خفة مفاجئة بالنسبة لحجمها."
+   ],
+   "tools": [
+    [
+     "كتل الفوم",
+     "فوم البوليسترين أو البولي يوريثان."
+    ],
+    [
+     "قاطع السلك الحار",
+     "يقطع الفوم بنظافة بالحرارة."
+    ],
+    [
+     "مبارد وورق صنفرة",
+     "للتشكيل والتنعيم."
+    ],
+    [
+     "مواد التغطية",
+     "جبس أو ريزن أو ألياف زجاجية."
+    ],
+    [
+     "كمامة وتهوية جيدة",
+     "لا يجوز استنشاق غبار الفوم وأبخرته."
+    ]
+   ],
+   "time": "من أيام قليلة إلى عدة أسابيع",
+   "bestFor": "صانعي القطع الكبيرة والديكورات والعروض الخارجية.",
+   "artists": [],
+   "guide": [
+    "اسأل عن الطبقة التي تحمي الفوم، فالفوم غير المغطى ينبعج بسهولة.",
+    "اسأل إن كانت مصنوعة للداخل أم للخارج.",
+    "أبعدها عن الحرارة والمذيبات، فقد تذيب الفوم."
+   ]
+  }
+ },
+{
+  "id": "metal_sculpture",
+  "cat": "sculpture",
+  "type": "metal_sculpture",
+  "level": "advanced",
+  "en": {
+   "name": "Metal Sculpture",
+   "feel": "Strong",
+   "essence": "Forms cast, hammered or welded from bronze, steel, iron or copper.",
+   "story": [
+    "Bronze casting is thousands of years old. Ancient makers used the lost-wax method, still used today.",
+    "In the 20th century, artists began to weld steel and iron, building sculptures piece by piece.",
+    "Today metal is used for everything from small figures to huge works in public squares."
+   ],
+   "tech": [
+    [
+     "Lost-wax casting",
+     "A wax model is replaced by molten bronze in a mould."
+    ],
+    [
+     "Welding",
+     "Joining metal pieces with great heat."
+    ],
+    [
+     "Forging",
+     "Hammering hot metal into shape."
+    ],
+    [
+     "Repoussé",
+     "Hammering sheet metal from behind to raise a design."
+    ],
+    [
+     "Patina",
+     "Chemicals and heat that colour the metal surface."
+    ]
+   ],
+   "signs": [
+    "Hand-finished welds and joins.",
+    "Hammer marks and chasing lines on the surface.",
+    "A patina with natural, uneven colour.",
+    "A foundry mark, signature or number on cast pieces."
+   ],
+   "tools": [
+    [
+     "Welding torch",
+     "Melts and joins metal."
+    ],
+    [
+     "Hammers and anvil",
+     "For forging and shaping."
+    ],
+    [
+     "Angle grinder",
+     "Cuts and smooths metal."
+    ],
+    [
+     "Metal",
+     "Bronze, steel, iron, copper or aluminium."
+    ],
+    [
+     "Protective gear",
+     "Gloves, mask and eye shields against heat and sparks."
+    ]
+   ],
+   "time": "Several weeks to several months",
+   "bestFor": "Makers who like strength, heat and large scale.",
+   "artists": [
+    [
+     "Julio González",
+     "Spanish, 1876–1942",
+     "A pioneer of welded iron sculpture."
+    ],
+    [
+     "David Smith",
+     "American, 1906–1965",
+     "Known for large sculptures of welded steel."
+    ],
+    [
+     "Alexander Calder",
+     "American, 1898–1976",
+     "He made moving sculptures, called mobiles, from sheet metal and wire."
+    ]
+   ],
+   "guide": [
+    "For cast bronze, ask about the foundry and the edition number.",
+    "Ask if it is made for indoors or outdoors.",
+    "Do not polish away the patina. It is part of the artwork."
+   ]
+  },
+  "ar": {
+   "name": "النحت المعدني",
+   "feel": "قوي",
+   "essence": "أشكال تُصب أو تُطرق أو تُلحم من البرونز أو الحديد أو النحاس.",
+   "story": [
+    "صب البرونز عمره آلاف السنين. واستعمل الصنّاع القدماء طريقة الشمع المفقود، وما زالت مستعملة اليوم.",
+    "وفي القرن العشرين بدأ الفنانون يلحمون الحديد والفولاذ، فيبنون المنحوتة قطعة بعد قطعة.",
+    "واليوم يُستعمل المعدن في كل شيء، من التماثيل الصغيرة إلى الأعمال الضخمة في الساحات العامة."
+   ],
+   "tech": [
+    [
+     "الصب بالشمع المفقود",
+     "نموذج من الشمع يحل محله البرونز المصهور في قالب."
+    ],
+    [
+     "اللحام",
+     "وصل قطع المعدن بحرارة عالية."
+    ],
+    [
+     "الطرق",
+     "طرق المعدن الساخن لتشكيله."
+    ],
+    [
+     "الطرق من الخلف",
+     "طرق صفيحة المعدن من الخلف لإبراز التصميم."
+    ],
+    [
+     "الباتينا",
+     "مواد وحرارة تلوّن سطح المعدن."
+    ]
+   ],
+   "signs": [
+    "لحامات ووصلات مشطّبة باليد.",
+    "آثار المطرقة وخطوط النقش على السطح.",
+    "باتينا بلون طبيعي غير متساوٍ.",
+    "علامة المسبك أو التوقيع أو الرقم على القطع المصبوبة."
+   ],
+   "tools": [
+    [
+     "شعلة اللحام",
+     "تصهر المعدن وتصله."
+    ],
+    [
+     "المطارق والسندان",
+     "للطرق والتشكيل."
+    ],
+    [
+     "الصاروخ (الجلاخة)",
+     "يقطع المعدن وينعّمه."
+    ],
+    [
+     "المعدن",
+     "برونز أو فولاذ أو حديد أو نحاس أو ألمنيوم."
+    ],
+    [
+     "معدات الوقاية",
+     "قفازات وكمامة وواقي عينين من الحرارة والشرر."
+    ]
+   ],
+   "time": "من عدة أسابيع إلى عدة أشهر",
+   "bestFor": "الصنّاع الذين يحبون القوة والحرارة والأحجام الكبيرة.",
+   "artists": [
+    [
+     "خوليو غونزاليس",
+     "إسباني، 1876–1942",
+     "من رواد النحت بالحديد الملحوم."
+    ],
+    [
+     "ديفيد سميث",
+     "أمريكي، 1906–1965",
+     "اشتهر بمنحوتات كبيرة من الفولاذ الملحوم."
+    ],
+    [
+     "ألكسندر كالدر",
+     "أمريكي، 1898–1976",
+     "صنع منحوتات متحركة تُسمى «الموبايل» من صفائح المعدن والأسلاك."
+    ]
+   ],
+   "guide": [
+    "في البرونز المصبوب، اسأل عن المسبك ورقم النسخة.",
+    "اسأل إن كانت مصنوعة للداخل أم للخارج.",
+    "لا تلمّع الباتينا حتى تزول، فهي جزء من العمل الفني."
+   ]
+  }
+ },
+{
+  "id": "relief_sculpture",
+  "cat": "sculpture",
+  "type": "relief_sculpture",
+  "level": "intermediate",
+  "en": {
+   "name": "Relief Sculpture",
+   "feel": "Storytelling",
+   "essence": "Figures and patterns that rise from a flat background.",
+   "story": [
+    "Relief is one of the oldest ways to tell stories in stone. Ancient Egyptian and Assyrian walls are covered with it.",
+    "There is low relief, which rises only a little, and high relief, where forms stand far out.",
+    "In 15th-century Florence, Lorenzo Ghiberti cast famous bronze doors full of reliefs."
+   ],
+   "tech": [
+    [
+     "Low relief",
+     "Forms raised only slightly from the background."
+    ],
+    [
+     "High relief",
+     "Forms that stand far out, almost free."
+    ],
+    [
+     "Sunken relief",
+     "Forms cut into the surface instead of raised."
+    ],
+    [
+     "Undercutting",
+     "Cutting under edges to make deep shadows."
+    ],
+    [
+     "Layering depth",
+     "Near forms higher, far forms lower."
+    ]
+   ],
+   "signs": [
+    "Tool marks in the background and around edges.",
+    "Depth that changes gently, not in flat machine steps.",
+    "Light and shadow that move as you walk past.",
+    "Small, natural differences in repeated patterns."
+   ],
+   "tools": [
+    [
+     "Chisels and gouges",
+     "For stone or wood reliefs."
+    ],
+    [
+     "Modelling tools",
+     "For clay or wax reliefs."
+    ],
+    [
+     "Flat board or slab",
+     "The background to carve or build on."
+    ],
+    [
+     "Drawing on the surface",
+     "The design traced before carving."
+    ],
+    [
+     "Side light",
+     "Shows the depth while you work."
+    ]
+   ],
+   "time": "A few days to several months",
+   "bestFor": "Artists who think in pictures and love storytelling.",
+   "artists": [
+    [
+     "Lorenzo Ghiberti",
+     "Italian, about 1378–1455",
+     "He cast bronze relief doors for Florence."
+    ],
+    [
+     "Donatello",
+     "Italian, about 1386–1466",
+     "He created a very flat relief style called rilievo schiacciato."
+    ]
+   ],
+   "guide": [
+    "Look at it from the side. Real hand work shows changing depth.",
+    "Ask about the material: stone, wood, plaster, clay or metal.",
+    "Hang heavy reliefs on strong fixings made for their weight."
+   ]
+  },
+  "ar": {
+   "name": "النحت البارز",
+   "feel": "راوٍ",
+   "essence": "أشكال ونقوش تبرز من خلفية مسطحة.",
+   "story": [
+    "النحت البارز من أقدم طرق رواية القصص على الحجر، وجدران مصر القديمة وآشور مليئة به.",
+    "هناك البارز المنخفض الذي يبرز قليلاً، والبارز العالي الذي تخرج فيه الأشكال كثيراً.",
+    "وفي فلورنسا في القرن الخامس عشر صبّ لورنزو غيبرتي أبواباً برونزية شهيرة مليئة بالنقوش البارزة."
+   ],
+   "tech": [
+    [
+     "البارز المنخفض",
+     "أشكال تبرز قليلاً عن الخلفية."
+    ],
+    [
+     "البارز العالي",
+     "أشكال تخرج كثيراً، تكاد تنفصل."
+    ],
+    [
+     "الغائر",
+     "أشكال محفورة في السطح بدل أن تبرز."
+    ],
+    [
+     "الحفر تحت الحواف",
+     "قطع تحت الحواف لصنع ظلال عميقة."
+    ],
+    [
+     "طبقات العمق",
+     "الأشكال القريبة أعلى والبعيدة أخفض."
+    ]
+   ],
+   "signs": [
+    "آثار أدوات في الخلفية وحول الحواف.",
+    "عمق يتغير بهدوء، لا على درجات آلية مسطحة.",
+    "ضوء وظل يتحركان كلما مررت بجانبه.",
+    "اختلافات طبيعية صغيرة في النقوش المتكررة."
+   ],
+   "tools": [
+    [
+     "الأزاميل",
+     "للنقوش في الحجر أو الخشب."
+    ],
+    [
+     "أدوات التشكيل",
+     "للنقوش بالطين أو الشمع."
+    ],
+    [
+     "لوح أو بلاطة مسطحة",
+     "الخلفية التي يُنحت عليها."
+    ],
+    [
+     "الرسم على السطح",
+     "التصميم يُرسم قبل النحت."
+    ],
+    [
+     "ضوء جانبي",
+     "يُظهر العمق أثناء العمل."
+    ]
+   ],
+   "time": "من أيام قليلة إلى عدة أشهر",
+   "bestFor": "الفنانين الذين يفكرون بالصور ويحبون رواية القصص.",
+   "artists": [
+    [
+     "لورنزو غيبرتي",
+     "إيطالي، نحو 1378–1455",
+     "صبّ أبواباً برونزية بنقوش بارزة لفلورنسا."
+    ],
+    [
+     "دوناتيلو",
+     "إيطالي، نحو 1386–1466",
+     "ابتكر أسلوب نقش بارز مسطح جداً يُسمى «ريليفو سكياتشاتو»."
+    ]
+   ],
+   "guide": [
+    "انظر إليه من الجانب، فالعمل اليدوي الحقيقي يُظهر عمقاً متغيراً.",
+    "اسأل عن الخامة: حجر أو خشب أو جبس أو طين أو معدن.",
+    "علّق النقوش الثقيلة على مثبتات قوية تناسب وزنها."
+   ]
+  }
+ },
+{
+  "id": "silver_jewellery",
+  "cat": "jewellery",
+  "type": "silver_jewellery",
+  "level": "intermediate",
+  "en": {
+   "name": "Handmade Silver and Metal Jewellery",
+   "feel": "Precious",
+   "essence": "Rings, bracelets and pendants sawn, hammered and soldered by hand.",
+   "story": [
+    "People have shaped metal into jewellery for thousands of years, from simple rings to fine chains.",
+    "Across the Arabian Peninsula, silversmiths made bold silver jewellery, often set with coral, carnelian or turquoise.",
+    "Today small studios still make each piece at the bench, using the same basic tools."
+   ],
+   "tech": [
+    [
+     "Sawing",
+     "Cutting shapes from metal sheet with a fine saw."
+    ],
+    [
+     "Soldering",
+     "Joining parts with a small flame and solder."
+    ],
+    [
+     "Forging and hammering",
+     "Shaping and texturing the metal."
+    ],
+    [
+     "Filigree",
+     "Fine twisted wires made into lace-like patterns."
+    ],
+    [
+     "Stone setting",
+     "Holding a stone safely in metal."
+    ]
+   ],
+   "signs": [
+    "Small hammer marks or hand-cut edges.",
+    "A hallmark or maker's mark stamped on the piece.",
+    "Solder joins cleaned by hand.",
+    "Slight differences between pairs, such as earrings."
+   ],
+   "tools": [
+    [
+     "Jeweller's saw",
+     "Cuts fine shapes."
+    ],
+    [
+     "Torch",
+     "Heats the metal for soldering."
+    ],
+    [
+     "Files and pliers",
+     "Shape and finish small parts."
+    ],
+    [
+     "Silver or other metal",
+     "Sterling silver, copper or brass sheet and wire."
+    ],
+    [
+     "Polishing tools",
+     "Bring out the shine."
+    ]
+   ],
+   "time": "A few hours to several weeks",
+   "bestFor": "Detail lovers with steady hands.",
+   "artists": [
+    [
+     "Georg Jensen",
+     "Danish, 1866–1935",
+     "A silversmith known for flowing, hand-finished silver."
+    ]
+   ],
+   "guide": [
+    "Look for a silver mark, such as 925 for sterling silver.",
+    "Ask how the stones are set and whether they are natural.",
+    "Store each piece separately so it does not scratch, and keep silver dry to slow tarnish."
+   ]
+  },
+  "ar": {
+   "name": "المجوهرات الفضية والمعدنية اليدوية",
+   "feel": "ثمين",
+   "essence": "خواتم وأساور وقلائد تُنشر وتُطرق وتُلحم باليد.",
+   "story": [
+    "شكّل الناس المعدن حُلياً منذ آلاف السنين، من الخواتم البسيطة إلى السلاسل الدقيقة.",
+    "وفي أنحاء الجزيرة العربية صنع الصاغة حُلياً فضية جريئة، كثيراً ما رُصّعت بالمرجان والعقيق والفيروز.",
+    "واليوم ما زالت المشاغل الصغيرة تصنع كل قطعة على طاولة العمل بالأدوات الأساسية نفسها."
+   ],
+   "tech": [
+    [
+     "النشر",
+     "قطع الأشكال من صفيحة المعدن بمنشار دقيق."
+    ],
+    [
+     "اللحام",
+     "وصل الأجزاء بلهب صغير ومادة لحام."
+    ],
+    [
+     "الطرق",
+     "تشكيل المعدن وإعطاؤه ملمساً."
+    ],
+    [
+     "التخريم (الفيليغري)",
+     "أسلاك دقيقة مجدولة تصنع نقوشاً تشبه الدانتيل."
+    ],
+    [
+     "الترصيع",
+     "تثبيت الحجر بأمان في المعدن."
+    ]
+   ],
+   "signs": [
+    "آثار مطرقة صغيرة أو حواف مقطوعة باليد.",
+    "دمغة أو علامة الصانع مختومة على القطعة.",
+    "وصلات لحام منظّفة باليد.",
+    "اختلافات بسيطة بين القطع المتزاوجة مثل الأقراط."
+   ],
+   "tools": [
+    [
+     "منشار الصائغ",
+     "يقطع الأشكال الدقيقة."
+    ],
+    [
+     "الشعلة",
+     "تسخّن المعدن للحام."
+    ],
+    [
+     "المبارد والكماشات",
+     "لتشكيل الأجزاء الصغيرة وتشطيبها."
+    ],
+    [
+     "الفضة أو معدن آخر",
+     "صفائح وأسلاك من الفضة أو النحاس أو النحاس الأصفر."
+    ],
+    [
+     "أدوات التلميع",
+     "تُظهر اللمعان."
+    ]
+   ],
+   "time": "من ساعات قليلة إلى عدة أسابيع",
+   "bestFor": "محبي التفاصيل أصحاب الأيدي الثابتة.",
+   "artists": [
+    [
+     "جورج ينسن",
+     "دنماركي، 1866–1935",
+     "صائغ فضة اشتهر بقطع فضية انسيابية مشطّبة باليد."
+    ]
+   ],
+   "guide": [
+    "ابحث عن دمغة الفضة، مثل 925 للفضة الإسترلينية.",
+    "اسأل كيف رُصّعت الأحجار وهل هي طبيعية.",
+    "احفظ كل قطعة وحدها حتى لا تُخدش، وأبقِ الفضة جافة لتبطئ اسودادها."
+   ]
+  }
+ },
+{
+  "id": "beadwork",
+  "cat": "jewellery",
+  "type": "beadwork",
+  "level": "beginner",
+  "en": {
+   "name": "Beadwork",
+   "feel": "Playful",
+   "essence": "Small beads threaded, woven or stitched into jewellery and patterns.",
+   "story": [
+    "Beads are among the oldest ornaments people made. Shell beads tens of thousands of years old have been found in caves.",
+    "Over time, beads were made of shell, stone, bone, glass, metal and seeds.",
+    "Many cultures, from Africa to the Americas and Arabia, have rich beadwork traditions with their own patterns."
+   ],
+   "tech": [
+    [
+     "Stringing",
+     "Threading beads on a cord or wire."
+    ],
+    [
+     "Loom weaving",
+     "Weaving rows of beads on a small loom."
+    ],
+    [
+     "Peyote stitch",
+     "A needle stitch that builds a flat or tube shape."
+    ],
+    [
+     "Bead embroidery",
+     "Sewing beads onto fabric or leather."
+    ],
+    [
+     "Knotting",
+     "Knots between beads to keep them safe."
+    ]
+   ],
+   "signs": [
+    "Small, natural changes in tension along the work.",
+    "Knots and thread ends finished neatly by hand.",
+    "Patterns with tiny variations made by hand.",
+    "Beads of slightly different sizes when natural materials are used."
+   ],
+   "tools": [
+    [
+     "Beads",
+     "Glass, stone, wood, shell or metal."
+    ],
+    [
+     "Beading needles",
+     "Thin needles that pass through small holes."
+    ],
+    [
+     "Thread or cord",
+     "Strong nylon, silk or wire."
+    ],
+    [
+     "Bead loom",
+     "For woven bands."
+    ],
+    [
+     "Clasps and findings",
+     "Small metal parts to finish a piece."
+    ]
+   ],
+   "time": "A few hours to several weeks",
+   "bestFor": "Beginners who love colour and pattern.",
+   "artists": [],
+   "guide": [
+    "Ask what the beads are made of: glass, stone or plastic.",
+    "Check the clasp and the end knots. Good work is finished neatly.",
+    "Store strands flat, and keep them away from perfume and water."
+   ]
+  },
+  "ar": {
+   "name": "أشغال الخرز",
+   "feel": "مرح",
+   "essence": "حبات خرز صغيرة تُنظم أو تُنسج أو تُطرّز في حُلي ونقوش.",
+   "story": [
+    "الخرز من أقدم الحُلي المعروفة، وقد وُجدت في الكهوف خرزات من الأصداف عمرها عشرات آلاف السنين.",
+    "ومع الزمن صُنع الخرز من الأصداف والحجر والعظم والزجاج والمعدن والبذور.",
+    "ولكثير من الثقافات، من أفريقيا إلى الأمريكيتين والجزيرة العربية، تقاليد غنية في الخرز بنقوشها الخاصة."
+   ],
+   "tech": [
+    [
+     "النظم",
+     "إدخال الخرز في خيط أو سلك."
+    ],
+    [
+     "النسج على النول",
+     "نسج صفوف من الخرز على نول صغير."
+    ],
+    [
+     "غرزة البيوت",
+     "غرزة بالإبرة تبني شكلاً مسطحاً أو أنبوبياً."
+    ],
+    [
+     "التطريز بالخرز",
+     "خياطة الخرز على القماش أو الجلد."
+    ],
+    [
+     "العُقد",
+     "عُقد بين الحبات لحمايتها."
+    ]
+   ],
+   "signs": [
+    "تغيرات طبيعية صغيرة في الشد على طول العمل.",
+    "عُقد وأطراف خيوط مشطّبة بعناية باليد.",
+    "نقوش فيها اختلافات يدوية دقيقة.",
+    "حبات بأحجام مختلفة قليلاً عند استعمال الخامات الطبيعية."
+   ],
+   "tools": [
+    [
+     "الخرز",
+     "زجاج أو حجر أو خشب أو صدف أو معدن."
+    ],
+    [
+     "إبر الخرز",
+     "إبر رفيعة تمر من الثقوب الصغيرة."
+    ],
+    [
+     "الخيط أو الحبل",
+     "نايلون قوي أو حرير أو سلك."
+    ],
+    [
+     "نول الخرز",
+     "للشرائط المنسوجة."
+    ],
+    [
+     "المشابك والقطع المعدنية",
+     "قطع صغيرة لإنهاء القطعة."
+    ]
+   ],
+   "time": "من ساعات قليلة إلى عدة أسابيع",
+   "bestFor": "المبتدئين الذين يحبون الألوان والنقوش.",
+   "artists": [],
+   "guide": [
+    "اسأل عن خامة الخرز: زجاج أو حجر أو بلاستيك.",
+    "افحص المشبك والعقد الأخيرة، فالعمل الجيد مشطّب بعناية.",
+    "احفظ العقود مسطحة، وأبعدها عن العطور والماء."
+   ]
+  }
+ },
+{
+  "id": "resin_jewellery",
+  "cat": "jewellery",
+  "type": "resin_jewellery",
+  "level": "beginner",
+  "en": {
+   "name": "Resin Jewellery",
+   "feel": "Luminous",
+   "essence": "Clear or coloured resin poured into moulds and set into jewellery.",
+   "story": [
+    "Resin jewellery is a modern craft. Early plastics such as Bakelite were popular for jewellery in the 1930s.",
+    "Today makers use epoxy or UV resin, which is poured as a liquid and sets hard and clear.",
+    "Small objects, pigments or metal flakes can be held inside, so each piece is one of a kind."
+   ],
+   "tech": [
+    [
+     "Measuring and mixing",
+     "Exact amounts of resin and hardener."
+    ],
+    [
+     "Pouring",
+     "Filling a mould or a metal frame (bezel)."
+    ],
+    [
+     "Embedding",
+     "Placing small objects or colour inside the resin."
+    ],
+    [
+     "Curing",
+     "Letting it harden, by time or UV light."
+    ],
+    [
+     "Sanding and polishing",
+     "A smooth, glass-like finish."
+    ]
+   ],
+   "signs": [
+    "Colours and inclusions that differ from piece to piece.",
+    "Hand-sanded edges.",
+    "Tiny natural changes in colour layers.",
+    "A clear, bubble-free surface from careful pouring."
+   ],
+   "tools": [
+    [
+     "Epoxy or UV resin",
+     "The clear liquid that hardens."
+    ],
+    [
+     "Silicone moulds",
+     "Give the shape."
+    ],
+    [
+     "Pigments and inclusions",
+     "Colour and small objects inside."
+    ],
+    [
+     "UV lamp",
+     "Hardens UV resin."
+    ],
+    [
+     "Gloves and mask",
+     "Protect the skin and lungs while mixing."
+    ]
+   ],
+   "time": "A few hours to a few days, with curing",
+   "bestFor": "Creative beginners who love colour and light.",
+   "artists": [],
+   "guide": [
+    "Ask which resin was used, and if it is fully cured.",
+    "Keep it away from strong sun and heat, which can yellow some resins.",
+    "Clean it with a soft cloth only."
+   ]
+  },
+  "ar": {
+   "name": "مجوهرات الريزن",
+   "feel": "مضيء",
+   "essence": "ريزن شفاف أو ملوّن يُصب في قوالب ويُثبّت في حُلي.",
+   "story": [
+    "مجوهرات الريزن حرفة حديثة، وكانت البلاستيكات الأولى مثل الباكلايت رائجة في الحُلي في ثلاثينيات القرن العشرين.",
+    "واليوم يستعمل الصنّاع ريزن الإيبوكسي أو ريزن الأشعة فوق البنفسجية، يُصب سائلاً ثم يتصلب شفافاً.",
+    "ويمكن حفظ أشياء صغيرة أو أصباغ أو رقائق معدنية بداخله، فتصبح كل قطعة فريدة."
+   ],
+   "tech": [
+    [
+     "القياس والخلط",
+     "كميات دقيقة من الريزن والمصلّب."
+    ],
+    [
+     "الصب",
+     "ملء قالب أو إطار معدني."
+    ],
+    [
+     "الدمج",
+     "وضع أشياء صغيرة أو ألوان داخل الريزن."
+    ],
+    [
+     "التصلب",
+     "تركه يتصلب بالوقت أو بالأشعة فوق البنفسجية."
+    ],
+    [
+     "الصنفرة والتلميع",
+     "سطح ناعم يشبه الزجاج."
+    ]
+   ],
+   "signs": [
+    "ألوان ومحتويات تختلف من قطعة لأخرى.",
+    "حواف مصنفرة باليد.",
+    "تغيرات طبيعية صغيرة في طبقات اللون.",
+    "سطح شفاف بلا فقاعات بفضل الصب المتأني."
+   ],
+   "tools": [
+    [
+     "ريزن الإيبوكسي أو الأشعة فوق البنفسجية",
+     "السائل الشفاف الذي يتصلب."
+    ],
+    [
+     "قوالب السيليكون",
+     "تعطي الشكل."
+    ],
+    [
+     "الأصباغ والإضافات",
+     "لون وأشياء صغيرة بالداخل."
+    ],
+    [
+     "مصباح الأشعة فوق البنفسجية",
+     "يصلّب ريزن الأشعة."
+    ],
+    [
+     "قفازات وكمامة",
+     "تحمي الجلد والرئتين أثناء الخلط."
+    ]
+   ],
+   "time": "من ساعات قليلة إلى أيام قليلة مع التصلب",
+   "bestFor": "المبتدئين المبدعين الذين يحبون اللون والضوء.",
+   "artists": [],
+   "guide": [
+    "اسأل عن نوع الريزن وهل تصلّب تماماً.",
+    "أبعدها عن الشمس القوية والحرارة، فقد تصفرّ بعض أنواع الريزن.",
+    "نظّفها بقطعة قماش ناعمة فقط."
+   ]
+  }
+ },
+{
+  "id": "wire_wrapping",
+  "cat": "jewellery",
+  "type": "wire_wrapping",
+  "level": "beginner",
+  "en": {
+   "name": "Wire Wrapping",
+   "feel": "Graceful",
+   "essence": "Metal wire bent, coiled and wrapped by hand to make jewellery, without solder.",
+   "story": [
+    "Jewellers have twisted and bent metal wire since ancient times.",
+    "Wire wrapping holds a stone or bead in a cage of wire, so no heat or solder is needed.",
+    "It became a popular handmade craft in recent decades, because it needs only a few simple tools."
+   ],
+   "tech": [
+    [
+     "Wrapping",
+     "Coiling wire tightly around itself or a stone."
+    ],
+    [
+     "Weaving",
+     "Thin wire woven around thicker frame wires."
+    ],
+    [
+     "Loops and spirals",
+     "Round shapes made with pliers."
+    ],
+    [
+     "Caging",
+     "A wire frame that holds a stone."
+    ],
+    [
+     "Hammering",
+     "Flattening wire for strength and shine."
+    ]
+   ],
+   "signs": [
+    "Even coils, with small natural changes.",
+    "Wire ends tucked in so they do not scratch.",
+    "Slight differences between matching pieces.",
+    "No solder joins: the shape is held by the wire alone."
+   ],
+   "tools": [
+    [
+     "Wire",
+     "Copper, silver or gold-filled wire."
+    ],
+    [
+     "Round-nose pliers",
+     "Make loops and curves."
+    ],
+    [
+     "Flat-nose pliers",
+     "Hold and bend the wire."
+    ],
+    [
+     "Wire cutters",
+     "Clean, flush cuts."
+    ],
+    [
+     "Stones or beads",
+     "The centre of many pieces."
+    ]
+   ],
+   "time": "A few hours to a few days",
+   "bestFor": "Beginners who want to make jewellery with few tools.",
+   "artists": [],
+   "guide": [
+    "Check the wire ends. They should be smooth and tucked in.",
+    "Ask what the wire is made of, especially for sensitive skin.",
+    "Avoid pulling the wraps. Store pieces flat."
+   ]
+  },
+  "ar": {
+   "name": "لف الأسلاك",
+   "feel": "رشيق",
+   "essence": "سلك معدني يُثنى ويُلف باليد ليصنع حُلياً، دون لحام.",
+   "story": [
+    "يجدل الصاغة السلك المعدني ويثنونه منذ العصور القديمة.",
+    "ولف الأسلاك يمسك الحجر أو الخرزة داخل قفص من السلك، فلا حاجة إلى حرارة أو لحام.",
+    "وصار حرفة يدوية رائجة في العقود الأخيرة، لأنه يحتاج إلى أدوات بسيطة قليلة."
+   ],
+   "tech": [
+    [
+     "اللف",
+     "لف السلك بإحكام حول نفسه أو حول حجر."
+    ],
+    [
+     "النسج",
+     "سلك رفيع يُنسج حول أسلاك إطار أسمك."
+    ],
+    [
+     "الحلقات واللوالب",
+     "أشكال دائرية تُصنع بالكماشة."
+    ],
+    [
+     "القفص",
+     "إطار من السلك يمسك الحجر."
+    ],
+    [
+     "الطرق",
+     "تسطيح السلك ليزداد قوة ولمعاناً."
+    ]
+   ],
+   "signs": [
+    "لفّات متساوية مع تغيرات طبيعية صغيرة.",
+    "أطراف السلك مخبأة حتى لا تخدش.",
+    "اختلافات بسيطة بين القطع المتشابهة.",
+    "لا وصلات لحام، فالشكل يمسكه السلك وحده."
+   ],
+   "tools": [
+    [
+     "السلك",
+     "سلك نحاس أو فضة أو مطلي بالذهب."
+    ],
+    [
+     "كماشة دائرية الرأس",
+     "تصنع الحلقات والمنحنيات."
+    ],
+    [
+     "كماشة مسطحة الرأس",
+     "تمسك السلك وتثنيه."
+    ],
+    [
+     "قطّاعة الأسلاك",
+     "قطع نظيف ومستوٍ."
+    ],
+    [
+     "الأحجار أو الخرز",
+     "قلب كثير من القطع."
+    ]
+   ],
+   "time": "من ساعات قليلة إلى أيام قليلة",
+   "bestFor": "المبتدئين الذين يريدون صنع حُلي بأدوات قليلة.",
+   "artists": [],
+   "guide": [
+    "افحص أطراف السلك، يجب أن تكون ناعمة ومخبأة.",
+    "اسأل عن نوع السلك، خاصة لأصحاب البشرة الحساسة.",
+    "لا تشد اللفّات، واحفظ القطع مسطحة."
+   ]
+  }
+ },
+{
+  "id": "enamel_jewellery",
+  "cat": "jewellery",
+  "type": "enamel_jewellery",
+  "level": "advanced",
+  "en": {
+   "name": "Enamel Work",
+   "feel": "Radiant",
+   "essence": "Powdered glass fused onto metal by heat, for colours that last for centuries.",
+   "story": [
+    "Enamel is glass melted onto metal. Ancient makers used it more than 3,000 years ago.",
+    "Byzantine and Chinese workshops became famous for cloisonné, where thin wires make little cells of colour.",
+    "Around 1900, jewellers such as René Lalique and the Fabergé workshop made enamel jewels of great beauty."
+   ],
+   "tech": [
+    [
+     "Cloisonné",
+     "Thin wires form cells that are filled with enamel."
+    ],
+    [
+     "Champlevé",
+     "Hollows carved in the metal are filled with enamel."
+    ],
+    [
+     "Plique-à-jour",
+     "Enamel with no backing, so light shines through."
+    ],
+    [
+     "Guilloché enamel",
+     "Clear enamel over a finely engraved metal pattern."
+    ],
+    [
+     "Kiln firing",
+     "Heat melts the glass powder into a smooth layer."
+    ]
+   ],
+   "signs": [
+    "Tiny, natural changes in colour between cells.",
+    "Fine wires or metal walls between colours.",
+    "A glassy, hard surface, not soft paint.",
+    "Small differences in each piece, even in a set."
+   ],
+   "tools": [
+    [
+     "Enamel powders",
+     "Finely ground coloured glass."
+    ],
+    [
+     "Metal base",
+     "Copper, silver or gold."
+    ],
+    [
+     "Kiln or torch",
+     "Melts the enamel."
+    ],
+    [
+     "Fine wire",
+     "For cloisonné cells."
+    ],
+    [
+     "Stones and files",
+     "Smooth the fired surface."
+    ]
+   ],
+   "time": "Several days to several weeks",
+   "bestFor": "Patient makers who love colour and fine detail.",
+   "artists": [
+    [
+     "René Lalique",
+     "French, 1860–1945",
+     "A master of Art Nouveau jewellery with enamel."
+    ],
+    [
+     "Peter Carl Fabergé",
+     "Russian, 1846–1920",
+     "His workshop was famous for fine guilloché enamel."
+    ]
+   ],
+   "guide": [
+    "Ask which technique was used: cloisonné, champlevé or another.",
+    "Look closely: real enamel is glass, smooth and hard, not painted.",
+    "Avoid knocks and sudden heat. Enamel can chip like glass."
+   ]
+  },
+  "ar": {
+   "name": "المينا",
+   "feel": "متألق",
+   "essence": "زجاج مطحون يُصهر على المعدن بالحرارة، بألوان تدوم قروناً.",
+   "story": [
+    "المينا زجاج يُصهر على المعدن، واستعمله الصنّاع القدماء قبل أكثر من 3,000 عام.",
+    "واشتهرت المشاغل البيزنطية والصينية بالمينا المحجّرة، حيث تصنع أسلاك رفيعة خلايا صغيرة من الألوان.",
+    "ونحو عام 1900 صنع صاغة مثل رينيه لاليك ومشغل فابرجيه حُلياً بالمينا بالغة الجمال."
+   ],
+   "tech": [
+    [
+     "المينا المحجّرة (كلوازونيه)",
+     "أسلاك رفيعة تشكّل خلايا تُملأ بالمينا."
+    ],
+    [
+     "المينا المحفورة (شامبلفيه)",
+     "تجاويف تُحفر في المعدن وتُملأ بالمينا."
+    ],
+    [
+     "المينا الشفافة (بليك أ جور)",
+     "مينا بلا خلفية فيمر الضوء من خلالها."
+    ],
+    [
+     "مينا الغيوشيه",
+     "مينا شفافة فوق نقش معدني دقيق."
+    ],
+    [
+     "الحرق في الفرن",
+     "الحرارة تصهر مسحوق الزجاج إلى طبقة ناعمة."
+    ]
+   ],
+   "signs": [
+    "تغيرات طبيعية صغيرة في اللون بين الخلايا.",
+    "أسلاك دقيقة أو جدران معدنية بين الألوان.",
+    "سطح زجاجي صلب، لا طلاء طري.",
+    "اختلافات بسيطة في كل قطعة، حتى ضمن الطقم الواحد."
+   ],
+   "tools": [
+    [
+     "مساحيق المينا",
+     "زجاج ملوّن مطحون بنعومة."
+    ],
+    [
+     "قاعدة معدنية",
+     "نحاس أو فضة أو ذهب."
+    ],
+    [
+     "فرن أو شعلة",
+     "يصهر المينا."
+    ],
+    [
+     "سلك رفيع",
+     "لخلايا المينا المحجّرة."
+    ],
+    [
+     "أحجار ومبارد",
+     "تنعّم السطح بعد الحرق."
+    ]
+   ],
+   "time": "من عدة أيام إلى عدة أسابيع",
+   "bestFor": "الصنّاع الصبورين الذين يحبون اللون والتفاصيل الدقيقة.",
+   "artists": [
+    [
+     "رينيه لاليك",
+     "فرنسي، 1860–1945",
+     "أستاذ حُلي الفن الحديث (آرت نوفو) بالمينا."
+    ],
+    [
+     "بيتر كارل فابرجيه",
+     "روسي، 1846–1920",
+     "اشتهر مشغله بمينا الغيوشيه الدقيقة."
+    ]
+   ],
+   "guide": [
+    "اسأل عن التقنية المستعملة: المحجّرة أو المحفورة أو غيرها.",
+    "انظر عن قرب: المينا الحقيقية زجاج ناعم صلب، لا طلاء.",
+    "تجنّب الصدمات والحرارة المفاجئة، فالمينا قد تتشظى كالزجاج."
    ]
   }
  }

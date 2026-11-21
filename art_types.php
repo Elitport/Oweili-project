@@ -52,6 +52,9 @@ if (!function_exists('owLoadArtTypes')) {
                    hidden, not deleted. They keep their label for any artwork that has one */
                 if (in_array((string) $s['cat'], ['digital', 'photography'], true)) $types[(string) $s['id']]['legacy'] = true;
                 if (in_array((string) $s['id'], OW_MORE_STYLES, true) && !owMoreStylesOn()) $types[(string) $s['id']]['legacy'] = true;
+                /* Sculpture and Handmade jewellery (owner, 21 Nov 2026) are on Art Styles only: the Gallery, the upload,
+                   the artist profile and the admin lists stay painting only, so they are never offered there */
+                if (in_array((string) $s['cat'], ['sculpture', 'jewellery'], true)) $types[(string) $s['id']]['legacy'] = true;
             }
         }
         /* two topics of the upload form that are not an Explore style (owner, 6 Nov 2026) */

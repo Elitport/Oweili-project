@@ -31,8 +31,11 @@
     if (s.cat !== 'heritage') return s;
     var c = {}; for (var k in s) c[k] = s[k]; c.cat = 'traditional'; return c;
   });
-  STYLES = STYLES.filter(function (s) { return DRAWING.indexOf(s.id) < 0; })
-    .concat(DRAWING.map(function (id) { return STYLES.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean));
+  /* painting first, then drawing, then Sculpture and Handmade jewellery (21 Nov 2026) */
+  var LATER = function (s) { return s.cat === 'sculpture' || s.cat === 'jewellery'; };
+  STYLES = STYLES.filter(function (s) { return DRAWING.indexOf(s.id) < 0 && !LATER(s); })
+    .concat(DRAWING.map(function (id) { return STYLES.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean))
+    .concat(STYLES.filter(LATER));
   var BY_ID = {};
   STYLES.forEach(function (s) { BY_ID[s.id] = s; });
 
@@ -42,8 +45,13 @@
     ['traditional', 'Traditional', 'تقليدي'],
     ['heritage', 'Islamic & Arab Heritage', 'تراث إسلامي وعربي'],
     ['contemporary', 'Contemporary', 'معاصر'],
-    ['nature', 'Nature & Portrait', 'طبيعة وبورتريه']
+    ['nature', 'Nature & Portrait', 'طبيعة وبورتريه'],
+    ['sculpture', 'Sculpture', 'النحت'],
+    ['jewellery', 'Handmade Jewellery', 'المجوهرات اليدوية']
   ];
+  /* Sculpture and Handmade jewellery (owner, 21 Nov 2026): on Art Styles only, never sold in the Gallery,
+     so their window has no "From Our Gallery" part */
+  var NOT_IN_GALLERY = ['sculpture', 'jewellery'];
   if (MORE_OFF) CATS = CATS.filter(function (c) { return c[0] !== 'heritage'; });
   var LEVELS = {
     beginner: ['Beginner', 'مبتدئ', 1],
@@ -180,9 +188,9 @@
       section('Signs of a Real Hand', 'علامات اليد الحقيقية', list(signs, 'ol'), 'm-signs') +
       section('Tools & Materials', 'الأدوات والخامات', list(tools, 'ul'), 'm-tools') +
       section('Difficulty & Time', 'الصعوبة والوقت', facts, 'm-facts') +
-      section('Famous Artists', 'فنانون صنعوا هذا الأسلوب', list(artists, 'ul'), 'm-artists') +
-      section('Collector’s Guide: How to recognize authentic ' + en.name + ' work', 'دليل المقتني: كيف تتعرّف على عمل أصيل في ' + ar.name, list(guide, 'ol'), 'm-guide') +
-      liveHtml(s) +
+      (artists ? section('Famous Artists', 'فنانون صنعوا هذا الأسلوب', list(artists, 'ul'), 'm-artists') : '') +
+      section('Collector’s Guide: How to recognize authentic ' + en.name + (/work$/i.test(en.name) ? '' : ' work'), 'دليل المقتني: كيف تتعرّف على عمل أصيل في ' + ar.name, list(guide, 'ol'), 'm-guide') +
+      (NOT_IN_GALLERY.indexOf(s.cat) < 0 ? liveHtml(s) : '') +
       '</div>';
   }
   function openStyle(id, push) {

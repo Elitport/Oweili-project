@@ -1352,7 +1352,7 @@ const ADICT = {
   "Inquiries":"طلبات الاهتمام","Artwork":"العمل الفني","Collector":"المقتني",
   "No inquiries yet. They appear here when a visitor presses \"I'm Interested\" in the Gallery.":"لا توجد طلبات بعد. تظهر هنا عندما يضغط زائر «أنا مهتم» في المعرض.",
   "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.","Too many attempts. Please wait 10 minutes.":"محاولات كثيرة جداً. يرجى الانتظار 10 دقائق.",
-  "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"أساليب الرسم",
+  "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"الأساليب الفنية",
   "Events":"الأحداث","Training":"التدريب",
   "Add New Event":"إضافة حدث جديد","Add Event":"إضافة الحدث",
   "Add New Training":"إضافة تدريب جديد","Add Training":"إضافة التدريب",

@@ -79,13 +79,14 @@
 - Sprint 4: payments (last — after everything else is complete)
 
 ## What NOT to build yet
+- Selling sculptures or jewellery: Art Styles shows Sculpture and Handmade jewellery (owner, 21 Nov 2026, a first step toward courses in these arts), but the Gallery and the artwork upload stay painting only
 - Any real payment provider, checkout or live money movement
 - The orders and escrow structure exists but stays switched off (see Payments and escrow) until Sprint 4
 
 ## Pages Built
 - index.php — Homepage in the calm style (19 Nov 2026): the painting video as the hero with the title, the two lines, the two buttons and the three trust points; under it Artist of the week and a row of links to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education (see Features)
 - nav.php — Shared navbar (used across all pages)
-- explore.php — Art Styles: an art encyclopedia (50 styles shown: painting and drawing) with a rich window for each (see Features)
+- explore.php — Art Styles («الأساليب الفنية» since 21 Nov 2026): an art encyclopedia (62 styles shown: 50 painting and drawing, 7 Sculpture, 5 Handmade jewellery) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
 - community.php — Community page: real counts and the newest artworks (see Features). HIDDEN FOR NOW, to bring back later (6 Nov 2026, Admin → Settings)
@@ -119,7 +120,7 @@
 - admin_institutes.php — team tool for institutes and courses
 - bashro_api.php — the Bashro data connection (off by default)
 - bashro_send.php — sends requests to Bashro's receive-only door (needs BASHRO_DOOR_SITE / BASHRO_DOOR_KEY in config.php; see Features)
-- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (77 styles, 50 shown)
+- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (89 styles, 62 shown; the 12 Sculpture and Handmade jewellery styles are never Gallery types)
 - art_types.php — the art type list: the styles (names from art_styles.js; hidden ones marked legacy, OW_MORE_STYLES) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
@@ -156,6 +157,14 @@
 - Terms, Privacy, About: after the hero, a narrow reading column (760 px) with large line spacing (18 px text, line height 1.95)
 - The certificate and its printed label are left exactly as they were (body.cert-page / body.label-page are left out of every calm rule)
 - Code: one calm layer at the end of assets/css/oweili.css (it replaces the old photo-page rules and the glass layer); index.php has its own small block for the video hero and the row of links; assets/css/bento.css was removed; the Gallery's filter button has a visible "Filter" word (marketplace.php)
+
+### Art Styles: Sculpture and Handmade jewellery, Arabic name «الأساليب الفنية» (21 Nov 2026, owner)
+- OWNER'S DECISION: Art Styles grows to sculpture and handmade jewellery, a first step toward courses in these arts. Selling sculptures or jewellery is NOT part of it: the Gallery, the artwork upload and edit forms, the artist profile style choices and the admin lists stay painting only (art_types.php marks the cats 'sculpture' and 'jewellery' legacy, so they are never offered; explore.js shows no "From Our Gallery" part in their windows)
+- Arabic name of the menu item and the page: «الأساليب الفنية» (was «أساليب الرسم») everywhere: menu (computer and ☰), page title and heading, link previews, the home page link, the older pages' own menu words and the admin label. English "Art Styles" unchanged
+- Two new filter pills after the painting groups: Sculpture / النحت (Wood Carving, Stone Carving, Plaster (Gypsum) Sculpture, Clay and Ceramic Sculpture, Foam Carving, Metal Sculpture, Relief Sculpture) and Handmade Jewellery / المجوهرات اليدوية (Handmade Silver and Metal Jewellery, Beadwork, Resin Jewellery, Wire Wrapping, Enamel Work). In "All" they come after painting and drawing. Each has the same card and window as the painting styles (feeling word, short description, short history, techniques, signs of a real hand, tools, difficulty and time, famous artists when there are well-known ones, collector's guide), in Arabic and English, in assets/js/art_styles.js. A window with no famous artists leaves that part out
+- Pictures: free Wikimedia Commons files (public domain or a free licence), no real people, with the usual credit line (assets/js/art_photos.js, assets/img/styles/<id>.jpg/.webp and -s copies)
+- The hidden switch "Other art styles" (OW_MORE_STYLES) was not used or changed
+- Files: assets/js/art_styles.js, assets/js/explore.js, assets/js/art_photos.js, assets/img/styles/, art_types.php, explore.php and the pages with the Arabic menu word (nav.php, lang_lib.php, index.php, marketplace.php, upload_artwork.php, register*.php, login.php, forgot.php, verify.php, support.php, community.php, edit_profile.php, edit_artwork.php, artist_dashboard.php, admin.php), CLAUDE.md. Tables: none
 
 ### Company location: "Saudi Arabia" only, no city (21 Nov 2026, owner)
 - RULE (owner): wherever Oweili or Elitport's location is described (Terms, Privacy, About, footer, emails, structured data for Google, anything else), it is "Saudi Arabia" / «المملكة العربية السعودية» only, never a city. Cities of places, institutes, courses and events (Art Map, Art Institutes, filters) are NOT affected
@@ -1183,7 +1192,7 @@ Multiple .sql files exist for setup, roles, profiles, purchases, financial, phon
 - dir attribute must be set on html element when switching
 
 ## Navigation Structure
-- Now (owner, 6 Nov 2026, night; Art Map since 12 Nov 2026; Art Institutes back 15 Nov 2026): no Discover dropdown. Gallery · Art Styles («أساليب الرسم», renamed from Explore Art Styles) · Art Events · Art Education · Art Map (Arabic menu word «وجهات») · Art Institutes («المعاهد الفنية», only while the courses switch is on) · Support ↓ (Artist Spotlights, Community and the Collect menu come back only when switched on). The lines below describe the older layout
+- Now (owner, 6 Nov 2026, night; Art Map since 12 Nov 2026; Art Institutes back 15 Nov 2026): no Discover dropdown. Gallery · Art Styles («الأساليب الفنية» since 21 Nov 2026, was «أساليب الرسم», renamed from Explore Art Styles) · Art Events · Art Education · Art Map (Arabic menu word «وجهات») · Art Institutes («المعاهد الفنية», only while the courses switch is on) · Support ↓ (Artist Spotlights, Community and the Collect menu come back only when switched on). The lines below describe the older layout
 - Order (owner's choice): Gallery · Collect ↓ · Explore Art Styles · Discover ↓ · Community · Support ↓ (Community, Gifts, Commissions and Artist Spotlights are hidden for now, to bring back later, 6 Nov 2026: while hidden the menu is Gallery · Explore Art Styles · Discover ↓ (Art Events, Art Education, Art Institutes) · Support ↓, and the Collect menu is gone because all its pages are hidden) (Arabic, right to left: المعرض · اقتنِ · استكشف أساليب الرسم · اكتشف · المجتمع · الدعم). The ☰ phone menu uses the same order
 - Collect ↓ / «اقتنِ» → Gifts / «هدايا» (gifts.php, hidden for now: then the top word opens commission.php), Commissions / «طلب لوحة خاصة» (commission.php), and Auctions / «المزاد» (auctions.php, with a small "Soon" tag) ONLY while the Auctions page is switched on in Admin → Settings (hidden since 5 Nov 2026). The top word opens gifts.php
 - Gallery / «المعرض» → marketplace.php, no dropdown (never call it "Marketplace" / «السوق» on the site)

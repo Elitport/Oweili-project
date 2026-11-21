@@ -539,7 +539,7 @@ var NAV_T = {
        
        'dd-sp1':'Contact Us','dd-sp2':'How It Works','dd-sp3':'Terms of Use','lb':'العربية'},
   ar: {'nav-community-label':'المجتمع','nav-marketplace-label':'المعرض',
-       'nav-explore-label':'أساليب الرسم','nav-support-label':'الدعم',
+       'nav-explore-label':'الأساليب الفنية','nav-support-label':'الدعم',
        
        'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام','lb':'English'}
 };

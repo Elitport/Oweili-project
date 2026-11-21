@@ -402,7 +402,7 @@ const T={
     abstract:'تجريدي',landscape:'طبيعي',portrait:'بورتريه',other:'أخرى',
     cardEdit:'تعديل',cardDelete:'حذف',rejected:'لم تتم الموافقة',
     available:'متاح',sold:'مباع',auction:'مزاد',sar:'ر.س',
-    nav:{community:'المجتمع',marketplace:'المعرض',explore:'أساليب الرسم',support:'الدعم',
+    nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
       sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
 };
 let L='en';
