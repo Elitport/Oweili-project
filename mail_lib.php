@@ -47,7 +47,7 @@ function owSmtpReady(): bool {
  *   - From "Oweili · أويلي" <no-reply@oweili.com>, Reply-To contact@oweili.com
  *   - two versions in one email (multipart/alternative): plain text AND HTML,
  *     made from whichever one the page wrote
- *   - the same footer: Oweili, Elitport Limited, Jeddah, Saudi Arabia,
+ *   - the same footer: Oweili, Elitport Limited, Saudi Arabia,
  *     contact@oweili.com, oweili.com (+ the commercial registration number
  *     once it is set in ow_paths.php / config.php)
  *   - a correct Date and a unique Message-ID on oweili.com

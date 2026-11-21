@@ -49,7 +49,7 @@ if (!function_exists('owContactEmail')) {
    registration number stays empty until it is added here (or in config.php:
    define('OWEILI_COMPANY_CR', '…')); while it is empty, the line is left out. */
 if (!defined('OW_COMPANY_NAME')) define('OW_COMPANY_NAME', 'Elitport Limited');
-if (!defined('OW_COMPANY_CITY')) define('OW_COMPANY_CITY', 'Jeddah, Saudi Arabia');
+if (!defined('OW_COMPANY_CITY')) define('OW_COMPANY_CITY', 'Saudi Arabia');   // country only, no city (owner, 21 Nov 2026)
 if (!defined('OW_COMPANY_CR'))   define('OW_COMPANY_CR', '');
 if (!defined('OW_COMPANY_UNN'))  define('OW_COMPANY_UNN', '7053193244');   // Unified National Number (owner, 21 Nov 2026): footer, Privacy, Terms
 if (!function_exists('owCompanyCr')) {
