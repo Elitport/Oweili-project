@@ -580,6 +580,40 @@
       return '<rect width="400" height="300" class="ink" opacity=".85"/>' + r +
         '<path d="M110 230 A90 90 0 0 1 290 230 Z" class="pk"/><path d="M140 230 A60 60 0 0 1 260 230" class="st bgk" stroke-width="3"/>' +
         '<rect x="60" y="230" width="280" height="12" class="gb"/><rect x="90" y="250" width="220" height="10" class="gb" opacity=".7"/><rect x="120" y="268" width="160" height="8" class="gb" opacity=".5"/>';
+    },
+    /* 22 Nov 2026 (owner): three handmade styles with no good free photo */
+    coffee_painting: function (u) {
+      return '<defs><filter id="cf' + u + '" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter></defs>' +
+        '<g filter="url(#cf' + u + ')"><path d="M0 190 C90 150 170 170 250 140 S360 130 400 150 L400 300 L0 300 Z" class="ink" opacity=".18"/>' +
+        '<path d="M0 232 C100 206 200 226 290 200 S380 196 400 206 L400 300 L0 300 Z" class="ink" opacity=".32"/>' +
+        '<path d="M0 268 C120 250 240 270 400 252 L400 300 L0 300 Z" class="ink" opacity=".5"/></g>' +
+        '<circle cx="300" cy="78" r="26" class="ink" opacity=".22"/>' +
+        '<path d="M60 112 C100 96 140 104 170 92" class="st ink" stroke-width="3" opacity=".45"/>' +
+        '<path d="M318 210 h44 l-6 34 a10 10 0 0 1 -10 8 h-12 a10 10 0 0 1 -10 -8 Z" class="ink" opacity=".75"/>' +
+        '<path d="M362 218 c12 0 12 16 0 16" class="st ink" stroke-width="3" opacity=".75"/>';
+    },
+    handbuilt_porcelain: function (u) {
+      return '<defs><radialGradient id="hp' + u + '" cx="50%" cy="40%" r="60%"><stop offset="0" class="sbg"/><stop offset="1" class="sgb" stop-opacity=".55"/></radialGradient></defs>' +
+        '<ellipse cx="200" cy="248" rx="120" ry="14" class="ink" opacity=".12"/>' +
+        '<path d="M92 120 C96 200 140 244 200 246 C262 244 306 198 310 118 Z" fill="url(#hp' + u + ')" class="st gb" stroke-width="2.5"/>' +
+        '<path d="M92 120 C120 108 160 128 200 116 C240 104 282 126 310 118" class="st ink" stroke-width="2.5" opacity=".7"/>' +
+        '<path d="M92 120 C130 136 170 128 200 134 C236 140 280 128 310 118" class="st gb" stroke-width="2"/>' +
+        '<ellipse cx="160" cy="176" rx="7" ry="11" class="gb" opacity=".35"/><ellipse cx="232" cy="190" rx="7" ry="11" class="gb" opacity=".35"/>' +
+        '<ellipse cx="196" cy="214" rx="6" ry="9" class="gb" opacity=".3"/>' +
+        '<path d="M140 150 C150 180 168 206 196 222" class="st bgk" stroke-width="6" opacity=".8"/>';
+    },
+    talli: function () {
+      var d = '';
+      for (var i = 0; i < 8; i++) {
+        var x = 40 + i * 42;
+        d += '<path d="M' + x + ' 150 l21 -22 l21 22 l-21 22 Z" class="' + (i % 2 ? 'gb' : 'pk') + '"/>' +
+          '<path d="M' + (x + 21) + ' 136 l7 14 l-7 14 l-7 -14 Z" class="bgk" opacity=".85"/>';
+      }
+      return '<rect x="30" y="118" width="346" height="64" rx="6" class="ink" opacity=".88"/>' + d +
+        '<path d="M30 122 H376 M30 178 H376" class="st gb" stroke-width="3" opacity=".9"/>' +
+        '<path d="M70 182 L60 250 M120 182 L118 254 M170 182 L176 250 M230 182 L232 256 M290 182 L300 250 M340 182 L350 252" class="st ink" stroke-width="1.5" opacity=".45"/>' +
+        '<g class="gb"><rect x="54" y="248" width="12" height="22" rx="4"/><rect x="112" y="252" width="12" height="22" rx="4"/><rect x="170" y="248" width="12" height="22" rx="4"/>' +
+        '<rect x="226" y="254" width="12" height="22" rx="4"/><rect x="294" y="248" width="12" height="22" rx="4"/><rect x="344" y="250" width="12" height="22" rx="4"/></g>';
     }
 
   };

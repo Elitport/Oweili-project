@@ -60,6 +60,7 @@
 - Proof of process: all 3 stage photos must be taken through the Oweili website camera
 - Art type selection: always guided with example images, never automatic AI detection
 - Local artist photos: never published without a saved consent record
+- Art Styles is handmade only (owner, 22 Nov 2026): every style on Art Styles must be made BY HAND. No printing, no machine production, no factory processes. Hand tools (chisels, needles, a potter's wheel, a kiln) are fine. Each new style's text must make clear it is handmade
 
 ## Database Tables Needed (not yet built — need approval before creating)
 - Done on the live database (checked 30 Oct 2026): all 8 tables, artworks.is_draft and the 'institute' role are in place. A safe re-run on 30 Oct found everything already there and changed nothing. database_update.sql stays in the project as the record (safe to run more than once)
@@ -86,7 +87,7 @@
 ## Pages Built
 - index.php — Homepage in the calm style (19 Nov 2026): the painting video as the hero with the title, the two lines, the two buttons and the three trust points; under it Artist of the week and a row of links to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education (see Features)
 - nav.php — Shared navbar (used across all pages)
-- explore.php — Art Styles («الأساليب الفنية» since 21 Nov 2026): an art encyclopedia (76 styles shown: 56 painting and drawing, 8 Sculpture, 5 Handmade jewellery, 2 Pottery & ceramics, 5 Textiles) with a rich window for each (see Features)
+- explore.php — Art Styles («الأساليب الفنية» since 21 Nov 2026): an art encyclopedia (99 styles shown: 58 painting and drawing, 13 Sculpture, 10 Handmade jewellery, 7 Pottery & ceramics, 11 Textiles) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
 - community.php — Community page: real counts and the newest artworks (see Features). HIDDEN FOR NOW, to bring back later (6 Nov 2026, Admin → Settings)
@@ -120,7 +121,7 @@
 - admin_institutes.php — team tool for institutes and courses
 - bashro_api.php — the Bashro data connection (off by default)
 - bashro_send.php — sends requests to Bashro's receive-only door (needs BASHRO_DOOR_SITE / BASHRO_DOOR_KEY in config.php; see Features)
-- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (100 styles, 76 shown; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 3 OW_STYLES_ONLY painting styles are never Gallery types)
+- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (123 styles, 99 shown; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 5 OW_STYLES_ONLY painting styles are never Gallery types)
 - art_types.php — the art type list: the styles (names from art_styles.js; hidden ones marked legacy, OW_MORE_STYLES) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
@@ -144,6 +145,14 @@
 - Deleted on 15 Nov 2026 (owner): the pink brush video assets/video/hero-pink-tall.mp4 (no page used it), from the project and the live site. Backup first: .backups/rejected-video-20261115-083853/hero-pink-tall.mp4 on the server; the file also stays in the git history
 
 ## Features
+
+### Art Styles: 23 more handmade styles, 99 shown (22 Nov 2026, owner)
+- Owner rule added to Business Rules: every style on Art Styles is made by hand (no printing, machine or factory processes; hand tools such as chisels, needles, a potter's wheel and a kiln are fine). Each new style's text says it is handmade
+- Added with the same card, window, picture and credit rules (assets/js/art_styles.js; pictures in assets/js/art_photos.js and assets/img/styles/): Painting (Traditional pill): Miniature Painting / المنمنمات, Coffee Painting / الرسم بالقهوة. Sculpture: Miniature Hand Sculpture / المجسمات المصغّرة, Wire Sculpture / النحت بالأسلاك, Wax Sculpture / النحت بالشمع, Sand Sculpture / النحت بالرمل, Soapstone Carving / نحت حجر الصابون. Handmade jewellery: Filigree / الفيليجري (المخرّمات), Hand Stone Setting / ترصيع الأحجار, Handmade Prayer Beads / صناعة المسابح اليدوية, Polymer Clay Jewellery / مجوهرات الصلصال الحراري, Hand Goldsmithing / صياغة الذهب اليدوية. Pottery & ceramics: Coil Pottery / الفخار بالحبال, Raku / الراكو, Hand-built Porcelain / البورسلين المشكّل باليد, Terracotta / التيراكوتا, Hand Glazing / التزجيج اليدوي. Textiles: Hand-loom Weaving / النسيج على النول اليدوي, Batik / الباتيك, Felting / اللباد, Handmade Lace / الدانتيل اليدوي (التخريم), Palm-frond Weaving / سف الخوص, Talli Embroidery / التلي
+- Not added twice: Al-Qatt Al-Asiri / القط العسيري was already a shown style. So Art Styles shows 99 styles (123 in the file), not 100
+- No good free picture (no people, no flowers, no living artist's piece as the main subject) for Coffee Painting, Hand-built Porcelain and Talli: they show a simple drawn picture in the brand colours (assets/js/art_covers.js) until a real photo is found
+- Never Gallery types: the 2 painting styles are in OW_STYLES_ONLY (art_types.php) and STYLES_ONLY (explore.js); the others are in the Sculpture, Jewellery, Pottery and Textiles cats. The Gallery, the upload and edit forms, the artist profile and the admin lists are unchanged. All 23 are course styles in their group (owCourseArtStyles, automatic)
+- Files: assets/js/art_styles.js, assets/js/art_photos.js, assets/js/art_covers.js, assets/img/styles/, assets/js/explore.js, art_types.php, CLAUDE.md. Tables: none
 
 ### New look: the calm style (19 Nov 2026, owner) — replaces the glass + Bento look of 16 to 18 Nov 2026
 - OWNER'S DECISION: the whole site has one CALM, elegant style. The glass boxes, the Bento grids and the soft colour shapes are gone. RULE: any new page must use this style

@@ -1,5 +1,5 @@
 /* =====================================================================
- *  art_styles.js: the single source for all art style content (100 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 3 painting styles in art_types.php OW_STYLES_ONLY, 21 Nov 2026, are on Art Styles only, never Gallery types).
+ *  art_styles.js: the single source for all art style content (123 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 5 painting styles in art_types.php OW_STYLES_ONLY, 21 and 22 Nov 2026, are on Art Styles only, never Gallery types).
  *  Used by explore.php (cards + the style window), and read by
  *  art_types.php for the art type names. Never copy this data into a
  *  page: load this file instead.
@@ -19941,6 +19941,3338 @@ window.OW_ART_STYLES = [
     "اقلب السجادة. السجاد المعقود باليد يُظهر كل عقدة على ظهره.",
     "كثرة العقد في كل سنتيمتر مربع تعني غالباً عملاً أدق.",
     "اسأل عن الصوف والأصباغ، وأبعدها عن الشمس القوية."
+   ]
+  }
+ },
+ {
+  "id": "miniature_painting",
+  "cat": "traditional",
+  "type": "miniature_painting",
+  "level": "advanced",
+  "en": {
+   "name": "Miniature Painting",
+   "feel": "Precious",
+   "essence": "Tiny, detailed pictures painted entirely by hand with very fine brushes.",
+   "story": [
+    "Miniature painting grew in the royal workshops of Persia, India and the Ottoman lands, mostly to fill the pages of books.",
+    "Painters ground their own colours from minerals and plants, and made brushes from a few hairs of a squirrel or a kitten.",
+    "Every part is still made by hand today: the paper is burnished smooth, and each tiny line is painted one by one."
+   ],
+   "tech": [
+    [
+     "Burnishing",
+     "Rubbing the paper smooth with a stone so the brush glides."
+    ],
+    [
+     "Fine line work",
+     "Drawing outlines with a brush of only a few hairs."
+    ],
+    [
+     "Mineral colours",
+     "Grinding stones and earths into paint by hand."
+    ],
+    [
+     "Stippling",
+     "Building soft shading from many tiny dots."
+    ],
+    [
+     "Gold work",
+     "Laying real gold paint for borders and highlights."
+    ]
+   ],
+   "signs": [
+    "Lines so fine they are hard to see without a magnifier.",
+    "Tiny dots of colour that build soft shading.",
+    "A smooth, slightly shiny burnished surface.",
+    "Small differences between repeated patterns in the border."
+   ],
+   "tools": [
+    [
+     "Hand-made brushes",
+     "A few very fine hairs set in a quill."
+    ],
+    [
+     "Burnishing stone",
+     "A smooth agate to polish the paper."
+    ],
+    [
+     "Mineral pigments",
+     "Ground stones, earths and plants."
+    ],
+    [
+     "Gum binder",
+     "Gum arabic that holds the colour."
+    ],
+    [
+     "Magnifier",
+     "To see and paint the smallest details."
+    ]
+   ],
+   "time": "Weeks to several months",
+   "bestFor": "Very patient painters with steady hands.",
+   "artists": [
+    [
+     "Kamal ud-Din Behzad",
+     "Persian, about 1450–1535",
+     "The great master of Persian miniature painting in Herat and Tabriz."
+    ],
+    [
+     "Ustad Mansur",
+     "Mughal India, active about 1590–1624",
+     "Painted animals and birds with exact, loving detail."
+    ],
+    [
+     "Reza Abbasi",
+     "Persian, about 1565–1635",
+     "Led the Isfahan school with flowing, elegant lines."
+    ]
+   ],
+   "guide": [
+    "Use a magnifier. Hand painting shows tiny brush marks, a print shows dots.",
+    "Ask about the paper and the colours used.",
+    "Keep it out of sunlight, and frame it behind glass."
+   ]
+  },
+  "ar": {
+   "name": "المنمنمات",
+   "feel": "نفيس",
+   "essence": "صور صغيرة دقيقة التفاصيل، تُرسم كلها باليد بفرش رفيعة جداً.",
+   "story": [
+    "نشأ فن المنمنمات في المراسم الملكية في بلاد فارس والهند والدولة العثمانية، وكان يزيّن صفحات الكتب غالباً.",
+    "كان الرسامون يطحنون ألوانهم بأنفسهم من المعادن والنباتات، ويصنعون فرشهم من شعيرات قليلة من السنجاب أو القطط الصغيرة.",
+    "وما زال كل جزء يُصنع باليد حتى اليوم: يُصقل الورق حتى يصير أملس، ويُرسم كل خط صغير وحده."
+   ],
+   "tech": [
+    [
+     "الصقل",
+     "حكّ الورق بحجر أملس لتنزلق عليه الفرشاة."
+    ],
+    [
+     "الخطوط الدقيقة",
+     "رسم الحدود بفرشاة من شعيرات قليلة."
+    ],
+    [
+     "الألوان المعدنية",
+     "طحن الأحجار والأتربة يدوياً لتصير ألواناً."
+    ],
+    [
+     "التنقيط",
+     "بناء ظلال ناعمة من نقاط صغيرة كثيرة."
+    ],
+    [
+     "التذهيب",
+     "وضع ماء الذهب الحقيقي في الإطارات واللمعات."
+    ]
+   ],
+   "signs": [
+    "خطوط رفيعة يصعب رؤيتها دون عدسة مكبّرة.",
+    "نقاط لون صغيرة تبني ظلالاً ناعمة.",
+    "سطح أملس لامع قليلاً من الصقل.",
+    "اختلافات بسيطة بين النقوش المتكررة في الإطار."
+   ],
+   "tools": [
+    [
+     "فرش يدوية الصنع",
+     "شعيرات رفيعة جداً مثبتة في ريشة."
+    ],
+    [
+     "حجر الصقل",
+     "عقيق أملس لصقل الورق."
+    ],
+    [
+     "أصباغ معدنية",
+     "أحجار وأتربة ونباتات مطحونة."
+    ],
+    [
+     "مادة رابطة",
+     "الصمغ العربي الذي يثبّت اللون."
+    ],
+    [
+     "عدسة مكبّرة",
+     "لرؤية أصغر التفاصيل ورسمها."
+    ]
+   ],
+   "time": "من أسابيع إلى عدة أشهر",
+   "bestFor": "الرسامون الصبورون جداً ذوو الأيدي الثابتة.",
+   "artists": [
+    [
+     "كمال الدين بهزاد",
+     "فارسي، نحو 1450–1535",
+     "أعظم أساتذة المنمنمات الفارسية في هراة وتبريز."
+    ],
+    [
+     "الأستاذ منصور",
+     "الهند المغولية، نشط نحو 1590–1624",
+     "رسم الحيوانات والطيور بدقة ومحبة."
+    ],
+    [
+     "رضا عباسي",
+     "فارسي، نحو 1565–1635",
+     "قاد مدرسة أصفهان بخطوط انسيابية أنيقة."
+    ]
+   ],
+   "guide": [
+    "استخدم عدسة مكبّرة. الرسم اليدوي يُظهر آثار فرشاة صغيرة، والطباعة تُظهر نقاطاً.",
+    "اسأل عن نوع الورق والألوان المستخدمة.",
+    "أبعدها عن الشمس، وضعها في إطار خلف زجاج."
+   ]
+  }
+ },
+{
+  "id": "coffee_painting",
+  "cat": "traditional",
+  "type": "coffee_painting",
+  "level": "beginner",
+  "en": {
+   "name": "Coffee Painting",
+   "feel": "Warm",
+   "essence": "Paintings made by hand with brewed coffee instead of paint, in warm shades of brown.",
+   "story": [
+    "Artists have long used what was near them as colour. Coffee gives a warm brown that ranges from pale gold to almost black.",
+    "Coffee painting became a popular art in many countries, including Arabia, where coffee is part of every welcome.",
+    "Each picture is painted by hand with a brush, building the darker shades with stronger coffee, layer by layer."
+   ],
+   "tech": [
+    [
+     "Strength scale",
+     "Mixing weak, medium and strong coffee for light to dark tones."
+    ],
+    [
+     "Layering",
+     "Letting each wash dry, then adding a darker one."
+    ],
+    [
+     "Wet in wet",
+     "Dropping coffee on damp paper for soft edges."
+    ],
+    [
+     "Lifting",
+     "Removing colour with a clean damp brush for highlights."
+    ],
+    [
+     "Fine details",
+     "Adding the darkest lines last with a small brush."
+    ]
+   ],
+   "signs": [
+    "Soft brown edges where the coffee dried.",
+    "Small rings and marks where washes overlap.",
+    "Darker tones that are built in layers, not in one go.",
+    "Brush strokes that change in direction and pressure."
+   ],
+   "tools": [
+    [
+     "Brewed or instant coffee",
+     "Mixed with water at different strengths."
+    ],
+    [
+     "Watercolour paper",
+     "Thick paper that holds wet washes."
+    ],
+    [
+     "Soft brushes",
+     "Round and flat, large and small."
+    ],
+    [
+     "Small cups",
+     "To keep each strength apart."
+    ],
+    [
+     "Fixing spray",
+     "Helps protect the finished painting."
+    ]
+   ],
+   "time": "A few hours to a few days",
+   "bestFor": "Beginners and anyone who loves warm, simple colour.",
+   "artists": [],
+   "guide": [
+    "Look for layered washes and soft edges; a print looks flat.",
+    "Ask if the work was sealed to protect it.",
+    "Keep it framed behind glass and away from damp and sunlight."
+   ]
+  },
+  "ar": {
+   "name": "الرسم بالقهوة",
+   "feel": "دافئ",
+   "essence": "لوحات تُرسم باليد بالقهوة بدلاً من الألوان، بدرجات بنية دافئة.",
+   "story": [
+    "استخدم الفنانون منذ زمن بعيد ما حولهم ألواناً. والقهوة تعطي بنياً دافئاً، من الذهبي الفاتح إلى ما يقارب الأسود.",
+    "وصار الرسم بالقهوة فناً محبوباً في بلدان كثيرة، ومنها الجزيرة العربية، حيث القهوة جزء من كل ترحيب.",
+    "تُرسم كل لوحة باليد بالفرشاة، وتُبنى الدرجات الداكنة بقهوة أقوى، طبقة بعد طبقة."
+   ],
+   "tech": [
+    [
+     "سلّم التركيز",
+     "خلط قهوة خفيفة ومتوسطة وقوية لدرجات من الفاتح إلى الداكن."
+    ],
+    [
+     "الطبقات",
+     "ترك كل طبقة تجف ثم إضافة طبقة أغمق."
+    ],
+    [
+     "الرطب على الرطب",
+     "وضع القهوة على ورق رطب لحواف ناعمة."
+    ],
+    [
+     "الرفع",
+     "إزالة اللون بفرشاة نظيفة رطبة لعمل الإضاءات."
+    ],
+    [
+     "التفاصيل الدقيقة",
+     "إضافة أغمق الخطوط في النهاية بفرشاة صغيرة."
+    ]
+   ],
+   "signs": [
+    "حواف بنية ناعمة حيث جفّت القهوة.",
+    "حلقات وآثار صغيرة حيث تتداخل الطبقات.",
+    "درجات داكنة مبنية بطبقات، لا دفعة واحدة.",
+    "ضربات فرشاة يتغيّر اتجاهها وضغطها."
+   ],
+   "tools": [
+    [
+     "قهوة مخمّرة أو سريعة الذوبان",
+     "تُخلط بالماء بدرجات تركيز مختلفة."
+    ],
+    [
+     "ورق ألوان مائية",
+     "ورق سميك يتحمّل الطبقات الرطبة."
+    ],
+    [
+     "فرش ناعمة",
+     "مستديرة ومسطحة، كبيرة وصغيرة."
+    ],
+    [
+     "أكواب صغيرة",
+     "لفصل كل درجة تركيز."
+    ],
+    [
+     "بخاخ تثبيت",
+     "يساعد على حماية اللوحة المكتملة."
+    ]
+   ],
+   "time": "من ساعات إلى بضعة أيام",
+   "bestFor": "المبتدئون وكل من يحب الألوان الدافئة البسيطة.",
+   "artists": [],
+   "guide": [
+    "ابحث عن طبقات وحواف ناعمة؛ المطبوعة تبدو مسطحة.",
+    "اسأل إن كان العمل قد ثُبّت لحمايته.",
+    "ضعها في إطار خلف زجاج، وأبعدها عن الرطوبة والشمس."
+   ]
+  }
+ },
+{
+  "id": "miniature_sculpture",
+  "cat": "sculpture",
+  "type": "miniature_sculpture",
+  "level": "advanced",
+  "en": {
+   "name": "Miniature Hand Sculpture",
+   "feel": "Delicate",
+   "essence": "Tiny sculptures carved or modelled entirely by hand, small enough to hold in your palm.",
+   "story": [
+    "People have carved tiny figures for thousands of years, from small animal amulets to toggles and charms.",
+    "In Japan, netsuke carvers made tiny toggles from wood and ivory, full of animals and stories.",
+    "Today miniature sculptors work in wood, clay, stone and resin, with small knives, files and a magnifier."
+   ],
+   "tech": [
+    [
+     "Roughing out",
+     "Cutting the basic shape from a small block."
+    ],
+    [
+     "Fine carving",
+     "Shaping details with tiny knives and gravers."
+    ],
+    [
+     "Modelling",
+     "Pressing and pulling soft clay with fine tools."
+    ],
+    [
+     "Sanding",
+     "Smoothing the surface with fine abrasive paper."
+    ],
+    [
+     "Finishing",
+     "Polishing, oiling or painting by hand."
+    ]
+   ],
+   "signs": [
+    "Tool marks visible under a magnifier.",
+    "Small differences between the two sides.",
+    "Details that follow the grain of the wood or stone.",
+    "A surface finished by hand, not a seam from a mould."
+   ],
+   "tools": [
+    [
+     "Small knives and gravers",
+     "Very sharp, for tiny cuts."
+    ],
+    [
+     "Needle files",
+     "To shape small curves."
+    ],
+    [
+     "Modelling tools",
+     "Fine metal or wooden points for clay."
+    ],
+    [
+     "Magnifier lamp",
+     "Light and magnification together."
+    ],
+    [
+     "Fine abrasive paper",
+     "For a smooth finish."
+    ]
+   ],
+   "time": "Days to several weeks",
+   "bestFor": "Patient sculptors who enjoy fine detail.",
+   "artists": [],
+   "guide": [
+    "Look for a mould seam. A hand-carved piece has none.",
+    "Check the details under a magnifier: tool marks are a good sign.",
+    "Display it in a closed case, away from dust and knocks."
+   ]
+  },
+  "ar": {
+   "name": "المجسمات المصغّرة",
+   "feel": "رقيق",
+   "essence": "منحوتات صغيرة جداً تُنحت أو تُشكَّل كلها باليد، تتسع لها راحة يدك.",
+   "story": [
+    "نحت الناس أشكالاً صغيرة منذ آلاف السنين، من تمائم الحيوانات الصغيرة إلى الأزرار والحليّ.",
+    "وفي اليابان نحت صنّاع النتسكي أزراراً صغيرة من الخشب والعاج، مليئة بالحيوانات والحكايات.",
+    "واليوم يعمل نحاتو المجسمات المصغّرة بالخشب والطين والحجر والراتنج، بسكاكين صغيرة ومبارد وعدسة مكبّرة."
+   ],
+   "tech": [
+    [
+     "التشكيل الأولي",
+     "قصّ الشكل الأساسي من قطعة صغيرة."
+    ],
+    [
+     "النحت الدقيق",
+     "تشكيل التفاصيل بسكاكين وأزاميل صغيرة جداً."
+    ],
+    [
+     "التشكيل بالطين",
+     "ضغط الطين الطري وسحبه بأدوات رفيعة."
+    ],
+    [
+     "التنعيم",
+     "صنفرة السطح بورق كاشط ناعم."
+    ],
+    [
+     "التشطيب",
+     "الصقل أو التزييت أو التلوين باليد."
+    ]
+   ],
+   "signs": [
+    "آثار أدوات تظهر تحت العدسة المكبّرة.",
+    "اختلافات بسيطة بين الجانبين.",
+    "تفاصيل تتبع عروق الخشب أو الحجر.",
+    "سطح مشطّب باليد، بلا خط قالب."
+   ],
+   "tools": [
+    [
+     "سكاكين وأزاميل صغيرة",
+     "حادة جداً للقطع الدقيقة."
+    ],
+    [
+     "مبارد إبرية",
+     "لتشكيل المنحنيات الصغيرة."
+    ],
+    [
+     "أدوات تشكيل",
+     "رؤوس معدنية أو خشبية رفيعة للطين."
+    ],
+    [
+     "مصباح بعدسة مكبّرة",
+     "إضاءة وتكبير معاً."
+    ],
+    [
+     "ورق كاشط ناعم",
+     "لتشطيب أملس."
+    ]
+   ],
+   "time": "من أيام إلى عدة أسابيع",
+   "bestFor": "النحاتون الصبورون الذين يستمتعون بالتفاصيل الدقيقة.",
+   "artists": [],
+   "guide": [
+    "ابحث عن خط القالب. القطعة المنحوتة باليد لا خط فيها.",
+    "افحص التفاصيل تحت العدسة: آثار الأدوات علامة جيدة.",
+    "اعرضها في خزانة مغلقة، بعيداً عن الغبار والصدمات."
+   ]
+  }
+ },
+{
+  "id": "wire_sculpture",
+  "cat": "sculpture",
+  "type": "wire_sculpture",
+  "level": "intermediate",
+  "en": {
+   "name": "Wire Sculpture",
+   "feel": "Airy",
+   "essence": "Shapes bent, twisted and joined by hand from wire, like drawings in the air.",
+   "story": [
+    "Wire is one of the simplest materials for sculpture. It can be bent into a line that hangs in space.",
+    "In many countries, makers bend wire into toy cars, bicycles and animals, a skill passed from hand to hand.",
+    "Twentieth-century sculptors turned wire into fine art, drawing portraits and creatures with a single bent line."
+   ],
+   "tech": [
+    [
+     "Bending",
+     "Shaping the wire with fingers and pliers."
+    ],
+    [
+     "Twisting",
+     "Turning two wires together for strength and texture."
+    ],
+    [
+     "Wrapping",
+     "Coiling thin wire around thicker wire to join it."
+    ],
+    [
+     "Armature",
+     "Building a strong inner frame first."
+    ],
+    [
+     "Line drawing",
+     "Making a figure from one continuous line."
+    ]
+   ],
+   "signs": [
+    "Small kinks and changes in the curves.",
+    "Joints wrapped by hand, each a little different.",
+    "Plier marks on the wire.",
+    "A shape that is never perfectly even on both sides."
+   ],
+   "tools": [
+    [
+     "Wire",
+     "Steel, copper, brass or aluminium, in many thicknesses."
+    ],
+    [
+     "Round-nose pliers",
+     "For smooth curves and loops."
+    ],
+    [
+     "Flat pliers",
+     "To grip and bend sharp angles."
+    ],
+    [
+     "Wire cutters",
+     "For clean ends."
+    ],
+    [
+     "Base",
+     "Wood or stone to hold the sculpture."
+    ]
+   ],
+   "time": "A few hours to a few weeks",
+   "bestFor": "Makers who like to draw with their hands.",
+   "artists": [],
+   "guide": [
+    "Look at the joints. Hand work shows wrapped or twisted joins, not machine welds.",
+    "Check that the base is firm and the wire has no sharp ends.",
+    "Dust it gently with a soft brush."
+   ]
+  },
+  "ar": {
+   "name": "النحت بالأسلاك",
+   "feel": "خفيف",
+   "essence": "أشكال تُثنى وتُلفّ وتُوصل باليد من الأسلاك، كأنها رسوم في الهواء.",
+   "story": [
+    "السلك من أبسط مواد النحت. يمكن ثنيه ليصير خطاً معلّقاً في الفراغ.",
+    "وفي بلدان كثيرة يثني الصنّاع الأسلاك لعمل سيارات ودراجات وحيوانات للعب، ومهارة تنتقل من يد إلى يد.",
+    "وفي القرن العشرين حوّل النحاتون السلك إلى فن رفيع، فرسموا وجوهاً وكائنات بخط واحد مثني."
+   ],
+   "tech": [
+    [
+     "الثني",
+     "تشكيل السلك بالأصابع والكماشة."
+    ],
+    [
+     "الفتل",
+     "لفّ سلكين معاً للقوة والملمس."
+    ],
+    [
+     "اللف",
+     "لفّ سلك رفيع حول سلك أسمك لوصله."
+    ],
+    [
+     "الهيكل",
+     "بناء هيكل داخلي قوي أولاً."
+    ],
+    [
+     "الرسم بالخط",
+     "عمل الشكل من خط واحد متصل."
+    ]
+   ],
+   "signs": [
+    "انثناءات صغيرة وتغيّرات في المنحنيات.",
+    "وصلات ملفوفة باليد، كل واحدة مختلفة قليلاً.",
+    "آثار الكماشة على السلك.",
+    "شكل لا يتساوى تماماً على الجانبين."
+   ],
+   "tools": [
+    [
+     "سلك",
+     "فولاذ أو نحاس أو نحاس أصفر أو ألمنيوم، بسماكات كثيرة."
+    ],
+    [
+     "كماشة مستديرة الرأس",
+     "للمنحنيات والحلقات الناعمة."
+    ],
+    [
+     "كماشة مسطحة",
+     "للإمساك والزوايا الحادة."
+    ],
+    [
+     "قطّاعة أسلاك",
+     "لأطراف نظيفة."
+    ],
+    [
+     "قاعدة",
+     "خشب أو حجر يحمل المنحوتة."
+    ]
+   ],
+   "time": "من ساعات إلى بضعة أسابيع",
+   "bestFor": "الصنّاع الذين يحبون الرسم بأيديهم.",
+   "artists": [],
+   "guide": [
+    "انظر إلى الوصلات. العمل اليدوي يُظهر وصلات ملفوفة أو مفتولة، لا لحام آلات.",
+    "تأكد أن القاعدة ثابتة وأن السلك بلا أطراف حادة.",
+    "أزل عنها الغبار بفرشاة ناعمة."
+   ]
+  }
+ },
+{
+  "id": "wax_sculpture",
+  "cat": "sculpture",
+  "type": "wax_sculpture",
+  "level": "intermediate",
+  "en": {
+   "name": "Wax Sculpture",
+   "feel": "Soft",
+   "essence": "Figures modelled and carved by hand in warm, soft wax.",
+   "story": [
+    "Wax has been shaped by hand since ancient times. Egyptians and Greeks used it for small figures and models.",
+    "For centuries sculptors made their first model in wax, then cast it in bronze by the lost-wax method.",
+    "Some artists kept their wax models as finished works. The French painter Edgar Degas modelled horses and dancers in wax."
+   ],
+   "tech": [
+    [
+     "Warming",
+     "Softening wax in the hands or with gentle heat."
+    ],
+    [
+     "Modelling",
+     "Adding and pressing small pieces to build the form."
+    ],
+    [
+     "Carving",
+     "Cutting harder wax with knives and loops."
+    ],
+    [
+     "Smoothing",
+     "Melting the surface lightly with a warm tool."
+    ],
+    [
+     "Armature",
+     "A wire frame inside to hold large pieces."
+    ]
+   ],
+   "signs": [
+    "Finger and tool marks in the surface.",
+    "Small joins where pieces of wax were added.",
+    "A soft glow in the wax when light passes through it.",
+    "Details that are freely modelled, not perfectly even."
+   ],
+   "tools": [
+    [
+     "Sculpting wax",
+     "Beeswax or microcrystalline wax."
+    ],
+    [
+     "Modelling tools",
+     "Metal spatulas and loops."
+    ],
+    [
+     "Warming tool",
+     "A small heated pen or spirit lamp."
+    ],
+    [
+     "Carving knives",
+     "For harder wax."
+    ],
+    [
+     "Wire armature",
+     "Supports the form inside."
+    ]
+   ],
+   "time": "Days to several weeks",
+   "bestFor": "Sculptors who enjoy soft, free modelling.",
+   "artists": [
+    [
+     "Edgar Degas",
+     "French, 1834–1917",
+     "Modelled horses and dancers in wax, later cast in bronze."
+    ]
+   ],
+   "guide": [
+    "Keep wax away from heat and direct sun; it can soften.",
+    "Look for tool and finger marks; a cast copy looks smoother.",
+    "Display it under a cover to keep dust away."
+   ]
+  },
+  "ar": {
+   "name": "النحت بالشمع",
+   "feel": "ليّن",
+   "essence": "أشكال تُشكَّل وتُنحت باليد في الشمع الدافئ الليّن.",
+   "story": [
+    "شُكّل الشمع باليد منذ العصور القديمة. استخدمه المصريون والإغريق للتماثيل الصغيرة والنماذج.",
+    "وطوال قرون صنع النحاتون نموذجهم الأول من الشمع، ثم صبّوه برونزاً بطريقة الشمع المفقود.",
+    "واحتفظ بعض الفنانين بنماذجهم الشمعية أعمالاً مكتملة. فقد شكّل الرسام الفرنسي إدغار ديغا خيولاً وراقصات من الشمع."
+   ],
+   "tech": [
+    [
+     "التدفئة",
+     "تليين الشمع باليدين أو بحرارة خفيفة."
+    ],
+    [
+     "التشكيل",
+     "إضافة قطع صغيرة وضغطها لبناء الشكل."
+    ],
+    [
+     "النحت",
+     "قطع الشمع الأقسى بالسكاكين والحلقات."
+    ],
+    [
+     "التنعيم",
+     "إذابة السطح قليلاً بأداة دافئة."
+    ],
+    [
+     "الهيكل",
+     "إطار من السلك في الداخل يحمل القطع الكبيرة."
+    ]
+   ],
+   "signs": [
+    "آثار أصابع وأدوات على السطح.",
+    "وصلات صغيرة حيث أضيفت قطع الشمع.",
+    "توهج ناعم في الشمع حين يمر الضوء خلاله.",
+    "تفاصيل مشكّلة بحرية، غير متساوية تماماً."
+   ],
+   "tools": [
+    [
+     "شمع النحت",
+     "شمع العسل أو الشمع الدقيق البلورات."
+    ],
+    [
+     "أدوات التشكيل",
+     "ملاعق وحلقات معدنية."
+    ],
+    [
+     "أداة التدفئة",
+     "قلم صغير ساخن أو مصباح كحولي."
+    ],
+    [
+     "سكاكين النحت",
+     "للشمع الأقسى."
+    ],
+    [
+     "هيكل من السلك",
+     "يدعم الشكل من الداخل."
+    ]
+   ],
+   "time": "من أيام إلى عدة أسابيع",
+   "bestFor": "النحاتون الذين يستمتعون بالتشكيل الحر الليّن.",
+   "artists": [
+    [
+     "إدغار ديغا",
+     "فرنسي، 1834–1917",
+     "شكّل خيولاً وراقصات من الشمع، صُبّت برونزاً لاحقاً."
+    ]
+   ],
+   "guide": [
+    "أبعد الشمع عن الحرارة وأشعة الشمس المباشرة؛ فقد يلين.",
+    "ابحث عن آثار الأدوات والأصابع؛ النسخة المصبوبة تبدو أنعم.",
+    "اعرضه تحت غطاء ليبقى بعيداً عن الغبار."
+   ]
+  }
+ },
+{
+  "id": "sand_sculpture",
+  "cat": "sculpture",
+  "type": "sand_sculpture",
+  "level": "beginner",
+  "en": {
+   "name": "Sand Sculpture",
+   "feel": "Fleeting",
+   "essence": "Shapes built and carved by hand from packed wet sand, made to last only a short time.",
+   "story": [
+    "Children and adults have built with sand on beaches for as long as there have been beaches.",
+    "Sand sculpture grew into an art with festivals around the world, where large castles and animals are carved by hand.",
+    "The work is fleeting: wind and rain slowly return it to sand, which is part of its beauty."
+   ],
+   "tech": [
+    [
+     "Packing",
+     "Pressing wet sand firmly into forms or mounds."
+    ],
+    [
+     "Carving from the top",
+     "Working downwards so falling sand does not spoil finished parts."
+    ],
+    [
+     "Wet sand",
+     "Using the right mix of sand and water so it holds."
+    ],
+    [
+     "Fine detail",
+     "Using small tools and brushes for edges and texture."
+    ],
+    [
+     "Blowing",
+     "Clearing loose grains with a straw or soft breath."
+    ]
+   ],
+   "signs": [
+    "Tool and finger marks in the sand.",
+    "Edges that change as the sand dries.",
+    "Small differences between repeated shapes.",
+    "A form carved on the spot, never cast."
+   ],
+   "tools": [
+    [
+     "Sand and water",
+     "Fine sand with some clay holds best."
+    ],
+    [
+     "Buckets and forms",
+     "For packing the sand."
+    ],
+    [
+     "Trowels and knives",
+     "For carving."
+    ],
+    [
+     "Brushes and straws",
+     "For fine detail and cleaning."
+    ],
+    [
+     "Spray bottle",
+     "Keeps the surface damp while working."
+    ]
+   ],
+   "time": "A few hours to a few days",
+   "bestFor": "Families and anyone who enjoys making art outdoors.",
+   "artists": [],
+   "guide": [
+    "Sand sculptures are enjoyed on the spot; a photo keeps the memory.",
+    "Visit sand sculpture festivals to see large works.",
+    "If you build one, wet the sand well and carve from the top down."
+   ]
+  },
+  "ar": {
+   "name": "النحت بالرمل",
+   "feel": "عابر",
+   "essence": "أشكال تُبنى وتُنحت باليد من الرمل الرطب المضغوط، وتعيش وقتاً قصيراً.",
+   "story": [
+    "بنى الأطفال والكبار بالرمل على الشواطئ منذ وُجدت الشواطئ.",
+    "وتحوّل النحت بالرمل إلى فن له مهرجانات حول العالم، تُنحت فيها باليد قلاع وحيوانات كبيرة.",
+    "والعمل عابر: تعيده الرياح والأمطار رملاً شيئاً فشيئاً، وهذا جزء من جماله."
+   ],
+   "tech": [
+    [
+     "الضغط",
+     "كبس الرمل الرطب بقوة في قوالب أو أكوام."
+    ],
+    [
+     "النحت من الأعلى",
+     "العمل نزولاً كي لا يفسد الرمل المتساقط الأجزاء المكتملة."
+    ],
+    [
+     "الرمل الرطب",
+     "استخدام الخليط المناسب من الرمل والماء ليتماسك."
+    ],
+    [
+     "التفاصيل الدقيقة",
+     "استخدام أدوات صغيرة وفرش للحواف والملمس."
+    ],
+    [
+     "النفخ",
+     "إزالة الحبيبات السائبة بماصة أو نفَس خفيف."
+    ]
+   ],
+   "signs": [
+    "آثار أدوات وأصابع في الرمل.",
+    "حواف تتغيّر حين يجف الرمل.",
+    "اختلافات بسيطة بين الأشكال المتكررة.",
+    "شكل منحوت في مكانه، لا يُصبّ أبداً."
+   ],
+   "tools": [
+    [
+     "رمل وماء",
+     "الرمل الناعم مع قليل من الطين يتماسك أفضل."
+    ],
+    [
+     "دلاء وقوالب",
+     "لكبس الرمل."
+    ],
+    [
+     "مسطرين وسكاكين",
+     "للنحت."
+    ],
+    [
+     "فرش وماصات",
+     "للتفاصيل الدقيقة والتنظيف."
+    ],
+    [
+     "بخاخ ماء",
+     "يُبقي السطح رطباً أثناء العمل."
+    ]
+   ],
+   "time": "من ساعات إلى بضعة أيام",
+   "bestFor": "العائلات وكل من يستمتع بالفن في الهواء الطلق.",
+   "artists": [],
+   "guide": [
+    "منحوتات الرمل يُستمتع بها في مكانها؛ والصورة تحفظ الذكرى.",
+    "زُر مهرجانات النحت بالرمل لترى الأعمال الكبيرة.",
+    "إن بنيت واحدة، فرطّب الرمل جيداً وانحت من الأعلى إلى الأسفل."
+   ]
+  }
+ },
+{
+  "id": "soapstone_carving",
+  "cat": "sculpture",
+  "type": "soapstone_carving",
+  "level": "beginner",
+  "en": {
+   "name": "Soapstone Carving",
+   "feel": "Smooth",
+   "essence": "Figures and bowls carved by hand from soapstone, a soft stone that feels smooth like soap.",
+   "story": [
+    "Soapstone is soft enough to carve with simple hand tools, so people have shaped it for thousands of years.",
+    "Ancient makers carved bowls, seals and small animals from it, in places from the Gulf to China.",
+    "Today carvers in Kenya, Canada, India and many other countries still shape it by hand, then polish it to a soft shine."
+   ],
+   "tech": [
+    [
+     "Roughing out",
+     "Removing large parts with a saw or rasp."
+    ],
+    [
+     "Rasping",
+     "Shaping the form with coarse files."
+    ],
+    [
+     "Fine carving",
+     "Adding details with knives and small chisels."
+    ],
+    [
+     "Wet sanding",
+     "Smoothing with fine paper and water."
+    ],
+    [
+     "Polishing",
+     "Rubbing with oil or wax for a soft shine."
+    ]
+   ],
+   "signs": [
+    "Small file and chisel marks in hidden places.",
+    "Natural veins and colours of the stone.",
+    "Shapes that are never perfectly even.",
+    "A smooth, slightly waxy feel."
+   ],
+   "tools": [
+    [
+     "Soapstone",
+     "A soft stone in white, green, grey or pink."
+    ],
+    [
+     "Saw and rasps",
+     "For the first shaping."
+    ],
+    [
+     "Knives and small chisels",
+     "For details."
+    ],
+    [
+     "Wet-and-dry paper",
+     "In finer and finer grades."
+    ],
+    [
+     "Dust mask",
+     "Protects the lungs while carving."
+    ]
+   ],
+   "time": "A few days to a few weeks",
+   "bestFor": "Beginners in stone carving.",
+   "artists": [],
+   "guide": [
+    "Each piece has its own veins; no two are the same.",
+    "Soapstone can scratch; place it on a soft surface.",
+    "Clean it with a dry cloth and a little oil."
+   ]
+  },
+  "ar": {
+   "name": "نحت حجر الصابون",
+   "feel": "أملس",
+   "essence": "أشكال وأوعية تُنحت باليد من حجر الصابون، حجر ليّن ملمسه أملس كالصابون.",
+   "story": [
+    "حجر الصابون ليّن بما يكفي لنحته بأدوات يدوية بسيطة، ولذلك شكّله الناس منذ آلاف السنين.",
+    "نحت الصنّاع القدماء منه أوعية وأختاماً وحيوانات صغيرة، في أماكن من الخليج إلى الصين.",
+    "واليوم ما زال النحاتون في كينيا وكندا والهند وبلدان كثيرة يشكّلونه باليد، ثم يصقلونه ليلمع لمعاناً ناعماً."
+   ],
+   "tech": [
+    [
+     "التشكيل الأولي",
+     "إزالة الأجزاء الكبيرة بالمنشار أو المبرد الخشن."
+    ],
+    [
+     "البرد",
+     "تشكيل الهيئة بالمبارد الخشنة."
+    ],
+    [
+     "النحت الدقيق",
+     "إضافة التفاصيل بالسكاكين والأزاميل الصغيرة."
+    ],
+    [
+     "الصنفرة الرطبة",
+     "التنعيم بورق ناعم وماء."
+    ],
+    [
+     "الصقل",
+     "الدهن بالزيت أو الشمع للمعان ناعم."
+    ]
+   ],
+   "signs": [
+    "آثار صغيرة للمبرد والإزميل في الأماكن المخفية.",
+    "عروق الحجر وألوانه الطبيعية.",
+    "أشكال لا تتساوى تماماً أبداً.",
+    "ملمس أملس شمعي قليلاً."
+   ],
+   "tools": [
+    [
+     "حجر الصابون",
+     "حجر ليّن أبيض أو أخضر أو رمادي أو وردي."
+    ],
+    [
+     "منشار ومبارد",
+     "للتشكيل الأول."
+    ],
+    [
+     "سكاكين وأزاميل صغيرة",
+     "للتفاصيل."
+    ],
+    [
+     "ورق صنفرة مائي",
+     "بدرجات أنعم فأنعم."
+    ],
+    [
+     "كمامة",
+     "تحمي الرئتين أثناء النحت."
+    ]
+   ],
+   "time": "من بضعة أيام إلى بضعة أسابيع",
+   "bestFor": "المبتدئون في نحت الحجر.",
+   "artists": [],
+   "guide": [
+    "لكل قطعة عروقها؛ ولا تتشابه قطعتان.",
+    "حجر الصابون قد يُخدش؛ ضعه على سطح ناعم.",
+    "نظّفه بقطعة قماش جافة وقليل من الزيت."
+   ]
+  }
+ },
+{
+  "id": "filigree",
+  "cat": "jewellery",
+  "type": "filigree",
+  "level": "advanced",
+  "en": {
+   "name": "Filigree",
+   "feel": "Lacy",
+   "essence": "Lace-like jewellery made by hand from very fine twisted threads of silver or gold.",
+   "story": [
+    "Filigree is one of the oldest jewellery crafts. It was known in ancient Mesopotamia, Egypt and Greece.",
+    "Silversmiths in Yemen, Oman, Arabia, India and Portugal made it famous, each with their own patterns.",
+    "Every curl is still bent by hand with tweezers, set in a frame, and joined with tiny drops of solder."
+   ],
+   "tech": [
+    [
+     "Drawing wire",
+     "Pulling metal through smaller and smaller holes to make fine wire."
+    ],
+    [
+     "Twisting",
+     "Twisting two wires together, then flattening them."
+    ],
+    [
+     "Framing",
+     "Bending a stronger wire into the outer shape."
+    ],
+    [
+     "Filling",
+     "Bending small curls by hand and fitting them inside the frame."
+    ],
+    [
+     "Soldering",
+     "Joining every part with fine solder and a small flame."
+    ]
+   ],
+   "signs": [
+    "Curls that are close in size, but never exactly the same.",
+    "Tiny solder joins where wires meet.",
+    "Light passing through the open lace-like pattern.",
+    "Twisted wire with a fine rope texture."
+   ],
+   "tools": [
+    [
+     "Silver or gold wire",
+     "Very fine, often twisted."
+    ],
+    [
+     "Tweezers",
+     "To bend and place each curl."
+    ],
+    [
+     "Draw plate",
+     "To make the wire thinner."
+    ],
+    [
+     "Small torch",
+     "For soldering."
+    ],
+    [
+     "Solder and flux",
+     "To join the parts."
+    ]
+   ],
+   "time": "Days to several weeks",
+   "bestFor": "Patient jewellers with steady hands.",
+   "artists": [],
+   "guide": [
+    "Look closely: hand filigree has small differences in each curl.",
+    "Cast copies look flat and solid where the wires should be open.",
+    "Store it alone in a soft pouch so it does not bend."
+   ]
+  },
+  "ar": {
+   "name": "الفيليجري (المخرّمات)",
+   "feel": "مخرّم",
+   "essence": "حليّ تشبه الدانتيل تُصنع باليد من خيوط رفيعة جداً مفتولة من الفضة أو الذهب.",
+   "story": [
+    "الفيليجري من أقدم حِرف الحليّ. عُرف في بلاد الرافدين ومصر واليونان القديمة.",
+    "واشتهر به صاغة الفضة في اليمن وعُمان والجزيرة العربية والهند والبرتغال، ولكلٍّ نقوشه.",
+    "وما زالت كل لفّة تُثنى باليد بالملقط، وتُثبّت في إطار، وتُوصل بقطرات لحام صغيرة."
+   ],
+   "tech": [
+    [
+     "سحب السلك",
+     "سحب المعدن عبر ثقوب أصغر فأصغر لعمل سلك رفيع."
+    ],
+    [
+     "الفتل",
+     "فتل سلكين معاً ثم تسطيحهما."
+    ],
+    [
+     "الإطار",
+     "ثني سلك أقوى ليصير الشكل الخارجي."
+    ],
+    [
+     "الحشو",
+     "ثني لفّات صغيرة باليد وتركيبها داخل الإطار."
+    ],
+    [
+     "اللحام",
+     "وصل كل جزء بلحام رفيع ولهب صغير."
+    ]
+   ],
+   "signs": [
+    "لفّات متقاربة الحجم، لكنها لا تتطابق تماماً.",
+    "نقاط لحام صغيرة حيث تلتقي الأسلاك.",
+    "ضوء يمر عبر النقش المفتوح الشبيه بالدانتيل.",
+    "سلك مفتول بملمس يشبه الحبل الرفيع."
+   ],
+   "tools": [
+    [
+     "سلك فضة أو ذهب",
+     "رفيع جداً، ومفتول غالباً."
+    ],
+    [
+     "ملقط",
+     "لثني كل لفّة ووضعها."
+    ],
+    [
+     "لوح السحب",
+     "لترقيق السلك."
+    ],
+    [
+     "شعلة صغيرة",
+     "للّحام."
+    ],
+    [
+     "لحام ومادة مساعدة",
+     "لوصل الأجزاء."
+    ]
+   ],
+   "time": "من أيام إلى عدة أسابيع",
+   "bestFor": "الصاغة الصبورون ذوو الأيدي الثابتة.",
+   "artists": [],
+   "guide": [
+    "انظر عن قرب: الفيليجري اليدوي فيه اختلافات بسيطة في كل لفّة.",
+    "النسخ المصبوبة تبدو مسطحة ومصمتة حيث يجب أن تكون الأسلاك مفتوحة.",
+    "احفظها وحدها في كيس ناعم كي لا تنثني."
+   ]
+  }
+ },
+{
+  "id": "stone_setting",
+  "cat": "jewellery",
+  "type": "stone_setting",
+  "level": "advanced",
+  "en": {
+   "name": "Hand Stone Setting",
+   "feel": "Brilliant",
+   "essence": "Gemstones fixed into metal by hand, one by one, so they hold safely and catch the light.",
+   "story": [
+    "People have set coloured stones in gold and silver since ancient times, from Egypt to India.",
+    "Setters learned to raise tiny claws and walls of metal by hand to hold each stone firmly.",
+    "Today a setter still works under a magnifier, pushing the metal over each stone with small hand tools."
+   ],
+   "tech": [
+    [
+     "Bezel setting",
+     "A thin wall of metal pressed around the stone."
+    ],
+    [
+     "Claw setting",
+     "Small prongs bent over the stone's edge."
+    ],
+    [
+     "Pavé",
+     "Many small stones held by tiny beads of metal."
+    ],
+    [
+     "Seat cutting",
+     "Cutting a ledge in the metal for the stone to sit on."
+    ],
+    [
+     "Burnishing",
+     "Smoothing the metal edge over the stone."
+    ]
+   ],
+   "signs": [
+    "Tiny tool marks around each setting under a magnifier.",
+    "Claws that are close in shape, but each a little different.",
+    "Stones that sit level and do not move.",
+    "Clean edges finished by hand."
+   ],
+   "tools": [
+    [
+     "Gravers",
+     "Small sharp chisels to cut metal."
+    ],
+    [
+     "Bezel pusher",
+     "To press metal over the stone."
+    ],
+    [
+     "Burnisher",
+     "A polished steel tool to smooth edges."
+    ],
+    [
+     "Ring clamp",
+     "Holds the piece while setting."
+    ],
+    [
+     "Magnifier",
+     "To see the smallest details."
+    ]
+   ],
+   "time": "Hours to several weeks",
+   "bestFor": "Precise jewellers who enjoy fine work.",
+   "artists": [],
+   "guide": [
+    "Gently check that no stone moves.",
+    "Ask what the stones are and whether they are natural.",
+    "Have the settings checked by a jeweller every year or two."
+   ]
+  },
+  "ar": {
+   "name": "ترصيع الأحجار",
+   "feel": "متلألئ",
+   "essence": "أحجار كريمة تُثبّت في المعدن باليد، حجراً حجراً، لتبقى آمنة وتلتقط الضوء.",
+   "story": [
+    "رصّع الناس الأحجار الملونة في الذهب والفضة منذ القدم، من مصر إلى الهند.",
+    "وتعلّم المرصّعون رفع مخالب وجدران صغيرة من المعدن باليد لتمسك كل حجر بثبات.",
+    "واليوم ما زال المرصّع يعمل تحت عدسة مكبّرة، ويدفع المعدن فوق كل حجر بأدوات يدوية صغيرة."
+   ],
+   "tech": [
+    [
+     "الترصيع بالإطار",
+     "جدار رفيع من المعدن يُضغط حول الحجر."
+    ],
+    [
+     "الترصيع بالمخالب",
+     "شوكات صغيرة تُثنى فوق حافة الحجر."
+    ],
+    [
+     "الترصيع المرصوف",
+     "أحجار صغيرة كثيرة تمسكها حبيبات معدن دقيقة."
+    ],
+    [
+     "حفر المقعد",
+     "حفر حافة في المعدن يستقر عليها الحجر."
+    ],
+    [
+     "الصقل",
+     "تنعيم حافة المعدن فوق الحجر."
+    ]
+   ],
+   "signs": [
+    "آثار أدوات صغيرة حول كل ترصيعة تحت العدسة.",
+    "مخالب متقاربة الشكل، لكن كل واحدة مختلفة قليلاً.",
+    "أحجار مستوية لا تتحرك.",
+    "حواف نظيفة مشطّبة باليد."
+   ],
+   "tools": [
+    [
+     "أزاميل الحفر",
+     "أزاميل صغيرة حادة لقطع المعدن."
+    ],
+    [
+     "دافعة الإطار",
+     "لضغط المعدن فوق الحجر."
+    ],
+    [
+     "أداة الصقل",
+     "أداة فولاذية مصقولة لتنعيم الحواف."
+    ],
+    [
+     "ملزمة الخواتم",
+     "تمسك القطعة أثناء الترصيع."
+    ],
+    [
+     "عدسة مكبّرة",
+     "لرؤية أصغر التفاصيل."
+    ]
+   ],
+   "time": "من ساعات إلى عدة أسابيع",
+   "bestFor": "الصاغة الدقيقون الذين يستمتعون بالعمل الرفيع.",
+   "artists": [],
+   "guide": [
+    "تأكد برفق أن لا حجر يتحرك.",
+    "اسأل عن نوع الأحجار وهل هي طبيعية.",
+    "اعرض الترصيعات على صائغ كل سنة أو سنتين."
+   ]
+  }
+ },
+{
+  "id": "prayer_beads",
+  "cat": "jewellery",
+  "type": "prayer_beads",
+  "level": "intermediate",
+  "en": {
+   "name": "Handmade Prayer Beads",
+   "feel": "Calm",
+   "essence": "Strings of beads shaped, drilled and strung by hand from amber, stone, wood or bone.",
+   "story": [
+    "Strings of beads have been held and counted in many cultures for centuries.",
+    "In the Arab world the misbaha is a loved craft. Makers turn and polish each bead by hand.",
+    "A fine misbaha is chosen for its material, its weight in the hand and the sound of its beads."
+   ],
+   "tech": [
+    [
+     "Cutting",
+     "Cutting the raw material into small blocks."
+    ],
+    [
+     "Shaping",
+     "Rounding each bead on a hand lathe or with files."
+    ],
+    [
+     "Drilling",
+     "Making a straight hole through each bead."
+    ],
+    [
+     "Polishing",
+     "Rubbing each bead to a soft shine."
+    ],
+    [
+     "Stringing",
+     "Threading the beads with the divider beads and the tassel."
+    ]
+   ],
+   "signs": [
+    "Beads that are close in size, but not exactly the same.",
+    "The natural pattern of the amber, stone or wood.",
+    "Small differences in the holes and the polish.",
+    "A tassel and knots finished by hand."
+   ],
+   "tools": [
+    [
+     "Raw material",
+     "Amber, stone, wood, bone or horn."
+    ],
+    [
+     "Hand lathe",
+     "To round the beads."
+    ],
+    [
+     "Fine drill",
+     "For the holes."
+    ],
+    [
+     "Files and polish",
+     "To shape and shine."
+    ],
+    [
+     "Strong thread",
+     "To string the beads."
+    ]
+   ],
+   "time": "A few days to a few weeks",
+   "bestFor": "Patient makers who love natural materials.",
+   "artists": [],
+   "guide": [
+    "Ask what the beads are made of; real amber is light and warm to the touch.",
+    "Look for natural patterns; plastic copies look too even.",
+    "Keep it away from perfume and strong heat."
+   ]
+  },
+  "ar": {
+   "name": "صناعة المسابح اليدوية",
+   "feel": "هادئ",
+   "essence": "خيوط من الحبات تُشكَّل وتُثقب وتُنظم باليد من الكهرمان أو الحجر أو الخشب أو العظم.",
+   "story": [
+    "حمل الناس خيوط الحبات وعدّوها في ثقافات كثيرة منذ قرون.",
+    "وفي العالم العربي صناعة المسابح حرفة محبوبة. يخرط الصانع كل حبة ويصقلها بيده.",
+    "وتُختار المسبحة الجيدة لمادتها، وثقلها في اليد، وصوت حباتها."
+   ],
+   "tech": [
+    [
+     "القص",
+     "قصّ المادة الخام إلى قطع صغيرة."
+    ],
+    [
+     "التشكيل",
+     "تدوير كل حبة على مخرطة يدوية أو بالمبارد."
+    ],
+    [
+     "الثقب",
+     "عمل ثقب مستقيم في كل حبة."
+    ],
+    [
+     "الصقل",
+     "دعك كل حبة حتى تلمع لمعاناً ناعماً."
+    ],
+    [
+     "النظم",
+     "إدخال الحبات في الخيط مع الفواصل والشرّابة."
+    ]
+   ],
+   "signs": [
+    "حبات متقاربة الحجم، لكنها لا تتطابق تماماً.",
+    "النقش الطبيعي للكهرمان أو الحجر أو الخشب.",
+    "اختلافات بسيطة في الثقوب والصقل.",
+    "شرّابة وعقد مشطّبة باليد."
+   ],
+   "tools": [
+    [
+     "المادة الخام",
+     "كهرمان أو حجر أو خشب أو عظم أو قرن."
+    ],
+    [
+     "مخرطة يدوية",
+     "لتدوير الحبات."
+    ],
+    [
+     "مثقب رفيع",
+     "للثقوب."
+    ],
+    [
+     "مبارد ومادة صقل",
+     "للتشكيل واللمعان."
+    ],
+    [
+     "خيط قوي",
+     "لنظم الحبات."
+    ]
+   ],
+   "time": "من بضعة أيام إلى بضعة أسابيع",
+   "bestFor": "الصنّاع الصبورون الذين يحبون المواد الطبيعية.",
+   "artists": [],
+   "guide": [
+    "اسأل عن مادة الحبات؛ الكهرمان الحقيقي خفيف ودافئ الملمس.",
+    "ابحث عن النقوش الطبيعية؛ النسخ البلاستيكية متساوية أكثر من اللازم.",
+    "أبعدها عن العطور والحرارة القوية."
+   ]
+  }
+ },
+{
+  "id": "polymer_clay_jewellery",
+  "cat": "jewellery",
+  "type": "polymer_clay_jewellery",
+  "level": "beginner",
+  "en": {
+   "name": "Polymer Clay Jewellery",
+   "feel": "Playful",
+   "essence": "Colourful beads, earrings and pendants shaped by hand from soft clay, then baked to harden.",
+   "story": [
+    "Polymer clay is a soft modelling clay that becomes hard when baked in a home oven.",
+    "It appeared in the twentieth century and was soon loved by jewellery makers for its bright colours.",
+    "Each piece is shaped by hand: canes of colour are rolled, sliced and pressed into patterns."
+   ],
+   "tech": [
+    [
+     "Conditioning",
+     "Kneading the clay until it is soft."
+    ],
+    [
+     "Caning",
+     "Rolling coloured clay into a long log with a pattern inside."
+    ],
+    [
+     "Slicing",
+     "Cutting thin slices from the cane."
+    ],
+    [
+     "Baking",
+     "Hardening the piece in an oven at a low heat."
+    ],
+    [
+     "Sanding and buffing",
+     "Smoothing and polishing by hand."
+    ]
+   ],
+   "signs": [
+    "Patterns that change a little from slice to slice.",
+    "Small fingerprints or tool marks.",
+    "Pieces that are close, but never exactly the same.",
+    "Edges sanded by hand."
+   ],
+   "tools": [
+    [
+     "Polymer clay",
+     "In many colours."
+    ],
+    [
+     "Roller",
+     "Acrylic roller or pasta machine turned by hand."
+    ],
+    [
+     "Thin blade",
+     "For clean slices."
+    ],
+    [
+     "Oven",
+     "A home oven at low heat."
+    ],
+    [
+     "Findings",
+     "Hooks, rings and pins."
+    ]
+   ],
+   "time": "A few hours to a few days",
+   "bestFor": "Beginners and anyone who loves bright colour.",
+   "artists": [],
+   "guide": [
+    "Look for small differences between pieces; mass-made ones are identical.",
+    "Ask if the piece was baked and sealed properly.",
+    "Keep it away from strong heat and sharp objects."
+   ]
+  },
+  "ar": {
+   "name": "مجوهرات الصلصال الحراري",
+   "feel": "مرِح",
+   "essence": "حبات وأقراط وقلائد ملونة تُشكَّل باليد من صلصال طري، ثم تُخبز لتتصلّب.",
+   "story": [
+    "الصلصال الحراري صلصال تشكيل طري يتصلّب حين يُخبز في فرن المنزل.",
+    "ظهر في القرن العشرين، وسرعان ما أحبه صانعو الحليّ لألوانه الزاهية.",
+    "تُشكَّل كل قطعة باليد: تُلفّ أعواد اللون وتُقطّع وتُضغط لتصير نقوشاً."
+   ],
+   "tech": [
+    [
+     "التليين",
+     "عجن الصلصال حتى يصير طرياً."
+    ],
+    [
+     "الأعواد",
+     "لفّ صلصال ملون في عود طويل بداخله نقش."
+    ],
+    [
+     "التقطيع",
+     "قصّ شرائح رقيقة من العود."
+    ],
+    [
+     "الخَبز",
+     "تصليب القطعة في الفرن بحرارة منخفضة."
+    ],
+    [
+     "الصنفرة والتلميع",
+     "التنعيم والصقل باليد."
+    ]
+   ],
+   "signs": [
+    "نقوش تتغيّر قليلاً من شريحة إلى أخرى.",
+    "آثار أصابع أو أدوات صغيرة.",
+    "قطع متقاربة، لكنها لا تتطابق تماماً.",
+    "حواف مصنفرة باليد."
+   ],
+   "tools": [
+    [
+     "الصلصال الحراري",
+     "بألوان كثيرة."
+    ],
+    [
+     "أداة الفرد",
+     "أسطوانة أكريليك أو آلة فرد تُدار باليد."
+    ],
+    [
+     "شفرة رفيعة",
+     "لشرائح نظيفة."
+    ],
+    [
+     "فرن",
+     "فرن منزلي بحرارة منخفضة."
+    ],
+    [
+     "مستلزمات",
+     "خطاطيف وحلقات ودبابيس."
+    ]
+   ],
+   "time": "من ساعات إلى بضعة أيام",
+   "bestFor": "المبتدئون وكل من يحب الألوان الزاهية.",
+   "artists": [],
+   "guide": [
+    "ابحث عن اختلافات بسيطة بين القطع؛ القطع المصنوعة بالجملة متطابقة.",
+    "اسأل إن كانت القطعة قد خُبزت وطُليت جيداً.",
+    "أبعدها عن الحرارة القوية والأشياء الحادة."
+   ]
+  }
+ },
+{
+  "id": "goldsmithing",
+  "cat": "jewellery",
+  "type": "goldsmithing",
+  "level": "advanced",
+  "en": {
+   "name": "Hand Goldsmithing",
+   "feel": "Radiant",
+   "essence": "Gold shaped by hand into jewellery with hammers, files and a small flame.",
+   "story": [
+    "Gold has been worked by hand for more than six thousand years. It is soft, bright and never rusts.",
+    "Goldsmiths in the Gulf, Arabia, India and the Mediterranean passed their skills from master to apprentice.",
+    "A hand goldsmith still melts, hammers, solders and polishes each piece at a small bench."
+   ],
+   "tech": [
+    [
+     "Melting and casting",
+     "Melting gold and pouring it into a simple ingot."
+    ],
+    [
+     "Hammering",
+     "Shaping sheet and wire with hammers on a steel block."
+    ],
+    [
+     "Granulation",
+     "Fixing tiny gold balls onto the surface."
+    ],
+    [
+     "Soldering",
+     "Joining parts with a small flame."
+    ],
+    [
+     "Chasing",
+     "Pushing patterns into the gold with small punches."
+    ]
+   ],
+   "signs": [
+    "Small hammer and file marks inside or on the back.",
+    "Patterns that are close, but each a little different.",
+    "Soft, hand-polished edges.",
+    "A maker's or purity mark stamped by hand."
+   ],
+   "tools": [
+    [
+     "Gold",
+     "Sheet, wire or grain."
+    ],
+    [
+     "Hammers and anvil",
+     "To shape the metal."
+    ],
+    [
+     "Files and saw",
+     "To cut and refine."
+    ],
+    [
+     "Small torch",
+     "For melting and soldering."
+    ],
+    [
+     "Polishing tools",
+     "For the final shine."
+    ]
+   ],
+   "time": "Days to several weeks",
+   "bestFor": "Skilled jewellers who love working with precious metal.",
+   "artists": [],
+   "guide": [
+    "Check the purity mark (for example 18K or 21K).",
+    "Ask how the piece was made: by hand, or cast from a mould.",
+    "Clean it with mild soap and water and a soft cloth."
+   ]
+  },
+  "ar": {
+   "name": "صياغة الذهب اليدوية",
+   "feel": "مشعّ",
+   "essence": "ذهب يُشكَّل باليد ليصير حلياً بالمطارق والمبارد ولهب صغير.",
+   "story": [
+    "عُمل الذهب باليد منذ أكثر من ستة آلاف سنة. فهو ليّن ولامع ولا يصدأ أبداً.",
+    "ونقل الصاغة في الخليج والجزيرة العربية والهند وحوض المتوسط مهارتهم من المعلّم إلى المتعلّم.",
+    "وما زال الصائغ اليدوي يصهر ويطرق ويلحم ويصقل كل قطعة على طاولة عمل صغيرة."
+   ],
+   "tech": [
+    [
+     "الصهر والصب",
+     "صهر الذهب وصبّه في سبيكة بسيطة."
+    ],
+    [
+     "الطَّرق",
+     "تشكيل الصفائح والأسلاك بالمطارق على سندان."
+    ],
+    [
+     "التحبيب",
+     "تثبيت كرات ذهب صغيرة جداً على السطح."
+    ],
+    [
+     "اللحام",
+     "وصل الأجزاء بلهب صغير."
+    ],
+    [
+     "النقش بالضغط",
+     "دفع النقوش في الذهب بأقلام معدنية صغيرة."
+    ]
+   ],
+   "signs": [
+    "آثار صغيرة للمطرقة والمبرد في الداخل أو الخلف.",
+    "نقوش متقاربة، لكن كل واحد مختلف قليلاً.",
+    "حواف ناعمة مصقولة باليد.",
+    "علامة الصانع أو العيار مختومة باليد."
+   ],
+   "tools": [
+    [
+     "الذهب",
+     "صفائح أو أسلاك أو حبيبات."
+    ],
+    [
+     "مطارق وسندان",
+     "لتشكيل المعدن."
+    ],
+    [
+     "مبارد ومنشار",
+     "للقص والتنعيم."
+    ],
+    [
+     "شعلة صغيرة",
+     "للصهر واللحام."
+    ],
+    [
+     "أدوات الصقل",
+     "للمعان النهائي."
+    ]
+   ],
+   "time": "من أيام إلى عدة أسابيع",
+   "bestFor": "الصاغة المهرة الذين يحبون العمل بالمعادن الثمينة.",
+   "artists": [],
+   "guide": [
+    "تحقق من علامة العيار (مثل 18 أو 21 قيراطاً).",
+    "اسأل كيف صُنعت القطعة: باليد، أم صُبّت في قالب.",
+    "نظّفها بصابون خفيف وماء وقطعة قماش ناعمة."
+   ]
+  }
+ },
+{
+  "id": "coil_pottery",
+  "cat": "pottery",
+  "type": "coil_pottery",
+  "level": "beginner",
+  "en": {
+   "name": "Coil Pottery",
+   "feel": "Earthy",
+   "essence": "Pots built by hand from long rolls of clay, laid one on top of another and smoothed together.",
+   "story": [
+    "Coiling is one of the oldest ways to make a pot. It needs no wheel, only clay and hands.",
+    "Potters in ancient China, Africa, the Americas and Arabia built large jars this way, ring by ring.",
+    "It is still used today for big pots and free shapes that a wheel cannot make."
+   ],
+   "tech": [
+    [
+     "Rolling coils",
+     "Rolling clay into even ropes on a table."
+    ],
+    [
+     "Building up",
+     "Laying each coil on the one below, round and round."
+    ],
+    [
+     "Joining",
+     "Pressing and smoothing the coils together inside and out."
+    ],
+    [
+     "Paddling",
+     "Tapping the wall with a wooden paddle to shape it."
+    ],
+    [
+     "Burnishing",
+     "Rubbing the dry clay with a stone for a soft shine."
+    ]
+   ],
+   "signs": [
+    "A wall that is slightly uneven in thickness.",
+    "Faint lines of the coils, inside or out.",
+    "A shape that is close to round, but never perfect.",
+    "Finger and tool marks on the surface."
+   ],
+   "tools": [
+    [
+     "Clay",
+     "Earthenware or stoneware clay."
+    ],
+    [
+     "Wooden paddle",
+     "To shape and strengthen the wall."
+    ],
+    [
+     "Smoothing tools",
+     "Wood, rubber or a smooth stone."
+    ],
+    [
+     "Turntable",
+     "A banding wheel turned by hand."
+    ],
+    [
+     "Kiln",
+     "To fire the finished pot."
+    ]
+   ],
+   "time": "A few days to a few weeks (with drying and firing)",
+   "bestFor": "Beginners and potters who like free shapes.",
+   "artists": [],
+   "guide": [
+    "Look inside: coiled pots often show soft ridges.",
+    "Tap it gently; a well-fired pot rings, not thuds.",
+    "Ask if it is safe for food and water before using it."
+   ]
+  },
+  "ar": {
+   "name": "الفخار بالحبال",
+   "feel": "ترابي",
+   "essence": "أوانٍ تُبنى باليد من حبال طويلة من الطين، تُوضع فوق بعضها وتُنعّم معاً.",
+   "story": [
+    "البناء بالحبال من أقدم طرق صنع الأواني. لا يحتاج إلى عجلة، بل إلى طين ويدين فقط.",
+    "بنى الخزافون في الصين القديمة وأفريقيا والأمريكتين والجزيرة العربية جراراً كبيرة بهذه الطريقة، حلقة فوق حلقة.",
+    "وما زالت تُستخدم اليوم للأواني الكبيرة والأشكال الحرة التي لا تصنعها العجلة."
+   ],
+   "tech": [
+    [
+     "لفّ الحبال",
+     "دحرجة الطين على الطاولة ليصير حبالاً متساوية."
+    ],
+    [
+     "البناء",
+     "وضع كل حبل فوق الذي تحته، دورة بعد دورة."
+    ],
+    [
+     "الوصل",
+     "ضغط الحبال وتنعيمها معاً من الداخل والخارج."
+    ],
+    [
+     "الضرب بالمضرب",
+     "طرق الجدار بمضرب خشبي لتشكيله."
+    ],
+    [
+     "الصقل",
+     "دعك الطين الجاف بحجر للمعان ناعم."
+    ]
+   ],
+   "signs": [
+    "جدار غير متساوٍ قليلاً في السماكة.",
+    "خطوط خفيفة للحبال من الداخل أو الخارج.",
+    "شكل قريب من الدائري، لكنه ليس كاملاً أبداً.",
+    "آثار أصابع وأدوات على السطح."
+   ],
+   "tools": [
+    [
+     "طين",
+     "طين فخاري أو حجري."
+    ],
+    [
+     "مضرب خشبي",
+     "لتشكيل الجدار وتقويته."
+    ],
+    [
+     "أدوات التنعيم",
+     "خشب أو مطاط أو حجر أملس."
+    ],
+    [
+     "قاعدة دوّارة",
+     "قرص يُدار باليد."
+    ],
+    [
+     "فرن",
+     "لحرق الإناء المكتمل."
+    ]
+   ],
+   "time": "من بضعة أيام إلى بضعة أسابيع (مع التجفيف والحرق)",
+   "bestFor": "المبتدئون والخزافون الذين يحبون الأشكال الحرة.",
+   "artists": [],
+   "guide": [
+    "انظر إلى الداخل: الأواني المبنية بالحبال تُظهر غالباً نتوءات ناعمة.",
+    "انقر عليها برفق؛ الإناء المحروق جيداً يرنّ ولا يُصدر صوتاً مكتوماً.",
+    "اسأل إن كانت آمنة للطعام والماء قبل استخدامها."
+   ]
+  }
+ },
+{
+  "id": "raku",
+  "cat": "pottery",
+  "type": "raku",
+  "level": "intermediate",
+  "en": {
+   "name": "Raku",
+   "feel": "Fiery",
+   "essence": "Hand-shaped pottery taken red-hot from the kiln, so fire and smoke paint its surface.",
+   "story": [
+    "Raku began in Japan in the 1500s, when the potter Chōjirō made hand-shaped tea bowls for the tea ceremony.",
+    "The bowls were shaped by hand, not on a wheel, so each one is a little different.",
+    "Later, potters outside Japan took the glowing pots out of the kiln into sawdust or leaves, so smoke made crackles and metal shine."
+   ],
+   "tech": [
+    [
+     "Hand shaping",
+     "Pinching and carving the bowl without a wheel."
+    ],
+    [
+     "Fast firing",
+     "Heating the pot quickly in a small kiln."
+    ],
+    [
+     "Pulling",
+     "Lifting the glowing pot out with long tongs."
+    ],
+    [
+     "Smoking",
+     "Placing it in sawdust or leaves so smoke darkens the cracks."
+    ],
+    [
+     "Cooling",
+     "Letting the sudden change in heat make crackle patterns."
+    ]
+   ],
+   "signs": [
+    "A crackle pattern that is never the same twice.",
+    "Smoky black lines in the cracks of the glaze.",
+    "Metallic or rainbow flashes in some glazes.",
+    "A shape with soft, uneven walls."
+   ],
+   "tools": [
+    [
+     "Clay",
+     "A clay that can take sudden heat."
+    ],
+    [
+     "Raku kiln",
+     "A small kiln that opens while hot."
+    ],
+    [
+     "Long tongs",
+     "To lift the glowing pot."
+    ],
+    [
+     "Metal bin",
+     "Filled with sawdust or leaves."
+    ],
+    [
+     "Safety gear",
+     "Gloves, mask and eye protection."
+    ]
+   ],
+   "time": "One day to a few weeks",
+   "bestFor": "Potters who enjoy surprise and fire.",
+   "artists": [
+    [
+     "Chōjirō",
+     "Japanese, died 1589",
+     "Made the first raku tea bowls in Kyoto."
+    ],
+    [
+     "Hon'ami Kōetsu",
+     "Japanese, 1558–1637",
+     "Artist and potter famous for his raku tea bowls."
+    ]
+   ],
+   "guide": [
+    "Raku is often not waterproof; use it for display.",
+    "Every crackle pattern is unique; that is the beauty of it.",
+    "Clean it with a dry soft cloth only."
+   ]
+  },
+  "ar": {
+   "name": "الراكو",
+   "feel": "ناري",
+   "essence": "فخار يُشكَّل باليد ويُخرج من الفرن وهو متوهج، فترسم النار والدخان سطحه.",
+   "story": [
+    "بدأ الراكو في اليابان في القرن السادس عشر، حين صنع الخزاف تشوجيرو أوعية شاي مشكّلة باليد لطقوس الشاي.",
+    "كانت الأوعية تُشكَّل باليد لا على العجلة، فكل واحد منها مختلف قليلاً.",
+    "ثم صار خزافون خارج اليابان يُخرجون الأواني المتوهجة إلى نشارة الخشب أو الأوراق، فيصنع الدخان تشققات ولمعاناً معدنياً."
+   ],
+   "tech": [
+    [
+     "التشكيل باليد",
+     "قرص الوعاء ونحته دون عجلة."
+    ],
+    [
+     "الحرق السريع",
+     "تسخين الإناء بسرعة في فرن صغير."
+    ],
+    [
+     "السحب",
+     "رفع الإناء المتوهج بملقط طويل."
+    ],
+    [
+     "التدخين",
+     "وضعه في نشارة الخشب أو الأوراق ليُغمّق الدخان الشقوق."
+    ],
+    [
+     "التبريد",
+     "ترك التغيّر المفاجئ في الحرارة يصنع نقوش التشقق."
+    ]
+   ],
+   "signs": [
+    "نقش تشققات لا يتكرر أبداً.",
+    "خطوط سوداء من الدخان في شقوق الطلاء.",
+    "ومضات معدنية أو بألوان قوس قزح في بعض الطلاءات.",
+    "شكل بجدران ناعمة غير متساوية."
+   ],
+   "tools": [
+    [
+     "طين",
+     "طين يتحمّل الحرارة المفاجئة."
+    ],
+    [
+     "فرن الراكو",
+     "فرن صغير يُفتح وهو ساخن."
+    ],
+    [
+     "ملقط طويل",
+     "لرفع الإناء المتوهج."
+    ],
+    [
+     "حاوية معدنية",
+     "مملوءة بنشارة الخشب أو الأوراق."
+    ],
+    [
+     "أدوات السلامة",
+     "قفازات وكمامة وحماية للعينين."
+    ]
+   ],
+   "time": "من يوم إلى بضعة أسابيع",
+   "bestFor": "الخزافون الذين يستمتعون بالمفاجأة والنار.",
+   "artists": [
+    [
+     "تشوجيرو",
+     "ياباني، توفي 1589",
+     "صنع أول أوعية شاي من الراكو في كيوتو."
+    ],
+    [
+     "هونآمي كوإتسو",
+     "ياباني، 1558–1637",
+     "فنان وخزاف اشتهر بأوعية الشاي من الراكو."
+    ]
+   ],
+   "guide": [
+    "الراكو غالباً لا يمنع تسرّب الماء؛ استخدمه للعرض.",
+    "كل نقش تشققات فريد؛ وهذا سرّ جماله.",
+    "نظّفه بقطعة قماش ناعمة وجافة فقط."
+   ]
+  }
+ },
+{
+  "id": "handbuilt_porcelain",
+  "cat": "pottery",
+  "type": "handbuilt_porcelain",
+  "level": "advanced",
+  "en": {
+   "name": "Hand-built Porcelain",
+   "feel": "Pure",
+   "essence": "Fine, white porcelain shaped by hand by pinching, slabs or coils, without a wheel or a mould.",
+   "story": [
+    "Porcelain was first made in China more than a thousand years ago, from a fine white clay called kaolin.",
+    "For centuries most porcelain was thrown on a wheel or pressed in moulds.",
+    "Today many potters shape it by hand instead. Thin walls let light glow through, and each piece keeps the touch of the fingers."
+   ],
+   "tech": [
+    [
+     "Pinching",
+     "Pressing a ball of clay into a thin bowl with the fingers."
+    ],
+    [
+     "Slab building",
+     "Rolling thin sheets and joining them."
+    ],
+    [
+     "Coiling",
+     "Building with fine rolls of porcelain."
+    ],
+    [
+     "Thinning",
+     "Scraping the wall until light can pass through."
+    ],
+    [
+     "High firing",
+     "Firing very hot so the clay turns glassy and strong."
+    ]
+   ],
+   "signs": [
+    "Light glowing through thin walls.",
+    "Soft finger marks in the surface.",
+    "Edges that are gently uneven.",
+    "A shape that leans a little, never machine-straight."
+   ],
+   "tools": [
+    [
+     "Porcelain clay",
+     "A fine white clay."
+    ],
+    [
+     "Rolling pin and cloth",
+     "For thin slabs."
+    ],
+    [
+     "Scrapers",
+     "Metal or rubber, to thin the walls."
+    ],
+    [
+     "Sponge",
+     "To smooth the surface."
+    ],
+    [
+     "High-fire kiln",
+     "Porcelain needs great heat."
+    ]
+   ],
+   "time": "One to several weeks (with drying and firing)",
+   "bestFor": "Careful potters who love fine, delicate work.",
+   "artists": [],
+   "guide": [
+    "Hold it to the light: thin, hand-built porcelain often glows.",
+    "Look for finger marks; moulded pieces look smooth and identical.",
+    "Wash it gently by hand."
+   ]
+  },
+  "ar": {
+   "name": "البورسلين المشكّل باليد",
+   "feel": "نقي",
+   "essence": "بورسلين أبيض رقيق يُشكَّل باليد بالقرص أو الشرائح أو الحبال، دون عجلة أو قالب.",
+   "story": [
+    "صُنع البورسلين أول مرة في الصين قبل أكثر من ألف عام، من طين أبيض ناعم اسمه الكاولين.",
+    "وطوال قرون كان معظم البورسلين يُدار على العجلة أو يُضغط في القوالب.",
+    "واليوم يشكّله خزافون كثيرون باليد بدلاً من ذلك. فالجدران الرقيقة يتوهج الضوء خلالها، وتحتفظ كل قطعة بلمسة الأصابع."
+   ],
+   "tech": [
+    [
+     "القرص",
+     "ضغط كرة من الطين بالأصابع لتصير وعاءً رقيقاً."
+    ],
+    [
+     "البناء بالشرائح",
+     "فرد صفائح رقيقة ووصلها."
+    ],
+    [
+     "البناء بالحبال",
+     "البناء بحبال رفيعة من البورسلين."
+    ],
+    [
+     "الترقيق",
+     "كشط الجدار حتى يمر الضوء خلاله."
+    ],
+    [
+     "الحرق العالي",
+     "الحرق بحرارة عالية جداً ليصير الطين زجاجياً قوياً."
+    ]
+   ],
+   "signs": [
+    "ضوء يتوهج عبر الجدران الرقيقة.",
+    "آثار أصابع ناعمة على السطح.",
+    "حواف غير متساوية برفق.",
+    "شكل يميل قليلاً، لا استقامة آلة فيه."
+   ],
+   "tools": [
+    [
+     "طين البورسلين",
+     "طين أبيض ناعم."
+    ],
+    [
+     "أسطوانة فرد وقماش",
+     "للشرائح الرقيقة."
+    ],
+    [
+     "مكاشط",
+     "معدنية أو مطاطية لترقيق الجدران."
+    ],
+    [
+     "إسفنجة",
+     "لتنعيم السطح."
+    ],
+    [
+     "فرن عالي الحرارة",
+     "البورسلين يحتاج حرارة كبيرة."
+    ]
+   ],
+   "time": "من أسبوع إلى عدة أسابيع (مع التجفيف والحرق)",
+   "bestFor": "الخزافون الحريصون الذين يحبون العمل الرقيق.",
+   "artists": [],
+   "guide": [
+    "ارفعه نحو الضوء: البورسلين الرقيق المشكّل باليد يتوهج غالباً.",
+    "ابحث عن آثار الأصابع؛ القطع المصبوبة في القوالب ناعمة ومتطابقة.",
+    "اغسله برفق باليد."
+   ]
+  }
+ },
+{
+  "id": "terracotta",
+  "cat": "pottery",
+  "type": "terracotta",
+  "level": "beginner",
+  "en": {
+   "name": "Terracotta",
+   "feel": "Warm",
+   "essence": "Reddish-brown clay shaped by hand into pots and figures, then fired at a low heat.",
+   "story": [
+    "Terracotta means baked earth in Italian. It is one of the oldest materials people shaped by hand.",
+    "Ancient makers used it for jars, roof tiles and small figures of animals, from Cyprus to China and Arabia.",
+    "Its warm colour comes from the iron in the clay. Many makers leave it unglazed to show the earth itself."
+   ],
+   "tech": [
+    [
+     "Hand modelling",
+     "Shaping the clay with fingers and simple tools."
+    ],
+    [
+     "Pinching and coiling",
+     "Building pots and figures without a wheel."
+    ],
+    [
+     "Slip decoration",
+     "Painting with liquid clay of another colour."
+    ],
+    [
+     "Burnishing",
+     "Polishing the dry clay with a smooth stone."
+    ],
+    [
+     "Low firing",
+     "Firing at a lower heat, which keeps the warm colour."
+    ]
+   ],
+   "signs": [
+    "Finger and tool marks in the clay.",
+    "Small changes in colour from the firing.",
+    "A slightly rough, matte surface where it is unglazed.",
+    "Shapes that are close, but never exactly the same."
+   ],
+   "tools": [
+    [
+     "Terracotta clay",
+     "A red clay rich in iron."
+    ],
+    [
+     "Modelling tools",
+     "Wood and wire tools."
+    ],
+    [
+     "Smooth stone",
+     "For burnishing."
+    ],
+    [
+     "Slip and brushes",
+     "For decoration."
+    ],
+    [
+     "Kiln",
+     "Low firing."
+    ]
+   ],
+   "time": "A few days to a few weeks",
+   "bestFor": "Beginners who love earthy colours.",
+   "artists": [],
+   "guide": [
+    "Unglazed terracotta drinks in water; keep it dry indoors.",
+    "Look for finger marks; factory pieces look smooth and the same.",
+    "Dust it with a soft brush."
+   ]
+  },
+  "ar": {
+   "name": "التيراكوتا",
+   "feel": "دافئ",
+   "essence": "طين بني محمرّ يُشكَّل باليد أوانيَ وتماثيل، ثم يُحرق بحرارة منخفضة.",
+   "story": [
+    "تعني «تيراكوتا» بالإيطالية «الأرض المحروقة». وهي من أقدم المواد التي شكّلها الناس بأيديهم.",
+    "استخدمها الصنّاع القدماء للجرار وقرميد الأسقف والتماثيل الصغيرة للحيوانات، من قبرص إلى الصين والجزيرة العربية.",
+    "ويأتي لونها الدافئ من الحديد في الطين. ويتركها صنّاع كثيرون بلا طلاء ليظهر التراب نفسه."
+   ],
+   "tech": [
+    [
+     "التشكيل باليد",
+     "تشكيل الطين بالأصابع وأدوات بسيطة."
+    ],
+    [
+     "القرص والحبال",
+     "بناء الأواني والتماثيل دون عجلة."
+    ],
+    [
+     "الزخرفة بالطين السائل",
+     "الرسم بطين سائل بلون آخر."
+    ],
+    [
+     "الصقل",
+     "دعك الطين الجاف بحجر أملس."
+    ],
+    [
+     "الحرق المنخفض",
+     "الحرق بحرارة أقل، فيبقى اللون دافئاً."
+    ]
+   ],
+   "signs": [
+    "آثار أصابع وأدوات في الطين.",
+    "تغيّرات بسيطة في اللون من الحرق.",
+    "سطح خشن قليلاً غير لامع حيث لا طلاء.",
+    "أشكال متقاربة، لكنها لا تتطابق تماماً."
+   ],
+   "tools": [
+    [
+     "طين التيراكوتا",
+     "طين أحمر غني بالحديد."
+    ],
+    [
+     "أدوات التشكيل",
+     "أدوات من الخشب والسلك."
+    ],
+    [
+     "حجر أملس",
+     "للصقل."
+    ],
+    [
+     "طين سائل وفرش",
+     "للزخرفة."
+    ],
+    [
+     "فرن",
+     "حرق منخفض."
+    ]
+   ],
+   "time": "من بضعة أيام إلى بضعة أسابيع",
+   "bestFor": "المبتدئون الذين يحبون الألوان الترابية.",
+   "artists": [],
+   "guide": [
+    "التيراكوتا غير المطلية تمتص الماء؛ أبقها جافة داخل البيت.",
+    "ابحث عن آثار الأصابع؛ قطع المصانع ناعمة ومتشابهة.",
+    "أزل الغبار عنها بفرشاة ناعمة."
+   ]
+  }
+ },
+{
+  "id": "hand_glazing",
+  "cat": "pottery",
+  "type": "hand_glazing",
+  "level": "intermediate",
+  "en": {
+   "name": "Hand Glazing",
+   "feel": "Glossy",
+   "essence": "A glassy coat put on pottery by hand, by dipping, pouring or brushing, then melted in the kiln.",
+   "story": [
+    "Glaze is a thin layer of glass on pottery. It makes a pot shine, gives it colour and helps it hold water.",
+    "Potters in Mesopotamia, Egypt and China glazed by hand thousands of years ago.",
+    "Chinese potters made famous glazes such as hare's fur, where the glaze runs into fine streaks in the fire."
+   ],
+   "tech": [
+    [
+     "Dipping",
+     "Holding the pot and dipping it into a bucket of glaze."
+    ],
+    [
+     "Pouring",
+     "Pouring glaze over and inside the pot."
+    ],
+    [
+     "Brushing",
+     "Painting glaze on with a soft brush."
+    ],
+    [
+     "Layering",
+     "Putting one glaze over another for depth."
+    ],
+    [
+     "Wax resist",
+     "Waxing the base so glaze does not stick there."
+    ]
+   ],
+   "signs": [
+    "Drips and runs where the glaze flowed in the fire.",
+    "Thicker and thinner areas of colour.",
+    "Finger marks where the pot was held while dipping.",
+    "Small differences between pots from the same kiln."
+   ],
+   "tools": [
+    [
+     "Glaze",
+     "Mixed by the potter from minerals and water."
+    ],
+    [
+     "Buckets and jugs",
+     "For dipping and pouring."
+    ],
+    [
+     "Soft brushes",
+     "For brushing and details."
+    ],
+    [
+     "Wax",
+     "For the base of the pot."
+    ],
+    [
+     "Kiln",
+     "Melts the glaze into glass."
+    ]
+   ],
+   "time": "One day to a few weeks",
+   "bestFor": "Potters who love colour and surprise.",
+   "artists": [],
+   "guide": [
+    "Look at the drips and changes in colour; they show the hand and the fire.",
+    "Ask if the glaze is safe for food.",
+    "Avoid sudden heat changes, such as hot water in a cold bowl."
+   ]
+  },
+  "ar": {
+   "name": "التزجيج اليدوي",
+   "feel": "لامع",
+   "essence": "طبقة زجاجية تُوضع على الفخار باليد، بالغمس أو الصبّ أو الفرشاة، ثم تذوب في الفرن.",
+   "story": [
+    "الطلاء الزجاجي طبقة رقيقة من الزجاج على الفخار. يجعل الإناء لامعاً، ويعطيه لوناً، ويساعده على حفظ الماء.",
+    "زجّج الخزافون في بلاد الرافدين ومصر والصين باليد قبل آلاف السنين.",
+    "وابتكر الخزافون الصينيون طلاءات مشهورة مثل «فرو الأرنب»، حيث يسيل الطلاء في النار خطوطاً رفيعة."
+   ],
+   "tech": [
+    [
+     "الغمس",
+     "الإمساك بالإناء وغمسه في دلو الطلاء."
+    ],
+    [
+     "الصبّ",
+     "صبّ الطلاء على الإناء وفي داخله."
+    ],
+    [
+     "الفرشاة",
+     "دهن الطلاء بفرشاة ناعمة."
+    ],
+    [
+     "الطبقات",
+     "وضع طلاء فوق آخر للعمق."
+    ],
+    [
+     "العزل بالشمع",
+     "دهن القاعدة بالشمع كي لا يلتصق الطلاء بها."
+    ]
+   ],
+   "signs": [
+    "قطرات وسيلان حيث جرى الطلاء في النار.",
+    "مناطق لون أسمك وأخرى أرق.",
+    "آثار أصابع حيث أُمسك الإناء أثناء الغمس.",
+    "اختلافات بسيطة بين أوانٍ من الفرن نفسه."
+   ],
+   "tools": [
+    [
+     "الطلاء",
+     "يخلطه الخزاف من المعادن والماء."
+    ],
+    [
+     "دلاء وأباريق",
+     "للغمس والصبّ."
+    ],
+    [
+     "فرش ناعمة",
+     "للدهن والتفاصيل."
+    ],
+    [
+     "شمع",
+     "لقاعدة الإناء."
+    ],
+    [
+     "فرن",
+     "يُذيب الطلاء ليصير زجاجاً."
+    ]
+   ],
+   "time": "من يوم إلى بضعة أسابيع",
+   "bestFor": "الخزافون الذين يحبون اللون والمفاجأة.",
+   "artists": [],
+   "guide": [
+    "انظر إلى القطرات وتغيّر الألوان؛ فهي تُظهر اليد والنار.",
+    "اسأل إن كان الطلاء آمناً للطعام.",
+    "تجنّب تغيّر الحرارة المفاجئ، مثل ماء ساخن في وعاء بارد."
+   ]
+  }
+ },
+{
+  "id": "handloom_weaving",
+  "cat": "textiles",
+  "type": "handloom_weaving",
+  "level": "intermediate",
+  "en": {
+   "name": "Hand-loom Weaving",
+   "feel": "Steady",
+   "essence": "Cloth woven thread by thread on a loom worked by the weaver's own hands and feet.",
+   "story": [
+    "People have woven cloth on looms for more than eight thousand years.",
+    "On a hand loom, the weaver lifts the threads with pedals and passes the shuttle across by hand, one line at a time.",
+    "Hand-loom traditions are still alive from India and Central Asia to Arabia, Greece and Peru."
+   ],
+   "tech": [
+    [
+     "Warping",
+     "Setting the long threads on the loom, one by one."
+    ],
+    [
+     "Shedding",
+     "Lifting some threads with the pedals to open a gap."
+    ],
+    [
+     "Picking",
+     "Passing the shuttle with the cross thread through the gap."
+    ],
+    [
+     "Beating",
+     "Pressing each new thread tight with the comb (reed)."
+    ],
+    [
+     "Patterning",
+     "Changing colours and lifting orders to make designs."
+    ]
+   ],
+   "signs": [
+    "Small changes in tightness along the cloth.",
+    "Edges that are straight, but not machine-perfect.",
+    "Tiny knots or joins where a thread ended.",
+    "Patterns with small differences from one repeat to the next."
+   ],
+   "tools": [
+    [
+     "Hand loom",
+     "A wooden frame loom worked by hand and foot."
+    ],
+    [
+     "Shuttle",
+     "Carries the cross thread."
+    ],
+    [
+     "Reed",
+     "A comb that spaces and beats the threads."
+    ],
+    [
+     "Yarn",
+     "Cotton, wool, silk or linen."
+    ],
+    [
+     "Bobbin winder",
+     "To fill the shuttle."
+    ]
+   ],
+   "time": "Days to months for one piece",
+   "bestFor": "Patient makers who love rhythm and pattern.",
+   "artists": [],
+   "guide": [
+    "Look at the edges and the back; hand-loom cloth shows small changes.",
+    "Ask about the yarn and how long the piece took.",
+    "Wash it gently by hand, or as the maker advises."
+   ]
+  },
+  "ar": {
+   "name": "النسيج على النول اليدوي",
+   "feel": "متّزن",
+   "essence": "قماش يُنسج خيطاً خيطاً على نول يعمل بيدي النسّاج وقدميه.",
+   "story": [
+    "نسج الناس القماش على الأنوال منذ أكثر من ثمانية آلاف عام.",
+    "على النول اليدوي يرفع النسّاج الخيوط بالدواسات، ويمرّر المكّوك باليد، سطراً بعد سطر.",
+    "وما زالت تقاليد النول اليدوي حية من الهند وآسيا الوسطى إلى الجزيرة العربية واليونان والبيرو."
+   ],
+   "tech": [
+    [
+     "السدى",
+     "تركيب الخيوط الطويلة على النول، خيطاً خيطاً."
+    ],
+    [
+     "فتح النفس",
+     "رفع بعض الخيوط بالدواسات لفتح فراغ."
+    ],
+    [
+     "الرمي",
+     "تمرير المكّوك بخيط اللحمة عبر الفراغ."
+    ],
+    [
+     "الضرب",
+     "ضغط كل خيط جديد بالمشط ليصير متيناً."
+    ],
+    [
+     "النقش",
+     "تغيير الألوان وترتيب الرفع لعمل الزخارف."
+    ]
+   ],
+   "signs": [
+    "تغيّرات صغيرة في الشدّ على طول القماش.",
+    "حواف مستقيمة، لكن ليست كاملة كالآلة.",
+    "عقد أو وصلات صغيرة حيث انتهى خيط.",
+    "نقوش فيها اختلافات بسيطة من تكرار إلى آخر."
+   ],
+   "tools": [
+    [
+     "النول اليدوي",
+     "إطار خشبي يعمل باليد والقدم."
+    ],
+    [
+     "المكّوك",
+     "يحمل خيط اللحمة."
+    ],
+    [
+     "المشط",
+     "يباعد بين الخيوط ويضربها."
+    ],
+    [
+     "الخيوط",
+     "قطن أو صوف أو حرير أو كتان."
+    ],
+    [
+     "أداة لفّ البكرات",
+     "لملء المكّوك."
+    ]
+   ],
+   "time": "من أيام إلى أشهر للقطعة الواحدة",
+   "bestFor": "الصنّاع الصبورون الذين يحبون الإيقاع والنقش.",
+   "artists": [],
+   "guide": [
+    "انظر إلى الحواف والظهر؛ قماش النول اليدوي يُظهر تغيّرات صغيرة.",
+    "اسأل عن نوع الخيوط وكم استغرقت القطعة.",
+    "اغسلها برفق باليد، أو كما ينصح الصانع."
+   ]
+  }
+ },
+{
+  "id": "batik",
+  "cat": "textiles",
+  "type": "batik",
+  "level": "intermediate",
+  "en": {
+   "name": "Batik",
+   "feel": "Rich",
+   "essence": "Patterns drawn by hand on cloth with hot wax, then dyed, so the waxed lines stay pale.",
+   "story": [
+    "Batik is a way of making patterns with wax and dye. It is best known from Java in Indonesia.",
+    "The maker draws with hot wax using a small copper pen called a canting, then dips the cloth in dye.",
+    "Hand-drawn batik is called batik tulis. UNESCO lists Indonesian batik as a living heritage."
+   ],
+   "tech": [
+    [
+     "Drawing with wax",
+     "Tracing lines of hot wax with the canting."
+    ],
+    [
+     "Dyeing",
+     "Dipping the cloth so dye colours the unwaxed parts."
+    ],
+    [
+     "Layering",
+     "Waxing again and dyeing darker colours, step by step."
+    ],
+    [
+     "Crackle",
+     "Letting the wax crack so fine dye lines appear."
+    ],
+    [
+     "Removing wax",
+     "Boiling or ironing the cloth to take the wax away."
+    ]
+   ],
+   "signs": [
+    "Fine dye lines where the wax cracked.",
+    "The pattern shows on both sides of the cloth.",
+    "Lines that change a little in thickness.",
+    "Repeats that are close, but not identical."
+   ],
+   "tools": [
+    [
+     "Canting",
+     "A small copper pen for hot wax."
+    ],
+    [
+     "Batik wax",
+     "A mix of beeswax and resin."
+    ],
+    [
+     "Wax pot",
+     "Keeps the wax hot."
+    ],
+    [
+     "Cotton or silk",
+     "Plain cloth for the design."
+    ],
+    [
+     "Dye baths",
+     "One for each colour."
+    ]
+   ],
+   "time": "Days to months",
+   "bestFor": "Patient makers who love pattern and colour.",
+   "artists": [],
+   "guide": [
+    "Turn it over: hand batik shows the pattern on both sides; a print fades on the back.",
+    "Look for fine crackle lines and small changes in the lines.",
+    "Wash it gently in cold water, away from strong sun."
+   ]
+  },
+  "ar": {
+   "name": "الباتيك",
+   "feel": "غنيّ",
+   "essence": "نقوش تُرسم باليد على القماش بالشمع الساخن، ثم يُصبغ، فتبقى خطوط الشمع فاتحة.",
+   "story": [
+    "الباتيك طريقة لعمل النقوش بالشمع والصبغة. واشتهر في جزيرة جاوة في إندونيسيا.",
+    "يرسم الصانع بالشمع الساخن بقلم نحاسي صغير اسمه «تشانتينغ»، ثم يغمس القماش في الصبغة.",
+    "ويُسمّى الباتيك المرسوم باليد «باتيك توليس». وقد أدرجت اليونسكو الباتيك الإندونيسي تراثاً حياً."
+   ],
+   "tech": [
+    [
+     "الرسم بالشمع",
+     "تتبّع خطوط الشمع الساخن بالتشانتينغ."
+    ],
+    [
+     "الصبغ",
+     "غمس القماش فتلوّن الصبغة الأجزاء غير المشمّعة."
+    ],
+    [
+     "الطبقات",
+     "التشميع من جديد والصبغ بألوان أغمق، خطوة بخطوة."
+    ],
+    [
+     "التشقق",
+     "ترك الشمع يتشقق فتظهر خطوط صبغة رفيعة."
+    ],
+    [
+     "إزالة الشمع",
+     "غلي القماش أو كيّه لإزالة الشمع."
+    ]
+   ],
+   "signs": [
+    "خطوط صبغة رفيعة حيث تشقق الشمع.",
+    "النقش يظهر على وجهي القماش.",
+    "خطوط يتغيّر سمكها قليلاً.",
+    "تكرارات متقاربة، لكنها غير متطابقة."
+   ],
+   "tools": [
+    [
+     "التشانتينغ",
+     "قلم نحاسي صغير للشمع الساخن."
+    ],
+    [
+     "شمع الباتيك",
+     "خليط من شمع العسل والراتنج."
+    ],
+    [
+     "قِدر الشمع",
+     "يُبقي الشمع ساخناً."
+    ],
+    [
+     "قطن أو حرير",
+     "قماش سادة للتصميم."
+    ],
+    [
+     "أحواض الصبغ",
+     "حوض لكل لون."
+    ]
+   ],
+   "time": "من أيام إلى أشهر",
+   "bestFor": "الصنّاع الصبورون الذين يحبون النقش واللون.",
+   "artists": [],
+   "guide": [
+    "اقلبه: الباتيك اليدوي يُظهر النقش على الوجهين؛ والمطبوع يبهت من الخلف.",
+    "ابحث عن خطوط التشقق الرفيعة والتغيّرات الصغيرة في الخطوط.",
+    "اغسله برفق بماء بارد، وأبعده عن الشمس القوية."
+   ]
+  }
+ },
+{
+  "id": "felting",
+  "cat": "textiles",
+  "type": "felting",
+  "level": "beginner",
+  "en": {
+   "name": "Felting",
+   "feel": "Cosy",
+   "essence": "Wool pressed and rubbed by hand with water and soap until its fibres lock into a strong cloth.",
+   "story": [
+    "Felt may be the oldest cloth in the world. It is made without spinning or weaving.",
+    "The nomads of Central Asia made tents, rugs and boots from felt. In Kyrgyzstan, shyrdak rugs are a proud tradition.",
+    "Felt is still made by hand today: wool is laid out, wetted, and rolled and pressed until it becomes firm."
+   ],
+   "tech": [
+    [
+     "Laying out",
+     "Spreading thin layers of wool in crossing directions."
+    ],
+    [
+     "Wet felting",
+     "Adding warm soapy water and rubbing by hand."
+    ],
+    [
+     "Rolling",
+     "Rolling the wool in a mat again and again to make it firm."
+    ],
+    [
+     "Needle felting",
+     "Stabbing wool with a barbed needle to shape it."
+    ],
+    [
+     "Inlay",
+     "Cutting and sewing coloured felt shapes together, as in shyrdak."
+    ]
+   ],
+   "signs": [
+    "Edges that are soft and a little uneven.",
+    "Fibres you can see blending into each other.",
+    "Hand stitching around inlaid shapes.",
+    "Colours that change gently where wools meet."
+   ],
+   "tools": [
+    [
+     "Wool",
+     "Sheep's wool, washed and carded."
+    ],
+    [
+     "Warm soapy water",
+     "Helps the fibres lock together."
+    ],
+    [
+     "Mat or bamboo blind",
+     "For rolling."
+    ],
+    [
+     "Felting needles",
+     "For needle felting."
+    ],
+    [
+     "Needle and thread",
+     "For sewing inlaid pieces."
+    ]
+   ],
+   "time": "A few hours to several weeks",
+   "bestFor": "Beginners and anyone who enjoys soft materials.",
+   "artists": [],
+   "guide": [
+    "Felt rugs should feel firm, not loose.",
+    "Look for hand stitching on inlaid designs.",
+    "Air it often and keep it away from moths."
+   ]
+  },
+  "ar": {
+   "name": "اللباد",
+   "feel": "دافئ",
+   "essence": "صوف يُضغط ويُدعك باليد بالماء والصابون حتى تتشابك أليافه فتصير قماشاً قوياً.",
+   "story": [
+    "قد يكون اللباد أقدم قماش في العالم. فهو يُصنع دون غزل أو نسج.",
+    "صنع الرحّل في آسيا الوسطى الخيام والسجاد والأحذية من اللباد. وفي قيرغيزستان سجاد «الشيرداك» تقليد تفخر به.",
+    "وما زال اللباد يُصنع باليد اليوم: يُفرد الصوف ويُبلّل، ثم يُلفّ ويُضغط حتى يتماسك."
+   ],
+   "tech": [
+    [
+     "الفرد",
+     "نشر طبقات رقيقة من الصوف في اتجاهات متقاطعة."
+    ],
+    [
+     "اللبد الرطب",
+     "إضافة ماء دافئ بالصابون والدعك باليد."
+    ],
+    [
+     "اللف",
+     "لفّ الصوف في حصيرة مرة بعد مرة ليتماسك."
+    ],
+    [
+     "اللبد بالإبرة",
+     "وخز الصوف بإبرة مسننة لتشكيله."
+    ],
+    [
+     "التطعيم",
+     "قصّ أشكال لباد ملونة وخياطتها معاً، كما في الشيرداك."
+    ]
+   ],
+   "signs": [
+    "حواف ناعمة غير متساوية قليلاً.",
+    "ألياف تراها تمتزج ببعضها.",
+    "خياطة يدوية حول الأشكال المطعّمة.",
+    "ألوان تتغيّر برفق حيث تلتقي الأصواف."
+   ],
+   "tools": [
+    [
+     "الصوف",
+     "صوف غنم مغسول وممشّط."
+    ],
+    [
+     "ماء دافئ بالصابون",
+     "يساعد الألياف على التشابك."
+    ],
+    [
+     "حصيرة أو ستارة خيزران",
+     "للّف."
+    ],
+    [
+     "إبر اللبد",
+     "للّبد بالإبرة."
+    ],
+    [
+     "إبرة وخيط",
+     "لخياطة القطع المطعّمة."
+    ]
+   ],
+   "time": "من ساعات إلى عدة أسابيع",
+   "bestFor": "المبتدئون وكل من يستمتع بالمواد الناعمة.",
+   "artists": [],
+   "guide": [
+    "سجاد اللباد يجب أن يكون متماسكاً، لا رخواً.",
+    "ابحث عن الخياطة اليدوية في التصاميم المطعّمة.",
+    "عرّضه للهواء كثيراً، وأبعده عن العثّ."
+   ]
+  }
+ },
+{
+  "id": "handmade_lace",
+  "cat": "textiles",
+  "type": "handmade_lace",
+  "level": "advanced",
+  "en": {
+   "name": "Handmade Lace",
+   "feel": "Graceful",
+   "essence": "Open, airy patterns made by hand from fine thread, with bobbins or a needle.",
+   "story": [
+    "Handmade lace grew in Europe in the 1500s and was soon treasured as much as jewellery.",
+    "Bobbin lace is made by crossing and twisting many threads wound on small bobbins over a pillow, around pins.",
+    "Needle lace is built stitch by stitch with a sewing needle. Both can take many hours for a few centimetres."
+   ],
+   "tech": [
+    [
+     "Bobbin lace",
+     "Crossing and twisting threads from many bobbins."
+    ],
+    [
+     "Pricking",
+     "A paper pattern with holes for the pins."
+    ],
+    [
+     "Pinning",
+     "Placing pins to hold each stitch in place."
+    ],
+    [
+     "Needle lace",
+     "Building the lace from buttonhole stitches."
+    ],
+    [
+     "Joining",
+     "Linking parts of the pattern with fine bars."
+    ]
+   ],
+   "signs": [
+    "Tiny differences between repeated motifs.",
+    "Threads that cross and twist, not machine-knitted loops.",
+    "Small joins where threads were added.",
+    "Edges with a soft, uneven feel."
+   ],
+   "tools": [
+    [
+     "Lace pillow",
+     "A firm cushion to work on."
+    ],
+    [
+     "Bobbins",
+     "Small spools that hold the thread."
+    ],
+    [
+     "Pins",
+     "Hold the stitches in place."
+    ],
+    [
+     "Pattern (pricking)",
+     "Shows where each pin goes."
+    ],
+    [
+     "Fine thread",
+     "Linen, cotton or silk."
+    ]
+   ],
+   "time": "Weeks to months",
+   "bestFor": "Very patient makers who love fine detail.",
+   "artists": [],
+   "guide": [
+    "Use a magnifier: hand lace shows crossed and twisted threads.",
+    "Machine lace looks perfectly even from end to end.",
+    "Store it flat in acid-free paper, away from light."
+   ]
+  },
+  "ar": {
+   "name": "الدانتيل اليدوي (التخريم)",
+   "feel": "رشيق",
+   "essence": "نقوش مفتوحة خفيفة تُصنع باليد من خيط رفيع، بالبكرات أو بالإبرة.",
+   "story": [
+    "ازدهر الدانتيل اليدوي في أوروبا في القرن السادس عشر، وسرعان ما صار ثميناً كالمجوهرات.",
+    "يُصنع دانتيل البكرات بتقاطع خيوط كثيرة ملفوفة على بكرات صغيرة وفتلها فوق وسادة، حول الدبابيس.",
+    "ويُبنى دانتيل الإبرة غرزة بعد غرزة بإبرة الخياطة. وقد يستغرق كلاهما ساعات طويلة لبضعة سنتيمترات."
+   ],
+   "tech": [
+    [
+     "دانتيل البكرات",
+     "تقاطع الخيوط من بكرات كثيرة وفتلها."
+    ],
+    [
+     "ورقة النقش",
+     "نقش ورقي فيه ثقوب للدبابيس."
+    ],
+    [
+     "التثبيت بالدبابيس",
+     "وضع الدبابيس لتثبيت كل غرزة."
+    ],
+    [
+     "دانتيل الإبرة",
+     "بناء الدانتيل من غرز العُرى."
+    ],
+    [
+     "الوصل",
+     "ربط أجزاء النقش بجسور رفيعة."
+    ]
+   ],
+   "signs": [
+    "اختلافات صغيرة بين الزخارف المتكررة.",
+    "خيوط تتقاطع وتُفتل، لا حلقات محبوكة آلياً.",
+    "وصلات صغيرة حيث أضيفت الخيوط.",
+    "حواف ناعمة غير متساوية الملمس."
+   ],
+   "tools": [
+    [
+     "وسادة الدانتيل",
+     "وسادة متماسكة للعمل عليها."
+    ],
+    [
+     "البكرات",
+     "بكرات صغيرة تحمل الخيط."
+    ],
+    [
+     "الدبابيس",
+     "تثبّت الغرز في مكانها."
+    ],
+    [
+     "ورقة النقش",
+     "تُظهر مكان كل دبوس."
+    ],
+    [
+     "خيط رفيع",
+     "كتان أو قطن أو حرير."
+    ]
+   ],
+   "time": "من أسابيع إلى أشهر",
+   "bestFor": "الصنّاع الصبورون جداً الذين يحبون التفاصيل الدقيقة.",
+   "artists": [],
+   "guide": [
+    "استخدم عدسة مكبّرة: الدانتيل اليدوي يُظهر خيوطاً متقاطعة مفتولة.",
+    "دانتيل الآلات متساوٍ تماماً من أوله إلى آخره.",
+    "احفظه مسطحاً في ورق خالٍ من الأحماض، بعيداً عن الضوء."
+   ]
+  }
+ },
+{
+  "id": "palm_weaving",
+  "cat": "textiles",
+  "type": "palm_weaving",
+  "level": "beginner",
+  "en": {
+   "name": "Palm-frond Weaving",
+   "feel": "Rooted",
+   "essence": "Baskets, mats and trays braided by hand from the dried leaves of the date palm.",
+   "story": [
+    "In Arabia the date palm gave people food, shade and material. Its leaves (khoos) were woven into everyday things.",
+    "Women and men braided long strips of palm leaf, called saf, then sewed them into baskets, mats, food covers and fans.",
+    "Sa'af al-khoos is still practised by hand in Saudi Arabia and the Gulf, often in bright dyed colours."
+   ],
+   "tech": [
+    [
+     "Preparing",
+     "Drying the leaves, splitting them into strips and soaking them."
+    ],
+    [
+     "Dyeing",
+     "Colouring some strips in bright dyes."
+    ],
+    [
+     "Braiding",
+     "Plaiting strips into a long flat band (saf)."
+    ],
+    [
+     "Coiling and sewing",
+     "Winding the band round and sewing it into shape."
+    ],
+    [
+     "Finishing",
+     "Adding handles, lids and edges."
+    ]
+   ],
+   "signs": [
+    "Small changes in the width of the braid.",
+    "Hand stitching joining the coils.",
+    "Natural differences in the colour of the leaves.",
+    "Shapes that are close to round, but not perfect."
+   ],
+   "tools": [
+    [
+     "Palm leaves",
+     "Dried leaves of the date palm."
+    ],
+    [
+     "Bowl of water",
+     "Keeps the strips soft."
+    ],
+    [
+     "Large needle",
+     "For sewing the coils."
+    ],
+    [
+     "Knife or scissors",
+     "To cut and split the leaves."
+    ],
+    [
+     "Natural or bright dyes",
+     "For coloured patterns."
+    ]
+   ],
+   "time": "A few hours to a few weeks",
+   "bestFor": "Beginners and anyone who loves heritage crafts.",
+   "artists": [],
+   "guide": [
+    "Look for hand stitching between the braided coils.",
+    "Keep it dry; damp can spoil palm leaves.",
+    "Dust it with a soft brush."
+   ]
+  },
+  "ar": {
+   "name": "سف الخوص",
+   "feel": "أصيل",
+   "essence": "سلال وحصر وأطباق تُضفر باليد من سعف النخيل المجفف.",
+   "story": [
+    "في الجزيرة العربية أعطت النخلة الناس الطعام والظل والمادة. ونُسج خوصها في أشياء الحياة اليومية.",
+    "ضفر النساء والرجال شرائط طويلة من الخوص تُسمّى «السفيفة»، ثم خاطوها سلالاً وحصراً ومكبّات ومراوح.",
+    "وما زال سفّ الخوص يُمارس باليد في المملكة العربية السعودية والخليج، بألوان مصبوغة زاهية غالباً."
+   ],
+   "tech": [
+    [
+     "التحضير",
+     "تجفيف الخوص وشقّه شرائط ونقعه."
+    ],
+    [
+     "الصبغ",
+     "تلوين بعض الشرائط بأصباغ زاهية."
+    ],
+    [
+     "الضفر",
+     "ضفر الشرائط في شريط طويل مسطح (السفيفة)."
+    ],
+    [
+     "اللف والخياطة",
+     "لفّ الشريط دائرياً وخياطته ليأخذ شكله."
+    ],
+    [
+     "التشطيب",
+     "إضافة المقابض والأغطية والحواف."
+    ]
+   ],
+   "signs": [
+    "تغيّرات صغيرة في عرض الضفيرة.",
+    "خياطة يدوية تصل اللفّات.",
+    "اختلافات طبيعية في لون الخوص.",
+    "أشكال قريبة من الدائرية، لكنها ليست كاملة."
+   ],
+   "tools": [
+    [
+     "الخوص",
+     "سعف نخيل التمر المجفف."
+    ],
+    [
+     "وعاء ماء",
+     "يُبقي الشرائط لينة."
+    ],
+    [
+     "إبرة كبيرة",
+     "لخياطة اللفّات."
+    ],
+    [
+     "سكين أو مقص",
+     "لقصّ الخوص وشقّه."
+    ],
+    [
+     "أصباغ طبيعية أو زاهية",
+     "للنقوش الملونة."
+    ]
+   ],
+   "time": "من ساعات إلى بضعة أسابيع",
+   "bestFor": "المبتدئون وكل من يحب الحرف التراثية.",
+   "artists": [],
+   "guide": [
+    "ابحث عن الخياطة اليدوية بين لفّات الضفيرة.",
+    "أبقه جافاً؛ فالرطوبة قد تُتلف الخوص.",
+    "أزل الغبار عنه بفرشاة ناعمة."
+   ]
+  }
+ },
+{
+  "id": "talli",
+  "cat": "textiles",
+  "type": "talli",
+  "level": "advanced",
+  "en": {
+   "name": "Talli Embroidery",
+   "feel": "Shimmering",
+   "essence": "Narrow bands braided by hand from cotton and shining metallic threads, a Gulf tradition.",
+   "story": [
+    "Talli is a traditional Emirati and Gulf craft. Women braided narrow decorative bands to edge clothes.",
+    "The braid is worked on a small cushion-shaped stand called a kajouja, with many bobbins of thread.",
+    "Shining silver or gold threads are crossed with coloured cotton to make small patterns, one cross at a time."
+   ],
+   "tech": [
+    [
+     "Setting up",
+     "Fixing the threads on the kajouja stand."
+    ],
+    [
+     "Braiding",
+     "Crossing the bobbins over each other in a set order."
+    ],
+    [
+     "Patterning",
+     "Changing the order to make small diamonds and triangles."
+    ],
+    [
+     "Tightening",
+     "Pulling each cross firmly so the band stays even."
+    ],
+    [
+     "Sewing on",
+     "Stitching the finished band onto the clothes."
+    ]
+   ],
+   "signs": [
+    "Small changes in the pattern from one repeat to the next.",
+    "Metallic threads that cross over coloured cotton.",
+    "A band that is close to even, but not machine-perfect.",
+    "Hand stitches where it is sewn onto the cloth."
+   ],
+   "tools": [
+    [
+     "Kajouja",
+     "A small stand with a cushion."
+    ],
+    [
+     "Bobbins",
+     "Hold the threads."
+    ],
+    [
+     "Metallic thread",
+     "Silver or gold coloured."
+    ],
+    [
+     "Cotton thread",
+     "In bright colours."
+    ],
+    [
+     "Needle",
+     "To sew the band onto clothes."
+    ]
+   ],
+   "time": "Days to weeks",
+   "bestFor": "Patient makers who love fine heritage work.",
+   "artists": [],
+   "guide": [
+    "Look closely at the crossings; hand talli shows small differences.",
+    "Ask whether the metallic thread is real silver or coloured.",
+    "Store it flat and away from damp so the metal does not tarnish."
+   ]
+  },
+  "ar": {
+   "name": "التلي",
+   "feel": "متلألئ",
+   "essence": "أشرطة ضيقة تُضفر باليد من خيوط القطن والخيوط المعدنية اللامعة، تقليد خليجي.",
+   "story": [
+    "التلي حرفة إماراتية وخليجية تقليدية. كانت النساء يضفرن أشرطة زخرفية ضيقة لتزيين أطراف الملابس.",
+    "تُضفر الأشرطة على قاعدة صغيرة على شكل وسادة تُسمّى «الكاجوجة»، مع بكرات كثيرة من الخيوط.",
+    "وتُقاطع الخيوط الفضية أو الذهبية اللامعة مع القطن الملون لعمل نقوش صغيرة، تقاطعاً بعد تقاطع."
+   ],
+   "tech": [
+    [
+     "التجهيز",
+     "تثبيت الخيوط على قاعدة الكاجوجة."
+    ],
+    [
+     "الضفر",
+     "تمرير البكرات فوق بعضها بترتيب محدد."
+    ],
+    [
+     "النقش",
+     "تغيير الترتيب لعمل معيّنات ومثلثات صغيرة."
+    ],
+    [
+     "الشدّ",
+     "شدّ كل تقاطع بقوة ليبقى الشريط متساوياً."
+    ],
+    [
+     "الخياطة",
+     "خياطة الشريط المكتمل على الملابس."
+    ]
+   ],
+   "signs": [
+    "تغيّرات صغيرة في النقش من تكرار إلى آخر.",
+    "خيوط معدنية تتقاطع فوق القطن الملون.",
+    "شريط قريب من التساوي، لكنه ليس كاملاً كالآلة.",
+    "غرز يدوية حيث خيط على القماش."
+   ],
+   "tools": [
+    [
+     "الكاجوجة",
+     "قاعدة صغيرة عليها وسادة."
+    ],
+    [
+     "البكرات",
+     "تحمل الخيوط."
+    ],
+    [
+     "خيط معدني",
+     "بلون الفضة أو الذهب."
+    ],
+    [
+     "خيط قطني",
+     "بألوان زاهية."
+    ],
+    [
+     "إبرة",
+     "لخياطة الشريط على الملابس."
+    ]
+   ],
+   "time": "من أيام إلى أسابيع",
+   "bestFor": "الصنّاع الصبورون الذين يحبون العمل التراثي الدقيق.",
+   "artists": [],
+   "guide": [
+    "انظر عن قرب إلى التقاطعات؛ التلي اليدوي يُظهر اختلافات صغيرة.",
+    "اسأل هل الخيط المعدني فضة حقيقية أم ملوّن.",
+    "احفظه مسطحاً وبعيداً عن الرطوبة كي لا يبهت المعدن."
    ]
   }
  }

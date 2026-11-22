@@ -768,5 +768,194 @@ window.OW_ART_PHOTO = {
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:Yomut_Main_Carpet_MET_DP272802.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "miniature_painting": {
+  "w": 800,
+  "h": 639,
+  "en": "Ustad Mansur, A Chameleon, Mughal India, about 1612",
+  "ar": "الأستاذ منصور، «الحرباء»، الهند المغولية، نحو 1612",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:A_chameleon_by_Ustad_Mansur.jpg"
+ },
+ "miniature_sculpture": {
+  "w": 800,
+  "h": 793,
+  "en": "Netsuke in the shape of a crab on a lotus leaf, Japan, 19th century (Metropolitan Museum of Art)",
+  "ar": "نتسكي على هيئة سلطعون فوق ورقة لوتس، اليابان، القرن التاسع عشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Netsuke_in_the_Shape_of_Crab_on_a_Lotus_Leaf_MET_DP-15452-008.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "wire_sculpture": {
+  "w": 800,
+  "h": 600,
+  "en": "Bicycle sculpture made by hand from recycled wire, Kitwe, Zambia",
+  "ar": "دراجة منحوتة باليد من أسلاك معاد تدويرها، كيتوي، زامبيا",
+  "lic": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Wire_Bike_in_Zambia.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "by": "Hans Hillewaert"
+ },
+ "wax_sculpture": {
+  "w": 800,
+  "h": 618,
+  "en": "Antoine-Louis Barye, Java Deer, wax model, 1838 (Metropolitan Museum of Art)",
+  "ar": "أنطوان لوي باري، «أيل جاوة»، نموذج من الشمع، 1838 (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Java_Deer_MET_148283.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "sand_sculpture": {
+  "w": 800,
+  "h": 1095,
+  "en": "Sand castle on the beach, Playa de la Fontanilla, Marbella, Spain",
+  "ar": "قلعة من الرمل على شاطئ لا فونتانيا، ماربيا، إسبانيا",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Sand_Castle_in_Playa_de_la_Fontanilla_Marbella.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Cabeza2000"
+ },
+ "soapstone_carving": {
+  "w": 800,
+  "h": 1150,
+  "en": "Soapstone carvings from Kisii, Kenya (detail)",
+  "ar": "منحوتات من حجر الصابون من كيسي، كينيا (جزء)",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Soapstone_artistic_carvings.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Susangesare"
+ },
+ "filigree": {
+  "w": 800,
+  "h": 1028,
+  "en": "Filigree casket with sliding top, 17th century (Metropolitan Museum of Art)",
+  "ar": "صندوق من الفيليجري بغطاء منزلق، القرن السابع عشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Filigree_Casket_with_Sliding_Top_MET_DP335175.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "stone_setting": {
+  "w": 800,
+  "h": 597,
+  "en": "Ring in gold set with rubies and coloured glass, with enamel, Mughal India, 18th century (Cleveland Museum of Art)",
+  "ar": "خاتم من الذهب مرصّع بالياقوت والزجاج الملون، مع المينا، الهند المغولية، القرن الثامن عشر (متحف كليفلاند للفنون)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Ring%2C_Mughal_India%2C_18th_century.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "prayer_beads": {
+  "w": 800,
+  "h": 554,
+  "en": "A misbaha from Saudi Arabia",
+  "ar": "مسبحة من المملكة العربية السعودية",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Misbaha_00_%281%29.JPG",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "لا روسا"
+ },
+ "polymer_clay_jewellery": {
+  "w": 800,
+  "h": 600,
+  "en": "Earrings made by hand from polymer clay",
+  "ar": "أقراط مصنوعة باليد من الصلصال الحراري",
+  "lic": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Fimo_earrings.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "by": "A ngelus"
+ },
+ "goldsmithing": {
+  "w": 800,
+  "h": 303,
+  "en": "Crescent-shaped earrings with balls and granulation, 2nd century (Metropolitan Museum of Art)",
+  "ar": "أقراط هلالية بكرات وتحبيب، القرن الثاني الميلادي (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Crescent-shaped_earrings_with_balls_and_granulation_MET_vs25.2.12.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "coil_pottery": {
+  "w": 800,
+  "h": 870,
+  "en": "Two-handled jar made by coiling, Neolithic China, before 2100 BC (Ashmolean Museum)",
+  "ar": "جرّة بمقبضين صُنعت بطريقة الحبال، الصين في العصر الحجري الحديث، قبل 2100 قبل الميلاد (متحف أشموليان)",
+  "lic": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Pot_%28AM_1938.255-1%29.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "by": "Ashmolean Museum, University of Oxford"
+ },
+ "raku": {
+  "w": 800,
+  "h": 600,
+  "en": "Chōjirō, black Raku tea bowl, Japan, about 1575 (Metropolitan Museum of Art)",
+  "ar": "تشوجيرو، وعاء شاي أسود من الراكو، اليابان، نحو 1575 (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:MET_DP247421.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "terracotta": {
+  "w": 800,
+  "h": 800,
+  "en": "Terracotta horse from a chariot group, Cyprus, late 4th century BC (Metropolitan Museum of Art)",
+  "ar": "حصان من التيراكوتا من مجموعة عربة، قبرص، أواخر القرن الرابع قبل الميلاد (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Terracotta_statuette_of_a_horse_MET_DP101838.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "hand_glazing": {
+  "w": 800,
+  "h": 601,
+  "en": "Tea bowl with hare's-fur glaze, Jian ware, China, 12th century (Metropolitan Museum of Art)",
+  "ar": "وعاء شاي بطلاء «فرو الأرنب»، خزف جيان، الصين، القرن الثاني عشر (متحف المتروبوليتان)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:%E4%B8%AD%E5%9C%8B_%E5%8D%97%E5%AE%8B_%E5%BB%BA%E7%AA%AF_%E5%85%94%E6%AF%AB%E9%87%89%E8%8C%B6%E7%A2%97-Tea_Bowl_with_%E2%80%9CHare%E2%80%99s-Fur%E2%80%9D_Glaze_MET_DP372022.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "handloom_weaving": {
+  "w": 800,
+  "h": 531,
+  "en": "Wooden floor loom with two harnesses, Crete, 18th century",
+  "ar": "نول أرضي خشبي بنيرين، جزيرة كريت، القرن الثامن عشر",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:FLOOR_LOOM_WITH_TWO_HARNESSES%2C_CRETE%2C_18TH_C.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Sophia Tsourinaki, SEN Heritage Looms"
+ },
+ "batik": {
+  "w": 800,
+  "h": 889,
+  "en": "Batik with a pattern of fish, on a fire screen, about 1900 (detail, Rijksmuseum)",
+  "ar": "باتيك بنقش أسماك على حاجز مدفأة، نحو 1900 (جزء، متحف رايكس)",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Haardscherm_met_batik_waarop_een_ornamentaal_vissenpatroon_van_snoekbaarzen%2C_BK-1976-43.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+ },
+ "felting": {
+  "w": 800,
+  "h": 600,
+  "en": "A shyrdak felt rug in a Kyrgyz home, Kyzyl-Jar, Kyrgyzstan",
+  "ar": "سجادة شيرداك من اللباد في بيت قيرغيزي، قيزيل جار، قيرغيزستان",
+  "lic": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Shyrdak_on_floor.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "by": "Firespeaker"
+ },
+ "handmade_lace": {
+  "w": 800,
+  "h": 875,
+  "en": "Bobbins on a lace-making pillow, Allhallows Museum, Honiton, England",
+  "ar": "بكرات على وسادة صناعة الدانتيل، متحف أولهالوز، هونيتون، إنجلترا",
+  "lic": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Lace_Bobbins.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "by": "Hu Nhu"
+ },
+ "palm_weaving": {
+  "w": 800,
+  "h": 533,
+  "en": "Palm-frond weaving from Saudi Arabia, Saudi Day exhibition, Geneva, 2023",
+  "ar": "منسوجات من سعف النخيل من المملكة العربية السعودية، معرض اليوم السعودي، جنيف، 2023",
+  "lic": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Inauguration_of_the_%E2%80%9CSaudi_Day_in_Geneva%E2%80%9D_exhibition_and_cultural_event%2C_co-organized_by_WIPO_and_the_Government_of_Saudi_Arabia_in_Geneva%2C_Switzerland%2C_July_2023_-_27.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by/2.0/",
+  "by": "WIPO"
  }
 };

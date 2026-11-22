@@ -19,9 +19,9 @@ if (!defined('OW_MORE_STYLES')) define('OW_MORE_STYLES', [
     'stained_glass', 'mosaic', 'islamic_mosaic', 'islamic_geometric', 'islamic_ornament', 'egyptian_linen', 'textile',
     'manuscript', 'collage', 'conceptual', 'performance', 'architectural', 'printmaking', 'ukiyo_e', 'calligraphy',
 ]);
-/* Three painting styles added to Art Styles on 21 Nov 2026 (owner) that are on Art Styles only, like Sculpture: the Gallery,
+/* Painting styles added to Art Styles on 21 and 22 Nov 2026 (owner) that are on Art Styles only, like Sculpture: the Gallery,
    the upload, the artist profile and the admin lists stay as they were, so they are never offered there */
-if (!defined('OW_STYLES_ONLY')) define('OW_STYLES_ONLY', ['glass_painting', 'fabric_painting', 'murals']);
+if (!defined('OW_STYLES_ONLY')) define('OW_STYLES_ONLY', ['glass_painting', 'fabric_painting', 'murals', 'miniature_painting', 'coffee_painting']);
 /* Three of the hidden styles that ARE shown on Art Styles (in the painting group) and offered as course styles under
    Painting, while the switch stays off (owner, 22 Nov 2026). They stay out of the Gallery, the upload and the profile lists */
 if (!defined('OW_MORE_SHOWN')) define('OW_MORE_SHOWN', ['calligraphy', 'islamic_geometric', 'islamic_ornament']);
