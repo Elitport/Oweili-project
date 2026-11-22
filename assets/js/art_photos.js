@@ -960,10 +960,11 @@ window.OW_ART_PHOTO = {
  },
  "gold_illumination": {
   "w": 800,
-  "h": 1303,
-  "en": "Illuminated frontispiece in gold and lapis blue, Herat, about 1500–1550 (Library of Congress)",
-  "ar": "صفحة افتتاحية مذهّبة بالذهب والأزرق اللازوردي، هراة، نحو 1500–1550 (مكتبة الكونغرس)",
+  "h": 416,
+  "en": "Ghiyath al-Din Mahmud Shirazi, illuminated frontispiece of Sa'di's Bustan and Gulistan (poetry), Shiraz, 1536–1537 (detail, Calouste Gulbenkian Museum)",
+  "ar": "غياث الدين محمود الشيرازي، صفحة افتتاحية مذهّبة لكتابَي «البستان» و«الكلستان» لسعدي (شعر وأدب)، شيراز، 1536–1537 (جزء، متحف كالوست كولبنكيان)",
   "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Illuminated_Frontispiece_WDL6800.png"
+  "page": "https://commons.wikimedia.org/wiki/File:Illuminated_frontispiece_from_the_manuscript_of_Sa%CA%BFd%C4%AB%27s_%22Bustan%22_and_%22Gulistan%22.jpg",
+  "v": "2"
  }
 };
