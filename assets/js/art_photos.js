@@ -966,5 +966,16 @@ window.OW_ART_PHOTO = {
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Illuminated_frontispiece_from_the_manuscript_of_Sa%CA%BFd%C4%AB%27s_%22Bustan%22_and_%22Gulistan%22.jpg",
   "v": "2"
+ },
+ "coffee_painting": {
+  "w": 800,
+  "h": 1066,
+  "en": "Red Fort, Delhi, painted by hand in coffee by Crafthouse, Edanattukara, India",
+  "ar": "القلعة الحمراء في دلهي، مرسومة باليد بالقهوة، من عمل كرافت هاوس، إيدانتوكارا، الهند",
+  "lic": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Coffee_Painting_Red_Fort_at_Delhi.jpg",
+  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "by": "Sadikibnusalim",
+  "v": "2"
  }
 };

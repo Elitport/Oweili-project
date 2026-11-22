@@ -1,5 +1,7 @@
 # Oweili — Saudi Art Platform
 
+- RULE (owner, 22 Nov 2026): At the start of every session, check the git remote; if it is the old Resha-project address, change it to Elitport/Oweili-project before any push.
+
 ## Project Overview
 - Name: Oweili (أويلي)
 - Domain: oweili.com
@@ -61,6 +63,7 @@
 - Art type selection: always guided with example images, never automatic AI detection
 - Local artist photos: never published without a saved consent record
 - Art Styles is handmade only (owner, 22 Nov 2026): every style on Art Styles must be made BY HAND. No printing, no machine production, no factory processes. Hand tools (chisels, needles, a potter's wheel, a kiln) are fine. Each new style's text must make clear it is handmade
+- Art Styles pictures (owner, 22 Nov 2026): every visible style must have a REAL photo so visitors understand it. Hands at work are allowed; faces are NOT (crop them out or choose another photo). Work by living or unnamed makers is allowed if the photo has a free licence (public domain, CC0, CC BY, CC BY-SA) and the credit line is shown. Still not allowed: faces, unlicensed photos, printed or machine-made items, and anything on the "never use again" list
 
 ## Database Tables Needed (not yet built — need approval before creating)
 - Done on the live database (checked 30 Oct 2026): all 8 tables, artworks.is_draft and the 'institute' role are in place. A safe re-run on 30 Oct found everything already there and changed nothing. database_update.sql stays in the project as the record (safe to run more than once)
@@ -145,6 +148,13 @@
 - Deleted on 15 Nov 2026 (owner): the pink brush video assets/video/hero-pink-tall.mp4 (no page used it), from the project and the live site. Backup first: .backups/rejected-video-20261115-083853/hero-pink-tall.mp4 on the server; the file also stays in the git history
 
 ## Features
+
+### Art Styles: real photos check, coffee painting photo, git rule (22 Nov 2026, owner)
+- New picture rules in Business Rules ("Art Styles pictures"). New rule at the top of this file: check the git remote at the start of every session; the remote points to Elitport/Oweili-project again
+- Checked all 100 visible styles: 97 had a real photo, 3 had only a drawing (Coffee Painting, Hand-built Porcelain, Talli)
+- Coffee Painting now has a real photo: the Red Fort, Delhi, painted by hand in coffee by Crafthouse, Edanattukara, India (photo Sadikibnusalim, CC0, Wikimedia Commons; "v":"2")
+- Still no good free photo, so they keep their drawing: Hand-built Porcelain (the free photos found were wheel-thrown or factory porcelain) and Talli (no free photo of Talli braiding on Wikimedia Commons or in museum collections)
+- No text and no other picture changed. Files: assets/js/art_photos.js, assets/img/styles/coffee_painting*, CLAUDE.md. Tables: none
 
 ### Art Styles: Gold Illumination, 100 shown; git remote moved (22 Nov 2026, owner)
 - Gold Illumination / التذهيب added as the 100th shown style, in the painting group (Traditional pill), handmade, with the same card, window, picture and credit rules: picture (since the same day, owner): a detail of the gold and blue border of Ghiyath al-Din Mahmud Shirazi's illuminated frontispiece of Sa'di's Bustan and Gulistan (poetry), Shiraz, 1536–1537 (Calouste Gulbenkian Museum, public domain; the shown part has no writing and no people; version "v":"2" so browsers load the new file). It replaced a Herat frontispiece (Library of Congress) that may have opened a Qur'an: never use that one again. In OW_STYLES_ONLY (art_types.php) and STYLES_ONLY (explore.js), so it is never a Gallery or upload type; offered as a course style under Painting. Art Styles now shows exactly 100 styles (Traditional 39; 124 in the file)
