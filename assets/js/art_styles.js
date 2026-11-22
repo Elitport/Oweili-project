@@ -1,5 +1,5 @@
 /* =====================================================================
- *  art_styles.js: the single source for all art style content (123 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 5 painting styles in art_types.php OW_STYLES_ONLY, 21 and 22 Nov 2026, are on Art Styles only, never Gallery types).
+ *  art_styles.js: the single source for all art style content (124 styles; the Digital and Photography styles and the 15 listed in art_types.php OW_MORE_STYLES are hidden for now; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 6 painting styles in art_types.php OW_STYLES_ONLY, 21 and 22 Nov 2026, are on Art Styles only, never Gallery types).
  *  Used by explore.php (cards + the style window), and read by
  *  art_types.php for the art type names. Never copy this data into a
  *  page: load this file instead.
@@ -23273,6 +23273,148 @@ window.OW_ART_STYLES = [
     "انظر عن قرب إلى التقاطعات؛ التلي اليدوي يُظهر اختلافات صغيرة.",
     "اسأل هل الخيط المعدني فضة حقيقية أم ملوّن.",
     "احفظه مسطحاً وبعيداً عن الرطوبة كي لا يبهت المعدن."
+   ]
+  }
+ },
+ {
+  "id": "gold_illumination",
+  "cat": "traditional",
+  "type": "gold_illumination",
+  "level": "advanced",
+  "en": {
+   "name": "Gold Illumination",
+   "feel": "Radiant",
+   "essence": "Gold leaf and gold paint laid by hand, with fine colours, to decorate pages and borders.",
+   "story": [
+    "Illumination means lighting up a page with gold. Real gold catches the light and makes the page glow.",
+    "In Herat, Tabriz, Istanbul and across the Islamic world, illuminators decorated the opening pages and borders of fine books with gold and lapis blue.",
+    "Every part is still done by hand today: the design is drawn, the gold is laid and burnished, and each tiny scroll is painted with a fine brush."
+   ],
+   "tech": [
+    [
+     "Drawing the design",
+     "Tracing the pattern with fine lines, often from a pricked paper stencil."
+    ],
+    [
+     "Laying gold leaf",
+     "Pressing thin sheets of real gold onto a sticky base."
+    ],
+    [
+     "Shell gold",
+     "Painting with powdered gold mixed with gum."
+    ],
+    [
+     "Burnishing",
+     "Rubbing the gold with an agate stone until it shines."
+    ],
+    [
+     "Fine colour work",
+     "Painting tiny scrolls and leaves in blue, red and white around the gold."
+    ]
+   ],
+   "signs": [
+    "Gold that shines and changes as you move the page.",
+    "Burnish marks and small texture in the gold.",
+    "Fine lines that change a little in thickness.",
+    "Repeated motifs that are close, but never exactly the same."
+   ],
+   "tools": [
+    [
+     "Gold leaf and shell gold",
+     "Real gold, in thin sheets or powder."
+    ],
+    [
+     "Agate burnisher",
+     "A smooth stone to polish the gold."
+    ],
+    [
+     "Fine brushes",
+     "A few hairs for the smallest details."
+    ],
+    [
+     "Mineral colours",
+     "Lapis blue, red and white, mixed with gum."
+    ],
+    [
+     "Smooth paper",
+     "Burnished paper that holds fine lines."
+    ]
+   ],
+   "time": "Weeks to several months",
+   "bestFor": "Very patient painters who love fine detail and gold.",
+   "artists": [],
+   "guide": [
+    "Tilt the page: real gold shines and changes with the light; printed gold looks flat.",
+    "Look with a magnifier for brush marks and burnish texture.",
+    "Keep it framed behind glass, away from sunlight and damp."
+   ]
+  },
+  "ar": {
+   "name": "التذهيب",
+   "feel": "مشعّ",
+   "essence": "ورق الذهب وماء الذهب يوضعان باليد، مع ألوان دقيقة، لتزيين الصفحات والأطر.",
+   "story": [
+    "التذهيب يعني إضاءة الصفحة بالذهب. فالذهب الحقيقي يلتقط الضوء ويجعل الصفحة تتوهج.",
+    "في هراة وتبريز وإسطنبول وأنحاء العالم الإسلامي، زيّن المذهّبون الصفحات الأولى للكتب النفيسة وأطرها بالذهب والأزرق اللازوردي.",
+    "وما زال كل جزء يُعمل باليد حتى اليوم: يُرسم التصميم، ويوضع الذهب ويُصقل، وتُرسم كل لفّة صغيرة بفرشاة رفيعة."
+   ],
+   "tech": [
+    [
+     "رسم التصميم",
+     "تتبّع النقش بخطوط رفيعة، غالباً من ورقة مثقّبة للنقل."
+    ],
+    [
+     "وضع ورق الذهب",
+     "ضغط صفائح رقيقة من الذهب الحقيقي على قاعدة لاصقة."
+    ],
+    [
+     "ماء الذهب",
+     "الرسم بمسحوق الذهب الممزوج بالصمغ."
+    ],
+    [
+     "الصقل",
+     "دعك الذهب بحجر العقيق حتى يلمع."
+    ],
+    [
+     "الألوان الدقيقة",
+     "رسم لفّات وأوراق صغيرة بالأزرق والأحمر والأبيض حول الذهب."
+    ]
+   ],
+   "signs": [
+    "ذهب يلمع ويتغيّر حين تحرّك الصفحة.",
+    "آثار الصقل وملمس خفيف في الذهب.",
+    "خطوط رفيعة يتغيّر سمكها قليلاً.",
+    "زخارف متكررة متقاربة، لكنها لا تتطابق تماماً."
+   ],
+   "tools": [
+    [
+     "ورق الذهب وماء الذهب",
+     "ذهب حقيقي، صفائح رقيقة أو مسحوق."
+    ],
+    [
+     "حجر العقيق",
+     "حجر أملس لصقل الذهب."
+    ],
+    [
+     "فرش رفيعة",
+     "شعيرات قليلة لأصغر التفاصيل."
+    ],
+    [
+     "ألوان معدنية",
+     "أزرق لازوردي وأحمر وأبيض، ممزوجة بالصمغ."
+    ],
+    [
+     "ورق أملس",
+     "ورق مصقول يحمل الخطوط الرفيعة."
+    ]
+   ],
+   "time": "من أسابيع إلى عدة أشهر",
+   "bestFor": "الرسامون الصبورون جداً الذين يحبون التفاصيل الدقيقة والذهب.",
+   "artists": [],
+   "guide": [
+    "أمِل الصفحة: الذهب الحقيقي يلمع ويتغيّر مع الضوء؛ والذهب المطبوع يبدو مسطحاً.",
+    "انظر بعدسة مكبّرة إلى آثار الفرشاة وملمس الصقل.",
+    "ضعه في إطار خلف زجاج، بعيداً عن الشمس والرطوبة."
    ]
   }
  }

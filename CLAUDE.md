@@ -87,7 +87,7 @@
 ## Pages Built
 - index.php — Homepage in the calm style (19 Nov 2026): the painting video as the hero with the title, the two lines, the two buttons and the three trust points; under it Artist of the week and a row of links to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education (see Features)
 - nav.php — Shared navbar (used across all pages)
-- explore.php — Art Styles («الأساليب الفنية» since 21 Nov 2026): an art encyclopedia (99 styles shown: 58 painting and drawing, 13 Sculpture, 10 Handmade jewellery, 7 Pottery & ceramics, 11 Textiles) with a rich window for each (see Features)
+- explore.php — Art Styles («الأساليب الفنية» since 21 Nov 2026): an art encyclopedia (100 styles shown: 59 painting and drawing, 13 Sculpture, 10 Handmade jewellery, 7 Pottery & ceramics, 11 Textiles) with a rich window for each (see Features)
 - marketplace.php — "The Gallery" / «المعرض»: browse and buy artworks (bilingual). The file keeps its old name; visitors only ever see "Gallery"
 - studio.php — retired: it only sends visitors to explore.php (permanent redirect). Its workshop ideas moved to training.php
 - community.php — Community page: real counts and the newest artworks (see Features). HIDDEN FOR NOW, to bring back later (6 Nov 2026, Admin → Settings)
@@ -121,7 +121,7 @@
 - admin_institutes.php — team tool for institutes and courses
 - bashro_api.php — the Bashro data connection (off by default)
 - bashro_send.php — sends requests to Bashro's receive-only door (needs BASHRO_DOOR_SITE / BASHRO_DOOR_KEY in config.php; see Features)
-- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (123 styles, 99 shown; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 5 OW_STYLES_ONLY painting styles are never Gallery types)
+- assets/js/art_styles.js — Shared data file for all art styles (single source of truth), bilingual. art_types.php reads the style names from it (124 styles, 100 shown; the Sculpture, Handmade jewellery, Pottery & ceramics and Textiles styles and the 6 OW_STYLES_ONLY painting styles are never Gallery types)
 - art_types.php — the art type list: the styles (names from art_styles.js; hidden ones marked legacy, OW_MORE_STYLES) plus older types kept only so existing artworks keep their label (marked legacy; not offered in the upload or edit forms, except an artwork's own current type when editing)
 - assets/js/art_covers.js — the drawn picture of each style, shared by explore.php and upload_artwork.php
 - assets/js/art_photos.js + assets/img/styles/ — the real artwork shown on each Art Styles card and window, with its credit and licence (7 Nov 2026)
@@ -145,6 +145,11 @@
 - Deleted on 15 Nov 2026 (owner): the pink brush video assets/video/hero-pink-tall.mp4 (no page used it), from the project and the live site. Backup first: .backups/rejected-video-20261115-083853/hero-pink-tall.mp4 on the server; the file also stays in the git history
 
 ## Features
+
+### Art Styles: Gold Illumination, 100 shown; git remote moved (22 Nov 2026, owner)
+- Gold Illumination / التذهيب added as the 100th shown style, in the painting group (Traditional pill), handmade, with the same card, window, picture and credit rules: picture an illuminated frontispiece in gold and lapis blue, Herat, about 1500–1550 (Library of Congress, public domain; the page carries no writing). In OW_STYLES_ONLY (art_types.php) and STYLES_ONLY (explore.js), so it is never a Gallery or upload type; offered as a course style under Painting. Art Styles now shows exactly 100 styles (Traditional 39; 124 in the file)
+- The project's git remote now points to https://github.com/Elitport/Oweili-project (was …/Resha-project); nothing else in the git settings changed
+- Files: assets/js/art_styles.js, assets/js/art_photos.js, assets/img/styles/gold_illumination*, assets/js/explore.js, art_types.php, CLAUDE.md. Tables: none
 
 ### Art Styles: 23 more handmade styles, 99 shown (22 Nov 2026, owner)
 - Owner rule added to Business Rules: every style on Art Styles is made by hand (no printing, machine or factory processes; hand tools such as chisels, needles, a potter's wheel and a kiln are fine). Each new style's text says it is handmade

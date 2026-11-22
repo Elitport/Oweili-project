@@ -957,5 +957,13 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Inauguration_of_the_%E2%80%9CSaudi_Day_in_Geneva%E2%80%9D_exhibition_and_cultural_event%2C_co-organized_by_WIPO_and_the_Government_of_Saudi_Arabia_in_Geneva%2C_Switzerland%2C_July_2023_-_27.jpg",
   "licUrl": "https://creativecommons.org/licenses/by/2.0/",
   "by": "WIPO"
+ },
+ "gold_illumination": {
+  "w": 800,
+  "h": 1303,
+  "en": "Illuminated frontispiece in gold and lapis blue, Herat, about 1500–1550 (Library of Congress)",
+  "ar": "صفحة افتتاحية مذهّبة بالذهب والأزرق اللازوردي، هراة، نحو 1500–1550 (مكتبة الكونغرس)",
+  "lic": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Illuminated_Frontispiece_WDL6800.png"
  }
 };
