@@ -149,6 +149,12 @@
 
 ## Features
 
+### Art Styles: Handmade Porcelain with a real photo (22 Nov 2026, owner)
+- "Hand-built Porcelain / البورسلين المشكّل باليد" is renamed and widened to "Handmade Porcelain / البورسلين اليدوي": porcelain shaped by hand, pinched or built from slabs and coils, AND thrown by hand on the potter's wheel (the wheel is a hand tool). Its English and Arabic texts say clearly it is made by hand, never cast in a mould or made in a factory. Its inner id stays handbuilt_porcelain, so nothing that uses it changes
+- Picture: a porcelain cup thrown by hand on the potter's wheel, Sèvres, France (only hands, no face; photo Coyau, CC BY-SA 3.0, Wikimedia Commons; "v":"2"). The drawn cover stays as the fallback
+- Talli keeps its drawing until the owner sends a photo. No other style changed
+- Files: assets/js/art_styles.js, assets/js/art_photos.js, assets/img/styles/handbuilt_porcelain*, CLAUDE.md. Tables: none
+
 ### Art Styles: real photos check, coffee painting photo, git rule (22 Nov 2026, owner)
 - New picture rules in Business Rules ("Art Styles pictures"). New rule at the top of this file: check the git remote at the start of every session; the remote points to Elitport/Oweili-project again
 - Checked all 100 visible styles: 97 had a real photo, 3 had only a drawing (Coffee Painting, Hand-built Porcelain, Talli)

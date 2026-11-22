@@ -977,5 +977,16 @@ window.OW_ART_PHOTO = {
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
   "by": "Sadikibnusalim",
   "v": "2"
+ },
+ "handbuilt_porcelain": {
+  "w": 800,
+  "h": 800,
+  "en": "A porcelain cup thrown by hand on the potter's wheel, Sèvres, France",
+  "ar": "فنجان من البورسلين يُشكَّل باليد على عجلة الخزّاف، سيفر، فرنسا",
+  "lic": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:S%C3%A8vres_-_Grand_atelier_-_%C3%A9bauchage_032.jpg",
+  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "by": "Coyau",
+  "v": "2"
  }
 };

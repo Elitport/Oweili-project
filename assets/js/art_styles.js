@@ -22004,30 +22004,30 @@ window.OW_ART_STYLES = [
   "type": "handbuilt_porcelain",
   "level": "advanced",
   "en": {
-   "name": "Hand-built Porcelain",
+   "name": "Handmade Porcelain",
    "feel": "Pure",
-   "essence": "Fine, white porcelain shaped by hand by pinching, slabs or coils, without a wheel or a mould.",
+   "essence": "Fine, white porcelain shaped by hand: thrown on the potter's wheel, pinched, or built from slabs and coils. Never cast in a mould or made in a factory.",
    "story": [
     "Porcelain was first made in China more than a thousand years ago, from a fine white clay called kaolin.",
-    "For centuries most porcelain was thrown on a wheel or pressed in moulds.",
-    "Today many potters shape it by hand instead. Thin walls let light glow through, and each piece keeps the touch of the fingers."
+    "Potters have long thrown it by hand on the wheel. The wheel only turns: the hands open, lift and thin every wall.",
+    "Today many potters also pinch it or build it from slabs. Either way, each piece keeps the touch of the hands, and thin walls let light glow through."
    ],
    "tech": [
+    [
+     "Throwing on the wheel",
+     "Centring the clay on the turning wheel, then opening and lifting the walls by hand."
+    ],
     [
      "Pinching",
      "Pressing a ball of clay into a thin bowl with the fingers."
     ],
     [
-     "Slab building",
-     "Rolling thin sheets and joining them."
-    ],
-    [
-     "Coiling",
-     "Building with fine rolls of porcelain."
+     "Slab and coil building",
+     "Joining thin rolled sheets or fine rolls of porcelain."
     ],
     [
      "Thinning",
-     "Scraping the wall until light can pass through."
+     "Scraping or trimming the wall until light can pass through."
     ],
     [
      "High firing",
@@ -22036,9 +22036,9 @@ window.OW_ART_STYLES = [
    ],
    "signs": [
     "Light glowing through thin walls.",
-    "Soft finger marks in the surface.",
+    "Fine throwing rings or soft finger marks in the surface.",
     "Edges that are gently uneven.",
-    "A shape that leans a little, never machine-straight."
+    "Small differences between pieces of a set: no two are exactly the same."
    ],
    "tools": [
     [
@@ -22046,12 +22046,12 @@ window.OW_ART_STYLES = [
      "A fine white clay."
     ],
     [
-     "Rolling pin and cloth",
-     "For thin slabs."
+     "Potter's wheel",
+     "A turning wheel; the hands do the shaping."
     ],
     [
-     "Scrapers",
-     "Metal or rubber, to thin the walls."
+     "Scrapers and trimming tools",
+     "Metal or rubber, to thin and finish the walls."
     ],
     [
      "Sponge",
@@ -22066,36 +22066,36 @@ window.OW_ART_STYLES = [
    "bestFor": "Careful potters who love fine, delicate work.",
    "artists": [],
    "guide": [
-    "Hold it to the light: thin, hand-built porcelain often glows.",
-    "Look for finger marks; moulded pieces look smooth and identical.",
+    "Hold it to the light: thin, handmade porcelain often glows.",
+    "Look for throwing rings or finger marks; moulded pieces look smooth and identical.",
     "Wash it gently by hand."
    ]
   },
   "ar": {
-   "name": "البورسلين المشكّل باليد",
+   "name": "البورسلين اليدوي",
    "feel": "نقي",
-   "essence": "بورسلين أبيض رقيق يُشكَّل باليد بالقرص أو الشرائح أو الحبال، دون عجلة أو قالب.",
+   "essence": "بورسلين أبيض رقيق يُشكَّل باليد: يُدار على عجلة الخزّاف، أو يُقرص بالأصابع، أو يُبنى بالشرائح والحبال. لا يُصبّ في قالب ولا يُصنع في مصنع.",
    "story": [
     "صُنع البورسلين أول مرة في الصين قبل أكثر من ألف عام، من طين أبيض ناعم اسمه الكاولين.",
-    "وطوال قرون كان معظم البورسلين يُدار على العجلة أو يُضغط في القوالب.",
-    "واليوم يشكّله خزافون كثيرون باليد بدلاً من ذلك. فالجدران الرقيقة يتوهج الضوء خلالها، وتحتفظ كل قطعة بلمسة الأصابع."
+    "ومنذ زمن طويل يشكّله الخزافون باليد على العجلة. فالعجلة تدور فقط، واليدان تفتحان كل جدار وترفعانه وترقّقانه.",
+    "واليوم يشكّله خزافون كثيرون أيضاً بالقرص أو بالشرائح. وفي كل الأحوال تحتفظ كل قطعة بلمسة اليدين، ويتوهج الضوء خلال جدرانها الرقيقة."
    ],
    "tech": [
+    [
+     "التشكيل على العجلة",
+     "توسيط الطين على العجلة الدوّارة، ثم فتح الجدران ورفعها باليد."
+    ],
     [
      "القرص",
      "ضغط كرة من الطين بالأصابع لتصير وعاءً رقيقاً."
     ],
     [
-     "البناء بالشرائح",
-     "فرد صفائح رقيقة ووصلها."
-    ],
-    [
-     "البناء بالحبال",
-     "البناء بحبال رفيعة من البورسلين."
+     "البناء بالشرائح والحبال",
+     "وصل صفائح رقيقة أو حبال رفيعة من البورسلين."
     ],
     [
      "الترقيق",
-     "كشط الجدار حتى يمر الضوء خلاله."
+     "كشط الجدار أو تشذيبه حتى يمر الضوء خلاله."
     ],
     [
      "الحرق العالي",
@@ -22104,9 +22104,9 @@ window.OW_ART_STYLES = [
    ],
    "signs": [
     "ضوء يتوهج عبر الجدران الرقيقة.",
-    "آثار أصابع ناعمة على السطح.",
+    "حلقات دقيقة من التشكيل على العجلة أو آثار أصابع ناعمة على السطح.",
     "حواف غير متساوية برفق.",
-    "شكل يميل قليلاً، لا استقامة آلة فيه."
+    "فروق صغيرة بين قطع الطقم الواحد: لا تتطابق قطعتان تماماً."
    ],
    "tools": [
     [
@@ -22114,12 +22114,12 @@ window.OW_ART_STYLES = [
      "طين أبيض ناعم."
     ],
     [
-     "أسطوانة فرد وقماش",
-     "للشرائح الرقيقة."
+     "عجلة الخزّاف",
+     "عجلة تدور، واليدان تتوليان التشكيل."
     ],
     [
-     "مكاشط",
-     "معدنية أو مطاطية لترقيق الجدران."
+     "مكاشط وأدوات تشذيب",
+     "معدنية أو مطاطية لترقيق الجدران وإنهائها."
     ],
     [
      "إسفنجة",
@@ -22134,8 +22134,8 @@ window.OW_ART_STYLES = [
    "bestFor": "الخزافون الحريصون الذين يحبون العمل الرقيق.",
    "artists": [],
    "guide": [
-    "ارفعه نحو الضوء: البورسلين الرقيق المشكّل باليد يتوهج غالباً.",
-    "ابحث عن آثار الأصابع؛ القطع المصبوبة في القوالب ناعمة ومتطابقة.",
+    "ارفعه نحو الضوء: البورسلين اليدوي الرقيق يتوهج غالباً.",
+    "ابحث عن حلقات العجلة أو آثار الأصابع؛ القطع المصبوبة في القوالب ناعمة ومتطابقة.",
     "اغسله برفق باليد."
    ]
   }
