@@ -56,6 +56,9 @@
   var NOT_IN_GALLERY = ['sculpture', 'jewellery', 'pottery', 'textiles'];
   /* + Pottery & ceramics and Textiles, and three painting styles that are on Art Styles only (owner, 21 Nov 2026; art_types.php OW_STYLES_ONLY) */
   var STYLES_ONLY = ['glass_painting', 'fabric_painting', 'murals'];
+  /* Arabic Calligraphy, Islamic Geometric Art and Islamic Ornamental Art are shown while the other hidden styles stay hidden
+     (owner, 22 Nov 2026); they are not Gallery types then, so no "From Our Gallery" part (explore.php OW_MORE_SHOWN) */
+  STYLES_ONLY = STYLES_ONLY.concat(window.OW_MORE_SHOWN || []);
   if (MORE_OFF) CATS = CATS.filter(function (c) { return c[0] !== 'heritage'; });
   var LEVELS = {
     beginner: ['Beginner', 'مبتدئ', 1],

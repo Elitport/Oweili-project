@@ -49,7 +49,7 @@ function owCourseArtStyles(): array {
     foreach ($types as $id => $t) {
         $cat = (string) ($t['cat'] ?? '');
         if (isset($out[$cat]) && $cat !== 'painting') $out[$cat][$id] = [$t['en'], $t['ar']];
-        elseif ((empty($t['legacy']) || in_array((string) $id, OW_STYLES_ONLY, true)) && empty($t['topic_only']) && $cat !== '') $out['painting'][$id] = [$t['en'], $t['ar']];
+        elseif ((empty($t['legacy']) || in_array((string) $id, OW_STYLES_ONLY, true) || in_array((string) $id, OW_MORE_SHOWN, true)) && empty($t['topic_only']) && $cat !== '') $out['painting'][$id] = [$t['en'], $t['ar']];   // + the 3 hidden styles shown on Art Styles (22 Nov 2026)
     }
     return $out;
 }
