@@ -1011,3 +1011,27 @@ html body.s-b .c-home .c-hero:not(#ow-none) .hero-sub { margin-bottom: clamp(22p
 .ow-footer-ecom { max-width: 1200px; margin: var(--space-xs) auto 0; display: flex; align-items: center; gap: var(--space-xs); font-size: 12px; color: var(--color-body); }
 .ow-footer-ecom[hidden] { display: none; }
 .ow-footer-ecom img { width: 56px; height: 56px; object-fit: contain; }
+
+/* =====================================================================
+   Compact footer (owner, 24 Nov 2026): small text (12 to 13 px), a small logo, the links, the email and the
+   company line on as few lines as possible, little space at the bottom. Readable on phones (tap areas kept)
+   ===================================================================== */
+html body:not(.cert-page):not(.label-page) .ow-footer { padding: 16px 24px 14px; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-in { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 20px; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-brand { font-size: 13px; gap: 6px; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-brand svg { width: 16px; height: 16px; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-links { gap: 4px 18px; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-links a,
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-mail { font-size: 13px; padding: 12px 4px; margin: -12px -4px; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-social a { width: 32px; height: 32px; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-copy { margin: 8px auto 0; padding-top: 0; font-size: 12px; line-height: 1.6; gap: 2px 16px; justify-content: space-between; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-copy .ow-footer-legal { margin: 0; max-width: none; font-size: 12px; line-height: 1.6; }
+html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-ecom { margin-top: 6px; }
+@media (max-width: 640px) {
+  html body:not(.cert-page):not(.label-page) .ow-footer { padding: 14px 16px 12px; }
+  html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-in { justify-content: center; gap: 4px 18px; }
+  html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-copy { flex-direction: column; align-items: center; text-align: center; gap: 2px; }
+}
+/* Home page (owner, 24 Nov 2026): the hero, then straight to the footer, with no empty space between them */
+html body:not(.cert-page):not(.label-page):has(.c-home) .ow-footer { margin-top: 0; }
+@media (max-width: 640px) { .c-home .c-under { padding-bottom: 6px; } }

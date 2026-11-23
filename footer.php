@@ -25,17 +25,18 @@ if (!function_exists('owLogoMark')) {
 $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspecialchars($en, ENT_QUOTES, 'UTF-8') . '</span><span class="bi-ar" lang="ar">' . htmlspecialchars($ar, ENT_QUOTES, 'UTF-8') . '</span>';
 ?>
 <footer class="ow-footer">
+  <?php /* Compact footer (owner, 24 Nov 2026): small text and logo, few lines. Links already in the top menu
+           (Home logo, Terms, Contact, Gifts) are not repeated here. The company line, the email and the
+           hidden badge place stay (required by law). */ ?>
   <div class="ow-footer-in">
-    <a class="ow-footer-brand" href="index.php" aria-label="Oweili · أويلي"><?php owLogoMark(22); ?>OWEILI</a>
+    <span class="ow-footer-brand" aria-label="Oweili · أويلي"><?php owLogoMark(16); ?>OWEILI</span>
     <nav aria-label="Footer · روابط الموقع">
       <ul class="ow-footer-links">
-<?php $owFtGift = false; try { if (function_exists('getDB')) { require_once __DIR__ . '/gallery_lib.php'; $owFtGift = owGiftsPageOn(); } } catch (Throwable $e) {} if ($owFtGift): ?>        <li><a href="gifts.php"><?= $owFt('Gifts', 'الهدايا') ?></a></li><?php endif; /* Gifts hidden for now (6 Nov 2026) */ ?>
         <li><a href="about.php"><?= $owFt('About', 'من نحن') ?></a></li>
         <li><a href="privacy.php"><?= $owFt('Privacy', 'الخصوصية') ?></a></li>
-        <li><a href="terms.php"><?= $owFt('Terms', 'الشروط') ?></a></li>
-        <li><a href="support.php#sp-form"><?= $owFt('Contact', 'تواصل معنا') ?></a></li>
       </ul>
     </nav>
+    <a class="ow-footer-mail" href="mailto:<?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?>" dir="ltr"><?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?></a>
     <?php $owSocialSet = array_filter($OW_SOCIAL, fn($u) => preg_match('#^https://#', $u)); if ($owSocialSet): ?>
       <div class="ow-footer-social">
         <?php foreach ($owSocialSet as $k => $url): ?>
@@ -44,10 +45,9 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
       </div>
     <?php endif; ?>
   </div>
-  <div class="ow-footer-copy"><span><?= $owFt('© ' . date('Y') . ' Oweili · The home of real art', '© ' . date('Y') . ' أويلي · بيت الفن الأصيل') ?></span>
-    <a class="ow-footer-mail" href="mailto:<?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?>" dir="ltr"><?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?></a></div>
   <?php $owUnn = defined('OW_COMPANY_UNN') ? OW_COMPANY_UNN : '7053193244'; /* legal company line (owner, 21 Nov 2026) */ ?>
-  <p class="ow-footer-legal"><?= $owFt('Oweili is a service of Elitport Company Ltd. · Unified National Number ' . $owUnn . ' · Saudi Arabia', 'أويلي إحدى خدمات شركة إيليتبورت المحدودة · الرقم الوطني الموحد ' . $owUnn . ' · المملكة العربية السعودية') ?></p>
+  <div class="ow-footer-copy"><span><?= $owFt('© ' . date('Y') . ' Oweili · The home of real art', '© ' . date('Y') . ' أويلي · بيت الفن الأصيل') ?></span>
+    <span class="ow-footer-legal"><?= $owFt('Oweili is a service of Elitport Company Ltd. · Unified National Number ' . $owUnn . ' · Saudi Arabia', 'أويلي إحدى خدمات شركة إيليتبورت المحدودة · الرقم الوطني الموحد ' . $owUnn . ' · المملكة العربية السعودية') ?></span></div>
   <?php /* E-commerce authentication badge and certificate number (Saudi Business Center / maroof): ready, HIDDEN until the owner has them.
            To show it: put the badge image path and the certificate number below; it appears only when both are filled in. */
   $owEcomBadge = ''; $owEcomNo = ''; ?>
