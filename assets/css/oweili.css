@@ -1031,6 +1031,7 @@ html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-ecom { margin-t
   html body:not(.cert-page):not(.label-page) .ow-footer { padding: 14px 16px 12px; }
   html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-in { justify-content: center; gap: 4px 18px; }
   html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-copy { flex-direction: column; align-items: center; text-align: center; gap: 2px; }
+  html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-copy .ow-footer-legal { text-align: center; }
 }
 /* Home page (owner, 24 Nov 2026): the hero, then straight to the footer, with no empty space between them */
 html body:not(.cert-page):not(.label-page):has(.c-home) .ow-footer { margin-top: 0; }
