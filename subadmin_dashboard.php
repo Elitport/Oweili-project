@@ -23,7 +23,7 @@ if ($role !== 'sub_admin' && $role !== 'admin') {
 
 /* ---- Approve / reject actions (CSRF-checked) ---- */
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action'])) {
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token'); }
     $action = $_POST['action'];
     $awId   = (int) ($_POST['artwork_id'] ?? 0);
     if ($awId > 0 && ($action === 'approve_art' || $action === 'reject_art')) {
@@ -106,7 +106,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
   <div class="top">
     <div>
       <h1>Artwork Approvals</h1>
-      <div class="sub">Review and approve or reject pending artwork submissions.</div>
+      <div class="sub">Review and approve or reject pending artwork submissions</div>
     </div>
     <div class="top-actions">
       <?php owCornerControls('tglLang()'); ?>
@@ -165,7 +165,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
 /* Bilingual — swap known EN strings to AR (and back) by walking text nodes. */
 const ADICT = {
   "Artwork Approvals":"اعتماد الأعمال الفنية",
-  "Review and approve or reject pending artwork submissions.":"راجع الأعمال المُرسلة ووافق عليها أو ارفضها.",
+  "Review and approve or reject pending artwork submissions":"راجع الأعمال المُرسلة ووافق عليها أو ارفضها",
   "Log out":"تسجيل الخروج",
   "Articles":"المقالات","With Proof of Process":"مع دليل المراحل","Without Stage Photos":"بدون صور مراحل",
   "Pending Artworks":"الأعمال المعلّقة",

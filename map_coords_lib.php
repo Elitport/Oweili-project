@@ -62,7 +62,7 @@ function owCoordsFromPost(string $lat, string $lng, string $link): array {
     }
     if ($la === '' && $lo === '') return ['c' => false, 'err' => null];
     $c = ($la === 'x' || $lo === 'x' || $la === '' || $lo === '') ? null : owCoordsOk($la, $lo);
-    return $c ? ['c' => $c, 'err' => null] : ['c' => null, 'err' => ['Please check the two numbers: latitude from -90 to 90, longitude from -180 to 180 (for example 24.647142 and 46.710704).', 'يرجى مراجعة الرقمين: خط العرض من -90 إلى 90، وخط الطول من -180 إلى 180 (مثلاً 24.647142 و 46.710704).']];
+    return $c ? ['c' => $c, 'err' => null] : ['c' => null, 'err' => ['Please check the two numbers: latitude from -90 to 90, longitude from -180 to 180 (for example 24.647142 and 46.710704)', 'يرجى مراجعة الرقمين: خط العرض من -90 إلى 90، وخط الطول من -180 إلى 180 (مثلا 24.647142 و 46.710704)']];
 }
 /* the map preview asks the server to open a short Google Maps link (staff pages only, with the security token) */
 function owCoordsResolveEndpoint(): void {

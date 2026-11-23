@@ -95,19 +95,19 @@ if ($needsOk && $waiting === '') {
   <div class="card sig-card">
     <h1><?= owBi('My signature', 'توقيعي') ?></h1>
     <p><?= owBi('Draw your signature once. It appears on the Certificate of Authenticity of every artwork you sell on Oweili. Only you and the Oweili team see it.', 'ارسم توقيعك مرة واحدة. يظهر على شهادة الأصالة لكل عمل تبيعه في أويلي. لا يراه إلا أنت وفريق أويلي.') ?></p>
-    <?php if ($needsOk): ?><p class="sig-line"><?= owBi('A new or changed signature is checked by the Oweili team first. Your certificates show it once it is approved.', 'يراجع فريق أويلي التوقيع الجديد أو المعدّل أولاً، ويظهر على شهاداتك بعد الموافقة عليه.') ?></p><?php endif; ?>
+    <?php if ($needsOk): ?><p class="sig-line"><?= owBi('A new or changed signature is checked by the Oweili team first. Your certificates show it once it is approved.', 'يراجع فريق أويلي التوقيع الجديد أو المعدّل أولا، ويظهر على شهاداتك بعد الموافقة عليه') ?></p><?php endif; ?>
     <?php if ($done === 'wait'): ?><div class="ok-box" style="display:block"><?= owBi('Sent. Your signature is waiting for approval by the Oweili team.', 'تم الإرسال. توقيعك بانتظار موافقة فريق أويلي.') ?></div><?php endif; ?>
     <?php if ($done === 'remove_wait'): ?><div class="ok-box" style="display:block"><?= owBi('Sent. Removing your signature is waiting for approval by the Oweili team.', 'تم الإرسال. حذف توقيعك بانتظار موافقة فريق أويلي.') ?></div><?php endif; ?>
     <?php if ($done === 'cancelled'): ?><div class="ok-box" style="display:block"><?= owBi('Done. Nothing is waiting any more.', 'تم. لا شيء بانتظار الموافقة الآن.') ?></div><?php endif; ?>
     <?php if ($lastNo !== ''): ?><div class="err-box" style="display:block"><?= owBi('Your last signature was not approved. The reason: ', 'لم تتم الموافقة على توقيعك الأخير. السبب: ') ?><?= e($lastNo) ?></div><?php endif; ?>
     <?php if ($done === 'saved'): ?><div class="ok-box" style="display:block"><?= owBi('Saved. Your signature is now on your certificates.', 'تم الحفظ. توقيعك الآن على شهاداتك.') ?></div><?php endif; ?>
-    <?php if ($done === 'removed'): ?><div class="ok-box" style="display:block"><?= owBi('Your signature was removed.', 'تم حذف توقيعك.') ?></div><?php endif; ?>
+    <?php if ($done === 'removed'): ?><div class="ok-box" style="display:block"><?= owBi('Your signature was removed', 'تم حذف توقيعك') ?></div><?php endif; ?>
     <?php if ($err !== ''): [$ee, $ea] = owSigError($err); ?><div class="err-box" style="display:block"><?= owBi($ee, $ea) ?></div><?php endif; ?>
     <form method="post" action="signature.php" id="sig-form">
       <?= csrfField() ?>
       <input type="hidden" name="sig_data" id="sig-data">
       <canvas class="sig-pad" id="sig-pad" aria-label="Signature pad · لوحة التوقيع"></canvas>
-      <p class="sig-line"><?= owBi('Sign inside the box with your finger or mouse.', 'وقّع داخل المربع بإصبعك أو بالفأرة.') ?></p>
+      <p class="sig-line"><?= owBi('Sign inside the box with your finger or mouse', 'وقّع داخل المربع بإصبعك أو بالفأرة') ?></p>
       <div class="sig-acts">
         <button type="submit" class="btn btn-primary"><?= owBi('Save signature', 'احفظ التوقيع') ?></button>
         <button type="button" class="btn btn-secondary" id="sig-clear"><?= owBi('Clear', 'امسح') ?></button>
@@ -118,7 +118,7 @@ if ($needsOk && $waiting === '') {
     <div class="sig-now">
       <p><b><?= owBi('Waiting for approval', 'بانتظار الموافقة') ?></b> <span class="pill off"><?= owBi('Not on your certificates yet', 'ليس على شهاداتك بعد') ?></span></p>
       <?php if ($waiting === 'new' && owSigExists((string) $uid, true)): ?><img src="<?= e(owSigDataUri((string) $uid, true)) ?>" alt="Your waiting signature · توقيعك بانتظار الموافقة">
-      <?php else: ?><p class="sig-line"><?= owBi('You asked to remove your signature.', 'طلبت حذف توقيعك.') ?></p><?php endif; ?>
+      <?php else: ?><p class="sig-line"><?= owBi('You asked to remove your signature', 'طلبت حذف توقيعك') ?></p><?php endif; ?>
       <form method="post" action="signature.php" style="margin-top:var(--space-xs)">
         <?= csrfField() ?><input type="hidden" name="do" value="cancel">
         <button class="btn btn-secondary btn-sm"><?= owBi('Cancel this request', 'ألغِ هذا الطلب') ?></button>
@@ -148,7 +148,7 @@ if ($needsOk && $waiting === '') {
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(n){ c.addEventListener(n, function(){ down = false; }); });
   document.getElementById('sig-clear').addEventListener('click', size);
   document.getElementById('sig-form').addEventListener('submit', function(e){
-    if (!drawn) { e.preventDefault(); alert(document.documentElement.dir === 'rtl' ? 'يرجى رسم توقيعك أولاً.' : 'Please draw your signature first.'); return; }
+    if (!drawn) { e.preventDefault(); alert(document.documentElement.dir === 'rtl' ? 'يرجى رسم توقيعك أولا' : 'Please draw your signature first'); return; }
     document.getElementById('sig-data').value = c.toDataURL('image/png');
   });
   size(); window.addEventListener('resize', function(){ if (!drawn) size(); });

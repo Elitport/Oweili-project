@@ -37,7 +37,7 @@ if (is_file($logFile) && ($fh = @fopen($logFile, 'r'))) {
   <div class="top">
     <div>
       <h1><?= owBi('Error log', 'سجل الأخطاء') ?></h1>
-      <div class="sub"><?= owBi('Private. Visitors never see these. Newest first.', 'خاص. لا يراه الزوار أبداً. الأحدث أولاً.') ?></div>
+      <div class="sub"><?= owBi('Private. Visitors never see these. Newest first.', 'خاص. لا يراه الزوار أبدا. الأحدث أولا.') ?></div>
     </div>
     <div class="top-actions">
       <?php owCornerControls('tgl()'); ?>
@@ -46,7 +46,7 @@ if (is_file($logFile) && ($fh = @fopen($logFile, 'r'))) {
   </div>
   <div class="card">
     <?php if (!$lines): ?>
-      <p><?= owBi('No errors have been written yet.', 'لم تُسجَّل أي أخطاء حتى الآن.') ?></p>
+      <p><?= owBi('No errors have been written yet', 'لم تُسجَّل أي أخطاء حتى الآن') ?></p>
     <?php else: ?>
       <ul class="el-list"><?php foreach ($lines as $l): ?><li><?= e($l) ?></li><?php endforeach; ?></ul>
     <?php endif; ?>

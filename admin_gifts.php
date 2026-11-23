@@ -66,9 +66,9 @@ owAdminTop('Gift requests', 'طلبات الهدايا', '
 ?>
   <h1><?= owBi('Gift requests', 'طلبات الهدايا') ?></h1>
   <p class="mini"><?= owBi('From "Give a gift that lasts". Call or write to the collector, confirm the price, then arrange wrapping and delivery by hand. No payment is taken on the site yet.', 'من «أهدِ ما يبقى». اتصل بالمقتني أو راسله، أكّد السعر، ثم رتّب التغليف والتوصيل بنفسك. لا يُدفع أي مبلغ في الموقع بعد.') ?></p>
-  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The gifts table is not set up yet (night_update.sql).', 'جدول الهدايا غير مُعدّ بعد (night_update.sql).') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
-  <?php if (isset($_GET['unpaid'])): ?><div class="alert alert-error"><?= owBi('A custom gift can only move to In progress or Done after it is marked as paid.', 'لا ينتقل الطلب الخاص إلى «قيد التنفيذ» أو «تم» إلا بعد تسجيل الدفع.') ?></div><?php endif; ?>
+  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The gifts table is not set up yet (night_update.sql)', 'جدول الهدايا غير مُعدّ بعد (night_update.sql)') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved', 'تم الحفظ') ?></div><?php endif; ?>
+  <?php if (isset($_GET['unpaid'])): ?><div class="alert alert-error"><?= owBi('A custom gift can only move to In progress or Done after it is marked as paid', 'لا ينتقل الطلب الخاص إلى «قيد التنفيذ» أو «تم» إلا بعد تسجيل الدفع') ?></div><?php endif; ?>
 
 <?php if ($one): $o = $OCC[$one['occasion']] ?? ['en' => $one['occasion'], 'ar' => $one['occasion']]; ?>
   <div class="card">
@@ -92,7 +92,7 @@ owAdminTop('Gift requests', 'طلبات الهدايا', '
             <button class="btn btn-accent btn-sm"><?= owBi('Confirm: it is paid', 'تأكيد: تم الدفع') ?></button></form></details>
         <?php endif; ?></dd>
       <?php endif; ?>
-      <dt><?= owBi('Surprise', 'مفاجأة') ?></dt><dd><?= (int) $one['surprise'] ? owBi('Yes: never show the price to the recipient', 'نعم: لا يُظهر السعر للمُهدى إليه أبداً') : owBi('No', 'لا') ?></dd>
+      <dt><?= owBi('Surprise', 'مفاجأة') ?></dt><dd><?= (int) $one['surprise'] ? owBi('Yes: never show the price to the recipient', 'نعم: لا يُظهر السعر للمُهدى إليه أبدا') : owBi('No', 'لا') ?></dd>
       <dt><?= owBi('Card message', 'رسالة البطاقة') ?></dt><dd dir="auto"><?= $one['card_message'] !== '' ? nl2br(e((string) $one['card_message'])) : '—' ?></dd>
       <dt><?= owBi('Delivery date', 'تاريخ التوصيل') ?></dt><dd><?php [$xe, $xa] = owDateBi($one['delivery_date']); ?><?= owBi($xe, $xa) ?></dd>
       <dt><?= owBi('Recipient', 'المُهدى إليه') ?></dt><dd dir="auto"><?= e((string) $one['recipient_name']) ?><?php if ($one['recipient_phone'] !== ''): ?> · <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', (string) $one['recipient_phone'])) ?>" dir="ltr"><?= e((string) $one['recipient_phone']) ?></a><?php endif; ?><br><?= e((string) $one['recipient_city']) ?><br><?= nl2br(e((string) $one['recipient_address'])) ?></dd>
@@ -114,7 +114,7 @@ owAdminTop('Gift requests', 'طلبات الهدايا', '
   <nav class="tabs"><a class="tab<?= $filter === '' ? ' active' : '' ?>" href="admin_gifts.php"><?= owBi('All', 'الكل') ?> (<?= array_sum($counts) ?>)</a>
     <?php foreach ($STATUS as $sk => $sl): ?><a class="tab<?= $filter === $sk ? ' active' : '' ?>" href="admin_gifts.php?status=<?= $sk ?>"><?= owBi($sl[0], $sl[1]) ?> (<?= (int) ($counts[$sk] ?? 0) ?>)</a><?php endforeach; ?></nav>
   <div class="card">
-    <?php if (!$list): ?><p class="mini"><?= owBi('No gift requests here yet.', 'لا طلبات هدايا هنا بعد.') ?></p><?php endif; ?>
+    <?php if (!$list): ?><p class="mini"><?= owBi('No gift requests here yet', 'لا طلبات هدايا هنا بعد') ?></p><?php endif; ?>
     <?php foreach ($list as $g): $o = $OCC[$g['occasion']] ?? ['en' => $g['occasion'], 'ar' => $g['occasion']]; [$de, $da] = owDateBi($g['created_at']); [$xe, $xa] = owDateBi($g['delivery_date']); ?>
     <a class="g-row" href="admin_gifts.php?id=<?= (int) $g['id'] ?>">
       <span><b>#<?= (int) $g['id'] ?> · <?= owBi($o['en'], $o['ar']) ?> · <?= $g['mode'] === 'ready' ? e((string) ($g['title_en'] ?? '—')) : owBi('Custom artwork', 'عمل خاص') ?></b>

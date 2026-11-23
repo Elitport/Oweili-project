@@ -101,7 +101,7 @@ function owSaveInquiry(array $aw, array $v, int $buyerId = 0): bool {
         $artEn = (string) ($aw['artist_en'] ?? ''); $artAr = (string) (($aw['artist_ar'] ?? '') ?: $artEn);
         owReqTellBuyer($v['email'], 'We received your request · وصلنا طلبك',
             'Thank you, ' . $v['name'] . '. We received your interest in "' . $aw['title_en'] . '" by ' . $artEn . '. The Oweili team will contact you soon about this artwork. Nothing is charged yet.',
-            'شكراً يا ' . $v['name'] . '. وصلنا اهتمامك بعمل «' . (($aw['title_ar'] ?? '') ?: $aw['title_en']) . '» للفنان ' . $artAr . '. سيتواصل معك فريق أويلي قريباً بخصوص هذا العمل. لا يُدفع أي مبلغ الآن.',
+            'شكرا يا ' . $v['name'] . '. وصلنا اهتمامك بعمل «' . (($aw['title_ar'] ?? '') ?: $aw['title_en']) . '» للفنان ' . $artAr . '. سيتواصل معك فريق أويلي قريبا بخصوص هذا العمل. لا يُدفع أي مبلغ الآن.',
             'artwork.php?id=' . (int) $aw['id']);
     } catch (Throwable $e) { error_log('inquiry: visitor email: ' . $e->getMessage()); }
     return true;

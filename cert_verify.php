@@ -53,8 +53,8 @@ if (!headers_sent()) header('Cache-Control: no-store');
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <base href="<?= e(owBase()) ?>">
 <?php owSeo(['en' => 'Verify a Certificate of Authenticity', 'ar' => 'تحقق من شهادة الأصالة',
-             'desc_en' => 'Type the number on an Oweili certificate, or scan its QR code, to see if it is real.',
-             'desc_ar' => 'اكتب رقم شهادة أويلي أو امسح رمزها لتعرف إن كانت حقيقية.', 'path' => 'verify', 'noindex' => $asked]); ?>
+             'desc_en' => 'Type the number on an Oweili certificate, or scan its QR code, to see if it is real',
+             'desc_ar' => 'اكتب رقم شهادة أويلي أو امسح رمزها لتعرف إن كانت حقيقية', 'path' => 'verify', 'noindex' => $asked]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -139,7 +139,7 @@ if (!headers_sent()) header('Cache-Control: no-store');
             <div><dt><?= owBi('Type', 'النوع') ?></dt><dd><?= owBi($edE, $edA) ?></dd></div>
             <div><dt><?= owBi('Issued by Oweili on', 'أصدرتها أويلي بتاريخ') ?></dt><dd><?= owBi($iE, $iA) ?></dd></div>
             <div><dt><?= owBi('Artist’s declaration', 'إقرار الفنان') ?></dt><dd><?= owBi('Made by the artist’s own hand', 'من صنع يد الفنان') ?></dd></div>
-            <?php if ($sold): ?><div><dt><?= owBi('Ownership', 'الملكية') ?></dt><dd><?= owBi('Sold · owned by a verified collector', 'مباع · يملكه مقتنٍ موثّق') ?><?php if ($owners > 1): ?><br><span class="mini"><?= owBi('Owners so far: ' . $owners, 'عدد المالكين حتى الآن: ' . $owners) ?></span><?php endif; ?></dd></div><?php endif; ?>
+            <?php if ($sold): ?><div><dt><?= owBi('Ownership', 'الملكية') ?></dt><dd><?= owBi('Sold · owned by a verified collector', 'مباع · يملكه مقتن موثّق') ?><?php if ($owners > 1): ?><br><span class="mini"><?= owBi('Owners so far: ' . $owners, 'عدد المالكين حتى الآن: ' . $owners) ?></span><?php endif; ?></dd></div><?php endif; ?>
           </dl>
           <?php if (!empty($s['real_touch'])): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
           <p class="rights-note"><?= owBi(OW_CERT_RIGHTS[0], OW_CERT_RIGHTS[1]) ?></p>
@@ -151,11 +151,11 @@ if (!headers_sent()) header('Cache-Control: no-store');
       </div>
     <?php elseif ($state === 'busy'): ?>
       <div class="vf-state bad"><?= owBi('Too many checks in a short time', 'عمليات تحقق كثيرة في وقت قصير') ?></div>
-      <div class="vf-none"><?= owBi('Please wait a minute, then try again.', 'يرجى الانتظار دقيقة ثم المحاولة مرة أخرى.') ?></div>
+      <div class="vf-none"><?= owBi('Please wait a minute, then try again', 'يرجى الانتظار دقيقة ثم المحاولة مرة أخرى') ?></div>
     <?php else: ?>
       <div class="vf-state bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7.5v6M12 16.5v.01"/></svg>
         <div><?= owBi('Certificate not found', 'لم نجد هذه الشهادة') ?><small dir="ltr"><?= e($typed) ?></small></div></div>
-      <div class="vf-none"><?= owBi('No Oweili certificate has this number. Please check the number and try again. If it is right, this certificate was not issued by Oweili.', 'لا توجد شهادة من أويلي بهذا الرقم. تأكد من الرقم وحاول مرة أخرى. إذا كان الرقم صحيحاً، فهذه الشهادة لم تصدرها أويلي.') ?></div>
+      <div class="vf-none"><?= owBi('No Oweili certificate has this number. Please check the number and try again. If it is right, this certificate was not issued by Oweili.', 'لا توجد شهادة من أويلي بهذا الرقم. تأكد من الرقم وحاول مرة أخرى. إذا كان الرقم صحيحا، فهذه الشهادة لم تصدرها أويلي.') ?></div>
     <?php endif; ?>
   </section>
   <?php endif; ?>
@@ -163,10 +163,10 @@ if (!headers_sent()) header('Cache-Control: no-store');
   <section class="vf-how card">
     <h2><?= owBi('How it works', 'كيف يعمل التحقق') ?></h2>
     <ul>
-      <li><?= owBi('The artist confirms each work is their own, made by hand.', 'يؤكد الفنان أن كل عمل من إبداعه ومن صنع يده.') ?></li>
-      <li><?= owBi('Our team reviews the work and its creation photos.', 'يراجع فريقنا العمل وصور مراحل إنجازه.') ?></li>
-      <li><?= owBi('Once approved, Oweili issues a certificate with its own number.', 'بعد الموافقة تصدر أويلي شهادة برقم خاص بها.') ?></li>
-      <li><?= owBi('The collector’s name is never shown here.', 'لا يظهر اسم المقتني هنا أبداً.') ?></li>
+      <li><?= owBi('The artist confirms each work is their own, made by hand', 'يؤكد الفنان أن كل عمل من إبداعه ومن صنع يده') ?></li>
+      <li><?= owBi('Our team reviews the work and its creation photos', 'يراجع فريقنا العمل وصور مراحل إنجازه') ?></li>
+      <li><?= owBi('Once approved, Oweili issues a certificate with its own number', 'بعد الموافقة تصدر أويلي شهادة برقم خاص بها') ?></li>
+      <li><?= owBi('The collector’s name is never shown here', 'لا يظهر اسم المقتني هنا أبدا') ?></li>
     </ul>
   </section>
 </main>

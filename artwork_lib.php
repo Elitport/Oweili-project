@@ -82,12 +82,12 @@ function owTopicOfStore(string $type): string {
 /* Stage messages shown to the artist (Steps 2–4). */
 function owStageText(int $stage): array {
     $t = [
-        25  => ['en' => 'Photograph your artwork at its beginning — first strokes, first layer, first marks.',
-                'ar' => 'صوّر عملك في بدايته — أول ضربات الريشة، أول طبقة، أول علامة.'],
+        25  => ['en' => 'Photograph your artwork at its beginning — first strokes, first layer, first marks',
+                'ar' => 'صوّر عملك في بدايته — أول ضربات الريشة، أول طبقة، أول علامة'],
         50  => ['en' => 'Your artwork is taking shape. Photograph it now at its halfway point.',
                 'ar' => 'عملك يأخذ شكله. صوّره الآن في منتصف الطريق.'],
         100 => ['en' => 'Your artwork is complete. Take the final photograph — this is what collectors will see first.',
-                'ar' => 'اكتمل عملك. التقط الصورة النهائية — هذا ما سيراه المقتنون أولاً.'],
+                'ar' => 'اكتمل عملك. التقط الصورة النهائية — هذا ما سيراه المقتنون أولا.'],
     ];
     return $t[$stage];
 }
@@ -426,7 +426,7 @@ function owGapBi(int $seconds, int $fromStage): array {
     if ($seconds >= 86400) {
         $n = intdiv($seconds, 86400);
         $en = $n . ' day' . ($n === 1 ? '' : 's');
-        $arT = $ar($n, ['يوم واحد', 'يومين', 'أيام', 'يوماً']);
+        $arT = $ar($n, ['يوم واحد', 'يومين', 'أيام', 'يوما']);
     } elseif ($seconds >= 3600) {
         $n = intdiv($seconds, 3600);
         $en = $n . ' hour' . ($n === 1 ? '' : 's');
@@ -540,9 +540,9 @@ function owJourneyHtml(array $stages, array $colors, string $type, array $artTyp
 function owProofPanelHtml(array $stages, array $colors, string $type, array $artTypes): string {
     $h = '<section class="pj pj-admin"><h3 class="pj-title">' . owBi('Proof of Process', 'دليل المراحل') . '</h3>';
     if (!$stages) {
-        return $h . '<p class="pj-note">' . owBi('No stage photos — this artwork was uploaded before the 3-stage system.', 'لا توجد صور مراحل — رُفع هذا العمل قبل نظام المراحل الثلاث.') . '</p></section>';
+        return $h . '<p class="pj-note">' . owBi('No stage photos — this artwork was uploaded before the 3-stage system', 'لا توجد صور مراحل — رُفع هذا العمل قبل نظام المراحل الثلاث') . '</p></section>';
     }
     return $h . owStagesHtml($stages, 'proof') . owMetaHtml($type, $colors, $artTypes)
-        . '<p class="pj-note">' . owBi('Check that the photos show real progress. The dates should make sense for this type of artwork.', 'تحقق أن الصور تظهر تقدماً حقيقياً. يجب أن تكون التواريخ منطقية لهذا النوع من الفن.') . '</p>'
+        . '<p class="pj-note">' . owBi('Check that the photos show real progress. The dates should make sense for this type of artwork.', 'تحقق أن الصور تظهر تقدما حقيقيا. يجب أن تكون التواريخ منطقية لهذا النوع من الفن.') . '</p>'
         . '</section>';
 }

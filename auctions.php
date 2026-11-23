@@ -1,6 +1,6 @@
 <?php
 /* =====================================================================
- *  auctions.php — "Oweili Auctions, Coming soon" («مزادات أويلي، قريباً»)
+ *  auctions.php — "Oweili Auctions, Coming soon" («مزادات أويلي، قريبا»)
  *  Also at oweili.com/auctions (.htaccess). A teaser before real auctions:
  *    - the REAL number of people waiting (auction_waitlist), counted live
  *      (auctions.php?count=1 answers {"n": …}; the page asks every 30 s)
@@ -66,8 +66,8 @@ if ($ready && !$leaveRow && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     } else {
         $f['name'] = owReqClean('name', 120);
         $f['email'] = strtolower(owReqClean('email', 190));
-        if (!filter_var($f['email'], FILTER_VALIDATE_EMAIL)) $errors[] = ['Please write a valid email address.', 'يرجى كتابة بريد إلكتروني صحيح.'];
-        if ($f['name'] !== '' && owNameProblem($f['name'], false) !== '') $errors[] = ['Please write your name with letters, or leave it empty.', 'يرجى كتابة اسمك بالحروف، أو اتركه فارغاً.'];
+        if (!filter_var($f['email'], FILTER_VALIDATE_EMAIL)) $errors[] = ['Please write a valid email address', 'يرجى كتابة بريد إلكتروني صحيح'];
+        if ($f['name'] !== '' && owNameProblem($f['name'], false) !== '') $errors[] = ['Please write your name with letters, or leave it empty', 'يرجى كتابة اسمك بالحروف، أو اتركه فارغا'];
         if (!$errors) {
             $r = owAuctionJoin($f['name'], $f['email'], ($_POST['lang'] ?? '') === 'ar' ? 'ar' : 'en', $me ? (int) $me['id'] : null);
             if ($r === 'new') owReqCounted('auction_signup');
@@ -81,11 +81,11 @@ $count = owAuctionCount();
 $v = fn(string $k) => e((string) $f[$k]);
 ?>
 <!DOCTYPE html>
-<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Oweili Auctions, Coming soon" data-title-ar="مزادات أويلي، قريباً">
+<html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?> data-title-en="Oweili Auctions, Coming soon" data-title-ar="مزادات أويلي، قريبا">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Oweili Auctions, Coming soon', 'ar' => 'مزادات أويلي، قريباً',
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Oweili Auctions, Coming soon', 'ar' => 'مزادات أويلي، قريبا',
   'desc_en' => 'Rare original artworks are coming to auction on Oweili. Join the list and be the first to know.', 'desc_ar' => 'أعمال فنية أصلية ونادرة في طريقها إلى المزاد في أويلي. انضم إلى القائمة وكن أول من يعرف.',
   'path' => 'auctions'] + ($leaveRow || $left ? ['noindex' => true] : [])); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
@@ -153,8 +153,8 @@ html.dark-mode .au-band{background:var(--color-surface-2);color:var(--color-dark
   <svg class="au-pattern" aria-hidden="true" width="100%" height="100%"><defs><pattern id="au-p" width="56" height="56" patternUnits="userSpaceOnUse"><path d="M28 2 54 28 28 54 2 28Z M28 14 42 28 28 42 14 28Z"/></pattern></defs><rect width="100%" height="100%" fill="url(#au-p)" style="fill:url(#au-p);stroke:none"/></svg>
   <div class="au-inner">
     <div>
-      <span class="au-kicker reveal"><i aria-hidden="true"></i><?= owBi('Coming soon', 'قريباً') ?></span>
-      <h1 id="au-h" class="reveal"><?= owBi('Oweili Auctions,', 'مزادات أويلي،') ?><b><?= owBi('Coming soon', 'قريباً') ?></b></h1>
+      <span class="au-kicker reveal"><i aria-hidden="true"></i><?= owBi('Coming soon', 'قريبا') ?></span>
+      <h1 id="au-h" class="reveal"><?= owBi('Oweili Auctions,', 'مزادات أويلي،') ?><b><?= owBi('Coming soon', 'قريبا') ?></b></h1>
       <p class="au-sub reveal"><?= owBi('Rare original artworks, each one of a kind, are going to auction. Every lot comes with its story and its certificate.', 'أعمال فنية أصلية ونادرة، كل واحد منها فريد، في طريقها إلى المزاد. ولكل عمل حكايته وشهادته.') ?></p>
       <div class="au-count reveal" aria-live="polite">
         <span class="au-num" id="au-num" data-n="<?= $count ?>"><?= number_format($count) ?></span>
@@ -184,20 +184,20 @@ html.dark-mode .au-band{background:var(--color-surface-2);color:var(--color-dark
       <form class="au-form" method="post" action="auctions.php"><?= csrfField() ?><input type="hidden" name="leave" value="<?= (int) $leaveRow['id'] ?>"><input type="hidden" name="t" value="<?= e((string) $leaveRow['unsub_token']) ?>">
         <p><b><?= owBi('Unsubscribe from Oweili Auctions?', 'إلغاء الاشتراك في مزادات أويلي؟') ?></b></p>
         <p class="au-note" dir="ltr"><?= e((string) $leaveRow['email']) ?></p>
-        <p class="au-note"><?= owBi('Your email will be deleted from the list.', 'سيُحذف بريدك من القائمة.') ?></p>
+        <p class="au-note"><?= owBi('Your email will be deleted from the list', 'سيُحذف بريدك من القائمة') ?></p>
         <button class="btn btn-secondary" type="submit"><?= owBi('Yes, unsubscribe me', 'نعم، ألغِ اشتراكي') ?></button></form>
     <?php elseif ($left): ?>
       <div class="au-ok" role="status"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
-        <div><b><?= owBi('You are unsubscribed.', 'تم إلغاء اشتراكك.') ?></b><?= owBi('Your email is no longer on the list. You can join again any time.', 'لم يعد بريدك في القائمة. يمكنك الانضمام مجدداً في أي وقت.') ?></div></div>
+        <div><b><?= owBi('You are unsubscribed', 'تم إلغاء اشتراكك') ?></b><?= owBi('Your email is no longer on the list. You can join again any time.', 'لم يعد بريدك في القائمة. يمكنك الانضمام مجددا في أي وقت.') ?></div></div>
     <?php elseif ((isset($_GET['leave']) || isset($_POST['leave'])) && !$leaveRow): ?>
       <div class="au-ok" role="status"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
-        <div><b><?= owBi('This link is not on the list any more.', 'هذا الرابط لم يعد في القائمة.') ?></b><?= owBi('You may have unsubscribed already. If you still get emails, write to us at ', 'ربما ألغيت اشتراكك من قبل. إن كانت الرسائل ما زالت تصلك فراسلنا على ') ?><a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></div></div>
+        <div><b><?= owBi('This link is not on the list any more', 'هذا الرابط لم يعد في القائمة') ?></b><?= owBi('You may have unsubscribed already. If you still get emails, write to us at ', 'ربما ألغيت اشتراكك من قبل. إن كانت الرسائل ما زالت تصلك فراسلنا على ') ?><a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></div></div>
     <?php elseif ($joined !== ''): ?>
       <div class="au-ok" role="status"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg>
-        <div><b><?= owBi('Thank you, you are on the list!', 'شكراً لك، أنت في القائمة!') ?></b><?= $joined === '2' ? owBi('This email was already on the list, so nothing changed.', 'هذا البريد موجود في القائمة من قبل، فلم يتغير شيء.') : owBi('We sent you a confirmation email. See you at the first auction.', 'أرسلنا لك رسالة تأكيد. نراك في أول مزاد.') ?></div></div>
+        <div><b><?= owBi('Thank you, you are on the list!', 'شكرا لك، أنت في القائمة!') ?></b><?= $joined === '2' ? owBi('This email was already on the list, so nothing changed', 'هذا البريد موجود في القائمة من قبل، فلم يتغير شيء') : owBi('We sent you a confirmation email. See you at the first auction.', 'أرسلنا لك رسالة تأكيد. نراك في أول مزاد.') ?></div></div>
       <p class="au-note" style="margin-top:var(--space-sm)"><a href="marketplace.php"><?= owBi('Meanwhile, explore the Gallery →', 'وحتى ذلك الحين، استكشف المعرض ←') ?></a></p>
     <?php elseif (!$ready): ?>
-      <p><?= owBi('The list opens in a moment. Please check back soon.', 'تُفتح القائمة خلال لحظات. عد قريباً.') ?></p>
+      <p><?= owBi('The list opens in a moment. Please check back soon.', 'تُفتح القائمة خلال لحظات. عد قريبا.') ?></p>
     <?php else: ?>
       <form class="au-form" method="post" action="auctions.php#join" novalidate>
         <?= csrfField() ?><input type="hidden" name="lang" value="en" id="au-lang">
@@ -213,17 +213,17 @@ html.dark-mode .au-band{background:var(--color-surface-2);color:var(--color-dark
 
   <div class="au-why">
     <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.3L21 9l-5 4.3L17.5 20 12 16.6 6.5 20 8 13.3 3 9l6.4-.7z"/></svg>
-      <h3><?= owBi('Rare originals', 'أعمال أصلية نادرة') ?></h3><p><?= owBi('One-of-a-kind pieces, chosen by the Oweili team. Never prints.', 'قطع فريدة يختارها فريق أويلي. لا نسخ مطبوعة أبداً.') ?></p></div>
+      <h3><?= owBi('Rare originals', 'أعمال أصلية نادرة') ?></h3><p><?= owBi('One-of-a-kind pieces, chosen by the Oweili team. Never prints.', 'قطع فريدة يختارها فريق أويلي. لا نسخ مطبوعة أبدا.') ?></p></div>
     <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="6" height="14" rx="1"/><rect x="9" y="5" width="6" height="14" rx="1"/><rect x="15" y="5" width="6" height="14" rx="1"/></svg>
-      <h3><?= owBi('See how each was made', 'شاهد كيف صُنع كل عمل') ?></h3><p><?= owBi('Every lot shows its creation journey: the 25%, 50% and 100% photos.', 'يعرض كل عمل رحلة إبداعه: صور 25% و50% و100%.') ?></p></div>
+      <h3><?= owBi('See how each was made', 'شاهد كيف صُنع كل عمل') ?></h3><p><?= owBi('Every lot shows its creation journey: the 25%, 50% and 100% photos', 'يعرض كل عمل رحلة إبداعه: صور 25% و50% و100%') ?></p></div>
     <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/></svg>
-      <h3><?= owBi('Certified authentic', 'أصالة موثّقة') ?></h3><p><?= owBi('Each piece has its Certificate of Authenticity, checkable at oweili.com/verify.', 'لكل قطعة شهادة أصالة يمكن التحقق منها في oweili.com/verify.') ?></p></div>
+      <h3><?= owBi('Certified authentic', 'أصالة موثّقة') ?></h3><p><?= owBi('Each piece has its Certificate of Authenticity, checkable at oweili.com/verify', 'لكل قطعة شهادة أصالة يمكن التحقق منها في oweili.com/verify') ?></p></div>
   </div>
 
   <ol class="au-steps">
-    <li class="reveal"><b><?= owBi('Join the list', 'انضم إلى القائمة') ?></b><span><?= owBi('Today, with your email.', 'اليوم، ببريدك الإلكتروني.') ?></span></li>
-    <li class="reveal"><b><?= owBi('Meet the lots', 'تعرّف على الأعمال') ?></b><span><?= owBi('We share the pieces before the auction opens.', 'نعرض القطع قبل افتتاح المزاد.') ?></span></li>
-    <li class="reveal"><b><?= owBi('Bid when it opens', 'زايد عند الافتتاح') ?></b><span><?= owBi('The first auction opens soon. You will hear first.', 'يُفتح أول مزاد قريباً. وستعرف أنت أولاً.') ?></span></li>
+    <li class="reveal"><b><?= owBi('Join the list', 'انضم إلى القائمة') ?></b><span><?= owBi('Today, with your email', 'اليوم، ببريدك الإلكتروني') ?></span></li>
+    <li class="reveal"><b><?= owBi('Meet the lots', 'تعرّف على الأعمال') ?></b><span><?= owBi('We share the pieces before the auction opens', 'نعرض القطع قبل افتتاح المزاد') ?></span></li>
+    <li class="reveal"><b><?= owBi('Bid when it opens', 'زايد عند الافتتاح') ?></b><span><?= owBi('The first auction opens soon. You will hear first.', 'يُفتح أول مزاد قريبا. وستعرف أنت أولا.') ?></span></li>
   </ol>
   <div class="au-more reveal"><a class="btn btn-secondary" href="marketplace.php"><?= owBi('Explore the Gallery', 'استكشف المعرض') ?></a></div>
 </main>

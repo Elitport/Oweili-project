@@ -98,7 +98,7 @@ function owAlertsTick(): void {
 function owAlertEmail(array $items): array {
     $base = 'https://oweili.com' . owBase();   // always the real site, never the visitor's Host header
     $kinds = ['artwork' => ['Waiting for approval', 'بانتظار الموافقة'], 'change' => ['Changes waiting for approval', 'تعديلات بانتظار الموافقة'],
-              'artist' => ['New artist sign-up', 'فنان جديد'], 'buyer' => ['New collector sign-up', 'مقتنٍ جديد'],
+              'artist' => ['New artist sign-up', 'فنان جديد'], 'buyer' => ['New collector sign-up', 'مقتن جديد'],
               'gift' => ['Gift request', 'طلب هدية'], 'commission' => ['Private commission', 'طلب عمل خاص'], 'order' => ['Order', 'طلب شراء'], 'auction' => ['Auctions waiting list', 'قائمة انتظار المزاد'], 'booking' => ['Courses and tickets', 'الدورات والتذاكر'], 'payout' => ['Artist payout waiting for approval', 'دفعة فنان بانتظار الموافقة']];
     $h = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
     $rows = '';
@@ -119,7 +119,7 @@ function owAlertEmail(array $items): array {
     if ($n === 1) {
         $d = json_decode((string) $items[0]['details'], true) ?: [];
         $subject = 'Oweili - ' . (string) ($d['en'] ?? 'New update');
-        $intro = ['There is something new for you on Oweili.', 'لديك جديد في أويلي.'];
+        $intro = ['There is something new for you on Oweili', 'لديك جديد في أويلي'];
     } else {
         $subject = 'Oweili - ' . $n . ' updates waiting for you';
         $intro = [$n . ' things happened close together, so here they are in one email.', 'حدثت ' . $n . ' أمور متقاربة، فجمعناها لك في رسالة واحدة.'];
@@ -130,7 +130,7 @@ function owAlertEmail(array $items): array {
           . '<p style="font-size:15px;color:#4A5568;margin:14px 0 0">' . $h($intro[0]) . '</p><p dir="rtl" style="font-size:15px;color:#4A5568;margin:4px 0 0;text-align:right">' . $h($intro[1]) . '</p></td></tr>'
           . '<tr><td style="padding:0 28px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">' . $rows . '</table></td></tr>'
           . '<tr><td style="padding:16px 28px 24px;font-size:12px;color:#4A5568">You get these alerts as the Oweili admin. To avoid a flood, alerts that come within 15 minutes of each other arrive together in one email.'
-          . '<div dir="rtl" style="text-align:right;margin-top:4px">تصلك هذه التنبيهات بصفتك مدير أويلي. التنبيهات المتقاربة خلال 15 دقيقة تصلك معاً في رسالة واحدة.</div></td></tr>'
+          . '<div dir="rtl" style="text-align:right;margin-top:4px">تصلك هذه التنبيهات بصفتك مدير أويلي. التنبيهات المتقاربة خلال 15 دقيقة تصلك معا في رسالة واحدة.</div></td></tr>'
           . '</table></body></html>';
     return [$subject, $html];
 }

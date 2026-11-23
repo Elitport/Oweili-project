@@ -493,7 +493,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
     'nav-explore-label':'الأساليب الفنية','nav-support-label':'الدعم',
     
     'dd-sp1':'تواصل معنا','dd-sp2':'كيف يعمل الموقع','dd-sp3':'شروط الاستخدام',
-    'n-login-t':'تسجيل الدخول','n-reg-t':'انضم مجاناً','lb':'English'};
+    'n-login-t':'تسجيل الدخول','n-reg-t':'انضم مجانا','lb':'English'};
   for (var id in t) { var el = document.getElementById(id); if (el) el.textContent = t[id]; }
 })();
 <?php endif; ?>
@@ -507,16 +507,16 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
     <span class="col-kicker"><?= $ar ? 'مجموعة مختارة' : 'Curated collection' ?></span>
     <h1><?= e($ar ? ($colObj['title_ar'] ?: $colObj['title_en']) : ($colObj['title_en'] ?: $colObj['title_ar'])) ?></h1>
     <?php $ci = $ar ? ($colObj['intro_ar'] ?: $colObj['intro_en']) : ($colObj['intro_en'] ?: $colObj['intro_ar']); if ($ci !== ''): ?><p><?= e($ci) ?></p><?php endif; ?>
-    <p class="ph-note"><?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love.' ?></p>
+    <p class="ph-note"><?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love' ?></p>
   </div>
   <?php else: ?>
   <div class="page-header">
     <h1><?= $ar ? 'المعرض' : 'The Gallery' ?></h1>
     <p><?= $ar
-        ? 'هنا تلتقي بأعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية، ولا تتكرر أبداً.'
+        ? 'هنا تلتقي بأعمال أصلية لفنانين حقيقيين، من السعودية ومن كل العالم. لكل قطعة حكاية، ولا تتكرر أبدا.'
         : 'Meet original works by real artists, from Saudi Arabia and all over the world. Every piece has a story. None of them repeat.' ?></p>
     <!-- the handmade line, inside the title card (owner, 12 Nov 2026; was a pill under it) -->
-    <p class="ph-note"><?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love.' ?></p>
+    <p class="ph-note"><?= $ar ? 'كل عمل هنا رسمته يد فنان، بصبر وحب' : 'Every piece here was made by an artist’s own hand, with patience and love' ?></p>
   </div>
   <?php endif; ?>
 
@@ -575,7 +575,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
   $topicOpts = [];
   foreach ($ART_CATS as $ck => $cv) { if ($ck !== 'all' && $ck !== $cat && !isset($mpShownTopics[$ck])) continue; /* hidden topics (owner, 8 Nov 2026) */ $topicOpts[$ck] = $ar ? $cv['ar'] : $cv['en']; }
   $stOpts = ['all' => ['All', 'الكل'], 'available' => ['Available', 'متاح']]; if (owAuctionsPageOn() || $status === 'auction') $stOpts['auction'] = ['Auction', 'مزاد'];   /* the Auction filter shows only while the Auctions page is switched on */
-  $sortOpts = ['newest' => ['Newest First', 'الأحدث أولاً'], 'popular' => ['Most viewed', 'الأكثر مشاهدة'], 'price_low' => ['Price: Low to High', 'السعر: من الأقل'], 'price_high' => ['Price: High to Low', 'السعر: من الأعلى']];
+  $sortOpts = ['newest' => ['Newest First', 'الأحدث أولا'], 'popular' => ['Most viewed', 'الأكثر مشاهدة'], 'price_low' => ['Price: Low to High', 'السعر: من الأقل'], 'price_high' => ['Price: High to Low', 'السعر: من الأعلى']];
   /* the chosen filters, each with a link that removes only that one */
   $mpChips = [];
   if ($q !== '') $mpChips[] = ['“' . $q . '”', mpUrl(['q' => ''])];
@@ -847,11 +847,11 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
           <div class="field"><label for="mi-email"><?= $ar ? 'البريد الإلكتروني' : 'Email Address' ?></label>
             <input type="email" id="mi-email" name="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($pre['email']) ?>"></div>
           <?php if ($isBuyer): ?><p class="mi-note"><?= $ar ? 'أضفنا بياناتك من حسابك. يمكنك تعديلها هنا.' : 'We filled in your details from your account. You can change them here.' ?></p><?php endif; ?>
-          <p class="mi-note"><?= $ar ? 'نستخدم بياناتك فقط للتواصل معك بخصوص هذا العمل.' : 'We use your details only to contact you about this artwork.' ?> <a href="privacy.php<?= $ar ? '?lang=ar' : '' ?>" target="_blank" rel="noopener"><?= $ar ? 'سياسة الخصوصية' : 'Privacy Policy' ?></a></p>
+          <p class="mi-note"><?= $ar ? 'نستخدم بياناتك فقط للتواصل معك بخصوص هذا العمل' : 'We use your details only to contact you about this artwork' ?> <a href="privacy.php<?= $ar ? '?lang=ar' : '' ?>" target="_blank" rel="noopener"><?= $ar ? 'سياسة الخصوصية' : 'Privacy Policy' ?></a></p>
           <div class="err-box" id="mi-err" role="alert" hidden></div>
           <button type="submit" class="btn btn-primary btn-block" id="mi-send"><?= $ar ? 'إرسال' : 'Send' ?></button>
         </form>
-        <div class="ok-box" id="mi-ok" role="status" hidden><?= $ar ? 'شكراً! سنتواصل معك قريباً.' : 'Thank you! We will contact you soon.' ?></div>
+        <div class="ok-box" id="mi-ok" role="status" hidden><?= $ar ? 'شكرا! سنتواصل معك قريبا.' : 'Thank you! We will contact you soon.' ?></div>
       </div>
       <?php foreach ($modalArtworks as $aw):
         $jid = (int) $aw['id'];
@@ -926,12 +926,12 @@ function openModal(id){
 }
 /* ---- I'm Interested ---- */
 const MI_ERR = <?= json_encode($ar ? [
-  'required' => 'يرجى تعبئة الحقول الثلاثة.', 'name' => 'يرجى كتابة اسمك الكامل.',
-  'phone' => 'يرجى كتابة رقم هاتف صحيح.', 'email' => 'يرجى كتابة بريد إلكتروني صحيح.',
+  'required' => 'يرجى تعبئة الحقول الثلاثة', 'name' => 'يرجى كتابة اسمك الكامل',
+  'phone' => 'يرجى كتابة رقم هاتف صحيح', 'email' => 'يرجى كتابة بريد إلكتروني صحيح',
   'rate' => 'أرسلت عدة طلبات. حاول مرة أخرى بعد ساعة.', 'other' => 'حدث خطأ. حاول مرة أخرى.',
 ] : [
-  'required' => 'Please fill in all three fields.', 'name' => 'Please enter your full name.',
-  'phone' => 'Please enter a valid phone number.', 'email' => 'Please enter a valid email address.',
+  'required' => 'Please fill in all three fields', 'name' => 'Please enter your full name',
+  'phone' => 'Please enter a valid phone number', 'email' => 'Please enter a valid email address',
   'rate' => 'You have sent several requests. Please try again in an hour.', 'other' => 'Something went wrong. Please try again.',
 ], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?>;
 function resetInterest(id){

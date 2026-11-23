@@ -145,10 +145,10 @@ if ($tab === 'earnings') {
 $DONE = [
     'email'    => ['Your new email is saved. Please open the link we sent to it to confirm it.', 'تم حفظ بريدك الجديد. افتح الرابط الذي أرسلناه إليه لتأكيده.'],
     'password' => ['Your password is changed. Other phones and computers were signed out.', 'تم تغيير كلمة المرور. وتم تسجيل الخروج من الأجهزة الأخرى.'],
-    'notify'   => ['Your email choices are saved.', 'تم حفظ اختياراتك للرسائل.'],
+    'notify'   => ['Your email choices are saved', 'تم حفظ اختياراتك للرسائل'],
     'resend'   => ['We sent the confirmation link again. Please check your inbox.', 'أرسلنا رابط التأكيد مرة أخرى. راجع بريدك.'],
     'waiting'  => ['Saved. Your changes are waiting for the team’s approval. Visitors see the approved version until then.', 'تم الحفظ. تعديلاتك بانتظار موافقة الفريق. يرى الزوار النسخة المعتمدة حتى ذلك الحين.'],
-    'saved'    => ['Your changes are saved.', 'تم حفظ تعديلاتك.'],
+    'saved'    => ['Your changes are saved', 'تم حفظ تعديلاتك'],
 ];
 $myChanges = owMyChanges($uid);
 foreach ($myChanges as $mc) if ($mc['state'] === 'pending') $sum['waiting']++;
@@ -237,10 +237,10 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   <div class="card st-head">
     <div>
       <h1><?= owBi('My Studio', 'مرسمي') ?></h1>
-      <p><?php $nmDot = rtrim($name, '. '); /* a name like "Sara A." keeps one full stop, not two */ ?><?= owBi('Welcome back, ' . $nmDot . '. Here is how your work is doing.', 'أهلاً بعودتك يا ' . $nmDot . '. هذا حال أعمالك.') ?></p>
+      <p><?php $nmDot = rtrim($name, '. '); /* a name like "Sara A." keeps one full stop, not two */ ?><?= owBi('Welcome back, ' . $nmDot . '. Here is how your work is doing.', 'أهلا بعودتك يا ' . $nmDot . '. هذا حال أعمالك.') ?></p>
     </div>
     <div class="acts">
-      <a class="btn btn-primary" href="upload_artwork.php"><?= owBi('Start New Artwork', 'ابدأ عملاً جديداً') ?></a>
+      <a class="btn btn-primary" href="upload_artwork.php"><?= owBi('Start New Artwork', 'ابدأ عملا جديدا') ?></a>
       <a class="btn btn-secondary" href="edit_profile.php"><?= owBi('Edit Profile', 'تعديل الملف') ?></a>
       <a class="btn btn-ghost" href="artist_dashboard.php?id=<?= $uid ?>"><?= owBi('My public page', 'صفحتي العامة') ?></a>
     </div>
@@ -248,9 +248,9 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 
   <?php if (!$verified): ?>
   <div class="alert alert-error" role="status" style="display:flex;justify-content:space-between;align-items:center;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-md)">
-    <span><?= owBi('Please confirm your email address. We sent you a link when you joined.', 'يرجى تأكيد بريدك الإلكتروني. أرسلنا لك رابطاً عند التسجيل.') ?></span>
+    <span><?= owBi('Please confirm your email address. We sent you a link when you joined.', 'يرجى تأكيد بريدك الإلكتروني. أرسلنا لك رابطا عند التسجيل.') ?></span>
     <form method="post" action="<?= e($tabLink($tab)) ?>" style="margin:0"><?= csrfField() ?><input type="hidden" name="do" value="resend">
-      <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send the link again', 'أرسل الرابط مجدداً') ?></button></form>
+      <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send the link again', 'أرسل الرابط مجددا') ?></button></form>
   </div>
   <?php endif; ?>
   <?php if ($done): ?><div class="alert alert-ok" role="status" style="margin-top:var(--space-md)"><?= owBi($done[0], $done[1]) ?></div><?php endif; ?>
@@ -283,8 +283,8 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 <?php if ($tab === 'works'): ?>
   <p class="note"><?= owBi('Oweili is the middle party: we talk to collectors for you and keep their details private. You see how many people are interested, never who they are.', 'أويلي هو الوسيط: نتواصل مع المقتنين نيابة عنك ونحفظ بياناتهم. ترى عدد المهتمين، لا هوياتهم.') ?></p>
   <?php if (!$works): ?>
-    <div class="card empty"><p><?= owBi('Your studio is ready for its first piece.', 'مرسمك جاهز لعملك الأول.') ?></p>
-      <a class="btn btn-primary" href="upload_artwork.php"><?= owBi('Start New Artwork', 'ابدأ عملاً جديداً') ?></a></div>
+    <div class="card empty"><p><?= owBi('Your studio is ready for its first piece', 'مرسمك جاهز لعملك الأول') ?></p>
+      <a class="btn btn-primary" href="upload_artwork.php"><?= owBi('Start New Artwork', 'ابدأ عملا جديدا') ?></a></div>
   <?php else: ?>
   <div class="w-list">
     <?php foreach ($works as $w):
@@ -312,7 +312,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
           <div class="w-reason"><?= owBi('Your last changes were not approved: ', 'لم تتم الموافقة على تعديلاتك الأخيرة: ') ?><?= e($ch['reason'] ?: '—') ?></div>
         <?php endif; ?>
         <?php if ($s === 'rejected'): ?>
-          <div class="w-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e((string) ($w['reason'] ?: '—')) ?> · <?= owBi('Edit it and it goes back to review.', 'عدّله ليعود إلى المراجعة.') ?></div>
+          <div class="w-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e((string) ($w['reason'] ?: '—')) ?> · <?= owBi('Edit it and it goes back to review', 'عدّله ليعود إلى المراجعة') ?></div>
         <?php endif; ?>
       </div>
       <div class="w-side">
@@ -336,7 +336,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   try { if (owHasTable('articles')) { $q = getDB()->prepare('SELECT id, type, slug, title_en, title_ar, status FROM articles WHERE author_user_id = :u ORDER BY updated_at DESC, id DESC LIMIT 50'); $q->execute([':u' => $uid]); $myArts = $q->fetchAll(); } } catch (Throwable $e) { $myArts = []; }
   $aState = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approval', 'بانتظار الموافقة'], 'rejected' => ['Not approved', 'لم تتم الموافقة'], 'published' => ['Published', 'منشور']];
   $aTypes = ['event' => ['Art Event', 'ملتقى فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان'], 'art_education' => ['Art Education', 'تثقيف فني']]; ?>
-  <p class="note"><?= owBi('Write Art Events, Artist Spotlights and Art Education articles. The Oweili team reads each one first, and we email you the result.', 'اكتب عن الملتقيات الفنية وأضواء على الفنانين والتثقيف الفني. يقرأ فريق أويلي كل مقال أولاً، ونراسلك بالنتيجة.') ?></p>
+  <p class="note"><?= owBi('Write Art Events, Artist Spotlights and Art Education articles. The Oweili team reads each one first, and we email you the result.', 'اكتب عن الملتقيات الفنية وأضواء على الفنانين والتثقيف الفني. يقرأ فريق أويلي كل مقال أولا، ونراسلك بالنتيجة.') ?></p>
   <div style="display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-bottom:var(--space-md)">
     <a class="btn btn-primary" href="my_articles.php?new=event"><?= owBi('New Art Event', 'ملتقى فني جديد') ?></a>
     <a class="btn btn-secondary" href="my_articles.php?new=artist_spotlight"><?= owBi('New Artist Spotlight', 'أضواء جديدة على فنان') ?></a>
@@ -375,7 +375,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
     <?php foreach ($myC as $cm): [$ce, $ca] = owCommStatus()[$cm['status']]; ?>
     <div class="card w-row" style="grid-template-columns:1fr auto">
       <div><p class="w-title"><?= e($cm['ref_no']) ?> · <?= owBi($cS[$cm['subject']][0] ?? '', $cS[$cm['subject']][1] ?? '') ?></p>
-        <?php if (!(int) $cm['nda']): ?><div class="w-wait"><?= owBi('Please accept the confidentiality agreement to see the photos.', 'يرجى قبول اتفاقية السرّية لرؤية الصور.') ?></div><?php endif; ?></div>
+        <?php if (!(int) $cm['nda']): ?><div class="w-wait"><?= owBi('Please accept the confidentiality agreement to see the photos', 'يرجى قبول اتفاقية السرّية لرؤية الصور') ?></div><?php endif; ?></div>
       <div class="w-side"><span class="st-pill"><?= owBi($ce, $ca) ?></span><a class="btn btn-accent btn-sm" href="artist_commission.php?id=<?= (int) $cm['id'] ?>"><?= owBi('Open', 'افتح') ?></a></div>
     </div>
     <?php endforeach; ?>
@@ -389,7 +389,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
       <span><?= owBi('Tell me when someone is interested in one of my works', 'أخبرني حين يهتم أحد بأحد أعمالي') ?></span></label>
     <label class="check"><input type="checkbox" name="notify_news" value="1"<?= (int) ($me['notify_news'] ?? 1) === 1 ? ' checked' : '' ?>>
       <span><?= owBi('Send me Oweili news and tips for artists', 'أرسل لي أخبار أويلي ونصائح للفنانين') ?></span></label>
-    <p class="hint"><?= owBi('Important account emails (like password changes) always arrive.', 'رسائل الحساب المهمة (مثل تغيير كلمة المرور) تصلك دائماً.') ?></p>
+    <p class="hint"><?= owBi('Important account emails (like password changes) always arrive', 'رسائل الحساب المهمة (مثل تغيير كلمة المرور) تصلك دائما') ?></p>
     <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button>
   </form>
   <form class="card form-card" method="post" action="<?= e($tabLink('account')) ?>" novalidate>
@@ -400,7 +400,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
       <input id="a-email" name="new_email" type="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($old['new_email'] ?? '') ?>"></div>
     <div class="field"><label for="a-cur1"><?= owBi('Current password', 'كلمة المرور الحالية') ?></label>
       <input id="a-cur1" name="current_password" type="password" required autocomplete="current-password"></div>
-    <p class="hint"><?= owBi('We will send a link to the new address to confirm it.', 'سنرسل رابطاً إلى البريد الجديد لتأكيده.') ?></p>
+    <p class="hint"><?= owBi('We will send a link to the new address to confirm it', 'سنرسل رابطا إلى البريد الجديد لتأكيده') ?></p>
     <button class="btn btn-primary" type="submit"><?= owBi('Change email', 'غيّر البريد') ?></button>
   </form>
   <form class="card form-card" method="post" action="<?= e($tabLink('account')) ?>" novalidate>
@@ -410,7 +410,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
       <input id="a-cur2" name="current_password" type="password" required autocomplete="current-password"></div>
     <div class="field<?= in_array($err, ['weak', 'same'], true) ? ' has-error' : '' ?>"><label for="a-new"><?= owBi('New password', 'كلمة المرور الجديدة') ?></label>
       <input id="a-new" name="new_password" type="password" required minlength="8" autocomplete="new-password"></div>
-    <p class="hint"><?= owBi('8 or more characters, with a capital letter, a number and a symbol.', '8 أحرف أو أكثر، مع حرف كبير ورقم ورمز.') ?></p>
+    <p class="hint"><?= owBi('8 or more characters, with a capital letter, a number and a symbol', '8 أحرف أو أكثر، مع حرف كبير ورقم ورمز') ?></p>
     <div class="field<?= $err === 'mismatch' ? ' has-error' : '' ?>"><label for="a-conf"><?= owBi('New password again', 'كلمة المرور الجديدة مرة أخرى') ?></label>
       <input id="a-conf" name="confirm_password" type="password" required minlength="8" autocomplete="new-password"></div>
     <button class="btn btn-primary" type="submit"><?= owBi('Change password', 'غيّر كلمة المرور') ?></button>
@@ -420,11 +420,11 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   <p class="note"><?= owBi('Each approved artwork gets a Certificate of Authenticity with its own number. Open one to download it as a PDF, or share its verify page with a collector.', 'يحصل كل عمل معتمد على شهادة أصالة برقم خاص. افتح الشهادة لتنزيلها بصيغة PDF، أو شارك صفحة التحقق مع المقتني.') ?></p>
   <?php require_once __DIR__ . '/sig_lib.php'; $sigOn = owSigExists((string) $uid); ?>
   <div class="card" style="display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;justify-content:space-between;margin-bottom:var(--space-sm)">
-    <span><?= $sigOn ? owBi('✓ Your signature is on your certificates.', '✓ توقيعك على شهاداتك.') : owBi('Add your signature to your certificates: draw it once.', 'أضف توقيعك إلى شهاداتك: ارسمه مرة واحدة.') ?></span>
+    <span><?= $sigOn ? owBi('✓ Your signature is on your certificates', '✓ توقيعك على شهاداتك') : owBi('Add your signature to your certificates: draw it once', 'أضف توقيعك إلى شهاداتك: ارسمه مرة واحدة') ?></span>
     <a class="btn btn-secondary btn-sm" href="signature.php"><?= $sigOn ? owBi('Change signature', 'غيّر التوقيع') : owBi('Draw my signature', 'ارسم توقيعي') ?></a>
   </div>
   <?php if (!owCertReady() || !$certs): ?>
-    <div class="card empty"><p><?= owBi('Your certificates will appear here once your artworks are approved.', 'ستظهر شهاداتك هنا بعد اعتماد أعمالك.') ?></p></div>
+    <div class="card empty"><p><?= owBi('Your certificates will appear here once your artworks are approved', 'ستظهر شهاداتك هنا بعد اعتماد أعمالك') ?></p></div>
   <?php else: ?>
   <div class="w-list">
     <?php foreach ($certs as $c): $cs = $c['snap']; $ci = owImgSrc((string) ($cs['image'] ?? '')); $c4 = $ci !== '' ? owImgSized($ci, 400) : ''; [$ciE, $ciA] = owDateBi((string) $c['issued_at']); $ok = $c['status'] === 'valid'; ?>
@@ -449,18 +449,18 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
 <?php elseif ($tab === 'packing'): /* Packing guide (owner, 11 Nov 2026): only here, for the signed-in artist */ ?>
   <p class="note"><?= owBi('Oweili arranges the shipping. You only pack the artwork.', 'أويلي يتولى الشحن. عليك فقط تغليف العمل.') ?></p>
   <ol class="pk-list">
-      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="40" height="40" rx="2"/><path d="M16 18h28v28H16z" stroke-dasharray="3 3"/><path d="M18 8h36v36l-8 8H18z"/><path d="M54 44h-8v8"/></svg></span><span class="pk-txt"><b class="pk-n">1</b><?= owBi('Cover the front of the painting with glassine paper (soft protective paper). Never put bubble wrap straight on the paint.', 'غطِّ وجه اللوحة بورق الجلاسين (ورق حماية ناعم). لا تضع الغلاف الفقاعي مباشرة على الطلاء أبداً.') ?></span></li>
-      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="10" width="44" height="44" rx="2"/><path d="M10 22V10h12M42 10h12v12M54 42v12H42M22 54H10V42"/><path d="M10 22l12-12M42 10l12 12M54 42L42 54M22 54L10 42"/></svg></span><span class="pk-txt"><b class="pk-n">2</b><?= owBi('Add corner protectors.', 'أضف واقيات الزوايا.') ?></span></li>
-      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="10" width="48" height="44" rx="6"/><circle cx="18" cy="20" r="3"/><circle cx="32" cy="20" r="3"/><circle cx="46" cy="20" r="3"/><circle cx="18" cy="32" r="3"/><circle cx="32" cy="32" r="3"/><circle cx="46" cy="32" r="3"/><circle cx="18" cy="44" r="3"/><circle cx="32" cy="44" r="3"/><circle cx="46" cy="44" r="3"/></svg></span><span class="pk-txt"><b class="pk-n">3</b><?= owBi('Wrap it in bubble wrap.', 'لُفَّ اللوحة بالغلاف الفقاعي.') ?></span></li>
-      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 24l24-10 24 10v26L32 60 8 50z"/><path d="M8 24l24 10 24-10M32 34v26"/><path d="M8 24l-4 8 24 10 4-8M56 24l4 8-24 10-4-8"/></svg></span><span class="pk-txt"><b class="pk-n">4</b><?= owBi('Put it in a strong cardboard box that fits snugly, with no empty space.', 'ضعها في صندوق كرتون متين يناسب مقاسها تماماً، دون فراغات.') ?></span></li>
-      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 26l22-9 22 9v22L28 57 6 48z"/><path d="M6 26l22 9 22-9M28 35v22"/><path d="M11 37l12 5v6l-12-5z"/><rect x="40" y="6" width="20" height="16" rx="2"/><path d="M44 12h12M44 16h8"/></svg></span><span class="pk-txt"><b class="pk-n">5</b><?= owBi('Write the certificate number on the box, and put the back label on the artwork.', 'اكتب رقم الشهادة على الصندوق، وألصق ملصق الظهر على العمل.') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="40" height="40" rx="2"/><path d="M16 18h28v28H16z" stroke-dasharray="3 3"/><path d="M18 8h36v36l-8 8H18z"/><path d="M54 44h-8v8"/></svg></span><span class="pk-txt"><b class="pk-n">1</b><?= owBi('Cover the front of the painting with glassine paper (soft protective paper). Never put bubble wrap straight on the paint.', 'غطِّ وجه اللوحة بورق الجلاسين (ورق حماية ناعم). لا تضع الغلاف الفقاعي مباشرة على الطلاء أبدا.') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="10" width="44" height="44" rx="2"/><path d="M10 22V10h12M42 10h12v12M54 42v12H42M22 54H10V42"/><path d="M10 22l12-12M42 10l12 12M54 42L42 54M22 54L10 42"/></svg></span><span class="pk-txt"><b class="pk-n">2</b><?= owBi('Add corner protectors', 'أضف واقيات الزوايا') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="10" width="48" height="44" rx="6"/><circle cx="18" cy="20" r="3"/><circle cx="32" cy="20" r="3"/><circle cx="46" cy="20" r="3"/><circle cx="18" cy="32" r="3"/><circle cx="32" cy="32" r="3"/><circle cx="46" cy="32" r="3"/><circle cx="18" cy="44" r="3"/><circle cx="32" cy="44" r="3"/><circle cx="46" cy="44" r="3"/></svg></span><span class="pk-txt"><b class="pk-n">3</b><?= owBi('Wrap it in bubble wrap', 'لُفَّ اللوحة بالغلاف الفقاعي') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 24l24-10 24 10v26L32 60 8 50z"/><path d="M8 24l24 10 24-10M32 34v26"/><path d="M8 24l-4 8 24 10 4-8M56 24l4 8-24 10-4-8"/></svg></span><span class="pk-txt"><b class="pk-n">4</b><?= owBi('Put it in a strong cardboard box that fits snugly, with no empty space', 'ضعها في صندوق كرتون متين يناسب مقاسها تماما، دون فراغات') ?></span></li>
+      <li class="card pk-step"><span class="pk-ico"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 26l22-9 22 9v22L28 57 6 48z"/><path d="M6 26l22 9 22-9M28 35v22"/><path d="M11 37l12 5v6l-12-5z"/><rect x="40" y="6" width="20" height="16" rx="2"/><path d="M44 12h12M44 16h8"/></svg></span><span class="pk-txt"><b class="pk-n">5</b><?= owBi('Write the certificate number on the box, and put the back label on the artwork', 'اكتب رقم الشهادة على الصندوق، وألصق ملصق الظهر على العمل') ?></span></li>
   </ol>
   <p class="note" style="margin-top:var(--space-sm)"><?= owBi('Your certificate numbers and back labels are in', 'تجد أرقام شهاداتك وملصقات الظهر في') ?> <a href="<?= e($tabLink('certs')) ?>"><?= owBi('Certificates', 'الشهادات') ?></a>.</p>
 
 <?php elseif ($tab === 'activity'): ?>
   <div class="card">
     <?php if (!$activity): ?>
-      <p class="empty"><?= owBi('Your activity will show here.', 'سيظهر نشاطك هنا.') ?></p>
+      <p class="empty"><?= owBi('Your activity will show here', 'سيظهر نشاطك هنا') ?></p>
     <?php else: ?>
     <ul class="act-list">
       <?php foreach ($activity as $a): $w = OW_ACTION_WORDS[$a['action']] ?? [ucfirst(str_replace('_', ' ', $a['action'])), $a['action']]; ?>
@@ -471,7 +471,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
   </div>
 
 <?php else: /* earnings */ ?>
-  <p class="note"><?= owBi('Payments on Oweili open soon. When a work sells, Oweili keeps ' . owCommissionText() . ' (before VAT), which covers shipping and advertising. A work already sold keeps the rate it was sold at.', 'المدفوعات في أويلي قريباً. عند بيع عمل، يحتفظ أويلي بـ' . owCommissionText() . ' (قبل الضريبة) تغطي الشحن والإعلان. ويبقى العمل المباع سابقاً على النسبة التي بيع بها.') ?></p>
+  <p class="note"><?= owBi('Payments on Oweili open soon. When a work sells, Oweili keeps ' . owCommissionText() . ' (before VAT), which covers shipping and advertising. A work already sold keeps the rate it was sold at.', 'المدفوعات في أويلي قريبا. عند بيع عمل، يحتفظ أويلي بـ' . owCommissionText() . ' (قبل الضريبة) تغطي الشحن والإعلان. ويبقى العمل المباع سابقا على النسبة التي بيع بها.') ?></p>
   <div class="stat-grid st-stats">
     <div class="stat-card"><span class="stat-num"><?= $sum['sold'] ?></span><span class="stat-lbl"><?= owBi('Works sold', 'أعمال مباعة') ?></span></div>
     <div class="stat-card"><span class="stat-num"><?= owArtistShareText($sum['sales']) ?></span><span class="stat-lbl"><?= owBi('Sales total (SAR)', 'إجمالي المبيعات (ر.س)') ?></span></div>
@@ -497,7 +497,7 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
                                 $st->execute([':u' => $uid]); foreach ($st->fetchAll() as $ro) { $rc = owOrderReceipt((int) $ro['id']); if ($rc && $rc['photos']) $rcpts[] = [$ro, $rc]; } } } catch (Throwable $e) { $rcpts = []; }
     if ($rcpts): ?>
   <h2 style="font-size:var(--fs-subtitle);margin:var(--space-lg) 0 var(--space-sm)"><?= owBi('Your artworks as the collectors received them', 'أعمالك كما استلمها المقتنون') ?></h2>
-  <p class="st-sub" style="display:block;margin-bottom:var(--space-sm)"><?= owBi('Private photos: only you and the Oweili team see them.', 'صور خاصة: لا يراها إلا أنت وفريق أويلي.') ?></p>
+  <p class="st-sub" style="display:block;margin-bottom:var(--space-sm)"><?= owBi('Private photos: only you and the Oweili team see them', 'صور خاصة: لا يراها إلا أنت وفريق أويلي') ?></p>
   <?php foreach ($rcpts as [$ro, $rc]): ?><div class="card" style="margin-bottom:var(--space-sm)"><strong><?= e($ro['title']) ?></strong> <span class="st-sub" dir="ltr" style="display:inline"><?= e($ro['order_no']) ?></span>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><?php foreach ($rc['photos'] as $ri => $_): ?><a href="<?= e(owReceiptPhotoUrl((int) $ro['id'], $ri)) ?>" target="_blank" rel="noopener"><img src="<?= e(owReceiptPhotoUrl((int) $ro['id'], $ri)) ?>" alt="<?= e('Your artwork as received · عملك كما وصل') ?>" style="width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--color-border)"></a><?php endforeach; ?></div></div>
   <?php endforeach; endif; ?>

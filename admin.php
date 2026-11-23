@@ -44,7 +44,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['admin_pass
         owLog('admin_login', null, null, '', ['type' => 'admin', 'id' => null]);
     } else {
         if (verifyCsrf($_POST['csrf_token'] ?? null)) owAdminGateRecord(false);
-        $loginError = 'Incorrect password.';
+        $loginError = 'Incorrect password';
     }
 }
 
@@ -112,7 +112,7 @@ $flash = '';
 if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action'])) {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         http_response_code(403);
-        exit('Invalid CSRF token.');
+        exit('Invalid CSRF token');
     }
     $uid    = (int) ($_POST['user_id'] ?? 0);
     $action = $_POST['action'];
@@ -126,7 +126,7 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
             } elseif (owHasColumn('artworks', 'rejected_at')) {
                 /* Not approved: kept with the reason, so the artist can fix it */
                 if (!owRejectArtwork($awId, (string) ($_POST['reason'] ?? ''))) {
-                    $_SESSION['admin_err'] = 'Please write the reason, so the artist knows what to fix.';
+                    $_SESSION['admin_err'] = 'Please write the reason, so the artist knows what to fix';
                 }
             } else {
                 // Reject = remove the pending artwork and its uploaded image file.
@@ -159,7 +159,7 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
             $_SESSION['admin_err'] = ($GLOBALS['OW_APPROVE_ERR'] ?? '') === 'consent'
                 ? 'This spotlight has photos but no active photo consent. Add the consent in Articles first, then approve.'
                 : (str_starts_with($action, 'reject') && trim((string) ($_POST['reason'] ?? '')) === ''
-                    ? 'Please write the reason, so the artist knows what to fix.' : 'This was already decided or no longer exists.');
+                    ? 'Please write the reason, so the artist knows what to fix' : 'This was already decided or no longer exists');
         }
         header('Location: admin.php' . ($ok ? '?ok=1' : '') . '#pending');
         exit;
@@ -168,13 +168,13 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
     /* --- Certificate of Authenticity: cancel (with a reason), or make one now --- */
     if ($action === 'cert_cancel') {
         if (!owCancelCertificate((int) ($_POST['cert_id'] ?? 0), (string) ($_POST['reason'] ?? ''), null)) {
-            $_SESSION['admin_err'] = trim((string) ($_POST['reason'] ?? '')) === '' ? 'Please write the reason for cancelling the certificate.' : 'This certificate was already cancelled.';
+            $_SESSION['admin_err'] = trim((string) ($_POST['reason'] ?? '')) === '' ? 'Please write the reason for cancelling the certificate' : 'This certificate was already cancelled';
         }
         header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#certs');
         exit;
     }
     if ($action === 'cert_issue') {
-        if (owIssueCertificate((int) ($_POST['artwork_id'] ?? 0)) === '') $_SESSION['admin_err'] = 'No certificate yet: the artwork must be approved and have all its details and the artist’s declaration.';
+        if (owIssueCertificate((int) ($_POST['artwork_id'] ?? 0)) === '') $_SESSION['admin_err'] = 'No certificate yet: the artwork must be approved and have all its details and the artist’s declaration';
         header('Location: admin.php' . (empty($_SESSION['admin_err']) ? '?ok=1' : '') . '#certs');
         exit;
     }
@@ -226,8 +226,8 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
         $why = owAdminDeleteUser($uid);
         if ($why !== '') {
             $_SESSION['admin_err'] = ['staff' => 'Staff accounts cannot be deleted here. · لا يمكن حذف حسابات الفريق من هنا.',
-                                      'linked' => 'This account is part of real records (gifts, commissions, orders, articles…), so it was not deleted. Suspend it instead. · هذا الحساب مرتبط بسجلات حقيقية، لذا لم يُحذف. أوقفه بدلاً من ذلك.',
-                                      'not_found' => 'This account no longer exists. · هذا الحساب غير موجود.'][$why] ?? 'Not deleted.';
+                                      'linked' => 'This account is part of real records (gifts, commissions, orders, articles…), so it was not deleted. Suspend it instead. · هذا الحساب مرتبط بسجلات حقيقية، لذا لم يُحذف. أوقفه بدلا من ذلك.',
+                                      'not_found' => 'This account no longer exists. · هذا الحساب غير موجود.'][$why] ?? 'Not deleted';
             header('Location: admin.php');
             exit;
         }
@@ -259,7 +259,7 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
     if (isset($map[$action]) && $uid > 0) {
         getDB()->prepare($map[$action])->execute([':id' => $uid]);
         owLog(['approve' => 'user_approve', 'unapprove' => 'user_unapprove', 'ban' => 'user_suspend', 'unban' => 'user_unsuspend'][$action], 'user', $uid, '', ['type' => 'admin', 'id' => null]);
-        $flash = 'Updated.';
+        $flash = 'Updated';
     }
     $backTo = in_array($_POST['back'] ?? '', ['collectors', 'artists'], true) ? '#' . $_POST['back'] : '';
     if (($_POST['back'] ?? '') === 'person') $backTo = '';
@@ -641,7 +641,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <div class="top">
     <div>
       <h1>Admin Dashboard</h1>
-      <div class="sub">Manage artists, collectors, artworks and requests.</div>
+      <div class="sub">Manage artists, collectors, artworks and requests</div>
     </div>
   </div>
   <p class="adm-sec"><?= owBi('Today', 'اليوم') ?></p>
@@ -665,12 +665,12 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 
   <?php if (!empty($_SESSION['admin_err'])): ?>
     <div class="alert alert-error">
-      <strong>⚠ Could not save.</strong> <?= e($_SESSION['admin_err']) ?>
-      <div class="mini" style="margin-top:6px;">If this mentions a missing table, run <code>discover_setup.sql</code> in phpMyAdmin.</div>
+      <strong>⚠ Could not save</strong> <?= e($_SESSION['admin_err']) ?>
+      <div class="mini" style="margin-top:6px;">If this mentions a missing table, run <code>discover_setup.sql</code> in phpMyAdmin</div>
     </div>
     <?php unset($_SESSION['admin_err']); ?>
   <?php elseif (isset($_GET['ok'])): ?>
-    <div class="alert alert-ok"><strong>✓ Saved.</strong></div>
+    <div class="alert alert-ok"><strong>✓ Saved</strong></div>
   <?php endif; ?>
 
   <!-- TABS (owner, 9 Nov 2026): Waiting for approval first, then grouped -->
@@ -704,11 +704,11 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <!-- ===== TAB: ARTICLES (links to the team tools) ===== -->
   <div class="tab-panel" id="tab-articles">
     <div class="adm-cards">
-      <a class="card card-hover" href="admin_articles.php"><b><?= owBi('Articles & events', 'المقالات والملتقيات') ?></b><span><?= owBi('Write and publish Art Events and Art Education.', 'اكتب وانشر الملتقيات والتثقيف الفني.') ?></span></a>
-      <a class="card card-hover" href="admin_gallery.php"><b><?= owBi('Gallery', 'المعرض') ?></b><span><?= owBi('Collections, Artist of the week, verified artists.', 'المجموعات، فنان الأسبوع، الفنانون الموثّقون.') ?></span></a>
-      <a class="card card-hover" href="admin_institutes.php"><b><?= owBi('Institutes', 'المعاهد') ?></b><span><?= owBi('Art institutes and their courses.', 'المعاهد الفنية ودوراتها.') ?></span></a>
-      <a class="card card-hover" href="admin_art_map.php"><b><?= owBi('Art Map', 'خريطة الفن') ?></b><span><?= owBi('Museums and art galleries: drafts and published.', 'المتاحف والمعارض الفنية: المسودات والمنشور.') ?></span></a>
-      <a class="card card-hover" href="admin_bookings.php"><b><?= owBi('Courses and tickets', 'الدورات والتذاكر') ?></b><span><?= owBi('Institutes, courses, registrations, partner museums, tickets and payouts (hidden from visitors until switched on).', 'المعاهد والدورات والتسجيلات والمتاحف الشريكة والتذاكر والمستحقات (مخفية عن الزوار حتى التفعيل).') ?></span></a>
+      <a class="card card-hover" href="admin_articles.php"><b><?= owBi('Articles & events', 'المقالات والملتقيات') ?></b><span><?= owBi('Write and publish Art Events and Art Education', 'اكتب وانشر الملتقيات والتثقيف الفني') ?></span></a>
+      <a class="card card-hover" href="admin_gallery.php"><b><?= owBi('Gallery', 'المعرض') ?></b><span><?= owBi('Collections, Artist of the week, verified artists', 'المجموعات، فنان الأسبوع، الفنانون الموثّقون') ?></span></a>
+      <a class="card card-hover" href="admin_institutes.php"><b><?= owBi('Institutes', 'المعاهد') ?></b><span><?= owBi('Art institutes and their courses', 'المعاهد الفنية ودوراتها') ?></span></a>
+      <a class="card card-hover" href="admin_art_map.php"><b><?= owBi('Art Map', 'خريطة الفن') ?></b><span><?= owBi('Museums and art galleries: drafts and published', 'المتاحف والمعارض الفنية: المسودات والمنشور') ?></span></a>
+      <a class="card card-hover" href="admin_bookings.php"><b><?= owBi('Courses and tickets', 'الدورات والتذاكر') ?></b><span><?= owBi('Institutes, courses, registrations, partner museums, tickets and payouts (hidden from visitors until switched on)', 'المعاهد والدورات والتسجيلات والمتاحف الشريكة والتذاكر والمستحقات (مخفية عن الزوار حتى التفعيل)') ?></span></a>
     </div>
   </div>
 
@@ -718,10 +718,10 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="stat-range" role="group" aria-label="Period · المدة">
       <button class="sub-btn on" data-days="1" onclick="statRange(1,this)"><?= owBi('Today', 'اليوم') ?></button>
       <button class="sub-btn" data-days="7" onclick="statRange(7,this)"><?= owBi('Last 7 days', 'آخر 7 أيام') ?></button>
-      <button class="sub-btn" data-days="30" onclick="statRange(30,this)"><?= owBi('Last 30 days', 'آخر 30 يوماً') ?></button>
+      <button class="sub-btn" data-days="30" onclick="statRange(30,this)"><?= owBi('Last 30 days', 'آخر 30 يوما') ?></button>
     </div>
     <?php if (!owHasTable('visitor_stats')): ?>
-      <p class="mini"><?= owBi('Statistics start once the visitor_stats table is added (visitor_stats.sql).', 'تبدأ الإحصاءات بعد إضافة جدول visitor_stats.') ?></p>
+      <p class="mini"><?= owBi('Statistics start once the visitor_stats table is added (visitor_stats.sql)', 'تبدأ الإحصاءات بعد إضافة جدول visitor_stats') ?></p>
     <?php elseif (!$hasGeo): ?>
       <p class="mini"><?= owBi('The location file is being downloaded. Visits are counted already; cities show once it is ready.', 'يجري تنزيل ملف المواقع. الزيارات تُحسب الآن، وتظهر المدن عند جاهزيته.') ?></p>
     <?php endif; ?>
@@ -730,19 +730,19 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <p class="stat-total"><strong><?= (int) $gs['total'] ?></strong> <?= owBi('visitors', 'زائر') ?></p>
       <div class="stat-cols">
         <div class="card"><h3><?= owBi('Top cities', 'أكثر المدن') ?></h3>
-          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: $max = max(1, (int) $gs['cities'][0]['v']); ?>
+          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period', 'لا زيارات بعد في هذه المدة') ?></p><?php else: $max = max(1, (int) $gs['cities'][0]['v']); ?>
           <ol class="bars"><?php foreach (array_slice($gs['cities'], 0, 10) as $c): ?>
             <li><span class="b-name"><?= owBi((string) $c['city'], owCityName((string) $c['city'], true)) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></span><span class="b-bar"><i style="width:<?= round(100 * $c['v'] / $max) ?>%"></i></span><span class="b-n"><?= (int) $c['v'] ?></span></li>
           <?php endforeach; ?></ol><?php endif; ?>
         </div>
         <div class="card"><h3><?= owBi('By country', 'حسب الدولة') ?></h3>
-          <?php if (!$gs['countries']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: ?>
+          <?php if (!$gs['countries']): ?><p class="mini"><?= owBi('No visits yet in this period', 'لا زيارات بعد في هذه المدة') ?></p><?php else: ?>
           <table class="table"><tbody><?php foreach ($gs['countries'] as $c): ?>
             <tr><td><?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></td><td class="num"><?= (int) $c['v'] ?></td></tr>
           <?php endforeach; ?></tbody></table><?php endif; ?>
         </div>
         <div class="card"><h3><?= owBi('By city', 'حسب المدينة') ?></h3>
-          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period.', 'لا زيارات بعد في هذه المدة.') ?></p><?php else: ?>
+          <?php if (!$gs['cities']): ?><p class="mini"><?= owBi('No visits yet in this period', 'لا زيارات بعد في هذه المدة') ?></p><?php else: ?>
           <table class="table"><tbody><?php foreach ($gs['cities'] as $c): ?>
             <tr><td><?= owBi((string) $c['city'], owCityName((string) $c['city'], true)) ?> <span class="mini">· <?= owBi(owCountryName($c['country'], false), owCountryName($c['country'], true)) ?></span></td><td class="num"><?= (int) $c['v'] ?></td></tr>
           <?php endforeach; ?></tbody></table><?php endif; ?>
@@ -757,10 +757,10 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <!-- ===== TAB: SETTINGS (links) ===== -->
   <div class="tab-panel" id="tab-settings">
     <div class="adm-cards">
-      <a class="card card-hover" href="admin.php?settings=1"><b><?= owBi('Site settings', 'إعدادات الموقع') ?></b><span><?= owBi('Show or hide parts of the site, Bashro, payments, signature.', 'إظهار أو إخفاء أجزاء الموقع، بشرو، الدفع، التوقيع.') ?></span></a>
+      <a class="card card-hover" href="admin.php?settings=1"><b><?= owBi('Site settings', 'إعدادات الموقع') ?></b><span><?= owBi('Show or hide parts of the site, Bashro, payments, signature', 'إظهار أو إخفاء أجزاء الموقع، بشرو، الدفع، التوقيع') ?></span></a>
       <a class="card card-hover" href="admin.php?photo_check=1"><b><?= owBi('Photo check', 'فحص الصور') ?></b><span><?= owBi('Are artwork photos and their small copies working?', 'هل تعمل صور الأعمال ونسخها الصغيرة؟') ?></span></a>
-      <a class="card card-hover" href="admin.php?mail_check=1"><b><?= owBi('Email check', 'فحص البريد') ?></b><span><?= owBi('Send a test email and see the answer.', 'أرسل بريداً تجريبياً واطّلع على الرد.') ?></span></a>
-      <a class="card card-hover" href="admin.php?error_log=1"><b><?= owBi('Error log', 'سجل الأخطاء') ?></b><span><?= owBi('The newest errors on the server.', 'أحدث الأخطاء على الخادم.') ?></span></a>
+      <a class="card card-hover" href="admin.php?mail_check=1"><b><?= owBi('Email check', 'فحص البريد') ?></b><span><?= owBi('Send a test email and see the answer', 'أرسل بريدا تجريبيا واطّلع على الرد') ?></span></a>
+      <a class="card card-hover" href="admin.php?error_log=1"><b><?= owBi('Error log', 'سجل الأخطاء') ?></b><span><?= owBi('The newest errors on the server', 'أحدث الأخطاء على الخادم') ?></span></a>
     </div>
   </div>
 
@@ -770,7 +770,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <div class="field adm-search"><label for="s-artists"><?= owBi('Search artists (name, email, phone, city)', 'ابحث عن فنان (الاسم، البريد، الهاتف، المدينة)') ?></label>
       <input id="s-artists" type="search" data-search=".acard" autocomplete="off"></div>
     <?php if (!$artists): ?>
-      <div class="empty">No artist accounts yet.</div>
+      <div class="empty">No artist accounts yet</div>
     <?php else: ?>
       <div class="acards">
       <?php foreach ($artists as $a): $on = isOnline($a['last_active'] ?? null); $pics = $portfolio[(int)$a['id']] ?? []; ?>
@@ -844,10 +844,10 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <!-- ===== TAB: COLLECTORS ===== -->
   <div class="tab-panel" id="tab-collectors">
   <div class="card">
-    <div class="field adm-search"><label for="s-buyers"><?= owBi('Search collectors (name, email, phone, city)', 'ابحث عن مقتنٍ (الاسم، البريد، الهاتف، المدينة)') ?></label>
+    <div class="field adm-search"><label for="s-buyers"><?= owBi('Search collectors (name, email, phone, city)', 'ابحث عن مقتن (الاسم، البريد، الهاتف، المدينة)') ?></label>
       <input id="s-buyers" type="search" data-search="#tab-collectors tbody tr" autocomplete="off"></div>
     <?php if (!$collectors): ?>
-      <div class="empty">No collector accounts yet.</div>
+      <div class="empty">No collector accounts yet</div>
     <?php else: ?>
       <div style="overflow-x:auto;">
       <table class="table">
@@ -929,7 +929,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
                 <textarea name="admin_notes" rows="2" maxlength="4000" aria-label="Private note" placeholder="Private note · ملاحظة خاصة"><?= e((string) ($q['admin_notes'] ?? '')) ?></textarea>
                 <button class="btn btn-dark btn-sm" name="action" value="inquiry_update"><?= owBi('Save', 'حفظ') ?></button>
               </form><?php endif; ?>
-              <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.lang === 'ar' ? 'هل أنت متأكد؟ سيُحذف هذا الطلب نهائياً.' : 'Are you sure? This request will be deleted for good.');"><?= csrfField() ?><input type="hidden" name="inquiry_id" value="<?= (int) $q['id'] ?>">
+              <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.lang === 'ar' ? 'هل أنت متأكد؟ سيُحذف هذا الطلب نهائيا.' : 'Are you sure? This request will be deleted for good.');"><?= csrfField() ?><input type="hidden" name="inquiry_id" value="<?= (int) $q['id'] ?>">
                 <button class="btn btn-danger btn-sm" name="action" value="delete_inquiry"><?= owBi('Delete', 'حذف') ?></button></form></td>
           </tr>
         <?php endforeach; ?>
@@ -944,10 +944,10 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <div class="tab-panel active" id="tab-pending">
   <div class="card" id="pending">
     <div class="sec-head">
-      <div class="sub" style="margin:0;"><?= owBi('Everything here waits for you before visitors see it. Until you approve, visitors see the approved version, or nothing if it is new. The artist gets an email either way.', 'كل ما هنا ينتظر موافقتك قبل أن يراه الزوار. حتى توافق، يرى الزوار النسخة المعتمدة، أو لا شيء إن كان جديداً. يصل الفنانَ بريد في الحالتين.') ?></div>
+      <div class="sub" style="margin:0;"><?= owBi('Everything here waits for you before visitors see it. Until you approve, visitors see the approved version, or nothing if it is new. The artist gets an email either way.', 'كل ما هنا ينتظر موافقتك قبل أن يراه الزوار. حتى توافق، يرى الزوار النسخة المعتمدة، أو لا شيء إن كان جديدا. يصل الفنانَ بريد في الحالتين.') ?></div>
     </div>
     <?php if (!owApprovalsReady()): ?>
-      <div class="mini wc-note"><?= owBi('Changes to live artworks, profiles and articles are not held yet: the database update for approvals has not been run.', 'التعديلات على الأعمال المعروضة والملفات والمقالات لا تُحجز بعد: لم يُشغَّل تحديث قاعدة البيانات الخاص بالموافقات.') ?></div>
+      <div class="mini wc-note"><?= owBi('Changes to live artworks, profiles and articles are not held yet: the database update for approvals has not been run', 'التعديلات على الأعمال المعروضة والملفات والمقالات لا تُحجز بعد: لم يُشغَّل تحديث قاعدة البيانات الخاص بالموافقات') ?></div>
     <?php endif; ?>
     <?php if ($waitTotal === 0): ?>
       <div class="empty"><?= owBi('Nothing waiting. All caught up.', 'لا شيء بانتظارك. كل شيء محدّث.') ?></div>
@@ -955,7 +955,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
 
     <?php if ($teamDrafts): $ATYPE = ['event' => ['Art Event', 'ملتقى فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان'], 'art_education' => ['Art Education', 'تثقيف فني']]; ?>
     <h3 class="wc-h"><?= owBi('Article drafts from the Oweili team', 'مسودات مقالات من فريق أويلي') ?> <span class="pill count"><?= count($teamDrafts) ?></span></h3>
-    <p class="mini"><?= owBi('Read each one with Preview. Publish puts it on the site; Edit lets you change it first. Nothing is public until you publish.', 'اقرأ كل مقال عبر «معاينة». «انشر» يضعه في الموقع، و«تعديل» يتيح لك تغييره أولاً. لا يظهر شيء للزوار قبل النشر.') ?></p>
+    <p class="mini"><?= owBi('Read each one with Preview. Publish puts it on the site; Edit lets you change it first. Nothing is public until you publish.', 'اقرأ كل مقال عبر «معاينة». «انشر» يضعه في الموقع، و«تعديل» يتيح لك تغييره أولا. لا يظهر شيء للزوار قبل النشر.') ?></p>
     <div class="wc-list">
       <?php foreach ($teamDrafts as $td): $tt = $ATYPE[$td['type']] ?? [$td['type'], $td['type']]; ?>
       <div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
@@ -988,7 +988,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
           <?php $rc = owOrderReceipt((int) $po['id']); ?>
           <span class="mini"><?= $rc ? owBi('The collector sent "I received the artwork": arrived in good condition', 'أرسل المقتني «استلمت العمل»: وصل بحالة سليمة') : owBi('No receipt from the collector: delivered ' . OW_PAYOUT_ASK_DAYS . ' days ago, no complaint', 'لا تأكيد من المقتني: سُلّم قبل ' . OW_PAYOUT_ASK_DAYS . ' أيام دون شكوى') ?> · <?= owBi('Artist’s share ', 'حصة الفنان ') ?><?= number_format((float) $po['artist_amount'], 2) ?> <?= owBi('SAR', 'ر.س') ?></span>
           <?php if ($rc): ?><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><?php foreach ($rc['photos'] as $ri => $_): ?><a href="<?= e(owReceiptPhotoUrl((int) $po['id'], $ri)) ?>" target="_blank" rel="noopener"><img src="<?= e(owReceiptPhotoUrl((int) $po['id'], $ri)) ?>" alt="<?= e('Photo from the collector · صورة من المقتني') ?>" style="width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid var(--color-border)"></a><?php endforeach; ?></div>
-            <span class="mini"><?= (int) ($rc['share'] ?? 0) ? owBi('The collector agrees that Oweili may share the photo.', 'يوافق المقتني على أن تنشر أويلي الصورة.') : owBi('Private: the collector did not agree to sharing.', 'خاصة: لم يوافق المقتني على النشر.') ?></span><?php endif; ?></div>
+            <span class="mini"><?= (int) ($rc['share'] ?? 0) ? owBi('The collector agrees that Oweili may share the photo', 'يوافق المقتني على أن تنشر أويلي الصورة') : owBi('Private: the collector did not agree to sharing', 'خاصة: لم يوافق المقتني على النشر') ?></span><?php endif; ?></div>
         <form method="post" action="admin_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="released"><input type="hidden" name="id" value="<?= (int) $po['id'] ?>"><input type="hidden" name="note" value="payout approved by the admin">
           <button class="btn btn-accent btn-sm"><?= owBi('Approve the payout', 'اعتمد الدفعة') ?></button></form>
       </div>
@@ -1007,7 +1007,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <h3 class="wc-h"><?= owBi('Art Map drafts: museums and art galleries', 'مسودات خريطة الفن: المتاحف والمعارض الفنية') ?> <span class="pill count"><?= (int) $mapDrafts ?></span></h3>
     <p class="mini"><?= owBi('Places our team found and checked on their official websites. Visitors see each one only after you publish it.', 'أماكن وجدها فريقنا وتحقق منها في مواقعها الرسمية. لا يراها الزوار إلا بعد أن تنشرها.') ?></p>
     <div class="wc-list"><div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
-      <div><strong><?= owBi($mapDrafts . ' places waiting', $mapDrafts . ' مكاناً بانتظارك') ?></strong></div>
+      <div><strong><?= owBi($mapDrafts . ' places waiting', $mapDrafts . ' مكانا بانتظارك') ?></strong></div>
       <a class="btn btn-accent btn-sm" href="admin_art_map.php"><?= owBi('Open the Art Map tool', 'افتح أداة خريطة الفن') ?></a>
     </div></div>
     <?php endif; ?>
@@ -1064,8 +1064,8 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
           <?php elseif ($wt === 'article'): ?>
             <?php if (in_array($wc['asker_role'] ?? '', ['artist', 'institute'], true)): ?>
             <p class="mini"><span class="pill <?= $fromInst ? 'off' : 'on' ?>"><?= $fromInst ? owBi('From an institute', 'من معهد') : owBi('From an artist', 'من فنان') ?></span>
-              <?= $fromInst ? owBi('An institute wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب معهد هذا المقال ويطلب نشره. اقرأه أولاً عبر «معاينة». يبقى مخفياً حتى توافق.')
-                            : owBi('An artist wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب فنان هذا المقال ويطلب نشره. اقرأه أولاً عبر «معاينة». يبقى مخفياً حتى توافق.') ?>
+              <?= $fromInst ? owBi('An institute wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب معهد هذا المقال ويطلب نشره. اقرأه أولا عبر «معاينة». يبقى مخفيا حتى توافق.')
+                            : owBi('An artist wrote this article and asks to publish it. Read it first with Preview. It stays hidden until you approve.', 'كتب فنان هذا المقال ويطلب نشره. اقرأه أولا عبر «معاينة». يبقى مخفيا حتى توافق.') ?>
               <?php if (!empty($cur['slug'])): ?><a class="btn btn-ghost btn-sm" href="article.php?slug=<?= e(rawurlencode((string) $cur['slug'])) ?>&amp;preview=1" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a><?php endif; ?></p>
             <?php else: ?>
             <p class="mini"><?= owBi('A team member asks to publish this article. It stays a draft until you approve.', 'يطلب أحد أعضاء الفريق نشر هذا المقال. يبقى مسودة حتى توافق.') ?></p>
@@ -1141,7 +1141,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php if ($cm): [$mE, $mA] = owCertMissingWords($cm); ?>
               <span class="warn">⚠ <?= owBi('No certificate until the artist adds: ' . $mE . '. You can still approve it.', 'لن تصدر الشهادة حتى يضيف الفنان: ' . $mA . '. يمكنك الموافقة الآن.') ?></span>
             <?php else: ?>
-              <span><?= owBi('A Certificate of Authenticity is made when you approve.', 'تصدر شهادة الأصالة عند موافقتك.') ?></span>
+              <span><?= owBi('A Certificate of Authenticity is made when you approve', 'تصدر شهادة الأصالة عند موافقتك') ?></span>
             <?php endif; ?>
           </div>
           <?php endif; ?>
@@ -1157,9 +1157,9 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <!-- ===== TAB: CERTIFICATES OF AUTHENTICITY ===== -->
   <div class="tab-panel" id="tab-certs">
   <div class="card" id="certs">
-    <div class="sub" style="margin:0 0 var(--space-sm)"><?= owBi('Every approved artwork gets a certificate with its own number. Anyone can check a number at oweili.com/verify. A cancelled certificate shows as “Cancelled” there. Certificates are never deleted.', 'يحصل كل عمل معتمد على شهادة برقم خاص. يستطيع أي شخص التحقق من الرقم في oweili.com/verify. الشهادة الملغاة تظهر هناك «ملغاة». لا تُحذف الشهادات أبداً.') ?></div>
+    <div class="sub" style="margin:0 0 var(--space-sm)"><?= owBi('Every approved artwork gets a certificate with its own number. Anyone can check a number at oweili.com/verify. A cancelled certificate shows as “Cancelled” there. Certificates are never deleted.', 'يحصل كل عمل معتمد على شهادة برقم خاص. يستطيع أي شخص التحقق من الرقم في oweili.com/verify. الشهادة الملغاة تظهر هناك «ملغاة». لا تُحذف الشهادات أبدا.') ?></div>
     <?php if (!owCertReady()): ?>
-      <div class="mini wc-note"><?= owBi('Certificates are not switched on yet: the database update for certificates has not been run.', 'الشهادات غير مفعّلة بعد: لم يُشغَّل تحديث قاعدة البيانات الخاص بها.') ?></div>
+      <div class="mini wc-note"><?= owBi('Certificates are not switched on yet: the database update for certificates has not been run', 'الشهادات غير مفعّلة بعد: لم يُشغَّل تحديث قاعدة البيانات الخاص بها') ?></div>
     <?php endif; ?>
     <?php if ($noCertYet): ?>
       <h3 class="wc-h"><?= owBi('Approved, still without a certificate', 'معتمدة وبلا شهادة بعد') ?> <span class="pill count"><?= count($noCertYet) ?></span></h3>
@@ -1188,7 +1188,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php if ($ok): ?>
             <details class="rej-box"><summary class="btn btn-secondary btn-sm"><?= trim((string) ($c['owner_name'] ?? '')) !== '' ? owBi('Owner…', 'المالك…') : owBi('Add owner…', 'أضف المالك…') ?></summary>
               <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="cert_id" value="<?= (int) $c['id'] ?>">
-                <div class="field"><label for="co-<?= (int) $c['id'] ?>"><?= owBi('Owner’s name (shown on the certificate, never on the public verify page). A new name counts as a new owner.', 'اسم المالك (يظهر على الشهادة، ولا يظهر في صفحة التحقق العامة). الاسم الجديد يُحسب مالكاً جديداً.') ?></label>
+                <div class="field"><label for="co-<?= (int) $c['id'] ?>"><?= owBi('Owner’s name (shown on the certificate, never on the public verify page). A new name counts as a new owner.', 'اسم المالك (يظهر على الشهادة، ولا يظهر في صفحة التحقق العامة). الاسم الجديد يُحسب مالكا جديدا.') ?></label>
                   <input id="co-<?= (int) $c['id'] ?>" name="owner_name" maxlength="200" required value="<?= e((string) ($c['owner_name'] ?? '')) ?>"></div>
                 <button class="btn btn-accent btn-sm" name="action" value="cert_owner"><?= owBi('Save owner', 'احفظ المالك') ?></button>
               </form></details>
@@ -1210,14 +1210,14 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <!-- ===== TAB: PHOTO CHANGES (a live artwork got a new photo) ===== -->
   <div class="tab-panel" id="tab-photos">
   <div class="card" id="photos">
-    <div class="sub" style="margin:0 0 var(--space-sm)"><?= owBi('An artist changed the photo of an artwork that is live in the Gallery. It stays live. Compare the photos, then press “Looks fine”, or hide the artwork and tell the artist why.', 'غيّر فنان صورة عمل معروض في المعرض. يبقى العمل معروضاً. قارن الصورتين ثم اضغط «تبدو جيدة»، أو أخفِ العمل وأخبر الفنان بالسبب.') ?></div>
-    <?php if (!$photoChanges): ?><div class="empty"><?= owBi('No photo changes waiting. All caught up.', 'لا تغييرات صور بانتظارك.') ?></div><?php else: ?>
+    <div class="sub" style="margin:0 0 var(--space-sm)"><?= owBi('An artist changed the photo of an artwork that is live in the Gallery. It stays live. Compare the photos, then press “Looks fine”, or hide the artwork and tell the artist why.', 'غيّر فنان صورة عمل معروض في المعرض. يبقى العمل معروضا. قارن الصورتين ثم اضغط «تبدو جيدة»، أو أخفِ العمل وأخبر الفنان بالسبب.') ?></div>
+    <?php if (!$photoChanges): ?><div class="empty"><?= owBi('No photo changes waiting. All caught up.', 'لا تغييرات صور بانتظارك') ?></div><?php else: ?>
     <div class="pc-list">
     <?php foreach ($photoChanges as $pc): $pd = json_decode((string) $pc['details'], true) ?: []; $aid = (int) $pc['artwork_id'];
       $oldSrc = owImgSrc((string) ($pd['old'] ?? '')); $newSrc = owImgSrc((string) $pc['image_url']); ?>
       <div class="pc-item">
         <div class="pc-head"><strong><?= e($pc['title_en'] ?: $pc['title_ar']) ?></strong> <span class="name-ar" dir="rtl"><?= e($pc['title_ar']) ?></span>
-          <div class="mini"><a href="admin.php?person=<?= (int) $pc['artist_id'] ?>"><?= e($pc['artist_en']) ?></a> · <?= owBi('changed', 'تغيّرت') ?> <?= e(fmtDateTime($pc['created_at'])) ?> · <a href="artwork.php?id=<?= $aid ?>" target="_blank" rel="noopener"><?= owBi('See it live', 'شاهده معروضاً') ?> ↗</a></div></div>
+          <div class="mini"><a href="admin.php?person=<?= (int) $pc['artist_id'] ?>"><?= e($pc['artist_en']) ?></a> · <?= owBi('changed', 'تغيّرت') ?> <?= e(fmtDateTime($pc['created_at'])) ?> · <a href="artwork.php?id=<?= $aid ?>" target="_blank" rel="noopener"><?= owBi('See it live', 'شاهده معروضا') ?> ↗</a></div></div>
         <div class="pc-photos">
           <figure><figcaption><?= owBi('Before', 'قبل') ?></figcaption><?php if ($oldSrc !== ''): ?><a href="<?= e($oldSrc) ?>" target="_blank" rel="noopener"><img loading="lazy" src="<?= e($oldSrc) ?>" alt="Before · قبل"></a><?php else: ?><div class="empty">—</div><?php endif; ?></figure>
           <figure><figcaption><?= owBi('Now', 'الآن') ?></figcaption><?php if ($newSrc !== ''): ?><a href="<?= e($newSrc) ?>" target="_blank" rel="noopener"><img loading="lazy" src="<?= e($newSrc) ?>" alt="Now · الآن"></a><?php else: ?><div class="empty">—</div><?php endif; ?></figure>
@@ -1246,8 +1246,8 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
       <span style="display:flex;gap:var(--space-xs);flex-wrap:wrap"><a class="btn btn-ghost btn-sm" href="auctions.php" target="_blank" rel="noopener"><?= owBi('Open the page', 'افتح الصفحة') ?> ↗</a>
         <?php if ($auList): ?><a class="btn btn-accent btn-sm" href="admin.php?auctions_csv=1"><?= owBi('Export to CSV', 'تصدير CSV') ?></a><?php endif; ?></span>
     </div>
-    <?php if (!owAuctionReady()): ?><p class="mini"><?= owBi('The waiting-list table is not set up yet (auctions_update.sql).', 'جدول قائمة الانتظار غير مُعدّ بعد (auctions_update.sql).') ?></p>
-    <?php elseif (!$auList): ?><p class="mini"><?= owBi('No one has signed up yet.', 'لم يسجّل أحد بعد.') ?></p>
+    <?php if (!owAuctionReady()): ?><p class="mini"><?= owBi('The waiting-list table is not set up yet (auctions_update.sql)', 'جدول قائمة الانتظار غير مُعدّ بعد (auctions_update.sql)') ?></p>
+    <?php elseif (!$auList): ?><p class="mini"><?= owBi('No one has signed up yet', 'لم يسجّل أحد بعد') ?></p>
     <?php else: ?>
     <div class="table-wrap" style="margin-top:var(--space-sm)"><table class="table">
       <thead><tr><th><?= owBi('Signed up', 'تاريخ التسجيل') ?></th><th><?= owBi('Email', 'البريد') ?></th><th><?= owBi('Name', 'الاسم') ?></th><th><?= owBi('Language', 'اللغة') ?></th></tr></thead>
@@ -1257,7 +1257,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
           <td><?= $au['lang'] === 'ar' ? 'العربية' : 'English' ?></td></tr>
       <?php endforeach; ?></tbody></table></div>
     <?php endif; ?>
-    <p class="mini" style="margin-top:var(--space-sm)"><?= owBi('People who unsubscribe are deleted from the list straight away.', 'من يلغي اشتراكه يُحذف من القائمة فوراً.') ?></p>
+    <p class="mini" style="margin-top:var(--space-sm)"><?= owBi('People who unsubscribe are deleted from the list straight away', 'من يلغي اشتراكه يُحذف من القائمة فورا') ?></p>
   </div>
   </div>
 
@@ -1265,7 +1265,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <div class="card">
     <div class="field adm-search"><label for="s-art"><?= owBi('Search artworks (title or artist)', 'ابحث عن عمل (العنوان أو الفنان)') ?></label>
       <input id="s-art" type="search" data-search="#tab-artworks tbody tr" autocomplete="off"></div>
-    <?php if (!$allArt): ?><div class="empty"><?= owBi('No artworks yet.', 'لا أعمال بعد.') ?></div><?php else: ?>
+    <?php if (!$allArt): ?><div class="empty"><?= owBi('No artworks yet', 'لا أعمال بعد') ?></div><?php else: ?>
     <div style="overflow-x:auto;"><table class="table">
       <thead><tr><th>Artwork</th><th>Artist</th><th>Price</th><th>Status</th><th><?= owBi('Views', 'المشاهدات') ?></th><th>Actions</th></tr></thead>
       <tbody>
@@ -1278,7 +1278,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
           <td><?= (int) $w['views'] ?></td>
           <td><div class="acts">
             <?php if ($stw === 'sold'): ?>
-              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unsell_art"><?= owBi('Back to available', 'أعده متاحاً') ?></button></form>
+              <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>"><button class="btn btn-ghost btn-sm" name="action" value="unsell_art"><?= owBi('Back to available', 'أعده متاحا') ?></button></form>
             <?php else: ?>
               <details class="rej-box"><summary class="btn btn-dark btn-sm"><?= owBi('Mark as sold…', 'علّمه كمباع…') ?></summary>
                 <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.dir==='rtl'?'تعليم هذا العمل كمباع؟ سيخرج من المعرض.':'Mark this artwork as sold? It leaves the Gallery.');"><?= csrfField() ?><input type="hidden" name="artwork_id" value="<?= (int) $w['id'] ?>">
@@ -1343,7 +1343,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
    nodes, so the whole panel translates without per-element markup. */
 const ADICT = {
   "Admin Dashboard":"لوحة الإدارة",
-  "Manage artists, collectors, artworks and requests.":"إدارة الفنانين والمقتنين والأعمال والطلبات.",
+  "Manage artists, collectors, artworks and requests":"إدارة الفنانين والمقتنين والأعمال والطلبات",
   "Log out":"تسجيل الخروج",
   "Articles":"المقالات",
   "Photo check":"فحص الصور",
@@ -1351,7 +1351,7 @@ const ADICT = {
   "Error log":"سجل الأخطاء",
   "Inquiries":"طلبات الاهتمام","Artwork":"العمل الفني","Collector":"المقتني",
   "No inquiries yet. They appear here when a visitor presses \"I'm Interested\" in the Gallery.":"لا توجد طلبات بعد. تظهر هنا عندما يضغط زائر «أنا مهتم» في المعرض.",
-  "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password.":"كلمة مرور غير صحيحة.","Too many attempts. Please wait 10 minutes.":"محاولات كثيرة جداً. يرجى الانتظار 10 دقائق.",
+  "Admin Login":"دخول الإدارة","Password":"كلمة المرور","Sign In":"تسجيل الدخول","Admin password is not set up yet. Add ADMIN_HASH to config.php.":"كلمة مرور الإدارة غير مُعدّة بعد. أضف ADMIN_HASH إلى config.php.","Incorrect password":"كلمة مرور غير صحيحة","Too many attempts. Please wait 10 minutes.":"محاولات كثيرة جدا. يرجى الانتظار 10 دقائق.",
   "Artists":"الفنانون","Collectors":"المقتنون","Pending Artworks":"الأعمال المعلّقة","Art Styles":"الأساليب الفنية",
   "Events":"الأحداث","Training":"التدريب",
   "Add New Event":"إضافة حدث جديد","Add Event":"إضافة الحدث",
@@ -1373,9 +1373,9 @@ const ADICT = {
   "Artist":"الفنان","Contact":"التواصل","City":"المدينة","Verification":"التحقق",
   "Verified":"موثّق","Unverified":"غير موثّق","Approved":"معتمد","Pending":"معلّق","Status":"الحالة","Actions":"إجراءات",
   "Name":"الاسم","Email":"البريد الإلكتروني","Phone":"الهاتف","Date":"التاريخ","Price":"السعر","Login:":"آخر دخول:","Online":"متصل","Offline":"غير متصل",
-  "No artist accounts yet.":"لا توجد حسابات فنانين بعد.","No collector accounts yet.":"لا يوجد مقتنون بعد.",
+  "No artist accounts yet":"لا توجد حسابات فنانين بعد","No collector accounts yet":"لا يوجد مقتنون بعد",
   "Nothing pending — all caught up. 🎉":"لا يوجد معلّق — كل شيء محدّث. 🎉",
-  "New uploads waiting for approval before they appear in the gallery.":"أعمال جديدة بانتظار الموافقة قبل ظهورها في المعرض.",
+  "New uploads waiting for approval before they appear in the gallery":"أعمال جديدة بانتظار الموافقة قبل ظهورها في المعرض",
   "Approve":"موافقة","Unapprove":"إلغاء الموافقة","Ban":"حظر","Unban":"رفع الحظر","Reject":"رفض",
   "Yes":"نعم","No":"لا","Banned":"محظور","Active":"نشط",
   "No photo":"لا صورة","No video":"لا فيديو","Open video ↗":"فتح الفيديو ↗"

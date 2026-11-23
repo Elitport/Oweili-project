@@ -187,7 +187,7 @@ window.OW_ART_PHOTO = {
   "w": 663,
   "h": 800,
   "en": "Charles Demuth, I Saw the Figure 5 in Gold, 1928",
-  "ar": "تشارلز ديموث، «رأيت الرقم 5 ذهبياً»، 1928",
+  "ar": "تشارلز ديموث، «رأيت الرقم 5 ذهبيا»، 1928",
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:I_Saw_the_Figure_5_in_Gold_MET_DP236148.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
@@ -231,7 +231,7 @@ window.OW_ART_PHOTO = {
   "w": 800,
   "h": 540,
   "en": "Katsushika Hokusai, Fine Wind, Clear Morning (Red Fuji), about 1830",
-  "ar": "كاتسوشيكا هوكوساي، «ريح لطيفة وصباح صافٍ» (فوجي الأحمر)، نحو 1830",
+  "ar": "كاتسوشيكا هوكوساي، «ريح لطيفة وصباح صاف» (فوجي الأحمر)، نحو 1830",
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Katsushika_Hokusai_-_Fine_Wind%2C_Clear_Morning_%28Gaif%C5%AB_kaisei%29_-_Google_Art_Project.jpg"
  },
@@ -304,7 +304,7 @@ window.OW_ART_PHOTO = {
   "w": 800,
   "h": 230,
   "en": "The Ideal City, Urbino, about 1480 (once given to Piero della Francesca)",
-  "ar": "المدينة المثالية، أوربينو، نحو 1480 (نُسبت سابقاً إلى بييرو ديلا فرانشيسكا)",
+  "ar": "المدينة المثالية، أوربينو، نحو 1480 (نُسبت سابقا إلى بييرو ديلا فرانشيسكا)",
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Formerly_Piero_della_Francesca_-_Ideal_City_-_Galleria_Nazionale_delle_Marche_Urbino.jpg"
  },
@@ -492,7 +492,7 @@ window.OW_ART_PHOTO = {
   "w": 789,
   "h": 800,
   "en": "Carved stucco (gypsum plaster) panel, Iran, probably Nishapur, 10th century (Metropolitan Museum of Art)",
-  "ar": "لوح من الجص المنحوت، إيران، غالباً نيسابور، القرن العاشر (متحف المتروبوليتان)",
+  "ar": "لوح من الجص المنحوت، إيران، غالبا نيسابور، القرن العاشر (متحف المتروبوليتان)",
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:Carved_Stucco_Panel_from_Between_Two_Arches_MET_DP253145.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
@@ -501,7 +501,7 @@ window.OW_ART_PHOTO = {
   "w": 800,
   "h": 629,
   "en": "Terracotta figure of a kneeling horse, Ptolemaic Egypt, 2nd to 1st century BC (Metropolitan Museum of Art)",
-  "ar": "تمثال حصان جاثٍ من الطين المحروق، مصر البطلمية، القرنان الثاني والأول قبل الميلاد (متحف المتروبوليتان)",
+  "ar": "تمثال حصان جاث من الطين المحروق، مصر البطلمية، القرنان الثاني والأول قبل الميلاد (متحف المتروبوليتان)",
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:Terracotta_figure_of_a_kneeling_horse_MET_DP145568.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
@@ -520,7 +520,7 @@ window.OW_ART_PHOTO = {
   "w": 800,
   "h": 522,
   "en": "Stone relief of a lion attacking a bull, Apadana staircase, Persepolis, 5th century BC",
-  "ar": "نقش بارز في الحجر لأسد يهاجم ثوراً، درج الأبادانا، برسبوليس، القرن الخامس قبل الميلاد",
+  "ar": "نقش بارز في الحجر لأسد يهاجم ثورا، درج الأبادانا، برسبوليس، القرن الخامس قبل الميلاد",
   "lic": "CC BY 4.0",
   "page": "https://commons.wikimedia.org/wiki/File:Bas-relief_of_Lion_Attacking_a_Bull_Apadana_Staircase_Persepolis.jpg",
   "licUrl": "https://creativecommons.org/licenses/by/4.0/",
@@ -622,7 +622,7 @@ window.OW_ART_PHOTO = {
   "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
   "by": "Padres Hana"
  },
- "crochet_knitting": {"w":800,"h":742,"en":"A hat crocheted by hand (detail)","ar":"قبعة مصنوعة بالكروشيه يدوياً (جزء)","lic":"CC BY 4.0","page":"https://commons.wikimedia.org/wiki/File:Hat_crochet_project.jpg","licUrl":"https://creativecommons.org/licenses/by/4.0/","by":"Eanngalindo","v":"2"},
+ "crochet_knitting": {"w":800,"h":742,"en":"A hat crocheted by hand (detail)","ar":"قبعة مصنوعة بالكروشيه يدويا (جزء)","lic":"CC BY 4.0","page":"https://commons.wikimedia.org/wiki/File:Hat_crochet_project.jpg","licUrl":"https://creativecommons.org/licenses/by/4.0/","by":"Eanngalindo","v":"2"},
  "macrame": {
   "w": 800,
   "h": 600,
@@ -637,7 +637,7 @@ window.OW_ART_PHOTO = {
   "w": 522,
   "h": 800,
   "en": "Yomut main carpet, Turkmen, probably late 18th century (Metropolitan Museum of Art)",
-  "ar": "سجادة يموت، تركمانية، غالباً أواخر القرن الثامن عشر (متحف المتروبوليتان)",
+  "ar": "سجادة يموت، تركمانية، غالبا أواخر القرن الثامن عشر (متحف المتروبوليتان)",
   "lic": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:Yomut_Main_Carpet_MET_DP272802.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
@@ -731,7 +731,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:%E4%B8%AD%E5%9C%8B_%E5%8D%97%E5%AE%8B_%E5%BB%BA%E7%AA%AF_%E5%85%94%E6%AF%AB%E9%87%89%E8%8C%B6%E7%A2%97-Tea_Bowl_with_%E2%80%9CHare%E2%80%99s-Fur%E2%80%9D_Glaze_MET_DP372022.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "handloom_weaving": {"w":800,"h":599,"en":"Persian silk brocade woven by hand on a draw loom, Isfahan, 2004 (detail)","ar":"بروكار حريري فارسي منسوج يدوياً على النول، أصفهان، 2004 (جزء)","lic":"CC BY-SA 3.0","page":"https://commons.wikimedia.org/wiki/File:Persian_Silk_Brocade_-_The_Fish_with_Shah_Abbasi_Flower_-_Mohammad_Salimian_Rizi_-_2004.JPG","licUrl":"https://creativecommons.org/licenses/by-sa/3.0/","by":"Sialkgraph","v":"2"},
+ "handloom_weaving": {"w":800,"h":599,"en":"Persian silk brocade woven by hand on a draw loom, Isfahan, 2004 (detail)","ar":"بروكار حريري فارسي منسوج يدويا على النول، أصفهان، 2004 (جزء)","lic":"CC BY-SA 3.0","page":"https://commons.wikimedia.org/wiki/File:Persian_Silk_Brocade_-_The_Fish_with_Shah_Abbasi_Flower_-_Mohammad_Salimian_Rizi_-_2004.JPG","licUrl":"https://creativecommons.org/licenses/by-sa/3.0/","by":"Sialkgraph","v":"2"},
  "batik": {
   "w": 800,
   "h": 889,

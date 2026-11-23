@@ -45,7 +45,7 @@ if ($ready && isset($_GET['proof'])) {
     $st = $db->prepare('SELECT proof_path FROM photo_consents WHERE id = :id');
     $st->execute([':id' => (int) $_GET['proof']]);
     $p = (string) $st->fetchColumn();
-    if (!owSafeConsentPath($p) || !is_file(__DIR__ . '/' . $p)) { http_response_code(404); exit('Not found.'); }
+    if (!owSafeConsentPath($p) || !is_file(__DIR__ . '/' . $p)) { http_response_code(404); exit('Not found'); }
     $types = ['jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'pdf' => 'application/pdf'];
     header('Content-Type: ' . $types[pathinfo($p, PATHINFO_EXTENSION)]);
     header('Content-Disposition: inline; filename="consent-proof.' . pathinfo($p, PATHINFO_EXTENSION) . '"');
@@ -83,11 +83,11 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     // A post bigger than the server allows arrives empty — explain instead of a token error.
     if (!$_POST && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
         flash('The files were too large to send together. Please send fewer or smaller photos (10MB each at most).',
-              'الملفات كبيرة جداً لإرسالها معاً. يرجى إرسال صور أقل أو أصغر (10 ميغابايت لكل صورة كحد أقصى).', true);
+              'الملفات كبيرة جدا لإرسالها معا. يرجى إرسال صور أقل أو أصغر (10 ميغابايت لكل صورة كحد أقصى).', true);
         header('Location: admin_articles.php?tab=' . $tab);
         exit;
     }
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token'); }
     $action = (string) ($_POST['action'] ?? '');
 
     /* --- Delete an article (its photos too; consent records stay) --- */
@@ -97,7 +97,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $db->prepare('DELETE FROM articles WHERE id = :id')->execute([':id' => $a['id']]);
             owDeleteArticleFile((string) $a['cover_image_path']);
             foreach ($a['images'] as $im) owDeleteArticleFile((string) $im['image_path']);
-            flash('Article deleted.', 'تم حذف المقال.');
+            flash('Article deleted', 'تم حذف المقال');
             $tab = $a['type'];
         }
         header('Location: admin_articles.php?tab=' . $tab);
@@ -111,7 +111,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $c = $st->fetch();
         if ($c) {
             $db->prepare('UPDATE photo_consents SET withdrawn_at = NOW() WHERE id = :id AND withdrawn_at IS NULL')->execute([':id' => $c['id']]);
-            $msg = ['Consent marked as withdrawn.', 'تم تسجيل سحب الموافقة.'];
+            $msg = ['Consent marked as withdrawn', 'تم تسجيل سحب الموافقة'];
             $a = $c['article_id'] ? loadArticle($db, (int) $c['article_id']) : null;
             if ($a) {
                 $active = array_filter($a['consents'], fn($x) => $x['withdrawn_at'] === null);
@@ -119,7 +119,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 if ($a['status'] === 'published' && $hasPhotos && !$active) {
                     $db->prepare("UPDATE articles SET status = 'draft' WHERE id = :id")->execute([':id' => $a['id']]);
                     $msg = ['Consent withdrawn. The article had photos and no other consent, so it is now a draft and hidden from visitors.',
-                            'تم سحب الموافقة. المقال يحتوي على صور ولا توجد موافقة أخرى، لذلك أصبح مسودة ومخفياً عن الزوار.'];
+                            'تم سحب الموافقة. المقال يحتوي على صور ولا توجد موافقة أخرى، لذلك أصبح مسودة ومخفيا عن الزوار.'];
                 }
                 header('Location: admin_articles.php?edit=' . (int) $a['id']);
             } else {
@@ -160,23 +160,23 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             'remove_images' => array_map('intval', (array) ($_POST['remove_images'] ?? [])),
         ];
 
-        if ($f['title_en'] === '') $errors[] = ['Please write the title in English.', 'يرجى كتابة العنوان بالإنجليزية.'];
-        if ($f['title_ar'] === '') $errors[] = ['Please write the title in Arabic.', 'يرجى كتابة العنوان بالعربية.'];
-        if (mb_strlen($f['title_en']) > 255 || mb_strlen($f['title_ar']) > 255) $errors[] = ['Titles can be 255 characters at most.', 'العنوان لا يتجاوز 255 حرفاً.'];
-        if ($f['body_en'] === '') $errors[] = ['Please write the article text in English.', 'يرجى كتابة نص المقال بالإنجليزية.'];
-        if ($f['body_ar'] === '') $errors[] = ['Please write the article text in Arabic.', 'يرجى كتابة نص المقال بالعربية.'];
-        if (mb_strlen($f['body_en']) > 60000 || mb_strlen($f['body_ar']) > 60000) $errors[] = ['The article text is too long (60,000 characters at most).', 'نص المقال طويل جداً (60,000 حرف كحد أقصى).'];
+        if ($f['title_en'] === '') $errors[] = ['Please write the title in English', 'يرجى كتابة العنوان بالإنجليزية'];
+        if ($f['title_ar'] === '') $errors[] = ['Please write the title in Arabic', 'يرجى كتابة العنوان بالعربية'];
+        if (mb_strlen($f['title_en']) > 255 || mb_strlen($f['title_ar']) > 255) $errors[] = ['Titles can be 255 characters at most', 'العنوان لا يتجاوز 255 حرفا'];
+        if ($f['body_en'] === '') $errors[] = ['Please write the article text in English', 'يرجى كتابة نص المقال بالإنجليزية'];
+        if ($f['body_ar'] === '') $errors[] = ['Please write the article text in Arabic', 'يرجى كتابة نص المقال بالعربية'];
+        if (mb_strlen($f['body_en']) > 60000 || mb_strlen($f['body_ar']) > 60000) $errors[] = ['The article text is too long (60,000 characters at most)', 'نص المقال طويل جدا (60,000 حرف كحد أقصى)'];
 
         $start = $end = null;
         if ($type === 'event') {
             $start = owFormDate($f['event_start_date']);
             $end   = $f['event_end_date'] !== '' ? owFormDate($f['event_end_date']) : null;
-            if (!$start) $errors[] = ['Please choose the event start date.', 'يرجى اختيار تاريخ بداية الملتقى.'];
-            if ($f['event_end_date'] !== '' && !$end) $errors[] = ['The event end date is not a real date.', 'تاريخ نهاية الملتقى غير صحيح.'];
-            if ($start && $end && $end < $start) $errors[] = ['The end date cannot be before the start date.', 'لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية.'];
-            if ($f['event_location_en'] === '') $errors[] = ['Please write the event location in English.', 'يرجى كتابة مكان الملتقى بالإنجليزية.'];
-            if ($f['event_location_ar'] === '') $errors[] = ['Please write the event location in Arabic.', 'يرجى كتابة مكان الملتقى بالعربية.'];
-            if (mb_strlen($f['event_location_en']) > 255 || mb_strlen($f['event_location_ar']) > 255) $errors[] = ['The location can be 255 characters at most.', 'المكان لا يتجاوز 255 حرفاً.'];
+            if (!$start) $errors[] = ['Please choose the event start date', 'يرجى اختيار تاريخ بداية الملتقى'];
+            if ($f['event_end_date'] !== '' && !$end) $errors[] = ['The event end date is not a real date', 'تاريخ نهاية الملتقى غير صحيح'];
+            if ($start && $end && $end < $start) $errors[] = ['The end date cannot be before the start date', 'لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية'];
+            if ($f['event_location_en'] === '') $errors[] = ['Please write the event location in English', 'يرجى كتابة مكان الملتقى بالإنجليزية'];
+            if ($f['event_location_ar'] === '') $errors[] = ['Please write the event location in Arabic', 'يرجى كتابة مكان الملتقى بالعربية'];
+            if (mb_strlen($f['event_location_en']) > 255 || mb_strlen($f['event_location_ar']) > 255) $errors[] = ['The location can be 255 characters at most', 'المكان لا يتجاوز 255 حرفا'];
         }
 
         /* Which photos will the article have after this save? */
@@ -207,16 +207,16 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             if ($any) {
                 $newConsent = true;
                 $cDate = owFormDate($f['c_date']);
-                if ($f['c_name_en'] === '') $errors[] = ['Consent: please write the artist name in English.', 'الموافقة: يرجى كتابة اسم الفنان بالإنجليزية.'];
-                if ($f['c_name_ar'] === '') $errors[] = ['Consent: please write the artist name in Arabic.', 'الموافقة: يرجى كتابة اسم الفنان بالعربية.'];
-                if ($f['c_contact'] === '') $errors[] = ['Consent: please add the artist email or phone.', 'الموافقة: يرجى إضافة بريد الفنان أو هاتفه.'];
+                if ($f['c_name_en'] === '') $errors[] = ['Consent: please write the artist name in English', 'الموافقة: يرجى كتابة اسم الفنان بالإنجليزية'];
+                if ($f['c_name_ar'] === '') $errors[] = ['Consent: please write the artist name in Arabic', 'الموافقة: يرجى كتابة اسم الفنان بالعربية'];
+                if ($f['c_contact'] === '') $errors[] = ['Consent: please add the artist email or phone', 'الموافقة: يرجى إضافة بريد الفنان أو هاتفه'];
                 elseif (!filter_var($f['c_contact'], FILTER_VALIDATE_EMAIL) && !preg_match('/^\+?[0-9 ()-]{7,20}$/', $f['c_contact'])) {
-                    $errors[] = ['Consent: the contact must be an email address or a phone number.', 'الموافقة: يجب أن يكون التواصل بريداً إلكترونياً أو رقم هاتف.'];
+                    $errors[] = ['Consent: the contact must be an email address or a phone number', 'الموافقة: يجب أن يكون التواصل بريدا إلكترونيا أو رقم هاتف'];
                 }
-                if (!isset($METHODS[$f['c_method']])) $errors[] = ['Consent: please choose how the artist agreed.', 'الموافقة: يرجى اختيار طريقة الموافقة.'];
-                if (!$cDate) $errors[] = ['Consent: please choose the date the artist agreed.', 'الموافقة: يرجى اختيار تاريخ الموافقة.'];
-                elseif ($cDate > date('Y-m-d')) $errors[] = ['Consent: the date cannot be in the future.', 'الموافقة: لا يمكن أن يكون التاريخ في المستقبل.'];
-                if (mb_strlen($f['c_name_en']) > 200 || mb_strlen($f['c_name_ar']) > 200 || mb_strlen($f['c_contact']) > 190) $errors[] = ['Consent: a field is too long.', 'الموافقة: أحد الحقول طويل جداً.'];
+                if (!isset($METHODS[$f['c_method']])) $errors[] = ['Consent: please choose how the artist agreed', 'الموافقة: يرجى اختيار طريقة الموافقة'];
+                if (!$cDate) $errors[] = ['Consent: please choose the date the artist agreed', 'الموافقة: يرجى اختيار تاريخ الموافقة'];
+                elseif ($cDate > date('Y-m-d')) $errors[] = ['Consent: the date cannot be in the future', 'الموافقة: لا يمكن أن يكون التاريخ في المستقبل'];
+                if (mb_strlen($f['c_name_en']) > 200 || mb_strlen($f['c_name_ar']) > 200 || mb_strlen($f['c_contact']) > 190) $errors[] = ['Consent: a field is too long', 'الموافقة: أحد الحقول طويل جدا'];
             }
             $activeConsent = $existing && array_filter($existing['consents'], fn($x) => $x['withdrawn_at'] === null);
             if ($f['status'] === 'published' && $hasPhotos && !$activeConsent && !$newConsent) {
@@ -254,7 +254,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $r = owStoreConsentProof($proofFile);
             if ($r['ok']) $proofPath = $r['path'];
             else $errors[] = $r['err'] === 'type'
-                ? ['Consent proof: please choose a photo (JPG, PNG, WEBP) or a PDF.', 'إثبات الموافقة: يرجى اختيار صورة (JPG أو PNG أو WEBP) أو ملف PDF.']
+                ? ['Consent proof: please choose a photo (JPG, PNG, WEBP) or a PDF', 'إثبات الموافقة: يرجى اختيار صورة (JPG أو PNG أو WEBP) أو ملف PDF']
                 : owUploadErrBi($r['err'], 'Consent proof', 'إثبات الموافقة');
         }
 
@@ -313,8 +313,8 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 if ($askPublish && owSubmitChange((int) $staff['user_id'], 'article', $id, ['publish' => 1])) {
                     flash('Saved. It will be published once the admin approves it.', 'تم الحفظ. سيُنشر بعد موافقة الإدارة.');
                 } else
-                flash($f['status'] === 'published' ? 'Saved and published.' : 'Saved as a draft.',
-                      $f['status'] === 'published' ? 'تم الحفظ والنشر.' : 'تم الحفظ كمسودة.');
+                flash($f['status'] === 'published' ? 'Saved and published' : 'Saved as a draft',
+                      $f['status'] === 'published' ? 'تم الحفظ والنشر' : 'تم الحفظ كمسودة');
                 header('Location: admin_articles.php?edit=' . $id);
                 exit;
             } catch (Throwable $e) {
@@ -433,7 +433,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
   <div class="top">
     <div>
       <h1><?= owBi('Articles', 'المقالات') ?></h1>
-      <p class="sub"><?= owBi('Events, artist spotlights and art education — written by the Oweili team.', 'الملتقيات وأضواء الفنانين والتثقيف الفني — بقلم فريق أويلي.') ?></p>
+      <p class="sub"><?= owBi('Events, artist spotlights and art education — written by the Oweili team', 'الملتقيات وأضواء الفنانين والتثقيف الفني — بقلم فريق أويلي') ?></p>
     </div>
     <div class="top-links">
       <?php owCornerControls('tgl()'); ?>
@@ -491,7 +491,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
             <a class="btn btn-secondary btn-sm" href="admin_articles.php?edit=<?= (int) $r['id'] ?>"><?= owBi('Edit', 'تعديل') ?></a>
             <form method="post" action="admin_articles.php?tab=<?= e($tab) ?>" class="js-confirm"
                   data-confirm-en="Delete “<?= e($r['title_en']) ?>”? Its photos will be deleted too. This cannot be undone."
-                  data-confirm-ar="حذف «<?= e($r['title_ar']) ?>»؟ ستُحذف صوره أيضاً. لا يمكن التراجع عن ذلك.">
+                  data-confirm-ar="حذف «<?= e($r['title_ar']) ?>»؟ ستُحذف صوره أيضا. لا يمكن التراجع عن ذلك.">
               <?= csrfField() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int) $r['id'] ?>">
               <button class="btn btn-danger btn-sm" type="submit"><?= owBi('Delete', 'حذف') ?></button>
             </form>
@@ -508,7 +508,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
       <div class="msg bad" role="alert">
         <?= owBi('⚠ Please fix these and save again:', '⚠ يرجى تصحيح ما يلي ثم الحفظ مرة أخرى:') ?>
         <ul><?php foreach ($errors as [$en, $ar]): ?><li><?= owBi($en, $ar) ?></li><?php endforeach; ?></ul>
-        <?php if (!empty($_FILES)): ?><div class="hint"><?= owBi('Photos you chose were not saved — please choose them again.', 'الصور التي اخترتها لم تُحفظ — يرجى اختيارها مرة أخرى.') ?></div><?php endif; ?>
+        <?php if (!empty($_FILES)): ?><div class="hint"><?= owBi('Photos you chose were not saved — please choose them again', 'الصور التي اخترتها لم تُحفظ — يرجى اختيارها مرة أخرى') ?></div><?php endif; ?>
       </div>
     <?php endif; ?>
 
@@ -526,7 +526,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
         <p class="slug"><?= owBi('Web address:', 'عنوان الصفحة:') ?> article.php?slug=<?= e($article['slug']) ?>
           <?= $article['published_at'] ? '' : owBi(' (made from the English title; it stays fixed once published)', ' (من العنوان الإنجليزي؛ ويثبت بعد النشر)') ?></p>
       <?php else: ?>
-        <p class="slug"><?= owBi('The web address is made from the English title automatically.', 'يُنشأ عنوان الصفحة من العنوان الإنجليزي تلقائياً.') ?></p>
+        <p class="slug"><?= owBi('The web address is made from the English title automatically', 'يُنشأ عنوان الصفحة من العنوان الإنجليزي تلقائيا') ?></p>
       <?php endif; ?>
 
       <fieldset>
@@ -539,7 +539,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
         </div>
         <div class="field"><label for="body_en"><?= owBi('Text in English', 'النص بالإنجليزية') ?> <span class="req">*</span></label>
           <textarea id="body_en" name="body_en" dir="ltr" lang="en" required><?= $v('body_en') ?></textarea>
-          <span class="hint"><?= owBi('Leave an empty line between paragraphs.', 'اترك سطراً فارغاً بين الفقرات.') ?></span></div>
+          <span class="hint"><?= owBi('Leave an empty line between paragraphs', 'اترك سطرا فارغا بين الفقرات') ?></span></div>
         <div class="field"><label for="body_ar"><?= owBi('Text in Arabic', 'النص بالعربية') ?> <span class="req">*</span></label>
           <textarea id="body_ar" name="body_ar" dir="rtl" lang="ar" required><?= $v('body_ar') ?></textarea></div>
       </fieldset>
@@ -563,7 +563,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
       <fieldset>
         <legend><?= owBi('Photos', 'الصور') ?></legend>
         <?php if ($type === 'artist_spotlight'): ?>
-          <p class="hint" style="margin:0 0 12px;"><?= owBi('Photos of a local artist can only be published after their consent is recorded below.', 'لا تُنشر صور فنان محلي إلا بعد تسجيل موافقته في الأسفل.') ?></p>
+          <p class="hint" style="margin:0 0 12px;"><?= owBi('Photos of a local artist can only be published after their consent is recorded below', 'لا تُنشر صور فنان محلي إلا بعد تسجيل موافقته في الأسفل') ?></p>
         <?php endif; ?>
         <div class="field">
           <span class="lbl" id="cover-lbl"><?= owBi('Cover image', 'صورة الغلاف') ?></span>
@@ -572,7 +572,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
               <img src="<?= e($article['cover_image_path']) ?>" alt="<?= e($article['title_en'] . ' · ' . $article['title_ar']) ?>">
               <label class="radio"><input type="checkbox" name="remove_cover" value="1"<?= !empty($form['remove_cover']) ? ' checked' : '' ?>> <?= owBi('Remove cover', 'إزالة الغلاف') ?></label>
             </div>
-            <span class="hint"><?= owBi('Choose a new photo to replace it.', 'اختر صورة جديدة لاستبدالها.') ?></span>
+            <span class="hint"><?= owBi('Choose a new photo to replace it', 'اختر صورة جديدة لاستبدالها') ?></span>
           <?php endif; ?>
           <input type="file" name="cover" accept="image/jpeg,image/png,image/webp" aria-labelledby="cover-lbl">
           <span class="hint"><?= owBi('JPG, PNG or WEBP, up to 10MB. A wide photo looks best.', 'JPG أو PNG أو WEBP حتى 10 ميغابايت. الصورة العريضة أجمل.') ?></span>
@@ -588,7 +588,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
             </div>
           <?php endif; ?>
           <input type="file" name="images[]" multiple accept="image/jpeg,image/png,image/webp" aria-labelledby="imgs-lbl">
-          <span class="hint"><?= owBi('You can choose several at once (up to ' . OW_ARTICLE_MAX_IMAGES . ' in total).', 'يمكنك اختيار عدة صور معاً (حتى ' . OW_ARTICLE_MAX_IMAGES . ' صورة).') ?></span>
+          <span class="hint"><?= owBi('You can choose several at once (up to ' . OW_ARTICLE_MAX_IMAGES . ' in total).', 'يمكنك اختيار عدة صور معا (حتى ' . OW_ARTICLE_MAX_IMAGES . ' صورة).') ?></span>
         </div>
       </fieldset>
 
@@ -619,7 +619,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
             </div>
           <?php endforeach; ?>
           </div>
-          <p class="hint" style="margin:0 0 10px;"><?= owBi('Consent records are kept as a legal record and cannot be deleted. Add another one below if needed.', 'سجلات الموافقة تُحفظ كسجل قانوني ولا يمكن حذفها. أضف سجلاً آخر في الأسفل عند الحاجة.') ?></p>
+          <p class="hint" style="margin:0 0 10px;"><?= owBi('Consent records are kept as a legal record and cannot be deleted. Add another one below if needed.', 'سجلات الموافقة تُحفظ كسجل قانوني ولا يمكن حذفها. أضف سجلا آخر في الأسفل عند الحاجة.') ?></p>
         <?php else: ?>
           <p class="hint" style="margin:0 0 12px;"><?= owBi('Record how the artist agreed to have their photos published. This record is kept and cannot be deleted.', 'سجّل كيف وافق الفنان على نشر صوره. يُحفظ هذا السجل ولا يمكن حذفه.') ?></p>
         <?php endif; ?>
@@ -641,7 +641,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
             <input type="date" id="c_date" name="c_date" max="<?= date('Y-m-d') ?>" value="<?= $v('c_date') ?>"></div>
           <div class="field"><span class="lbl" id="proof-lbl"><?= owBi('Proof (screenshot or signed form)', 'الإثبات (لقطة شاشة أو نموذج موقّع)') ?></span>
             <input type="file" name="c_proof" accept="image/jpeg,image/png,image/webp,application/pdf" aria-labelledby="proof-lbl">
-            <span class="hint"><?= owBi('Photo or PDF, up to 10MB. Kept private — only the team can open it.', 'صورة أو PDF حتى 10 ميغابايت. يبقى خاصاً — لا يفتحه إلا الفريق.') ?></span></div>
+            <span class="hint"><?= owBi('Photo or PDF, up to 10MB. Kept private — only the team can open it.', 'صورة أو PDF حتى 10 ميغابايت. يبقى خاصا — لا يفتحه إلا الفريق.') ?></span></div>
         </div>
       </fieldset>
       <?php endif; ?>
@@ -664,7 +664,7 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
     if ($article): foreach ($article['consents'] as $c): if ($c['withdrawn_at']) continue; ?>
       <form id="wd-<?= (int) $c['id'] ?>" method="post" action="admin_articles.php" class="js-confirm" hidden
             data-confirm-en="Mark this consent as withdrawn? The record is kept, and an article with photos and no other consent goes back to draft."
-            data-confirm-ar="تسجيل سحب هذه الموافقة؟ يبقى السجل محفوظاً، والمقال الذي يحتوي على صور دون موافقة أخرى يعود مسودة.">
+            data-confirm-ar="تسجيل سحب هذه الموافقة؟ يبقى السجل محفوظا، والمقال الذي يحتوي على صور دون موافقة أخرى يعود مسودة.">
         <?= csrfField() ?><input type="hidden" name="action" value="withdraw"><input type="hidden" name="consent_id" value="<?= (int) $c['id'] ?>">
       </form>
     <?php endforeach; endif; ?>

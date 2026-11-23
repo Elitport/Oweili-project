@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join Oweili', 'ar' => 'انضم إلى أويلي', 'desc_en' => 'Join free as an artist or a collector. Real art, made by real hands.', 'desc_ar' => 'انضم مجاناً كفنان أو مقتنٍ. فن أصيل بأيدٍ حقيقية.', 'path' => 'register.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join Oweili', 'ar' => 'انضم إلى أويلي', 'desc_en' => 'Join free as an artist or a collector. Real art, made by real hands.', 'desc_ar' => 'انضم مجانا كفنان أو مقتن. فن أصيل بأيد حقيقية.', 'path' => 'register.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -44,7 +44,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 <div class="wrap">
   <div class="head">
     <h1 id="t-h1">Join Oweili</h1>
-    <p id="t-sub">Choose how you would like to join us.</p>
+    <p id="t-sub">Choose how you would like to join us</p>
     <div class="j-hero-btns"><a class="btn btn-primary" id="t-hb-a" href="register_artist.php">I am an Artist</a><a class="btn btn-secondary" id="t-hb-c" href="register_collector.php">I am a Collector</a></div>
   </div>
   <div class="choices">
@@ -68,18 +68,18 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 
 <script>
 const T={
-  en:{dir:'ltr',lb:'العربية',h1:'Join Oweili',sub:'Choose how you would like to join us.',
+  en:{dir:'ltr',lb:'العربية',h1:'Join Oweili',sub:'Choose how you would like to join us',
     aTitle:'I am an Artist',aDesc:'Share your work and sell it to people who care. We review every artist by hand. You will need a photo and a few artworks. A short video is optional.',aGo:'Join as Artist',
     cTitle:'I am a Collector',cDesc:'Find art made by real hands and bring it home. Signing up takes a minute.',cGo:'Join as Collector',
     have:'Already one of us?',login:'Sign In',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',h1:'انضم إلى أويلي',sub:'اختر كيف تحب أن تنضم إلينا.',
+  ar:{dir:'rtl',lb:'English',h1:'انضم إلى أويلي',sub:'اختر كيف تحب أن تنضم إلينا',
     aTitle:'أنا فنان',aDesc:'شارك أعمالك وبِعها لمن يقدّرها. نراجع كل فنان بعناية. ستحتاج صورة وبعض أعمالك، والمقطع القصير اختياري.',aGo:'انضم كفنان',
-    cTitle:'أنا مقتنٍ',cDesc:'اعثر على فن صنعته أيدٍ حقيقية، وخذه إلى بيتك. التسجيل يستغرق دقيقة.',cGo:'انضم كمقتنٍ',
+    cTitle:'أنا مقتن',cDesc:'اعثر على فن صنعته أيد حقيقية، وخذه إلى بيتك. التسجيل يستغرق دقيقة.',cGo:'انضم كمقتن',
     have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
+      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا'}}
 };
 let L='en';
 function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}

@@ -58,7 +58,7 @@ $tooBig = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && empty($_POST) && (
 if ($tooBig) { $error = 'size'; }
 
 if ($ready && !$tooBig && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token'); }
     $action = $_POST['action'] ?? '';
     $db = getDB();
 
@@ -198,18 +198,18 @@ $idQ     = $draft ? '?id=' . (int) $draft['id'] . '&step=' : '?step=';
 
 /* Bilingual error messages */
 $ERR = [
-    'titles'     => ['Please enter the title in Arabic or English.', 'يرجى إدخال العنوان بالعربية أو الإنجليزية.'],
-    'too_long'   => ['Titles can be up to 200 characters and descriptions up to 3,000.', 'العنوان حتى 200 حرف والوصف حتى 3000 حرف.'],
-    'none'       => ['Please take a photo first.', 'يرجى التقاط صورة أولاً.'],
+    'titles'     => ['Please enter the title in Arabic or English', 'يرجى إدخال العنوان بالعربية أو الإنجليزية'],
+    'too_long'   => ['Titles can be up to 200 characters and descriptions up to 3,000', 'العنوان حتى 200 حرف والوصف حتى 3000 حرف'],
+    'none'       => ['Please take a photo first', 'يرجى التقاط صورة أولا'],
     'size'       => ['This photo is larger than 10MB. Please take it again.', 'حجم الصورة أكبر من 10 ميغابايت. يرجى التقاطها مرة أخرى.'],
-    'type'       => ['Please use a JPG, PNG or WEBP photo.', 'يرجى استخدام صورة بصيغة JPG أو PNG أو WEBP.'],
+    'type'       => ['Please use a JPG, PNG or WEBP photo', 'يرجى استخدام صورة بصيغة JPG أو PNG أو WEBP'],
     'save'       => ['The photo could not be saved. Please try again.', 'تعذّر حفظ الصورة. يرجى المحاولة مرة أخرى.'],
-    'need100'    => ['Please take the finished (100%) photo first.', 'يرجى التقاط صورة العمل المكتمل (100%) أولاً.'],
-    'incomplete' => ['The 25% photo, the 100% photo and the art type are required before submitting.', 'صورة 25% وصورة 100% ونوع الفن مطلوبة قبل الإرسال.'],
-    'price'      => ['Please enter a price of at least 1 SAR (numbers only).', 'يرجى إدخال سعر لا يقل عن 1 ريال (أرقام فقط).'],
+    'need100'    => ['Please take the finished (100%) photo first', 'يرجى التقاط صورة العمل المكتمل (100%) أولا'],
+    'incomplete' => ['The 25% photo, the 100% photo and the art type are required before submitting', 'صورة 25% وصورة 100% ونوع الفن مطلوبة قبل الإرسال'],
+    'price'      => ['Please enter a price of at least 1 SAR (numbers only)', 'يرجى إدخال سعر لا يقل عن 1 ريال (أرقام فقط)'],
 ] + owCertDetailErrors();
 if ($error === 'type' && ($_POST['action'] ?? '') === 'save_choices') {
-    $ERR['type'] = ['Please choose the type of art.', 'يرجى اختيار نوع الفن.'];
+    $ERR['type'] = ['Please choose the type of art', 'يرجى اختيار نوع الفن'];
 }
 
 $STEP_NAMES = [
@@ -337,8 +337,8 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 <main class="wrap">
 <?php if (!$ready): ?>
   <div class="card panel">
-    <?= t2('Start New Artwork', 'ابدأ عملاً فنياً جديداً', 'h1') ?>
-    <p class="lead"><?= t2('The new 3-stage upload is being set up. Please check back soon.', 'يجري تجهيز نظام الرفع الجديد بثلاث مراحل. يرجى العودة قريباً.') ?></p>
+    <?= t2('Start New Artwork', 'ابدأ عملا فنيا جديدا', 'h1') ?>
+    <p class="lead"><?= t2('The new 3-stage upload is being set up. Please check back soon.', 'يجري تجهيز نظام الرفع الجديد بثلاث مراحل. يرجى العودة قريبا.') ?></p>
     <a class="btn btn-secondary" href="artist_studio.php"><?= t2('Back to My Studio', 'العودة إلى مرسمي') ?></a>
   </div>
 
@@ -348,12 +348,12 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
     <?= t2('Your artwork has been submitted. Our team will review it within 24 hours.', 'تم إرسال عملك. سيراجعه فريقنا خلال 24 ساعة.', 'h1', 'style="font-size:22px;line-height:1.5;"') ?>
     <div class="actions" style="margin-top:20px;">
       <a class="btn btn-dark" href="artist_studio.php"><?= t2('Back to My Studio', 'العودة إلى مرسمي') ?></a>
-      <a class="btn btn-secondary" href="upload_artwork.php"><?= t2('Start another artwork', 'ابدأ عملاً آخر') ?></a>
+      <a class="btn btn-secondary" href="upload_artwork.php"><?= t2('Start another artwork', 'ابدأ عملا آخر') ?></a>
     </div>
   </div>
 
 <?php else: ?>
-  <?= t2('Start New Artwork', 'ابدأ عملاً فنياً جديداً', 'h1') ?>
+  <?= t2('Start New Artwork', 'ابدأ عملا فنيا جديدا', 'h1') ?>
   <p class="lead"><?= t2('Show the real journey of your work. Your progress is saved after every step. You can come back any time.', 'اعرض الرحلة الحقيقية لعملك. يُحفظ تقدّمك بعد كل خطوة، ويمكنك العودة في أي وقت.') ?></p>
 
   <nav class="progress" aria-label="Progress · التقدم">
@@ -385,7 +385,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
         <input type="hidden" name="action" value="save_details">
         <input type="hidden" name="step" value="1">
         <?php if ($draft): ?><input type="hidden" name="artwork_id" value="<?= (int) $draft['id'] ?>"><?php endif; ?>
-        <p class="hint"><?= t2('Write the title in Arabic, in English, or in both.', 'اكتب العنوان بالعربية أو بالإنجليزية أو بكلتيهما.') ?></p>
+        <p class="hint"><?= t2('Write the title in Arabic, in English, or in both', 'اكتب العنوان بالعربية أو بالإنجليزية أو بكلتيهما') ?></p>
         <div class="field<?= owBadField($error === 'titles' ? ['title'] : [], 'title') ?>">
           <label for="title_ar"><?= t2('Title in Arabic', 'العنوان بالعربية') ?></label>
           <input id="title_ar" name="title_ar" dir="rtl" lang="ar" maxlength="200"<?= $error === 'titles' ? ' aria-invalid="true"' : '' ?> value="<?= e($_POST['title_ar'] ?? ($draft['title_ar'] ?? '')) ?>">
@@ -449,7 +449,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 
         <fieldset style="border:0;">
           <legend class="sub-h" style="margin-top:0;"><?= t2('Colors used', 'الألوان المستخدمة') ?></legend>
-          <p class="sub-p"><?= t2('Tap every color you used.', 'اضغط على كل لون استخدمته.') ?></p>
+          <p class="sub-p"><?= t2('Tap every color you used', 'اضغط على كل لون استخدمته') ?></p>
           <div class="chips">
             <?php $sel = isset($_POST['colors']) ? (array) $_POST['colors'] : $savedColors;
             foreach ($COLORS as $key => $c): ?>
@@ -549,7 +549,7 @@ function applyLang(l){
   h.setAttribute('lang', l);
   var m = NAV_T[l];
   for (var id in m) { var el = document.getElementById(id); if (el) el.textContent = m[id]; }
-  document.title = l === 'ar' ? 'ابدأ عملاً فنياً جديداً · أويلي' : 'Start New Artwork · Oweili';
+  document.title = l === 'ar' ? 'ابدأ عملا فنيا جديدا · أويلي' : 'Start New Artwork · Oweili';
 }
 function tgl(){
   var l = document.documentElement.getAttribute('dir') === 'rtl' ? 'en' : 'ar';
@@ -583,7 +583,7 @@ document.querySelectorAll('.cam-form').forEach(function(form){
     setTimeout(function(){ save.disabled = true; }, 0);
     var s = save.querySelector('.nav-i18n');
     var ar = document.documentElement.getAttribute('dir') === 'rtl';
-    s.textContent = ar ? 'جارٍ رفع الصورة…' : 'Uploading photo…';
+    s.textContent = ar ? 'جار رفع الصورة…' : 'Uploading photo…';
   });
 });
 /* Loading state on the final submit */

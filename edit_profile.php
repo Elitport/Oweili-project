@@ -20,7 +20,7 @@ $pendingProfile  = $holdForApproval ? owPendingChange('profile', $uid) : null;
 if ($pendingProfile && array_keys($pendingProfile['data']) === ['signature']) $pendingProfile = null;   // only a certificate signature waits (signature.php), not a profile change
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token'); }
 
     $isArtist = ($u['role'] ?? '') === 'artist';
     /* the public name (what visitors see) is its own field; the full names are private (owner, 13 Nov 2026) */
@@ -172,21 +172,21 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
 <div class="page" id="pg">
   <div class="head">
     <h1 id="t-title">Edit Profile</h1>
-    <p id="t-sub">Update your public artist profile.</p>
+    <p id="t-sub">Update your public artist profile</p>
   </div>
 
   <div class="card">
     <?php if ($err): ?>
       <div class="err-box" id="err"
-           data-en="<?= $err==='pubname' ? 'Please enter your public name. It is the name visitors see.' : ($err==='name' ? 'Please enter your name.' : ($err==='phone' ? 'Please enter a valid phone number.' : ($err==='name_letters' ? 'Please write your name in letters, not only numbers or symbols.' : ($err==='link' ? 'Please check your links. Use a full web address, like https://instagram.com/yourname.' : 'Profile picture must be a JPG or PNG under 5 MB.')))) ?>"
-           data-ar="<?= $err==='pubname' ? 'يرجى إدخال اسمك العام، وهو الاسم الذي يراه الزوار.' : ($err==='name' ? 'يرجى إدخال اسمك.' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح.' : ($err==='name_letters' ? 'يرجى كتابة الاسم بالحروف، لا بالأرقام أو الرموز فقط.' : ($err==='link' ? 'يرجى مراجعة الروابط. استخدم عنواناً كاملاً مثل https://instagram.com/yourname.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت.')))) ?>">
+           data-en="<?= $err==='pubname' ? 'Please enter your public name. It is the name visitors see.' : ($err==='name' ? 'Please enter your name' : ($err==='phone' ? 'Please enter a valid phone number' : ($err==='name_letters' ? 'Please write your name in letters, not only numbers or symbols' : ($err==='link' ? 'Please check your links. Use a full web address, like https://instagram.com/yourname.' : 'Profile picture must be a JPG or PNG under 5 MB')))) ?>"
+           data-ar="<?= $err==='pubname' ? 'يرجى إدخال اسمك العام، وهو الاسم الذي يراه الزوار' : ($err==='name' ? 'يرجى إدخال اسمك' : ($err==='phone' ? 'يرجى إدخال رقم هاتف صالح' : ($err==='name_letters' ? 'يرجى كتابة الاسم بالحروف، لا بالأرقام أو الرموز فقط' : ($err==='link' ? 'يرجى مراجعة الروابط. استخدم عنوانا كاملا مثل https://instagram.com/yourname.' : 'يجب أن تكون الصورة الشخصية بصيغة JPG أو PNG وأقل من 5 ميجابايت')))) ?>">
       </div>
     <?php endif; ?>
 
     <?php if ($pendingProfile): ?>
       <div class="ok-box" role="status"><?= owBi('Your last profile changes are waiting for approval. Visitors still see your approved profile. Saving again replaces the waiting changes.', 'تعديلات ملفك الأخيرة بانتظار الموافقة. ما زال الزوار يرون ملفك المعتمد. الحفظ مرة أخرى يستبدل التعديلات المنتظرة.') ?></div>
     <?php elseif ($holdForApproval): ?>
-      <p class="wait-note">⏳ <?= owBi('Your profile is public. Changes to your photo, names, bio, city, styles or links wait for the team’s approval before visitors see them. Your phone number is private and saves straight away.', 'ملفك ظاهر للزوار. التعديلات على الصورة أو الاسم أو النبذة أو المدينة أو الأساليب أو الروابط تنتظر موافقة الفريق قبل أن يراها الزوار. رقم هاتفك خاص ويُحفظ فوراً.') ?></p>
+      <p class="wait-note">⏳ <?= owBi('Your profile is public. Changes to your photo, names, bio, city, styles or links wait for the team’s approval before visitors see them. Your phone number is private and saves straight away.', 'ملفك ظاهر للزوار. التعديلات على الصورة أو الاسم أو النبذة أو المدينة أو الأساليب أو الروابط تنتظر موافقة الفريق قبل أن يراها الزوار. رقم هاتفك خاص ويُحفظ فورا.') ?></p>
     <?php endif; ?>
 
     <form method="post" action="edit_profile.php" enctype="multipart/form-data">
@@ -247,7 +247,7 @@ $val = fn($k) => e((string) ($u[$k] ?? ''));
     </form>
     <?php if (($u['role'] ?? '') === 'artist'): require_once __DIR__ . '/sig_lib.php'; ?>
     <div class="sig-link" style="margin-top:var(--space-md);padding-top:var(--space-md);border-top:1px solid var(--color-border);display:flex;flex-wrap:wrap;gap:var(--space-xs);align-items:center;justify-content:space-between">
-      <span><b><span class="bi-en">My signature for certificates</span><span class="bi-ar">توقيعي على الشهادات</span></b><br><span class="bi-en"><?= owSigExists((string) $u['id']) ? 'Saved. It appears on all your certificates.' : 'Not drawn yet. Draw it once with your finger or mouse.' ?></span><span class="bi-ar"><?= owSigExists((string) $u['id']) ? 'محفوظ، ويظهر على كل شهاداتك.' : 'لم يُرسم بعد. ارسمه مرة واحدة بإصبعك أو بالفأرة.' ?></span></span>
+      <span><b><span class="bi-en">My signature for certificates</span><span class="bi-ar">توقيعي على الشهادات</span></b><br><span class="bi-en"><?= owSigExists((string) $u['id']) ? 'Saved. It appears on all your certificates.' : 'Not drawn yet. Draw it once with your finger or mouse.' ?></span><span class="bi-ar"><?= owSigExists((string) $u['id']) ? 'محفوظ، ويظهر على كل شهاداتك' : 'لم يُرسم بعد. ارسمه مرة واحدة بإصبعك أو بالفأرة.' ?></span></span>
       <a class="btn btn-secondary btn-sm" href="signature.php"><span class="bi-en"><?= owSigExists((string) $u['id']) ? 'Change signature' : 'Draw my signature' ?></span><span class="bi-ar"><?= owSigExists((string) $u['id']) ? 'غيّر التوقيع' : 'ارسم توقيعي' ?></span></a>
     </div>
     <?php endif; ?>
@@ -263,18 +263,18 @@ function previewPhoto(inp){
   }
 }
 const T={
-  en:{dir:'ltr',lb:'العربية',title:'Edit Profile',sub:'Update your public artist profile.',
+  en:{dir:'ltr',lb:'العربية',title:'Edit Profile',sub:'Update your public artist profile',
     photo:'Profile picture (JPG/PNG, max 5MB)',<?php if (($u['role'] ?? '') === 'artist'): ?>pub:'Public name: shown to visitors',nen:'Full name in English: private',nar:'Full name in Arabic: private',<?php else: ?>nen:'Artist name (English)',nar:'Artist name (Arabic)',<?php endif; ?>
     city:'City',phone:'Phone number',ben:'Bio (English)',bar:'Bio (Arabic)',ig:'Instagram',tw:'Twitter / X',web:'Website',
     save:'Save Changes',cancel:'Cancel',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',title:'تعديل الملف الشخصي',sub:'حدّث ملفك الشخصي العام كفنان.',
+  ar:{dir:'rtl',lb:'English',title:'تعديل الملف الشخصي',sub:'حدّث ملفك الشخصي العام كفنان',
     photo:'الصورة الشخصية (JPG/PNG، بحد أقصى 5 ميجابايت)',<?php if (($u['role'] ?? '') === 'artist'): ?>pub:'الاسم العام: يظهر للزوار',nen:'الاسم الكامل بالإنجليزية: خاص',nar:'الاسم الكامل بالعربية: خاص',<?php else: ?>nen:'اسم الفنان (بالإنجليزية)',nar:'اسم الفنان (بالعربية)',<?php endif; ?>
     city:'المدينة',phone:'رقم الهاتف',ben:'نبذة (بالإنجليزية)',bar:'نبذة (بالعربية)',ig:'إنستغرام',tw:'تويتر / X',web:'الموقع الإلكتروني',
     save:'حفظ التغييرات',cancel:'إلغاء',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
+      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا'}}
 };
 let L='en';
 function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}

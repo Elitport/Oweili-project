@@ -141,7 +141,7 @@ $placeCard = function (array $p) use ($PIN): string {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Art Map', 'ar' => 'وجهات الفن', 'desc_en' => 'Museums, art galleries and art institutes across Saudi Arabia, in one place.', 'desc_ar' => 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد.', 'path' => 'art_map.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Art Map', 'ar' => 'وجهات الفن', 'desc_en' => 'Museums, art galleries and art institutes across Saudi Arabia, in one place', 'desc_ar' => 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد', 'path' => 'art_map.php']); ?>
 <meta property="og:title" content="Art Map · وجهات الفن · Oweili">
 <meta property="og:type" content="website">
 <?php include __DIR__ . '/theme_head.php'; ?>
@@ -279,7 +279,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
   <div class="d-wrap">
     <header class="d-head reveal">
       <h1><?= owBi('Art Map', 'وجهات الفن') ?></h1>
-      <p><?= owBi('Museums, art galleries and art institutes across Saudi Arabia, in one place.', 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد.') ?></p>
+      <p><?= owBi('Museums, art galleries and art institutes across Saudi Arabia, in one place', 'المتاحف والمعارض الفنية والمعاهد الفنية في السعودية، في مكان واحد') ?></p>
     </header>
 
     <div class="m-bar" id="results">
@@ -331,7 +331,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
             </div>
           </div>
           <p class="i-desc"><?= owBi('Capture the warmth of Saudi desert light. Layer by layer, until the dunes glow.', 'التقط دفء ضوء الصحراء السعودية. طبقة بعد طبقة، حتى تتوهّج الكثبان.') ?></p>
-          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريبا') ?></span>
           <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
         </article>
         <article class="card i-card ws-card reveal">
@@ -343,7 +343,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
             </div>
           </div>
           <p class="i-desc"><?= owBi('Paint wide horizons and golden sunset skies. Classic oil techniques, step by step.', 'ارسم الآفاق الواسعة وسماء الغروب الذهبية. تعلّم تقنيات الزيت الكلاسيكية خطوة بخطوة.') ?></p>
-          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريبا') ?></span>
           <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
         </article>
         <article class="card i-card ws-card reveal">
@@ -355,7 +355,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
             </div>
           </div>
           <p class="i-desc"><?= owBi('Love Arabic letters and geometric patterns. Then bring them to life on screen.', 'اعشق الحرف العربي والزخارف الهندسية. ثم امنحها الحياة على الشاشة.') ?></p>
-          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريبا') ?></span>
           <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
         </article>
         <article class="card i-card ws-card reveal">
@@ -367,7 +367,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
             </div>
           </div>
           <p class="i-desc"><?= owBi('Draw carved doors and Najdi mud houses in charcoal and ink. Every line holds a story.', 'ارسم الأبواب المنقوشة والبيوت النجدية بالفحم والحبر. كل خط يحفظ حكاية.') ?></p>
-          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريبا') ?></span>
           <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
         </article>
         <article class="card i-card ws-card reveal">
@@ -379,7 +379,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
             </div>
           </div>
           <p class="i-desc"><?= owBi('Mix collage, color and photography. Tell the story of Saudi Arabia today, in your own voice.', 'امزج الكولاج والألوان والتصوير. احكِ قصة السعودية اليوم بصوتك أنت.') ?></p>
-          <span class="ws-soon"><?= owBi('Coming Soon', 'قريباً') ?></span>
+          <span class="ws-soon"><?= owBi('Coming Soon', 'قريبا') ?></span>
           <a class="btn btn-dark" href="register.php"><?= owBi('Notify Me', 'أبلغني') ?></a>
         </article>
       </div>
@@ -391,25 +391,25 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
         <?php if ($tab === 'all'): ?>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
         <?php if ($sq !== ''): ?>
-          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسماً أو مدينة أخرى.') ?>
+          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسما أو مدينة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, '')) ?>"><?= owBi('Clear the search', 'امسح البحث') ?></a></div>
         <?php elseif ($city !== ''): ?>
           <?= owBi('No art places in this region on our map yet. Try another region.', 'لا وجهات فنية في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q('all', '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
         <?php else: ?>
-          <?= owBi('We are gathering the best art places for you. Check back soon.', 'نجمع لك أجمل وجهات الفن. عد قريباً.') ?>
+          <?= owBi('We are gathering the best art places for you. Check back soon.', 'نجمع لك أجمل وجهات الفن. عد قريبا.') ?>
           <div><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore the Gallery', 'تصفّح المعرض') ?></a></div>
         <?php endif; ?>
         <?php else: ?>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg>
         <?php if ($sq !== ''): ?>
-          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسماً أو مدينة أخرى.') ?>
+          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسما أو مدينة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, '')) ?>"><?= owBi('Clear the search', 'امسح البحث') ?></a></div>
         <?php elseif ($city !== ''): ?>
           <?= owBi('No institutes in this region yet. Try another region.', 'لا توجد معاهد في هذه المنطقة بعد. جرّب منطقة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q('institutes', '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
         <?php else: ?>
-          <?= owBi('We are gathering the best art institutes for you. Check back soon.', 'نجمع لك أفضل المعاهد الفنية. عد قريباً.') ?>
+          <?= owBi('We are gathering the best art institutes for you. Check back soon.', 'نجمع لك أفضل المعاهد الفنية. عد قريبا.') ?>
           <div><a class="btn btn-primary" href="articles_list.php?type=art_education"><?= owBi('Learn about art styles', 'تعرّف على الأساليب الفنية') ?></a></div>
         <?php endif; ?>
         <?php endif; ?>
@@ -417,7 +417,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
     <?php else: ?>
       <p class="result-count"><?= $tab === 'all'
           ? owBi($n === 1 ? '1 place' : $n . ' places', $n === 1 ? 'وجهة واحدة' : ($n === 2 ? 'وجهتان' : $n . ($n <= 10 ? ' وجهات' : ' وجهة')))
-          : owBi($n === 1 ? '1 institute' : $n . ' institutes', $n === 1 ? 'معهد واحد' : ($n === 2 ? 'معهدان' : $n . ($n <= 10 ? ' معاهد' : ' معهداً'))) ?></p>
+          : owBi($n === 1 ? '1 institute' : $n . ' institutes', $n === 1 ? 'معهد واحد' : ($n === 2 ? 'معهدان' : $n . ($n <= 10 ? ' معاهد' : ' معهدا'))) ?></p>
       <?php /* cards with a photo and cards without one sit in separate even rows (owner, 13 Nov 2026) */ if ($placesPhoto): ?>
       <div class="i-grid m-grp">
         <?php foreach ($placesPhoto as $p) echo $placeCard($p); ?>
@@ -485,7 +485,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
                     <span><?php
                       if ($total <= 0)     echo owBi('Ask the institute about seats', 'اسأل المعهد عن المقاعد');
                       elseif ($left <= 0)  echo owBi('Fully booked', 'اكتمل العدد');
-                      else                 echo owBi($left . ' of ' . $total . ' seats left', 'متبقٍ ' . $left . ' من ' . $total . ' مقعداً');
+                      else                 echo owBi($left . ' of ' . $total . ' seats left', 'متبق ' . $left . ' من ' . $total . ' مقعدا');
                     ?></span>
                   </div>
                   <?php if ((int) ($c['bookable'] ?? 0) === 1): /* a course booked on Oweili (14 Nov 2026; shown only once switched on) */ ?>
@@ -512,22 +512,22 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
         <?php if ($sq !== ''): ?>
-          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسماً أو مدينة أخرى.') ?>
+          <?= owBi('No places match “' . $sq . '”. Try another name or city.', 'لا توجد أماكن تطابق «' . $sq . '». جرّب اسما أو مدينة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, '')) ?>"><?= owBi('Clear the search', 'امسح البحث') ?></a></div>
         <?php elseif ($city !== ''): ?>
           <?= $kind === 'museum' ? owBi('No museums in this region on our map yet. Try another region.', 'لا متاحف في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.')
                                  : owBi('No art galleries in this region on our map yet. Try another region.', 'لا معارض فنية في هذه المنطقة على خريطتنا بعد. جرّب منطقة أخرى.') ?>
           <div><a class="btn btn-secondary" href="<?= e($q($tab, '')) ?>"><?= owBi('Show all regions', 'عرض كل المناطق') ?></a></div>
         <?php else: ?>
-          <?= $kind === 'museum' ? owBi('We are gathering the best museums for you. Check back soon.', 'نجمع لك أجمل المتاحف. عد قريباً.')
-                                 : owBi('We are gathering the best art galleries for you. Check back soon.', 'نجمع لك أجمل المعارض الفنية. عد قريباً.') ?>
+          <?= $kind === 'museum' ? owBi('We are gathering the best museums for you. Check back soon.', 'نجمع لك أجمل المتاحف. عد قريبا.')
+                                 : owBi('We are gathering the best art galleries for you. Check back soon.', 'نجمع لك أجمل المعارض الفنية. عد قريبا.') ?>
           <div><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore the Gallery', 'تصفّح المعرض') ?></a></div>
         <?php endif; ?>
       </div>
     <?php else: ?>
       <p class="result-count"><?= $kind === 'museum'
-          ? owBi($n === 1 ? '1 museum' : $n . ' museums', $n === 1 ? 'متحف واحد' : ($n === 2 ? 'متحفان' : $n . ($n <= 10 ? ' متاحف' : ' متحفاً')))
-          : owBi($n === 1 ? '1 art gallery' : $n . ' art galleries', $n === 1 ? 'معرض فني واحد' : ($n === 2 ? 'معرضان فنيان' : $n . ($n <= 10 ? ' معارض فنية' : ' معرضاً فنياً'))) ?></p>
+          ? owBi($n === 1 ? '1 museum' : $n . ' museums', $n === 1 ? 'متحف واحد' : ($n === 2 ? 'متحفان' : $n . ($n <= 10 ? ' متاحف' : ' متحفا')))
+          : owBi($n === 1 ? '1 art gallery' : $n . ' art galleries', $n === 1 ? 'معرض فني واحد' : ($n === 2 ? 'معرضان فنيان' : $n . ($n <= 10 ? ' معارض فنية' : ' معرضا فنيا'))) ?></p>
       <?php $withPh = array_values(array_filter($places, $hasPhoto)); $noPh = array_values(array_filter($places, fn($p) => !$hasPhoto($p))); ?>
       <?php if ($withPh): ?><div class="i-grid m-grid m-grp"><?php foreach ($withPh as $p) echo $placeCard($p); ?></div><?php endif; ?>
       <?php if ($noPh): ?><div class="i-grid m-grid m-grp"><?php foreach ($noPh as $p) echo $placeCard($p); ?></div><?php endif; ?>

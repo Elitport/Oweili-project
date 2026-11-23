@@ -60,7 +60,7 @@ if (!function_exists('owLogoMark')) {
       <div class="dropdown" id="dd-collect">
 <?php if ($owGiftOn): ?>        <a href="gifts.php"<?= navAct('', 'gifts.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a><?php endif; ?>
 <?php if ($owCommOn): ?>        <a href="commission.php"<?= navAct('', 'commission.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span class="nav-i18n" data-en="Commissions" data-ar="طلب لوحة خاصة">Commissions</span></a><?php endif; ?>
-        <?php if ($owAucOn): ?>        <a href="auctions.php" id="nav-auctions-link"<?= navAct('', 'auctions.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6M11 7l6 6M13 5l-7 7 3 3 7-7M8 14l-5 5"/><path d="M3 21h9"/></svg><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span><span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a><?php endif; ?>
+        <?php if ($owAucOn): ?>        <a href="auctions.php" id="nav-auctions-link"<?= navAct('', 'auctions.php') ?>><svg class="d-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6M11 7l6 6M13 5l-7 7 3 3 7-7M8 14l-5 5"/><path d="M3 21h9"/></svg><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span><span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريبا">Soon</span></a><?php endif; ?>
       </div>
     </div>
 <?php endif; ?>
@@ -103,7 +103,7 @@ if (!function_exists('owLogoMark')) {
 <?php if ($owCollectUrl !== ''): ?>    <a class="mnav-link" href="<?= $owCollectUrl ?>"<?= navAct('collect') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Collect" data-ar="اقتنِ">Collect</span></a>
 <?php if ($owGiftOn): ?>    <a class="mnav-link mnav-sub" href="gifts.php"><span class="nav-i18n" data-en="Gifts" data-ar="هدايا">Gifts</span></a><?php endif; ?>
 <?php if ($owCommOn): ?>    <a class="mnav-link mnav-sub" href="commission.php"><span class="nav-i18n" data-en="Commissions" data-ar="طلب لوحة خاصة">Commissions</span></a><?php endif; ?>
-<?php if ($owAucOn): ?>    <a class="mnav-link mnav-sub" href="auctions.php"><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span> <span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريباً">Soon</span></a><?php endif; ?><?php endif; /* the Collect group */ ?>
+<?php if ($owAucOn): ?>    <a class="mnav-link mnav-sub" href="auctions.php"><span class="nav-i18n" data-en="Auctions" data-ar="المزاد">Auctions</span> <span class="nav-soon nav-i18n" data-en="Soon" data-ar="قريبا">Soon</span></a><?php endif; ?><?php endif; /* the Collect group */ ?>
     <a class="mnav-link" href="explore.php"<?= navAct('explore') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Styles" data-ar="الأساليب الفنية">Art Styles</span></a>
     <a class="mnav-link" href="articles_list.php?type=event"<?= navAct('art_event') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Art Events" data-ar="الملتقيات الفنية">Art Events</span></a>
 <?php if ($owSpotOn): ?>    <a class="mnav-link" href="articles_list.php?type=artist_spotlight"<?= navAct('art_artist_spotlight') ? ' data-active="1"' : '' ?>><span class="nav-i18n" data-en="Artist Spotlights" data-ar="أضواء على الفنانين">Artist Spotlights</span></a><?php endif; ?>
@@ -121,7 +121,7 @@ if (!function_exists('owLogoMark')) {
       <a class="mnav-link" href="logout.php"><span class="nav-i18n" data-en="Sign Out" data-ar="تسجيل الخروج">Sign Out</span></a>
     <?php else: ?>
       <a class="mnav-link" href="login.php"><span class="nav-i18n" data-en="Sign In" data-ar="تسجيل الدخول">Sign In</span></a>
-      <a class="mnav-link" href="register.php"><span class="nav-i18n" data-en="Join Free" data-ar="انضم مجاناً">Join Free</span></a>
+      <a class="mnav-link" href="register.php"><span class="nav-i18n" data-en="Join Free" data-ar="انضم مجانا">Join Free</span></a>
     <?php endif; ?>
     </div>
   </div>
@@ -154,7 +154,7 @@ if (!function_exists('owLogoMark')) {
     'nav-explore-label':     ['Art Styles', 'الأساليب الفنية'],
     'nav-support-label':     ['Support', 'الدعم'],
     'dd-sp1': ['Contact Us', 'تواصل معنا'], 'dd-sp2': ['How It Works', 'كيف يعمل الموقع'], 'dd-sp3': ['Terms of Use', 'شروط الاستخدام'],
-    'n-login-t': ['Sign In', 'تسجيل الدخول'], 'n-reg-t': ['Join Free', 'انضم مجاناً'], 'lb': ['ع', 'E']
+    'n-login-t': ['Sign In', 'تسجيل الدخول'], 'n-reg-t': ['Join Free', 'انضم مجانا'], 'lb': ['ع', 'E']
   };
   function syncNavI18n(){
     var ar = curLang() === 'ar';

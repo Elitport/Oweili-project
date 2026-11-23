@@ -12,16 +12,16 @@ require_once __DIR__ . '/mail_lib.php';
 /* Words for the error codes, in English and Arabic */
 const OW_ACCOUNT_ERR = [
     'csrf'      => ['The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'],
-    'current'   => ['Your current password is not right.', 'كلمة المرور الحالية غير صحيحة.'],
-    'weak'      => ['Please use 8 or more characters with a capital letter, a number and a symbol.', 'استخدم 8 أحرف أو أكثر، مع حرف كبير ورقم ورمز.'],
-    'mismatch'  => ['The two new passwords do not match.', 'كلمتا المرور الجديدتان غير متطابقتين.'],
-    'same'      => ['The new password is the same as the old one.', 'كلمة المرور الجديدة مثل القديمة.'],
-    'email'     => ['Please enter a valid email address.', 'يرجى إدخال بريد إلكتروني صحيح.'],
-    'email_same'=> ['This is already your email address.', 'هذا هو بريدك الحالي بالفعل.'],
-    'exists'    => ['This email belongs to another account.', 'هذا البريد مستخدم في حساب آخر.'],
-    'rate'      => ['Please wait a little before trying again.', 'يرجى الانتظار قليلاً قبل المحاولة مجدداً.'],
-    'name'      => ['Please enter your name.', 'يرجى كتابة اسمك.'],
-    'phone'     => ['Please enter a valid phone number.', 'يرجى إدخال رقم هاتف صحيح.'],
+    'current'   => ['Your current password is not right', 'كلمة المرور الحالية غير صحيحة'],
+    'weak'      => ['Please use 8 or more characters with a capital letter, a number and a symbol', 'استخدم 8 أحرف أو أكثر، مع حرف كبير ورقم ورمز'],
+    'mismatch'  => ['The two new passwords do not match', 'كلمتا المرور الجديدتان غير متطابقتين'],
+    'same'      => ['The new password is the same as the old one', 'كلمة المرور الجديدة مثل القديمة'],
+    'email'     => ['Please enter a valid email address', 'يرجى إدخال بريد إلكتروني صحيح'],
+    'email_same'=> ['This is already your email address', 'هذا هو بريدك الحالي بالفعل'],
+    'exists'    => ['This email belongs to another account', 'هذا البريد مستخدم في حساب آخر'],
+    'rate'      => ['Please wait a little before trying again', 'يرجى الانتظار قليلا قبل المحاولة مجددا'],
+    'name'      => ['Please enter your name', 'يرجى كتابة اسمك'],
+    'phone'     => ['Please enter a valid phone number', 'يرجى إدخال رقم هاتف صحيح'],
     'server'    => ['Something went wrong on our side. Please try again.', 'حدث خطأ من جهتنا. حاول مرة أخرى.'],
 ];
 
@@ -56,7 +56,7 @@ function owChangePassword(array $user, string $current, string $new, string $con
     owLog('password_change', 'user', $uid, '', ['type' => owActorType($user['role'] ?? ''), 'id' => $uid]);
     owSendMail((string) $user['email'], 'Your Oweili password was changed · تم تغيير كلمة المرور',
         "Your Oweili password was just changed. If this was not you, reset it now: https://" . owHost() . "/forgot.php\r\n\r\n"
-      . "تم تغيير كلمة مرورك في أويلي الآن. إن لم تكن أنت، أعد تعيينها فوراً: https://" . owHost() . "/forgot.php\r\n");
+      . "تم تغيير كلمة مرورك في أويلي الآن. إن لم تكن أنت، أعد تعيينها فورا: https://" . owHost() . "/forgot.php\r\n");
     return '';
 }
 

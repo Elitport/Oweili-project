@@ -39,7 +39,7 @@ if ($token !== '' && ctype_xdigit($token) && strlen($token) <= 128) {
                 $dashUrl,
                 $marketUrl
             );
-            if (!owSendMail($row['email'], 'Welcome to Oweili · مرحباً بك في أويلي', $welcome, true)) {
+            if (!owSendMail($row['email'], 'Welcome to Oweili · مرحبا بك في أويلي', $welcome, true)) {
                 error_log('verify.php: welcome email failed to send to ' . $row['email']);
             }
         }
@@ -106,7 +106,7 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
             a bilingual home for Saudi artists, collectors, and art lovers.
           </p>
           <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#4A5568;">
-            Explore original artworks, connect with fellow artists, and share your own work with the world.
+            Explore original artworks, connect with fellow artists, and share your own work with the world
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0"><tr>
             <td style="padding-right:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#23314A;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">Go to your dashboard</a></td>
@@ -118,13 +118,13 @@ function welcomeEmailHtml(string $nameEn, string $nameAr, string $dashUrl, strin
 
         <!-- Arabic -->
         <tr><td style="padding:8px 32px 32px;text-align:right;" dir="rtl">
-          <h1 style="margin:0 0 12px;font-size:22px;color:#23314A;">مرحباً، {$ar}! 🎨</h1>
+          <h1 style="margin:0 0 12px;font-size:22px;color:#23314A;">مرحبا، {$ar}! 🎨</h1>
           <p style="margin:0 0 14px;font-size:15px;line-height:1.9;color:#4A5568;">
             تم تفعيل حسابك، وأنت الآن جزء من مجتمع <strong>أويلي</strong> الفني —
             منصة ثنائية اللغة تجمع الفنانين السعوديين والمقتنين ومحبي الفن.
           </p>
           <p style="margin:0 0 20px;font-size:15px;line-height:1.9;color:#4A5568;">
-            استكشف الأعمال الفنية الأصلية، وتواصل مع فنانين آخرين، وشارك أعمالك مع العالم.
+            استكشف الأعمال الفنية الأصلية، وتواصل مع فنانين آخرين، وشارك أعمالك مع العالم
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0" align="right"><tr>
             <td style="padding-left:10px;"><a href="{$dU}" style="display:inline-block;padding:12px 24px;background:#23314A;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;border-radius:999px;">لوحة التحكم</a></td>
@@ -179,19 +179,19 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <?php if ($state === 'sent'): ?>
       <div class="v-icon ok">✓</div>
       <h1><span class="bi-en">Check your email</span><span class="bi-ar">راجع بريدك</span></h1>
-      <p><span class="bi-en">If this email has an Oweili account that is not confirmed yet, we sent a new link to it. The link works for 48 hours.</span><span class="bi-ar">إن كان لهذا البريد حساب في أويلي لم يُؤكَّد بعد، فقد أرسلنا إليه رابطاً جديداً. يعمل الرابط لمدة 48 ساعة.</span></p>
+      <p><span class="bi-en">If this email has an Oweili account that is not confirmed yet, we sent a new link to it. The link works for 48 hours.</span><span class="bi-ar">إن كان لهذا البريد حساب في أويلي لم يُؤكَّد بعد، فقد أرسلنا إليه رابطا جديدا. يعمل الرابط لمدة 48 ساعة.</span></p>
       <a class="btn btn-primary" href="login.php"><span class="bi-en">Sign In</span><span class="bi-ar">تسجيل الدخول</span></a>
     <?php elseif ($state === 'rate'): ?>
       <div class="v-icon bad">✕</div>
-      <h1><span class="bi-en">Please wait a little</span><span class="bi-ar">انتظر قليلاً من فضلك</span></h1>
+      <h1><span class="bi-en">Please wait a little</span><span class="bi-ar">انتظر قليلا من فضلك</span></h1>
       <p><span class="bi-en">We already sent several links in the last hour. Please check your inbox and spam folder, or try again in an hour.</span><span class="bi-ar">أرسلنا عدة روابط خلال الساعة الأخيرة. راجع البريد الوارد ومجلد الرسائل غير المرغوب فيها، أو حاول بعد ساعة.</span></p>
     <?php elseif (in_array($state, ['resend', 'resend_old', 'resend_bad'], true)): ?>
       <div class="auth-head">
-      <h1><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></h1>
-      <p><span class="bi-en">Type the email you joined with. We will send you a new confirmation link.</span><span class="bi-ar">اكتب البريد الذي سجّلت به، وسنرسل لك رابط تأكيد جديداً.</span></p>
+      <h1><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطا جديدا</span></h1>
+      <p><span class="bi-en">Type the email you joined with. We will send you a new confirmation link.</span><span class="bi-ar">اكتب البريد الذي سجّلت به، وسنرسل لك رابط تأكيد جديدا</span></p>
       </div>
-      <?php if ($state === 'resend_old'): ?><div class="err-box" style="display:block"><span class="bi-en">This page was open for a long time. Please press the button again.</span><span class="bi-ar">بقيت الصفحة مفتوحة وقتاً طويلاً. اضغط الزر مرة أخرى من فضلك.</span></div><?php endif; ?>
-      <?php if ($state === 'resend_bad'): ?><div class="err-box" style="display:block"><span class="bi-en">Please enter a valid email address.</span><span class="bi-ar">يرجى إدخال بريد إلكتروني صالح.</span></div><?php endif; ?>
+      <?php if ($state === 'resend_old'): ?><div class="err-box" style="display:block"><span class="bi-en">This page was open for a long time. Please press the button again.</span><span class="bi-ar">بقيت الصفحة مفتوحة وقتا طويلا. اضغط الزر مرة أخرى من فضلك.</span></div><?php endif; ?>
+      <?php if ($state === 'resend_bad'): ?><div class="err-box" style="display:block"><span class="bi-en">Please enter a valid email address</span><span class="bi-ar">يرجى إدخال بريد إلكتروني صالح</span></div><?php endif; ?>
       <form method="post" action="verify.php" class="v-resend">
         <?= csrfField() ?>
         <input type="hidden" name="action" value="resend">
@@ -200,12 +200,12 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
           <label for="v-email"><span class="bi-en">Your email</span><span class="bi-ar">بريدك الإلكتروني</span></label>
           <input type="email" id="v-email" name="email" required autocomplete="email" dir="ltr">
         </div>
-        <button type="submit" class="btn btn-primary btn-block"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></button>
+        <button type="submit" class="btn btn-primary btn-block"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطا جديدا</span></button>
       </form>
     <?php elseif ($state === 'success'): ?>
       <div class="v-icon ok">✓</div>
       <h1 id="t-title">Your account is verified</h1>
-      <p id="t-sub">You can now sign in.</p>
+      <p id="t-sub">You can now sign in</p>
       <a class="btn btn-primary" href="login.php" id="t-btn">Sign In</a>
       <p class="redir-note" id="t-redir">Redirecting to sign in…</p>
     <?php else: ?>
@@ -213,7 +213,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <h1 id="t-title">Invalid or expired link</h1>
       <p id="t-sub">This verification link is invalid or has expired. Please register again or request a new link.</p>
       <a class="btn btn-primary" href="register.php" id="t-btn">Register</a>
-      <p class="v-or"><span class="bi-en">Already joined? Get a new confirmation link:</span><span class="bi-ar">لديك حساب؟ اطلب رابط تأكيد جديداً:</span></p>
+      <p class="v-or"><span class="bi-en">Already joined? Get a new confirmation link:</span><span class="bi-ar">لديك حساب؟ اطلب رابط تأكيد جديدا:</span></p>
       <form method="post" action="verify.php" class="v-resend">
         <?= csrfField() ?>
         <input type="hidden" name="action" value="resend">
@@ -222,7 +222,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
           <label for="v-email"><span class="bi-en">Your email</span><span class="bi-ar">بريدك الإلكتروني</span></label>
           <input type="email" id="v-email" name="email" required autocomplete="email" dir="ltr">
         </div>
-        <button type="submit" class="btn btn-primary btn-block"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></button>
+        <button type="submit" class="btn btn-primary btn-block"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطا جديدا</span></button>
       </form>
     <?php endif; ?>
   </div>
@@ -232,15 +232,15 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 const STATE = <?= json_encode($state) ?>;
 const T={
   en:{dir:'ltr',lb:'العربية',
-    okTitle:'Your account is verified',okSub:'You can now sign in.',okBtn:'Sign In',redir:'Redirecting to sign in…',
+    okTitle:'Your account is verified',okSub:'You can now sign in',okBtn:'Sign In',redir:'Redirecting to sign in…',
     badTitle:'Invalid or expired link',badSub:'This verification link is invalid or has expired. Please register again or request a new link.',badBtn:'Register',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',
-    okTitle:'تم التحقق من حسابك',okSub:'يمكنك الآن تسجيل الدخول.',okBtn:'تسجيل الدخول',redir:'جارٍ التحويل إلى تسجيل الدخول…',
+    okTitle:'تم التحقق من حسابك',okSub:'يمكنك الآن تسجيل الدخول',okBtn:'تسجيل الدخول',redir:'جار التحويل إلى تسجيل الدخول…',
     badTitle:'رابط غير صالح أو منتهي',badSub:'رابط التحقق غير صالح أو منتهي الصلاحية. يرجى التسجيل مرة أخرى أو طلب رابط جديد.',badBtn:'إنشاء حساب',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
+      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا'}}
 };
 let L='en';
 function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}

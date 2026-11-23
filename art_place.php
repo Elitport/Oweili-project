@@ -172,7 +172,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
       <p><?= owBi(count($inRegion) . ' museums, art galleries and art institutes in ' . $R[0] . ', on one page.', 'المتاحف والمعارض والمعاهد الفنية في ' . $R[1] . ' في صفحة واحدة: ' . count($inRegion) . ' وجهة.') ?></p>
     </header>
     <?php if (!$inRegion): ?>
-      <div class="card empty-state d-empty"><?= owBi('No art places in this region on our map yet.', 'لا وجهات فنية في هذه المنطقة على خريطتنا بعد.') ?><div><a class="btn btn-primary" href="art_map.php"><?= owBi('Back to the Art Map', 'العودة إلى وجهات الفن') ?></a></div></div>
+      <div class="card empty-state d-empty"><?= owBi('No art places in this region on our map yet', 'لا وجهات فنية في هذه المنطقة على خريطتنا بعد') ?><div><a class="btn btn-primary" href="art_map.php"><?= owBi('Back to the Art Map', 'العودة إلى وجهات الفن') ?></a></div></div>
     <?php endif; ?>
     <?php foreach (['museum', 'gallery', 'institute'] as $k):
       $list = array_values(array_filter($inRegion, fn($r) => $r['kind'] === $k));

@@ -138,11 +138,11 @@ $val    = fn(string $k, string $col) => $old[$k] ?? (string) ($me[$col] ?? '');
 $prefL  = $old['lang'] ?? ((string) ($me['preferred_lang'] ?? '') === 'ar' ? 'ar' : 'en');
 
 $DONE = [
-    'profile'  => ['Your profile is saved.', 'تم حفظ ملفك الشخصي.'],
+    'profile'  => ['Your profile is saved', 'تم حفظ ملفك الشخصي'],
     'email'    => ['Your new email is saved. Please open the link we sent to it to confirm it.', 'تم حفظ بريدك الجديد. افتح الرابط الذي أرسلناه إليه لتأكيده.'],
     'password' => ['Your password is changed. Other phones and computers were signed out.', 'تم تغيير كلمة المرور. وتم تسجيل الخروج من الأجهزة الأخرى.'],
     'resend'   => ['We sent the confirmation link again. Please check your inbox.', 'أرسلنا رابط التأكيد مرة أخرى. راجع بريدك.'],
-    'unfav'    => ['Removed from your favorites.', 'أُزيل من المفضلة.'],
+    'unfav'    => ['Removed from your favorites', 'أُزيل من المفضلة'],
 ];
 $done = $DONE[$_GET['done'] ?? ''] ?? null;
 
@@ -221,8 +221,8 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
   <div class="card bd-head">
     <div class="bd-avatar" aria-hidden="true"<?= ($pp = owImgSrc($me['profile_picture'] ?? '')) !== '' ? ' style="background-image:url(\'' . e(owImgSized($pp, 400)) . '\')"' : '' ?>><?= ($pp ?? '') === '' ? e(mb_strtoupper(mb_substr($name, 0, 1))) : '' ?></div>
     <div>
-      <h1><?= owBi('Hello, ' . $name, 'أهلاً، ' . $name) ?></h1>
-      <p><?= owBi('Your requests, favorites and account, all in one place.', 'طلباتك ومفضلتك وحسابك، في مكان واحد.') ?></p>
+      <h1><?= owBi('Hello, ' . $name, 'أهلا، ' . $name) ?></h1>
+      <p><?= owBi('Your requests, favorites and account, all in one place', 'طلباتك ومفضلتك وحسابك، في مكان واحد') ?></p>
     </div>
     <div class="head-actions">
       <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore the Gallery', 'استكشف المعرض') ?></a>
@@ -231,9 +231,9 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
 
   <?php if (!$verified): ?>
   <div class="alert alert-error bd-verify" role="status">
-    <span><?= owBi('Please confirm your email address. We sent you a link when you joined.', 'يرجى تأكيد بريدك الإلكتروني. أرسلنا لك رابطاً عند التسجيل.') ?></span>
+    <span><?= owBi('Please confirm your email address. We sent you a link when you joined.', 'يرجى تأكيد بريدك الإلكتروني. أرسلنا لك رابطا عند التسجيل.') ?></span>
     <form method="post" action="<?= e($tabLink($tab)) ?>"><?= csrfField() ?><input type="hidden" name="do" value="resend">
-      <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send the link again', 'أرسل الرابط مجدداً') ?></button></form>
+      <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send the link again', 'أرسل الرابط مجددا') ?></button></form>
   </div>
   <?php endif; ?>
 
@@ -302,7 +302,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
     <?php foreach ($myComms as $c): $cs = owCommSubjects()[$c['subject']] ?? ['Commission', 'عمل خاص']; $cw = owCommStatus()[$c['status']] ?? [$c['status'], $c['status']]; ?>
       <div class="card req" style="grid-template-columns:1fr auto">
         <div class="req-body"><p class="req-title"><?= owBi('Private commission: ' . $cs[0], 'عمل خاص: ' . $cs[1]) ?> <span dir="ltr" class="req-meta"><?= e($c['ref_no']) ?></span></p>
-          <div class="req-meta"><?= owBi('Open the private link in our first email to see every step.', 'افتح الرابط الخاص في أول رسالة منا لترى كل خطوة.') ?></div></div>
+          <div class="req-meta"><?= owBi('Open the private link in our first email to see every step', 'افتح الرابط الخاص في أول رسالة منا لترى كل خطوة') ?></div></div>
         <div class="req-side"><span class="st-pill"><?= owBi($cw[0], $cw[1]) ?></span></div>
       </div>
     <?php endforeach; ?>
@@ -334,7 +334,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
           <?php if ((int) $f['visible'] === 1): ?>
             <a class="btn btn-dark btn-block btn-sm" href="marketplace.php?show=<?= $fid ?>#artwork-<?= $fid ?>"><?= owBi('See the Story', 'شاهد القصة') ?></a>
           <?php else: ?>
-            <span class="fav-gone"><?= owBi('No longer available', 'لم يعد متاحاً') ?></span>
+            <span class="fav-gone"><?= owBi('No longer available', 'لم يعد متاحا') ?></span>
           <?php endif; ?>
         </div>
       </article>
@@ -376,7 +376,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
       <input id="a-email" name="new_email" type="email" required maxlength="190" autocomplete="email" dir="ltr" value="<?= e($old['new_email'] ?? '') ?>"></div>
     <div class="field"><label for="a-cur1"><?= owBi('Current password', 'كلمة المرور الحالية') ?></label>
       <input id="a-cur1" name="current_password" type="password" required autocomplete="current-password"></div>
-    <p class="hint"><?= owBi('We will send a link to the new address to confirm it.', 'سنرسل رابطاً إلى البريد الجديد لتأكيده.') ?></p>
+    <p class="hint"><?= owBi('We will send a link to the new address to confirm it', 'سنرسل رابطا إلى البريد الجديد لتأكيده') ?></p>
     <button class="btn btn-primary" type="submit"><?= owBi('Change email', 'غيّر البريد') ?></button>
   </form>
   <form class="card form-card" method="post" action="<?= e($tabLink('account')) ?>" novalidate>
@@ -386,7 +386,7 @@ $fmtDate = function (?string $d): string { [$en, $ar] = owDateBi($d); return owB
       <input id="a-cur2" name="current_password" type="password" required autocomplete="current-password"></div>
     <div class="field<?= in_array($err, ['weak', 'same'], true) ? ' has-error' : '' ?>"><label for="a-new"><?= owBi('New password', 'كلمة المرور الجديدة') ?></label>
       <input id="a-new" name="new_password" type="password" required minlength="8" autocomplete="new-password"></div>
-    <p class="hint"><?= owBi('8 or more characters, with a capital letter, a number and a symbol.', '8 أحرف أو أكثر، مع حرف كبير ورقم ورمز.') ?></p>
+    <p class="hint"><?= owBi('8 or more characters, with a capital letter, a number and a symbol', '8 أحرف أو أكثر، مع حرف كبير ورقم ورمز') ?></p>
     <div class="field<?= $err === 'mismatch' ? ' has-error' : '' ?>"><label for="a-conf"><?= owBi('New password again', 'كلمة المرور الجديدة مرة أخرى') ?></label>
       <input id="a-conf" name="confirm_password" type="password" required minlength="8" autocomplete="new-password"></div>
     <button class="btn btn-primary" type="submit"><?= owBi('Change password', 'غيّر كلمة المرور') ?></button>

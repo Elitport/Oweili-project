@@ -36,8 +36,8 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $v = ['title_en' => $txt('title_en', 150), 'title_ar' => $txt('title_ar', 150), 'intro_en' => $txt('intro_en', 500), 'intro_ar' => $txt('intro_ar', 500),
               'rule_max_price' => $num('rule_max_price'), 'rule_min_price' => $num('rule_min_price'), 'rule_type' => (string) ($_POST['rule_type'] ?? ''),
               'is_active' => isset($_POST['is_active']) ? 1 : 0, 'sort_order' => max(-999, min(999, (int) ($_POST['sort_order'] ?? 0)))];
-        if ($v['title_en'] === '' || $v['title_ar'] === '') $errors[] = ['The title is needed in both languages.', 'العنوان مطلوب باللغتين.'];
-        if ($v['rule_max_price'] === -1.0 || $v['rule_min_price'] === -1.0) $errors[] = ['Please write the prices as numbers.', 'يرجى كتابة الأسعار كأرقام.'];
+        if ($v['title_en'] === '' || $v['title_ar'] === '') $errors[] = ['The title is needed in both languages', 'العنوان مطلوب باللغتين'];
+        if ($v['rule_max_price'] === -1.0 || $v['rule_min_price'] === -1.0) $errors[] = ['Please write the prices as numbers', 'يرجى كتابة الأسعار كأرقام'];
         if ($v['rule_type'] !== '' && !isset($ART_TYPES[$v['rule_type']])) $v['rule_type'] = '';
         if (!$errors) {
             if ($id > 0) {
@@ -70,7 +70,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $aid = (int) ($_POST['artist_id'] ?? 0);
         if ($aid === 0) { owSetSetting('artist_of_week', null); owLog('artist_of_week', 'user', null, 'cleared', $actor); header('Location: admin_gallery.php?tab=week&ok=1'); exit; }
         $ex = $db->prepare("SELECT 1 FROM users WHERE id = :id AND role = 'artist' AND is_approved = 1 AND COALESCE(is_banned, 0) = 0"); $ex->execute([':id' => $aid]);
-        if (!$ex->fetchColumn()) $errors[] = ['Please choose an approved artist.', 'يرجى اختيار فنان معتمد.'];
+        if (!$ex->fetchColumn()) $errors[] = ['Please choose an approved artist', 'يرجى اختيار فنان معتمد'];
         else {
             owSetSetting('artist_of_week', json_encode(['id' => $aid, 'note_en' => $txt('note_en', 220), 'note_ar' => $txt('note_ar', 220), 'at' => gmdate('Y-m-d H:i:s')], JSON_UNESCAPED_UNICODE));
             owLog('artist_of_week', 'user', $aid, '', $actor);
@@ -115,9 +115,9 @@ owAdminTop('Gallery', 'المعرض', '
 ', '<a class="btn btn-ghost btn-sm" href="marketplace.php" target="_blank" rel="noopener">' . owBi('See the Gallery', 'شاهد المعرض') . ' ↗</a>');
 ?>
   <h1><?= owBi('Gallery', 'المعرض') ?></h1>
-  <p class="mini"><?= owBi('Shape what visitors see first: curated collections, the Artist of the week and the Verified artist badge.', 'شكّل ما يراه الزوار أولاً: المجموعات المختارة وفنان الأسبوع وشارة الفنان الموثّق.') ?></p>
-  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The Gallery tables are not set up yet (night_update.sql).', 'جداول المعرض غير مُعدّة بعد (night_update.sql).') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <p class="mini"><?= owBi('Shape what visitors see first: curated collections, the Artist of the week and the Verified artist badge', 'شكّل ما يراه الزوار أولا: المجموعات المختارة وفنان الأسبوع وشارة الفنان الموثّق') ?></p>
+  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The Gallery tables are not set up yet (night_update.sql)', 'جداول المعرض غير مُعدّة بعد (night_update.sql)') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved', 'تم الحفظ') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
 
   <nav class="tabs"><?php foreach (['collections' => ['Collections', 'المجموعات'], 'week' => ['Artist of the week', 'فنان الأسبوع'], 'verified' => ['Verified artists', 'الفنانون الموثّقون']] as $t => $l): ?>
@@ -133,7 +133,7 @@ owAdminTop('Gallery', 'المعرض', '
         <div class="field"><label><?= owBi('Short intro (English)', 'مقدمة قصيرة (بالإنجليزية)') ?><input name="intro_en" maxlength="500" value="<?= $cv($c, 'intro_en') ?>"></label></div>
         <div class="field"><label><?= owBi('Short intro (Arabic)', 'مقدمة قصيرة (بالعربية)') ?><input name="intro_ar" maxlength="500" dir="rtl" value="<?= $cv($c, 'intro_ar') ?>"></label></div>
       </div>
-      <p class="mini"><?= owBi('Rule (optional): every Gallery artwork that matches is added by itself. Artworks you pick by hand are always in.', 'قاعدة (اختيارية): يُضاف كل عمل في المعرض يطابقها تلقائياً. الأعمال التي تختارها بيدك موجودة دائماً.') ?></p>
+      <p class="mini"><?= owBi('Rule (optional): every Gallery artwork that matches is added by itself. Artworks you pick by hand are always in.', 'قاعدة (اختيارية): يُضاف كل عمل في المعرض يطابقها تلقائيا. الأعمال التي تختارها بيدك موجودة دائما.') ?></p>
       <div class="g3">
         <div class="field"><label><?= owBi('Price up to (SAR)', 'السعر حتى (ر.س)') ?><input name="rule_max_price" inputmode="decimal" dir="ltr" value="<?= $cv($c, 'rule_max_price') ?>"></label></div>
         <div class="field"><label><?= owBi('Price from (SAR)', 'السعر من (ر.س)') ?><input name="rule_min_price" inputmode="decimal" dir="ltr" value="<?= $cv($c, 'rule_min_price') ?>"></label></div>
@@ -141,7 +141,7 @@ owAdminTop('Gallery', 'المعرض', '
           <?php $cur = (string) ($_POST['rule_type'] ?? $c['rule_type'] ?? ''); foreach ($ART_TYPES as $tk => $tv): if (!empty($tv['legacy']) && $cur !== $tk) continue; ?><option value="<?= e($tk) ?>"<?= $cur === $tk ? ' selected' : '' ?>><?= e($tv['en'] . ' · ' . $tv['ar']) ?></option><?php endforeach; ?></select></label></div>
       </div>
       <div class="g2">
-        <div class="field"><label><?= owBi('Order (smaller shows first)', 'الترتيب (الأصغر أولاً)') ?><input name="sort_order" type="number" min="-999" max="999" dir="ltr" value="<?= $cv($c, 'sort_order') ?: '0' ?>"></label></div>
+        <div class="field"><label><?= owBi('Order (smaller shows first)', 'الترتيب (الأصغر أولا)') ?><input name="sort_order" type="number" min="-999" max="999" dir="ltr" value="<?= $cv($c, 'sort_order') ?: '0' ?>"></label></div>
         <label class="chk"><input type="checkbox" name="is_active" value="1"<?= ((int) ($c['is_active'] ?? 1)) === 1 ? ' checked' : '' ?>> <?= owBi('Shown in the Gallery', 'ظاهرة في المعرض') ?></label>
       </div>
       <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save collection', 'احفظ المجموعة') ?></button>
@@ -153,11 +153,11 @@ owAdminTop('Gallery', 'المعرض', '
   <div class="card" id="c<?= $cid ?>">
     <div class="c-head"><h2><?php if ($p0 && ($pi = owImgSrc((string) $p0['image_url'])) !== ''): ?><img class="c-thumb" src="<?= e(owImgSized($pi, 400)) ?>" alt=""> <?php endif; ?><?= e($c['title_en']) ?> · <span dir="rtl"><?= e($c['title_ar']) ?></span></h2>
       <span class="acts"><span class="pillx<?= (int) $c['is_active'] === 1 ? ' on' : '' ?>"><?= (int) $c['is_active'] === 1 ? owBi('Shown', 'ظاهرة') : owBi('Hidden', 'مخفية') ?></span>
-        <span class="mini"><?= owBi($cc['count'] . ' artworks now', $cc['count'] . ' عملاً الآن') ?></span>
+        <span class="mini"><?= owBi($cc['count'] . ' artworks now', $cc['count'] . ' عملا الآن') ?></span>
         <a class="btn btn-ghost btn-sm" href="marketplace.php?col=<?= e(rawurlencode($c['slug'])) ?>" target="_blank" rel="noopener"><?= owBi('Open', 'افتح') ?> ↗</a></span></div>
     <details<?= $edit === $cid ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $colForm($c); ?></details>
     <details<?= $edit === $cid ? ' open' : '' ?>><summary><?= owBi('Pick artworks by hand', 'اختر الأعمال بيدك') ?></summary>
-      <?php if (!$visible): ?><p class="mini"><?= owBi('There are no artworks in the Gallery yet.', 'لا توجد أعمال في المعرض بعد.') ?></p><?php else:
+      <?php if (!$visible): ?><p class="mini"><?= owBi('There are no artworks in the Gallery yet', 'لا توجد أعمال في المعرض بعد') ?></p><?php else:
         if ($edit !== $cid) { $st = $db->prepare('SELECT artwork_id FROM collection_items WHERE collection_id = :id'); $st->execute([':id' => $cid]); $pk = array_flip(array_map('intval', $st->fetchAll(PDO::FETCH_COLUMN))); } else $pk = $picked; ?>
       <form method="post" action="admin_gallery.php?edit=<?= $cid ?>">
         <?= csrfField() ?><input type="hidden" name="do" value="items"><input type="hidden" name="id" value="<?= $cid ?>">
@@ -179,7 +179,7 @@ owAdminTop('Gallery', 'المعرض', '
   <div class="card">
     <h2><?= owBi('Artist of the week', 'فنان الأسبوع') ?></h2>
     <?php if ($wk): ?><p><?= owBi('Now: ', 'الآن: ') ?><b><?= e($wk['artist_en']) ?></b> <?php if (!empty($week['at'])): [$we, $wa] = owDateBi($week['at']); ?><span class="mini">(<?= owBi('since ' . $we, 'منذ ' . $wa) ?>)</span><?php endif; ?></p>
-    <?php else: ?><p class="mini"><?= owBi('No one is picked. The homepage and the Gallery show nothing in this place.', 'لم يُختر أحد. لا تعرض الصفحة الرئيسية والمعرض شيئاً في هذا المكان.') ?></p><?php endif; ?>
+    <?php else: ?><p class="mini"><?= owBi('No one is picked. The homepage and the Gallery show nothing in this place.', 'لم يُختر أحد. لا تعرض الصفحة الرئيسية والمعرض شيئا في هذا المكان.') ?></p><?php endif; ?>
     <form method="post" action="admin_gallery.php?tab=week">
       <?= csrfField() ?><input type="hidden" name="do" value="week">
       <div class="field"><label><?= owBi('Artist', 'الفنان') ?><select name="artist_id"><option value="0"><?= e('— No one · لا أحد —') ?></option>
@@ -196,7 +196,7 @@ owAdminTop('Gallery', 'المعرض', '
   <div class="card">
     <h2><?= owBi('Verified artists', 'الفنانون الموثّقون') ?></h2>
     <p class="mini"><?= owBi('Give the badge after you check an artist (who they are, and that the work is their own). Visitors see it on cards, the artwork window and the profile, and can filter by it.', 'امنح الشارة بعد أن تتحقق من الفنان (هويته، وأن العمل من صنعه). يراها الزوار على البطاقات ونافذة العمل والملف، ويمكنهم التصفية بها.') ?></p>
-    <?php if (!$artists): ?><p class="mini"><?= owBi('No artists yet.', 'لا فنانين بعد.') ?></p><?php endif; ?>
+    <?php if (!$artists): ?><p class="mini"><?= owBi('No artists yet', 'لا فنانين بعد') ?></p><?php endif; ?>
     <?php foreach ($artists as $a): $on = (int) $a['is_verified_artist'] === 1; ?>
     <div class="a-row" id="a<?= (int) $a['id'] ?>">
       <div><b><?= e($a['artist_en']) ?></b> · <span dir="rtl"><?= e($a['artist_ar']) ?></span>

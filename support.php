@@ -98,11 +98,11 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         </div>
         <div class="field"><label for="sp-phone"><span class="bi-en">Phone (optional)</span><span class="bi-ar">الهاتف (اختياري)</span></label><input id="sp-phone" name="phone" type="tel" maxlength="30" autocomplete="tel" dir="ltr"></div>
         <div class="field"><label for="sp-msg"><span class="bi-en">Your message</span><span class="bi-ar">رسالتك</span></label><textarea id="sp-msg" name="message" required maxlength="3000" rows="5"></textarea></div>
-        <p class="sp-note"><span class="bi-en">We use your details only to answer you.</span><span class="bi-ar">نستخدم بياناتك فقط للرد عليك.</span> <a href="privacy.php"><span class="bi-en">Privacy Policy</span><span class="bi-ar">سياسة الخصوصية</span></a></p>
+        <p class="sp-note"><span class="bi-en">We use your details only to answer you</span><span class="bi-ar">نستخدم بياناتك فقط للرد عليك</span> <a href="privacy.php"><span class="bi-en">Privacy Policy</span><span class="bi-ar">سياسة الخصوصية</span></a></p>
         <div class="err-box" id="sp-err" role="alert" hidden></div>
         <button type="submit" class="btn btn-primary btn-block" id="sp-send"><span class="bi-en">Send message</span><span class="bi-ar">أرسل الرسالة</span></button>
       </form>
-      <div class="ok-box" id="sp-ok" role="status" hidden><span class="bi-en">Thank you! We received your message and will reply soon. We also sent you a short email.</span><span class="bi-ar">شكراً لك! وصلتنا رسالتك وسنرد عليك قريباً، وأرسلنا لك بريداً قصيراً.</span></div>
+      <div class="ok-box" id="sp-ok" role="status" hidden><span class="bi-en">Thank you! We received your message and will reply soon. We also sent you a short email.</span><span class="bi-ar">شكرا لك! وصلتنا رسالتك وسنرد عليك قريبا، وأرسلنا لك بريدا قصيرا.</span></div>
       <p class="sp-alt"><span class="bi-en">Or write to</span><span class="bi-ar">أو راسلنا على</span> <a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p>
     </div>
     <?php /* "Join the Community" is hidden while the Community page is hidden (owner, 8 Nov 2026); it comes back by itself with Admin → Settings → Community */
@@ -110,7 +110,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <a class="contact-card" href="register.php">
       <div class="contact-icon">🎨</div>
       <h3 id="t-c3">Join the Community</h3>
-      <p id="t-c3d">Create your free account and meet artists who share your love of art.</p>
+      <p id="t-c3d">Create your free account and meet artists who share your love of art</p>
       <span class="contact-link" id="t-c3l">Join Free →</span>
     </a>
     <?php endif; ?>
@@ -130,7 +130,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <a class="legal-card" href="terms.php">
       <span class="legal-arrow">→</span>
       <h4 id="t-l2">Terms of Use</h4>
-      <p id="t-l2d">Using Oweili means you agree to our community guidelines.</p>
+      <p id="t-l2d">Using Oweili means you agree to our community guidelines</p>
     </a>
     <a class="legal-card" href="privacy.php">
       <span class="legal-arrow">→</span>
@@ -151,12 +151,12 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   var f = document.getElementById('sp-form'); if (!f) return;
   var err = document.getElementById('sp-err'), ok = document.getElementById('sp-ok'), btn = document.getElementById('sp-send');
   var M = {
-    required: ['Please fill in your name, email and message.', 'يرجى كتابة اسمك وبريدك ورسالتك.'],
-    email: ['Please enter a valid email address.', 'يرجى إدخال بريد إلكتروني صالح.'],
-    phone: ['Please check the phone number.', 'يرجى التحقق من رقم الهاتف.'],
-    short: ['Please write a little more in your message.', 'يرجى كتابة رسالة أطول قليلاً.'],
+    required: ['Please fill in your name, email and message', 'يرجى كتابة اسمك وبريدك ورسالتك'],
+    email: ['Please enter a valid email address', 'يرجى إدخال بريد إلكتروني صالح'],
+    phone: ['Please check the phone number', 'يرجى التحقق من رقم الهاتف'],
+    short: ['Please write a little more in your message', 'يرجى كتابة رسالة أطول قليلا'],
     rate: ['You sent several messages already. Please try again in an hour.', 'أرسلت عدة رسائل. حاول مرة أخرى بعد ساعة.'],
-    csrf: ['This page was open for a long time. Please refresh it and send again.', 'بقيت الصفحة مفتوحة طويلاً. حدّثها وأرسل مرة أخرى.'],
+    csrf: ['This page was open for a long time. Please refresh it and send again.', 'بقيت الصفحة مفتوحة طويلا. حدّثها وأرسل مرة أخرى.'],
     server: ['We could not send it. Please try again, or email us.', 'تعذّر الإرسال. حاول مرة أخرى أو راسلنا بالبريد.']
   };
   function ar(){ return document.documentElement.getAttribute('dir') === 'rtl'; }
@@ -193,7 +193,7 @@ const FAQS={
     {q:'Is Oweili available in Arabic?',a:'Yes. Oweili speaks Arabic and English. Tap the language button at the top to switch.'}
   ],
   ar:[
-    {q:'كيف أنشئ حساباً؟',a:'اضغط «انضم مجاناً» في الأعلى. أضف اسمك وبريدك وجوالك وكلمة مرور. ثم أكّد بريدك، وأهلاً بك معنا.'},
+    {q:'كيف أنشئ حسابا؟',a:'اضغط «انضم مجانا» في الأعلى. أضف اسمك وبريدك وجوالك وكلمة مرور. ثم أكّد بريدك، وأهلا بك معنا.'},
     {q:'هل الانضمام مجاني؟',a:'الانضمام إلى أويلي مجاني. وعند بيع عمل، يأخذ أويلي <?= owCommissionText() ?> قبل ضريبة القيمة المضافة. وهي تغطي الشحن والإعلان.'},
     {q:'هل يمكنني مشاركة أعمالي على أويلي؟',a:'نعم، ويسعدنا ذلك. بعد موافقة فريقنا على ملفك، أضف أعمالك من لوحة التحكم. صوّر العمل عند 25% و50% و100%. بعدها يظهر في المعرض وفي ملفك.'},
     {q:'كيف أبلّغ عن مشكلة؟',a:'راسلنا على <?= e(owContactEmail()) ?>. سيساعدك شخص حقيقي من فريقنا.'},
@@ -211,12 +211,12 @@ const T={
     l4:'Report Misuse of Your Art',l4d:'Someone used your art without asking? Tell us right away.'},
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
     badge:'نحن هنا من أجلك',h1:'المساعدة والدعم',desc:'لديك سؤال؟ اسألنا فقط. سيساعدك شخص حقيقي من فريقنا.',
-    ctTitle:'تواصل معنا',c1:'اكتب لنا',c1d:'أرسل لنا رسالة. نرد خلال 24 ساعة، وغالباً أسرع.',c3:'انضم للمجتمع',c3d:'أنشئ حسابك المجاني والتقِ بفنانين يشاركونك حب الفن.',c3l:'انضم مجاناً →',
-    faqTitle:'أسئلة تصلنا كثيراً',legalTitle:'الحقوق والخصوصية',
-    l1:'فنك يبقى لك',l1d:'كل ما تشاركه على أويلي يبقى ملكك. دائماً.',
+    ctTitle:'تواصل معنا',c1:'اكتب لنا',c1d:'أرسل لنا رسالة. نرد خلال 24 ساعة، وغالبا أسرع.',c3:'انضم للمجتمع',c3d:'أنشئ حسابك المجاني والتقِ بفنانين يشاركونك حب الفن.',c3l:'انضم مجانا →',
+    faqTitle:'أسئلة تصلنا كثيرا',legalTitle:'الحقوق والخصوصية',
+    l1:'فنك يبقى لك',l1d:'كل ما تشاركه على أويلي يبقى ملكك. دائما.',
     l2:'شروط الاستخدام',l2d:'باستخدامك أويلي توافق على إرشادات مجتمعنا.',
     l3:'الخصوصية',l3d:'نحمي بياناتك وأعمالك الإبداعية. هذا وعد منا.',
-    l4:'أبلغ عن استخدام فنك دون إذن',l4d:'استخدم أحد فنك دون إذنك؟ أخبرنا فوراً.'}
+    l4:'أبلغ عن استخدام فنك دون إذن',l4d:'استخدم أحد فنك دون إذنك؟ أخبرنا فورا.'}
 };
 let L='en';
 const NAV={
@@ -225,7 +225,7 @@ const NAV={
     login:'Sign In',reg:'Join Free'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
-    login:'تسجيل الدخول',reg:'انضم مجاناً'}
+    login:'تسجيل الدخول',reg:'انضم مجانا'}
 };
 function applyNav(l){
   const n=NAV[l];

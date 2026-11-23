@@ -56,7 +56,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $newBuyer = (int) getDB()->lastInsertId();
             owSignupCounted($newBuyer, 'collector');
             require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
-            owAdminAlert('buyer', 'New collector sign-up: ' . $fullName, 'مقتنٍ جديد: ' . $fullName, 'admin.php?person=' . $newBuyer);
+            owAdminAlert('buyer', 'New collector sign-up: ' . $fullName, 'مقتن جديد: ' . $fullName, 'admin.php?person=' . $newBuyer);
             if (is_file(__DIR__ . '/bashro_send.php')) { require_once __DIR__ . '/bashro_send.php'; owBashroSignup($newBuyer, 'buyer'); }   // off until Bashro accepts sign-ups
 
             $verifyUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'oweili.com') . '/verify.php?token=' . $token;
@@ -72,15 +72,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 $ERR = [
     'csrf'=>['en'=>'Security check failed. Please try again.','ar'=>'فشل التحقق الأمني. حاول مرة أخرى.'],
     'rate'=>['en'=>'Too many new accounts from here. Please try again in an hour.','ar'=>'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'],
-    'name_letters'=>['en'=>'Please write your name in letters, not only numbers or symbols.','ar'=>'يرجى كتابة اسمك بالحروف، لا بالأرقام أو الرموز فقط.'],
-    'required'=>['en'=>'Please fill in the required fields.','ar'=>'يرجى تعبئة الحقول المطلوبة.'],
-    'email'=>['en'=>'Please enter a valid email address.','ar'=>'يرجى إدخال بريد إلكتروني صالح.'],
-    'phone'=>['en'=>'Please enter a valid mobile number.','ar'=>'يرجى إدخال رقم جوال صالح.'],
-    'weak'=>['en'=>'Password does not meet the requirements.','ar'=>'كلمة المرور لا تستوفي الشروط.'],
-    'mismatch'=>['en'=>'Passwords do not match.','ar'=>'كلمتا المرور غير متطابقتين.'],
-    'exists'=>['en'=>'An account with this email already exists.','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل.'],
+    'name_letters'=>['en'=>'Please write your name in letters, not only numbers or symbols','ar'=>'يرجى كتابة اسمك بالحروف، لا بالأرقام أو الرموز فقط'],
+    'required'=>['en'=>'Please fill in the required fields','ar'=>'يرجى تعبئة الحقول المطلوبة'],
+    'email'=>['en'=>'Please enter a valid email address','ar'=>'يرجى إدخال بريد إلكتروني صالح'],
+    'phone'=>['en'=>'Please enter a valid mobile number','ar'=>'يرجى إدخال رقم جوال صالح'],
+    'weak'=>['en'=>'Password does not meet the requirements','ar'=>'كلمة المرور لا تستوفي الشروط'],
+    'mismatch'=>['en'=>'Passwords do not match','ar'=>'كلمتا المرور غير متطابقتين'],
+    'exists'=>['en'=>'An account with this email already exists','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل'],
 ];
-$OK = ['check_email'=>['en'=>'Please check your email to verify your account.','ar'=>'يرجى مراجعة بريدك لتفعيل حسابك.']];
+$OK = ['check_email'=>['en'=>'Please check your email to verify your account','ar'=>'يرجى مراجعة بريدك لتفعيل حسابك']];
 /* The exact boxes that are wrong (marked on the form) */
 $bad = match ($errCode) {
     'required'        => array_keys(array_filter(['first_name' => $old['first'], 'email' => $old['email'], 'phone' => $old['phone']], fn($v) => $v === '')),
@@ -99,7 +99,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join as a Collector', 'ar' => 'انضم كمقتنٍ', 'desc_en' => 'Welcome. Real art made by real hands is waiting for you.', 'desc_ar' => 'أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.', 'path' => 'register_collector.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Join as a Collector', 'ar' => 'انضم كمقتن', 'desc_en' => 'Welcome. Real art made by real hands is waiting for you.', 'desc_ar' => 'أهلا بك. فن حقيقي بأيد حقيقية بانتظارك.', 'path' => 'register_collector.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -152,12 +152,12 @@ const T={
     submit:'Create My Account',have:'Already one of us?',login:'Sign In',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',title:'انضم إلينا كمقتنٍ',sub:'أهلاً بك. فن حقيقي بأيدٍ حقيقية بانتظارك.',
+  ar:{dir:'rtl',lb:'English',title:'انضم إلينا كمقتن',sub:'أهلا بك. فن حقيقي بأيد حقيقية بانتظارك.',
     first:'الاسم الأول',last:'اسم العائلة',email:'البريد الإلكتروني',phone:'رقم الجوال',pass:'كلمة المرور',confirm:'تأكيد كلمة المرور',
     rlen:'الحد الأدنى 8 أحرف',rupper:'حرف كبير واحد على الأقل',rnum:'رقم واحد على الأقل',rspec:'رمز خاص واحد على الأقل (!@#$%^&*)',
     submit:'أنشئ حسابي',have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
+      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا'}}
 };
 let L='en';
 function checkRules(){const p=document.getElementById('password').value;const set=(id,ok)=>document.getElementById(id).classList.toggle('ok',ok);set('r-len',p.length>=8);set('r-upper',/[A-Z]/.test(p));set('r-num',/[0-9]/.test(p));set('r-spec',/[!@#$%^&*]/.test(p));}

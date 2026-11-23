@@ -168,8 +168,8 @@ $seoImg = '';
 foreach ($artworks as $sa) { if ((int) $sa['is_approved'] === 1 && ($si = owImgSrc((string) $sa['image_url'])) !== '') { $seoImg = owImgSized($si, 800); break; } }
 if ($seoImg === '' && $artist && ($pp = owImgSrc((string) ($artist['profile_picture'] ?? ''))) !== '') $seoImg = $pp;
 owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $artist['artist_ar'] . '، فنان في أويلي',
-                 'desc_en' => trim(mb_substr((string) ($artist['bio_en'] ?: 'Original works, made by hand.'), 0, 150)),
-                 'desc_ar' => trim(mb_substr((string) ($artist['bio_ar'] ?: 'أعمال أصلية مصنوعة باليد.'), 0, 150)),
+                 'desc_en' => trim(mb_substr((string) ($artist['bio_en'] ?: 'Original works, made by hand'), 0, 150)),
+                 'desc_ar' => trim(mb_substr((string) ($artist['bio_ar'] ?: 'أعمال أصلية مصنوعة باليد'), 0, 150)),
                  'image' => $seoImg, 'path' => 'artist_dashboard.php?id=' . (int) $profileId, 'type' => 'profile', 'noindex' => !$hasId]
               : ['en' => 'Artist not found', 'ar' => 'الفنان غير موجود', 'path' => 'marketplace.php', 'noindex' => true]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
@@ -256,10 +256,10 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
 
 <div class="page dash role-artist dash-wrap" id="pg">
 <?php if (!$artist): ?>
-  <div class="card empty-state">Artist not found.</div>
+  <div class="card empty-state">Artist not found</div>
 <?php else: ?>
 
-  <?php if ($isSelf): /* on a frosted card, easy to read over the photo (owner, 13 Nov 2026) */ ?><div class="self-note" role="status"><?= owBi('This is your public page, as visitors see it.', 'هذه صفحتك العامة كما يراها الزوار.') ?> <a href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div><?php endif; ?>
+  <?php if ($isSelf): /* on a frosted card, easy to read over the photo (owner, 13 Nov 2026) */ ?><div class="self-note" role="status"><?= owBi('This is your public page, as visitors see it', 'هذه صفحتك العامة كما يراها الزوار') ?> <a href="artist_studio.php"><?= owBi('Back to My Studio', 'العودة إلى مرسمي') ?></a></div><?php endif; ?>
   <!-- SECTION 1: PROFILE HEADER -->
   <p class="section-title" id="t-profile-title">Artist Profile</p>
   <div class="card profile-head">
@@ -386,7 +386,7 @@ const T={
     profileTitle:'Artist Profile',worksTitle:'Artworks',uploadTitle:'New Artwork',start:'Start New Artwork',startDesc:'Show the real journey of your work: photograph it at 25%, 50% and 100%. Your progress is saved after every step.',draftsTitle:'Drafts in progress',cardContinue:'Continue',review:'In review',
     statTotal:'Total Artworks',statSold:'Artworks Sold',statSince:'Member Since',
     finTitle:'Financial Report',finTotal:'Total Artworks',finSold:'Artworks Sold',finYear:'Your share this year, after Oweili’s 15% (SAR)',finAll:'Your share all time, after Oweili’s 15% (SAR)',
-    finEmpty:'No sales yet. Your sold artworks will appear here.',finHArt:'Artwork',finHDate:'Sale Date',finHPrice:'Price',saved:'Profile updated successfully.',
+    finEmpty:'No sales yet. Your sold artworks will appear here.',finHArt:'Artwork',finHDate:'Sale Date',finHPrice:'Price',saved:'Profile updated successfully',
     edit:'Edit Profile',empty:'No artworks yet. Start by uploading your first piece.',
     abstract:'Abstract',landscape:'Landscape',portrait:'Portrait',other:'Other',
     cardEdit:'Edit',cardDelete:'Delete',rejected:'Not approved',
@@ -394,16 +394,16 @@ const T={
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
   ar:{dir:'rtl',lb:'English',
-    profileTitle:'الملف الشخصي للفنان',worksTitle:'الأعمال الفنية',uploadTitle:'عمل فني جديد',start:'ابدأ عملاً فنياً جديداً',startDesc:'اعرض الرحلة الحقيقية لعملك: صوّره عند 25% و50% و100%. يُحفظ تقدّمك بعد كل خطوة.',draftsTitle:'مسودات قيد العمل',cardContinue:'متابعة',review:'قيد المراجعة',
+    profileTitle:'الملف الشخصي للفنان',worksTitle:'الأعمال الفنية',uploadTitle:'عمل فني جديد',start:'ابدأ عملا فنيا جديدا',startDesc:'اعرض الرحلة الحقيقية لعملك: صوّره عند 25% و50% و100%. يُحفظ تقدّمك بعد كل خطوة.',draftsTitle:'مسودات قيد العمل',cardContinue:'متابعة',review:'قيد المراجعة',
     statTotal:'إجمالي الأعمال',statSold:'الأعمال المباعة',statSince:'عضو منذ',
     finTitle:'التقرير المالي',finTotal:'إجمالي الأعمال',finSold:'الأعمال المباعة',finYear:'حصتك هذا العام بعد 15% لأويلي (ر.س)',finAll:'حصتك الإجمالية بعد 15% لأويلي (ر.س)',
-    finEmpty:'لا توجد مبيعات بعد. ستظهر أعمالك المباعة هنا.',finHArt:'العمل الفني',finHDate:'تاريخ البيع',finHPrice:'السعر',saved:'تم تحديث الملف الشخصي بنجاح.',
+    finEmpty:'لا توجد مبيعات بعد. ستظهر أعمالك المباعة هنا.',finHArt:'العمل الفني',finHDate:'تاريخ البيع',finHPrice:'السعر',saved:'تم تحديث الملف الشخصي بنجاح',
     edit:'تعديل الملف الشخصي',empty:'لا توجد أعمال بعد. ابدأ برفع عملك الأول.',
     abstract:'تجريدي',landscape:'طبيعي',portrait:'بورتريه',other:'أخرى',
     cardEdit:'تعديل',cardDelete:'حذف',rejected:'لم تتم الموافقة',
     available:'متاح',sold:'مباع',auction:'مزاد',sar:'ر.س',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
+      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا'}}
 };
 let L='en';
 function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}

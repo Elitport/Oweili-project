@@ -51,7 +51,7 @@ if (!defined('OW_HIDDEN_PARTS')) define('OW_HIDDEN_PARTS', [
     'bookings'  => ['bookings_on', 'Museum tickets (museum accounts, ticket sales, the ticket rules in the Terms)', 'تذاكر المتاحف (حسابات المتاحف، بيع التذاكر، قواعد التذاكر في الشروط)', 'art_map.php'],
     /* Art Institutes and course booking, split from museum tickets (owner, 15 Nov 2026) */
     'courses'   => ['courses_on', 'Art Institutes and course booking (the Art Institutes page, course pages, institute sign-up and dashboard, the course rules in the Terms)', 'المعاهد الفنية وحجز الدورات (صفحة المعاهد الفنية، صفحات الدورات، تسجيل المعاهد ولوحتها، قواعد الدورات في الشروط)', 'institutes.php'],
-    'workshops' => ['workshops_on', 'Upcoming workshops (the 5 "Coming soon" cards on the Art Map, Institutes tab)', 'ورش العمل القادمة (البطاقات الخمس «قريباً» في خريطة الفن، تبويب المعاهد)', 'art_map.php?tab=institutes'],
+    'workshops' => ['workshops_on', 'Upcoming workshops (the 5 "Coming soon" cards on the Art Map, Institutes tab)', 'ورش العمل القادمة (البطاقات الخمس «قريبا» في خريطة الفن، تبويب المعاهد)', 'art_map.php?tab=institutes'],
 ]);
 function owPartOn(string $part): bool { $k = OW_HIDDEN_PARTS[$part][0] ?? ''; return $k !== '' && owSetting($k, '0') === '1'; }
 function owCommunityPageOn(): bool { return owPartOn('community'); }
@@ -68,7 +68,7 @@ function owHiddenPageGate(string $part): bool {
 }
 /* The small notice an admin sees on the preview of a hidden page */
 function owHiddenNotice(): string {
-    return '<div class="alert alert-error" role="status" style="position:relative;z-index:5;max-width:1100px;margin:84px auto 0;">' . owBi('Preview for the admin: this page is hidden from visitors (Admin → Settings).', 'معاينة للإدارة: هذه الصفحة مخفية عن الزوار (الإدارة ← الإعدادات).') . '</div>';
+    return '<div class="alert alert-error" role="status" style="position:relative;z-index:5;max-width:1100px;margin:84px auto 0;">' . owBi('Preview for the admin: this page is hidden from visitors (Admin → Settings)', 'معاينة للإدارة: هذه الصفحة مخفية عن الزوار (الإدارة ← الإعدادات)') . '</div>';
 }
 function owSetSetting(string $key, ?string $value): bool {
     unset($GLOBALS['OW_SETTINGS_CACHE'][$key]);
@@ -124,11 +124,11 @@ function owPriceFilters(): array {
 function owSizeFilters(): array {
     /* the 5 standard size groups (size_lib.php, 5 Nov 2026) */
     return [
-        'xs' => ['en' => 'Extra small (20 to 30 cm)',  'ar' => 'صغير جداً (20 إلى 30 سم)'],
+        'xs' => ['en' => 'Extra small (20 to 30 cm)',  'ar' => 'صغير جدا (20 إلى 30 سم)'],
         's'  => ['en' => 'Small (30 to 40 cm)',         'ar' => 'صغير (30 إلى 40 سم)'],
         'm'  => ['en' => 'Medium (40 to 70 cm)',        'ar' => 'متوسط (40 إلى 70 سم)'],
         'l'  => ['en' => 'Large (60 to 120 cm)',        'ar' => 'كبير (60 إلى 120 سم)'],
-        'xl' => ['en' => 'Extra large (100 to 180 cm)', 'ar' => 'كبير جداً (100 إلى 180 سم)'],
+        'xl' => ['en' => 'Extra large (100 to 180 cm)', 'ar' => 'كبير جدا (100 إلى 180 سم)'],
     ];
 }
 function owOrientFilters(): array {

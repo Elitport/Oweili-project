@@ -71,9 +71,9 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
   </div>
 
   <div class="card"><h2><?= owBi('Database backups on the server', 'نسخ قاعدة البيانات على الخادم') ?></h2>
-    <?php if (!$backups): ?><p class="mini"><?= owBi('No backups yet.', 'لا نسخ بعد.') ?></p><?php else: ?>
+    <?php if (!$backups): ?><p class="mini"><?= owBi('No backups yet', 'لا نسخ بعد') ?></p><?php else: ?>
     <ul class="rows"><?php foreach (array_slice($backups, 0, 10) as $b): ?><li><span dir="ltr"><?= e(basename($b)) ?></span><span class="mini"><?= e(gmdate('Y-m-d H:i', (int) filemtime($b))) ?> UTC · <?= number_format((int) filesize($b) / 1024, 1) ?> KB</span></li><?php endforeach; ?></ul>
-    <p class="mini"><?= owBi('To download one: hPanel → Files → File Manager → public_html → show hidden files → .backups.', 'للتنزيل: hPanel ← الملفات ← مدير الملفات ← public_html ← إظهار الملفات المخفية ← ‎.backups') ?></p><?php endif; ?>
+    <p class="mini"><?= owBi('To download one: hPanel → Files → File Manager → public_html → show hidden files → .backups', 'للتنزيل: hPanel ← الملفات ← مدير الملفات ← public_html ← إظهار الملفات المخفية ← ‎.backups') ?></p><?php endif; ?>
   </div>
 
 <?php /* Oweili's commission: one number used everywhere (owner, 11 Nov 2026). Artworks already sold keep their rate. */
@@ -85,9 +85,9 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
   $comHist = owCommissionHistory(); ?>
   <div class="card" id="commission"><h2><?= owBi('Oweili’s commission', 'عمولة أويلي') ?> <span class="pillx ok"><?= e(owCommissionText()) ?></span></h2>
     <p><?= owBi('One number for the whole site, before VAT. When you change it, the new rate shows by itself on the "What you get" box, the artists’ earnings, the Terms of Use, the Help page, the upload page and the commission price box. Artworks already sold keep the rate they were sold at.',
-                'رقم واحد لكل الموقع، قبل ضريبة القيمة المضافة. حين تغيّره تظهر النسبة الجديدة تلقائياً في مربع «ما تحصل عليه» وأرباح الفنانين وشروط الاستخدام وصفحة المساعدة وصفحة رفع العمل وخانة سعر العمل الخاص. وتبقى الأعمال المباعة سابقاً على النسبة التي بيعت بها.') ?></p>
+                'رقم واحد لكل الموقع، قبل ضريبة القيمة المضافة. حين تغيّره تظهر النسبة الجديدة تلقائيا في مربع «ما تحصل عليه» وأرباح الفنانين وشروط الاستخدام وصفحة المساعدة وصفحة رفع العمل وخانة سعر العمل الخاص. وتبقى الأعمال المباعة سابقا على النسبة التي بيعت بها.') ?></p>
     <?php if ($comMsg === 'ok'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. The commission is now ' . owCommissionText() . '.', 'تم الحفظ. العمولة الآن ' . owCommissionText() . '.') ?></div>
-    <?php elseif ($comMsg === 'bad'): ?><div class="alert alert-error" role="alert"><?= owBi('Please type a number from 1 to 50, for example 15.', 'يرجى كتابة رقم من 1 إلى 50، مثل 15.') ?></div><?php endif; ?>
+    <?php elseif ($comMsg === 'bad'): ?><div class="alert alert-error" role="alert"><?= owBi('Please type a number from 1 to 50, for example 15', 'يرجى كتابة رقم من 1 إلى 50، مثل 15') ?></div><?php endif; ?>
     <form method="post" action="admin.php?settings=1#commission" style="display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:flex-end"><?= csrfField() ?><input type="hidden" name="do" value="commission">
       <div class="field" style="margin:0"><label for="com-rate"><?= owBi('Commission (%)', 'العمولة (٪)') ?></label><input id="com-rate" name="rate" type="text" inputmode="decimal" dir="ltr" maxlength="5" style="max-width:120px" value="<?= e(rtrim(owCommissionText(), '%')) ?>"></div>
       <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
@@ -105,9 +105,9 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
   $ccText = rtrim(rtrim(number_format(owCourseCommission(), 2), '0'), '.') . '%'; ?>
   <div class="card" id="course-commission"><h2><?= owBi('Course commission', 'عمولة الدورات') ?> <span class="pillx ok"><?= e($ccText) ?></span></h2>
     <p><?= owBi('Oweili’s share of each course registration, before VAT. Separate from the artwork commission above. Registrations already paid keep the rate they were paid at. Museums have their own rate each (Admin → Art Map).',
-                'حصة أويلي من كل تسجيل في دورة، قبل ضريبة القيمة المضافة. مستقلة عن عمولة الأعمال الفنية أعلاه. وتبقى التسجيلات المدفوعة سابقاً على النسبة التي دُفعت بها. ولكل متحف نسبته الخاصة (الإدارة ← خريطة الفن).') ?></p>
+                'حصة أويلي من كل تسجيل في دورة، قبل ضريبة القيمة المضافة. مستقلة عن عمولة الأعمال الفنية أعلاه. وتبقى التسجيلات المدفوعة سابقا على النسبة التي دُفعت بها. ولكل متحف نسبته الخاصة (الإدارة ← خريطة الفن).') ?></p>
     <?php if ($ccMsg === 'ok'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. The course commission is now ' . $ccText . '.', 'تم الحفظ. عمولة الدورات الآن ' . $ccText . '.') ?></div>
-    <?php elseif ($ccMsg === 'bad'): ?><div class="alert alert-error" role="alert"><?= owBi('Please type a number from 0 to 50, for example 10.', 'يرجى كتابة رقم من 0 إلى 50، مثل 10.') ?></div><?php endif; ?>
+    <?php elseif ($ccMsg === 'bad'): ?><div class="alert alert-error" role="alert"><?= owBi('Please type a number from 0 to 50, for example 10', 'يرجى كتابة رقم من 0 إلى 50، مثل 10') ?></div><?php endif; ?>
     <form method="post" action="admin.php?settings=1#course-commission" style="display:flex;gap:var(--space-xs);flex-wrap:wrap;align-items:flex-end"><?= csrfField() ?><input type="hidden" name="do" value="course_commission">
       <div class="field" style="margin:0"><label for="cc-rate"><?= owBi('Course commission (%)', 'عمولة الدورات (٪)') ?></label><input id="cc-rate" name="rate" type="text" inputmode="decimal" dir="ltr" maxlength="5" style="max-width:120px" value="<?= e(rtrim($ccText, '%')) ?>"></div>
       <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
@@ -117,13 +117,13 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
 <?php require_once __DIR__ . '/order_lib.php'; $payMiss = owPaymentsMissing(); ?>
   <div class="card"><h2><?= owBi('Payments and escrow', 'الدفع والضمان') ?> <?= !$payMiss ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Switched off', 'متوقف') . '</span>' ?></h2>
     <p><?= owBi('Orders for artworks, gifts, commissions and course or workshop tickets are built, with escrow: Oweili holds the money and pays the artist only after you approve the payout (Admin → Waiting for approval). The request reaches you when the collector sends "I received the artwork" with a photo, or ' . OW_PAYOUT_ASK_DAYS . ' days after delivery with no complaint; a complaint holds it. Minus Oweili’s commission (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '%, before VAT). Everything stays switched off and hidden until these are ready:',
-                 'طلبات الأعمال والهدايا والأعمال الخاصة وتذاكر الدورات والورش جاهزة، مع الضمان: يحتفظ أويلي بالمال ولا يُدفع للفنان إلا بعد موافقتك على الدفعة (الإدارة ← بانتظار الموافقة). يصلك الطلب حين يرسل المقتني «استلمت العمل» مع صورة، أو بعد ' . OW_PAYOUT_ASK_DAYS . ' أيام من التسليم دون شكوى، والشكوى توقفه. مخصوماً منه عمولة أويلي (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '٪ قبل الضريبة). يبقى كل شيء متوقفاً ومخفياً حتى يجهز ما يلي:') ?></p>
+                 'طلبات الأعمال والهدايا والأعمال الخاصة وتذاكر الدورات والورش جاهزة، مع الضمان: يحتفظ أويلي بالمال ولا يُدفع للفنان إلا بعد موافقتك على الدفعة (الإدارة ← بانتظار الموافقة). يصلك الطلب حين يرسل المقتني «استلمت العمل» مع صورة، أو بعد ' . OW_PAYOUT_ASK_DAYS . ' أيام من التسليم دون شكوى، والشكوى توقفه. مخصوما منه عمولة أويلي (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '٪ قبل الضريبة). يبقى كل شيء متوقفا ومخفيا حتى يجهز ما يلي:') ?></p>
     <ul class="rows">
       <li><span><?= owBi('Commercial registration number (in config.php: OWEILI_COMPANY_CR)', 'رقم السجل التجاري (في config.php: OWEILI_COMPANY_CR)') ?></span><?= $yes(owCompanyCr() !== '') ?></li>
       <li><span><?= owBi('A payment provider: Moyasar, Tap or HyperPay (merchant account, keys in config.php, its connection built and tested)', 'مزوّد دفع: Moyasar أو Tap أو HyperPay (حساب تاجر، ومفاتيحه في config.php، وبناء الربط واختباره)') ?></span><?= $yes(owGatewayName() !== '') ?></li>
       <li><span><?= owBi('A bank account for the money held and for paying artists', 'حساب بنكي للمبالغ المحفوظة ولدفع مستحقات الفنانين') ?></span><span class="mini"><?= owBi('your step', 'خطوتك') ?></span></li>
-      <li><span><?= owBi('VAT: whether Oweili is VAT-registered (ZATCA e-invoicing if yes)', 'ضريبة القيمة المضافة: هل أويلي مسجّل (والفوترة الإلكترونية من زاتكا إن كان مسجلاً)') ?></span><span class="mini"><?= owBi('your decision', 'قرارك') ?></span></li>
-      <li><span><?= owBi('Terms of Use and Privacy Policy updated for payments, refunds and escrow (reviewed by a lawyer)', 'تحديث شروط الاستخدام وسياسة الخصوصية للدفع والاسترداد والضمان (بمراجعة محامٍ)') ?></span><span class="mini"><?= owBi('your step', 'خطوتك') ?></span></li>
+      <li><span><?= owBi('VAT: whether Oweili is VAT-registered (ZATCA e-invoicing if yes)', 'ضريبة القيمة المضافة: هل أويلي مسجّل (والفوترة الإلكترونية من زاتكا إن كان مسجلا)') ?></span><span class="mini"><?= owBi('your decision', 'قرارك') ?></span></li>
+      <li><span><?= owBi('Terms of Use and Privacy Policy updated for payments, refunds and escrow (reviewed by a lawyer)', 'تحديث شروط الاستخدام وسياسة الخصوصية للدفع والاسترداد والضمان (بمراجعة محام)') ?></span><span class="mini"><?= owBi('your step', 'خطوتك') ?></span></li>
       <li><span><?= owBi('Your final "switch on"', 'موافقتك النهائية بالتشغيل') ?></span><?= $yes(owSetting('payments_enabled', '0') === '1') ?></li>
     </ul>
     <p class="mini"><a href="admin_orders.php"><?= owBi('Orders and payouts', 'الطلبات والمدفوعات') ?></a></p>
@@ -142,9 +142,9 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
   $aucOn = owAuctionsPageOn();
   $doorLog = []; try { if (owHasTable('activity_log')) $doorLog = getDB()->query("SELECT details, created_at FROM activity_log WHERE action = 'bashro_send' ORDER BY id DESC LIMIT 8")->fetchAll(); } catch (Throwable $e) {} ?>
   <div class="card" id="auctions-switch"><h2><?= owBi('Auctions page', 'صفحة المزاد') ?> <?= $aucOn ? '<span class="pillx ok">' . owBi('Shown', 'ظاهرة') . '</span>' : '<span class="pillx no">' . owBi('Hidden', 'مخفية') . '</span>' ?></h2>
-    <p><?= $aucOn ? owBi('Visitors can open oweili.com/auctions, and it is in the menu (Collect → Auctions) and the sitemap.', 'يستطيع الزوار فتح oweili.com/auctions، وهي في القائمة (اقتنِ ← المزاد) وفي خريطة الموقع.')
+    <p><?= $aucOn ? owBi('Visitors can open oweili.com/auctions, and it is in the menu (Collect → Auctions) and the sitemap', 'يستطيع الزوار فتح oweili.com/auctions، وهي في القائمة (اقتنِ ← المزاد) وفي خريطة الموقع')
                   : owBi('Hidden: not in the menu or the sitemap, and visitors who open oweili.com/auctions see "page not found". You can still preview it. The waiting list and its sign-ups are kept, and the unsubscribe links in its emails still work.', 'مخفية: ليست في القائمة ولا في خريطة الموقع، ومن يفتح oweili.com/auctions يرى «الصفحة غير موجودة». تستطيع معاينتها. قائمة الانتظار وتسجيلاتها محفوظة، وروابط إلغاء الاشتراك في رسائلها تعمل.') ?></p>
-    <?php if ($aucMsg !== ''): ?><div class="alert alert-ok" role="status"><?= $aucMsg === '1' ? owBi('The Auctions page is shown again.', 'صفحة المزاد ظاهرة الآن.') : owBi('The Auctions page is hidden.', 'صفحة المزاد مخفية الآن.') ?></div><?php endif; ?>
+    <?php if ($aucMsg !== ''): ?><div class="alert alert-ok" role="status"><?= $aucMsg === '1' ? owBi('The Auctions page is shown again', 'صفحة المزاد ظاهرة الآن') : owBi('The Auctions page is hidden', 'صفحة المزاد مخفية الآن') ?></div><?php endif; ?>
     <form method="post" action="admin.php?settings=1#auctions-switch" style="display:flex;gap:var(--space-xs);flex-wrap:wrap"><?= csrfField() ?><input type="hidden" name="do" value="auctions_page"><input type="hidden" name="on" value="<?= $aucOn ? '0' : '1' ?>">
       <button class="btn <?= $aucOn ? 'btn-secondary' : 'btn-primary' ?> btn-sm" type="submit"><?= $aucOn ? owBi('Hide the Auctions page', 'إخفاء صفحة المزاد') : owBi('Show the Auctions page', 'إظهار صفحة المزاد') ?></button>
       <a class="btn btn-ghost btn-sm" href="auctions.php" target="_blank" rel="noopener"><?= owBi('Preview', 'معاينة') ?></a></form>
@@ -160,11 +160,11 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
       if (owDemoRestore()) { owLog('setting_change', null, null, 'demo_content=1', ['type' => 'admin', 'id' => null]); $demoBack = true; }
   }
   $demoLeft = owSetting('demo_content', '1') !== '0'; ?>
-  <div class="card" id="demo"><h2><?= owBi('Demo content', 'المحتوى التجريبي') ?> <?= $demoLeft ? '<span class="pillx ok">' . owBi('Shown to everyone for now', 'ظاهر للجميع مؤقتاً') . '</span>' : '<span class="pillx no">' . owBi('Deleted', 'محذوف') . '</span>' ?></h2>
+  <div class="card" id="demo"><h2><?= owBi('Demo content', 'المحتوى التجريبي') ?> <?= $demoLeft ? '<span class="pillx ok">' . owBi('Shown to everyone for now', 'ظاهر للجميع مؤقتا') . '</span>' : '<span class="pillx no">' . owBi('Deleted', 'محذوف') . '</span>' ?></h2>
     <p><?= owBi('8 demo artworks in the Gallery, 4 Art Events, 4 Art Education articles and 6 courses in Art Institutes, each with a "Demo" badge. For now everyone can see them (also when signed out). Google never indexes them, and nothing can be bought, booked or sent.',
-                'ثمانية أعمال تجريبية في المعرض، وأربعة ملتقيات فنية، وأربعة مقالات في التثقيف الفني، وست دورات في المعاهد الفنية، وعلى كل منها شارة «تجريبي». يراها الجميع مؤقتاً (حتى دون تسجيل الدخول). لا يفهرسها Google، ولا يمكن شراء شيء أو حجزه أو إرساله.') ?></p>
-    <?php if ($demoMsg): ?><div class="alert alert-ok" role="status"><?= owBi('All demo content is deleted.', 'حُذف كل المحتوى التجريبي.') ?></div><?php endif; ?>
-    <?php if ($demoBack): ?><div class="alert alert-ok" role="status"><?= owBi('The demo content is shown again.', 'عاد المحتوى التجريبي للظهور.') ?></div><?php endif; ?>
+                'ثمانية أعمال تجريبية في المعرض، وأربعة ملتقيات فنية، وأربعة مقالات في التثقيف الفني، وست دورات في المعاهد الفنية، وعلى كل منها شارة «تجريبي». يراها الجميع مؤقتا (حتى دون تسجيل الدخول). لا يفهرسها Google، ولا يمكن شراء شيء أو حجزه أو إرساله.') ?></p>
+    <?php if ($demoMsg): ?><div class="alert alert-ok" role="status"><?= owBi('All demo content is deleted', 'حُذف كل المحتوى التجريبي') ?></div><?php endif; ?>
+    <?php if ($demoBack): ?><div class="alert alert-ok" role="status"><?= owBi('The demo content is shown again', 'عاد المحتوى التجريبي للظهور') ?></div><?php endif; ?>
     <?php /* a check for THIS browser (owner, 20 Nov 2026): is the demo shown here, and on which address */
       $dHost = preg_replace('/[^a-z0-9.\-]/i', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
       $dAdm = owIsAdmin(); $dOn = owDemoOn(); ?>
@@ -174,7 +174,7 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
       <li><span><?= owBi('You are signed in on this address', 'أنت مسجّل الدخول على هذا العنوان') ?></span><b dir="ltr"><?= e($dHost) ?></b></li>
     </ul>
     <p class="mini"><?= owBi('The sign-in works only on the address you used to sign in. Open the pages with these buttons, so you stay on the same address. The demo items are under the big photo at the top: scroll down a little.',
-                            'تسجيل الدخول يعمل فقط على العنوان الذي سجّلت الدخول منه. افتح الصفحات من هذه الأزرار لتبقى على العنوان نفسه. المحتوى التجريبي تحت الصورة الكبيرة في أعلى الصفحة: انزل قليلاً.') ?></p>
+                            'تسجيل الدخول يعمل فقط على العنوان الذي سجّلت الدخول منه. افتح الصفحات من هذه الأزرار لتبقى على العنوان نفسه. المحتوى التجريبي تحت الصورة الكبيرة في أعلى الصفحة: انزل قليلا.') ?></p>
     <div style="display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-bottom:var(--space-sm)">
       <a class="btn btn-secondary btn-sm" href="marketplace.php#results"><?= owBi('Gallery', 'المعرض') ?></a>
       <a class="btn btn-secondary btn-sm" href="articles_list.php?type=event"><?= owBi('Art Events', 'الملتقيات الفنية') ?></a>
@@ -183,7 +183,7 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     </div>
     <?php if (!$demoLeft): ?>
     <form method="post" action="admin.php?settings=1#demo"><?= csrfField() ?><input type="hidden" name="do" value="demo_restore">
-      <button class="btn btn-primary" type="submit"><?= owBi('Show the demo content again', 'إظهار المحتوى التجريبي مجدداً') ?></button></form>
+      <button class="btn btn-primary" type="submit"><?= owBi('Show the demo content again', 'إظهار المحتوى التجريبي مجددا') ?></button></form>
     <?php endif; ?>
     <?php if ($demoLeft): ?>
     <form method="post" action="admin.php?settings=1#demo" onsubmit="return confirm(<?= e(json_encode(owIsAr() ? 'حذف كل المحتوى التجريبي؟' : 'Delete all demo content?', JSON_UNESCAPED_UNICODE)) ?>)"><?= csrfField() ?><input type="hidden" name="do" value="demo_delete">
@@ -199,7 +199,7 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
           if (owSetSetting(OW_HIDDEN_PARTS[$part][0], $want)) { owLog('setting_change', null, null, OW_HIDDEN_PARTS[$part][0] . '=' . $want, ['type' => 'admin', 'id' => null]); $hidMsg = [$part, $want]; }
       }
   } ?>
-  <div class="card" id="hidden-parts"><h2><?= owBi('Hidden for now, to bring back later', 'مخفي الآن، يعود لاحقاً') ?></h2>
+  <div class="card" id="hidden-parts"><h2><?= owBi('Hidden for now, to bring back later', 'مخفي الآن، يعود لاحقا') ?></h2>
     <p><?= owBi('While hidden: not in the menu, the footer, the sitemap or any link, and visitors who open the address see "page not found". You can still preview the pages. Nothing is deleted: the pages, the code, the tables and every saved request stay.', 'أثناء الإخفاء: لا تظهر في القائمة ولا في أسفل الموقع ولا في خريطة الموقع ولا في أي رابط، ومن يفتح العنوان يرى «الصفحة غير موجودة». تستطيع معاينة الصفحات. لا يُحذف شيء: الصفحات والبرمجة والجداول وكل الطلبات المحفوظة باقية.') ?></p>
     <?php if ($hidMsg): ?><div class="alert alert-ok" role="status"><?= $hidMsg[1] === '1' ? owBi(OW_HIDDEN_PARTS[$hidMsg[0]][1] . ' is shown again.', OW_HIDDEN_PARTS[$hidMsg[0]][2] . ': ظاهرة الآن.') : owBi(OW_HIDDEN_PARTS[$hidMsg[0]][1] . ' is hidden.', OW_HIDDEN_PARTS[$hidMsg[0]][2] . ': مخفية الآن.') ?></div><?php endif; ?>
     <ul class="rows">
@@ -212,7 +212,7 @@ pre{white-space:pre-wrap;background:var(--color-surface-2);padding:var(--space-s
     </ul>
   </div>
   <div class="card"><h2><?= owBi('Sending to Bashro (website door)', 'الإرسال إلى بشرو (بوابة الموقع)') ?> <?= $doorOn ? '<span class="pillx ok">' . owBi('On', 'يعمل') . '</span>' : '<span class="pillx no">' . owBi('Off', 'متوقف') . '</span>' ?></h2>
-    <p><?= owBi('"I’m Interested", gift and commission requests go to Bashro Sales (project 3) after the visitor’s page is delivered. Never photos, passwords, card, ID or bank numbers.', 'تذهب طلبات «أنا مهتم» والهدايا والأعمال الخاصة إلى مبيعات بشرو (المشروع 3) بعد عرض صفحة الزائر. لا صور ولا كلمات مرور ولا أرقام بطاقات أو هويات أو حسابات بنكية أبداً.') ?></p>
+    <p><?= owBi('"I’m Interested", gift and commission requests go to Bashro Sales (project 3) after the visitor’s page is delivered. Never photos, passwords, card, ID or bank numbers.', 'تذهب طلبات «أنا مهتم» والهدايا والأعمال الخاصة إلى مبيعات بشرو (المشروع 3) بعد عرض صفحة الزائر. لا صور ولا كلمات مرور ولا أرقام بطاقات أو هويات أو حسابات بنكية أبدا.') ?></p>
     <ul class="rows">
       <li><span><?= owBi('Requests to Sales', 'الطلبات إلى المبيعات') ?></span><?= $yes(owBashroKindOn('quote')) ?></li>
       <li><span><?= owBi('New artist and collector sign-ups (waits until Bashro accepts them)', 'تسجيلات الفنانين والمقتنين الجدد (بانتظار قبول بشرو لها)') ?></span><?= $yes(owBashroKindOn('signup')) ?></li>
@@ -224,7 +224,7 @@ define('BASHRO_DOOR_KEY', 'the 64-character key from Bashro');</pre><?php endif;
     <?php if ($doorTest !== null): ?><div class="<?= $doorTest === 202 ? 'alert alert-ok' : 'alert alert-error' ?>" role="status"><?= $doorTest === 202 ? owBi('Bashro accepted the test (202). Look for "Oweili test (please ignore)" in Bashro Sales.', 'قبل بشرو رسالة الاختبار (202). ابحث عن «Oweili test (please ignore)» في مبيعات بشرو.')
         : owBi('Bashro did not accept the test. Answer: ' . ($doorTest ?: 'no answer') . '. 401 = the key does not match, 403 = the website connection is off in Bashro.', 'لم يقبل بشرو رسالة الاختبار. الرد: ' . ($doorTest ?: 'لا رد') . '. 401 = المفتاح غير مطابق، 403 = ربط الموقع متوقف في بشرو.') ?></div><?php endif; ?>
     <?php if ($doorOn): ?><form method="post" action="admin.php?settings=1" style="margin:var(--space-xs) 0"><?= csrfField() ?><input type="hidden" name="do" value="bashro_test">
-      <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send a test to Bashro', 'أرسل اختباراً إلى بشرو') ?></button></form><?php endif; ?>
+      <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Send a test to Bashro', 'أرسل اختبارا إلى بشرو') ?></button></form><?php endif; ?>
     <?php if ($doorLog): ?><p class="mini"><?= owBi('Last answers from Bashro (202 = accepted):', 'آخر ردود بشرو (202 = مقبول):') ?></p>
       <ul class="rows"><?php foreach ($doorLog as $dl): ?><li><span dir="ltr"><?= e((string) $dl['details']) ?></span><span class="mini"><?= e((string) $dl['created_at']) ?></span></li><?php endforeach; ?></ul><?php endif; ?>
   </div>
@@ -234,7 +234,7 @@ define('BASHRO_DOOR_KEY', 'the 64-character key from Bashro');</pre><?php endif;
     <?php if ($bashroOn): ?>
       <p class="mini"><?= owBi('Address: ', 'العنوان: ') ?><span dir="ltr">https://<?= e((string) ($_SERVER['HTTP_HOST'] ?? 'oweili.com')) ?>/bashro_api.php?resource=summary</span> · <?= owBi('Allowed addresses: ', 'العناوين المسموحة: ') ?><?= e($bashroIps ?: 'any') ?></p>
     <?php else: ?>
-      <p class="mini"><?= owBi('It stays off until these two lines are added to config.php on the server (hPanel → File Manager). Use a long random key and give it only to Bashro:', 'يبقى متوقفاً حتى يُضاف هذان السطران إلى config.php على الخادم (hPanel ← مدير الملفات). استخدم مفتاحاً طويلاً عشوائياً وأعطه لبشرو فقط:') ?></p>
+      <p class="mini"><?= owBi('It stays off until these two lines are added to config.php on the server (hPanel → File Manager). Use a long random key and give it only to Bashro:', 'يبقى متوقفا حتى يُضاف هذان السطران إلى config.php على الخادم (hPanel ← مدير الملفات). استخدم مفتاحا طويلا عشوائيا وأعطه لبشرو فقط:') ?></p>
       <pre>define('BASHRO_API_ENABLED', true);
 define('BASHRO_API_KEY', 'a long random key, 32 characters or more');</pre>
     <?php endif; ?>

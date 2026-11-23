@@ -16,7 +16,7 @@ $artId = isset($_GET['id']) ? (int) $_GET['id'] : (int) ($_POST['artwork_id'] ??
 $stmt = getDB()->prepare('SELECT * FROM artworks WHERE id = :id AND artist_id = :uid LIMIT 1');
 $stmt->execute([':id' => $artId, ':uid' => $viewerId]);
 $aw = $stmt->fetch();
-if (!$aw) { http_response_code(404); exit('Artwork not found or not yours.'); }
+if (!$aw) { http_response_code(404); exit('Artwork not found or not yours'); }
 /* Unfinished 3-stage drafts are completed in the upload flow, not here. */
 if (!empty($aw['is_draft'])) { header('Location: upload_artwork.php?id=' . (int) $aw['id']); exit; }
 
@@ -31,7 +31,7 @@ $liveAw = $aw;
 
 /* ---- Handle save ---- */
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token'); }
 
     $tEn    = sanitize($_POST['title_en'] ?? '');
     $tAr    = sanitize($_POST['title_ar'] ?? '');
@@ -202,15 +202,15 @@ $waitNote = (int) $liveAw['is_approved'] === 1 && owApprovalsReady();
 <div class="page" id="pg">
   <div class="gc">
     <h1 id="t-title">Edit Artwork</h1>
-    <div class="sub" id="t-sub">Update the details of your artwork.</div>
+    <div class="sub" id="t-sub">Update the details of your artwork</div>
 
     <?php $CERT_ERR = owCertDetailErrors(); if ($err && isset($CERT_ERR[$err])): ?>
       <div class="err-box" role="alert"><?= owBi($CERT_ERR[$err][0], $CERT_ERR[$err][1]) ?></div>
     <?php elseif ($err): ?>
       <div class="err-box"
-           data-en="<?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?>"
-           data-ar="<?= $err === 'image' ? 'يجب أن تكون الصورة JPG/PNG/WEBP بحجم أقل من 5 ميغابايت.' : 'العنوانان مطلوبان ويجب أن يكون السعر رقماً.' ?>"
-           id="errbox"><?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB.' : 'Both titles are required and the price must be a number.' ?></div>
+           data-en="<?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB' : 'Both titles are required and the price must be a number' ?>"
+           data-ar="<?= $err === 'image' ? 'يجب أن تكون الصورة JPG/PNG/WEBP بحجم أقل من 5 ميغابايت' : 'العنوانان مطلوبان ويجب أن يكون السعر رقما' ?>"
+           id="errbox"><?= $err === 'image' ? 'The image must be a valid JPG/PNG/WEBP under 5MB' : 'Both titles are required and the price must be a number' ?></div>
     <?php endif; ?>
 
     <?php if ($pendingAw): ?>
@@ -297,13 +297,13 @@ let L = 'en';
 const NAV={
   en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free',
-    title:'Edit Artwork',sub:'Update the details of your artwork.',
+    title:'Edit Artwork',sub:'Update the details of your artwork',
     ten:'Title in English',tar:'Title in Arabic',den:'Description in English',dar:'Description in Arabic',
     price:'Price in SAR',type:'Type',status:'Status',img:'Replace Image (optional, JPG/PNG/WEBP, max 5MB)',
     save:'Save Changes',cancel:'Cancel'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-    sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً',
-    title:'تعديل العمل الفني',sub:'حدّث تفاصيل عملك الفني.',
+    sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا',
+    title:'تعديل العمل الفني',sub:'حدّث تفاصيل عملك الفني',
     ten:'العنوان بالإنجليزية',tar:'العنوان بالعربية',den:'الوصف بالإنجليزية',dar:'الوصف بالعربية',
     price:'السعر بالريال',type:'النوع',status:'الحالة',img:'استبدال الصورة (اختياري، JPG/PNG/WEBP، بحد أقصى 5 ميغابايت)',
     save:'حفظ التغييرات',cancel:'إلغاء'}

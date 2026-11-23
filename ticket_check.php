@@ -22,7 +22,7 @@ $msg = null;
 if ($canCheck && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && verifyCsrf($_POST['csrf_token'] ?? null) && ($_POST['do'] ?? '') === 'use') {
     $u = getDB()->prepare("UPDATE museum_tickets SET status = 'used', used_at = NOW(), used_by = :by WHERE id = :id AND status = 'paid'");
     $u->execute([':by' => $me['id'] ?? null, ':id' => (int) $t['id']]);
-    if ($u->rowCount()) { owLog('ticket_used', 'museum_ticket', (int) $t['id'], (string) $t['ref_no'], $me ? ['type' => owActorType($me['role']), 'id' => (int) $me['id']] : ['type' => 'admin', 'id' => null]); $msg = ['Marked as used. Welcome them in!', 'تم التأشير بالاستخدام. أهلاً بهم!']; }
+    if ($u->rowCount()) { owLog('ticket_used', 'museum_ticket', (int) $t['id'], (string) $t['ref_no'], $me ? ['type' => owActorType($me['role']), 'id' => (int) $me['id']] : ['type' => 'admin', 'id' => null]); $msg = ['Marked as used. Welcome them in!', 'تم التأشير بالاستخدام. أهلا بهم!']; }
     $st = getDB()->prepare('SELECT * FROM museum_tickets WHERE id = :id'); $st->execute([':id' => (int) $t['id']]); $t = $st->fetch();
 }
 header('X-Robots-Tag: noindex');
@@ -31,7 +31,7 @@ owBookTop('Ticket check', 'فحص التذكرة', 'ticket_check.php', $preview,
 <div class="card ck">
 <?php if (!$t): ?>
   <h1><?= owBi('Ticket not found', 'التذكرة غير موجودة') ?></h1>
-  <p><?= owBi('Please check the code and try again.', 'يرجى مراجعة الرمز والمحاولة مرة أخرى.') ?></p>
+  <p><?= owBi('Please check the code and try again', 'يرجى مراجعة الرمز والمحاولة مرة أخرى') ?></p>
 <?php elseif (!$canCheck): ?>
   <h1><?= owBi('Oweili ticket', 'تذكرة أويلي') ?></h1>
   <p><?= owBi('Please show this code at the museum entrance. The museum team will scan it.', 'يرجى عرض هذا الرمز عند مدخل المتحف. سيمسحه فريق المتحف.') ?></p>

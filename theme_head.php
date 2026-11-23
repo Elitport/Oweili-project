@@ -178,8 +178,8 @@ if(document.prerendering){document.addEventListener('prerenderingchange',go,{onc
 (function(){
   var MON = { en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
               ar: ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] };
-  var W = { en: ['Day', 'Month', 'Year', 'Please choose a date on or after {d}.', 'Please choose a date on or before {d}.', 'Please choose the day, the month and the year.'],
-            ar: ['اليوم', 'الشهر', 'السنة', 'يرجى اختيار تاريخ في {d} أو بعده.', 'يرجى اختيار تاريخ في {d} أو قبله.', 'يرجى اختيار اليوم والشهر والسنة.'] };
+  var W = { en: ['Day', 'Month', 'Year', 'Please choose a date on or after {d}.', 'Please choose a date on or before {d}.', 'Please choose the day, the month and the year'],
+            ar: ['اليوم', 'الشهر', 'السنة', 'يرجى اختيار تاريخ في {d} أو بعده.', 'يرجى اختيار تاريخ في {d} أو قبله.', 'يرجى اختيار اليوم والشهر والسنة'] };
   function lang(){ return document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en'; }
   function pad(n){ return (n < 10 ? '0' : '') + n; }
   function show(iso){ var p = iso.split('-'); return +p[2] + '/' + +p[1] + '/' + p[0]; }
@@ -220,7 +220,7 @@ if(document.prerendering){document.addEventListener('prerenderingchange',go,{onc
   document.addEventListener('DOMContentLoaded', function(){ document.querySelectorAll('input[type=date]:not([data-native])').forEach(build); });
   /* File boxes: the browser writes "Choose Files / No file chosen" in its own language.
      Our own button and line say it in the page language instead (the real box still does the work). */
-  var FW = { en: ['Choose a file', 'Choose files', 'No file chosen', ' files chosen'], ar: ['اختر ملفاً', 'اختر الملفات', 'لم يتم اختيار ملف', ' ملفات مختارة'] };
+  var FW = { en: ['Choose a file', 'Choose files', 'No file chosen', ' files chosen'], ar: ['اختر ملفا', 'اختر الملفات', 'لم يتم اختيار ملف', ' ملفات مختارة'] };
   function fileBox(inp){
     if (inp.dataset.owFile || getComputedStyle(inp).display === 'none' || inp.offsetParent === null) return; inp.dataset.owFile = '1';
     var box = document.createElement('span'), btn = document.createElement('button'), txt = document.createElement('span');

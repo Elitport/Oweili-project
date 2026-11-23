@@ -138,18 +138,18 @@ function owPlaceStorePhoto(array $file, int $placeId): array {
 /* Read one uploaded photo (JPG / PNG / WebP up to 10 MB, at least 200 × 120), turned upright. ['ok' => true, 'img' => GdImage] or an error */
 function owPlaceReadUpload(array $file): array {
     $bad = fn(string $en, string $ar) => ['ok' => false, 'err' => [$en, $ar]];
-    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE || empty($file['tmp_name'])) return $bad('Please choose a photo.', 'يرجى اختيار صورة.');
-    if (in_array($file['error'], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true) || (int) $file['size'] > 10 * 1024 * 1024) return $bad('The photo is too large (10 MB at most).', 'الصورة كبيرة جداً (10 ميغابايت كحد أقصى).');
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE || empty($file['tmp_name'])) return $bad('Please choose a photo', 'يرجى اختيار صورة');
+    if (in_array($file['error'], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true) || (int) $file['size'] > 10 * 1024 * 1024) return $bad('The photo is too large (10 MB at most)', 'الصورة كبيرة جدا (10 ميغابايت كحد أقصى)');
     if ($file['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($file['tmp_name'])) return $bad('The photo could not be received. Please try again.', 'تعذّر استلام الصورة. حاول مرة أخرى.');
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
-    if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true) || !function_exists('imagecreatefromstring')) return $bad('Please send a JPG, PNG or WebP photo.', 'يرجى إرسال صورة JPG أو PNG أو WebP.');
+    if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true) || !function_exists('imagecreatefromstring')) return $bad('Please send a JPG, PNG or WebP photo', 'يرجى إرسال صورة JPG أو PNG أو WebP');
     $img = @imagecreatefromstring((string) file_get_contents($file['tmp_name']));
-    if (!$img) return $bad('Please send a JPG, PNG or WebP photo.', 'يرجى إرسال صورة JPG أو PNG أو WebP.');
+    if (!$img) return $bad('Please send a JPG, PNG or WebP photo', 'يرجى إرسال صورة JPG أو PNG أو WebP');
     if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
         $o = (int) (@exif_read_data($file['tmp_name'])['Orientation'] ?? 1);
         if ($o === 3) $img = imagerotate($img, 180, 0); elseif ($o === 6) $img = imagerotate($img, -90, 0); elseif ($o === 8) $img = imagerotate($img, 90, 0);
     }
-    if (imagesx($img) < 200 || imagesy($img) < 120) return $bad('The photo is too small (at least 200 × 120 pixels).', 'الصورة صغيرة جداً (200 × 120 بكسل على الأقل).');
+    if (imagesx($img) < 200 || imagesy($img) < 120) return $bad('The photo is too small (at least 200 × 120 pixels)', 'الصورة صغيرة جدا (200 × 120 بكسل على الأقل)');
     return ['ok' => true, 'img' => $img];
 }
 /* Redraw a photo at most $maxW wide (no hidden data kept) and save it as $absBase.jpg (+ .webp when $webp) */
@@ -168,7 +168,7 @@ function owPlaceWriteImage($img, int $placeId): array {
     $dir = __DIR__ . '/uploads/places';
     if (!is_dir($dir)) @mkdir($dir, 0755, true);
     $base = 'uploads/places/p' . $placeId . '-' . bin2hex(random_bytes(5));
-    if (!is_dir($dir) || !owPlaceSaveGd($img, __DIR__ . '/' . $base)) return ['ok' => false, 'err' => ['The photo could not be saved.', 'تعذّر حفظ الصورة.']];
+    if (!is_dir($dir) || !owPlaceSaveGd($img, __DIR__ . '/' . $base)) return ['ok' => false, 'err' => ['The photo could not be saved', 'تعذّر حفظ الصورة']];
     return ['ok' => true, 'base' => $base];
 }
 

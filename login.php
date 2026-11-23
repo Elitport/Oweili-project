@@ -67,8 +67,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 /* Bilingual error strings */
 $ERR = [
     'csrf'    => ['en' => 'Security check failed. Please try again.', 'ar' => 'فشل التحقق الأمني. حاول مرة أخرى.'],
-    'rate'    => ['en' => 'Too many attempts. Please wait 10 minutes.', 'ar' => 'محاولات كثيرة جداً. يرجى الانتظار 10 دقائق.'],
-    'invalid' => ['en' => 'Invalid email or password.', 'ar' => 'البريد الإلكتروني أو كلمة المرور غير صحيحة.'],
+    'rate'    => ['en' => 'Too many attempts. Please wait 10 minutes.', 'ar' => 'محاولات كثيرة جدا. يرجى الانتظار 10 دقائق.'],
+    'invalid' => ['en' => 'Invalid email or password', 'ar' => 'البريد الإلكتروني أو كلمة المرور غير صحيحة'],
 ];
 $errEn = $errCode ? $ERR[$errCode]['en'] : '';
 $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
@@ -78,7 +78,7 @@ $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Sign In', 'ar' => 'تسجيل الدخول', 'desc_en' => 'Welcome back to Oweili.', 'desc_ar' => 'أهلاً بعودتك إلى أويلي.', 'path' => 'login.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Sign In', 'ar' => 'تسجيل الدخول', 'desc_en' => 'Welcome back to Oweili', 'desc_ar' => 'أهلا بعودتك إلى أويلي', 'path' => 'login.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -143,7 +143,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     </div>
     <div class="auth-foot ow-newlink">
       <span><span class="bi-en">Did not get the confirmation email?</span><span class="bi-ar">لم يصلك بريد التأكيد؟</span></span>
-      <a class="btn btn-secondary btn-sm" href="verify.php?resend=1" data-no-prefetch><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></a>
+      <a class="btn btn-secondary btn-sm" href="verify.php?resend=1" data-no-prefetch><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطا جديدا</span></a>
     </div>
   </div>
 </div>
@@ -155,11 +155,11 @@ const T={
     submit:'Sign In',noacc:"Don't have an account?",joinlink:'Join Free',show:'SHOW',hide:'HIDE',
     nav:{community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
       sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free'}},
-  ar:{dir:'rtl',lb:'English',title:'تسجيل الدخول',sub:'مرحباً بعودتك إلى أويلي',
+  ar:{dir:'rtl',lb:'English',title:'تسجيل الدخول',sub:'مرحبا بعودتك إلى أويلي',
     email:'البريد الإلكتروني',pass:'كلمة المرور',remember:'تذكرني',forgot:'نسيت كلمة المرور؟',
-    submit:'تسجيل الدخول',noacc:'ليس لديك حساب؟',joinlink:'انضم مجاناً',show:'إظهار',hide:'إخفاء',
+    submit:'تسجيل الدخول',noacc:'ليس لديك حساب؟',joinlink:'انضم مجانا',show:'إظهار',hide:'إخفاء',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
+      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا'}}
 };
 let L='en';
 function togglePw(id,btn){

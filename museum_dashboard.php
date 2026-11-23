@@ -56,7 +56,7 @@ owBookTop('My museum', 'متحفي', 'museum_dashboard.php', $preview, '
   <h1><?= owBi($p['name_en'], $p['name_ar']) ?></h1>
   <?php if (!(int) $p['partner']): ?><div class="alert alert-error" role="status"><?= owBi('Ticket sales are not switched on for your museum yet. The Oweili team will let you know.', 'لم يُفعّل بيع التذاكر لمتحفك بعد. سيبلغك فريق أويلي.') ?></div><?php endif; ?>
   <?php if ($done === 'wait'): ?><div class="alert alert-ok" role="status"><?= owBi('Sent. Your change waits for the Oweili team’s approval. Visitors see it once it is approved.', 'تم الإرسال. ينتظر تعديلك موافقة فريق أويلي. يراه الزوار بعد الموافقة.') ?></div>
-  <?php elseif ($done): ?><div class="alert alert-ok" role="status"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php elseif ($done): ?><div class="alert alert-ok" role="status"><?= owBi('Saved', 'تم الحفظ') ?></div><?php endif; ?>
   <?php if ($err): ?><div class="alert alert-error" role="alert"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>
 </div>
 <div class="stat-row">
@@ -74,7 +74,7 @@ owBookTop('My museum', 'متحفي', 'museum_dashboard.php', $preview, '
     <div class="field" style="margin:0"><label for="f-day"><?= owBi('Visit date', 'تاريخ الزيارة') ?></label><input id="f-day" type="date" name="day" value="<?= e($day) ?>"></div>
     <button class="btn btn-secondary btn-sm"><?= owBi('Show', 'عرض') ?></button><a class="btn btn-ghost btn-sm" href="museum_dashboard.php?tab=tickets&day=<?= date('Y-m-d') ?>"><?= owBi('Today', 'اليوم') ?></a></form>
   <div class="card">
-    <?php if (!$tickets): ?><p><?= owBi('No tickets yet.', 'لا تذاكر بعد.') ?></p><?php else: ?>
+    <?php if (!$tickets): ?><p><?= owBi('No tickets yet', 'لا تذاكر بعد') ?></p><?php else: ?>
     <table class="tbl"><thead><tr><th><?= owBi('Ticket', 'التذكرة') ?></th><th><?= owBi('Visit date', 'تاريخ الزيارة') ?></th><th><?= owBi('People', 'الأشخاص') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
     <?php foreach ($tickets as $t): [$lEn, $lAr] = owTicketLinesBi($t); [$de, $da] = owDateRangeBi($t['visit_date'], null); ?>
       <tr><td><b dir="ltr"><?= e($t['ref_no']) ?></b><br><?= e($t['buyer_name']) ?></td><td><?= owBi($de, $da) ?></td><td><?= owBi($lEn, $lAr) ?></td>
@@ -85,7 +85,7 @@ owBookTop('My museum', 'متحفي', 'museum_dashboard.php', $preview, '
 <?php elseif ($tab === 'scan'): ?>
   <div class="card">
     <h2><?= owBi('Scan a ticket', 'امسح تذكرة') ?></h2>
-    <p><?= owBi('Point the camera at the visitor’s QR code. You can also scan it with your phone’s own camera, or type the ticket number.', 'وجّه الكاميرا إلى رمز QR لدى الزائر. ويمكنك أيضاً مسحه بكاميرا جوالك، أو كتابة رقم التذكرة.') ?></p>
+    <p><?= owBi('Point the camera at the visitor’s QR code. You can also scan it with your phone’s own camera, or type the ticket number.', 'وجّه الكاميرا إلى رمز QR لدى الزائر. ويمكنك أيضا مسحه بكاميرا جوالك، أو كتابة رقم التذكرة.') ?></p>
     <button class="btn btn-primary" id="scan-start" type="button"><?= owBi('Open the camera', 'افتح الكاميرا') ?></button>
     <p class="mini" id="scan-msg" role="status"></p>
     <video id="scan-video" playsinline muted></video>
@@ -106,7 +106,7 @@ owBookTop('My museum', 'متحفي', 'museum_dashboard.php', $preview, '
           try { var r = await d.detect(v); if (r.length) { var u = r[0].rawValue || ''; var k = (u.match(/[?&]k=([a-f0-9]{40})/) || [])[1];
             if (k) { s.getTracks().forEach(function(t){ t.stop(); }); location.href = 'ticket_check.php?k=' + k; return; } } } catch (e) {}
           requestAnimationFrame(loop); })();
-      } catch (e) { m.textContent = ar ? 'تعذّر فتح الكاميرا.' : 'The camera could not be opened.'; }
+      } catch (e) { m.textContent = ar ? 'تعذّر فتح الكاميرا' : 'The camera could not be opened'; }
     });
   })();
   </script>
@@ -133,7 +133,7 @@ owBookTop('My museum', 'متحفي', 'museum_dashboard.php', $preview, '
     </div>
   </div>
   <div class="card">
-    <?php if (!$payouts): ?><p><?= owBi('Nothing yet.', 'لا شيء بعد.') ?></p><?php else: ?>
+    <?php if (!$payouts): ?><p><?= owBi('Nothing yet', 'لا شيء بعد') ?></p><?php else: ?>
     <table class="tbl"><thead><tr><th><?= owBi('Ticket', 'التذكرة') ?></th><th><?= owBi('Your share', 'حصتك') ?></th><th><?= owBi('When', 'متى') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
     <?php $tById = []; foreach ($tickets as $t) $tById[(int) $t['id']] = $t;
       foreach ($payouts as $po): $t = $tById[(int) $po['source_id']] ?? null; [$we, $wa] = owPayoutDueBi($po['due_on']); ?>

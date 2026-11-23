@@ -75,7 +75,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $cur = $db->prepare('SELECT name_en, photo_path FROM art_places WHERE id = :id'); $cur->execute([':id' => $id]); $cur = $cur->fetch();
         if (!$cur) { header('Location: admin_art_map.php'); exit; }
         $link = $txt('photo_page', 500);
-        if ($link !== '' && owMapUrl($link) === '') $errors[] = ['Please check the credit link (it must start with https://).', 'يرجى مراجعة رابط المصدر (يبدأ بـ https://).'];
+        if ($link !== '' && owMapUrl($link) === '') $errors[] = ['Please check the credit link (it must start with https://)', 'يرجى مراجعة رابط المصدر (يبدأ بـ https://)'];
         if (!$errors) {
             $r = owPlaceStorePhoto($_FILES['photo'] ?? [], $id);
             if (!$r['ok']) $errors[] = $r['err'];
@@ -110,13 +110,13 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $days = max(0, min(120, (int) ($_POST['payout_days'] ?? 7)));
             $turl = $txt('tickets_url', 500); $turlOk = $turl === '' ? '' : owMapUrl($turl);
             $mail = strtolower($txt('account_email', 190)); $uid = null;
-            if ($com < 0 || $com > 50) $errors[] = ['The commission must be from 0 to 50.', 'العمولة من 0 إلى 50.'];
-            if ($turl !== '' && $turlOk === '') $errors[] = ['Please check the official tickets link (https://).', 'يرجى مراجعة رابط التذاكر الرسمية (https://).'];
+            if ($com < 0 || $com > 50) $errors[] = ['The commission must be from 0 to 50', 'العمولة من 0 إلى 50'];
+            if ($turl !== '' && $turlOk === '') $errors[] = ['Please check the official tickets link (https://)', 'يرجى مراجعة رابط التذاكر الرسمية (https://)'];
             if ($mail !== '') {
-                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) $errors[] = ['Please check the account email.', 'يرجى مراجعة بريد الحساب.'];
+                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) $errors[] = ['Please check the account email', 'يرجى مراجعة بريد الحساب'];
                 else {
                     $u = $db->prepare('SELECT id, role FROM users WHERE LOWER(TRIM(email)) = :e LIMIT 1'); $u->execute([':e' => $mail]); $u = $u->fetch();
-                    if ($u && $u['role'] !== 'museum') $errors[] = ['This email already belongs to another kind of account.', 'هذا البريد مستخدم لحساب من نوع آخر.'];
+                    if ($u && $u['role'] !== 'museum') $errors[] = ['This email already belongs to another kind of account', 'هذا البريد مستخدم لحساب من نوع آخر'];
                     elseif ($u) $uid = (int) $u['id'];
                     elseif (!$errors) {
                         $db->prepare("INSERT INTO users (email, password, full_name_en, full_name_ar, role, is_verified, is_approved) VALUES (:e, :p, :n, :na, 'museum', 1, 1)")
@@ -146,15 +146,15 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if (owHasColumn('art_places', 'address_ar')) $v['address_ar'] = $txt('address_ar', 300);   // the address for Arabic pages (owner, 13 Nov 2026)
         $src = array_values(array_filter(array_map(fn($l) => owMapUrl(trim($l)), preg_split('/\R/', $txt('sources', 3000)))));
         $v['sources'] = json_encode($src, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        if (!isset(OW_MAP_KINDS[$v['kind']])) $errors[] = ['Please choose the type.', 'يرجى اختيار النوع.'];
-        if (!isset(OW_MAP_REGIONS[$v['region']])) $errors[] = ['Please choose the region.', 'يرجى اختيار المنطقة.'];
+        if (!isset(OW_MAP_KINDS[$v['kind']])) $errors[] = ['Please choose the type', 'يرجى اختيار النوع'];
+        if (!isset(OW_MAP_REGIONS[$v['region']])) $errors[] = ['Please choose the region', 'يرجى اختيار المنطقة'];
         if (!isset(OW_MAP_CONF[$v['confidence']])) $v['confidence'] = 'medium';
-        if ($v['name_en'] === '' || $v['name_ar'] === '') $errors[] = ['The name is needed in both languages.', 'الاسم مطلوب باللغتين.'];
-        if ($v['city_en'] === '' || $v['city_ar'] === '') $errors[] = ['The city is needed in both languages.', 'المدينة مطلوبة باللغتين.'];
-        if ($v['desc_en'] === '' || $v['desc_ar'] === '') $errors[] = ['The short text is needed in both languages.', 'النص القصير مطلوب باللغتين.'];
+        if ($v['name_en'] === '' || $v['name_ar'] === '') $errors[] = ['The name is needed in both languages', 'الاسم مطلوب باللغتين'];
+        if ($v['city_en'] === '' || $v['city_ar'] === '') $errors[] = ['The city is needed in both languages', 'المدينة مطلوبة باللغتين'];
+        if ($v['desc_en'] === '' || $v['desc_ar'] === '') $errors[] = ['The short text is needed in both languages', 'النص القصير مطلوب باللغتين'];
         foreach (['website' => ['the website', 'الموقع'], 'instagram' => ['the Instagram link', 'رابط إنستغرام'], 'maps_url' => ['the Google Maps link', 'رابط خرائط Google']] as $k => $w)
             if ($txt($k, 500) !== '' && $v[$k] === '') $errors[] = ['Please check ' . $w[0] . '.', 'يرجى مراجعة ' . $w[1] . '.'];
-        if ($v['phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,39}$/', $v['phone'])) $errors[] = ['Please check the phone number.', 'يرجى مراجعة رقم الهاتف.'];
+        if ($v['phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,39}$/', $v['phone'])) $errors[] = ['Please check the phone number', 'يرجى مراجعة رقم الهاتف'];
         if (!$errors) {
             $args = []; foreach ($v as $k => $x) $args[':' . $k] = $x;
             if ($id > 0) {
@@ -232,9 +232,9 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
 ?>
   <link rel="stylesheet" href="<?= owAsset('assets/vendor/leaflet/leaflet.css') ?>"><script defer src="<?= owAsset('assets/vendor/leaflet/leaflet.js') ?>"></script><script defer src="<?= owAsset('assets/js/admin_map_pick.js') ?>"></script>
   <h1><?= owBi('Art Map: museums, galleries and institutes', 'خريطة الفن: المتاحف والمعارض والمعاهد') ?></h1>
-  <p class="mini"><?= owBi('Every place starts as a draft. Visitors see it only after you press Publish. Sources and confidence are shown only here, never to visitors. The older institutes (with courses) are in their own tool:', 'كل مكان يبدأ مسودة، ولا يراه الزوار إلا بعد أن تضغط «انشر». المصادر ودرجة الثقة تظهر هنا فقط، ولا يراها الزوار أبداً. المعاهد القديمة (مع الدورات) في أداتها الخاصة:') ?> <a href="admin_institutes.php"><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></a></p>
-  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The Art Map table is not set up yet (art_places.sql).', 'جدول خريطة الفن غير مُعدّ بعد (art_places.sql).') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['claim_photo' => owBi('Approved. The photo is on the Art Map now.', 'تمت الموافقة. الصورة ظاهرة في وجهات الفن الآن.'), 'claim_ok' => owBi('Approved. Apply any corrections with Edit below.', 'تمت الموافقة. طبّق التصحيحات عبر «تعديل» أدناه.'), 'claim_no' => owBi('Rejected. Nothing was shown.', 'تم الرفض. لم يظهر شيء.'), 'expired' => owBi('The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'), 'photo' => owBi('Photo saved.', 'تم حفظ الصورة.'), 'coords' => owBi('Location saved. The place is on the Art Map\'s map now (once published).', 'تم حفظ الموقع. المكان على خريطة وجهات الفن الآن (بعد نشره).'), 'coords_off' => owBi('Location removed. The place is no longer on the map.', 'تم حذف الموقع. لم يعد المكان على الخريطة.'), 'publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهراً في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهراً للزوار.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <p class="mini"><?= owBi('Every place starts as a draft. Visitors see it only after you press Publish. Sources and confidence are shown only here, never to visitors. The older institutes (with courses) are in their own tool:', 'كل مكان يبدأ مسودة، ولا يراه الزوار إلا بعد أن تضغط «انشر». المصادر ودرجة الثقة تظهر هنا فقط، ولا يراها الزوار أبدا. المعاهد القديمة (مع الدورات) في أداتها الخاصة:') ?> <a href="admin_institutes.php"><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></a></p>
+  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The Art Map table is not set up yet (art_places.sql)', 'جدول خريطة الفن غير مُعدّ بعد (art_places.sql)') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['claim_photo' => owBi('Approved. The photo is on the Art Map now.', 'تمت الموافقة. الصورة ظاهرة في وجهات الفن الآن.'), 'claim_ok' => owBi('Approved. Apply any corrections with Edit below.', 'تمت الموافقة. طبّق التصحيحات عبر «تعديل» أدناه.'), 'claim_no' => owBi('Rejected. Nothing was shown.', 'تم الرفض. لم يظهر شيء.'), 'expired' => owBi('The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'), 'photo' => owBi('Photo saved', 'تم حفظ الصورة'), 'coords' => owBi('Location saved. The place is on the Art Map\'s map now (once published).', 'تم حفظ الموقع. المكان على خريطة وجهات الفن الآن (بعد نشره).'), 'coords_off' => owBi('Location removed. The place is no longer on the map.', 'تم حذف الموقع. لم يعد المكان على الخريطة.'), 'publish' => owBi('Published. It is on the Art Map now.', 'تم النشر. صار ظاهرا في خريطة الفن.'), 'draft' => owBi('Back to draft. Visitors no longer see it.', 'أُعيد مسودة. لم يعد ظاهرا للزوار.')][$_GET['ok']] ?? owBi('Saved', 'تم الحفظ') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
   <?php if ($ready): ?>
   <p><span class="pillx warn"><?= owBi($count['draft'] . ' waiting for you', $count['draft'] . ' بانتظارك') ?></span> <span class="cf low"><?= owBi($count['low'] . ' with low confidence', $count['low'] . ' بثقة منخفضة') ?></span> <span class="mini"><?= owBi($count['all'] . ' places in all', 'المجموع ' . $count['all']) ?></span></p>
@@ -307,7 +307,7 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
             <div class="field"><label for="ph-<?= (int) $p['id'] ?>"><?= owBi('Photo (JPG, PNG or WebP, up to 10 MB)', 'الصورة (JPG أو PNG أو WebP، حتى 10 ميغابايت)') ?></label><input id="ph-<?= (int) $p['id'] ?>" type="file" name="photo" accept="image/jpeg,image/png,image/webp" required></div>
             <div class="g2"><?= $field('photo_credit', 'Credit line (optional), e.g. the museum or the photographer', 'سطر المصدر (اختياري)، مثل اسم المتحف أو المصوّر', $photoErr === (int) $p['id'] ? (string) ($_POST['photo_credit'] ?? '') : '', ' maxlength="200"', false, 'ph' . $p['id']) ?>
               <?= $field('photo_page', 'Credit link (optional)', 'رابط المصدر (اختياري)', $photoErr === (int) $p['id'] ? (string) ($_POST['photo_page'] ?? '') : '', ' dir="ltr" maxlength="500"', false, 'ph' . $p['id']) ?></div>
-            <p class="mini"><?= owBi('It replaces the current photo and shows on the Art Map at once (a published place). Only use a photo you have the right to show.', 'تحلّ محل الصورة الحالية وتظهر في خريطة الفن فوراً (للمكان المنشور). استخدم فقط صورة يحق لك نشرها.') ?></p>
+            <p class="mini"><?= owBi('It replaces the current photo and shows on the Art Map at once (a published place). Only use a photo you have the right to show.', 'تحلّ محل الصورة الحالية وتظهر في خريطة الفن فورا (للمكان المنشور). استخدم فقط صورة يحق لك نشرها.') ?></p>
             <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Upload the photo', 'ارفع الصورة') ?></button>
           </form></details>
         <?php $hasXY = is_numeric($p['lat'] ?? null) && is_numeric($p['lng'] ?? null); $mineXY = $coordErr === (int) $p['id'];
@@ -317,11 +317,11 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
             <div class="field"><label for="ml-<?= (int) $p['id'] ?>"><?= owBi('Paste a Google Maps link (optional)', 'الصق رابط خرائط Google (اختياري)') ?></label><input id="ml-<?= (int) $p['id'] ?>" class="mp-link" type="text" inputmode="url" name="gmaps_link" dir="ltr" maxlength="2000" value="<?= e($mineXY ? (string) ($_POST['gmaps_link'] ?? '') : '') ?>" placeholder="https://maps.app.goo.gl/…"></div>
             <p class="mini mp-msg" role="status" aria-live="polite"></p>
             <div class="g2">
-              <?= $field('lat', 'Latitude (for example 24.647142)', 'خط العرض (مثلاً 24.647142)', $xy('lat'), ' class="mp-lat" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"', false, 'xy' . $p['id']) ?>
-              <?= $field('lng', 'Longitude (for example 46.710704)', 'خط الطول (مثلاً 46.710704)', $xy('lng'), ' class="mp-lng" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"', false, 'xy' . $p['id']) ?>
+              <?= $field('lat', 'Latitude (for example 24.647142)', 'خط العرض (مثلا 24.647142)', $xy('lat'), ' class="mp-lat" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"', false, 'xy' . $p['id']) ?>
+              <?= $field('lng', 'Longitude (for example 46.710704)', 'خط الطول (مثلا 46.710704)', $xy('lng'), ' class="mp-lng" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"', false, 'xy' . $p['id']) ?>
             </div>
             <div class="mp-map" hidden role="img" aria-label="<?= e('Map preview of the location · معاينة الموقع على الخريطة') ?>"></div>
-            <p class="mini"><?= owBi('In Google Maps, open the place, press Share and copy the link (or copy the address bar), then paste it above: the two numbers fill in by themselves and the pin shows on the small map. Check the pin, then save. You can also type the numbers yourself. Empty numbers + Save takes the place off the map.', 'في خرائط Google افتح المكان واضغط «مشاركة» وانسخ الرابط (أو انسخ شريط العنوان)، ثم الصقه أعلاه: يُملأ الرقمان تلقائياً ويظهر الدبوس على الخريطة الصغيرة. تأكد من الدبوس ثم احفظ. ويمكنك أيضاً كتابة الرقمين بنفسك. حفظ الرقمين فارغين يُزيل المكان من الخريطة.') ?></p>
+            <p class="mini"><?= owBi('In Google Maps, open the place, press Share and copy the link (or copy the address bar), then paste it above: the two numbers fill in by themselves and the pin shows on the small map. Check the pin, then save. You can also type the numbers yourself. Empty numbers + Save takes the place off the map.', 'في خرائط Google افتح المكان واضغط «مشاركة» وانسخ الرابط (أو انسخ شريط العنوان)، ثم الصقه أعلاه: يُملأ الرقمان تلقائيا ويظهر الدبوس على الخريطة الصغيرة. تأكد من الدبوس ثم احفظ. ويمكنك أيضا كتابة الرقمين بنفسك. حفظ الرقمين فارغين يُزيل المكان من الخريطة.') ?></p>
             <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save the location', 'احفظ الموقع') ?></button>
           </form></details>
         <details<?= $errors && !$photoErr && !$coordErr && (int) ($_POST['id'] ?? 0) === (int) $p['id'] ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $form($p); ?></details>

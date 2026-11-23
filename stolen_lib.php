@@ -114,7 +114,7 @@ function owStolenWarningsHtml(array $art, array $stages): string {
     $rows = [];
     foreach (owLooksLike($art) as [$o, $d]) {
         $t = owImgSized(owImgSrc((string) $o['image_url']), 400); $m = owImgSized(owImgSrc((string) $art['image_url']), 400);
-        $rows[] = '<div class="sw-dup"><span class="warn">⚠ ' . owBi('Looks like an artwork by ' . $o['artist_en'], 'يشبه عملاً للفنان ' . $o['artist_ar']) . ' (' . owBi($d === 0 ? 'the same picture' : 'very close', $d === 0 ? 'الصورة نفسها' : 'قريب جداً') . ')'
+        $rows[] = '<div class="sw-dup"><span class="warn">⚠ ' . owBi('Looks like an artwork by ' . $o['artist_en'], 'يشبه عملا للفنان ' . $o['artist_ar']) . ' (' . owBi($d === 0 ? 'the same picture' : 'very close', $d === 0 ? 'الصورة نفسها' : 'قريب جدا') . ')'
                 . ((int) $o['artist_id'] === (int) $art['artist_id'] ? ' · ' . owBi('the same artist', 'الفنان نفسه') : '') . '</span>'
                 . '<span class="sw-pics"><figure><img src="' . e($m) . '" alt="' . e((string) $art['title_en']) . '"><figcaption>' . owBi('This upload', 'هذا العمل') . '</figcaption></figure>'
                 . '<figure><img src="' . e($t) . '" alt="' . e((string) $o['title_en']) . '"><figcaption>' . e((string) ($o['title_en'] ?: $o['title_ar'])) . ' · <a href="artwork.php?id=' . (int) $o['id'] . '" target="_blank" rel="noopener">#' . (int) $o['id'] . '</a>'

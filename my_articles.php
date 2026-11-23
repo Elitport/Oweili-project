@@ -65,7 +65,7 @@ $form = null;
 if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!$_POST && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
         myFlash('The photos were too large to send together. Please send fewer or smaller photos (10MB each at most).',
-                'الصور كبيرة جداً لإرسالها معاً. يرجى إرسال صور أقل أو أصغر (10 ميغابايت لكل صورة كحد أقصى).', true);
+                'الصور كبيرة جدا لإرسالها معا. يرجى إرسال صور أقل أو أصغر (10 ميغابايت لكل صورة كحد أقصى).', true);
         header('Location: my_articles.php'); exit;
     }
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) {
@@ -84,7 +84,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             owDeleteArticleFile((string) $a['cover_image_path']);
             foreach ($a['images'] as $im) owDeleteArticleFile((string) $im['image_path']);
             owLog('article_delete', 'article', (int) $a['id'], '', $ACTOR);
-            myFlash('The article is deleted.', 'تم حذف المقال.');
+            myFlash('The article is deleted', 'تم حذف المقال');
         }
         header('Location: my_articles.php'); exit;
     }
@@ -99,7 +99,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if (!$existing) {
             $n = $db->prepare('SELECT COUNT(*) FROM articles WHERE author_user_id = :u'); $n->execute([':u' => $uid]);
             if ((int) $n->fetchColumn() >= OW_MY_ARTICLE_MAX) {
-                myFlash('You have reached ' . OW_MY_ARTICLE_MAX . ' articles. Please delete a draft first.', 'وصلت إلى ' . OW_MY_ARTICLE_MAX . ' مقالاً. يرجى حذف مسودة أولاً.', true);
+                myFlash('You have reached ' . OW_MY_ARTICLE_MAX . ' articles. Please delete a draft first.', 'وصلت إلى ' . OW_MY_ARTICLE_MAX . ' مقالا. يرجى حذف مسودة أولا.', true);
                 header('Location: my_articles.php'); exit;
             }
         }
@@ -116,25 +116,25 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             'remove_images' => array_map('intval', (array) ($_POST['remove_images'] ?? [])),
         ];
         $send = $action === 'send';
-        if ($f['title_en'] === '') $errors[] = ['Please write the title in English.', 'يرجى كتابة العنوان بالإنجليزية.'];
-        if ($f['title_ar'] === '') $errors[] = ['Please write the title in Arabic.', 'يرجى كتابة العنوان بالعربية.'];
-        if (mb_strlen($f['title_en']) > 200 || mb_strlen($f['title_ar']) > 200) $errors[] = ['Titles can be 200 characters at most.', 'العنوان لا يتجاوز 200 حرف.'];
-        if ($send && $f['body_en'] === '') $errors[] = ['Please write the text in English.', 'يرجى كتابة النص بالإنجليزية.'];
-        if ($send && $f['body_ar'] === '') $errors[] = ['Please write the text in Arabic.', 'يرجى كتابة النص بالعربية.'];
-        if (mb_strlen($f['body_en']) > 20000 || mb_strlen($f['body_ar']) > 20000) $errors[] = ['The text is too long (20,000 characters at most).', 'النص طويل جداً (20,000 حرف كحد أقصى).'];
+        if ($f['title_en'] === '') $errors[] = ['Please write the title in English', 'يرجى كتابة العنوان بالإنجليزية'];
+        if ($f['title_ar'] === '') $errors[] = ['Please write the title in Arabic', 'يرجى كتابة العنوان بالعربية'];
+        if (mb_strlen($f['title_en']) > 200 || mb_strlen($f['title_ar']) > 200) $errors[] = ['Titles can be 200 characters at most', 'العنوان لا يتجاوز 200 حرف'];
+        if ($send && $f['body_en'] === '') $errors[] = ['Please write the text in English', 'يرجى كتابة النص بالإنجليزية'];
+        if ($send && $f['body_ar'] === '') $errors[] = ['Please write the text in Arabic', 'يرجى كتابة النص بالعربية'];
+        if (mb_strlen($f['body_en']) > 20000 || mb_strlen($f['body_ar']) > 20000) $errors[] = ['The text is too long (20,000 characters at most)', 'النص طويل جدا (20,000 حرف كحد أقصى)'];
         $start = $end = null;
         if ($type === 'event') {
             $start = $f['event_start_date'] !== '' ? owFormDate($f['event_start_date']) : null;
             $end   = $f['event_end_date'] !== '' ? owFormDate($f['event_end_date']) : null;
-            if ($f['event_start_date'] !== '' && !$start) $errors[] = ['The start date is not a real date.', 'تاريخ البداية غير صحيح.'];
-            if ($f['event_end_date'] !== '' && !$end) $errors[] = ['The end date is not a real date.', 'تاريخ النهاية غير صحيح.'];
-            if ($start && $end && $end < $start) $errors[] = ['The end date cannot be before the start date.', 'لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية.'];
-            if ($send && !$start) $errors[] = ['Please choose the start date of the event.', 'يرجى اختيار تاريخ بداية الملتقى.'];
-            if ($send && ($f['event_location_en'] === '' || $f['event_location_ar'] === '')) $errors[] = ['Please write the place of the event in English and Arabic.', 'يرجى كتابة مكان الملتقى بالإنجليزية والعربية.'];
-            if (mb_strlen($f['event_location_en']) > 200 || mb_strlen($f['event_location_ar']) > 200) $errors[] = ['The place can be 200 characters at most.', 'المكان لا يتجاوز 200 حرف.'];
+            if ($f['event_start_date'] !== '' && !$start) $errors[] = ['The start date is not a real date', 'تاريخ البداية غير صحيح'];
+            if ($f['event_end_date'] !== '' && !$end) $errors[] = ['The end date is not a real date', 'تاريخ النهاية غير صحيح'];
+            if ($start && $end && $end < $start) $errors[] = ['The end date cannot be before the start date', 'لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية'];
+            if ($send && !$start) $errors[] = ['Please choose the start date of the event', 'يرجى اختيار تاريخ بداية الملتقى'];
+            if ($send && ($f['event_location_en'] === '' || $f['event_location_ar'] === '')) $errors[] = ['Please write the place of the event in English and Arabic', 'يرجى كتابة مكان الملتقى بالإنجليزية والعربية'];
+            if (mb_strlen($f['event_location_en']) > 200 || mb_strlen($f['event_location_ar']) > 200) $errors[] = ['The place can be 200 characters at most', 'المكان لا يتجاوز 200 حرف'];
         }
         foreach (['title_en', 'title_ar', 'body_en', 'body_ar'] as $k) {
-            if (preg_match('~<\s*/?\s*(script|iframe|object)~i', $f[$k])) { $errors[] = ['Please write plain text only.', 'يرجى كتابة نص عادي فقط.']; break; }
+            if (preg_match('~<\s*/?\s*(script|iframe|object)~i', $f[$k])) { $errors[] = ['Please write plain text only', 'يرجى كتابة نص عادي فقط']; break; }
         }
 
         $coverFile = $_FILES['cover'] ?? null;
@@ -160,17 +160,17 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             if ($any) {
                 $newConsent = true;
                 $cDate = owFormDate($f['c_date']);
-                if ($f['c_name_en'] === '' || $f['c_name_ar'] === '') $errors[] = ['Photo consent: please write the name in English and Arabic.', 'الموافقة على الصور: يرجى كتابة الاسم بالإنجليزية والعربية.'];
-                if (!filter_var($f['c_contact'], FILTER_VALIDATE_EMAIL) && !preg_match('/^\+?[0-9 ()-]{7,20}$/', $f['c_contact'])) $errors[] = ['Photo consent: please add their email or phone number.', 'الموافقة على الصور: يرجى إضافة بريده أو رقم هاتفه.'];
-                if (!isset($METHODS[$f['c_method']])) $errors[] = ['Photo consent: please choose how they agreed.', 'الموافقة على الصور: يرجى اختيار طريقة الموافقة.'];
-                if (!$cDate || $cDate > date('Y-m-d')) $errors[] = ['Photo consent: please choose the date they agreed (not in the future).', 'الموافقة على الصور: يرجى اختيار تاريخ الموافقة (ليس في المستقبل).'];
-                if (!$f['c_confirm']) $errors[] = ['Photo consent: please confirm that they agreed.', 'الموافقة على الصور: يرجى تأكيد موافقته.'];
-                if (mb_strlen($f['c_name_en']) > 200 || mb_strlen($f['c_name_ar']) > 200 || mb_strlen($f['c_contact']) > 190) $errors[] = ['Photo consent: a field is too long.', 'الموافقة على الصور: أحد الحقول طويل جداً.'];
+                if ($f['c_name_en'] === '' || $f['c_name_ar'] === '') $errors[] = ['Photo consent: please write the name in English and Arabic', 'الموافقة على الصور: يرجى كتابة الاسم بالإنجليزية والعربية'];
+                if (!filter_var($f['c_contact'], FILTER_VALIDATE_EMAIL) && !preg_match('/^\+?[0-9 ()-]{7,20}$/', $f['c_contact'])) $errors[] = ['Photo consent: please add their email or phone number', 'الموافقة على الصور: يرجى إضافة بريده أو رقم هاتفه'];
+                if (!isset($METHODS[$f['c_method']])) $errors[] = ['Photo consent: please choose how they agreed', 'الموافقة على الصور: يرجى اختيار طريقة الموافقة'];
+                if (!$cDate || $cDate > date('Y-m-d')) $errors[] = ['Photo consent: please choose the date they agreed (not in the future)', 'الموافقة على الصور: يرجى اختيار تاريخ الموافقة (ليس في المستقبل)'];
+                if (!$f['c_confirm']) $errors[] = ['Photo consent: please confirm that they agreed', 'الموافقة على الصور: يرجى تأكيد موافقته'];
+                if (mb_strlen($f['c_name_en']) > 200 || mb_strlen($f['c_name_ar']) > 200 || mb_strlen($f['c_contact']) > 190) $errors[] = ['Photo consent: a field is too long', 'الموافقة على الصور: أحد الحقول طويل جدا'];
             }
             $active = $existing && array_filter($existing['consents'], fn($x) => $x['withdrawn_at'] === null);
             if ($send && $hasPhotos && !$active && !$newConsent) {
                 $errors[] = ['This spotlight has photos. Please fill in the photo consent below: the artist in the photos must agree first.',
-                             'هذا المقال يحتوي على صور. يرجى تعبئة الموافقة على الصور في الأسفل: يجب أن يوافق الفنان الظاهر فيها أولاً.'];
+                             'هذا المقال يحتوي على صور. يرجى تعبئة الموافقة على الصور في الأسفل: يجب أن يوافق الفنان الظاهر فيها أولا.'];
             }
         }
 
@@ -186,7 +186,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if (!$errors && $newConsent && $proofGiven) {
             $r = owStoreConsentProof($proofFile);
             if ($r['ok']) $proofPath = $r['path'];
-            else $errors[] = $r['err'] === 'type' ? ['Consent proof: please choose a photo (JPG, PNG, WEBP) or a PDF.', 'إثبات الموافقة: يرجى اختيار صورة (JPG أو PNG أو WEBP) أو ملف PDF.'] : owUploadErrBi($r['err'], 'Consent proof', 'إثبات الموافقة');
+            else $errors[] = $r['err'] === 'type' ? ['Consent proof: please choose a photo (JPG, PNG, WEBP) or a PDF', 'إثبات الموافقة: يرجى اختيار صورة (JPG أو PNG أو WEBP) أو ملف PDF'] : owUploadErrBi($r['err'], 'Consent proof', 'إثبات الموافقة');
         }
 
         if (!$errors) {
@@ -271,8 +271,8 @@ $flash = $_SESSION['my_art_flash'] ?? null; unset($_SESSION['my_art_flash']);
 $v = fn(string $k) => e((string) ($form[$k] ?? ''));
 $TYPE_HELP = [
     'event'            => ['An art exhibition, fair or gathering anywhere in the world. Add the dates and the place.', 'معرض أو ملتقى أو تجمّع فني في أي مكان من العالم. أضف التواريخ والمكان.'],
-    'artist_spotlight' => ['A story about an artist you admire: their path, their style, their work.', 'قصة عن فنان تُعجب به: مسيرته وأسلوبه وأعماله.'],
-    'art_education'    => ['Teach something you know: a technique, a material, the story of a style.', 'علّم شيئاً تعرفه: تقنية أو خامة أو قصة أسلوب.'],
+    'artist_spotlight' => ['A story about an artist you admire: their path, their style, their work', 'قصة عن فنان تُعجب به: مسيرته وأسلوبه وأعماله'],
+    'art_education'    => ['Teach something you know: a technique, a material, the story of a style', 'علّم شيئا تعرفه: تقنية أو خامة أو قصة أسلوب'],
 ];
 $stateOf = function (array $a) use ($changes): string {
     if ($a['status'] === 'published') return 'published';
@@ -354,7 +354,7 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
   <?php if ($flash): ?><div class="alert <?= $flash[2] ? 'alert-error' : 'alert-ok' ?>" role="status" style="margin-top:var(--space-md)"><?= owBi($flash[0], $flash[1]) ?></div><?php endif; ?>
 
   <?php if (!$ready): ?>
-    <div class="card empty" style="margin-top:var(--space-md)"><p><?= owBi('Articles are being set up. Please check back soon.', 'المقالات قيد التجهيز. يرجى العودة قريباً.') ?></p></div>
+    <div class="card empty" style="margin-top:var(--space-md)"><p><?= owBi('Articles are being set up. Please check back soon.', 'المقالات قيد التجهيز. يرجى العودة قريبا.') ?></p></div>
   <?php elseif (!$approved): ?>
     <div class="card empty" style="margin-top:var(--space-md)"><p><?= $isInst ? owBi('You can write articles once your institute is approved. We will email you.', 'يمكنك كتابة المقالات بعد الموافقة على معهدك. سنراسلك.') : owBi('You can write articles once your artist account is approved. We will email you.', 'يمكنك كتابة المقالات بعد الموافقة على حسابك كفنان. سنراسلك.') ?></p>
       <a class="btn btn-secondary" href="<?= e($HOME[0]) ?>"><?= owBi($HOME[1], $HOME[2]) ?></a></div>
@@ -365,7 +365,7 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
       <input type="hidden" name="id" value="<?= (int) ($form['id'] ?? 0) ?>"><input type="hidden" name="type" value="<?= e($type) ?>">
       <?php if ($errors): ?><div class="alert alert-error msg" role="alert"><?= owBi('Please check these:', 'يرجى مراجعة ما يلي:') ?><ul><?php foreach ($errors as [$en, $ar]): ?><li><?= owBi($en, $ar) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
       <h2><?= owBi(($form['id'] ? 'Edit: ' : 'New: ') . $tEn, ($form['id'] ? 'تعديل: ' : 'جديد: ') . $tAr) ?></h2>
-      <p class="note"><?= owBi($TYPE_HELP[$type][0], $TYPE_HELP[$type][1]) ?> <?= owBi('Please write it in English and Arabic.', 'يرجى كتابته بالإنجليزية والعربية.') ?></p>
+      <p class="note"><?= owBi($TYPE_HELP[$type][0], $TYPE_HELP[$type][1]) ?> <?= owBi('Please write it in English and Arabic', 'يرجى كتابته بالإنجليزية والعربية') ?></p>
       <?php $pc = $form['id'] ? ($changes['article:' . (int) $form['id']] ?? null) : null; if ($pc && $pc['state'] === 'pending'): ?>
         <div class="alert alert-ok"><?= owBi('This article is waiting for approval. If you change it, press "Send for approval" again: "Save draft" takes it back from the review.', 'هذا المقال بانتظار الموافقة. إن عدّلته فاضغط «أرسل للموافقة» مرة أخرى: «احفظ كمسودة» يسحبه من المراجعة.') ?></div>
       <?php elseif ($pc && $pc['state'] === 'rejected'): ?>
@@ -385,7 +385,7 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
       <?php endif; ?>
       <div class="field"><label for="be"><?= owBi('Text in English', 'النص بالإنجليزية') ?></label><textarea id="be" name="body_en" dir="ltr" maxlength="20000"><?= $v('body_en') ?></textarea></div>
       <div class="field"><label for="ba"><?= owBi('Text in Arabic', 'النص بالعربية') ?></label><textarea id="ba" name="body_ar" dir="rtl" maxlength="20000"><?= $v('body_ar') ?></textarea></div>
-      <p class="note"><?= owBi('Leave an empty line between paragraphs.', 'اترك سطراً فارغاً بين الفقرات.') ?></p>
+      <p class="note"><?= owBi('Leave an empty line between paragraphs', 'اترك سطرا فارغا بين الفقرات') ?></p>
 
       <h2><?= owBi('Photos', 'الصور') ?></h2>
       <p class="note"><?= owBi('Only photos you took yourself or have the right to share. JPG, PNG or WEBP, 10MB each at most. Location data is removed.', 'فقط صور التقطتها بنفسك أو يحق لك مشاركتها. JPG أو PNG أو WEBP، بحد أقصى 10 ميغابايت لكل صورة. تُزال بيانات الموقع.') ?></p>
@@ -404,9 +404,9 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
       <div class="box-blue">
         <h2 style="margin-top:0"><?= owBi('Photo consent', 'الموافقة على الصور') ?></h2>
         <?php if ($hasC): ?>
-          <p class="note" style="margin:0"><?= owBi('A photo consent is saved for this spotlight. Thank you.', 'تم حفظ موافقة على الصور لهذا المقال. شكراً لك.') ?></p>
+          <p class="note" style="margin:0"><?= owBi('A photo consent is saved for this spotlight. Thank you.', 'تم حفظ موافقة على الصور لهذا المقال. شكرا لك.') ?></p>
         <?php else: ?>
-          <p class="note"><?= owBi('If the spotlight has photos, the artist in them must agree before it is published. Without photos, you can leave this empty.', 'إن كان المقال يحتوي على صور، يجب أن يوافق الفنان الظاهر فيها قبل النشر. بدون صور يمكنك ترك هذا فارغاً.') ?></p>
+          <p class="note"><?= owBi('If the spotlight has photos, the artist in them must agree before it is published. Without photos, you can leave this empty.', 'إن كان المقال يحتوي على صور، يجب أن يوافق الفنان الظاهر فيها قبل النشر. بدون صور يمكنك ترك هذا فارغا.') ?></p>
           <div class="two">
             <div class="field"><label for="cne"><?= owBi('Their name in English', 'اسمه بالإنجليزية') ?></label><input id="cne" name="c_name_en" dir="ltr" maxlength="200" value="<?= $v('c_name_en') ?>"></div>
             <div class="field"><label for="cna"><?= owBi('Their name in Arabic', 'اسمه بالعربية') ?></label><input id="cna" name="c_name_ar" dir="rtl" maxlength="200" value="<?= $v('c_name_ar') ?>"></div>
@@ -418,8 +418,8 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
               <?php foreach ($METHODS as $mk => [$me1, $ma1]): ?><option value="<?= e($mk) ?>"<?= ($form['c_method'] ?? '') === $mk ? ' selected' : '' ?>><?= e($me1 . ' · ' . $ma1) ?></option><?php endforeach; ?>
             </select></div>
           <div class="field"><label for="cpf"><?= owBi('Proof (optional): a photo or PDF of their message or signed form', 'إثبات (اختياري): صورة أو ملف PDF لرسالته أو النموذج الموقّع') ?></label><input id="cpf" type="file" name="c_proof" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
-          <label class="check"><input type="checkbox" name="c_confirm" value="1"<?= !empty($form['c_confirm']) ? ' checked' : '' ?>> <span><?= owBi('I confirm this artist agreed to have these photos published on Oweili.', 'أؤكد أن هذا الفنان وافق على نشر هذه الصور في أويلي.') ?></span></label>
-          <p class="note" style="margin:0"><?= owBi('The proof is private: only the Oweili team can open it.', 'الإثبات خاص: لا يفتحه إلا فريق أويلي.') ?></p>
+          <label class="check"><input type="checkbox" name="c_confirm" value="1"<?= !empty($form['c_confirm']) ? ' checked' : '' ?>> <span><?= owBi('I confirm this artist agreed to have these photos published on Oweili', 'أؤكد أن هذا الفنان وافق على نشر هذه الصور في أويلي') ?></span></label>
+          <p class="note" style="margin:0"><?= owBi('The proof is private: only the Oweili team can open it', 'الإثبات خاص: لا يفتحه إلا فريق أويلي') ?></p>
         <?php endif; ?>
       </div>
       <?php endif; ?>
@@ -437,11 +437,11 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
   <?php else: ?>
     <div class="ma-new">
       <?php foreach ($TYPES as $k => [$en, $ar]): ?>
-        <a class="card card-hover" href="my_articles.php?new=<?= e($k) ?>"><b><?= owBi($en, $ar) ?></b><span><?= owBi($TYPE_HELP[$k][0], $TYPE_HELP[$k][1]) ?></span><span class="go"><?= owBi('Write one →', 'اكتب واحداً ←') ?></span></a>
+        <a class="card card-hover" href="my_articles.php?new=<?= e($k) ?>"><b><?= owBi($en, $ar) ?></b><span><?= owBi($TYPE_HELP[$k][0], $TYPE_HELP[$k][1]) ?></span><span class="go"><?= owBi('Write one →', 'اكتب واحدا ←') ?></span></a>
       <?php endforeach; ?>
     </div>
     <?php if (!$list): ?>
-      <div class="card empty"><p><?= owBi('No articles yet. Pick a kind above to write your first one.', 'لا مقالات بعد. اختر نوعاً من الأعلى لتكتب أول مقال.') ?></p></div>
+      <div class="card empty"><p><?= owBi('No articles yet. Pick a kind above to write your first one.', 'لا مقالات بعد. اختر نوعا من الأعلى لتكتب أول مقال.') ?></p></div>
     <?php else: ?>
     <div class="ma-list">
       <?php foreach ($list as $a): $s = $stateOf($a); [$ten, $tar] = $TYPES[$a['type']] ?? ['Article', 'مقال']; [$de, $da] = owDateBi($a['updated_at']); $ch = $changes['article:' . (int) $a['id']] ?? null; ?>
@@ -449,7 +449,7 @@ $STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['Waiting for approva
         <div>
           <p class="ma-t"><?= owBi((string) ($a['title_en'] ?: $a['title_ar']), (string) ($a['title_ar'] ?: $a['title_en'])) ?></p>
           <div class="ma-meta"><span><?= owBi($ten, $tar) ?></span><span>·</span><span><?= owBi('Changed ' . $de, 'آخر تعديل ' . $da) ?></span></div>
-          <?php if ($s === 'rejected'): ?><div class="w-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e($ch['reason'] ?: '—') ?> · <?= owBi('Edit it and send it again.', 'عدّله وأرسله مجدداً.') ?></div><?php endif; ?>
+          <?php if ($s === 'rejected'): ?><div class="w-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e($ch['reason'] ?: '—') ?> · <?= owBi('Edit it and send it again', 'عدّله وأرسله مجددا') ?></div><?php endif; ?>
           <?php if ($s === 'published'): ?><p class="note" style="margin:6px 0 0"><?= owBi('Published. To change it, write to us at ', 'منشور. لتعديله راسلنا على ') ?><a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p><?php endif; ?>
         </div>
         <div class="ma-acts">

@@ -28,7 +28,7 @@ function owAdminGate(string $back = 'admin.php'): void {
 <title>Admin only · Oweili</title><meta name="robots" content="noindex"><link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <script>try{if(localStorage.getItem('lang')==='ar'){document.documentElement.dir='rtl';document.documentElement.lang='ar';}}catch(e){}</script></head>
 <body><div style="max-width:480px;margin:15vh auto;padding:24px" class="card"><h1><?= owBi('Admin only', 'للإدارة فقط') ?></h1>
-<p><?= owBi('Please sign in on the admin page first.', 'يرجى تسجيل الدخول في صفحة الإدارة أولاً.') ?></p><p><a class="btn btn-primary" href="<?= htmlspecialchars($back, ENT_QUOTES, 'UTF-8') ?>"><?= owBi('Admin sign-in', 'دخول الإدارة') ?></a></p></div></body></html>
+<p><?= owBi('Please sign in on the admin page first', 'يرجى تسجيل الدخول في صفحة الإدارة أولا') ?></p><p><a class="btn btn-primary" href="<?= htmlspecialchars($back, ENT_QUOTES, 'UTF-8') ?>"><?= owBi('Admin sign-in', 'دخول الإدارة') ?></a></p></div></body></html>
 <?php exit;
 }
 function owAdminTop(string $titleEn, string $titleAr, string $css = '', string $extraLink = ''): void { ?>

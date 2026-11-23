@@ -39,10 +39,10 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
               'description_en' => $txt('description_en', 4000), 'description_ar' => $txt('description_ar', 4000),
               'contact_email' => strtolower($txt('contact_email', 190)), 'contact_phone' => $txt('contact_phone', 30), 'website_url' => $txt('website_url', 500),
               'is_active' => isset($_POST['is_active']) ? 1 : 0];
-        if ($v['name_en'] === '' || $v['name_ar'] === '' || $v['city_en'] === '' || $v['city_ar'] === '') $errors[] = ['Name and city are needed in both languages.', 'الاسم والمدينة مطلوبان باللغتين.'];
-        if ($v['contact_email'] !== '' && !filter_var($v['contact_email'], FILTER_VALIDATE_EMAIL)) $errors[] = ['Please check the email address.', 'يرجى مراجعة البريد الإلكتروني.'];
-        if ($v['contact_phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $v['contact_phone'])) $errors[] = ['Please check the phone number.', 'يرجى مراجعة رقم الهاتف.'];
-        if ($v['website_url'] !== '') { [$link, $ok] = owSafeLink($v['website_url'], 'web'); if ($ok) $v['website_url'] = $link; else $errors[] = ['Please check the website address.', 'يرجى مراجعة عنوان الموقع.']; }
+        if ($v['name_en'] === '' || $v['name_ar'] === '' || $v['city_en'] === '' || $v['city_ar'] === '') $errors[] = ['Name and city are needed in both languages', 'الاسم والمدينة مطلوبان باللغتين'];
+        if ($v['contact_email'] !== '' && !filter_var($v['contact_email'], FILTER_VALIDATE_EMAIL)) $errors[] = ['Please check the email address', 'يرجى مراجعة البريد الإلكتروني'];
+        if ($v['contact_phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $v['contact_phone'])) $errors[] = ['Please check the phone number', 'يرجى مراجعة رقم الهاتف'];
+        if ($v['website_url'] !== '') { [$link, $ok] = owSafeLink($v['website_url'], 'web'); if ($ok) $v['website_url'] = $link; else $errors[] = ['Please check the website address', 'يرجى مراجعة عنوان الموقع']; }
         $logo = null;
         if (!$errors && !empty($_FILES['logo']['name'])) {
             $r = owStoreImage($_FILES['logo'], 'uploads/institutes/');
@@ -83,10 +83,10 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
               'price' => max(0, (float) str_replace(',', '', (string) ($_POST['price'] ?? '0'))), 'seats_total' => max(0, (int) ($_POST['seats_total'] ?? 0)),
               'seats_remaining' => max(0, (int) ($_POST['seats_remaining'] ?? 0)), 'is_active' => isset($_POST['is_active']) ? 1 : 0];
         $ex = $db->prepare('SELECT 1 FROM institutes WHERE id = :id'); $ex->execute([':id' => $iid]);
-        if (!$ex->fetchColumn()) $errors[] = ['Please choose the institute.', 'يرجى اختيار المعهد.'];
-        if ($v['title_en'] === '' || $v['title_ar'] === '') $errors[] = ['The course title is needed in both languages.', 'عنوان الدورة مطلوب باللغتين.'];
-        if ($v['seats_remaining'] > $v['seats_total']) $errors[] = ['Seats left cannot be more than all seats.', 'المقاعد المتبقية لا تزيد عن إجمالي المقاعد.'];
-        if ($v['start_date'] && $v['end_date'] && $v['end_date'] < $v['start_date']) $errors[] = ['The end date is before the start date.', 'تاريخ النهاية قبل تاريخ البداية.'];
+        if (!$ex->fetchColumn()) $errors[] = ['Please choose the institute', 'يرجى اختيار المعهد'];
+        if ($v['title_en'] === '' || $v['title_ar'] === '') $errors[] = ['The course title is needed in both languages', 'عنوان الدورة مطلوب باللغتين'];
+        if ($v['seats_remaining'] > $v['seats_total']) $errors[] = ['Seats left cannot be more than all seats', 'المقاعد المتبقية لا تزيد عن إجمالي المقاعد'];
+        if ($v['start_date'] && $v['end_date'] && $v['end_date'] < $v['start_date']) $errors[] = ['The end date is before the start date', 'تاريخ النهاية قبل تاريخ البداية'];
         if (!$errors) {
             $args = [':institute_id' => $iid]; foreach ($v as $k => $x) $args[':' . $k] = $x;
             $cols = array_merge(['institute_id'], array_keys($v));
@@ -139,11 +139,11 @@ $coordForm = function (array $i) use ($coordErr): void {
         <div class="field"><label for="ml-<?= $iid ?>"><?= owBi('Paste a Google Maps link (optional)', 'الصق رابط خرائط Google (اختياري)') ?></label><input id="ml-<?= $iid ?>" class="mp-link" type="text" inputmode="url" name="gmaps_link" dir="ltr" maxlength="2000" value="<?= e($mine ? (string) ($_POST['gmaps_link'] ?? '') : '') ?>" placeholder="https://maps.app.goo.gl/…"></div>
         <p class="mini mp-msg" role="status" aria-live="polite"></p>
         <div class="g2">
-          <div class="field"><label for="la-<?= $iid ?>"><?= owBi('Latitude (for example 24.647142)', 'خط العرض (مثلاً 24.647142)') ?></label><input id="la-<?= $iid ?>" class="mp-lat" type="text" name="lat" value="<?= $xy('lat') ?>" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"></div>
-          <div class="field"><label for="lo-<?= $iid ?>"><?= owBi('Longitude (for example 46.710704)', 'خط الطول (مثلاً 46.710704)') ?></label><input id="lo-<?= $iid ?>" class="mp-lng" type="text" name="lng" value="<?= $xy('lng') ?>" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"></div>
+          <div class="field"><label for="la-<?= $iid ?>"><?= owBi('Latitude (for example 24.647142)', 'خط العرض (مثلا 24.647142)') ?></label><input id="la-<?= $iid ?>" class="mp-lat" type="text" name="lat" value="<?= $xy('lat') ?>" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"></div>
+          <div class="field"><label for="lo-<?= $iid ?>"><?= owBi('Longitude (for example 46.710704)', 'خط الطول (مثلا 46.710704)') ?></label><input id="lo-<?= $iid ?>" class="mp-lng" type="text" name="lng" value="<?= $xy('lng') ?>" inputmode="decimal" dir="ltr" maxlength="20" autocomplete="off"></div>
         </div>
         <div class="mp-map" hidden role="img" aria-label="<?= e('Map preview of the location · معاينة الموقع على الخريطة') ?>"></div>
-        <p class="mini"><?= owBi('In Google Maps, open the place, press Share and copy the link (or copy the address bar), then paste it above: the two numbers fill in by themselves and the pin shows on the small map. Check the pin, then save. You can also type the numbers yourself. Empty numbers + Save takes the institute off the map.', 'في خرائط Google افتح المكان واضغط «مشاركة» وانسخ الرابط (أو انسخ شريط العنوان)، ثم الصقه أعلاه: يُملأ الرقمان تلقائياً ويظهر الدبوس على الخريطة الصغيرة. تأكد من الدبوس ثم احفظ. ويمكنك أيضاً كتابة الرقمين بنفسك. حفظ الرقمين فارغين يُزيل المعهد من الخريطة.') ?></p>
+        <p class="mini"><?= owBi('In Google Maps, open the place, press Share and copy the link (or copy the address bar), then paste it above: the two numbers fill in by themselves and the pin shows on the small map. Check the pin, then save. You can also type the numbers yourself. Empty numbers + Save takes the institute off the map.', 'في خرائط Google افتح المكان واضغط «مشاركة» وانسخ الرابط (أو انسخ شريط العنوان)، ثم الصقه أعلاه: يُملأ الرقمان تلقائيا ويظهر الدبوس على الخريطة الصغيرة. تأكد من الدبوس ثم احفظ. ويمكنك أيضا كتابة الرقمين بنفسك. حفظ الرقمين فارغين يُزيل المعهد من الخريطة.') ?></p>
         <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save the location', 'احفظ الموقع') ?></button>
       </form></details>
 <?php };
@@ -199,8 +199,8 @@ details > summary{cursor:pointer;font-weight:700;margin:var(--space-sm) 0;}
   </div>
   <h1><?= owBi('Institutes and courses', 'المعاهد والدورات') ?></h1>
   <p class="mini"><?= owBi('Everything here appears on the Art Institutes page. Hide something instead of deleting it, so its history stays.', 'كل ما هنا يظهر في صفحة المعاهد الفنية. أخفِ العنصر بدل حذفه ليبقى تاريخه.') ?></p>
-  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The institutes tables are not set up yet.', 'جداول المعاهد غير مُعدّة بعد.') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['coords' => owBi('Location saved. The institute is on the Art Map\'s map now (while it is shown).', 'تم حفظ الموقع. المعهد على خريطة وجهات الفن الآن (ما دام ظاهراً).'), 'coords_off' => owBi('Location removed. The institute is no longer on the map.', 'تم حذف الموقع. لم يعد المعهد على الخريطة.')][$_GET['ok']] ?? owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The institutes tables are not set up yet', 'جداول المعاهد غير مُعدّة بعد') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= ['coords' => owBi('Location saved. The institute is on the Art Map\'s map now (while it is shown).', 'تم حفظ الموقع. المعهد على خريطة وجهات الفن الآن (ما دام ظاهرا).'), 'coords_off' => owBi('Location removed. The institute is no longer on the map.', 'تم حذف الموقع. لم يعد المعهد على الخريطة.')][$_GET['ok']] ?? owBi('Saved', 'تم الحفظ') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
 
   <?php if ($ready): ?>

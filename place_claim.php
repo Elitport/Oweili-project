@@ -46,11 +46,11 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $errors[] = ['The page was open too long. Please send it again.', 'انتهت صلاحية الصفحة. يرجى الإرسال مرة أخرى.'];
     elseif (trim((string) ($_POST['website'] ?? '')) !== '') { header('Location: ' . $self . '&sent=1'); exit; }   // a robot filled the hidden field: pretend all is well
     else {
-        if ($v['name'] === '') { $errors[] = ['Please write your name.', 'يرجى كتابة اسمك.']; $bad[] = 'name'; }
-        if (!filter_var($v['email'], FILTER_VALIDATE_EMAIL)) { $errors[] = ['Please check your email address.', 'يرجى مراجعة بريدك الإلكتروني.']; $bad[] = 'email'; }
-        if ($v['phone'] !== '' && !preg_match('/^[0-9+()\-\s٠-٩]{6,30}$/u', $v['phone'])) { $errors[] = ['Please check the phone number.', 'يرجى مراجعة رقم الهاتف.']; $bad[] = 'phone'; }
-        if (mb_strlen($v['message']) < 5 && !$hasFile) { $errors[] = ['Please send a photo or write your corrections.', 'يرجى إرسال صورة أو كتابة التصحيحات.']; $bad[] = 'message'; }
-        if (empty($_POST['confirm'])) { $errors[] = ['Please confirm that you represent this place.', 'يرجى تأكيد أنك تمثّل هذا المكان.']; $bad[] = 'confirm'; }
+        if ($v['name'] === '') { $errors[] = ['Please write your name', 'يرجى كتابة اسمك']; $bad[] = 'name'; }
+        if (!filter_var($v['email'], FILTER_VALIDATE_EMAIL)) { $errors[] = ['Please check your email address', 'يرجى مراجعة بريدك الإلكتروني']; $bad[] = 'email'; }
+        if ($v['phone'] !== '' && !preg_match('/^[0-9+()\-\s٠-٩]{6,30}$/u', $v['phone'])) { $errors[] = ['Please check the phone number', 'يرجى مراجعة رقم الهاتف']; $bad[] = 'phone'; }
+        if (mb_strlen($v['message']) < 5 && !$hasFile) { $errors[] = ['Please send a photo or write your corrections', 'يرجى إرسال صورة أو كتابة التصحيحات']; $bad[] = 'message'; }
+        if (empty($_POST['confirm'])) { $errors[] = ['Please confirm that you represent this place', 'يرجى تأكيد أنك تمثّل هذا المكان']; $bad[] = 'confirm'; }
         if (!$errors && owReqLimited('place_claim', 3)) $errors[] = ['Too many messages for now. Please try again in an hour.', 'رسائل كثيرة الآن. يرجى المحاولة بعد ساعة.'];
         $img = null;
         if (!$errors && $hasFile) {
@@ -128,8 +128,8 @@ html.dark-mode .ow-backdrop ~ * .pc.card{background:var(--color-card);}
     </header>
     <div class="card pc">
     <?php if ($sent): ?>
-      <h2><?= owBi('Thank you. We received your message.', 'شكراً لك. وصلتنا رسالتك.') ?></h2>
-      <p class="lead"><?= owBi('Our team checks every photo and correction before it shows on the Art Map.', 'يراجع فريقنا كل صورة وكل تصحيح قبل ظهوره في وجهات الفن.') ?></p>
+      <h2><?= owBi('Thank you. We received your message.', 'شكرا لك. وصلتنا رسالتك.') ?></h2>
+      <p class="lead"><?= owBi('Our team checks every photo and correction before it shows on the Art Map', 'يراجع فريقنا كل صورة وكل تصحيح قبل ظهوره في وجهات الفن') ?></p>
       <div class="acts"><a class="btn btn-primary" href="art_map.php"><?= owBi('Back to the Art Map', 'العودة إلى وجهات الفن') ?></a></div>
     <?php elseif (!$ready): ?>
       <p class="lead"><?= owBi('This form is being set up. Please write to us at ', 'هذا النموذج قيد الإعداد. يرجى مراسلتنا على ') ?><a href="mailto:<?= e(owContactEmail()) ?>"><?= e(owContactEmail()) ?></a></p>
@@ -146,7 +146,7 @@ html.dark-mode .ow-backdrop ~ * .pc.card{background:var(--color-card);}
         <div class="field"><label for="pc-photo"><?= owBi('A photo of your place', 'صورة لمكانك') ?> <span class="opt"><?= owBi('(optional; JPG, PNG or WebP, up to 10 MB)', '(اختياري؛ JPG أو PNG أو WebP، حتى 10 ميغابايت)') ?></span></label><input id="pc-photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp"<?= $badA('photo') ?>></div>
         <div class="field"><label for="pc-credit"><?= owBi('Photo credit', 'مصدر الصورة') ?> <span class="opt"><?= owBi('(optional, e.g. the photographer)', '(اختياري، مثل اسم المصوّر)') ?></span></label><input id="pc-credit" type="text" name="photo_credit" maxlength="200" value="<?= e($v['photo_credit']) ?>"></div>
         <div class="field"><label for="pc-msg"><?= owBi('Corrections or details', 'التصحيحات أو التفاصيل') ?></label><textarea id="pc-msg" name="message" rows="5" maxlength="3000"<?= $badA('message') ?>><?= e($v['message']) ?></textarea></div>
-        <label class="tick"><input type="checkbox" name="confirm" value="1"<?= !empty($_POST['confirm']) ? ' checked' : '' ?><?= $badA('confirm') ?>><span><?= owBi('I represent this place, and I have the right to share this photo with Oweili.', 'أنا أمثّل هذا المكان، ويحق لي مشاركة هذه الصورة مع أويلي.') ?></span></label>
+        <label class="tick"><input type="checkbox" name="confirm" value="1"<?= !empty($_POST['confirm']) ? ' checked' : '' ?><?= $badA('confirm') ?>><span><?= owBi('I represent this place, and I have the right to share this photo with Oweili', 'أنا أمثّل هذا المكان، ويحق لي مشاركة هذه الصورة مع أويلي') ?></span></label>
         <div class="acts"><button class="btn btn-primary" type="submit"><?= owBi('Send', 'أرسل') ?></button><a class="btn btn-secondary" href="art_map.php"><?= owBi('Back to the Art Map', 'العودة إلى وجهات الفن') ?></a></div>
       </form>
     <?php endif; ?>

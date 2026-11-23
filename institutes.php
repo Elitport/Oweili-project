@@ -62,10 +62,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') ===
     if (trim((string) ($_POST['website'] ?? '')) !== '') { header('Location: ' . $back); exit; }   // the hidden robot trap
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $nErr = ['The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'];
     elseif (owReqLimited('course_lead', 3)) $nErr = ['Too many requests from this device. Please try again in an hour.', 'طلبات كثيرة من هذا الجهاز. حاول بعد ساعة.'];
-    elseif (owNameProblem($nVals['name'], true) !== '') $nErr = ['Please write your name in letters.', 'يرجى كتابة اسمك بالحروف.'];
-    elseif (!filter_var($nVals['email'], FILTER_VALIDATE_EMAIL) || mb_strlen($nVals['email']) > 190) $nErr = ['Please write a valid email address.', 'يرجى كتابة بريد إلكتروني صحيح.'];
-    elseif (!preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $nVals['phone'])) $nErr = ['Please enter a valid mobile number.', 'يرجى إدخال رقم جوال صالح.'];
-    elseif ($nVals['city'] !== 'online' && !isset($leadCities[$nVals['city']])) $nErr = ['Please choose a city or Online.', 'يرجى اختيار مدينة أو «عن بعد».'];
+    elseif (owNameProblem($nVals['name'], true) !== '') $nErr = ['Please write your name in letters', 'يرجى كتابة اسمك بالحروف'];
+    elseif (!filter_var($nVals['email'], FILTER_VALIDATE_EMAIL) || mb_strlen($nVals['email']) > 190) $nErr = ['Please write a valid email address', 'يرجى كتابة بريد إلكتروني صحيح'];
+    elseif (!preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $nVals['phone'])) $nErr = ['Please enter a valid mobile number', 'يرجى إدخال رقم جوال صالح'];
+    elseif ($nVals['city'] !== 'online' && !isset($leadCities[$nVals['city']])) $nErr = ['Please choose a city or Online', 'يرجى اختيار مدينة أو «عن بعد»'];
     else {
         owReqCounted('course_lead');
         $nErr = owCourseLeadSave($inst && $inst['src'] === 'i' ? $inst['id'] : null, $inst && $inst['src'] === 'p' ? $inst['id'] : null,
@@ -202,7 +202,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
         <div class="ci-head"><?php if ($inst['logo'] !== '' && owSafeLogo($inst['logo'])): ?><img src="<?= e($inst['logo']) ?>" alt="<?= e('Logo of ' . $inst['name_en'] . ' · شعار ' . $inst['name_ar']) ?>"><?php endif; ?>
           <h1><?= owBi($inst['name_en'], $inst['name_ar']) ?></h1></div>
         <?php if ($inst['city_en'] !== ''): ?><div class="ci-city"><?= $PIN ?><?= owBi($inst['city_en'], $inst['city_ar']) ?></div><?php endif; ?>
-        <?php if ($instHasCourses): ?><p><?= owBi('Courses you can book on Oweili.', 'دورات يمكنك حجزها عبر أويلي.') ?></p><?php endif; ?>
+        <?php if ($instHasCourses): ?><p><?= owBi('Courses you can book on Oweili', 'دورات يمكنك حجزها عبر أويلي') ?></p><?php endif; ?>
       <?php else: ?>
         <h1><?= owBi('Art Institutes', 'المعاهد الفنية') ?></h1>
         <p><?= owBi('Art courses from approved institutes. Book your seat on Oweili.', 'دورات فنية من معاهد معتمدة. احجز مقعدك عبر أويلي.') ?></p>
@@ -256,7 +256,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
             <span class="c-tag"><?php if ($online): ?><?= owBi('Online', 'عن بعد') ?><?php else: ?><?= $PIN ?><?= owBi((string) ($c['inst_city_en'] ?: $c['inst_city_ar']), (string) ($c['inst_city_ar'] ?: $c['inst_city_en'])) ?><?php endif; ?></span>
           </div>
           <p class="c-meta"><span><?= owBi($wEn, $wAr) ?></span>
-            <span><?= $left > 0 ? owBi($left === 1 ? '1 seat left' : $left . ' seats left', $left === 1 ? 'بقي مقعد واحد' : 'متبقٍ ' . $left . ' مقاعد') : owBi('Full', 'اكتمل العدد') ?></span></p>
+            <span><?= $left > 0 ? owBi($left === 1 ? '1 seat left' : $left . ' seats left', $left === 1 ? 'بقي مقعد واحد' : 'متبق ' . $left . ' مقاعد') : owBi('Full', 'اكتمل العدد') ?></span></p>
           <div class="c-price"><?= $price > 0 ? owBi($pTxt . ' SAR', $pTxt . ' ر.س') : owBi('Free', 'مجاني') ?></div>
           <?php if ($isDemo): ?><button type="button" class="btn btn-primary" disabled aria-disabled="true" title="<?= e(owIsAr() ? OW_DEMO_NOTE[1] : OW_DEMO_NOTE[0]) ?>"><?= owBi('View the course', 'عرض الدورة') ?></button>
           <?php else: ?><a class="btn btn-primary" href="course.php?id=<?= (int) $c['id'] ?>"><?= owBi('View the course', 'عرض الدورة') ?></a><?php endif; ?>
@@ -265,16 +265,16 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
       </div>
     <?php elseif ($filtered): ?>
       <div class="card empty-state d-empty reveal">
-        <?= owBi('No courses match these choices. Try another city, level or price.', 'لا توجد دورات تطابق هذه الاختيارات. جرّب مدينة أو مستوى أو سعراً آخر.') ?>
+        <?= owBi('No courses match these choices. Try another city, level or price.', 'لا توجد دورات تطابق هذه الاختيارات. جرّب مدينة أو مستوى أو سعرا آخر.') ?>
         <div><a class="btn btn-secondary" href="<?= e($q(['city' => '', 'art' => '', 'level' => '', 'price' => ''])) ?>"><?= owBi('Show all courses', 'اعرض كل الدورات') ?></a></div>
       </div>
     <?php else: ?>
       <div class="card ci-none reveal" id="notify">
-        <h2><?= owBi('No courses right now', 'لا توجد دورات حالياً') ?></h2>
+        <h2><?= owBi('No courses right now', 'لا توجد دورات حاليا') ?></h2>
         <p><?= $inst ? owBi('Leave your details and we will tell you when ' . $inst['name_en'] . ' opens a course on Oweili.', 'اترك بياناتك ونخبرك عندما يفتح ' . $inst['name_ar'] . ' دورة عبر أويلي.')
-                     : owBi('Leave your details and we will tell you when a new course opens.', 'اترك بياناتك ونخبرك عند توفر دورة جديدة.') ?></p>
+                     : owBi('Leave your details and we will tell you when a new course opens', 'اترك بياناتك ونخبرك عند توفر دورة جديدة') ?></p>
         <?php if ($notified): ?>
-          <div class="alert alert-ok" role="status"><?= owBi('Thank you. We will tell you when a course opens.', 'شكراً. سنخبرك عند توفر دورة.') ?></div>
+          <div class="alert alert-ok" role="status"><?= owBi('Thank you. We will tell you when a course opens.', 'شكرا. سنخبرك عند توفر دورة.') ?></div>
         <?php else: ?>
           <details class="ci-form"<?= $nErr ? ' open' : '' ?>>
             <summary class="btn btn-primary"><?= owBi('Notify me', 'نبّهني عند توفر دورة') ?></summary>

@@ -61,7 +61,7 @@ try {
     /* 3. a short receipt to the visitor */
     owReqTellBuyer($email, 'We received your message · وصلنا رسالتك',
         "Thank you, $name. We received your message and will reply soon, usually within 24 hours.",
-        "شكراً لك، $name. وصلتنا رسالتك وسنرد عليك قريباً، غالباً خلال 24 ساعة.");
+        "شكرا لك، $name. وصلتنا رسالتك وسنرد عليك قريبا، غالبا خلال 24 ساعة.");
 } catch (Throwable $e) {
     error_log('support_send.php: ' . $e->getMessage());
     $reply(false, 'server', 500);

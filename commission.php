@@ -52,7 +52,7 @@ if ($c && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         header('Location: ' . $selfLink . '&done=quote'); exit;
     } elseif ($do === 'other_quote' && $c['status'] === 'quoted') {
         if (!owCommSetStatus((int) $c['id'], 'assigned', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'asked for another price', [$c['status']])) { header('Location: ' . $selfLink); exit; };
-        owCommAlert($c, 'The collector asked for another price', 'طلب المقتني سعراً آخر');
+        owCommAlert($c, 'The collector asked for another price', 'طلب المقتني سعرا آخر');
         owCommTellArtist($c, 'The collector asks about the price · المقتني يسأل عن السعر', 'The collector would like another price. Their note: ' . ($note ?: '—'), 'يرغب المقتني في سعر آخر. ملاحظته: ' . ($note ?: '—'));
         header('Location: ' . $selfLink . '&done=asked'); exit;
     } elseif ($do === 'approve_draft' && $c['status'] === 'draft_sent') {
@@ -61,7 +61,7 @@ if ($c && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         owCommTellArtist($c, 'The draft is approved · تمت الموافقة على المسودة', 'The collector approved your draft. Please finish the piece and send the final photo.', 'وافق المقتني على مسودتك. يرجى إنهاء العمل وإرسال الصورة النهائية.');
         header('Location: ' . $selfLink . '&done=draft'); exit;
     } elseif ($do === 'change_draft' && $c['status'] === 'draft_sent') {
-        if (mb_strlen($note) < 3) { $flash = ['Please tell the artist what to change.', 'يرجى إخبار الفنان بما يجب تغييره.', true]; }
+        if (mb_strlen($note) < 3) { $flash = ['Please tell the artist what to change', 'يرجى إخبار الفنان بما يجب تغييره', true]; }
         else {
             if (!owCommSetStatus((int) $c['id'], 'quote_accepted', ['buyer_note' => $note], ['type' => 'guest', 'id' => null], 'changes asked', [$c['status']])) { header('Location: ' . $selfLink); exit; };
             owCommAlert($c, 'The collector asked for changes to the draft', 'طلب المقتني تعديلات على المسودة');
@@ -83,7 +83,7 @@ $f = ['subject' => 'portrait', 'brief' => '', 'art_style' => '', 'size_note' => 
 $newLink = '';
 if (!$c && $ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') === 'request') {
     if (!$_POST && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
-        $errors[] = ['The photos were too large to send together. Please send fewer or smaller photos (10MB each at most).', 'الصور كبيرة جداً لإرسالها معاً. يرجى إرسال صور أقل أو أصغر (10 ميغابايت لكل صورة كحد أقصى).'];
+        $errors[] = ['The photos were too large to send together. Please send fewer or smaller photos (10MB each at most).', 'الصور كبيرة جدا لإرسالها معا. يرجى إرسال صور أقل أو أصغر (10 ميغابايت لكل صورة كحد أقصى).'];
     } elseif (!verifyCsrf($_POST['csrf_token'] ?? null)) {
         $errors[] = ['This page was open for a long time. Please send it again.', 'كانت الصفحة مفتوحة لوقت طويل. يرجى الإرسال مرة أخرى.'];
     } elseif (trim((string) ($_POST['website'] ?? '')) !== '') {
@@ -107,21 +107,21 @@ if (!$c && $ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST
         $f['agree'] = !empty($_POST['agree']);
         $b = owReqBuyer($errors);
         $f['buyer_name'] = $b['name']; $f['buyer_email'] = $b['email']; $f['buyer_phone'] = $b['phone'];
-        if (!isset($SUBJ[$f['subject']])) $errors[] = ['Please choose what the artwork is of.', 'يرجى اختيار موضوع العمل.'];
-        if (mb_strlen($f['brief']) < 10) $errors[] = ['Please describe the artwork you would like.', 'يرجى وصف العمل الذي تريده.'];
+        if (!isset($SUBJ[$f['subject']])) $errors[] = ['Please choose what the artwork is of', 'يرجى اختيار موضوع العمل'];
+        if (mb_strlen($f['brief']) < 10) $errors[] = ['Please describe the artwork you would like', 'يرجى وصف العمل الذي تريده'];
         if ($f['art_style'] !== '' && !isset($ART_TYPES[$f['art_style']])) $f['art_style'] = '';
         $budget = null;
         if ($f['budget_sar'] !== '') {
             $bv = str_replace([',', ' '], '', strtr($f['budget_sar'], ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9']));
-            if (!is_numeric($bv) || (float) $bv <= 0 || (float) $bv > 10000000) $errors[] = ['Please write the budget as a number in SAR.', 'يرجى كتابة الميزانية رقماً بالريال.']; else $budget = round((float) $bv, 2);
+            if (!is_numeric($bv) || (float) $bv <= 0 || (float) $bv > 10000000) $errors[] = ['Please write the budget as a number in SAR', 'يرجى كتابة الميزانية رقما بالريال']; else $budget = round((float) $bv, 2);
         }
         $wanted = null;
         if ($f['wanted_by'] !== '') {
             $d = DateTime::createFromFormat('Y-m-d', $f['wanted_by']);
-            if (!$d || $d->format('Y-m-d') !== $f['wanted_by'] || $f['wanted_by'] < date('Y-m-d', strtotime('+7 days'))) $errors[] = ['The date should be at least one week from today.', 'يجب أن يكون التاريخ بعد أسبوع على الأقل من اليوم.']; else $wanted = $f['wanted_by'];
+            if (!$d || $d->format('Y-m-d') !== $f['wanted_by'] || $f['wanted_by'] < date('Y-m-d', strtotime('+7 days'))) $errors[] = ['The date should be at least one week from today', 'يجب أن يكون التاريخ بعد أسبوع على الأقل من اليوم']; else $wanted = $f['wanted_by'];
         }
-        if ($f['may_show'] && mb_strtolower(trim($f['may_show_name'])) !== mb_strtolower(trim($f['buyer_name']))) $errors[] = ['To agree that it may be shown, please type your full name exactly as above.', 'للموافقة على عرضه، يرجى كتابة اسمك الكامل تماماً كما في الأعلى.'];
-        if (!$f['agree']) $errors[] = ['Please confirm you have the right to share these photos.', 'يرجى تأكيد أن لك حق مشاركة هذه الصور.'];
+        if ($f['may_show'] && mb_strtolower(trim($f['may_show_name'])) !== mb_strtolower(trim($f['buyer_name']))) $errors[] = ['To agree that it may be shown, please type your full name exactly as above', 'للموافقة على عرضه، يرجى كتابة اسمك الكامل تماما كما في الأعلى'];
+        if (!$f['agree']) $errors[] = ['Please confirm you have the right to share these photos', 'يرجى تأكيد أن لك حق مشاركة هذه الصور'];
         $photos = [];
         if (!empty($_FILES['photos']['name']) && is_array($_FILES['photos']['name'])) {
             foreach ($_FILES['photos']['name'] as $i => $n) {
@@ -129,7 +129,7 @@ if (!$c && $ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST
                 $photos[] = ['name' => $n, 'type' => $_FILES['photos']['type'][$i], 'tmp_name' => $_FILES['photos']['tmp_name'][$i], 'error' => $_FILES['photos']['error'][$i], 'size' => $_FILES['photos']['size'][$i]];
             }
         }
-        if (!$photos) $errors[] = ['Please add at least one reference photo.', 'يرجى إضافة صورة مرجعية واحدة على الأقل.'];
+        if (!$photos) $errors[] = ['Please add at least one reference photo', 'يرجى إضافة صورة مرجعية واحدة على الأقل'];
         if (count($photos) > OW_COMM_MAX_REFS) $errors[] = ['Please send ' . OW_COMM_MAX_REFS . ' photos at most.', 'يرجى إرسال ' . OW_COMM_MAX_REFS . ' صور كحد أقصى.'];
         if (!$errors) {
             $db = getDB();
@@ -160,7 +160,7 @@ if (!$c && $ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST
                 if (is_file(__DIR__ . '/bashro_send.php')) { require_once __DIR__ . '/bashro_send.php'; owBashroCommission($cid); }
                 owCommTellBuyer($nc, 'Your private commission request · طلب عملك الخاص',
                     'Thank you, ' . $f['buyer_name'] . '. We received your request and your photos. They are kept private: only the Oweili team and the one artist we choose (after they sign our confidentiality agreement) can see them. Keep this private link to follow every step:',
-                    'شكراً يا ' . $f['buyer_name'] . '. وصلنا طلبك وصورك. صورك محفوظة بسرّية: لا يراها إلا فريق أويلي والفنان الذي نختاره (بعد توقيعه اتفاقية السرّية). احتفظ بهذا الرابط الخاص لتتابع كل خطوة:', $newLink);
+                    'شكرا يا ' . $f['buyer_name'] . '. وصلنا طلبك وصورك. صورك محفوظة بسرّية: لا يراها إلا فريق أويلي والفنان الذي نختاره (بعد توقيعه اتفاقية السرّية). احتفظ بهذا الرابط الخاص لتتابع كل خطوة:', $newLink);
                 $_SESSION['ow_comm_new'] = $newLink;
                 header('Location: commission.php?sent=1'); exit;
             } catch (Throwable $e) {
@@ -175,8 +175,8 @@ if (!$c && $ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST
 }
 $sentLink = isset($_GET['sent']) ? (string) ($_SESSION['ow_comm_new'] ?? '') : '';
 $v = fn(string $k) => e((string) $f[$k]);
-$DONE = ['quote' => ['Thank you. The artist is starting your piece.', 'شكراً لك. بدأ الفنان العمل على قطعتك.'], 'draft' => ['Thank you. The artist is finishing your piece.', 'شكراً لك. الفنان ينهي قطعتك الآن.'],
-         'asked' => ['Sent. The artist will see your note.', 'تم الإرسال. سيرى الفنان ملاحظتك.'], 'received' => ['Thank you. We hope you love it.', 'شكراً لك. نتمنى أن تحبها.']];
+$DONE = ['quote' => ['Thank you. The artist is starting your piece.', 'شكرا لك. بدأ الفنان العمل على قطعتك.'], 'draft' => ['Thank you. The artist is finishing your piece.', 'شكرا لك. الفنان ينهي قطعتك الآن.'],
+         'asked' => ['Sent. The artist will see your note.', 'تم الإرسال. سيرى الفنان ملاحظتك.'], 'received' => ['Thank you. We hope you love it.', 'شكرا لك. نتمنى أن تحبها.']];
 if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['done']] + [2 => false];
 ?>
 <!DOCTYPE html>
@@ -245,8 +245,8 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
 
 <?php if ($sentLink !== '' || isset($_GET['sent'])): ?>
     <div class="card c-done reveal" role="status">
-      <h2><?= owBi('Thank you! Your request is with us.', 'شكراً! وصلنا طلبك.') ?></h2>
-      <p><?= owBi('We will choose the right artist and send you a price. Nothing is charged yet. We emailed you a private link to follow every step.', 'سنختار الفنان المناسب ونرسل لك السعر. لا يُدفع أي مبلغ الآن. أرسلنا لك رابطاً خاصاً لتتابع كل خطوة.') ?></p>
+      <h2><?= owBi('Thank you! Your request is with us.', 'شكرا! وصلنا طلبك.') ?></h2>
+      <p><?= owBi('We will choose the right artist and send you a price. Nothing is charged yet. We emailed you a private link to follow every step.', 'سنختار الفنان المناسب ونرسل لك السعر. لا يُدفع أي مبلغ الآن. أرسلنا لك رابطا خاصا لتتابع كل خطوة.') ?></p>
       <?php if ($sentLink !== ''): ?><p class="c-note"><?= owBi('Your private link (keep it to yourself):', 'رابطك الخاص (احتفظ به لنفسك):') ?></p><p class="c-link" dir="ltr"><a href="<?= e($sentLink) ?>"><?= e($sentLink) ?></a></p><?php unset($_SESSION['ow_comm_new']); endif; ?>
       <p><a class="btn btn-primary" href="marketplace.php"><?= owBi('Back to the Gallery', 'العودة إلى المعرض') ?></a></p>
     </div>
@@ -270,7 +270,7 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
         <div class="c-box">
           <h2 style="margin-top:0"><?= owBi('Next: the payment', 'الخطوة التالية: الدفع') ?></h2>
           <p style="margin:0"><?= owBi('The Oweili team will contact you about paying. Your artist sees your photos and starts only after the payment is confirmed.', 'سيتواصل معك فريق أويلي بخصوص الدفع. لا يرى فنانك صورك ولا يبدأ إلا بعد تأكيد الدفع.') ?></p>
-          <?php if ($cLeft !== null): ?><p class="c-note" style="margin:var(--space-xs) 0 0"><?= owBi('If it is not paid within ' . $cLeft . ' days, we delete your reference photos to protect your privacy. Your request stays.', 'إن لم يُدفع خلال ' . $cLeft . ' يوماً نحذف صورك المرجعية حفاظاً على خصوصيتك. ويبقى طلبك.') ?></p><?php endif; ?>
+          <?php if ($cLeft !== null): ?><p class="c-note" style="margin:var(--space-xs) 0 0"><?= owBi('If it is not paid within ' . $cLeft . ' days, we delete your reference photos to protect your privacy. Your request stays.', 'إن لم يُدفع خلال ' . $cLeft . ' يوما نحذف صورك المرجعية حفاظا على خصوصيتك. ويبقى طلبك.') ?></p><?php endif; ?>
         </div>
       <?php elseif ($cPaid && $c['status'] === 'quote_accepted'): ?>
         <div class="c-box"><p style="margin:0"><?= owBi('Payment received. Your artist is working on your piece.', 'وصلنا الدفع. فنانك يعمل على قطعتك.') ?></p></div>
@@ -279,12 +279,12 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
         <div class="c-box">
           <h2 style="margin-top:0"><?= owBi('The price for your piece', 'سعر قطعتك') ?></h2>
           <p style="font-size:var(--fs-card);font-weight:700;color:var(--color-dark);margin:0"><?= number_format((float) $c['quote_sar']) ?> <?= owBi('SAR', 'ر.س') ?></p>
-          <?php if ($c['quote_days']): ?><p class="c-note"><?= owBi('Ready in about ' . (int) $c['quote_days'] . ' days.', 'جاهزة خلال ' . (int) $c['quote_days'] . ' يوماً تقريباً.') ?></p><?php endif; ?>
+          <?php if ($c['quote_days']): ?><p class="c-note"><?= owBi('Ready in about ' . (int) $c['quote_days'] . ' days.', 'جاهزة خلال ' . (int) $c['quote_days'] . ' يوما تقريبا.') ?></p><?php endif; ?>
           <?php if ($c['quote_note'] !== ''): ?><p dir="auto"><?= nl2br(e((string) $c['quote_note'])) ?></p><?php endif; ?>
-          <p class="c-note"><?= owBi('No payment on the site yet: the Oweili team will contact you about paying.', 'لا دفع في الموقع بعد: سيتواصل معك فريق أويلي بخصوص الدفع.') ?></p>
+          <p class="c-note"><?= owBi('No payment on the site yet: the Oweili team will contact you about paying', 'لا دفع في الموقع بعد: سيتواصل معك فريق أويلي بخصوص الدفع') ?></p>
           <div class="c-acts">
             <form method="post" action="<?= e($selfLink) ?>"><?= csrfField() ?><input type="hidden" name="do" value="accept_quote"><button class="btn btn-primary"><?= owBi('Accept the price', 'أوافق على السعر') ?></button></form>
-            <details><summary class="btn btn-secondary"><?= owBi('Ask for another price', 'اطلب سعراً آخر') ?></summary>
+            <details><summary class="btn btn-secondary"><?= owBi('Ask for another price', 'اطلب سعرا آخر') ?></summary>
               <form method="post" action="<?= e($selfLink) ?>"><?= csrfField() ?><input type="hidden" name="do" value="other_quote">
                 <div class="field"><label for="n1"><?= owBi('Your note (optional)', 'ملاحظتك (اختياري)') ?></label><textarea id="n1" name="note" rows="2" maxlength="1000" dir="auto"></textarea></div>
                 <button class="btn btn-secondary btn-sm"><?= owBi('Send', 'أرسل') ?></button></form></details>
@@ -320,8 +320,8 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
       <?php if ($refs): ?>
         <p class="c-note"><?= owBi('Your reference photos (private):', 'صورك المرجعية (خاصة):') ?></p>
         <div class="c-pics"><?php foreach ($refs as $rf): ?><a href="<?= e($fileUrl($rf)) ?>" target="_blank" rel="noopener noreferrer"><img src="<?= e($fileUrl($rf)) ?>" alt="<?= e('Reference photo · صورة مرجعية') ?>"></a><?php endforeach; ?></div>
-      <?php elseif ($c['photos_deleted_at']): ?><p class="c-note"><?= owBi('Your reference photos were deleted ' . OW_COMM_KEEP_DAYS . ' days after delivery, as promised.', 'حُذفت صورك المرجعية بعد ' . OW_COMM_KEEP_DAYS . ' يوماً من التسليم، كما وعدنا.') ?></p><?php endif; ?>
-      <p class="c-note"><?= (int) $c['may_show'] === 1 ? owBi('You agreed in writing that the finished piece may be shown in public.', 'وافقت كتابياً على أن تُعرض القطعة المكتملة علناً.') : owBi('The finished piece will never be shown in public.', 'لن تُعرض القطعة المكتملة علناً أبداً.') ?></p>
+      <?php elseif ($c['photos_deleted_at']): ?><p class="c-note"><?= owBi('Your reference photos were deleted ' . OW_COMM_KEEP_DAYS . ' days after delivery, as promised.', 'حُذفت صورك المرجعية بعد ' . OW_COMM_KEEP_DAYS . ' يوما من التسليم، كما وعدنا.') ?></p><?php endif; ?>
+      <p class="c-note"><?= (int) $c['may_show'] === 1 ? owBi('You agreed in writing that the finished piece may be shown in public', 'وافقت كتابيا على أن تُعرض القطعة المكتملة علنا') : owBi('The finished piece will never be shown in public', 'لن تُعرض القطعة المكتملة علنا أبدا') ?></p>
     </div>
 
 <?php elseif ($ref !== ''): ?>
@@ -329,13 +329,13 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
       <p><?= owBi('Please open the link from your email exactly as it is. If it still does not work, write to us.', 'يرجى فتح الرابط من بريدك كما هو. إن لم يعمل فراسلنا.') ?> <a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p></div>
 
 <?php elseif (!$ready): ?>
-    <div class="card c-done reveal"><h2><?= owBi('Private commissions open very soon.', 'الأعمال الخاصة تفتح قريباً جداً.') ?></h2><p><a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p></div>
+    <div class="card c-done reveal"><h2><?= owBi('Private commissions open very soon', 'الأعمال الخاصة تفتح قريبا جدا') ?></h2><p><a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p></div>
 
 <?php else: ?>
     <div class="c-trust">
-      <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><h2><?= owBi('Your photos stay private', 'صورك تبقى خاصة') ?></h2><p><?= owBi('Kept in a locked place, never in the Gallery. Deleted ' . OW_COMM_KEEP_DAYS . ' days after delivery.', 'تُحفظ في مكان مقفل، ولا تظهر في المعرض أبداً. تُحذف بعد ' . OW_COMM_KEEP_DAYS . ' يوماً من التسليم.') ?></p></div>
-      <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/></svg><h2><?= owBi('One artist, under agreement', 'فنان واحد، باتفاقية') ?></h2><p><?= owBi('Only the artist we choose sees them, after signing our confidentiality agreement.', 'لا يراها إلا الفنان الذي نختاره، بعد توقيعه اتفاقية السرّية.') ?></p></div>
-      <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><h2><?= owBi('You approve every step', 'توافق على كل خطوة') ?></h2><p><?= owBi('The price first, then a draft. Nothing is shown in public unless you agree in writing.', 'السعر أولاً، ثم المسودة. لا يُعرض شيء علناً إلا بموافقتك كتابياً.') ?></p></div>
+      <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><h2><?= owBi('Your photos stay private', 'صورك تبقى خاصة') ?></h2><p><?= owBi('Kept in a locked place, never in the Gallery. Deleted ' . OW_COMM_KEEP_DAYS . ' days after delivery.', 'تُحفظ في مكان مقفل، ولا تظهر في المعرض أبدا. تُحذف بعد ' . OW_COMM_KEEP_DAYS . ' يوما من التسليم.') ?></p></div>
+      <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/></svg><h2><?= owBi('One artist, under agreement', 'فنان واحد، باتفاقية') ?></h2><p><?= owBi('Only the artist we choose sees them, after signing our confidentiality agreement', 'لا يراها إلا الفنان الذي نختاره، بعد توقيعه اتفاقية السرّية') ?></p></div>
+      <div class="card reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><h2><?= owBi('You approve every step', 'توافق على كل خطوة') ?></h2><p><?= owBi('The price first, then a draft. Nothing is shown in public unless you agree in writing.', 'السعر أولا، ثم المسودة. لا يُعرض شيء علنا إلا بموافقتك كتابيا.') ?></p></div>
     </div>
 
     <form class="card c-form reveal" method="post" action="commission.php" enctype="multipart/form-data" novalidate>
@@ -362,13 +362,13 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
       <h2><?= owBi('2. Your reference photos', '2. صورك المرجعية') ?></h2>
       <div class="field"><label for="c-photos"><?= owBi('1 to ' . OW_COMM_MAX_REFS . ' photos (JPG, PNG or WEBP, 10MB each at most)', 'من 1 إلى ' . OW_COMM_MAX_REFS . ' صور (JPG أو PNG أو WEBP، بحد أقصى 10 ميغابايت لكل صورة)') ?></label>
         <input id="c-photos" type="file" name="photos[]" multiple required accept="image/jpeg,image/png,image/webp"></div>
-      <p class="c-note"><?= owBi('Location and other hidden data are removed from every photo. They are kept in a private place visitors can never open.', 'تُزال بيانات الموقع وغيرها من البيانات المخفية من كل صورة. وتُحفظ في مكان خاص لا يفتحه الزوار أبداً.') ?></p>
-      <label class="c-check"><input type="checkbox" name="agree" value="1"<?= $f['agree'] ? ' checked' : '' ?>><span><?= owBi('I took these photos or have the right to share them, and the people in them agree.', 'التقطتُ هذه الصور أو يحق لي مشاركتها، والأشخاص الظاهرون فيها موافقون.') ?></span></label>
+      <p class="c-note"><?= owBi('Location and other hidden data are removed from every photo. They are kept in a private place visitors can never open.', 'تُزال بيانات الموقع وغيرها من البيانات المخفية من كل صورة. وتُحفظ في مكان خاص لا يفتحه الزوار أبدا.') ?></p>
+      <label class="c-check"><input type="checkbox" name="agree" value="1"<?= $f['agree'] ? ' checked' : '' ?>><span><?= owBi('I took these photos or have the right to share them, and the people in them agree', 'التقطتُ هذه الصور أو يحق لي مشاركتها، والأشخاص الظاهرون فيها موافقون') ?></span></label>
 
       <h2><?= owBi('3. Showing the finished piece', '3. عرض القطعة المكتملة') ?></h2>
       <div class="c-box">
-        <p style="margin-top:0"><?= owBi('By default, your commission is never shown: not in the Gallery, not on the artist’s profile, nowhere.', 'بشكل افتراضي لا يُعرض عملك الخاص أبداً: لا في المعرض، ولا في ملف الفنان، ولا في أي مكان.') ?></p>
-        <label class="c-check"><input type="checkbox" name="may_show" value="1"<?= $f['may_show'] ? ' checked' : '' ?> id="c-show"><span><?= owBi('I agree that Oweili and the artist may show the finished artwork in public.', 'أوافق على أن يعرض أويلي والفنان العمل المكتمل علناً.') ?><small><?= owBi('Optional. To agree, type your full name below as your written signature.', 'اختياري. للموافقة اكتب اسمك الكامل أدناه توقيعاً كتابياً.') ?></small></span></label>
+        <p style="margin-top:0"><?= owBi('By default, your commission is never shown: not in the Gallery, not on the artist’s profile, nowhere', 'بشكل افتراضي لا يُعرض عملك الخاص أبدا: لا في المعرض، ولا في ملف الفنان، ولا في أي مكان') ?></p>
+        <label class="c-check"><input type="checkbox" name="may_show" value="1"<?= $f['may_show'] ? ' checked' : '' ?> id="c-show"><span><?= owBi('I agree that Oweili and the artist may show the finished artwork in public', 'أوافق على أن يعرض أويلي والفنان العمل المكتمل علنا') ?><small><?= owBi('Optional. To agree, type your full name below as your written signature.', 'اختياري. للموافقة اكتب اسمك الكامل أدناه توقيعا كتابيا.') ?></small></span></label>
         <div class="field" style="margin:0"><label for="c-sign"><?= owBi('Your full name (signature)', 'اسمك الكامل (توقيع)') ?></label><input id="c-sign" name="may_show_name" maxlength="150" dir="auto" value="<?= $v('may_show_name') ?>"></div>
       </div>
 
@@ -378,8 +378,8 @@ if (!$flash && $c && isset($DONE[$_GET['done'] ?? ''])) $flash = $DONE[$_GET['do
         <div class="field"><label for="c-bp"><?= owBi('Your phone', 'هاتفك') ?></label><input id="c-bp" name="buyer_phone" type="tel" maxlength="30" required autocomplete="tel" dir="ltr" value="<?= $v('buyer_phone') ?>"></div>
         <div class="field"><label for="c-be"><?= owBi('Your email', 'بريدك الإلكتروني') ?></label><input id="c-be" name="buyer_email" type="email" maxlength="190" required autocomplete="email" dir="ltr" value="<?= $v('buyer_email') ?>"></div>
       </div>
-      <p class="c-note"><?= owBi('The artist never sees your name, phone or email: Oweili is the middle party.', 'لا يرى الفنان اسمك أو هاتفك أو بريدك: أويلي هو الوسيط.') ?> <a href="privacy.php" target="_blank" rel="noopener"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a></p>
-      <div class="c-foot"><p class="c-note" style="margin:0"><?= owBi('No payment now. You approve the price first.', 'لا دفع الآن. توافق على السعر أولاً.') ?></p>
+      <p class="c-note"><?= owBi('The artist never sees your name, phone or email: Oweili is the middle party', 'لا يرى الفنان اسمك أو هاتفك أو بريدك: أويلي هو الوسيط') ?> <a href="privacy.php" target="_blank" rel="noopener"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a></p>
+      <div class="c-foot"><p class="c-note" style="margin:0"><?= owBi('No payment now. You approve the price first.', 'لا دفع الآن. توافق على السعر أولا.') ?></p>
         <button class="btn btn-primary" type="submit"><?= owBi('Send my private request', 'أرسل طلبي الخاص') ?></button></div>
     </form>
 <?php endif; ?>

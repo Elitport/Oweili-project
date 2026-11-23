@@ -117,7 +117,6 @@ ob_start(); ?>
       </div>
     </div>
   </section>
-  <div class="c-under"><?= $owHeroSub /* the second line: in the hero on iPads and laptops, just under it on phones (owner, 20 Nov 2026) */ ?></div>
   <?php if ($aotw): ?>
   <div class="c-below">
     <?php $aImg = $aotw['art'] ? owImgSrc((string) $aotw['art']['image_url']) : ''; if ($aImg === '') $aImg = owImgSrc((string) ($aotw['profile_picture'] ?? '')); ?>

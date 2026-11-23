@@ -31,8 +31,8 @@ if (!defined('OW_SIZES')) define('OW_SIZES', [
 if (!function_exists('owSizeGroups')) {
 
 function owSizeGroups(): array {
-    return ['xs' => ['Extra small', 'صغير جداً'], 's' => ['Small', 'صغير'], 'm' => ['Medium', 'متوسط'],
-            'l' => ['Large', 'كبير'], 'xl' => ['Extra large', 'كبير جداً']];
+    return ['xs' => ['Extra small', 'صغير جدا'], 's' => ['Small', 'صغير'], 'm' => ['Medium', 'متوسط'],
+            'l' => ['Large', 'كبير'], 'xl' => ['Extra large', 'كبير جدا']];
 }
 
 function owSizeOrientations(): array {
@@ -96,8 +96,8 @@ function owSizeFromPost(array $p, bool $need): array {
 }
 
 function owSizeErrors(): array {
-    return ['size' => ['Please choose a size from the list.', 'يرجى اختيار مقاس من القائمة.'],
-            'orientation' => ['Please choose portrait or landscape.', 'يرجى اختيار طولي أو عرضي.']];
+    return ['size' => ['Please choose a size from the list', 'يرجى اختيار مقاس من القائمة'],
+            'orientation' => ['Please choose portrait or landscape', 'يرجى اختيار طولي أو عرضي']];
 }
 
 /* The form part: one list of sizes (grouped) and the orientation.
@@ -128,8 +128,8 @@ function owSizeSelect(string $code = '', string $orient = '', bool $optional = f
     }
     $h .= '</div>';
     /* why an orientation is greyed out, in the page language */
-    $h .= '<p class="sz-why" data-why="notsq" hidden>' . $bi('Square is greyed out because this size is not square. Choose portrait or landscape.', 'خيار «مربع» غير متاح لأن هذا المقاس ليس مربعاً. اختر طولي أو عرضي.') . '</p>';
-    $h .= '<p class="sz-why" data-why="sq" hidden>' . $bi('This size is square, so it can only be square.', 'هذا المقاس مربع، لذلك يكون مربعاً فقط.') . '</p>';
+    $h .= '<p class="sz-why" data-why="notsq" hidden>' . $bi('Square is greyed out because this size is not square. Choose portrait or landscape.', 'خيار «مربع» غير متاح لأن هذا المقاس ليس مربعا. اختر طولي أو عرضي.') . '</p>';
+    $h .= '<p class="sz-why" data-why="sq" hidden>' . $bi('This size is square, so it can only be square', 'هذا المقاس مربع، لذلك يكون مربعا فقط') . '</p>';
     $h .= '</div></div>';
     /* square sizes are always square; the others are tall or wide */
     $h .= '<script>(function(){var b=document.currentScript.previousElementSibling,s=b.querySelector("select"),rs=b.querySelectorAll("input[name=orientation]");'

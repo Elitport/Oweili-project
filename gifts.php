@@ -65,29 +65,29 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $b = owReqBuyer($errors);
         $f['buyer_name'] = $b['name']; $f['buyer_email'] = $b['email']; $f['buyer_phone'] = $b['phone'];
 
-        if (!isset($OCC[$f['occasion']])) $errors[] = ['Please choose the occasion.', 'يرجى اختيار المناسبة.'];
+        if (!isset($OCC[$f['occasion']])) $errors[] = ['Please choose the occasion', 'يرجى اختيار المناسبة'];
         $aw = null;
         if ($f['mode'] === 'ready') {
             $aw = owInquiryArtwork($f['artwork_id']);
-            if (!$aw) $errors[] = ['Please choose an artwork, or ask for a custom one.', 'يرجى اختيار عمل فني، أو اطلب عملاً خاصاً.'];
+            if (!$aw) $errors[] = ['Please choose an artwork, or ask for a custom one', 'يرجى اختيار عمل فني، أو اطلب عملا خاصا'];
         } else {
-            if (mb_strlen($f['custom_brief']) < 10) $errors[] = ['Please tell us a little about the custom artwork you have in mind.', 'يرجى أن تخبرنا قليلاً عن العمل الخاص الذي تتخيله.'];
+            if (mb_strlen($f['custom_brief']) < 10) $errors[] = ['Please tell us a little about the custom artwork you have in mind', 'يرجى أن تخبرنا قليلا عن العمل الخاص الذي تتخيله'];
         }
         $budget = null;
         if ($f['budget_sar'] !== '') {
             $bv = str_replace([',', ' '], '', strtr($f['budget_sar'], ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9']));
-            if (!is_numeric($bv) || (float) $bv <= 0 || (float) $bv > 10000000) $errors[] = ['Please write the budget as a number in SAR.', 'يرجى كتابة الميزانية رقماً بالريال.'];
+            if (!is_numeric($bv) || (float) $bv <= 0 || (float) $bv > 10000000) $errors[] = ['Please write the budget as a number in SAR', 'يرجى كتابة الميزانية رقما بالريال'];
             else $budget = round((float) $bv, 2);
         }
         $d = DateTime::createFromFormat('Y-m-d', $f['delivery_date']);
-        if (!$d || $d->format('Y-m-d') !== $f['delivery_date']) $errors[] = ['Please choose the delivery date.', 'يرجى اختيار تاريخ التوصيل.'];
-        elseif ($f['delivery_date'] < $minDate) $errors[] = ['Please choose a delivery date at least 3 days from today.', 'يرجى اختيار تاريخ توصيل بعد 3 أيام على الأقل من اليوم.'];
-        elseif ($f['delivery_date'] > date('Y-m-d', strtotime('+1 year'))) $errors[] = ['Please choose a delivery date within the next year.', 'يرجى اختيار تاريخ توصيل خلال السنة القادمة.'];
-        if (mb_strlen($f['recipient_name']) < 2) $errors[] = ['Please write the recipient’s name.', 'يرجى كتابة اسم المُهدى إليه.'];
-        if ($f['recipient_phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $f['recipient_phone'])) $errors[] = ['Please check the recipient’s phone number.', 'يرجى مراجعة رقم هاتف المُهدى إليه.'];
-        if (mb_strlen($f['recipient_city']) < 2) $errors[] = ['Please write the recipient’s city.', 'يرجى كتابة مدينة المُهدى إليه.'];
-        if (mb_strlen($f['recipient_address']) < 8) $errors[] = ['Please write the full delivery address.', 'يرجى كتابة عنوان التوصيل كاملاً.'];
-        if (preg_match('~<\s*/?\s*(script|iframe)~i', $f['card_message'] . $f['custom_brief'] . $f['recipient_address'])) $errors[] = ['Please write plain text only.', 'يرجى كتابة نص عادي فقط.'];
+        if (!$d || $d->format('Y-m-d') !== $f['delivery_date']) $errors[] = ['Please choose the delivery date', 'يرجى اختيار تاريخ التوصيل'];
+        elseif ($f['delivery_date'] < $minDate) $errors[] = ['Please choose a delivery date at least 3 days from today', 'يرجى اختيار تاريخ توصيل بعد 3 أيام على الأقل من اليوم'];
+        elseif ($f['delivery_date'] > date('Y-m-d', strtotime('+1 year'))) $errors[] = ['Please choose a delivery date within the next year', 'يرجى اختيار تاريخ توصيل خلال السنة القادمة'];
+        if (mb_strlen($f['recipient_name']) < 2) $errors[] = ['Please write the recipient’s name', 'يرجى كتابة اسم المُهدى إليه'];
+        if ($f['recipient_phone'] !== '' && !preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $f['recipient_phone'])) $errors[] = ['Please check the recipient’s phone number', 'يرجى مراجعة رقم هاتف المُهدى إليه'];
+        if (mb_strlen($f['recipient_city']) < 2) $errors[] = ['Please write the recipient’s city', 'يرجى كتابة مدينة المُهدى إليه'];
+        if (mb_strlen($f['recipient_address']) < 8) $errors[] = ['Please write the full delivery address', 'يرجى كتابة عنوان التوصيل كاملا'];
+        if (preg_match('~<\s*/?\s*(script|iframe)~i', $f['card_message'] . $f['custom_brief'] . $f['recipient_address'])) $errors[] = ['Please write plain text only', 'يرجى كتابة نص عادي فقط'];
 
         if (!$errors) {
             try {
@@ -116,7 +116,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 if (is_file(__DIR__ . '/bashro_send.php')) { require_once __DIR__ . '/bashro_send.php'; owBashroGift($gid); }
                 owReqTellBuyer($f['buyer_email'], 'We received your gift request · وصلنا طلب هديتك',
                     'Thank you, ' . $f['buyer_name'] . '. We received your ' . $oEn . ' gift request for ' . $f['recipient_name'] . '. The Oweili team will contact you soon to confirm the details. Nothing is charged yet.',
-                    'شكراً يا ' . $f['buyer_name'] . '. وصلنا طلب هدية ' . $oAr . ' إلى ' . $f['recipient_name'] . '. سيتواصل معك فريق أويلي قريباً لتأكيد التفاصيل. لا يُدفع أي مبلغ الآن.');
+                    'شكرا يا ' . $f['buyer_name'] . '. وصلنا طلب هدية ' . $oAr . ' إلى ' . $f['recipient_name'] . '. سيتواصل معك فريق أويلي قريبا لتأكيد التفاصيل. لا يُدفع أي مبلغ الآن.');
                 header('Location: gifts.php?sent=1'); exit;
             } catch (Throwable $e) {
                 error_log('gifts save: ' . $e->getMessage());
@@ -148,7 +148,7 @@ $v = fn(string $k) => e((string) $f[$k]);
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Oweili Gifts: give a gift that lasts', 'ar' => 'هدايا أويلي: أهدِ ما يبقى', 'desc_en' => 'A handmade artwork stays for years. Choose an original piece for a wedding, graduation, new baby or Eid, and we wrap and deliver it.', 'desc_ar' => 'عمل فني مصنوع باليد يبقى سنوات. اختر عملاً أصلياً لزواج أو تخرّج أو مولود أو عيد، ونحن نغلّفه ونوصله.', 'path' => 'gifts.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Oweili Gifts: give a gift that lasts', 'ar' => 'هدايا أويلي: أهدِ ما يبقى', 'desc_en' => 'A handmade artwork stays for years. Choose an original piece for a wedding, graduation, new baby or Eid, and we wrap and deliver it.', 'desc_ar' => 'عمل فني مصنوع باليد يبقى سنوات. اختر عملا أصليا لزواج أو تخرّج أو مولود أو عيد، ونحن نغلّفه ونوصله.', 'path' => 'gifts.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <link rel="stylesheet" href="<?= owAsset('assets/css/nav.css') ?>">
@@ -213,18 +213,18 @@ $v = fn(string $k) => e((string) $f[$k]);
 <?php if ($done): ?>
     <div class="card g-done reveal" role="status">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z"/></svg>
-      <h2><?= owBi('Thank you! Your gift request is with us.', 'شكراً! وصلنا طلب هديتك.') ?></h2>
-      <p><?= owBi('The Oweili team will contact you soon to confirm the details and the price. Nothing is charged yet. We also sent you an email.', 'سيتواصل معك فريق أويلي قريباً لتأكيد التفاصيل والسعر. لا يُدفع أي مبلغ الآن. وأرسلنا لك بريداً أيضاً.') ?></p>
+      <h2><?= owBi('Thank you! Your gift request is with us.', 'شكرا! وصلنا طلب هديتك.') ?></h2>
+      <p><?= owBi('The Oweili team will contact you soon to confirm the details and the price. Nothing is charged yet. We also sent you an email.', 'سيتواصل معك فريق أويلي قريبا لتأكيد التفاصيل والسعر. لا يُدفع أي مبلغ الآن. وأرسلنا لك بريدا أيضا.') ?></p>
       <div class="acts"><a class="btn btn-primary" href="marketplace.php"><?= owBi('Back to the Gallery', 'العودة إلى المعرض') ?></a><a class="btn btn-secondary" href="gifts.php"><?= owBi('Send another gift', 'أرسل هدية أخرى') ?></a></div>
     </div>
 <?php elseif (!$ready): ?>
-    <div class="card g-done reveal"><h2><?= owBi('Oweili Gifts open very soon.', 'هدايا أويلي تفتح قريباً جداً.') ?></h2>
-      <p><?= owBi('Write to us and we will help you choose a gift by hand.', 'راسلنا وسنساعدك في اختيار هديتك بأنفسنا.') ?> <a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p></div>
+    <div class="card g-done reveal"><h2><?= owBi('Oweili Gifts open very soon', 'هدايا أويلي تفتح قريبا جدا') ?></h2>
+      <p><?= owBi('Write to us and we will help you choose a gift by hand', 'راسلنا وسنساعدك في اختيار هديتك بأنفسنا') ?> <a href="mailto:<?= e(owContactEmail()) ?>" dir="ltr"><?= e(owContactEmail()) ?></a></p></div>
 <?php else: ?>
     <div class="g-steps">
-      <div class="card g-step reveal"><b>1</b><h2><?= owBi('Choose the piece', 'اختر القطعة') ?></h2><p><?= owBi('A ready artwork from the Gallery, or a custom one made for the occasion.', 'عمل جاهز من المعرض، أو عمل خاص يُصنع للمناسبة.') ?></p></div>
-      <div class="card g-step reveal"><b>2</b><h2><?= owBi('Add your card', 'أضف بطاقتك') ?></h2><p><?= owBi('Your words, gift wrapping, and the day it should arrive.', 'كلماتك، والتغليف، واليوم الذي تصل فيه.') ?></p></div>
-      <div class="card g-step reveal"><b>3</b><h2><?= owBi('We do the rest', 'ونحن نتكفّل بالباقي') ?></h2><p><?= owBi('We call you to confirm, then wrap and deliver. With "Surprise", the price never shows.', 'نتصل بك للتأكيد، ثم نغلّف ونوصل. ومع «مفاجأة» لا يظهر السعر أبداً.') ?></p></div>
+      <div class="card g-step reveal"><b>1</b><h2><?= owBi('Choose the piece', 'اختر القطعة') ?></h2><p><?= owBi('A ready artwork from the Gallery, or a custom one made for the occasion', 'عمل جاهز من المعرض، أو عمل خاص يُصنع للمناسبة') ?></p></div>
+      <div class="card g-step reveal"><b>2</b><h2><?= owBi('Add your card', 'أضف بطاقتك') ?></h2><p><?= owBi('Your words, gift wrapping, and the day it should arrive', 'كلماتك، والتغليف، واليوم الذي تصل فيه') ?></p></div>
+      <div class="card g-step reveal"><b>3</b><h2><?= owBi('We do the rest', 'ونحن نتكفّل بالباقي') ?></h2><p><?= owBi('We call you to confirm, then wrap and deliver. With "Surprise", the price never shows.', 'نتصل بك للتأكيد، ثم نغلّف ونوصل. ومع «مفاجأة» لا يظهر السعر أبدا.') ?></p></div>
     </div>
 
     <form class="card g-form reveal" method="post" action="gifts.php" novalidate>
@@ -242,8 +242,8 @@ $v = fn(string $k) => e((string) $f[$k]);
 
       <h2><?= owBi('2. The artwork', '2. العمل الفني') ?></h2>
       <div class="g-mode">
-        <label><input type="radio" name="mode" value="ready"<?= $f['mode'] === 'ready' ? ' checked' : '' ?><?= $choices ? '' : ' disabled' ?>><?= owBi('A ready artwork', 'عمل جاهز') ?><span><?= owBi('Choose one from the Gallery. It can be delivered soon.', 'اختر عملاً من المعرض. يمكن توصيله قريباً.') ?></span></label>
-        <label><input type="radio" name="mode" value="custom"<?= $f['mode'] === 'custom' ? ' checked' : '' ?>><?= owBi('A custom artwork', 'عمل خاص') ?><span><?= owBi('An artist makes something new for this occasion. It takes longer.', 'يصنع فنان شيئاً جديداً لهذه المناسبة. يحتاج وقتاً أطول.') ?></span></label>
+        <label><input type="radio" name="mode" value="ready"<?= $f['mode'] === 'ready' ? ' checked' : '' ?><?= $choices ? '' : ' disabled' ?>><?= owBi('A ready artwork', 'عمل جاهز') ?><span><?= owBi('Choose one from the Gallery. It can be delivered soon.', 'اختر عملا من المعرض. يمكن توصيله قريبا.') ?></span></label>
+        <label><input type="radio" name="mode" value="custom"<?= $f['mode'] === 'custom' ? ' checked' : '' ?>><?= owBi('A custom artwork', 'عمل خاص') ?><span><?= owBi('An artist makes something new for this occasion. It takes longer.', 'يصنع فنان شيئا جديدا لهذه المناسبة. يحتاج وقتا أطول.') ?></span></label>
       </div>
       <div id="g-ready"<?= $f['mode'] === 'ready' ? '' : ' hidden' ?>>
         <?php if ($choices): ?>
@@ -270,8 +270,8 @@ $v = fn(string $k) => e((string) $f[$k]);
       </div>
 
       <h2><?= owBi('3. Wrapping, card and day', '3. التغليف والبطاقة والموعد') ?></h2>
-      <label class="g-check"><input type="checkbox" name="wrapping" value="1"<?= $f['wrapping'] ? ' checked' : '' ?>><span><?= owBi('Gift wrapping', 'تغليف هدية') ?><small><?= owBi('Wrapped with care, ready to hand over.', 'مغلّفة بعناية، جاهزة للإهداء.') ?></small></span></label>
-      <label class="g-check"><input type="checkbox" name="surprise" value="1"<?= $f['surprise'] ? ' checked' : '' ?>><span><?= owBi('Surprise', 'مفاجأة') ?><small><?= owBi('The recipient never sees the price: not on the package, not in any message.', 'لا يرى المُهدى إليه السعر أبداً: لا على الطرد ولا في أي رسالة.') ?></small></span></label>
+      <label class="g-check"><input type="checkbox" name="wrapping" value="1"<?= $f['wrapping'] ? ' checked' : '' ?>><span><?= owBi('Gift wrapping', 'تغليف هدية') ?><small><?= owBi('Wrapped with care, ready to hand over', 'مغلّفة بعناية، جاهزة للإهداء') ?></small></span></label>
+      <label class="g-check"><input type="checkbox" name="surprise" value="1"<?= $f['surprise'] ? ' checked' : '' ?>><span><?= owBi('Surprise', 'مفاجأة') ?><small><?= owBi('The recipient never sees the price: not on the package, not in any message', 'لا يرى المُهدى إليه السعر أبدا: لا على الطرد ولا في أي رسالة') ?></small></span></label>
       <div class="field"><label for="g-card"><?= owBi('Card message (optional)', 'رسالة البطاقة (اختياري)') ?></label>
         <textarea id="g-card" name="card_message" rows="3" maxlength="300" dir="auto"><?= $v('card_message') ?></textarea></div>
       <div class="field"><label for="g-date"><?= owBi('Delivery date', 'تاريخ التوصيل') ?></label>
@@ -283,7 +283,7 @@ $v = fn(string $k) => e((string) $f[$k]);
         <div class="field"><label for="g-rp"><?= owBi('Recipient’s phone (optional, for the delivery)', 'هاتف المُهدى إليه (اختياري، للتوصيل)') ?></label><input id="g-rp" name="recipient_phone" type="tel" maxlength="30" dir="ltr" value="<?= $v('recipient_phone') ?>"></div>
         <div class="field"><label for="g-rc"><?= owBi('City', 'المدينة') ?></label><input id="g-rc" name="recipient_city" maxlength="100" required dir="auto" value="<?= $v('recipient_city') ?>"></div>
       </div>
-      <div class="field"><label for="g-ra"><?= owBi('Full address', 'العنوان كاملاً') ?></label><textarea id="g-ra" name="recipient_address" rows="2" maxlength="600" required dir="auto" placeholder="<?= e('District, street, building, national short address · الحي، الشارع، المبنى، العنوان الوطني المختصر') ?>"><?= $v('recipient_address') ?></textarea></div>
+      <div class="field"><label for="g-ra"><?= owBi('Full address', 'العنوان كاملا') ?></label><textarea id="g-ra" name="recipient_address" rows="2" maxlength="600" required dir="auto" placeholder="<?= e('District, street, building, national short address · الحي، الشارع، المبنى، العنوان الوطني المختصر') ?>"><?= $v('recipient_address') ?></textarea></div>
 
       <h2><?= owBi('5. Your details', '5. بياناتك') ?></h2>
       <div class="g-two">
@@ -293,7 +293,7 @@ $v = fn(string $k) => e((string) $f[$k]);
       </div>
       <p class="g-note"><?= owBi('We use these details only to arrange this gift. The recipient’s address is used only for the delivery.', 'نستخدم هذه البيانات فقط لترتيب هذه الهدية. ويُستخدم عنوان المُهدى إليه للتوصيل فقط.') ?> <a href="privacy.php" target="_blank" rel="noopener"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a></p>
       <div class="g-foot">
-        <p class="g-note" style="margin:0"><?= owBi('No payment now. We confirm the price with you first.', 'لا دفع الآن. نؤكد السعر معك أولاً.') ?></p>
+        <p class="g-note" style="margin:0"><?= owBi('No payment now. We confirm the price with you first.', 'لا دفع الآن. نؤكد السعر معك أولا.') ?></p>
         <button class="btn btn-primary" type="submit"><?= owBi('Send my gift request', 'أرسل طلب الهدية') ?></button>
       </div>
     </form>

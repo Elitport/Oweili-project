@@ -36,7 +36,7 @@ $checks = [
 /* ---- "Make all small copies": every artwork photo and stage photo, one at a time ---- */
 $made = null;
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['make_copies'])) {
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token'); }
     @set_time_limit(120);
     $paths = [];
     try {
@@ -106,7 +106,7 @@ try {
 
   <div class="card">
     <h2><?= owBi('Make all small copies', 'اصنع كل النسخ الصغيرة') ?></h2>
-    <p><?= owBi('Makes the phone-sized copies of every artwork photo now, one at a time, so phones never wait for them. New uploads get their copies by themselves.', 'يصنع نسخ الجوال لكل صور الأعمال الآن، واحدة تلو الأخرى، حتى لا ينتظرها الجوال أبداً. الصور الجديدة تحصل على نسخها تلقائياً.') ?></p>
+    <p><?= owBi('Makes the phone-sized copies of every artwork photo now, one at a time, so phones never wait for them. New uploads get their copies by themselves.', 'يصنع نسخ الجوال لكل صور الأعمال الآن، واحدة تلو الأخرى، حتى لا ينتظرها الجوال أبدا. الصور الجديدة تحصل على نسخها تلقائيا.') ?></p>
     <form method="post" action="admin.php?photo_check=1" style="margin-top:var(--space-sm)">
       <?= csrfField() ?>
       <button class="btn btn-primary" type="submit" name="make_copies" value="1"><?= owBi('Make all small copies', 'اصنع كل النسخ الصغيرة') ?></button>
@@ -122,7 +122,7 @@ try {
   <div class="card">
     <h2><?= owBi('Newest artwork photos', 'أحدث صور الأعمال') ?></h2>
     <p><?= owBi('Each small copy below is loaded the same way phones load it. "Small copy works" means phones get a light photo.', 'كل نسخة صغيرة هنا تُحمّل كما يحمّلها الجوال. «النسخة الصغيرة تعمل» تعني أن الجوال يحصل على صورة خفيفة.') ?></p>
-    <?php if (!$rows): ?><p><?= !empty($dbErr) ? owBi('Could not read the artworks from the database.', 'تعذّرت قراءة الأعمال من قاعدة البيانات.') : owBi('No artwork photos found.', 'لا توجد صور أعمال.') ?></p><?php endif; ?>
+    <?php if (!$rows): ?><p><?= !empty($dbErr) ? owBi('Could not read the artworks from the database', 'تعذّرت قراءة الأعمال من قاعدة البيانات') : owBi('No artwork photos found', 'لا توجد صور أعمال') ?></p><?php endif; ?>
     <div class="pc-list">
     <?php foreach ($rows as $r):
         $raw   = (string) $r['image_url'];

@@ -114,7 +114,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
     <div class="card empty-state d-empty">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <h1 style="font-size:var(--fs-card);margin:0 0 var(--space-xs);"><?= owBi('We could not find this article', 'لم نجد هذا المقال') ?></h1>
-      <?= owBi('It may have been moved or is not published yet.', 'ربما نُقل أو لم يُنشر بعد.') ?>
+      <?= owBi('It may have been moved or is not published yet', 'ربما نُقل أو لم يُنشر بعد') ?>
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
         <?php foreach ($TYPES as $k => [$en, $ar]): ?>
           <a class="btn btn-secondary" href="articles_list.php?type=<?= e($k) ?>"><?= owBi($en, $ar) ?></a>
@@ -136,7 +136,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
       <header class="art-hd">
       <a class="art-type" href="articles_list.php?type=<?= e($type) ?>"><?= owBi($typeEn, $typeAr) ?></a><?php if ($isDemoArt): ?> <?= owDemoBadge() ?><?php endif; ?>
       <h1><?= owBi($a['title_en'], $a['title_ar']) ?></h1>
-      <?php if ($preview && $a['status'] !== 'published'): ?><p class="alert alert-error" role="status"><?= owBi('Preview for the team: visitors cannot see this article yet.', 'معاينة للفريق: لا يرى الزوار هذا المقال بعد.') ?></p><?php endif; ?>
+      <?php if ($preview && $a['status'] !== 'published'): ?><p class="alert alert-error" role="status"><?= owBi('Preview for the team: visitors cannot see this article yet', 'معاينة للفريق: لا يرى الزوار هذا المقال بعد') ?></p><?php endif; ?>
       <p class="art-date"><?php if ($a['published_at']): ?><?= owBi('Published ' . $pEn, 'نُشر في ' . $pAr) ?><?php endif; ?><?php if ($byArtist): ?><?= $a['published_at'] ? ' · ' : '' ?><?= owBi('Written by', 'بقلم') ?> <?= $byArtist['url'] !== '' ? '<a href="' . e(owBase() . $byArtist['url']) . '">' . owBiName($byArtist['en'], $byArtist['ar']) . '</a>' : owBiName($byArtist['en'], $byArtist['ar']) ?><?php endif; ?></p>
       </header>
 

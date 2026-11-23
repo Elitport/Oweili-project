@@ -17,10 +17,10 @@
 require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 
-const OW_CERT_DECLARATION = ['I confirm this artwork is my original work, made by my own hand.',
-                             'أؤكد أن هذا العمل من إبداعي الأصلي، وقد صنعته بيدي.'];
+const OW_CERT_DECLARATION = ['I confirm this artwork is my original work, made by my own hand',
+                             'أؤكد أن هذا العمل من إبداعي الأصلي، وقد صنعته بيدي'];
 const OW_CERT_RIGHTS = ['The collector owns the physical artwork. The copyright stays with the artist.',
-                        'يملك المقتني العمل الفني نفسه، وتبقى حقوق النشر والملكية الفكرية للفنان.'];
+                        'يملك المقتني العمل الفني نفسه، وتبقى حقوق النشر والملكية الفكرية للفنان'];
 const OW_CERT_FIELDS = ['medium', 'width_cm', 'height_cm', 'year_made', 'edition_type', 'edition_number', 'edition_size'];
 
 function owCertReady(): bool { return owHasTable('certificates') && owHasColumn('artworks', 'declared_at'); }
@@ -95,14 +95,14 @@ function owCertDetailsFromPost(array $p): array {
 /* The messages for those error codes */
 function owCertDetailErrors(): array {
     return [
-        'medium'     => ['Please write the medium, for example "Oil on canvas".', 'يرجى كتابة الخامة، مثل «زيت على قماش».'],
-        'dims'       => ['Please write the width and height in centimetres (numbers only).', 'يرجى كتابة العرض والارتفاع بالسنتيمتر (أرقام فقط).'],
-        'size'       => ['Please choose a size from the list.', 'يرجى اختيار مقاس من القائمة.'],
-        'orientation'=> ['Please choose portrait or landscape for this size.', 'يرجى اختيار طولي أو عرضي لهذا المقاس.'],
+        'medium'     => ['Please write the medium, for example "Oil on canvas"', 'يرجى كتابة الخامة، مثل «زيت على قماش»'],
+        'dims'       => ['Please write the width and height in centimetres (numbers only)', 'يرجى كتابة العرض والارتفاع بالسنتيمتر (أرقام فقط)'],
+        'size'       => ['Please choose a size from the list', 'يرجى اختيار مقاس من القائمة'],
+        'orientation'=> ['Please choose portrait or landscape for this size', 'يرجى اختيار طولي أو عرضي لهذا المقاس'],
         'year'       => ['Please write the year the artwork was made (for example ' . date('Y') . ').', 'يرجى كتابة سنة إنجاز العمل (مثل ' . date('Y') . ').'],
-        'edition'    => ['Please choose: original, one of a kind, or limited print.', 'يرجى الاختيار: عمل أصلي فريد، أو نسخة مطبوعة محدودة.'],
-        'edition_no' => ['For a limited print, write its number and the total, for example 3 of 50.', 'للنسخة المحدودة، اكتب رقمها والعدد الكلي، مثل 3 من 50.'],
-        'declare'    => ['Please tick the box to confirm this is your original work, made by your own hand.', 'يرجى وضع علامة في المربع لتأكيد أن هذا العمل من إبداعك الأصلي وصنع يدك.'],
+        'edition'    => ['Please choose: original, one of a kind, or limited print', 'يرجى الاختيار: عمل أصلي فريد، أو نسخة مطبوعة محدودة'],
+        'edition_no' => ['For a limited print, write its number and the total, for example 3 of 50', 'للنسخة المحدودة، اكتب رقمها والعدد الكلي، مثل 3 من 50'],
+        'declare'    => ['Please tick the box to confirm this is your original work, made by your own hand', 'يرجى وضع علامة في المربع لتأكيد أن هذا العمل من إبداعك الأصلي وصنع يدك'],
     ];
 }
 
@@ -153,7 +153,7 @@ function owArtworkSizeWords(array $aw): ?array {
 }
 
 /* Under the price (artwork page, Gallery window): what happens after "I'm Interested" */
-const OW_BUY_NEXT = ['We’ll contact you within 24 hours to arrange payment and delivery.', 'سنتواصل معك خلال 24 ساعة لترتيب الدفع والتوصيل.'];
+const OW_BUY_NEXT = ['We’ll contact you within 24 hours to arrange payment and delivery', 'سنتواصل معك خلال 24 ساعة لترتيب الدفع والتوصيل'];
 
 /* The medium suggestions of the upload form, [English, Arabic] (cert_fields.php) */
 const OW_MEDIUMS = [['Oil on canvas', 'زيت على قماش'], ['Acrylic on canvas', 'أكريليك على قماش'], ['Watercolor on paper', 'ألوان مائية على ورق'],

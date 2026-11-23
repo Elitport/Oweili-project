@@ -47,7 +47,7 @@ function owFriendlyError(int $code = 500): void {
        . 'a{display:inline-block;margin-top:8px;background:#DB8084;color:#23314A;font-weight:700;font-size:14px;text-decoration:none;'
        . 'padding:14px 24px;border-radius:8px}a:hover{background:#C96A6E}hr{border:0;border-top:1px solid #E2E8F0;margin:20px 0}</style></head>'
        . '<body><div class="c"><h1>We will be right back</h1><p>Something went wrong on our side. Please try again in a moment.</p>'
-       . '<hr><div class="ar" lang="ar"><h1>سنعود حالاً</h1><p>حدث خطأ من جهتنا. يرجى المحاولة بعد قليل.</p></div>'
+       . '<hr><div class="ar" lang="ar"><h1>سنعود حالا</h1><p>حدث خطأ من جهتنا. يرجى المحاولة بعد قليل.</p></div>'
        . '<a href="/">Back to Oweili · العودة إلى أويلي</a></div></body></html>';
     exit;
 }

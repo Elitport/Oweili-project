@@ -28,21 +28,21 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $bad = ['The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'];
     elseif ($do === 'inst_approve' || $do === 'inst_reject') {
         $st = $db->prepare("SELECT i.*, u.email, u.id AS uid FROM institutes i JOIN users u ON u.id = i.user_id WHERE i.id = :id AND u.role = 'institute'"); $st->execute([':id' => $id]); $i = $st->fetch();
-        if (!$i) $bad = ['Not found.', 'غير موجود.'];
-        elseif ($do === 'inst_reject' && mb_strlen($why) < 3) $bad = ['Please write the reason.', 'يرجى كتابة السبب.'];
+        if (!$i) $bad = ['Not found', 'غير موجود'];
+        elseif ($do === 'inst_reject' && mb_strlen($why) < 3) $bad = ['Please write the reason', 'يرجى كتابة السبب'];
         else {
             $on = $do === 'inst_approve' ? 1 : 0;
             $db->prepare('UPDATE users SET is_approved = :a WHERE id = :u')->execute([':a' => $on, ':u' => $i['uid']]);
             $db->prepare('UPDATE institutes SET is_active = :a WHERE id = :id')->execute([':a' => $on, ':id' => $id]);
             owLog($on ? 'institute_approve' : 'institute_reject', 'institute', $id, $why, $actor);
-            $on ? $mailTo($i['email'], 'Your institute is approved · تم اعتماد معهدك', 'Welcome to Oweili! Your institute is approved. Add your courses from your dashboard.', 'أهلاً بك في أويلي! تم اعتماد معهدك. أضف دوراتك من لوحتك.', 'institute_dashboard.php')
+            $on ? $mailTo($i['email'], 'Your institute is approved · تم اعتماد معهدك', 'Welcome to Oweili! Your institute is approved. Add your courses from your dashboard.', 'أهلا بك في أويلي! تم اعتماد معهدك. أضف دوراتك من لوحتك.', 'institute_dashboard.php')
                 : $mailTo($i['email'], 'About your institute · بخصوص معهدك', 'We could not approve your institute yet. Reason: ' . $why, 'لم نتمكن من اعتماد معهدك بعد. السبب: ' . $why);
-            $msg = $on ? ['Institute approved.', 'تم اعتماد المعهد.'] : ['Institute not approved. They were told the reason.', 'لم يُعتمد المعهد، وأُبلغ بالسبب.'];
+            $msg = $on ? ['Institute approved', 'تم اعتماد المعهد'] : ['Institute not approved. They were told the reason.', 'لم يُعتمد المعهد، وأُبلغ بالسبب'];
         }
     } elseif ($do === 'course_approve' || $do === 'course_reject') {
         $c = owCourseGet($id);
-        if (!$c || (int) $c['bookable'] !== 1) $bad = ['Not found.', 'غير موجود.'];
-        elseif ($do === 'course_reject' && mb_strlen($why) < 3) $bad = ['Please write the reason.', 'يرجى كتابة السبب.'];
+        if (!$c || (int) $c['bookable'] !== 1) $bad = ['Not found', 'غير موجود'];
+        elseif ($do === 'course_reject' && mb_strlen($why) < 3) $bad = ['Please write the reason', 'يرجى كتابة السبب'];
         else {
             $s = $do === 'course_approve' ? 'approved' : 'rejected';
             $db->prepare('UPDATE courses SET status = :s, reject_reason = :r WHERE id = :id')->execute([':s' => $s, ':r' => $s === 'rejected' ? $why : '', ':id' => $id]);
@@ -50,38 +50,38 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             if ($c['inst_email'] !== '') $s === 'approved'
                 ? $mailTo($c['inst_email'], 'Course approved · تم اعتماد الدورة', 'Your course "' . $c['title_en'] . '" is approved.', 'تم اعتماد دورتك «' . $c['title_ar'] . '».', 'course.php?id=' . $id)
                 : $mailTo($c['inst_email'], 'About your course · بخصوص دورتك', 'Your course "' . $c['title_en'] . '" was not approved. Reason: ' . $why, 'لم تُعتمد دورتك «' . $c['title_ar'] . '». السبب: ' . $why, 'institute_dashboard.php');
-            $msg = $s === 'approved' ? ['Course approved.', 'تم اعتماد الدورة.'] : ['Course not approved. The institute was told the reason.', 'لم تُعتمد الدورة، وأُبلغ المعهد بالسبب.'];
+            $msg = $s === 'approved' ? ['Course approved', 'تم اعتماد الدورة'] : ['Course not approved. The institute was told the reason.', 'لم تُعتمد الدورة، وأُبلغ المعهد بالسبب'];
         }
     } elseif ($do === 'course_art' && owCourseArtReady()) {   // the admin sets a course's art type and style (owner, 21 Nov 2026); its status is not changed
         $c = owCourseGet($id); $art = (string) ($_POST['art_type'] ?? ''); $sty = (string) ($_POST['art_style'] ?? '');
-        if (!$c || (int) $c['bookable'] !== 1) $bad = ['Not found.', 'غير موجود.'];
-        elseif (!isset(OW_COURSE_ARTS[$art])) $bad = ['Please choose the art type.', 'يرجى اختيار نوع الفن.'];
-        elseif ($sty !== '' && !isset(owCourseArtStyles()[$art][$sty])) $bad = ['Please choose a style of this art type, or leave the style empty.', 'يرجى اختيار أسلوب من نوع الفن نفسه، أو ترك الأسلوب فارغاً.'];
+        if (!$c || (int) $c['bookable'] !== 1) $bad = ['Not found', 'غير موجود'];
+        elseif (!isset(OW_COURSE_ARTS[$art])) $bad = ['Please choose the art type', 'يرجى اختيار نوع الفن'];
+        elseif ($sty !== '' && !isset(owCourseArtStyles()[$art][$sty])) $bad = ['Please choose a style of this art type, or leave the style empty', 'يرجى اختيار أسلوب من نوع الفن نفسه، أو ترك الأسلوب فارغا'];
         else {
             $db->prepare('UPDATE courses SET art_type = :a, art_style = :s WHERE id = :id')->execute([':a' => $art, ':s' => $sty, ':id' => $id]);
-            owLog('course_art', 'course', $id, $art . ($sty !== '' ? ' / ' . $sty : ''), $actor); $msg = ['Saved.', 'تم الحفظ.'];
+            owLog('course_art', 'course', $id, $art . ($sty !== '' ? ' / ' . $sty : ''), $actor); $msg = ['Saved', 'تم الحفظ'];
         }
     } elseif ($do === 'reg_cancel' || $do === 'ticket_cancel') {
         $e2 = owBookingCancel($do === 'reg_cancel' ? 'course' : 'ticket', $id, $actor, !empty($_POST['refund']), $why);
-        $e2 ? $bad = $e2 : $msg = ['Cancelled.' . (!empty($_POST['refund']) ? ' The money was refunded.' : ''), 'تم الإلغاء.' . (!empty($_POST['refund']) ? ' وأُعيد المبلغ.' : '')];
+        $e2 ? $bad = $e2 : $msg = ['Cancelled.' . (!empty($_POST['refund']) ? ' The money was refunded' : ''), 'تم الإلغاء.' . (!empty($_POST['refund']) ? ' وأُعيد المبلغ' : '')];
     } elseif ($do === 'reg_paid') {   // a seat booked before online payment, paid to Oweili by hand (owner, 15 Nov 2026)
         $e2 = owCourseMarkPaid($id, $actor, mb_substr(trim((string) ($_POST['reference'] ?? '')), 0, 300));
         $e2 ? $bad = $e2 : $msg = ['Marked as paid. The student got the confirmation, and the institute’s payout was added.', 'تم التأشير بالدفع. وصل الطالبَ التأكيد، وأُضيف مستحق المعهد.'];
     } elseif ($do === 'lead_status' && owCourseLeadsReady()) {
         $st2 = in_array($_POST['status'] ?? '', ['new', 'contacted', 'closed'], true) ? $_POST['status'] : 'new';
         $db->prepare('UPDATE course_leads SET status = :s WHERE id = :id')->execute([':s' => $st2, ':id' => $id]);
-        owLog('course_lead_status', 'course_lead', $id, $st2, $actor); $msg = ['Saved.', 'تم الحفظ.'];
+        owLog('course_lead_status', 'course_lead', $id, $st2, $actor); $msg = ['Saved', 'تم الحفظ'];
     } elseif ($do === 'payout_paid') {
         $ref = mb_substr(trim((string) ($_POST['reference'] ?? '')), 0, 120);
-        if ($ref === '') $bad = ['Please write the bank transfer reference.', 'يرجى كتابة مرجع التحويل البنكي.'];
+        if ($ref === '') $bad = ['Please write the bank transfer reference', 'يرجى كتابة مرجع التحويل البنكي'];
         else {
             $u = $db->prepare("UPDATE partner_payouts SET status = 'paid', paid_at = NOW(), reference = :r WHERE id = :id AND status = 'pending'"); $u->execute([':r' => $ref, ':id' => $id]);
-            if ($u->rowCount()) { owLog('partner_payout_paid', 'partner_payout', $id, $ref, $actor); $msg = ['Marked as paid.', 'تم التأشير بالدفع.']; }
+            if ($u->rowCount()) { owLog('partner_payout_paid', 'partner_payout', $id, $ref, $actor); $msg = ['Marked as paid', 'تم التأشير بالدفع']; }
         }
     } elseif (in_array($do, ['type_save', 'dates_add', 'date_save'], true)) {
         $pl = owMuseumGet((int) ($_POST['place'] ?? 0));
-        $e2 = $pl ? owMuseumSetupPost($pl, $_POST, $actor) : ['Not found.', 'غير موجود.'];
-        $e2 ? $bad = $e2 : $msg = ['Saved.', 'تم الحفظ.'];
+        $e2 = $pl ? owMuseumSetupPost($pl, $_POST, $actor) : ['Not found', 'غير موجود'];
+        $e2 ? $bad = $e2 : $msg = ['Saved', 'تم الحفظ'];
     }
 }
 
@@ -118,8 +118,8 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <h1><?= owBi('Courses and tickets', 'الدورات والتذاكر') ?></h1>
 <p class="mini"><?= owBi('Courses: ', 'الدورات: ') ?><?= owCoursesOn() ? '<span class="pillx on">' . owBi('Shown to visitors', 'ظاهر للزوار') . '</span>' : '<span class="pillx warn">' . owBi('Hidden from visitors', 'مخفي عن الزوار') . '</span>' ?>
   · <?= owBi('Museum tickets: ', 'تذاكر المتاحف: ') ?><?= owBookingsOn() ? '<span class="pillx on">' . owBi('Shown to visitors', 'ظاهر للزوار') . '</span>' : '<span class="pillx warn">' . owBi('Hidden from visitors', 'مخفي عن الزوار') . '</span>' ?>
-  <?= owBi('Two switches: Admin → Settings → "Hidden for now".', 'مفتاحان: الإدارة ← الإعدادات ← «مخفي حالياً».') ?> <a href="admin.php?settings=1#hidden-parts"><?= owBi('Settings', 'الإعدادات') ?></a></p>
-<?php if (!$ready): ?><div class="card"><div class="alert alert-error"><?= owBi('The database part is not in place yet (bookings_update.sql).', 'جزء قاعدة البيانات غير موجود بعد (bookings_update.sql).') ?></div></div><?php owAdminBottom(); exit; endif; ?>
+  <?= owBi('Two switches: Admin → Settings → "Hidden for now"', 'مفتاحان: الإدارة ← الإعدادات ← «مخفي حاليا»') ?> <a href="admin.php?settings=1#hidden-parts"><?= owBi('Settings', 'الإعدادات') ?></a></p>
+<?php if (!$ready): ?><div class="card"><div class="alert alert-error"><?= owBi('The database part is not in place yet (bookings_update.sql)', 'جزء قاعدة البيانات غير موجود بعد (bookings_update.sql)') ?></div></div><?php owAdminBottom(); exit; endif; ?>
 <?php if ($msg): ?><div class="alert alert-ok" role="status"><?= owBi($msg[0], $msg[1]) ?></div><?php endif; ?>
 <?php if ($bad): ?><div class="alert alert-error" role="alert"><?= owBi($bad[0], $bad[1]) ?></div><?php endif; ?>
 <nav class="jump">
@@ -148,14 +148,14 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
   <div class="card r-course"><h3><?= owBi('2. Courses (institutes)', '2. الدورات (المعاهد)') ?></h3>
     <p><?= owBi('Due to the institute once the course has started (on its start date). Commission: ' . rtrim(rtrim(number_format(owCourseCommission(), 2), '0'), '.') . '% (Settings → Course commission).',
                 'يستحق للمعهد بعد بداية الدورة (في تاريخ بدايتها). العمولة: ' . rtrim(rtrim(number_format(owCourseCommission(), 2), '0'), '.') . '٪ (الإعدادات ← عمولة الدورات).') ?></p>
-    <p class="mini"><?= owBi('If the course is cancelled before it starts, the student is refunded and nothing is due.', 'إن أُلغيت الدورة قبل بدايتها يُعاد المبلغ للطالب ولا يستحق شيء.') ?></p></div>
+    <p class="mini"><?= owBi('If the course is cancelled before it starts, the student is refunded and nothing is due', 'إن أُلغيت الدورة قبل بدايتها يُعاد المبلغ للطالب ولا يستحق شيء') ?></p></div>
   <div class="card r-museum"><h3><?= owBi('3. Museums (partners)', '3. المتاحف (الشركاء)') ?></h3>
     <p><?= owBi('Set per museum, by agreement: a number of days after the visit date, once a month, or by hand. Each museum has its own commission. Set in Admin → Art Map (each museum).',
-                'لكل متحف حسب الاتفاقية: بعد تاريخ الزيارة بعدد أيام، أو مرة في الشهر، أو يدوياً. ولكل متحف عمولته. تُضبط في الإدارة ← خريطة الفن (لكل متحف).') ?></p></div>
+                'لكل متحف حسب الاتفاقية: بعد تاريخ الزيارة بعدد أيام، أو مرة في الشهر، أو يدويا. ولكل متحف عمولته. تُضبط في الإدارة ← خريطة الفن (لكل متحف).') ?></p></div>
 </div>
 
 <h2 id="institutes" style="margin-top:var(--space-lg)"><?= owBi('Institutes that joined', 'المعاهد المنضمة') ?></h2>
-<div class="card"><?php if (!$insts): ?><p><?= owBi('No institute has joined yet.', 'لم ينضم أي معهد بعد.') ?></p><?php else: ?>
+<div class="card"><?php if (!$insts): ?><p><?= owBi('No institute has joined yet', 'لم ينضم أي معهد بعد') ?></p><?php else: ?>
 <table class="tbl"><thead><tr><th><?= owBi('Institute', 'المعهد') ?></th><th><?= owBi('Contact', 'التواصل') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th></th></tr></thead><tbody>
 <?php foreach ($insts as $i): ?>
 <tr><td><b><?= owBi($i['name_en'], $i['name_ar']) ?></b><br><span class="mini"><?= owBi($i['city_en'], $i['city_ar']) ?></span><?php if ($i['description_en'] !== ''): ?><br><span class="mini"><?= e(owExcerpt((string) $i['description_en'], 160)) ?></span><?php endif; ?></td>
@@ -169,7 +169,7 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <?php endforeach; ?></tbody></table><?php endif; ?></div>
 
 <h2 id="courses"><?= owBi('Courses', 'الدورات') ?></h2>
-<div class="card"><?php if (!$courses): ?><p><?= owBi('No courses yet.', 'لا دورات بعد.') ?></p><?php else: ?>
+<div class="card"><?php if (!$courses): ?><p><?= owBi('No courses yet', 'لا دورات بعد') ?></p><?php else: ?>
 <table class="tbl"><thead><tr><th><?= owBi('Course', 'الدورة') ?></th><th><?= owBi('Details', 'التفاصيل') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th></th></tr></thead><tbody>
 <?php foreach ($courses as $c): [$de, $da] = owDateRangeBi($c['start_date'], $c['end_date']); $ty = OW_COURSE_TYPES[$c['course_type']] ?? ['', '']; $lv = OW_COURSE_LEVELS[$c['level']] ?? ['', '']; ?>
 <tr><td><b><?= owBi($c['title_en'], $c['title_ar']) ?></b><br><span class="mini"><?= owBi($c['inst_en'], $c['inst_ar']) ?></span><br><a class="mini" href="course.php?id=<?= (int) $c['id'] ?>"><?= owBi('Preview the page', 'معاينة الصفحة') ?></a></td>
@@ -186,7 +186,7 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <?php endforeach; ?></tbody></table><?php endif; ?></div>
 
 <h2 id="registrations"><?= owBi('Registrations', 'التسجيلات') ?></h2>
-<div class="card"><?php if (!$regs): ?><p><?= owBi('No registrations yet.', 'لا تسجيلات بعد.') ?></p><?php else: ?>
+<div class="card"><?php if (!$regs): ?><p><?= owBi('No registrations yet', 'لا تسجيلات بعد') ?></p><?php else: ?>
 <table class="tbl"><thead><tr><th><?= owBi('Student', 'الطالب') ?></th><th><?= owBi('Course', 'الدورة') ?></th><th><?= owBi('Money', 'المبلغ') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th></th></tr></thead><tbody>
 <?php foreach ($regs as $r): ?>
 <tr><td><b><?= e($r['student_name']) ?></b><br><span class="mini" dir="ltr"><?= e($r['ref_no']) ?> · <?= e($r['student_email']) ?> · <?= e($r['student_phone']) ?></span></td>
@@ -201,7 +201,7 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <?php endforeach; ?></tbody></table><?php endif; ?></div>
 
 <h2 id="leads"><?= owBi('Notify me: waiting for a course', 'نبّهني: بانتظار دورة') ?></h2>
-<div class="card"><?php if (!$leads): ?><p><?= owBi('No requests yet.', 'لا طلبات بعد.') ?></p><?php else: ?>
+<div class="card"><?php if (!$leads): ?><p><?= owBi('No requests yet', 'لا طلبات بعد') ?></p><?php else: ?>
 <?php $leadCityAr = []; try { foreach ($K("SELECT city_en, MIN(city_ar) AS city_ar FROM institutes WHERE city_en <> '' GROUP BY city_en") as $r) $leadCityAr[$r['city_en']] = $r['city_ar'] ?: $r['city_en']; } catch (Throwable $e) {} ?>
 <table class="tbl"><thead><tr><th><?= owBi('Person', 'الشخص') ?></th><th><?= owBi('Institute', 'المعهد') ?></th><th><?= owBi('City or Online', 'المدينة أو عن بعد') ?></th><th><?= owBi('Which art?', 'أي فن؟') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
 <?php foreach ($leads as $l): $lc = (string) ($l['city'] ?? ''); $ln = $l['inst_en'] !== null ? [$l['inst_en'], $l['inst_ar'] ?: $l['inst_en']] : ($l['pl_en'] !== null ? [$l['pl_en'], $l['pl_ar'] ?: $l['pl_en']] : ['Any institute', 'أي معهد']); ?>
@@ -213,8 +213,8 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <?php endforeach; ?></tbody></table><?php endif; ?></div>
 
 <h2 id="museums"><?= owBi('Partner museums', 'المتاحف الشريكة') ?></h2>
-<div class="card"><p class="mini"><?= owBi('Make a museum a partner, set its commission, its payout rule and its account in Admin → Art Map (open the museum, "Tickets").', 'اجعل المتحف شريكاً واضبط عمولته وقاعدة مستحقاته وحسابه من الإدارة ← خريطة الفن (افتح المتحف ← «التذاكر»).') ?> <a href="admin_art_map.php?k=museum"><?= owBi('Art Map', 'خريطة الفن') ?></a></p>
-<?php if (!$museums): ?><p><?= owBi('No partner museum yet.', 'لا متاحف شريكة بعد.') ?></p><?php else: ?>
+<div class="card"><p class="mini"><?= owBi('Make a museum a partner, set its commission, its payout rule and its account in Admin → Art Map (open the museum, "Tickets")', 'اجعل المتحف شريكا واضبط عمولته وقاعدة مستحقاته وحسابه من الإدارة ← خريطة الفن (افتح المتحف ← «التذاكر»)') ?> <a href="admin_art_map.php?k=museum"><?= owBi('Art Map', 'خريطة الفن') ?></a></p>
+<?php if (!$museums): ?><p><?= owBi('No partner museum yet', 'لا متاحف شريكة بعد') ?></p><?php else: ?>
 <table class="tbl"><thead><tr><th><?= owBi('Museum', 'المتحف') ?></th><th><?= owBi('Commission and payout rule', 'العمولة وقاعدة المستحقات') ?></th><th><?= owBi('Tickets on sale', 'التذاكر المعروضة') ?></th><th></th></tr></thead><tbody>
 <?php foreach ($museums as $m): [$re, $ra] = owMuseumRuleBi($m); ?>
 <tr><td><b><?= owBi($m['name_en'], $m['name_ar']) ?></b> <?= (int) $m['partner'] ? '<span class="pillx on">' . owBi('Partner', 'شريك') . '</span>' : '<span class="pillx">' . owBi('Not partner', 'غير شريك') . '</span>' ?><br><span class="mini" dir="ltr"><?= e($m['acct_email'] ?? owBi('No account', 'لا حساب')) ?></span></td>
@@ -224,7 +224,7 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <?php endforeach; ?></tbody></table><?php endif; ?></div>
 
 <h2 id="tickets"><?= owBi('Tickets', 'التذاكر') ?></h2>
-<div class="card"><?php if (!$tickets): ?><p><?= owBi('No tickets sold yet.', 'لم تُبع تذاكر بعد.') ?></p><?php else: ?>
+<div class="card"><?php if (!$tickets): ?><p><?= owBi('No tickets sold yet', 'لم تُبع تذاكر بعد') ?></p><?php else: ?>
 <table class="tbl"><thead><tr><th><?= owBi('Ticket', 'التذكرة') ?></th><th><?= owBi('Museum and date', 'المتحف والتاريخ') ?></th><th><?= owBi('Money', 'المبلغ') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th></th></tr></thead><tbody>
 <?php foreach ($tickets as $t): [$de, $da] = owDateRangeBi($t['visit_date'], null); [$lEn, $lAr] = owTicketLinesBi($t); ?>
 <tr><td><b dir="ltr"><?= e($t['ref_no']) ?></b><br><?= e($t['buyer_name']) ?><br><span class="mini" dir="ltr"><?= e($t['buyer_email']) ?> · <?= e($t['buyer_phone']) ?></span></td>
@@ -237,7 +237,7 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 
 <h2 id="payouts"><?= owBi('Payouts to institutes and museums', 'مستحقات المعاهد والمتاحف') ?></h2>
 <div class="card"><p class="mini"><?= owBi('Separate from the artists’ payouts. Pay by bank transfer, then write the transfer reference here.', 'منفصلة عن مستحقات الفنانين. ادفع بالتحويل البنكي ثم اكتب مرجع التحويل هنا.') ?></p>
-<?php if (!$payouts): ?><p><?= owBi('Nothing yet.', 'لا شيء بعد.') ?></p><?php else: ?>
+<?php if (!$payouts): ?><p><?= owBi('Nothing yet', 'لا شيء بعد') ?></p><?php else: ?>
 <table class="tbl"><thead><tr><th><?= owBi('To', 'إلى') ?></th><th><?= owBi('Amount', 'المبلغ') ?></th><th><?= owBi('When', 'متى') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th></th></tr></thead><tbody>
 <?php foreach ($payouts as $po): [$we, $wa] = owPayoutDueBi($po['due_on']); ?>
 <tr><td><b><?= e((string) $po['payee_en']) ?></b><br><span class="mini"><?= $po['payee_kind'] === 'institute' ? owBi('Institute · course', 'معهد · دورة') : owBi('Museum · ticket', 'متحف · تذكرة') ?> #<?= (int) $po['source_id'] ?></span><?= $po['payee_note'] ? '<br><span class="mini">' . e($po['payee_note']) . '</span>' : '' ?></td>
@@ -249,7 +249,7 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 
 <h2 id="payments"><?= owBi('Payment providers (test mode only)', 'مزودو الدفع (وضع تجريبي فقط)') ?></h2>
 <div class="card">
-  <p><?= owBi('Every payment is a test: no real money moves. Oweili’s own test page always works. A provider shows on the payment page once its TEST keys are in config.php on the server (never in GitHub or chat).', 'كل دفعة تجريبية: لا ينتقل مال حقيقي. صفحة أويلي التجريبية تعمل دائماً. ويظهر المزوّد في صفحة الدفع حين توضع مفاتيحه التجريبية في config.php على الخادم (لا في GitHub ولا في المحادثة).') ?></p>
+  <p><?= owBi('Every payment is a test: no real money moves. Oweili’s own test page always works. A provider shows on the payment page once its TEST keys are in config.php on the server (never in GitHub or chat).', 'كل دفعة تجريبية: لا ينتقل مال حقيقي. صفحة أويلي التجريبية تعمل دائما. ويظهر المزوّد في صفحة الدفع حين توضع مفاتيحه التجريبية في config.php على الخادم (لا في GitHub ولا في المحادثة).') ?></p>
   <ul class="rows">
     <li><span><?= owBi('Oweili test page', 'صفحة أويلي التجريبية') ?></span><span class="pillx on"><?= owBi('Ready', 'جاهزة') ?></span></li>
     <?php foreach (['moyasar' => 'Moyasar (mada, cards, Apple Pay)', 'tabby' => 'Tabby', 'tamara' => 'Tamara'] as $g => $n): ?>

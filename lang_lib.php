@@ -30,7 +30,7 @@ if (!defined('OW_LANG_IDS')) define('OW_LANG_IDS', [
     'nav-community-label' => 'المجتمع', 'nav-marketplace-label' => 'المعرض',
     'nav-explore-label' => 'الأساليب الفنية', 'nav-support-label' => 'الدعم',
     'dd-sp1' => 'تواصل معنا', 'dd-sp2' => 'كيف يعمل الموقع', 'dd-sp3' => 'شروط الاستخدام',
-    'n-login-t' => 'تسجيل الدخول', 'n-reg-t' => 'انضم مجاناً', 'lb' => 'E',
+    'n-login-t' => 'تسجيل الدخول', 'n-reg-t' => 'انضم مجانا', 'lb' => 'E',
 ]);
 
 if (!function_exists('owLang')) {

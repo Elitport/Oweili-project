@@ -22,7 +22,7 @@ owBookTop('Payment', 'الدفع', 'pay_return.php', $preview);
 ?>
 <div class="card">
 <?php if ($state === 'paid' && $what): $r = $what['row']; ?>
-  <div class="alert alert-ok" role="status"><?= owBi('Payment received. Thank you!', 'وصلنا الدفع. شكراً لك!') ?></div>
+  <div class="alert alert-ok" role="status"><?= owBi('Payment received. Thank you!', 'وصلنا الدفع. شكرا لك!') ?></div>
   <h1><?= $pay['kind'] === 'course' ? owBi('You are registered', 'تم تسجيلك') : owBi('Your ticket is ready', 'تذكرتك جاهزة') ?></h1>
   <dl class="kv"><dt><?= owBi('For', 'مقابل') ?></dt><dd><?= owBi($what['title_en'], $what['title_ar']) ?></dd>
     <dt><?= owBi('Booking number', 'رقم الحجز') ?></dt><dd dir="ltr"><?= e($r['ref_no']) ?></dd>
@@ -33,7 +33,7 @@ owBookTop('Payment', 'الدفع', 'pay_return.php', $preview);
     <a class="btn btn-secondary" href="my_bookings.php"><?= owBi('My bookings', 'حجوزاتي') ?></a></div>
 <?php elseif ($state === 'waiting'): ?>
   <h1><?= owBi('Checking your payment', 'نتحقق من دفعتك') ?></h1>
-  <p><?= owBi('The payment is not confirmed yet. Please wait a moment and refresh this page.', 'لم يتأكد الدفع بعد. انتظر قليلاً ثم حدّث الصفحة.') ?></p>
+  <p><?= owBi('The payment is not confirmed yet. Please wait a moment and refresh this page.', 'لم يتأكد الدفع بعد. انتظر قليلا ثم حدّث الصفحة.') ?></p>
   <a class="btn btn-secondary" href="pay_return.php?t=<?= e($pay['token']) ?>"><?= owBi('Refresh', 'تحديث') ?></a>
 <?php else: ?>
   <div class="alert alert-error" role="alert"><?= owBi('The payment did not go through. Nothing was charged.', 'لم يتم الدفع. لم يُخصم أي مبلغ.') ?></div>

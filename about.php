@@ -62,7 +62,7 @@ $L = fn(string $en1, string $en2, string $ar1, string $ar2) => '<li><b>' . owBi(
 
     <section class="card ab-card reveal">
       <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 3l3 3-9.5 9.5-4 1 1-4z"/><path d="M14.5 6.5l3 3"/><path d="M3 21c2-1 3-3 6-3"/></svg><?= owBi('Why Oweili?', 'لماذا أويلي؟') ?></h2>
-      <?= $P('At a time when making pictures has become easy, real art is worth more than ever. Oweili was born to protect the value of work made by an artist’s hand, and to give collectors full confidence in what they buy.', 'في زمن أصبح فيه إنتاج الصور سهلًا، صار الفن الأصيل أثمن من أي وقت مضى. وُلدت أويلي لتحمي قيمة العمل الذي صنعته يد فنان، ولتمنح المقتني ثقة كاملة بما يشتريه.') ?>
+      <?= $P('At a time when making pictures has become easy, real art is worth more than ever. Oweili was born to protect the value of work made by an artist’s hand, and to give collectors full confidence in what they buy.', 'في زمن أصبح فيه إنتاج الصور سهلا، صار الفن الأصيل أثمن من أي وقت مضى. وُلدت أويلي لتحمي قيمة العمل الذي صنعته يد فنان، ولتمنح المقتني ثقة كاملة بما يشتريه.') ?>
     </section>
 
     <section class="card ab-card reveal">

@@ -62,7 +62,7 @@
       if (c) { put(c); return; }
       if (!isShort(v)) { note('We could not read a location from this link. Open the place in Google Maps and copy the link, or type the two numbers.', 'لم نتمكن من قراءة الموقع من هذا الرابط. افتح المكان في خرائط Google وانسخ الرابط، أو اكتب الرقمين.', true); return; }
       var my = ++asked;
-      note('Reading the link…', 'جارٍ قراءة الرابط…');
+      note('Reading the link…', 'جار قراءة الرابط…');
       var fd = new FormData(); fd.append('do', 'resolve_link'); fd.append('link', v);
       var tok = form.querySelector('input[name="csrf_token"]'); if (tok) fd.append('csrf_token', tok.value);
       fetch(form.getAttribute('action') || 'admin_art_map.php', { method: 'POST', body: fd, credentials: 'same-origin' })

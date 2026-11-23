@@ -275,7 +275,7 @@ function owApproveChange(int $id, array $actor): bool {
     if ($p['target_type'] === 'article' && ($art = owArticleOfArtist($tid, (int) $p['user_id']))) {
         owTellUser((int) $p['user_id'], 'Your article is published · تم نشر مقالك',
             'Good news: your article "' . $art['title_en'] . '" is approved and now published on Oweili. Thank you for sharing it.',
-            'خبر جميل: تمت الموافقة على مقالك «' . $art['title_ar'] . '» وهو منشور الآن في أويلي. شكراً لمشاركتك.',
+            'خبر جميل: تمت الموافقة على مقالك «' . $art['title_ar'] . '» وهو منشور الآن في أويلي. شكرا لمشاركتك.',
             'article.php?slug=' . rawurlencode((string) $art['slug']));
         return true;
     }
@@ -305,7 +305,7 @@ function owRejectChange(int $id, string $reason, array $actor): bool {
     if ($p['target_type'] === 'article' && ($art = owArticleOfArtist((int) $p['target_id'], (int) $p['user_id']))) {
         owTellUser((int) $p['user_id'], 'About your article · بخصوص مقالك',
             'Thank you for your article "' . $art['title_en'] . "\". It was not approved yet. The reason: $reason\r\nYou can change it and send it again.",
-            'شكراً لمقالك «' . $art['title_ar'] . "». لم تتم الموافقة عليه بعد. السبب: $reason\r\nيمكنك تعديله وإرساله مرة أخرى.",
+            'شكرا لمقالك «' . $art['title_ar'] . "». لم تتم الموافقة عليه بعد. السبب: $reason\r\nيمكنك تعديله وإرساله مرة أخرى.",
             'my_articles.php?edit=' . (int) $p['target_id']);
         return true;
     }
@@ -342,7 +342,7 @@ function owRejectArtistAccount(int $userId, string $reason, array $actor): bool 
     owLog('user_reject', 'user', $userId, $reason, $actor);
     owTellUser($userId, 'About your Oweili artist account · بخصوص حسابك',
         "Thank you for joining Oweili. Your artist account was not approved yet. The reason: $reason\r\nReply to this email if you have questions.",
-        "شكراً لانضمامك إلى أويلي. لم تتم الموافقة على حسابك كفنان بعد. السبب: $reason\r\nرد على هذه الرسالة إن كان لديك سؤال.");
+        "شكرا لانضمامك إلى أويلي. لم تتم الموافقة على حسابك كفنان بعد. السبب: $reason\r\nرد على هذه الرسالة إن كان لديك سؤال.");
     return true;
 }
 
@@ -352,7 +352,7 @@ function owApproveArtistAccount(int $userId, array $actor): bool {
     $st->execute([':id' => $userId]);
     if ($st->rowCount() < 1) return false;
     owLog('user_approve', 'user', $userId, '', $actor);
-    owTellUser($userId, 'Welcome to Oweili · أهلاً بك في أويلي',
+    owTellUser($userId, 'Welcome to Oweili · أهلا بك في أويلي',
         'Your artist account is approved. Your profile is now visible, and you can start your first artwork.',
         'تمت الموافقة على حسابك كفنان. ملفك ظاهر الآن، ويمكنك البدء بعملك الأول.', 'artist_studio.php');
     return true;

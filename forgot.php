@@ -48,7 +48,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 $body     = "Hello,\r\n\r\nSomeone asked to reset the password for your Oweili account.\r\n"
                           . "Open this link to choose a new one. It works for 24 hours:\r\n"
                           . $resetUrl . "\r\n\r\nIf this was not you, you can ignore this email.\r\n\r\n"
-                          . "مرحباً،\r\n\r\nطلب أحدهم إعادة تعيين كلمة المرور لحسابك في أويلي.\r\n"
+                          . "مرحبا،\r\n\r\nطلب أحدهم إعادة تعيين كلمة المرور لحسابك في أويلي.\r\n"
                           . "افتح هذا الرابط لاختيار كلمة جديدة. يعمل لمدة 24 ساعة:\r\n"
                           . $resetUrl . "\r\n\r\nإن لم تطلب ذلك، تجاهل هذه الرسالة.\r\n\r\nOweili · أويلي\r\n";
 
@@ -92,13 +92,13 @@ if ($mode === 'reset' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && rese
 
 $ERR = [
     'csrf'     => ['en' => 'Security check failed. Please try again.', 'ar' => 'فشل التحقق الأمني. حاول مرة أخرى.'],
-    'email'    => ['en' => 'Please enter a valid email address.', 'ar' => 'يرجى إدخال بريد إلكتروني صالح.'],
-    'token'    => ['en' => 'This reset link is invalid or has expired.', 'ar' => 'رابط إعادة التعيين غير صالح أو منتهي.'],
-    'weak'     => ['en' => 'Password does not meet the requirements.', 'ar' => 'كلمة المرور لا تستوفي الشروط.'],
-    'mismatch' => ['en' => 'Passwords do not match.', 'ar' => 'كلمتا المرور غير متطابقتين.'],
+    'email'    => ['en' => 'Please enter a valid email address', 'ar' => 'يرجى إدخال بريد إلكتروني صالح'],
+    'token'    => ['en' => 'This reset link is invalid or has expired', 'ar' => 'رابط إعادة التعيين غير صالح أو منتهي'],
+    'weak'     => ['en' => 'Password does not meet the requirements', 'ar' => 'كلمة المرور لا تستوفي الشروط'],
+    'mismatch' => ['en' => 'Passwords do not match', 'ar' => 'كلمتا المرور غير متطابقتين'],
 ];
 $OK = [
-    'sent' => ['en' => 'If that email is registered, a reset link has been sent. Please check your inbox.', 'ar' => 'إذا كان هذا البريد مسجلاً، فقد أُرسل رابط إعادة التعيين. يرجى مراجعة بريدك.'],
+    'sent' => ['en' => 'If that email is registered, a reset link has been sent. Please check your inbox.', 'ar' => 'إذا كان هذا البريد مسجلا، فقد أُرسل رابط إعادة التعيين. يرجى مراجعة بريدك.'],
     'done' => ['en' => 'Your password has been reset. You can now sign in.', 'ar' => 'تمت إعادة تعيين كلمة المرور. يمكنك الآن تسجيل الدخول.'],
 ];
 $errEn = $errCode ? $ERR[$errCode]['en'] : '';  $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
@@ -109,7 +109,7 @@ $okEn  = $okCode ? $OK[$okCode]['en'] : '';      $okAr  = $okCode ? $OK[$okCode]
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Reset Password', 'ar' => 'إعادة تعيين كلمة المرور', 'desc_en' => 'Forgot your password? We will send you a link.', 'desc_ar' => 'نسيت كلمة المرور؟ سنرسل لك رابطاً.', 'path' => 'forgot.php', 'noindex' => true]); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Reset Password', 'ar' => 'إعادة تعيين كلمة المرور', 'desc_en' => 'Forgot your password? We will send you a link.', 'desc_ar' => 'نسيت كلمة المرور؟ سنرسل لك رابطا.', 'path' => 'forgot.php', 'noindex' => true]); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -130,7 +130,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   <div class="auth-card">
     <div class="auth-head">
       <h1 id="t-title"><?= $mode === 'reset' ? 'Set a new password' : 'Reset password' ?></h1>
-      <p id="t-sub"><?= $mode === 'reset' ? 'Choose a new password for your account.' : 'Enter your email and we\'ll send a reset link.' ?></p>
+      <p id="t-sub"><?= $mode === 'reset' ? 'Choose a new password for your account' : 'Enter your email and we\'ll send a reset link.' ?></p>
     </div>
 
     <?php if ($errCode): ?>
@@ -166,8 +166,8 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <div class="field<?= $errCode === 'email' ? ' has-error' : '' ?>"><label id="t-l-email" for="f-email">Email</label>
           <input type="email" id="f-email" name="email" required<?= $errCode === 'email' ? ' aria-invalid="true"' : '' ?> value="<?= e($_POST['email'] ?? '') ?>"></div>
         <?php if ($errCode === 'token'): /* "Send me a new link" on the invalid / expired page (owner, 9 Nov 2026) */ ?>
-        <p class="newlink-note"><span class="bi-en">Type your email and we will send you a new link. It works for 24 hours.</span><span class="bi-ar">اكتب بريدك وسنرسل لك رابطاً جديداً. يعمل لمدة 24 ساعة.</span></p>
-        <button type="submit" class="btn btn-primary btn-block btn-submit"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطاً جديداً</span></button>
+        <p class="newlink-note"><span class="bi-en">Type your email and we will send you a new link. It works for 24 hours.</span><span class="bi-ar">اكتب بريدك وسنرسل لك رابطا جديدا. يعمل لمدة 24 ساعة.</span></p>
+        <button type="submit" class="btn btn-primary btn-block btn-submit"><span class="bi-en">Send me a new link</span><span class="bi-ar">أرسل لي رابطا جديدا</span></button>
         <?php else: ?>
         <button type="submit" class="btn btn-primary btn-block btn-submit" id="t-submit">Send Reset Link</button>
         <?php endif; ?>
@@ -186,15 +186,15 @@ const MODE = <?= json_encode($mode) ?>;
 const NAV={
   en:{lb:'العربية',community:'Community',marketplace:'Gallery',explore:'Art Styles',support:'Support',
     sp1:'Contact Us',sp2:'How It Works',sp3:'Terms of Use',login:'Sign In',reg:'Join Free',
-    titleReq:'Reset password',subReq:"Enter your email and we'll send a reset link.",
-    titleRes:'Set a new password',subRes:'Choose a new password for your account.',
+    titleReq:'Reset password',subReq:"Enter your email and we'll send a reset link",
+    titleRes:'Set a new password',subRes:'Choose a new password for your account',
     email:'Email',pass:'New password',conf:'Confirm password',
     r1:'Minimum 8 characters',r2:'At least one uppercase letter',r3:'At least one number',r4:'At least one special character (!@#$%^&*)',
     sendBtn:'Send Reset Link',resetBtn:'Reset Password',go:'Go to Sign In',back:'Back to Sign In'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-    sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً',
-    titleReq:'إعادة تعيين كلمة المرور',subReq:'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.',
-    titleRes:'تعيين كلمة مرور جديدة',subRes:'اختر كلمة مرور جديدة لحسابك.',
+    sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا',
+    titleReq:'إعادة تعيين كلمة المرور',subReq:'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين',
+    titleRes:'تعيين كلمة مرور جديدة',subRes:'اختر كلمة مرور جديدة لحسابك',
     email:'البريد الإلكتروني',pass:'كلمة المرور الجديدة',conf:'تأكيد كلمة المرور',
     r1:'الحد الأدنى 8 أحرف',r2:'حرف كبير واحد على الأقل',r3:'رقم واحد على الأقل',r4:'رمز خاص واحد على الأقل (!@#$%^&*)',
     sendBtn:'إرسال رابط إعادة التعيين',resetBtn:'إعادة تعيين كلمة المرور',go:'الذهاب لتسجيل الدخول',back:'العودة لتسجيل الدخول'}

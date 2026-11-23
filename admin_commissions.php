@@ -36,13 +36,13 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         }
     } elseif ($do === 'delivered' && in_array($c['status'], ['final_sent', 'draft_approved'], true)) {
         if (!owCommSetStatus((int) $c['id'], 'delivered', ['delivered_at' => date('Y-m-d H:i:s')], $actor, 'marked delivered by the admin', [$c['status']])) { header('Location: admin_commissions.php?id=' . (int) $c['id']); exit; };
-        owCommTellBuyer($c, 'Delivered · تم التسليم', 'Your private commission is delivered. Thank you for trusting Oweili. Your reference photos will be deleted in ' . OW_COMM_KEEP_DAYS . ' days.', 'تم تسليم عملك الخاص. شكراً لثقتك بأويلي. ستُحذف صورك المرجعية بعد ' . OW_COMM_KEEP_DAYS . ' يوماً.');
+        owCommTellBuyer($c, 'Delivered · تم التسليم', 'Your private commission is delivered. Thank you for trusting Oweili. Your reference photos will be deleted in ' . OW_COMM_KEEP_DAYS . ' days.', 'تم تسليم عملك الخاص. شكرا لثقتك بأويلي. ستُحذف صورك المرجعية بعد ' . OW_COMM_KEEP_DAYS . ' يوما.');
     } elseif ($do === 'cancel' && !in_array($c['status'], ['delivered', 'cancelled'], true)) {
         $why = mb_substr(trim((string) ($_POST['reason'] ?? '')), 0, 500);
-        if ($why === '') $errors[] = ['Please write the reason.', 'يرجى كتابة السبب.'];
+        if ($why === '') $errors[] = ['Please write the reason', 'يرجى كتابة السبب'];
         else {
             if (!owCommSetStatus((int) $c['id'], 'cancelled', [], $actor, $why, [$c['status']])) { header('Location: admin_commissions.php?id=' . (int) $c['id']); exit; };
-            owCommTellBuyer($c, 'About your private commission · بخصوص عملك الخاص', 'Your private commission was cancelled. The reason: ' . $why . "\r\nYour reference photos will be deleted in " . OW_COMM_KEEP_DAYS . ' days.', 'أُلغي عملك الخاص. السبب: ' . $why . "\r\nستُحذف صورك المرجعية بعد " . OW_COMM_KEEP_DAYS . ' يوماً.');
+            owCommTellBuyer($c, 'About your private commission · بخصوص عملك الخاص', 'Your private commission was cancelled. The reason: ' . $why . "\r\nYour reference photos will be deleted in " . OW_COMM_KEEP_DAYS . ' days.', 'أُلغي عملك الخاص. السبب: ' . $why . "\r\nستُحذف صورك المرجعية بعد " . OW_COMM_KEEP_DAYS . ' يوما.');
         }
     } elseif ($do === 'paid') {
         owCommMarkPaid($c, $actor, (string) ($_POST['pay_note'] ?? ''));
@@ -81,9 +81,9 @@ owAdminTop('Private commissions', 'الأعمال الخاصة', '
 ', '<a class="btn btn-ghost btn-sm" href="commission.php" target="_blank" rel="noopener">' . owBi('Open the request page', 'افتح صفحة الطلب') . ' ↗</a>');
 ?>
   <h1><?= owBi('Private commissions', 'الأعمال الخاصة') ?></h1>
-  <p class="mini"><?= owBi('Portraits and personal photos, in full confidence. Photos open only here, for the collector with their link, and for the assigned artist after the confidentiality agreement. Money is handled by hand.', 'بورتريهات وصور شخصية بسرّية تامة. تُفتح الصور هنا فقط، وللمقتني عبر رابطه، وللفنان المُسند إليه بعد اتفاقية السرّية. يُدار المال يدوياً.') ?></p>
-  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The commission tables are not set up yet (night_update.sql).', 'جداول الأعمال الخاصة غير مُعدّة بعد (night_update.sql).') ?></div><?php endif; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <p class="mini"><?= owBi('Portraits and personal photos, in full confidence. Photos open only here, for the collector with their link, and for the assigned artist after the confidentiality agreement. Money is handled by hand.', 'بورتريهات وصور شخصية بسرّية تامة. تُفتح الصور هنا فقط، وللمقتني عبر رابطه، وللفنان المُسند إليه بعد اتفاقية السرّية. يُدار المال يدويا.') ?></p>
+  <?php if (!$ready): ?><div class="alert alert-error"><?= owBi('The commission tables are not set up yet (night_update.sql)', 'جداول الأعمال الخاصة غير مُعدّة بعد (night_update.sql)') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved', 'تم الحفظ') ?></div><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
 
 <?php if ($one): $fu = fn($ff) => 'commission_file.php?id=' . (int) $ff['id']; ?>
@@ -96,12 +96,12 @@ owAdminTop('Private commissions', 'الأعمال الخاصة', '
       <dt><?= owBi('Size · budget · by', 'المقاس · الميزانية · الموعد') ?></dt><dd><?= e($one['size_note'] ?: '—') ?> · <?= $one['budget_sar'] !== null ? number_format((float) $one['budget_sar']) . ' SAR' : '—' ?> · <?= e((string) ($one['wanted_by'] ?: '—')) ?></dd>
       <dt><?= owBi('Collector', 'المقتني') ?></dt><dd><?= e((string) $one['buyer_name']) ?><?php if ($one['user_id']): ?> · <a href="admin.php?person=<?= (int) $one['user_id'] ?>"><?= owBi('account', 'الحساب') ?></a><?php endif; ?><br>
         <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', (string) $one['buyer_phone'])) ?>" dir="ltr"><?= e((string) $one['buyer_phone']) ?></a> · <a href="mailto:<?= e((string) $one['buyer_email']) ?>" dir="ltr"><?= e((string) $one['buyer_email']) ?></a> · <?= $one['lang'] === 'ar' ? 'العربية' : 'English' ?></dd>
-      <dt><?= owBi('May be shown', 'يُسمح بعرضه') ?></dt><dd><?= (int) $one['may_show'] === 1 ? owBi('Yes, agreed in writing', 'نعم، بموافقة كتابية') . ' · <span dir="auto">' . e((string) $one['may_show_text']) . '</span> · ' . e((string) $one['may_show_at']) : owBi('No. Never show it.', 'لا. لا يُعرض أبداً.') ?></dd>
-      <dt><?= owBi('Price', 'السعر') ?></dt><dd><?= $one['quote_sar'] !== null ? number_format((float) $one['quote_sar']) . ' SAR · ' . (int) $one['quote_days'] . ' ' . owBi('days', 'يوماً') . ($one['quote_note'] !== '' ? ' · ' . e((string) $one['quote_note']) : '') : '—' ?></dd>
+      <dt><?= owBi('May be shown', 'يُسمح بعرضه') ?></dt><dd><?= (int) $one['may_show'] === 1 ? owBi('Yes, agreed in writing', 'نعم، بموافقة كتابية') . ' · <span dir="auto">' . e((string) $one['may_show_text']) . '</span> · ' . e((string) $one['may_show_at']) : owBi('No. Never show it.', 'لا. لا يُعرض أبدا.') ?></dd>
+      <dt><?= owBi('Price', 'السعر') ?></dt><dd><?= $one['quote_sar'] !== null ? number_format((float) $one['quote_sar']) . ' SAR · ' . (int) $one['quote_days'] . ' ' . owBi('days', 'يوما') . ($one['quote_note'] !== '' ? ' · ' . e((string) $one['quote_note']) : '') : '—' ?></dd>
       <?php if ($one['buyer_note'] !== ''): ?><dt><?= owBi('Collector’s last note', 'آخر ملاحظة للمقتني') ?></dt><dd dir="auto"><?= e((string) $one['buyer_note']) ?></dd><?php endif; ?>
       <dt><?= owBi('Artist', 'الفنان') ?></dt><dd><?php if ($one['artist_id']): ?><a href="admin.php?person=<?= (int) $one['artist_id'] ?>">#<?= (int) $one['artist_id'] ?></a> · <?= $nda ? owBi('confidentiality accepted ' . $nda['accepted_at'] . ' (signed "' . $nda['typed_name'] . '")', 'قبل اتفاقية السرّية ' . $nda['accepted_at'] . ' (وقّع «' . $nda['typed_name'] . '»)') : owBi('has NOT accepted the confidentiality agreement yet: no photo is shown to them', 'لم يقبل اتفاقية السرّية بعد: لا تُعرض عليه أي صورة') ?><?php else: ?><?= owBi('Not chosen yet', 'لم يُختر بعد') ?><?php endif; ?></dd>
       <?php $paidAt = owCommPaidAt((int) $one['id']); $left = owCommDaysToExpire($one); ?>
-      <dt><?= owBi('Payment', 'الدفع') ?></dt><dd><?= $paidAt ? '<span class="pillx on">' . owBi('Paid', 'مدفوع') . '</span> ' . e($paidAt) . ' · ' . owBi('the artist can see the photos and work', 'يستطيع الفنان رؤية الصور والعمل') : '<span class="pillx warn">' . owBi('Not paid yet', 'لم يُدفع بعد') . '</span> ' . owBi('the artist cannot see the reference photos or start', 'لا يستطيع الفنان رؤية الصور المرجعية أو البدء') . ($left !== null ? ' · ' . owBi('photos deleted in ' . $left . ' days if not paid', 'تُحذف الصور بعد ' . $left . ' يوماً إن لم يُدفع') : '') ?></dd>
+      <dt><?= owBi('Payment', 'الدفع') ?></dt><dd><?= $paidAt ? '<span class="pillx on">' . owBi('Paid', 'مدفوع') . '</span> ' . e($paidAt) . ' · ' . owBi('the artist can see the photos and work', 'يستطيع الفنان رؤية الصور والعمل') : '<span class="pillx warn">' . owBi('Not paid yet', 'لم يُدفع بعد') . '</span> ' . owBi('the artist cannot see the reference photos or start', 'لا يستطيع الفنان رؤية الصور المرجعية أو البدء') . ($left !== null ? ' · ' . owBi('photos deleted in ' . $left . ' days if not paid', 'تُحذف الصور بعد ' . $left . ' يوما إن لم يُدفع') : '') ?></dd>
       <dt><?= owBi('Delivered', 'التسليم') ?></dt><dd><?= e((string) ($one['delivered_at'] ?: '—')) ?><?= $one['photos_deleted_at'] ? ' · ' . owBi('reference photos deleted ' . $one['photos_deleted_at'], 'حُذفت الصور المرجعية ' . $one['photos_deleted_at']) : '' ?></dd>
     </dl>
     <?php if ($files): ?><div class="pics"><?php foreach ($files as $ff): $kw = ['reference' => ['Reference', 'مرجعية'], 'draft' => ['Draft', 'مسودة'], 'final' => ['Final', 'نهائية']][$ff['kind']]; ?>
@@ -141,7 +141,7 @@ owAdminTop('Private commissions', 'الأعمال الخاصة', '
 
 <?php if ($ready): ?>
   <div class="card">
-    <?php if (!$list): ?><p class="mini"><?= owBi('No private commissions yet.', 'لا أعمال خاصة بعد.') ?></p><?php endif; ?>
+    <?php if (!$list): ?><p class="mini"><?= owBi('No private commissions yet', 'لا أعمال خاصة بعد') ?></p><?php endif; ?>
     <?php foreach ($list as $r): [$de, $da] = owDateBi($r['created_at']); ?>
     <a class="c-row" href="admin_commissions.php?id=<?= (int) $r['id'] ?>"><span><b><?= e($r['ref_no']) ?> · <?= owBi($SUBJ[$r['subject']][0] ?? '', $SUBJ[$r['subject']][1] ?? '') ?></b>
       <span class="mini" style="display:block"><?= e((string) $r['buyer_name']) ?> · <?= $r['artist_id'] ? owBi('artist: ' . $r['artist_en'], 'الفنان: ' . $r['artist_ar']) : owBi('no artist yet', 'بلا فنان بعد') ?> · <?= owBi($de, $da) ?></span></span><?= owCommPill((string) $r['status']) ?></a>

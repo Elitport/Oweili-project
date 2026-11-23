@@ -26,7 +26,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     elseif (($_POST['do'] ?? '') === 'course') {
         $cid = (int) ($_POST['id'] ?? 0); $tab = 'courses';
         $old = null;
-        if ($cid) { $st = $db->prepare('SELECT * FROM courses WHERE id = :id AND institute_id = :i AND bookable = 1'); $st->execute([':id' => $cid, ':i' => $iid]); $old = $st->fetch(); if (!$old) $err[] = ['Course not found.', 'الدورة غير موجودة.']; }
+        if ($cid) { $st = $db->prepare('SELECT * FROM courses WHERE id = :id AND institute_id = :i AND bookable = 1'); $st->execute([':id' => $cid, ':i' => $iid]); $old = $st->fetch(); if (!$old) $err[] = ['Course not found', 'الدورة غير موجودة']; }
         [$v, $e2] = owCourseFromPost($_POST); $err = array_merge($err, $e2);
         $held = 0;
         if ($old) { $h = $db->prepare("SELECT COUNT(*) FROM course_registrations WHERE course_id = :c AND status IN ('pending','confirmed')"); $h->execute([':c' => $cid]); $held = (int) $h->fetchColumn(); }
@@ -50,8 +50,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $tab = 'profile';
         $t = fn(string $k, int $m) => mb_substr(trim((string) ($_POST[$k] ?? '')), 0, $m);
         $p = ['description_en' => $t('description_en', 1500), 'description_ar' => $t('description_ar', 1500), 'contact_phone' => $t('contact_phone', 30), 'website_url' => $t('website_url', 200), 'payout_note' => $t('payout_note', 500)];
-        if ($p['contact_phone'] !== '' && !preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $p['contact_phone'])) $err[] = ['Please check the phone number.', 'يرجى مراجعة رقم الهاتف.'];
-        if ($p['website_url'] !== '') { [$l, $ok] = owSafeLink($p['website_url'], 'web'); if ($ok) $p['website_url'] = $l; else $err[] = ['Please check the website address.', 'يرجى مراجعة عنوان الموقع.']; }
+        if ($p['contact_phone'] !== '' && !preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $p['contact_phone'])) $err[] = ['Please check the phone number', 'يرجى مراجعة رقم الهاتف'];
+        if ($p['website_url'] !== '') { [$l, $ok] = owSafeLink($p['website_url'], 'web'); if ($ok) $p['website_url'] = $l; else $err[] = ['Please check the website address', 'يرجى مراجعة عنوان الموقع']; }
         /* A shown institute: the description, phone and website wait for the admin; visitors keep the approved
            version until then (owner, 16 Nov 2026). The payout details are private, so they save straight away */
         if (!$err && (int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1 && owApprovalsReady()) {
@@ -101,10 +101,10 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
 <div class="card">
   <p class="mini" style="margin:0"><?= owBi('My institute', 'معهدي') ?></p>
   <h1><?= owBi($inst['name_en'], $inst['name_ar']) ?></h1>
-  <?php if (!(int) $me['is_verified']): ?><div class="alert alert-error" role="status"><?= owBi('Please confirm your email (check your inbox).', 'يرجى تأكيد بريدك (راجع صندوق الوارد).') ?></div><?php endif; ?>
+  <?php if (!(int) $me['is_verified']): ?><div class="alert alert-error" role="status"><?= owBi('Please confirm your email (check your inbox)', 'يرجى تأكيد بريدك (راجع صندوق الوارد)') ?></div><?php endif; ?>
   <?php if (!(int) $me['is_approved'] || !(int) $inst['is_active']): ?><div class="alert alert-error" role="status"><?= owBi('Your institute is waiting for the Oweili team’s review. You can already add courses; they show once both are approved.', 'معهدك بانتظار مراجعة فريق أويلي. يمكنك إضافة الدورات الآن، وتظهر بعد اعتماد المعهد والدورة.') ?></div><?php endif; ?>
   <?php if ($done === 'course'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. The course waits for the Oweili team’s approval before it shows.', 'تم الحفظ. تنتظر الدورة موافقة فريق أويلي قبل ظهورها.') ?></div><?php endif; ?>
-  <?php if ($done === 'profile'): ?><div class="alert alert-ok" role="status"><?= owBi('Profile saved.', 'تم حفظ الملف.') ?></div><?php endif; ?>
+  <?php if ($done === 'profile'): ?><div class="alert alert-ok" role="status"><?= owBi('Profile saved', 'تم حفظ الملف') ?></div><?php endif; ?>
   <?php if ($done === 'profile_wait'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. Your changes wait for the Oweili team’s approval. Until then, visitors see your current profile.', 'تم الحفظ. تنتظر تعديلاتك موافقة فريق أويلي، وحتى ذلك الحين يرى الزوار ملفك الحالي.') ?></div><?php endif; ?>
   <?php foreach ($err as $x): ?><div class="alert alert-error" role="alert"><?= owBi($x[0], $x[1]) ?></div><?php endforeach; ?>
 </div>
@@ -123,7 +123,7 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
   <form method="post" action="institute_dashboard.php?tab=courses<?= $edit ? '&edit=' . (int) $edit['id'] : '&new=1' ?>" class="card cf"><?= csrfField() ?>
     <input type="hidden" name="do" value="course"><input type="hidden" name="id" value="<?= (int) ($edit['id'] ?? 0) ?>">
     <h2><?= $edit ? owBi('Edit course', 'تعديل الدورة') : owBi('New course', 'دورة جديدة') ?></h2>
-    <?php if ($edit): ?><p class="mini"><?= owBi('Any change sends the course back for approval.', 'أي تعديل يعيد الدورة للموافقة.') ?></p><?php endif; ?>
+    <?php if ($edit): ?><p class="mini"><?= owBi('Any change sends the course back for approval', 'أي تعديل يعيد الدورة للموافقة') ?></p><?php endif; ?>
     <div class="g2">
       <div class="field"><label for="c-te"><?= owBi('Title (English)', 'العنوان (بالإنجليزية)') ?></label><input id="c-te" name="title_en" required maxlength="200" dir="ltr" value="<?= $f('title_en') ?>"></div>
       <div class="field"><label for="c-ta"><?= owBi('Title (Arabic)', 'العنوان (بالعربية)') ?></label><input id="c-ta" name="title_ar" required maxlength="200" dir="rtl" value="<?= $f('title_ar') ?>"></div>
@@ -143,7 +143,7 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
       <div class="field"><label for="c-sd"><?= owBi('Start date', 'تاريخ البداية') ?></label><input id="c-sd" type="date" name="start_date" required value="<?= $f('start_date') ?>"></div>
       <div class="field"><label for="c-ed"><?= owBi('End date', 'تاريخ النهاية') ?></label><input id="c-ed" type="date" name="end_date" required value="<?= $f('end_date') ?>"></div>
       <div class="field"><label for="c-se"><?= owBi('Days and times (English), e.g. Sun and Tue, 5 to 7 pm', 'الأيام والأوقات (بالإنجليزية)') ?></label><input id="c-se" name="schedule_en" required maxlength="300" dir="ltr" value="<?= $f('schedule_en') ?>"></div>
-      <div class="field"><label for="c-sa"><?= owBi('Days and times (Arabic)', 'الأيام والأوقات (بالعربية)، مثل: الأحد والثلاثاء، 5 إلى 7 مساءً') ?></label><input id="c-sa" name="schedule_ar" required maxlength="300" dir="rtl" value="<?= $f('schedule_ar') ?>"></div>
+      <div class="field"><label for="c-sa"><?= owBi('Days and times (Arabic)', 'الأيام والأوقات (بالعربية)، مثل: الأحد والثلاثاء، 5 إلى 7 مساء') ?></label><input id="c-sa" name="schedule_ar" required maxlength="300" dir="rtl" value="<?= $f('schedule_ar') ?>"></div>
       <div class="field"><label for="c-h"><?= owBi('Total hours', 'إجمالي الساعات') ?></label><input id="c-h" name="total_hours" required inputmode="decimal" dir="ltr" maxlength="6" value="<?= $f('total_hours') ?>"></div>
       <div class="field"><label for="c-p"><?= owBi('Price (SAR, 0 = free)', 'السعر (ر.س، 0 = مجاني)') ?></label><input id="c-p" name="price" required inputmode="decimal" dir="ltr" maxlength="10" value="<?= $f('price') ?>"></div>
       <div class="field"><label for="c-st"><?= owBi('Seats', 'المقاعد') ?></label><input id="c-st" name="seats_total" required inputmode="numeric" dir="ltr" maxlength="5" value="<?= $f('seats_total') ?>"></div>
@@ -179,7 +179,7 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
 
 <?php elseif ($tab === 'registrations'): ?>
   <div class="card">
-    <?php if (!$regs): ?><p><?= owBi('No registrations yet.', 'لا تسجيلات بعد.') ?></p><?php else: ?>
+    <?php if (!$regs): ?><p><?= owBi('No registrations yet', 'لا تسجيلات بعد') ?></p><?php else: ?>
     <table class="tbl"><thead><tr><th><?= owBi('Student', 'الطالب') ?></th><th><?= owBi('Course', 'الدورة') ?></th><th><?= owBi('Paid', 'المدفوع') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
     <?php foreach ($regs as $r): ?>
       <tr><td><b><?= e($r['student_name']) ?></b><br><span class="mini" dir="ltr"><?= e($r['student_phone']) ?> · <?= e($r['student_email']) ?></span><br><span class="mini" dir="ltr"><?= e($r['ref_no']) ?></span></td>
@@ -204,7 +204,7 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
     </div>
   </div>
   <div class="card">
-    <?php if (!$payouts): ?><p><?= owBi('Nothing yet.', 'لا شيء بعد.') ?></p><?php else: ?>
+    <?php if (!$payouts): ?><p><?= owBi('Nothing yet', 'لا شيء بعد') ?></p><?php else: ?>
     <table class="tbl"><thead><tr><th><?= owBi('For', 'مقابل') ?></th><th><?= owBi('Your share', 'حصتك') ?></th><th><?= owBi('When', 'متى') ?></th><th><?= owBi('Status', 'الحالة') ?></th></tr></thead><tbody>
     <?php $regById = []; foreach ($regs as $r) $regById[(int) $r['id']] = $r;
       foreach ($payouts as $po): $r = $regById[(int) $po['source_id']] ?? null; [$we, $wa] = owPayoutDueBi($po['due_on']); ?>
@@ -224,14 +224,14 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
   $ATY = ['event' => ['Art Event', 'ملتقى فني'], 'art_education' => ['Art Education', 'تثقيف فني'], 'artist_spotlight' => ['Artist Spotlight', 'أضواء على فنان']]; ?>
   <div class="card">
     <h2><?= owBi('My articles', 'مقالاتي') ?></h2>
-    <p class="mini"><?= owBi('Share your exhibitions and events, or teach something you know. The Oweili team reads every article before it goes live. Published articles show your institute’s name.', 'شارك معارضك وفعالياتك، أو علّم شيئاً تعرفه. يقرأ فريق أويلي كل مقال قبل نشره. وتظهر المقالات المنشورة باسم معهدك.') ?></p>
+    <p class="mini"><?= owBi('Share your exhibitions and events, or teach something you know. The Oweili team reads every article before it goes live. Published articles show your institute’s name.', 'شارك معارضك وفعالياتك، أو علّم شيئا تعرفه. يقرأ فريق أويلي كل مقال قبل نشره. وتظهر المقالات المنشورة باسم معهدك.') ?></p>
     <div class="acts">
       <a class="btn btn-primary" href="my_articles.php?new=event"><?= owBi('New Art Event', 'ملتقى فني جديد') ?></a>
       <a class="btn btn-secondary" href="my_articles.php?new=art_education"><?= owBi('New Art Education article', 'مقال تثقيف فني جديد') ?></a>
     </div>
   </div>
   <div class="card">
-    <?php if (!$myArts): ?><p><?= owBi('No articles yet.', 'لا مقالات بعد.') ?></p>
+    <?php if (!$myArts): ?><p><?= owBi('No articles yet', 'لا مقالات بعد') ?></p>
     <?php else: ?><table class="tbl" style="width:100%"><tbody>
       <?php foreach ($myArts as $ma): $tw = $ATY[$ma['type']] ?? ['Article', 'مقال'];
         $sw = $ma['status'] === 'published' ? '<span class="pillx on">' . owBi('Published', 'منشور') . '</span>' : (isset($artWait[(int) $ma['id']]) ? '<span class="pillx warn">' . owBi('Waiting for approval', 'بانتظار الموافقة') . '</span>' : '<span class="pillx">' . owBi('Draft', 'مسودة') . '</span>'); ?>
@@ -245,8 +245,8 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
 <?php else: $pendProf = (int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1 && owApprovalsReady() ? owPendingChange('profile', (int) $me['id']) : null;
   if ($pendProf) foreach (OW_INSTITUTE_FIELDS as $f) if (array_key_exists($f, $pendProf['data'])) $inst[$f] = $pendProf['data'][$f];   // the waiting version, so it is edited, not lost ?>
   <form method="post" action="institute_dashboard.php?tab=profile" class="card"><?= csrfField() ?><input type="hidden" name="do" value="profile">
-    <p class="mini"><?= owBi('The name and city are changed by the Oweili team. Write to us if they need a change.', 'يغيّر فريق أويلي الاسم والمدينة. راسلنا إن احتاجا تعديلاً.') ?></p>
-    <?php if ((int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1): ?><p class="mini"><?= $pendProf ? owBi('Your last changes are waiting for the Oweili team’s approval. Visitors see your current profile until then.', 'تعديلاتك الأخيرة بانتظار موافقة فريق أويلي. يرى الزوار ملفك الحالي حتى ذلك الحين.') : owBi('Changes to the description, phone and website wait for the Oweili team’s approval before visitors see them.', 'تنتظر التعديلات على الوصف والهاتف والموقع موافقة فريق أويلي قبل أن يراها الزوار.') ?></p><?php endif; ?>
+    <p class="mini"><?= owBi('The name and city are changed by the Oweili team. Write to us if they need a change.', 'يغيّر فريق أويلي الاسم والمدينة. راسلنا إن احتاجا تعديلا.') ?></p>
+    <?php if ((int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1): ?><p class="mini"><?= $pendProf ? owBi('Your last changes are waiting for the Oweili team’s approval. Visitors see your current profile until then.', 'تعديلاتك الأخيرة بانتظار موافقة فريق أويلي. يرى الزوار ملفك الحالي حتى ذلك الحين.') : owBi('Changes to the description, phone and website wait for the Oweili team’s approval before visitors see them', 'تنتظر التعديلات على الوصف والهاتف والموقع موافقة فريق أويلي قبل أن يراها الزوار') ?></p><?php endif; ?>
     <dl class="kv" style="margin-bottom:var(--space-sm)"><dt><?= owBi('Name', 'الاسم') ?></dt><dd><?= owBi($inst['name_en'], $inst['name_ar']) ?></dd><dt><?= owBi('City', 'المدينة') ?></dt><dd><?= owBi($inst['city_en'], $inst['city_ar']) ?></dd><dt><?= owBi('Sign-in email', 'بريد الدخول') ?></dt><dd dir="ltr"><?= e($me['email']) ?></dd></dl>
     <div class="g2">
       <div class="field"><label for="p-de"><?= owBi('Short description (English)', 'وصف قصير (بالإنجليزية)') ?></label><textarea id="p-de" name="description_en" rows="4" maxlength="1500" dir="ltr"><?= e($_POST['description_en'] ?? $inst['description_en']) ?></textarea></div>
@@ -254,7 +254,7 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
       <div class="field"><label for="p-ph"><?= owBi('Phone', 'الهاتف') ?></label><input id="p-ph" name="contact_phone" type="tel" maxlength="30" dir="ltr" value="<?= e($_POST['contact_phone'] ?? $inst['contact_phone']) ?>"></div>
       <div class="field"><label for="p-w"><?= owBi('Website', 'الموقع') ?></label><input id="p-w" name="website_url" maxlength="200" dir="ltr" value="<?= e($_POST['website_url'] ?? $inst['website_url']) ?>"></div>
     </div>
-    <div class="field"><label for="p-pn"><?= owBi('Payment details for payouts (bank name and account holder; we will ask for the IBAN by phone)', 'بيانات استلام المستحقات (اسم البنك وصاحب الحساب؛ نطلب رقم الآيبان هاتفياً)') ?></label><input id="p-pn" name="payout_note" maxlength="500" dir="auto" value="<?= e($_POST['payout_note'] ?? $inst['payout_note']) ?>"></div>
+    <div class="field"><label for="p-pn"><?= owBi('Payment details for payouts (bank name and account holder; we will ask for the IBAN by phone)', 'بيانات استلام المستحقات (اسم البنك وصاحب الحساب؛ نطلب رقم الآيبان هاتفيا)') ?></label><input id="p-pn" name="payout_note" maxlength="500" dir="auto" value="<?= e($_POST['payout_note'] ?? $inst['payout_note']) ?>"></div>
     <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button>
   </form>
 <?php endif; ?>

@@ -9,7 +9,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/order_lib.php';
 require_once __DIR__ . '/admin_shell.php';
-$no = function () { http_response_code(404); header('Cache-Control: no-store'); exit('Not found.'); };
+$no = function () { http_response_code(404); header('Cache-Control: no-store'); exit('Not found'); };
 if (!owOrdersReady()) $no();
 $o = owOrderGet((int) ($_GET['o'] ?? 0));
 if (!$o) $no();

@@ -69,10 +69,10 @@ function owSigApprovePending(int $uid, string $what): void {
 /* Error words for the forms */
 function owSigError(string $code): array {
     return [
-        'size'   => ['The signature is too large. Please try again.', 'التوقيع كبير جداً. حاول مرة أخرى.'],
-        'type'   => ['Please use a PNG or JPG picture.', 'يرجى استخدام صورة PNG أو JPG.'],
-        'small'  => ['The signature is too small. Please draw it bigger.', 'التوقيع صغير جداً. ارسمه بحجم أكبر.'],
-        'empty'  => ['Please draw your signature first.', 'يرجى رسم توقيعك أولاً.'],
+        'size'   => ['The signature is too large. Please try again.', 'التوقيع كبير جدا. حاول مرة أخرى.'],
+        'type'   => ['Please use a PNG or JPG picture', 'يرجى استخدام صورة PNG أو JPG'],
+        'small'  => ['The signature is too small. Please draw it bigger.', 'التوقيع صغير جدا. ارسمه بحجم أكبر.'],
+        'empty'  => ['Please draw your signature first', 'يرجى رسم توقيعك أولا'],
         'server' => ['We could not save it. Please try again.', 'تعذّر الحفظ. حاول مرة أخرى.'],
     ][$code] ?? ['We could not save it. Please try again.', 'تعذّر الحفظ. حاول مرة أخرى.'];
 }

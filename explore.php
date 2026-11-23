@@ -255,13 +255,13 @@ a.live-card:focus-visible { outline: 2px solid var(--color-accent); outline-offs
     <nav class="sc-filters" id="sc-filters" aria-label="Filter styles · تصفية الأساليب"></nav>
     <p class="sc-count" id="sc-count" aria-live="polite"></p>
     <ul class="sc-grid" id="sc-grid"></ul>
-    <noscript><p class="empty-state"><?= owBi('Please turn on JavaScript to explore the art styles.', 'يرجى تفعيل جافاسكربت لاستكشاف الأساليب الفنية.') ?></p></noscript>
+    <noscript><p class="empty-state"><?= owBi('Please turn on JavaScript to explore the art styles', 'يرجى تفعيل جافاسكربت لاستكشاف الأساليب الفنية') ?></p></noscript>
 
     <section class="ex-end reveal">
       <p class="ex-end-line"><?= owBi('Every style here has a story. Every one began with a hand.', 'لكل أسلوب هنا حكاية. وكلها بدأت بيد.') ?></p>
       <div class="btns">
         <a class="btn btn-dark" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>
-        <a class="btn btn-secondary" href="mailto:<?= e(owContactEmail()) ?>?subject=Art%20Style%20Suggestion"><?= owBi('Suggest a Style', 'اقترح أسلوباً') ?></a>
+        <a class="btn btn-secondary" href="mailto:<?= e(owContactEmail()) ?>?subject=Art%20Style%20Suggestion"><?= owBi('Suggest a Style', 'اقترح أسلوبا') ?></a>
       </div>
     </section>
   </div>

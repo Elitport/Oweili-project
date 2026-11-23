@@ -60,7 +60,7 @@ const OW_TICKET_STATUS = ['pending' => ['Waiting for payment', 'بانتظار �
                           'cancelled' => ['Cancelled', 'ملغاة'], 'expired' => ['Not paid in time', 'لم تُدفع في الوقت']];
 const OW_PAYOUT_RULES  = ['after_visit' => ['A set number of days after the visit date', 'بعد تاريخ الزيارة بعدد أيام محدد'],
                           'month_end'   => ['Once a month, after the month of the visit', 'مرة في الشهر، بعد انتهاء شهر الزيارة'],
-                          'agreement'   => ['By hand, as written in the agreement', 'يدوياً، كما في الاتفاقية']];
+                          'agreement'   => ['By hand, as written in the agreement', 'يدويا، كما في الاتفاقية']];
 const OW_PAYOUT_STATUS = ['pending' => ['Waiting', 'بالانتظار'], 'paid' => ['Paid', 'مدفوع'], 'cancelled' => ['Cancelled', 'ملغى']];
 
 /* ---------------- the two switches ----------------
@@ -196,25 +196,25 @@ function owCourseFromPost(array $p): array {
     $err = [];
     if (owCourseArtReady()) {   // art type (required) and the exact style (optional), owner 21 Nov 2026
         $art = (string) ($p['art_type'] ?? ''); $sty = (string) ($p['art_style'] ?? '');
-        if (!isset(OW_COURSE_ARTS[$art])) { $err[] = ['Please choose the art type.', 'يرجى اختيار نوع الفن.']; $art = 'painting'; }
-        if ($sty !== '' && !isset(owCourseArtStyles()[$art][$sty])) { $err[] = ['Please choose a style of this art type, or leave the style empty.', 'يرجى اختيار أسلوب من نوع الفن نفسه، أو ترك الأسلوب فارغاً.']; $sty = ''; }
+        if (!isset(OW_COURSE_ARTS[$art])) { $err[] = ['Please choose the art type', 'يرجى اختيار نوع الفن']; $art = 'painting'; }
+        if ($sty !== '' && !isset(owCourseArtStyles()[$art][$sty])) { $err[] = ['Please choose a style of this art type, or leave the style empty', 'يرجى اختيار أسلوب من نوع الفن نفسه، أو ترك الأسلوب فارغا']; $sty = ''; }
         $v['art_type'] = $art; $v['art_style'] = $sty;
     }
-    if ($v['title_en'] === '' || $v['title_ar'] === '') $err[] = ['The title is needed in Arabic and English.', 'العنوان مطلوب بالعربية والإنجليزية.'];
-    if ($v['description_en'] === '' || $v['description_ar'] === '') $err[] = ['The short description is needed in Arabic and English.', 'الوصف القصير مطلوب بالعربية والإنجليزية.'];
-    if ($v['learn_en'] === '' || $v['learn_ar'] === '') $err[] = ['Please write what students will learn, in Arabic and English.', 'يرجى كتابة ما سيتعلمه الطلاب، بالعربية والإنجليزية.'];
-    if (!$v['start_date'] || !$v['end_date']) $err[] = ['Please choose the start and end dates.', 'يرجى اختيار تاريخ البداية والنهاية.'];
-    elseif ($v['end_date'] < $v['start_date']) $err[] = ['The end date is before the start date.', 'تاريخ النهاية قبل تاريخ البداية.'];
-    elseif ($v['start_date'] <= date('Y-m-d')) $err[] = ['The start date must be in the future.', 'يجب أن يكون تاريخ البداية في المستقبل.'];
-    if ($v['schedule_en'] === '' || $v['schedule_ar'] === '') $err[] = ['Please write the days and times, in Arabic and English.', 'يرجى كتابة الأيام والأوقات، بالعربية والإنجليزية.'];
-    if ($v['total_hours'] === null) $err[] = ['Please write the total hours.', 'يرجى كتابة إجمالي الساعات.'];
-    if ($v['seats_total'] < 1) $err[] = ['Please write the number of seats.', 'يرجى كتابة عدد المقاعد.'];
-    if ($v['course_type'] === 'in_person' && ($v['location_en'] === '' || $v['location_ar'] === '')) $err[] = ['Please write the location, in Arabic and English.', 'يرجى كتابة المكان، بالعربية والإنجليزية.'];
+    if ($v['title_en'] === '' || $v['title_ar'] === '') $err[] = ['The title is needed in Arabic and English', 'العنوان مطلوب بالعربية والإنجليزية'];
+    if ($v['description_en'] === '' || $v['description_ar'] === '') $err[] = ['The short description is needed in Arabic and English', 'الوصف القصير مطلوب بالعربية والإنجليزية'];
+    if ($v['learn_en'] === '' || $v['learn_ar'] === '') $err[] = ['Please write what students will learn, in Arabic and English', 'يرجى كتابة ما سيتعلمه الطلاب، بالعربية والإنجليزية'];
+    if (!$v['start_date'] || !$v['end_date']) $err[] = ['Please choose the start and end dates', 'يرجى اختيار تاريخ البداية والنهاية'];
+    elseif ($v['end_date'] < $v['start_date']) $err[] = ['The end date is before the start date', 'تاريخ النهاية قبل تاريخ البداية'];
+    elseif ($v['start_date'] <= date('Y-m-d')) $err[] = ['The start date must be in the future', 'يجب أن يكون تاريخ البداية في المستقبل'];
+    if ($v['schedule_en'] === '' || $v['schedule_ar'] === '') $err[] = ['Please write the days and times, in Arabic and English', 'يرجى كتابة الأيام والأوقات، بالعربية والإنجليزية'];
+    if ($v['total_hours'] === null) $err[] = ['Please write the total hours', 'يرجى كتابة إجمالي الساعات'];
+    if ($v['seats_total'] < 1) $err[] = ['Please write the number of seats', 'يرجى كتابة عدد المقاعد'];
+    if ($v['course_type'] === 'in_person' && ($v['location_en'] === '' || $v['location_ar'] === '')) $err[] = ['Please write the location, in Arabic and English', 'يرجى كتابة المكان، بالعربية والإنجليزية'];
     if ($v['course_type'] === 'online') {
-        if ($v['meeting_link'] === '') $err[] = ['Please add the meeting link (only registered students see it).', 'يرجى إضافة رابط الاجتماع (يراه الطلاب المسجلون فقط).'];
-        else { [$l, $ok] = owSafeLink($v['meeting_link'], 'web'); if ($ok && str_starts_with($l, 'https://')) $v['meeting_link'] = $l; else $err[] = ['The meeting link must be a full https:// address.', 'يجب أن يكون رابط الاجتماع عنواناً كاملاً يبدأ بـ https://.']; }
+        if ($v['meeting_link'] === '') $err[] = ['Please add the meeting link (only registered students see it)', 'يرجى إضافة رابط الاجتماع (يراه الطلاب المسجلون فقط)'];
+        else { [$l, $ok] = owSafeLink($v['meeting_link'], 'web'); if ($ok && str_starts_with($l, 'https://')) $v['meeting_link'] = $l; else $err[] = ['The meeting link must be a full https:// address', 'يجب أن يكون رابط الاجتماع عنوانا كاملا يبدأ بـ https://']; }
     }
-    if ($v['age_min'] !== null && $v['age_max'] !== null && $v['age_max'] < $v['age_min']) $err[] = ['The age range is the wrong way round.', 'نطاق العمر معكوس.'];
+    if ($v['age_min'] !== null && $v['age_max'] !== null && $v['age_max'] < $v['age_min']) $err[] = ['The age range is the wrong way round', 'نطاق العمر معكوس'];
     return [$v, $err];
 }
 function owCourseAgeBi(array $c): array {
@@ -233,14 +233,14 @@ function owCourseHold(int $courseId, array $user, string $name, string $email, s
         $st = $db->prepare('SELECT * FROM courses WHERE id = :id FOR UPDATE'); $st->execute([':id' => $courseId]);
         $c = $st->fetch();
         $full = $c ? owCourseGet($courseId) : null;
-        if (!$c || !$full || !owCoursePublic($full) || ($c['start_date'] !== null && $c['start_date'] <= date('Y-m-d'))) { $db->rollBack(); return [0, ['Registration for this course is closed.', 'التسجيل في هذه الدورة مغلق.']]; }
+        if (!$c || !$full || !owCoursePublic($full) || ($c['start_date'] !== null && $c['start_date'] <= date('Y-m-d'))) { $db->rollBack(); return [0, ['Registration for this course is closed', 'التسجيل في هذه الدورة مغلق']]; }
         $ex = $db->prepare('SELECT * FROM course_registrations WHERE course_id = :c AND user_id = :u FOR UPDATE');
         $ex->execute([':c' => $courseId, ':u' => (int) $user['id']]);
         $r = $ex->fetch();
-        if ($r && $r['status'] === 'confirmed') { $db->rollBack(); return [(int) $r['id'], ['You are already registered for this course.', 'أنت مسجل في هذه الدورة بالفعل.']]; }
+        if ($r && $r['status'] === 'confirmed') { $db->rollBack(); return [(int) $r['id'], ['You are already registered for this course', 'أنت مسجل في هذه الدورة بالفعل']]; }
         $holding = $r && $r['status'] === 'pending';
         if (!$holding) {
-            if ((int) $c['seats_remaining'] < 1) { $db->rollBack(); return [0, ['Sorry, this course is full.', 'عذراً، اكتمل العدد في هذه الدورة.']]; }
+            if ((int) $c['seats_remaining'] < 1) { $db->rollBack(); return [0, ['Sorry, this course is full', 'عذرا، اكتمل العدد في هذه الدورة']]; }
             $db->prepare('UPDATE courses SET seats_remaining = seats_remaining - 1 WHERE id = :id')->execute([':id' => $courseId]);
         }
         $split = owSplit((float) $c['price'], owCourseCommission());
@@ -280,11 +280,11 @@ function owCourseBook(int $courseId, ?array $user, string $name, string $email, 
         $st = $db->prepare('SELECT * FROM courses WHERE id = :id FOR UPDATE'); $st->execute([':id' => $courseId]);
         $c = $st->fetch();
         $full = $c ? owCourseGet($courseId) : null;
-        if (!$c || !$full || !owCoursePublic($full) || ($c['start_date'] !== null && $c['start_date'] <= date('Y-m-d'))) { $db->rollBack(); return [0, ['Booking for this course is closed.', 'الحجز في هذه الدورة مغلق.']]; }
+        if (!$c || !$full || !owCoursePublic($full) || ($c['start_date'] !== null && $c['start_date'] <= date('Y-m-d'))) { $db->rollBack(); return [0, ['Booking for this course is closed', 'الحجز في هذه الدورة مغلق']]; }
         $ex = $db->prepare("SELECT id, ref_no, status FROM course_registrations WHERE course_id = :c AND status IN ('pending','confirmed') AND (student_email = :e" . ($user ? ' OR user_id = :u' : '') . ') LIMIT 1');
         $ex->execute([':c' => $courseId, ':e' => $email] + ($user ? [':u' => (int) $user['id']] : []));
         if ($old = $ex->fetch()) { $db->rollBack(); return [(int) $old['id'], ['You already booked this course. Booking number ' . $old['ref_no'] . '.', 'لقد حجزت هذه الدورة بالفعل. رقم الحجز ' . $old['ref_no'] . '.']]; }
-        if ((int) $c['seats_remaining'] < 1) { $db->rollBack(); return [0, ['Sorry, this course is full.', 'عذراً، اكتمل العدد في هذه الدورة.']]; }
+        if ((int) $c['seats_remaining'] < 1) { $db->rollBack(); return [0, ['Sorry, this course is full', 'عذرا، اكتمل العدد في هذه الدورة']]; }
         $db->prepare('UPDATE courses SET seats_remaining = seats_remaining - 1 WHERE id = :id')->execute([':id' => $courseId]);
         $split = owSplit((float) $c['price'], owCourseCommission());
         $uid = $user ? (int) $user['id'] : null;
@@ -329,13 +329,13 @@ function owCourseBookedMails(int $regId, string $lang): void {
                 . '<p>Your seat is held. The Oweili team will contact you soon to arrange the payment. Your place is confirmed once it is paid.</p>';
             $ar = '<p><b>وصلنا حجزك.</b></p><p>' . $h($c['title_ar']) . '<br>' . $h($c['inst_ar']) . '<br>' . $h($dAr) . '</p>'
                 . '<p>رقم الحجز: <b>' . $h($r['ref_no']) . '</b><br>السعر: ' . $amt . ' ر.س</p>'
-                . '<p>مقعدك محجوز. سيتواصل معك فريق أويلي قريباً لترتيب الدفع، ويتأكد مكانك بعد الدفع.</p>';
+                . '<p>مقعدك محجوز. سيتواصل معك فريق أويلي قريبا لترتيب الدفع، ويتأكد مكانك بعد الدفع.</p>';
             owSendMail((string) $r['student_email'], 'We received your booking · وصلنا حجزك: ' . $c['title_en'], $lang === 'ar' ? owBookMailHtml($ar, $en) : owBookMailHtml($en, $ar), true);
         }
         $inst = trim((string) $c['inst_email']);
         if ($inst !== '' && filter_var($inst, FILTER_VALIDATE_EMAIL))
             owSendMail($inst, 'New booking · حجز جديد: ' . $c['title_en'], "A student booked a seat in {$c['title_en']} ({$r['ref_no']}). Oweili is arranging the payment. See your dashboard: " . owSiteBase() . "/institute_dashboard.php?tab=registrations\r\n\r\n"
-                . "حجز طالب مقعداً في {$c['title_ar']} ({$r['ref_no']}). يرتب أويلي الدفع. لوحتك: " . owSiteBase() . '/institute_dashboard.php?tab=registrations');
+                . "حجز طالب مقعدا في {$c['title_ar']} ({$r['ref_no']}). يرتب أويلي الدفع. لوحتك: " . owSiteBase() . '/institute_dashboard.php?tab=registrations');
     } catch (Throwable $e) { error_log('owCourseBookedMails: ' . $e->getMessage()); }
 }
 /* The Oweili team collected the payment by hand: confirm the seat, make the institute's payout row, send the confirmation */
@@ -344,7 +344,7 @@ function owCourseMarkPaid(int $regId, array $actor, string $note = ''): ?array {
     try {
         $db->beginTransaction();
         $st = $db->prepare('SELECT * FROM course_registrations WHERE id = :id FOR UPDATE'); $st->execute([':id' => $regId]); $r = $st->fetch();
-        if (!$r || !owRegIsBooking($r)) { $db->rollBack(); return ['This booking is not waiting for payment.', 'هذا الحجز ليس بانتظار الدفع.']; }
+        if (!$r || !owRegIsBooking($r)) { $db->rollBack(); return ['This booking is not waiting for payment', 'هذا الحجز ليس بانتظار الدفع']; }
         $db->prepare("UPDATE course_registrations SET status = 'confirmed', paid_at = NOW(), notes = CONCAT(COALESCE(notes, ''), :n) WHERE id = :id")
            ->execute([':n' => "\nPaid outside the site" . ($note !== '' ? ': ' . mb_substr($note, 0, 300) : ''), ':id' => $regId]);
         $c = owCourseGet((int) $r['course_id']);
@@ -352,7 +352,7 @@ function owCourseMarkPaid(int $regId, array $actor, string $note = ''): ?array {
             $db->prepare("INSERT IGNORE INTO partner_payouts (payee_kind, payee_id, source_kind, source_id, amount, commission, due_on) VALUES ('institute', :i, 'course', :s, :a, :c, :d)")
                ->execute([':i' => (int) $c['institute_id'], ':s' => $regId, ':a' => $r['partner_amount'], ':c' => $r['commission_amount'], ':d' => $c['start_date']]);
         $db->commit();
-    } catch (Throwable $e) { if ($db->inTransaction()) $db->rollBack(); error_log('owCourseMarkPaid: ' . $e->getMessage()); return ['Something went wrong.', 'حدث خطأ.']; }
+    } catch (Throwable $e) { if ($db->inTransaction()) $db->rollBack(); error_log('owCourseMarkPaid: ' . $e->getMessage()); return ['Something went wrong', 'حدث خطأ']; }
     owLog('course_book_paid_by_hand', 'course_registration', $regId, mb_substr($note, 0, 200), $actor);
     owCourseConfirmMail($regId);
     return null;
@@ -430,8 +430,8 @@ function owMuseumDueOn(array $p, string $visitDate): ?string {
 function owMuseumRuleBi(array $p): array {
     $rule = (string) ($p['payout_rule'] ?? 'after_visit'); $d = (int) ($p['payout_days'] ?? 7);
     $r = match ($rule) {
-        'month_end' => ['Paid once a month, after the month of the visit.', 'يُدفع مرة في الشهر، بعد انتهاء شهر الزيارة.'],
-        'agreement' => ['Paid by hand, as written in the agreement.', 'يُدفع يدوياً، كما في الاتفاقية.'],
+        'month_end' => ['Paid once a month, after the month of the visit', 'يُدفع مرة في الشهر، بعد انتهاء شهر الزيارة'],
+        'agreement' => ['Paid by hand, as written in the agreement', 'يُدفع يدويا، كما في الاتفاقية'],
         default     => ["Paid $d days after the visit date.", "يُدفع بعد $d أيام من تاريخ الزيارة."],
     };
     $note = trim((string) ($p['payout_note'] ?? ''));
@@ -448,16 +448,16 @@ function owTicketHold(array $place, int $dateId, array $qty, array $user, string
         $lines[] = ['type' => $tid, 'en' => $t['name_en'], 'ar' => $t['name_ar'], 'qty' => $n, 'price' => (float) $t['price']];
         $people += $n * max(1, (int) $t['people']); $amount += $n * (float) $t['price'];
     }
-    if (!$lines) return [0, ['Please choose at least one ticket.', 'يرجى اختيار تذكرة واحدة على الأقل.']];
-    if ($people > 40) return [0, ['For more than 40 people, please contact us.', 'لأكثر من 40 شخصاً، يرجى التواصل معنا.']];
+    if (!$lines) return [0, ['Please choose at least one ticket', 'يرجى اختيار تذكرة واحدة على الأقل']];
+    if ($people > 40) return [0, ['For more than 40 people, please contact us', 'لأكثر من 40 شخصا، يرجى التواصل معنا']];
     $db = getDB();
     try {
         $db->beginTransaction();
         $st = $db->prepare('SELECT * FROM museum_ticket_dates WHERE id = :d AND place_id = :p AND is_active = 1 AND visit_date >= CURDATE() FOR UPDATE');
         $st->execute([':d' => $dateId, ':p' => (int) $place['id']]);
         $d = $st->fetch();
-        if (!$d) { $db->rollBack(); return [0, ['Please choose a date.', 'يرجى اختيار تاريخ.']]; }
-        if ((int) $d['capacity'] - (int) $d['sold'] < $people) { $db->rollBack(); return [0, ['Not enough tickets left on this date. Please choose another date or fewer tickets.', 'لا تكفي التذاكر المتبقية في هذا التاريخ. اختر تاريخاً آخر أو عدداً أقل.']]; }
+        if (!$d) { $db->rollBack(); return [0, ['Please choose a date', 'يرجى اختيار تاريخ']]; }
+        if ((int) $d['capacity'] - (int) $d['sold'] < $people) { $db->rollBack(); return [0, ['Not enough tickets left on this date. Please choose another date or fewer tickets.', 'لا تكفي التذاكر المتبقية في هذا التاريخ. اختر تاريخا آخر أو عددا أقل.']]; }
         $db->prepare('UPDATE museum_ticket_dates SET sold = sold + :n WHERE id = :d')->execute([':n' => $people, ':d' => $dateId]);
         $split = owSplit(round($amount, 2), (float) $place['ticket_commission']);
         $db->prepare("INSERT INTO museum_tickets (ref_no, qr_token, place_id, date_id, visit_date, user_id, buyer_name, buyer_email, buyer_phone, lines_json, people, amount,
@@ -491,9 +491,9 @@ function owMuseumSetupPost(array $p, array $in, array $actor, bool $dry = false)
         $id = (int) ($in['id'] ?? 0);
         $ne = mb_substr(trim((string) ($in['name_en'] ?? '')), 0, 120); $na = mb_substr(trim((string) ($in['name_ar'] ?? '')), 0, 120);
         $price = round((float) str_replace(',', '', (string) ($in['price'] ?? '')), 2); $people = max(1, min(10, (int) ($in['people'] ?? 1)));
-        if ($ne === '' || $na === '') return ['The ticket name is needed in Arabic and English.', 'اسم التذكرة مطلوب بالعربية والإنجليزية.'];
-        if ($price <= 0 || $price > 100000) return ['Please write a price above 0.', 'يرجى كتابة سعر أكبر من صفر.'];
-        if ($id && !owMuseumOwnRow('museum_ticket_types', $id, $pid)) return ['Not found.', 'غير موجود.'];
+        if ($ne === '' || $na === '') return ['The ticket name is needed in Arabic and English', 'اسم التذكرة مطلوب بالعربية والإنجليزية'];
+        if ($price <= 0 || $price > 100000) return ['Please write a price above 0', 'يرجى كتابة سعر أكبر من صفر'];
+        if ($id && !owMuseumOwnRow('museum_ticket_types', $id, $pid)) return ['Not found', 'غير موجود'];
         if ($dry) return null;
         $args = [':ne' => $ne, ':na' => $na, ':pr' => $price, ':pe' => $people, ':a' => !empty($in['is_active']) ? 1 : 0, ':p' => $pid];
         if ($id) $db->prepare('UPDATE museum_ticket_types SET name_en = :ne, name_ar = :na, price = :pr, people = :pe, is_active = :a WHERE id = :id AND place_id = :p')->execute($args + [':id' => $id]);
@@ -504,10 +504,10 @@ function owMuseumSetupPost(array $p, array $in, array $actor, bool $dry = false)
     if ($do === 'dates_add') {
         $from = owFormDate((string) ($in['from'] ?? '')); $to = owFormDate((string) ($in['to'] ?? '')); $cap = max(1, min(100000, (int) ($in['capacity'] ?? 0)));
         $days = array_map('intval', (array) ($in['wd'] ?? []));
-        if (!$from || !$to || $to < $from) return ['Please choose the first and last date.', 'يرجى اختيار أول تاريخ وآخر تاريخ.'];
-        if ($from < date('Y-m-d')) return ['The first date cannot be in the past.', 'لا يمكن أن يكون أول تاريخ في الماضي.'];
-        if ((strtotime($to) - strtotime($from)) / 86400 > 366) return ['Please add at most one year at a time.', 'يرجى إضافة سنة واحدة كحد أقصى في كل مرة.'];
-        if (!$days) return ['Please tick the open days.', 'يرجى تحديد أيام العمل.'];
+        if (!$from || !$to || $to < $from) return ['Please choose the first and last date', 'يرجى اختيار أول تاريخ وآخر تاريخ'];
+        if ($from < date('Y-m-d')) return ['The first date cannot be in the past', 'لا يمكن أن يكون أول تاريخ في الماضي'];
+        if ((strtotime($to) - strtotime($from)) / 86400 > 366) return ['Please add at most one year at a time', 'يرجى إضافة سنة واحدة كحد أقصى في كل مرة'];
+        if (!$days) return ['Please tick the open days', 'يرجى تحديد أيام العمل'];
         if ($dry) return null;
         $ins = $db->prepare('INSERT INTO museum_ticket_dates (place_id, visit_date, capacity, is_active) VALUES (:p, :d, :c, 1) ON DUPLICATE KEY UPDATE capacity = GREATEST(sold, VALUES(capacity)), is_active = 1');
         $n = 0;
@@ -517,14 +517,14 @@ function owMuseumSetupPost(array $p, array $in, array $actor, bool $dry = false)
     }
     if ($do === 'date_save') {
         $id = (int) ($in['id'] ?? 0); $cap = max(0, min(100000, (int) ($in['capacity'] ?? 0)));
-        if (!owMuseumOwnRow('museum_ticket_dates', $id, $pid)) return ['Not found.', 'غير موجود.'];
+        if (!owMuseumOwnRow('museum_ticket_dates', $id, $pid)) return ['Not found', 'غير موجود'];
         if ($dry) return null;
         $db->prepare('UPDATE museum_ticket_dates SET capacity = GREATEST(sold, :c), is_active = :a WHERE id = :id AND place_id = :p')
            ->execute([':c' => $cap, ':a' => !empty($in['is_active']) ? 1 : 0, ':id' => $id, ':p' => $pid]);
         owLog('ticket_date_save', 'art_place', $pid, "date $id cap $cap", $actor);
         return null;
     }
-    return ['Unknown action.', 'إجراء غير معروف.'];
+    return ['Unknown action', 'إجراء غير معروف'];
 }
 function owMuseumOwnRow(string $table, int $id, int $pid): bool {
     if (!in_array($table, ['museum_ticket_types', 'museum_ticket_dates'], true)) return false;
@@ -596,7 +596,7 @@ function owMuseumSetupHtml(array $p, string $action): string {
     $dates = owMuseumDates($pid, false);
     $dates = array_values(array_filter($dates, fn($d) => $d['visit_date'] >= date('Y-m-d')));
     if ($dates) {
-        $h .= '<p class="mini" style="margin-top:var(--space-md)">' . owBi('Each date: tickets per day, sold so far, and whether it is on sale.', 'لكل تاريخ: التذاكر في اليوم، والمباع حتى الآن، وهل هو معروض.') . '</p><div class="ms-dates">';
+        $h .= '<p class="mini" style="margin-top:var(--space-md)">' . owBi('Each date: tickets per day, sold so far, and whether it is on sale', 'لكل تاريخ: التذاكر في اليوم، والمباع حتى الآن، وهل هو معروض') . '</p><div class="ms-dates">';
         foreach ($dates as $d) {
             [$de, $da] = owDateRangeBi($d['visit_date'], null);
             $h .= '<form method="post" action="' . e($action) . '">' . csrfField() . '<input type="hidden" name="do" value="date_save"><input type="hidden" name="place" value="' . $pid . '"><input type="hidden" name="id" value="' . (int) $d['id'] . '">'
@@ -673,9 +673,9 @@ function owBookingCancel(string $kind, int $id, array $actor, bool $refund, stri
     $db = getDB();
     $table = $kind === 'course' ? 'course_registrations' : 'museum_tickets';
     $st = $db->prepare("SELECT * FROM $table WHERE id = :id"); $st->execute([':id' => $id]); $row = $st->fetch();
-    if (!$row) return ['Not found.', 'غير موجود.'];
+    if (!$row) return ['Not found', 'غير موجود'];
     $paidStates = $kind === 'course' ? ['confirmed'] : ['paid'];
-    if (!in_array($row['status'], array_merge($paidStates, ['pending']), true)) return ['This one is already closed.', 'هذا الحجز مغلق بالفعل.'];
+    if (!in_array($row['status'], array_merge($paidStates, ['pending']), true)) return ['This one is already closed', 'هذا الحجز مغلق بالفعل'];
     $wasPaid = in_array($row['status'], $paidStates, true) && (float) $row['amount'] > 0 && $row['payment_id'];
     if ($wasPaid && $refund) {
         $p = $db->prepare('SELECT * FROM booking_payments WHERE id = :id'); $p->execute([':id' => (int) $row['payment_id']]); $pay = $p->fetch();
@@ -694,14 +694,14 @@ function owBookingCancel(string $kind, int $id, array $actor, bool $refund, stri
         }
         $db->prepare("UPDATE partner_payouts SET status = 'cancelled' WHERE source_kind = :k AND source_id = :id AND status = 'pending'")->execute([':k' => $kind === 'course' ? 'course' : 'ticket', ':id' => $id]);
         $db->commit();
-    } catch (Throwable $e) { if ($db->inTransaction()) $db->rollBack(); error_log('owBookingCancel: ' . $e->getMessage()); return ['Something went wrong.', 'حدث خطأ.']; }
+    } catch (Throwable $e) { if ($db->inTransaction()) $db->rollBack(); error_log('owBookingCancel: ' . $e->getMessage()); return ['Something went wrong', 'حدث خطأ']; }
     owLog($kind === 'course' ? 'course_book_cancel' : 'ticket_cancel', $kind === 'course' ? 'course_registration' : 'museum_ticket', $id, ($wasPaid && $refund ? 'refunded ' : '') . $why, $actor);
     $email = $kind === 'course' ? (string) $row['student_email'] : (string) $row['buyer_email'];
     if ($email !== '' && $row['status'] !== 'pending') {
         require_once __DIR__ . '/request_lib.php';
         owReqTellBuyer($email, 'Your booking is cancelled · تم إلغاء حجزك',
             'Your booking ' . $row['ref_no'] . ' is cancelled.' . ($wasPaid && $refund ? ' The full amount (' . number_format((float) $row['amount'], 2) . ' SAR) is refunded to the way you paid.' : ''),
-            'تم إلغاء حجزك ' . $row['ref_no'] . '.' . ($wasPaid && $refund ? ' أعدنا المبلغ كاملاً (' . number_format((float) $row['amount'], 2) . ' ر.س) إلى وسيلة الدفع نفسها.' : ''), 'my_bookings.php');
+            'تم إلغاء حجزك ' . $row['ref_no'] . '.' . ($wasPaid && $refund ? ' أعدنا المبلغ كاملا (' . number_format((float) $row['amount'], 2) . ' ر.س) إلى وسيلة الدفع نفسها.' : ''), 'my_bookings.php');
     }
     return null;
 }
@@ -799,7 +799,7 @@ function owBookingRules(?bool $courses = null, ?bool $tickets = null): array {
 function owBookingRulesAll(): array {
     return [
         ['Courses: you can cancel and get the full amount back until the day before the course starts.',
-         'الدورات: يمكنك الإلغاء واسترداد المبلغ كاملاً حتى اليوم السابق لبداية الدورة.',
+         'الدورات: يمكنك الإلغاء واسترداد المبلغ كاملا حتى اليوم السابق لبداية الدورة.',
          'E-Commerce Law, Article 13 (the right to cancel within 7 days if the service has not been used). Oweili gives more time than the law.',
          'نظام التجارة الإلكترونية، المادة 13 (حق فسخ العقد خلال 7 أيام ما لم تُستخدم الخدمة). يمنحك أويلي مدة أطول من النظام.', OW_LAW_ECOMMERCE, 'c'],
         ['Once a course has started, it is not refunded, because the service is being used.',
@@ -807,23 +807,23 @@ function owBookingRulesAll(): array {
          'E-Commerce Law, Article 13 (the right to cancel applies only when the service has not been used).',
          'نظام التجارة الإلكترونية، المادة 13 (حق الفسخ ما لم يُستفد من الخدمة).', OW_LAW_ECOMMERCE, 'c'],
         ['Museum tickets: you can cancel and get the full amount back until the day before your visit date, if the ticket has not been used.',
-         'تذاكر المتاحف: يمكنك الإلغاء واسترداد المبلغ كاملاً حتى اليوم السابق لتاريخ زيارتك، ما لم تُستخدم التذكرة.',
+         'تذاكر المتاحف: يمكنك الإلغاء واسترداد المبلغ كاملا حتى اليوم السابق لتاريخ زيارتك، ما لم تُستخدم التذكرة.',
          'E-Commerce Law, Article 13.', 'نظام التجارة الإلكترونية، المادة 13.', OW_LAW_ECOMMERCE, 't'],
         ['A used ticket, or a visit date that has passed, is not refunded.',
          'التذكرة المستخدمة، أو التي مضى تاريخ زيارتها، لا تُسترد.',
          'E-Commerce Law, Article 13.', 'نظام التجارة الإلكترونية، المادة 13.', OW_LAW_ECOMMERCE, 't'],
         ['If the institute or the museum cancels, changes the date, or the course does not start within 15 days of the agreed date, you get the full amount back.',
-         'إذا ألغى المعهد أو المتحف، أو غيّر الموعد، أو لم تبدأ الدورة خلال 15 يوماً من الموعد المتفق عليه، يُعاد إليك المبلغ كاملاً.',
+         'إذا ألغى المعهد أو المتحف، أو غيّر الموعد، أو لم تبدأ الدورة خلال 15 يوما من الموعد المتفق عليه، يُعاد إليك المبلغ كاملا.',
          'E-Commerce Law, Article 14 (delay of more than 15 days: the right to cancel and get the money back).',
-         'نظام التجارة الإلكترونية، المادة 14 (التأخير أكثر من 15 يوماً: حق الفسخ واسترداد المبلغ).', OW_LAW_ECOMMERCE, 'both',
+         'نظام التجارة الإلكترونية، المادة 14 (التأخير أكثر من 15 يوما: حق الفسخ واسترداد المبلغ).', OW_LAW_ECOMMERCE, 'both',
          'If the institute cancels, changes the date, or the course does not start within 15 days of the agreed date, you get the full amount back.',
-         'إذا ألغى المعهد، أو غيّر الموعد، أو لم تبدأ الدورة خلال 15 يوماً من الموعد المتفق عليه، يُعاد إليك المبلغ كاملاً.'],
+         'إذا ألغى المعهد، أو غيّر الموعد، أو لم تبدأ الدورة خلال 15 يوما من الموعد المتفق عليه، يُعاد إليك المبلغ كاملا.'],
         ['Refunds go back to the same way you paid. We start them within 3 working days of the cancellation.',
          'يعود المبلغ إلى وسيلة الدفع نفسها. نبدأ إجراءه خلال 3 أيام عمل من الإلغاء.',
          'Oweili’s own promise. The details of refunds are in the Implementing Regulations of the E-Commerce Law (Ministry of Commerce).',
          'التزام من أويلي. تفاصيل الاسترداد في اللائحة التنفيذية لنظام التجارة الإلكترونية (وزارة التجارة).', OW_LAW_MC],
         ['Before you pay, we show the full price, what it includes, the date, and these rules. You get a confirmation email with your booking number.',
-         'قبل الدفع نعرض لك السعر كاملاً، وما يشمله، والموعد، وهذه القواعد. وتصلك رسالة تأكيد برقم حجزك.',
+         'قبل الدفع نعرض لك السعر كاملا، وما يشمله، والموعد، وهذه القواعد. وتصلك رسالة تأكيد برقم حجزك.',
          'E-Commerce Law, Articles 7 and 8 (clear information before and after the contract).',
          'نظام التجارة الإلكترونية، المادتان 7 و8 (وضوح البيانات قبل التعاقد وبعده).', OW_LAW_ECOMMERCE],
         ['To cancel, write to us from the email you booked with, with your booking number.',

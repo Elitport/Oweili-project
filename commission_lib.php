@@ -65,7 +65,7 @@ function owCommNdaText(): array {
         'ar' => ['هذه الصور خاصة، وهي ملك للمقتني وللأشخاص الظاهرين فيها.',
                  'سأستخدمها فقط لصنع هذا العمل الفني، ولا شيء غيره.',
                  'لن أحفظها أو أنسخها أو أشاركها أو أنشرها أو أعرضها على أحد، وسأحذف أي نسخة منها بعد تسليم العمل.',
-                 'لن أعرض العمل المكتمل علناً، لا في أويلي ولا في أي مكان آخر، إلا إذا أبلغني أويلي أن المقتني وافق كتابياً.',
+                 'لن أعرض العمل المكتمل علنا، لا في أويلي ولا في أي مكان آخر، إلا إذا أبلغني أويلي أن المقتني وافق كتابيا.',
                  'لن أتواصل مع المقتني خارج أويلي.',
                  'إن خالفت ذلك، يحق لأويلي إغلاق حسابي، ويحق للمقتني اتخاذ إجراء قانوني.'],
     ];
@@ -163,7 +163,7 @@ function owCommPaid(int $id): bool { return owCommPaidAt($id) !== null; }
 function owCommMarkPaid(array $c, array $actor, string $note = ''): bool {
     if (in_array($c['status'], ['cancelled', 'delivered'], true) || owCommPaid((int) $c['id'])) return false;
     owLog('commission_paid', 'commission', (int) $c['id'], mb_substr(trim($note), 0, 300), $actor);
-    owCommTellBuyer($c, 'Payment received · وصلنا الدفع', 'Thank you: we received your payment. Your artist can now start your piece.', 'شكراً لك: وصلنا الدفع. يستطيع فنانك الآن البدء في قطعتك.');
+    owCommTellBuyer($c, 'Payment received · وصلنا الدفع', 'Thank you: we received your payment. Your artist can now start your piece.', 'شكرا لك: وصلنا الدفع. يستطيع فنانك الآن البدء في قطعتك.');
     if (!empty($c['artist_id'])) owCommTellArtist($c, 'Payment confirmed, you can start · تم تأكيد الدفع، يمكنك البدء',
         'The collector has paid. The reference photos are now open for you, and you can start the piece and send a draft.',
         'دفع المقتني. الصور المرجعية مفتوحة لك الآن، ويمكنك البدء في القطعة وإرسال مسودة.');
@@ -237,7 +237,7 @@ function owCommUnpaidCleanup(): int {
             [$end, $endAr] = owDateBi(date('Y-m-d', strtotime((string) $c['created_at']) + OW_COMM_PAY_DAYS * 86400));
             owCommTellBuyer($c, 'Your request will expire · طلبك سينتهي',
                 "Your private commission request will expire on $end because it has not been paid yet. After that date we delete your reference photos to protect your privacy. Your request itself stays, and you can send the photos again later. To keep it going, reply to this email or open your private link.",
-                "سينتهي طلب عملك الخاص في $endAr لأنه لم يُدفع بعد. بعد هذا التاريخ نحذف صورك المرجعية حفاظاً على خصوصيتك. يبقى طلبك نفسه، ويمكنك إرسال الصور مرة أخرى لاحقاً. لمتابعته رد على هذه الرسالة أو افتح رابطك الخاص.");
+                "سينتهي طلب عملك الخاص في $endAr لأنه لم يُدفع بعد. بعد هذا التاريخ نحذف صورك المرجعية حفاظا على خصوصيتك. يبقى طلبك نفسه، ويمكنك إرسال الصور مرة أخرى لاحقا. لمتابعته رد على هذه الرسالة أو افتح رابطك الخاص.");
             owLog('commission_expiry_warned', 'commission', (int) $c['id'], 'expires ' . $end, ['type' => 'system', 'id' => null]);
         }
         /* 2. after 60 days: the reference photos are deleted */

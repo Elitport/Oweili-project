@@ -46,9 +46,9 @@ function owReqCounted(string $action): void {
 /* Checks the buyer's own details. Adds [en, ar] errors to $errors. */
 function owReqBuyer(array &$errors): array {
     $b = ['name' => owReqClean('buyer_name', 150), 'email' => strtolower(owReqClean('buyer_email', 190)), 'phone' => owReqClean('buyer_phone', 30)];
-    if (mb_strlen($b['name']) < 2) $errors[] = ['Please write your full name.', 'يرجى كتابة اسمك الكامل.'];
-    if (!filter_var($b['email'], FILTER_VALIDATE_EMAIL)) $errors[] = ['Please write a valid email address.', 'يرجى كتابة بريد إلكتروني صحيح.'];
-    if (!preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $b['phone'])) $errors[] = ['Please write a valid phone number.', 'يرجى كتابة رقم هاتف صحيح.'];
+    if (mb_strlen($b['name']) < 2) $errors[] = ['Please write your full name', 'يرجى كتابة اسمك الكامل'];
+    if (!filter_var($b['email'], FILTER_VALIDATE_EMAIL)) $errors[] = ['Please write a valid email address', 'يرجى كتابة بريد إلكتروني صحيح'];
+    if (!preg_match('/^\+?[0-9][0-9 \-()]{6,29}$/', $b['phone'])) $errors[] = ['Please write a valid phone number', 'يرجى كتابة رقم هاتف صحيح'];
     return $b;
 }
 

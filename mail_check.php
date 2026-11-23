@@ -12,7 +12,7 @@ require_once __DIR__ . '/mail_lib.php';
 
 $sent = null; $log = []; $testTo = '';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['test_to'])) {
-    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token.'); }
+    if (!verifyCsrf($_POST['csrf_token'] ?? null)) { http_response_code(403); exit('Invalid CSRF token'); }
     $testTo = trim((string) $_POST['test_to']);
     $sent = owSendMail($testTo, 'Oweili email test · اختبار البريد',
         "This is a test email from Oweili. If you can read it, emails work.\r\n\r\n"

@@ -62,7 +62,7 @@ function owAuctionTell(array $row): void {
               . "You are on the list for Oweili Auctions. Rare original artworks are coming to auction, and you will be among the first to know when the first one opens.\r\n"
               . "We will only use this email to tell you about Oweili auctions.\r\n\r\n"
               . "Not for you any more? Unsubscribe here: $leave\r\n\r\n"
-              . ($hi !== '' ? 'أهلاً ' . $hi . "،\r\n\r\n" : "أهلاً،\r\n\r\n")
+              . ($hi !== '' ? 'أهلا ' . $hi . "،\r\n\r\n" : "أهلا،\r\n\r\n")
               . "أنت الآن في قائمة مزادات أويلي. أعمال فنية أصلية ونادرة في طريقها إلى المزاد، وستكون من أول من يعرف حين يُفتح أول مزاد.\r\n"
               . "لن نستخدم هذا البريد إلا لإخبارك بمزادات أويلي.\r\n\r\n"
               . "لم يعد يناسبك؟ ألغِ الاشتراك من هنا: $leave\r\n";

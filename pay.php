@@ -47,7 +47,7 @@ owBookTop('Payment', 'الدفع', 'pay.php', $preview, '
   <?php if ($what && $what['ok'] && $pay['status'] === 'created'): ?>
   <?php if ($hold): ?><p class="mini"><?= owBi('Your place is held for ' . OW_BOOK_HOLD_MIN . ' minutes while you pay.', 'نحجز مكانك ' . OW_BOOK_HOLD_MIN . ' دقيقة أثناء الدفع.') ?></p><?php endif; ?>
   <?php if (!owPayGateways()): /* no way to pay yet: the test payment is for the admin only (owner, 14 Nov 2026) */ ?>
-  <p><?= owBi('Online payment is not open yet. Please try again later.', 'الدفع الإلكتروني غير متاح بعد. يرجى المحاولة لاحقاً.') ?></p>
+  <p><?= owBi('Online payment is not open yet. Please try again later.', 'الدفع الإلكتروني غير متاح بعد. يرجى المحاولة لاحقا.') ?></p>
   <?php else: ?>
   <form method="post" action="pay.php?t=<?= e($pay['token']) ?>"><?= csrfField() ?>
     <div class="g-list" role="radiogroup">

@@ -54,7 +54,7 @@ $STATE_W = ['active' => ['Active', 'نشط'], 'pending' => ['Waiting for approva
 $ART_W = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'قيد المراجعة'], 'approved' => ['In the Gallery', 'في المعرض'], 'rejected' => ['Not approved', 'لم تتم الموافقة'], 'sold' => ['Sold', 'مباع']];
 $d = fn(?string $v) => $v ? e(date('Y-m-d H:i', strtotime($v))) : '—';
 $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
-    if (!$rows) { echo '<p class="mini">' . owBi('None yet.', 'لا شيء بعد.') . '</p>'; return; }
+    if (!$rows) { echo '<p class="mini">' . owBi('None yet', 'لا شيء بعد') . '</p>'; return; }
     echo '<div style="overflow-x:auto"><table class="table"><thead><tr><th>' . owBi('Date', 'التاريخ') . '</th><th>' . owBi('Artwork', 'العمل') . '</th>'
        . ($showBuyer ? '<th>' . owBi('Collector', 'المقتني') . '</th>' : '') . '<th>' . owBi('Status', 'الحالة') . '</th></tr></thead><tbody>';
     foreach ($rows as $r) {
@@ -96,13 +96,13 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
     <?php owCornerControls('tgl()'); ?>
   </div>
 <?php if (!$p): ?>
-  <div class="card"><p><?= owBi('This account was not found.', 'لم يتم العثور على هذا الحساب.') ?></p></div>
+  <div class="card"><p><?= owBi('This account was not found', 'لم يتم العثور على هذا الحساب') ?></p></div>
 <?php else: $sw = $STATE_W[$p['state']] ?? $STATE_W['active']; ?>
-  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved.', 'تم الحفظ.') ?></div><?php endif; ?>
+  <?php if (isset($_GET['ok'])): ?><div class="alert alert-ok"><?= owBi('Saved', 'تم الحفظ') ?></div><?php endif; ?>
   <div class="card">
     <?php $pEn = owRealName($p['full_name_en']) ?: $p['artist_en']; $pAr = owRealName($p['full_name_ar']); ?>
     <h1><?= e($pEn) ?><?php if ($pAr !== '' && $pAr !== $pEn): ?> · <span dir="rtl"><?= e($pAr) ?></span><?php endif; ?></h1>
-    <p class="mini"><?= owBi($p['role'] === 'collector' ? 'Collector' : ucfirst(str_replace('_', ' ', $p['role'])), ['collector' => 'مقتنٍ', 'artist' => 'فنان', 'admin' => 'مدير', 'sub_admin' => 'مشرف فرعي', 'institute' => 'معهد'][$p['role']] ?? $p['role']) ?>
+    <p class="mini"><?= owBi($p['role'] === 'collector' ? 'Collector' : ucfirst(str_replace('_', ' ', $p['role'])), ['collector' => 'مقتن', 'artist' => 'فنان', 'admin' => 'مدير', 'sub_admin' => 'مشرف فرعي', 'institute' => 'معهد'][$p['role']] ?? $p['role']) ?>
       · <span class="pillx"><?= owBi($sw[0], $sw[1]) ?></span> · ID <span dir="ltr"><?= e((string) ($p['public_id'] ?? $p['id'])) ?></span></p>
     <div class="kv">
       <div><b><?= owBi('Email', 'البريد') ?></b><a href="mailto:<?= e($p['email']) ?>" dir="ltr"><?= e($p['email']) ?></a> <?= (int) $p['is_verified'] ? '✓' : owBi('(not confirmed)', '(غير مؤكد)') ?></div>
@@ -121,7 +121,7 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
       <form method="post" action="admin.php"<?= (int) $p['is_banned'] === 1 ? '' : ' onsubmit="return confirm(\'Suspend this account?\');"' ?>><?= csrfField() ?><input type="hidden" name="back" value="person"><input type="hidden" name="user_id" value="<?= (int) $p['id'] ?>">
         <?php if ((int) $p['is_banned'] === 1): ?><button class="btn btn-ghost btn-sm" name="action" value="unban"><?= owBi('Lift suspension', 'إلغاء الإيقاف') ?></button><?php else: ?><button class="btn btn-danger btn-sm" name="action" value="ban"><?= owBi('Suspend', 'إيقاف') ?></button><?php endif; ?></form>
       <?php if (in_array($p['role'], ['artist', 'collector'], true)): /* delete a test or spam account (owner, 8 Nov 2026); certificates are kept as Cancelled */ ?>
-      <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.lang === 'ar' ? 'هل أنت متأكد؟ سيُحذف هذا الحساب وأعماله نهائياً. تبقى الشهادات بحالة «ملغاة».' : 'Are you sure? This account and its artworks will be deleted for good. Certificates stay as Cancelled.');"><?= csrfField() ?><input type="hidden" name="back" value="person"><input type="hidden" name="user_id" value="<?= (int) $p['id'] ?>">
+      <form method="post" action="admin.php" onsubmit="return confirm(document.documentElement.lang === 'ar' ? 'هل أنت متأكد؟ سيُحذف هذا الحساب وأعماله نهائيا. تبقى الشهادات بحالة «ملغاة».' : 'Are you sure? This account and its artworks will be deleted for good. Certificates stay as Cancelled.');"><?= csrfField() ?><input type="hidden" name="back" value="person"><input type="hidden" name="user_id" value="<?= (int) $p['id'] ?>">
         <button class="btn btn-danger btn-sm" name="action" value="delete_user"><?= owBi('Delete account', 'حذف الحساب') ?></button></form>
       <?php endif; ?>
     </div>
@@ -129,7 +129,7 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
 
   <?php if ($p['role'] === 'artist'): ?>
   <div class="card"><h2><?= owBi('Artworks', 'الأعمال') ?> (<?= count($works) ?>)</h2>
-    <?php if (!$works): ?><p class="mini"><?= owBi('None yet.', 'لا شيء بعد.') ?></p><?php else: ?>
+    <?php if (!$works): ?><p class="mini"><?= owBi('None yet', 'لا شيء بعد') ?></p><?php else: ?>
     <div style="overflow-x:auto"><table class="table"><thead><tr><th><?= owBi('Artwork', 'العمل') ?></th><th><?= owBi('Status', 'الحالة') ?></th><th><?= owBi('Price', 'السعر') ?></th><th><?= owBi('Views', 'المشاهدات') ?></th><th><?= owBi('Added', 'أُضيف') ?></th></tr></thead><tbody>
     <?php foreach ($works as $w): $aw = $ART_W[$w['state']] ?? $ART_W['pending']; ?>
       <tr><td><?= e($w['title_en'] ?: $w['title_ar']) ?></td><td><?= owBi($aw[0], $aw[1]) ?></td><td><?= number_format((float) $w['price']) ?> <?= owBi('SAR', 'ر.س') ?></td><td><?= (int) $w['views'] ?></td><td class="mini"><?= $d($w['created_at']) ?></td></tr>
@@ -141,13 +141,13 @@ $inqTable = function (array $rows, bool $showBuyer) use ($d): void {
   <?php if ($p['role'] !== 'artist' || $sent): ?>
   <div class="card"><h2><?= owBi('Requests they sent', 'الطلبات التي أرسلها') ?> (<?= count($sent) ?>)</h2><?php $inqTable($sent, false); ?></div>
   <div class="card"><h2><?= owBi('Favorites', 'المفضلة') ?> (<?= count($favs) ?>)</h2>
-    <?php if (!$favs): ?><p class="mini"><?= owBi('None yet.', 'لا شيء بعد.') ?></p><?php else: ?><ul>
+    <?php if (!$favs): ?><p class="mini"><?= owBi('None yet', 'لا شيء بعد') ?></p><?php else: ?><ul>
     <?php foreach ($favs as $f): ?><li><?= e($f['title_en'] ?: $f['title_ar']) ?> <span class="mini">· <?= $d($f['created_at']) ?></span></li><?php endforeach; ?></ul><?php endif; ?>
   </div>
   <?php endif; ?>
 
   <div class="card"><h2><?= owBi('Activity', 'النشاط') ?></h2>
-    <?php if (!$log): ?><p class="mini"><?= owBi('No activity recorded yet.', 'لا نشاط مسجل بعد.') ?></p><?php else: ?>
+    <?php if (!$log): ?><p class="mini"><?= owBi('No activity recorded yet', 'لا نشاط مسجل بعد') ?></p><?php else: ?>
     <div style="overflow-x:auto"><table class="table"><thead><tr><th><?= owBi('When', 'متى') ?></th><th><?= owBi('Who', 'من') ?></th><th><?= owBi('What', 'ماذا') ?></th></tr></thead><tbody>
     <?php foreach ($log as $l): $w = OW_ACTION_WORDS[$l['action']] ?? [$l['action'], $l['action']]; ?>
       <tr><td class="mini"><?= $d($l['created_at']) ?></td><td><?= e($l['actor_type'] === 'buyer' ? 'Collector' : ucfirst(str_replace('_', ' ', $l['actor_type']))) ?></td>

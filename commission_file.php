@@ -13,7 +13,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/commission_lib.php';
 require_once __DIR__ . '/admin_shell.php';
-$no = function () { http_response_code(404); header('Cache-Control: no-store'); exit('Not found.'); };
+$no = function () { http_response_code(404); header('Cache-Control: no-store'); exit('Not found'); };
 if (!owCommReady()) $no();
 $st = getDB()->prepare('SELECT f.*, c.artist_id, c.status, c.ref_no, c.access_hash FROM commission_files f JOIN commissions c ON c.id = f.commission_id WHERE f.id = :id AND f.deleted_at IS NULL');
 $st->execute([':id' => (int) ($_GET['id'] ?? 0)]);

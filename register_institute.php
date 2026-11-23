@@ -15,18 +15,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $v['email'] = strtolower($v['email']);
     $pass = (string) ($_POST['password'] ?? ''); $confirm = (string) ($_POST['confirm'] ?? '');
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $err = ['Security check failed. Please try again.', 'فشل التحقق الأمني. حاول مرة أخرى.'];
-    elseif (($_POST['website_hp'] ?? '') !== '') $err = ['Please try again.', 'حاول مرة أخرى.'];
+    elseif (($_POST['website_hp'] ?? '') !== '') $err = ['Please try again', 'حاول مرة أخرى'];
     elseif (owSignupLimited()) $err = ['Too many new accounts from here. Please try again in an hour.', 'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'];
-    elseif ($v['name_en'] === '' || $v['name_ar'] === '' || $v['city_en'] === '' || $v['city_ar'] === '' || $v['person'] === '') $err = ['Please fill in the required fields.', 'يرجى تعبئة الحقول المطلوبة.'];
-    elseif (owNameProblem($v['person'], true) !== '') $err = ['Please write the contact person’s name in letters.', 'يرجى كتابة اسم المسؤول بالحروف.'];
-    elseif (!filter_var($v['email'], FILTER_VALIDATE_EMAIL)) $err = ['Please enter a valid email address.', 'يرجى إدخال بريد إلكتروني صالح.'];
-    elseif (!preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $v['phone'])) $err = ['Please enter a valid phone number.', 'يرجى إدخال رقم هاتف صالح.'];
-    elseif ($v['website'] !== '' && !owSafeLink($v['website'], 'web')[1]) $err = ['Please check the website address.', 'يرجى مراجعة عنوان الموقع.'];
-    elseif (!owPasswordStrong($pass)) $err = ['The password needs at least 8 characters, with a capital letter, a number and a symbol.', 'كلمة المرور تحتاج 8 أحرف على الأقل، فيها حرف كبير ورقم ورمز.'];
-    elseif ($pass !== $confirm) $err = ['Passwords do not match.', 'كلمتا المرور غير متطابقتين.'];
+    elseif ($v['name_en'] === '' || $v['name_ar'] === '' || $v['city_en'] === '' || $v['city_ar'] === '' || $v['person'] === '') $err = ['Please fill in the required fields', 'يرجى تعبئة الحقول المطلوبة'];
+    elseif (owNameProblem($v['person'], true) !== '') $err = ['Please write the contact person’s name in letters', 'يرجى كتابة اسم المسؤول بالحروف'];
+    elseif (!filter_var($v['email'], FILTER_VALIDATE_EMAIL)) $err = ['Please enter a valid email address', 'يرجى إدخال بريد إلكتروني صالح'];
+    elseif (!preg_match('/^[+0-9][0-9 \-()]{6,29}$/', $v['phone'])) $err = ['Please enter a valid phone number', 'يرجى إدخال رقم هاتف صالح'];
+    elseif ($v['website'] !== '' && !owSafeLink($v['website'], 'web')[1]) $err = ['Please check the website address', 'يرجى مراجعة عنوان الموقع'];
+    elseif (!owPasswordStrong($pass)) $err = ['The password needs at least 8 characters, with a capital letter, a number and a symbol', 'كلمة المرور تحتاج 8 أحرف على الأقل، فيها حرف كبير ورقم ورمز'];
+    elseif ($pass !== $confirm) $err = ['Passwords do not match', 'كلمتا المرور غير متطابقتين'];
     else {
         $st = getDB()->prepare('SELECT 1 FROM users WHERE LOWER(TRIM(email)) = :e LIMIT 1'); $st->execute([':e' => $v['email']]);
-        if ($st->fetchColumn()) $err = ['An account with this email already exists.', 'يوجد حساب بهذا البريد الإلكتروني بالفعل.'];
+        if ($st->fetchColumn()) $err = ['An account with this email already exists', 'يوجد حساب بهذا البريد الإلكتروني بالفعل'];
         else {
             $db = getDB();
             $token = bin2hex(random_bytes(32));
@@ -61,10 +61,10 @@ owBookTop('Join as an art institute', 'انضم كمعهد فني', 'register_in
   <h1><?= owBi('Join as an art institute', 'انضم كمعهد فني') ?></h1>
   <p><?= owBi('List your courses on Oweili. Students register and pay here, and you follow everything from your own dashboard. Oweili keeps ' . rtrim(rtrim(number_format(owCourseCommission(), 2), '0'), '.') . '% of each registration, before VAT. You are paid once the course has started.',
               'اعرض دوراتك على أويلي. يسجّل الطلاب ويدفعون هنا، وتتابع كل شيء من لوحتك الخاصة. يحتفظ أويلي بـ ' . rtrim(rtrim(number_format(owCourseCommission(), 2), '0'), '.') . '٪ من كل تسجيل، قبل الضريبة. وتُدفع مستحقاتك بعد بداية الدورة.') ?></p>
-  <p class="mini"><?= owBi('Every institute is reviewed by the Oweili team before it shows.', 'يراجع فريق أويلي كل معهد قبل ظهوره.') ?></p>
+  <p class="mini"><?= owBi('Every institute is reviewed by the Oweili team before it shows', 'يراجع فريق أويلي كل معهد قبل ظهوره') ?></p>
 </div>
 <?php if ($ok): ?>
-  <div class="card"><div class="alert alert-ok" role="status"><?= owBi('Thank you! Please confirm your email. We will review your institute and let you know.', 'شكراً لك! يرجى تأكيد بريدك. سنراجع معهدك ونبلغك.') ?></div></div>
+  <div class="card"><div class="alert alert-ok" role="status"><?= owBi('Thank you! Please confirm your email. We will review your institute and let you know.', 'شكرا لك! يرجى تأكيد بريدك. سنراجع معهدك ونبلغك.') ?></div></div>
 <?php else: ?>
 <?php if ($err): ?><div class="alert alert-error" role="alert"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>
 <form method="post" action="register_institute.php" class="card"><?= csrfField() ?>

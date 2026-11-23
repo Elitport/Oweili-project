@@ -147,25 +147,25 @@ const OW_ACTION_WORDS = [
     'password_change' => ['Changed the password', 'غيّر كلمة المرور'],
     'password_reset'  => ['Reset the password', 'أعاد تعيين كلمة المرور'],
     'email_change'    => ['Changed the email address', 'غيّر البريد الإلكتروني'],
-    'favorite_add'    => ['Saved an artwork to favorites', 'حفظ عملاً في المفضلة'],
-    'favorite_remove' => ['Removed an artwork from favorites', 'أزال عملاً من المفضلة'],
+    'favorite_add'    => ['Saved an artwork to favorites', 'حفظ عملا في المفضلة'],
+    'favorite_remove' => ['Removed an artwork from favorites', 'أزال عملا من المفضلة'],
     'inquiry_sent'    => ['Sent an "I’m Interested" request', 'أرسل طلب «أنا مهتم»'],
     'verify_resend'   => ['Asked for a new confirmation email', 'طلب رسالة تأكيد جديدة'],
     'notify_update'   => ['Changed the email choices', 'غيّر اختيارات الرسائل'],
-    'artwork_submit'  => ['Sent an artwork for review', 'أرسل عملاً للمراجعة'],
-    'artwork_edit'    => ['Edited an artwork', 'عدّل عملاً'],
-    'artwork_delete'  => ['Deleted an artwork', 'حذف عملاً'],
+    'artwork_submit'  => ['Sent an artwork for review', 'أرسل عملا للمراجعة'],
+    'artwork_edit'    => ['Edited an artwork', 'عدّل عملا'],
+    'artwork_delete'  => ['Deleted an artwork', 'حذف عملا'],
     'artwork_delete_fail' => ['Tried to delete an artwork (not deleted)', 'حاول حذف عمل (لم يُحذف)'],
     'artwork_approve' => ['Approved an artwork', 'وافق على عمل'],
     'artwork_reject'  => ['Did not approve an artwork', 'لم يوافق على عمل'],
-    'artwork_sold'    => ['Marked an artwork as sold', 'علّم عملاً كمباع'],
+    'artwork_sold'    => ['Marked an artwork as sold', 'علّم عملا كمباع'],
     'user_approve'    => ['Approved an artist', 'وافق على فنان'],
-    'user_unapprove'  => ['Set an artist back to pending', 'أعاد فناناً إلى الانتظار'],
-    'user_suspend'    => ['Suspended an account', 'أوقف حساباً'],
+    'user_unapprove'  => ['Set an artist back to pending', 'أعاد فنانا إلى الانتظار'],
+    'user_suspend'    => ['Suspended an account', 'أوقف حسابا'],
     'user_unsuspend'  => ['Lifted a suspension', 'ألغى إيقاف حساب'],
     'inquiry_status'  => ['Changed a request status', 'غيّر حالة طلب'],
     'inquiry_note'    => ['Wrote a private note on a request', 'كتب ملاحظة خاصة على طلب'],
-    'institute_save'  => ['Saved an institute', 'حفظ معهداً'],
+    'institute_save'  => ['Saved an institute', 'حفظ معهدا'],
     'course_save'     => ['Saved a course', 'حفظ دورة'],
     'admin_login'     => ['Admin signed in', 'دخول الإدارة'],
     'photo_change'    => ['Changed the photo of a live artwork', 'غيّر صورة عمل معروض'],
@@ -275,10 +275,10 @@ function owSignupCounted(int $newUserId, string $role): void {
 /* The "please confirm your email" message, in English and Arabic */
 function owVerifyEmailBody(string $verifyUrl, bool $artist = false): string {
     return "Welcome to Oweili!\r\n\r\nPlease confirm your email address with this link:\r\n" . $verifyUrl . "\r\n\r\n"
-         . "The link works for 48 hours." . ($artist ? " After that, our team reviews your portfolio before your profile goes live." : '') . "\r\n\r\n"
+         . "The link works for 48 hours." . ($artist ? " After that, our team reviews your portfolio before your profile goes live" : '') . "\r\n\r\n"
          . "—\r\n\r\n"
-         . "أهلاً بك في أويلي!\r\n\r\nيرجى تأكيد بريدك الإلكتروني عبر هذا الرابط:\r\n" . $verifyUrl . "\r\n\r\n"
-         . "يعمل الرابط لمدة 48 ساعة." . ($artist ? " بعدها يراجع فريقنا أعمالك قبل ظهور ملفك." : '') . "\r\n";
+         . "أهلا بك في أويلي!\r\n\r\nيرجى تأكيد بريدك الإلكتروني عبر هذا الرابط:\r\n" . $verifyUrl . "\r\n\r\n"
+         . "يعمل الرابط لمدة 48 ساعة." . ($artist ? " بعدها يراجع فريقنا أعمالك قبل ظهور ملفك" : '') . "\r\n";
 }
 
 /* A social or website link that is safe to show as a link: only http(s).

@@ -36,7 +36,7 @@ owAdminTop('Orders and payouts', 'الطلبات والمدفوعات', '.o-row{
 ?>
   <h1 id="top"><?= owBi('Orders and payouts', 'الطلبات والمدفوعات') ?> <span class="pillx<?= $on ? ' on' : ' warn' ?>"><?= $on ? owBi('Payments on', 'الدفع يعمل') : owBi('Payments switched off', 'الدفع متوقف') ?></span></h1>
   <p class="mini"><?= owBi('Escrow: the collector’s money is held by Oweili and paid to the artist only after you approve the payout (Admin → Waiting for approval): the request comes when the collector sends "I received the artwork" with a photo, or ' . OW_PAYOUT_ASK_DAYS . ' days after delivery with no complaint; a complaint holds it. Minus Oweili’s commission (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '%, before VAT).',
-                       'الضمان: يحتفظ أويلي بمال المقتني ولا يُدفع للفنان إلا بعد موافقتك على الدفعة (الإدارة ← بانتظار الموافقة): يصل الطلب حين يرسل المقتني «استلمت العمل» مع صورة، أو بعد ' . OW_PAYOUT_ASK_DAYS . ' أيام من التسليم دون شكوى، والشكوى توقفه. مخصوماً منه عمولة أويلي (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '٪ قبل الضريبة).') ?></p>
+                       'الضمان: يحتفظ أويلي بمال المقتني ولا يُدفع للفنان إلا بعد موافقتك على الدفعة (الإدارة ← بانتظار الموافقة): يصل الطلب حين يرسل المقتني «استلمت العمل» مع صورة، أو بعد ' . OW_PAYOUT_ASK_DAYS . ' أيام من التسليم دون شكوى، والشكوى توقفه. مخصوما منه عمولة أويلي (' . rtrim(rtrim(number_format(owCommissionRate(), 2), '0'), '.') . '٪ قبل الضريبة).') ?></p>
   <?php if (!$on): ?>
   <div class="card"><h2><?= owBi('What is needed to switch payments on', 'ما المطلوب لتشغيل الدفع') ?></h2>
     <ul class="miss"><?php foreach ($missing as [$en, $ar]): ?><li><?= owBi($en, $ar) ?></li><?php endforeach; ?></ul>
@@ -58,7 +58,7 @@ owAdminTop('Orders and payouts', 'الطلبات والمدفوعات', '.o-row{
   <?php endif; ?>
 
   <div class="card"><h2><?= owBi('Open complaints', 'الشكاوى المفتوحة') ?> (<?= count($complaints) ?>)</h2>
-    <?php if (!$complaints): ?><p class="mini"><?= owBi('None.', 'لا يوجد.') ?></p><?php endif; ?>
+    <?php if (!$complaints): ?><p class="mini"><?= owBi('None', 'لا يوجد') ?></p><?php endif; ?>
     <?php foreach ($complaints as $c): ?>
     <div class="o-row"><span><b><?= e($c['order_no'] . ' · ' . $c['title']) ?></b><span class="mini" style="display:block" dir="auto"><?= e((string) $c['reason']) ?></span></span>
       <span class="acts"><?php foreach (['released' => 'btn-accent', 'refunded' => 'btn-danger'] as $to => $cls): ?><form method="post" action="admin_orders.php"><?= csrfField() ?><input type="hidden" name="do" value="<?= $to ?>"><input type="hidden" name="id" value="<?= (int) $c['order_id'] ?>">
@@ -66,11 +66,11 @@ owAdminTop('Orders and payouts', 'الطلبات والمدفوعات', '.o-row{
     <?php endforeach; ?></div>
 
   <div class="card"><h2><?= owBi('Orders', 'الطلبات') ?> (<?= count($orders) ?>)</h2>
-    <?php if (!$orders): ?><p class="mini"><?= owBi('No orders yet.', 'لا طلبات بعد.') ?></p><?php endif; ?>
+    <?php if (!$orders): ?><p class="mini"><?= owBi('No orders yet', 'لا طلبات بعد') ?></p><?php endif; ?>
     <?php foreach ($orders as $o): ?><a class="o-row" href="admin_orders.php?id=<?= (int) $o['id'] ?>"><span><b><?= e($o['order_no'] . ' · ' . $o['title']) ?></b><span class="mini" style="display:block"><?= number_format((float) $o['amount'], 2) ?> SAR · <?= e((string) $o['buyer_name']) ?> · <?= e((string) $o['created_at']) ?></span></span><?= owOrderPill((string) $o['status']) ?></a><?php endforeach; ?></div>
 
   <div class="card"><h2><?= owBi('Artist payouts', 'مستحقات الفنانين') ?></h2>
-    <?php if (!$payouts): ?><p class="mini"><?= owBi('No payouts yet.', 'لا مستحقات بعد.') ?></p><?php endif; ?>
+    <?php if (!$payouts): ?><p class="mini"><?= owBi('No payouts yet', 'لا مستحقات بعد') ?></p><?php endif; ?>
     <?php foreach ($payouts as $p): ?><div class="o-row"><span><b><?= e($p['artist_en']) ?> · <?= number_format((float) $p['amount'], 2) ?> <?= e((string) $p['currency']) ?></b><span class="mini" style="display:block"><?= e((string) $p['note']) ?> · <?= e((string) $p['created_at']) ?><?= $p['reference'] ? ' · ' . e((string) $p['reference']) : '' ?></span></span>
       <?php if ($p['status'] === 'pending'): ?><form method="post" action="admin_orders.php" class="acts"><?= csrfField() ?><input type="hidden" name="do" value="payout_paid"><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
         <input name="reference" required maxlength="120" placeholder="<?= e('Bank reference · مرجع التحويل') ?>" style="max-width:200px"><button class="btn btn-accent btn-sm"><?= owBi('Mark paid', 'سجّل الدفع') ?></button></form>

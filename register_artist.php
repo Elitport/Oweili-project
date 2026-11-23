@@ -175,24 +175,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
 $ERR = [
     'too_big'=>['en'=>'Your files are too large to send together. The limit is ' . ($LIM['total'] !== '' ? $LIM['total'] . 'MB in total' : 'set by the server') . ': photo up to ' . $LIM['photo'] . 'MB, each artwork photo up to ' . $LIM['photo'] . 'MB, video up to ' . $LIM['video'] . 'MB. Please choose smaller files or leave the video out.',
-                'ar'=>'ملفاتك أكبر من المسموح إرسالها معاً. الحد ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'يحدده الخادم') . ': الصورة حتى ' . $LIM['photo'] . ' ميغابايت، وكل صورة عمل حتى ' . $LIM['photo'] . ' ميغابايت، والفيديو حتى ' . $LIM['video'] . ' ميغابايت. يرجى اختيار ملفات أصغر أو ترك الفيديو.'],
+                'ar'=>'ملفاتك أكبر من المسموح إرسالها معا. الحد ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'يحدده الخادم') . ': الصورة حتى ' . $LIM['photo'] . ' ميغابايت، وكل صورة عمل حتى ' . $LIM['photo'] . ' ميغابايت، والفيديو حتى ' . $LIM['video'] . ' ميغابايت. يرجى اختيار ملفات أصغر أو ترك الفيديو.'],
     'csrf'=>['en'=>'This page was open for a long time, so we could not send it. Please try again. Files must stay under ' . ($LIM['total'] !== '' ? $LIM['total'] . 'MB in total' : 'the size limits shown') . '.',
-             'ar'=>'بقيت الصفحة مفتوحة وقتاً طويلاً فلم نتمكن من إرسالها. حاول مرة أخرى. يجب ألا تتجاوز الملفات ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'الحدود الموضحة') . '.'],
-    'name_letters'=>['en'=>'Please write your names in letters, not only numbers or symbols.','ar'=>'يرجى كتابة الأسماء بالحروف، لا بالأرقام أو الرموز فقط.'],
-    'required'=>['en'=>'Please fill in all required fields.','ar'=>'يرجى تعبئة جميع الحقول المطلوبة.'],
-    'email'=>['en'=>'Please enter a valid email address.','ar'=>'يرجى إدخال بريد إلكتروني صالح.'],
-    'phone'=>['en'=>'Please enter a valid mobile number.','ar'=>'يرجى إدخال رقم جوال صالح.'],
-    'weak'=>['en'=>'Password does not meet the requirements.','ar'=>'كلمة المرور لا تستوفي الشروط.'],
-    'mismatch'=>['en'=>'Passwords do not match.','ar'=>'كلمتا المرور غير متطابقتين.'],
+             'ar'=>'بقيت الصفحة مفتوحة وقتا طويلا فلم نتمكن من إرسالها. حاول مرة أخرى. يجب ألا تتجاوز الملفات ' . ($LIM['total'] !== '' ? $LIM['total'] . ' ميغابايت للمجموع' : 'الحدود الموضحة') . '.'],
+    'name_letters'=>['en'=>'Please write your names in letters, not only numbers or symbols','ar'=>'يرجى كتابة الأسماء بالحروف، لا بالأرقام أو الرموز فقط'],
+    'required'=>['en'=>'Please fill in all required fields','ar'=>'يرجى تعبئة جميع الحقول المطلوبة'],
+    'email'=>['en'=>'Please enter a valid email address','ar'=>'يرجى إدخال بريد إلكتروني صالح'],
+    'phone'=>['en'=>'Please enter a valid mobile number','ar'=>'يرجى إدخال رقم جوال صالح'],
+    'weak'=>['en'=>'Password does not meet the requirements','ar'=>'كلمة المرور لا تستوفي الشروط'],
+    'mismatch'=>['en'=>'Passwords do not match','ar'=>'كلمتا المرور غير متطابقتين'],
     'photo'=>['en'=>'A profile picture (JPG/PNG, max ' . $LIM['photo'] . 'MB) is required.','ar'=>'الصورة الشخصية مطلوبة (JPG/PNG، بحد أقصى ' . $LIM['photo'] . ' ميغابايت).'],
-    'portfolio_req'=>['en'=>'Please upload at least one portfolio image.','ar'=>'يرجى رفع صورة واحدة على الأقل لأعمالك.'],
-    'portfolio_max'=>['en'=>'You can upload up to 5 portfolio images.','ar'=>'يمكنك رفع حتى 5 صور لأعمالك.'],
+    'portfolio_req'=>['en'=>'Please upload at least one portfolio image','ar'=>'يرجى رفع صورة واحدة على الأقل لأعمالك'],
+    'portfolio_max'=>['en'=>'You can upload up to 5 portfolio images','ar'=>'يمكنك رفع حتى 5 صور لأعمالك'],
     'portfolio'=>['en'=>'Portfolio images must be JPG/PNG under ' . $LIM['photo'] . 'MB each.','ar'=>'يجب أن تكون صور الأعمال JPG/PNG وأقل من ' . $LIM['photo'] . ' ميغابايت لكل صورة.'],
     'video'=>['en'=>'The video must be MP4 or MOV and under ' . $LIM['video'] . 'MB. You can also leave it out.','ar'=>'يجب أن يكون الفيديو بصيغة MP4 أو MOV وأقل من ' . $LIM['video'] . ' ميغابايت. ويمكنك تركه.'],
-    'exists'=>['en'=>'An account with this email already exists.','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل.'],
+    'exists'=>['en'=>'An account with this email already exists','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل'],
     'rate'=>['en'=>'Too many new accounts from here. Please try again in an hour.','ar'=>'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'],
 ];
-$OK = ['check_email'=>['en'=>'Thanks! Check your email to verify. Our team will review your portfolio before approval.','ar'=>'شكراً! راجع بريدك للتفعيل. سيراجع فريقنا أعمالك قبل الموافقة.']];
+$OK = ['check_email'=>['en'=>'Thanks! Check your email to verify. Our team will review your portfolio before approval.','ar'=>'شكرا! راجع بريدك للتفعيل. سيراجع فريقنا أعمالك قبل الموافقة.']];
 /* The exact boxes that are wrong (marked on the form) */
 $bad = match ($errCode) {
     'required'      => array_keys(array_filter(['first_name' => $old['first'], 'artist_name' => $old['artist'], 'email' => $old['email'], 'phone' => $old['phone'], 'city' => $old['city']], fn($v) => $v === '')),
@@ -242,10 +242,10 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
     <section class="ja-get" aria-labelledby="ja-get-h">
       <h2 id="ja-get-h"><?= owBi('What you get', 'ما تحصل عليه') ?></h2>
       <ul>
-        <li><?= owBi('Free to join.', 'الانضمام مجاني.') ?></li>
+        <li><?= owBi('Free to join', 'الانضمام مجاني') ?></li>
         <li><?= owBi('Oweili takes ' . owCommissionText() . ' only when a work sells.', 'تأخذ أويلي ' . owCommissionText() . ' فقط عند بيع العمل.') ?></li>
-        <li><?= owBi('You are paid after the collector confirms receipt with a photo of your artwork (or 7 days after delivery with no complaint) and Oweili approves the payment.', 'تحصل على المبلغ بعد أن يؤكد المقتني الاستلام مع صورة لعملك (أو بعد 7 أيام من التسليم دون شكوى) ويعتمد أويلي الدفعة.') ?></li>
-        <li><?= owBi('Every artist is reviewed by our team.', 'يراجع فريقنا كل فنان.') ?></li>
+        <li><?= owBi('You are paid after the collector confirms receipt with a photo of your artwork (or 7 days after delivery with no complaint) and Oweili approves the payment', 'تحصل على المبلغ بعد أن يؤكد المقتني الاستلام مع صورة لعملك (أو بعد 7 أيام من التسليم دون شكوى) ويعتمد أويلي الدفعة') ?></li>
+        <li><?= owBi('Every artist is reviewed by our team', 'يراجع فريقنا كل فنان') ?></li>
       </ul>
     </section>
     <div class="err-box" id="err" data-en="<?= e($errEn) ?>" data-ar="<?= e($errAr) ?>" style="display:<?= $errCode?'block':'none' ?>;"><?= e($errEn) ?></div>
@@ -272,12 +272,12 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
         <p class="hint" id="t-photo-hint">JPG or PNG, up to <?= e($LIM['photo']) ?>MB</p></div>
       <div class="field<?= owBadField($bad, 'portfolio') ?>"><label id="t-l-port" for="f-port">Your artworks (required, up to 5 photos)</label>
         <input type="file" id="f-port" name="portfolio[]"<?= owBadAttr($bad, 'portfolio') ?> accept="image/jpeg,image/png" multiple required data-max="<?= (int) $arPhotoMax ?>">
-        <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each.</p>
+        <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each</p>
         <p class="hint" id="t-port-note">These are samples for our review. After approval, you add each artwork with its 3 stage photos (25%, 50%, 100%).</p></div>
       <div class="field<?= owBadField($bad, 'art_video') ?>"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt"><?= owIsAr() ? 'اختياري' : 'Optional' ?></span></label>
         <input type="file" id="f-video" name="art_video"<?= owBadAttr($bad, 'art_video') ?> accept="video/mp4,video/quicktime,.mp4,.mov" data-max="<?= (int) $arVideoMax ?>">
-        <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to <?= e($LIM['video']) ?>MB.</p></div>
-      <?php if ($LIM['total'] !== ''): ?><p class="hint" id="t-total-hint">All files together: up to <?= e($LIM['total']) ?>MB.</p><?php endif; ?>
+        <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to <?= e($LIM['video']) ?>MB</p></div>
+      <?php if ($LIM['total'] !== ''): ?><p class="hint" id="t-total-hint">All files together: up to <?= e($LIM['total']) ?>MB</p><?php endif; ?>
       <div class="field<?= owBadField($bad, 'password') ?>"><label id="t-l-pass" for="password">Password</label><input type="password" id="password" name="password"<?= owBadAttr($bad, 'password') ?> required oninput="checkRules()">
         <ul class="pw-rules">
           <li id="r-len"><span class="mark">✓</span><span id="t-r-len">Minimum 8 characters</span></li>
@@ -315,14 +315,14 @@ const T={
     bioen:'نبذة عنك بالإنجليزية (اختياري)',bioar:'نبذة عنك بالعربية (اختياري)',
     photo:'صورتك (مطلوبة)',photoHint:'JPG أو PNG حتى '+LIM.photo+' ميغابايت',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر. JPG أو PNG حتى '+LIM.photo+' ميغابايت لكل صورة.',portNote:'هذه نماذج لمراجعتنا. بعد الموافقة، تضيف كل عمل مع صور مراحله الثلاث (25%، 50%، 100%).',
     video:'مقطع قصير وأنت تعمل',videoHint:'صوّر يديك وهي ترسم أو تلوّن. هكذا نعرف أن الفن من صنعك. MP4 أو MOV حتى '+LIM.video+' ميغابايت.',
-    totalHint:'كل الملفات معاً: حتى '+LIM.total+' ميغابايت.',
+    totalHint:'كل الملفات معا: حتى '+LIM.total+' ميغابايت.',
     tooBigFile:function(n,mb){return '«'+n+'» أكبر من '+mb+' ميغابايت. يرجى اختيار ملف أصغر.';},
-    tooBigAll:'ملفاتك معاً أكبر من '+LIM.total+' ميغابايت. يرجى اختيار ملفات أصغر أو ترك الفيديو.',
+    tooBigAll:'ملفاتك معا أكبر من '+LIM.total+' ميغابايت. يرجى اختيار ملفات أصغر أو ترك الفيديو.',
     pass:'كلمة المرور',confirm:'تأكيد كلمة المرور',
     rlen:'الحد الأدنى 8 أحرف',rupper:'حرف كبير واحد على الأقل',rnum:'رقم واحد على الأقل',rspec:'رمز خاص واحد على الأقل (!@#$%^&*)',
     submit:'أرسل للمراجعة',have:'أنت معنا بالفعل؟',login:'تسجيل الدخول',
     nav:{community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
-      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجاناً'}}
+      sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',login:'تسجيل الدخول',reg:'انضم مجانا'}}
 };
 let L='en';
 /* Check sizes on the phone before sending, so nothing is uploaded for nothing */

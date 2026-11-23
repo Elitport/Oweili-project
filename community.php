@@ -65,7 +65,7 @@ $owSafeImg = 'owImgSrc';   // artwork_lib.php: cleans up saved picture paths
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Community', 'ar' => 'المجتمع', 'desc_en' => 'Meet the artists of Oweili and the newest works made by hand.', 'desc_ar' => 'تعرّف على فناني أويلي وأحدث الأعمال المصنوعة باليد.', 'path' => 'community.php']); ?>
+<?php require_once __DIR__ . '/seo_lib.php'; owSeo(['en' => 'Community', 'ar' => 'المجتمع', 'desc_en' => 'Meet the artists of Oweili and the newest works made by hand', 'desc_ar' => 'تعرّف على فناني أويلي وأحدث الأعمال المصنوعة باليد', 'path' => 'community.php']); ?>
 <?php include __DIR__ . '/theme_head.php'; ?>
 <link rel="stylesheet" href="<?= owAsset('assets/css/oweili.css') ?>">
 <style>
@@ -147,7 +147,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
     <a class="comm-card" href="register.php">
       <div class="comm-icon">🎨</div>
       <h3 id="t-c2">Professional Artists Guild</h3>
-      <p id="t-c2d">A space for experienced artists to work together and guide new talent.</p>
+      <p id="t-c2d">A space for experienced artists to work together and guide new talent</p>
       <span class="comm-link" id="t-c2l">Apply to Join →</span>
     </a>
     <a class="comm-card" href="register.php">
@@ -183,7 +183,7 @@ a.inspo-card:focus-visible{outline:2px solid var(--color-accent);outline-offset:
     <div class="inspo-card inspo-empty">
       <div class="inspo-img" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.6"/></svg></div>
       <div class="inspo-body">
-        <h4><?= owBi('Be the first to share your work here.', 'كن أول من يشارك عمله هنا.') ?></h4>
+        <h4><?= owBi('Be the first to share your work here', 'كن أول من يشارك عمله هنا') ?></h4>
         <a class="btn btn-primary btn-sm" href="register_artist.php"><?= owBi('Join as Artist', 'انضم كفنان') ?></a>
       </div>
     </div>
@@ -197,18 +197,18 @@ const T={
     badge:'Artists Together',h1:'The <em>Artist Community</em>',desc:'Art grows when artists meet. Share your work, learn from each other, and make friends who get it.',
     s1:'Artists With Us',s2:'Artworks in Gallery',s3:'Art Styles Covered',s4:'Saudi Community',
     commTitle:'Community Spaces',
-    c2:'Professional Artists Guild',c2d:'A space for experienced artists to work together and guide new talent.',c2l:'Apply to Join →',
+    c2:'Professional Artists Guild',c2d:'A space for experienced artists to work together and guide new talent',c2l:'Apply to Join →',
     c3:'Daily Inspiration',c3d:'A little spark every day. Featured works, color palettes and new techniques to try.',c3l:'Explore →',
     c4:'Teach With Us',c4d:'Love sharing what you know? Become an instructor and help others grow.',c4l:'Apply Now →',
     inspoTitle:'Daily Inspiration',
 },
   ar:{dir:'rtl',lb:'English',explore:'استكشف',community:'المجتمع',support:'الدعم',login:'تسجيل الدخول',
-    badge:'فنانون معاً',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
+    badge:'فنانون معا',h1:'<em>مجتمع</em> الفنانين',desc:'الفن يكبر حين يلتقي الفنانون. شارك أعمالك، وتعلّم من غيرك، واصنع صداقات تفهم شغفك.',
     s1:'فنانون معنا',s2:'عمل فني في المعرض',s3:'أسلوب فني موثّق',s4:'المجتمع السعودي',
     commTitle:'مساحات المجتمع',
-    c2:'رابطة الرسامين المحترفين',c2d:'مساحة للفنانين المتمرّسين ليتعاونوا ويأخذوا بيد المواهب الجديدة.',c2l:'تقدّم للانضمام →',
+    c2:'رابطة الرسامين المحترفين',c2d:'مساحة للفنانين المتمرّسين ليتعاونوا ويأخذوا بيد المواهب الجديدة',c2l:'تقدّم للانضمام →',
     c3:'الإلهام اليومي',c3d:'شرارة صغيرة كل يوم. أعمال مختارة، ولوحات ألوان، وتقنيات جديدة لتجربتها.',c3l:'استكشف →',
-    c4:'علّم معنا',c4d:'تحب أن تشارك ما تعرفه؟ كن مدرباً وساعد غيرك على النمو.',c4l:'تقدّم الآن →',
+    c4:'علّم معنا',c4d:'تحب أن تشارك ما تعرفه؟ كن مدربا وساعد غيرك على النمو.',c4l:'تقدّم الآن →',
     inspoTitle:'إلهام اليوم',
 }
 };
@@ -219,7 +219,7 @@ const NAV={
     login:'Sign In',reg:'Join Free'},
   ar:{lb:'English',community:'المجتمع',marketplace:'المعرض',explore:'الأساليب الفنية',support:'الدعم',
     sp1:'تواصل معنا',sp2:'كيف يعمل الموقع',sp3:'شروط الاستخدام',
-    login:'تسجيل الدخول',reg:'انضم مجاناً'}
+    login:'تسجيل الدخول',reg:'انضم مجانا'}
 };
 function applyNav(l){
   const n=NAV[l];

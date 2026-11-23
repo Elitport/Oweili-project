@@ -27,7 +27,7 @@ function owConsentMethods(): array {
         'email'       => ['Email', 'البريد الإلكتروني'],
         'whatsapp'    => ['WhatsApp', 'واتساب'],
         'signed_form' => ['Signed Form', 'نموذج موقّع'],
-        'in_person'   => ['In Person', 'شخصياً'],
+        'in_person'   => ['In Person', 'شخصيا'],
         'other'       => ['Other', 'أخرى'],
     ];
 }
@@ -164,7 +164,7 @@ function owExcerpt(string $text, int $len = 155): string {
 
 /* "12 Nov 2026" or "12 Nov – 20 Dec 2026" style range, in both languages. */
 function owDateRangeBi(?string $start, ?string $end): array {
-    if (!$start) return ['Dates to be announced', 'المواعيد تُعلن لاحقاً'];
+    if (!$start) return ['Dates to be announced', 'المواعيد تُعلن لاحقا'];
     [$sEn, $sAr] = owDateBi($start);
     if (!$end || $end === $start) return [$sEn, $sAr];
     [$eEn, $eAr] = owDateBi($end);
@@ -213,7 +213,7 @@ function owSafeConsentPath(string $p): bool {
 /* Bilingual message for an upload problem code from owStoreImage. */
 function owUploadErrBi(string $code, string $whatEn, string $whatAr): array {
     switch ($code) {
-        case 'size': return [$whatEn . ': the file is too large (10MB maximum).', $whatAr . ': الملف كبير جداً (الحد الأقصى 10 ميغابايت).'];
+        case 'size': return [$whatEn . ': the file is too large (10MB maximum).', $whatAr . ': الملف كبير جدا (الحد الأقصى 10 ميغابايت).'];
         case 'type': return [$whatEn . ': please choose a JPG, PNG or WEBP photo.', $whatAr . ': يرجى اختيار صورة بصيغة JPG أو PNG أو WEBP.'];
         default:     return [$whatEn . ': the file could not be saved. Please try again.', $whatAr . ': تعذّر حفظ الملف. يرجى المحاولة مرة أخرى.'];
     }
