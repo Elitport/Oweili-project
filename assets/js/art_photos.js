@@ -2,14 +2,7 @@
    with its credit. Every file is public domain or under a licence that allows commercial use, checked on Wikimedia Commons.
    Pictures: assets/img/styles/<style id>-s.webp / .jpg (cards, 440 px) and <style id>.webp / .jpg (window, at most 800 px). A style that is not listed keeps its drawing. */
 window.OW_ART_PHOTO = {
- "watercolor": {
-  "w": 800,
-  "h": 542,
-  "en": "J. M. W. Turner, The Blue Rigi, Sunrise, 1842",
-  "ar": "ج. م. و. تيرنر، «ريغي الزرقاء عند الشروق»، 1842",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Blue_Rigi_painting.jpg"
- },
+ "watercolor": {"w":800,"h":1130,"en":"John Singer Sargent, Rushing Water, watercolor (Nationalmuseum, Stockholm)","ar":"جون سنجر سارجنت، «ماء متدفق»، ألوان مائية (المتحف الوطني، ستوكهولم)","lic":"Public domain","page":"https://commons.wikimedia.org/wiki/File:John_Singer_Sargent_-_Rushing_Water_-_Inl%C3%A5n_JSS_522-05_-_Nationalmuseum.jpg","v":"2"},
  "oil": {
   "w": 800,
   "h": 633,
@@ -27,14 +20,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:%27Abstract_sky%27%2C_1993_-_small_acrylic_painting_by_Dutch_artist_Fons_Heijnsbroek%3B_free_download_abstract_art_image%2C_CCO.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "ink": {
-  "w": 500,
-  "h": 347,
-  "en": "Leonardo da Vinci, Landscape of the Arno Valley, 1473",
-  "ar": "ليوناردو دا فينشي، «منظر وادي أرنو»، 1473",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Leonardo_da_Vinci_-_inv_8_P_r.jpg"
- },
+ "ink": {"w":800,"h":562,"en":"Peter Pugh-Jones, Cheyne Walk, Chelsea, London, pen and ink, 1982","ar":"بيتر بيو-جونز، «تشيني ووك» في تشيلسي، لندن، قلم وحبر، 1982","lic":"CC BY-SA 4.0","page":"https://commons.wikimedia.org/wiki/File:Cheyne_Walk,_Chelsea,_London_-_Pen_and_ink_drawing_after_John_Varley.jpg","licUrl":"https://creativecommons.org/licenses/by-sa/4.0/","v":"2"},
  "pastel": {
   "w": 800,
   "h": 608,
@@ -77,34 +63,9 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Heraklion_%E2%80%94_Dolphin_fresco.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "pencil": {
-  "w": 401,
-  "h": 800,
-  "en": "Caspar David Friedrich, Study of Pine Trees and a Rock, 1812",
-  "ar": "كاسبار دافيد فريدريش، «دراسة لأشجار صنوبر وصخرة»، 1812",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Study_of_Pine_Trees_and_a_Rock_%28recto%29%3B_Landscape_%28verso%29%2C_by_Caspar_David_Friedrich_%28Getty_109JD8%29.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
- "encaustic": {
-  "w": 524,
-  "h": 800,
-  "en": "Mitzi Humphrey, Autumn Leaf, encaustic (hot wax)",
-  "ar": "ميتزي همفري، «ورقة خريف»، رسم بالشمع الساخن",
-  "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Autumn_Leaf_encaustic_painting_by_Mitzi_Humphrey.png",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "Mitzi Humphrey"
- },
- "charcoal": {
-  "w": 800,
-  "h": 627,
-  "en": "Georges Seurat, Landscape with Houses, conté crayon, 1881–82",
-  "ar": "جورج سورا، «منظر طبيعي بالبيوت»، قلم كونتيه، 1881–1882",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Landscape_with_Houses_MET_DT10966.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
+ "pencil": {"w":800,"h":464,"en":"Untitled landscape, pencil and graphite on paper, 2020","ar":"منظر بلا عنوان، قلم رصاص وغرافيت على ورق، 2020","lic":"CC BY-SA 4.0","page":"https://commons.wikimedia.org/wiki/File:Untitled,_2020,_pencil_and_graphite_on_paper_laid_down_on_canvas,_80x140.jpg","licUrl":"https://creativecommons.org/licenses/by-sa/4.0/","by":"Vpro4em","v":"2"},
+ "encaustic": {"w":800,"h":1186,"en":"Encaustic (hot wax) painting on a wood panel, brush and stencil (detail)","ar":"لوحة بالشمع الساخن (إنكوستيك) على لوح خشبي، بالفرشاة والاستنسل (جزء)","lic":"CC BY-SA 4.0","page":"https://commons.wikimedia.org/wiki/File:Encaustic_painting_on_wood_panel.jpg","licUrl":"https://creativecommons.org/licenses/by-sa/4.0/","by":"Mitzi Humphrey","v":"2"},
+ "charcoal": {"w":800,"h":640,"en":"A tree in leaf, charcoal drawing (Wellcome Collection)","ar":"شجرة مورقة، رسم بالفحم (مجموعة ويلكم)","lic":"CC BY 4.0","page":"https://commons.wikimedia.org/wiki/File:A_tree_in_leaf._Charcoal_drawing._Wellcome_V0043523.jpg","licUrl":"https://creativecommons.org/licenses/by/4.0/","v":"2"},
  "street_art": {
   "w": 800,
   "h": 532,
@@ -205,14 +166,7 @@ window.OW_ART_PHOTO = {
   "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
   "by": "Dosseman"
  },
- "hyperrealism": {
-  "w": 800,
-  "h": 617,
-  "en": "Cornelis Norbertus Gijsbrechts, The Reverse of a Framed Painting, about 1670",
-  "ar": "كورنيليس خيسبرختس، «ظهر لوحة مؤطرة»، نحو 1670",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Cornelius_Norbertus_Gijsbrechts_-_Trompe_l%27oeil._The_Reverse_of_a_Framed_Painting_-_Google_Art_Project.jpg"
- },
+ "hyperrealism": {"w":800,"h":568,"en":"Mauro David, Fruit Bowl with Melons, hyperrealistic painting","ar":"ماورو ديفيد، «سلطانية فاكهة مع شمّام»، لوحة واقعية مفرطة","lic":"CC BY 2.5","page":"https://commons.wikimedia.org/wiki/File:Fruitbowlwithmelons.jpg","licUrl":"https://creativecommons.org/licenses/by/2.5/","v":"2"},
  "collage": {
   "w": 637,
   "h": 800,
@@ -246,14 +200,7 @@ window.OW_ART_PHOTO = {
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Kazimir_Malevich_-_%27Suprematist_Composition-_White_on_White%27%2C_oil_on_canvas%2C_1918%2C_Museum_of_Modern_Art.jpg"
  },
- "surrealism": {
-  "w": 604,
-  "h": 800,
-  "en": "Paul Klee, Twittering Machine, 1922",
-  "ar": "باول كلي، «آلة التغريد»، 1922",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Paul_Klee%2C_Die_Zwitscher-Maschine%27.jpg"
- },
+ "surrealism": {"w":800,"h":1200,"en":"Vincent Fink, Lionfish Bicycle Ride, oil and acrylic on canvas","ar":"فنسنت فينك، «رحلة دراجة سمكة الأسد»، زيت وأكريليك على قماش","lic":"CC BY 4.0","page":"https://commons.wikimedia.org/wiki/File:Lionfish_Bicycle_Ride_by_Vincent_Fink.jpg","licUrl":"https://creativecommons.org/licenses/by/4.0/","v":"2"},
  "expressionism": {
   "w": 800,
   "h": 458,
@@ -344,14 +291,7 @@ window.OW_ART_PHOTO = {
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Paul_Signac_-_The_Port_of_Saint-Tropez_-_Google_Art_Project.jpg"
  },
- "cubism": {
-  "w": 548,
-  "h": 800,
-  "en": "Robert Delaunay, Eiffel Tower, 1911",
-  "ar": "روبير ديلوناي، «برج إيفل»، 1911",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:Robert_Delaunay_-_Eiffel_Tower_-_1911_-_Solomon_R._Guggenheim_Museum.jpg"
- },
+ "cubism": {"w":800,"h":522,"en":"Juan Gris, Still Life with a Guitar","ar":"خوان غريس، «طبيعة صامتة مع غيتار»","lic":"Public domain","page":"https://commons.wikimedia.org/wiki/File:Juan_Gris_-_Still_Life_with_a_Guitar.jpg","v":"2"},
  "fauvism": {
   "w": 800,
   "h": 632,
@@ -401,16 +341,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Ando_Hiroshige_-_Sudden_Shower_over_Shin-%C5%8Chashi_Bridge_and_Atake%2C_from_the_series_One_Hundre_-_1921.318_-_Cleveland_Museum_of_Art.tif",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "al_qatt_asiri": {
-  "w": 600,
-  "h": 800,
-  "en": "Traditional women painters of Asir, painted pillar, Rijal Alma village (detail)",
-  "ar": "رسامات عسير التقليديات، عمود مزيّن، قرية رجال ألمع (جزء)",
-  "lic": "CC BY 2.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Rijal_Alma_village_from_the_inside%2C_2021.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by/2.0/",
-  "by": "Richard Mortel"
- },
+ "al_qatt_asiri": {"w":800,"h":600,"en":"Traditional women painters of Asir, painted pillar, Rijal Alma village (detail)","ar":"رسامات عسير التقليديات، عمود مزيّن، قرية رجال ألمع (جزء)","lic":"CC BY 2.0","page":"https://commons.wikimedia.org/wiki/File:Rijal_Alma_village_from_the_inside%2C_2021.jpg","licUrl":"https://creativecommons.org/licenses/by/2.0/","by":"Richard Mortel","v":"2"},
  "realism": {
   "w": 800,
   "h": 664,
@@ -428,15 +359,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Mont_Sainte-Victoire_and_the_Viaduct_of_the_Arc_River_Valley_MET_DT889.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "palette_knife": {
-  "w": 800,
-  "h": 554,
-  "en": "Gustave Courbet, The Source of the Loue, 1864",
-  "ar": "غوستاف كوربيه، «منبع نهر اللو»، 1864",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:The_Source_of_the_Loue_MET_DT1964.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
+ "palette_knife": {"w":800,"h":577,"en":"Julien Grandgagnage, Still Life, painted with a palette knife","ar":"جوليان غراندغانياج، طبيعة صامتة مرسومة بسكين الألوان","lic":"CC BY-SA 4.0","page":"https://commons.wikimedia.org/wiki/File:Still_life_with_painting_knife_by_Jules_Grandgagnage.jpg","licUrl":"https://creativecommons.org/licenses/by-sa/4.0/","v":"2"},
  "impasto": {
   "w": 800,
   "h": 567,
@@ -471,14 +394,7 @@ window.OW_ART_PHOTO = {
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_View_of_Delft_-_92_-_Mauritshuis.jpg"
  },
- "alla_prima": {
-  "w": 800,
-  "h": 474,
-  "en": "John Constable, Cloud Study, 1822",
-  "ar": "جون كونستابل، «دراسة سحب»، 1822",
-  "lic": "Public domain",
-  "page": "https://commons.wikimedia.org/wiki/File:John_Constable_-_Cloud_Study_-_Google_Art_Project.jpg"
- },
+ "alla_prima": {"w":800,"h":688,"en":"John Constable, Hadleigh Castle, oil sketch, about 1828–29","ar":"جون كونستابل، «قلعة هادلي»، رسم زيتي سريع، نحو 1828–1829","lic":"Public domain","page":"https://commons.wikimedia.org/wiki/File:John_Constable_-_Hadleigh_Castle_-_Google_Art_Project.jpg","v":"2"},
  "symbolism": {
   "w": 800,
   "h": 693,
@@ -590,17 +506,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Terracotta_figure_of_a_kneeling_horse_MET_DP145568.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "foam_carving": {
-  "w": 800,
-  "h": 450,
-  "en": "A hot-wire foam cutter, the main tool for carving foam",
-  "ar": "قاطع الفوم بالسلك الساخن، الأداة الأساسية لنحت الفوم",
-  "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Hot_wire_foam_cutter.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "Fox89",
-  "v": "2"
- },
+ "foam_carving": {"w":800,"h":527,"en":"Ib Benoh, Foam Construction No. 3, foam sculpture","ar":"إب بينوه، «تكوين من الفوم رقم 3»، منحوتة من الفوم","lic":"CC BY-SA 4.0","page":"https://commons.wikimedia.org/wiki/File:Foam_construction_no3_-_dimensional_transformations_project_based_on_his_doctor_of_arts_degree_projects_-_Ib_Benoh.jpg","licUrl":"https://creativecommons.org/licenses/by-sa/4.0/","by":"Wardiverde","v":"3"},
  "metal_sculpture": {
   "w": 600,
   "h": 800,
@@ -675,15 +581,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Achterglasschildering_met_de_voorstelling_van_de_sloep_%27Zwarte_Zwolm_Courrier_van_Antwerpen%27%2C_Petrus_Cornelius_Weyts%2C_ca_1855%2C_MAS.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "fabric_painting": {
-  "w": 673,
-  "h": 449,
-  "en": "Painted cotton panel, Chancay culture, Peru, 1100–1400 (detail, Metropolitan Museum of Art)",
-  "ar": "لوح قطني مرسوم، حضارة تشانكاي، بيرو، 1100–1400 (جزء، متحف المتروبوليتان)",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Panel_MET_1979_206_459_EX_01.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
+ "fabric_painting": {"w":800,"h":600,"en":"Kalamkari cloth painted by hand, Srikalahasti, India","ar":"قماش كالامكاري مرسوم باليد، سريكالاهاستي، الهند","lic":"CC BY 3.0","page":"https://commons.wikimedia.org/wiki/File:KALAMKARI_HAND_PAINTED_CLOTH_SRIKALAHASTI_AP_-_panoramio.jpg","licUrl":"https://creativecommons.org/licenses/by/3.0/","by":"Rajaraman Sundaram","v":"2"},
  "murals": {
   "w": 800,
   "h": 533,
@@ -693,24 +591,8 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Facsimile_Painting_of_Geese%2C_Tomb_of_Nefermaat_and_Itet_MET_DT226227.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "wood_engraving": {
-  "w": 800,
-  "h": 349,
-  "en": "Carved wooden door panel, late 15th century (Metropolitan Museum of Art)",
-  "ar": "لوح باب خشبي محفور، أواخر القرن الخامس عشر (متحف المتروبوليتان)",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Carved_Door_Panel_MET_DT254702.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
- "pottery_making": {
-  "w": 710,
-  "h": 468,
-  "en": "Clay pots from Liloan, Cebu, Philippines",
-  "ar": "أوانٍ فخارية من ليلوان، سيبو، الفلبين",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Clay_Pot_from_Liloan_1.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
+ "wood_engraving": {"w":800,"h":396,"en":"Carved wooden panel with oak and beech trees, England, 1600–1650","ar":"لوح خشبي محفور بأشجار البلوط والزان، إنجلترا، 1600–1650","lic":"CC BY-SA 3.0","page":"https://commons.wikimedia.org/wiki/File:Carved_wooden_panel_with_oak_and_beech_trees.jpg","licUrl":"https://creativecommons.org/licenses/by-sa/3.0/","by":"BabelStone","v":"2"},
+ "pottery_making": {"w":800,"h":606,"en":"Clay vase made by hand, found near Resko, Poland, 3rd century","ar":"إناء من الطين مصنوع باليد، عُثر عليه قرب ريسكو في بولندا، القرن الثالث الميلادي","lic":"CC0","page":"https://commons.wikimedia.org/wiki/File:02023_Clay_vessel_(vase)_found_near_Resko,_first_half_of_the_3rd_century_AD.jpg","licUrl":"https://creativecommons.org/publicdomain/zero/1.0/","v":"2"},
  "ceramic_painting": {
   "w": 771,
   "h": 800,
@@ -740,16 +622,7 @@ window.OW_ART_PHOTO = {
   "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
   "by": "Padres Hana"
  },
- "crochet_knitting": {
-  "w": 800,
-  "h": 560,
-  "en": "Crochet antimacassar, Victorian era (Auckland Museum)",
-  "ar": "غطاء مسند من الكروشيه، العصر الفيكتوري (متحف أوكلاند)",
-  "lic": "CC BY 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Antimacassar_%28AM_1967.119-1%29.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by/4.0/",
-  "by": "Auckland War Memorial Museum"
- },
+ "crochet_knitting": {"w":800,"h":742,"en":"A hat crocheted by hand (detail)","ar":"قبعة مصنوعة بالكروشيه يدوياً (جزء)","lic":"CC BY 4.0","page":"https://commons.wikimedia.org/wiki/File:Hat_crochet_project.jpg","licUrl":"https://creativecommons.org/licenses/by/4.0/","by":"Eanngalindo","v":"2"},
  "macrame": {
   "w": 800,
   "h": 600,
@@ -777,34 +650,9 @@ window.OW_ART_PHOTO = {
   "lic": "Public domain",
   "page": "https://commons.wikimedia.org/wiki/File:A_chameleon_by_Ustad_Mansur.jpg"
  },
- "miniature_sculpture": {
-  "w": 800,
-  "h": 793,
-  "en": "Netsuke in the shape of a crab on a lotus leaf, Japan, 19th century (Metropolitan Museum of Art)",
-  "ar": "نتسكي على هيئة سلطعون فوق ورقة لوتس، اليابان، القرن التاسع عشر (متحف المتروبوليتان)",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Netsuke_in_the_Shape_of_Crab_on_a_Lotus_Leaf_MET_DP-15452-008.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
- "wire_sculpture": {
-  "w": 800,
-  "h": 600,
-  "en": "Bicycle sculpture made by hand from recycled wire, Kitwe, Zambia",
-  "ar": "دراجة منحوتة باليد من أسلاك معاد تدويرها، كيتوي، زامبيا",
-  "lic": "CC BY-SA 3.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Wire_Bike_in_Zambia.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-  "by": "Hans Hillewaert"
- },
- "wax_sculpture": {
-  "w": 800,
-  "h": 618,
-  "en": "Antoine-Louis Barye, Java Deer, wax model, 1838 (Metropolitan Museum of Art)",
-  "ar": "أنطوان لوي باري، «أيل جاوة»، نموذج من الشمع، 1838 (متحف المتروبوليتان)",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Java_Deer_MET_148283.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
+ "miniature_sculpture": {"w":800,"h":506,"en":"Izumiya Tomotada, Netsuke in the form of a dog, Japan, 18th century (Walters Art Museum)","ar":"إيزومييا توموتادا، نتسكي على هيئة كلب، اليابان، القرن الثامن عشر (متحف والترز للفنون)","lic":"Public domain","page":"https://commons.wikimedia.org/wiki/File:Izumiya_Tomotada_-_Netsuke_in_the_Form_of_a_Dog_-_Walters_711020_-_Three_Quarter.jpg","v":"2"},
+ "wire_sculpture": {"w":800,"h":534,"en":"Lizard made by hand from wire, Bruma market, Johannesburg","ar":"سحلية مصنوعة باليد من الأسلاك، سوق بروما، جوهانسبرغ","lic":"CC BY-SA 3.0","page":"https://commons.wikimedia.org/wiki/File:Beadwork_Wire_Art_and_Crafts_(25).JPG","licUrl":"https://creativecommons.org/licenses/by-sa/3.0/","by":"Aurobindo Ogra","v":"2"},
+ "wax_sculpture": {"w":800,"h":800,"en":"An apple sculpted by hand in wax, first step of lost-wax casting","ar":"تفاحة منحوتة باليد من الشمع، الخطوة الأولى من الصبّ بالشمع المفقود","lic":"CC BY-SA 2.5","page":"https://commons.wikimedia.org/wiki/File:Lost_Wax-Model_of_apple_in_wax.jpg","licUrl":"https://creativecommons.org/licenses/by-sa/2.5/","by":"José-Manuel Benito","v":"2"},
  "sand_sculpture": {
   "w": 800,
   "h": 1095,
@@ -815,16 +663,7 @@ window.OW_ART_PHOTO = {
   "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
   "by": "Cabeza2000"
  },
- "soapstone_carving": {
-  "w": 800,
-  "h": 1150,
-  "en": "Soapstone carvings from Kisii, Kenya (detail)",
-  "ar": "منحوتات من حجر الصابون من كيسي، كينيا (جزء)",
-  "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Soapstone_artistic_carvings.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "Susangesare"
- },
+ "soapstone_carving": {"w":800,"h":620,"en":"Water buffalo carved in black soapstone, China, 19th century (Rijksmuseum)","ar":"جاموس منحوت من حجر الصابون الأسود، الصين، القرن التاسع عشر (متحف ريكس)","lic":"CC0","page":"https://commons.wikimedia.org/wiki/File:Een_karbouw_in_zwart_speksteen,_AK-RBK-15207.jpg","licUrl":"https://creativecommons.org/publicdomain/zero/1.0/","v":"2"},
  "filigree": {
   "w": 800,
   "h": 1028,
@@ -843,16 +682,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Ring%2C_Mughal_India%2C_18th_century.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "prayer_beads": {
-  "w": 800,
-  "h": 554,
-  "en": "A misbaha from Saudi Arabia",
-  "ar": "مسبحة من المملكة العربية السعودية",
-  "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Misbaha_00_%281%29.JPG",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "لا روسا"
- },
+ "prayer_beads": {"w":800,"h":1168,"en":"A misbaha from Saudi Arabia","ar":"مسبحة من المملكة العربية السعودية","lic":"CC BY-SA 4.0","page":"https://commons.wikimedia.org/wiki/File:Misbaha_00_(7).JPG","licUrl":"https://creativecommons.org/licenses/by-sa/4.0/","by":"لا روسا","v":"2"},
  "polymer_clay_jewellery": {
   "w": 800,
   "h": 600,
@@ -863,15 +693,7 @@ window.OW_ART_PHOTO = {
   "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
   "by": "A ngelus"
  },
- "goldsmithing": {
-  "w": 800,
-  "h": 303,
-  "en": "Crescent-shaped earrings with balls and granulation, 2nd century (Metropolitan Museum of Art)",
-  "ar": "أقراط هلالية بكرات وتحبيب، القرن الثاني الميلادي (متحف المتروبوليتان)",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Crescent-shaped_earrings_with_balls_and_granulation_MET_vs25.2.12.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
- },
+ "goldsmithing": {"w":800,"h":878,"en":"Gold necklace made by hand, Trialeti, about 1500 BC (Georgian National Museum)","ar":"قلادة ذهبية مصوغة باليد، تريالِتي، نحو 1500 قبل الميلاد (المتحف الوطني الجورجي)","lic":"CC BY-SA 3.0","page":"https://commons.wikimedia.org/wiki/File:Gold_necklace_-_Georgia_National_museum_(2).jpg","licUrl":"https://creativecommons.org/licenses/by-sa/3.0/","by":"Jonathan Cardy","v":"2"},
  "coil_pottery": {
   "w": 800,
   "h": 870,
@@ -909,16 +731,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:%E4%B8%AD%E5%9C%8B_%E5%8D%97%E5%AE%8B_%E5%BB%BA%E7%AA%AF_%E5%85%94%E6%AF%AB%E9%87%89%E8%8C%B6%E7%A2%97-Tea_Bowl_with_%E2%80%9CHare%E2%80%99s-Fur%E2%80%9D_Glaze_MET_DP372022.jpg",
   "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
  },
- "handloom_weaving": {
-  "w": 800,
-  "h": 531,
-  "en": "Wooden floor loom with two harnesses, Crete, 18th century",
-  "ar": "نول أرضي خشبي بنيرين، جزيرة كريت، القرن الثامن عشر",
-  "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:FLOOR_LOOM_WITH_TWO_HARNESSES%2C_CRETE%2C_18TH_C.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "Sophia Tsourinaki, SEN Heritage Looms"
- },
+ "handloom_weaving": {"w":800,"h":599,"en":"Persian silk brocade woven by hand on a draw loom, Isfahan, 2004 (detail)","ar":"بروكار حريري فارسي منسوج يدوياً على النول، أصفهان، 2004 (جزء)","lic":"CC BY-SA 3.0","page":"https://commons.wikimedia.org/wiki/File:Persian_Silk_Brocade_-_The_Fish_with_Shah_Abbasi_Flower_-_Mohammad_Salimian_Rizi_-_2004.JPG","licUrl":"https://creativecommons.org/licenses/by-sa/3.0/","by":"Sialkgraph","v":"2"},
  "batik": {
   "w": 800,
   "h": 889,
@@ -938,16 +751,7 @@ window.OW_ART_PHOTO = {
   "licUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
   "by": "Firespeaker"
  },
- "handmade_lace": {
-  "w": 800,
-  "h": 875,
-  "en": "Bobbins on a lace-making pillow, Allhallows Museum, Honiton, England",
-  "ar": "بكرات على وسادة صناعة الدانتيل، متحف أولهالوز، هونيتون، إنجلترا",
-  "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Lace_Bobbins.jpg",
-  "licUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "by": "Hu Nhu"
- },
+ "handmade_lace": {"w":800,"h":1066,"en":"Carrickmacross lace made by hand, Ireland (detail)","ar":"دانتيل كاريكماكروس مصنوع باليد، أيرلندا (جزء)","lic":"CC BY 4.0","page":"https://commons.wikimedia.org/wiki/File:Carrickmacross_lace_examples_closeup4.jpg","licUrl":"https://creativecommons.org/licenses/by/4.0/","by":"Mmangan333","v":"2"},
  "palm_weaving": {
   "w": 800,
   "h": 533,
@@ -967,17 +771,7 @@ window.OW_ART_PHOTO = {
   "page": "https://commons.wikimedia.org/wiki/File:Illuminated_frontispiece_from_the_manuscript_of_Sa%CA%BFd%C4%AB%27s_%22Bustan%22_and_%22Gulistan%22.jpg",
   "v": "2"
  },
- "coffee_painting": {
-  "w": 800,
-  "h": 1066,
-  "en": "Red Fort, Delhi, painted by hand in coffee by Crafthouse, Edanattukara, India",
-  "ar": "القلعة الحمراء في دلهي، مرسومة باليد بالقهوة، من عمل كرافت هاوس، إيدانتوكارا، الهند",
-  "lic": "CC0",
-  "page": "https://commons.wikimedia.org/wiki/File:Coffee_Painting_Red_Fort_at_Delhi.jpg",
-  "licUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-  "by": "Sadikibnusalim",
-  "v": "2"
- },
+ "coffee_painting": {"w":800,"h":600,"en":"Red Fort, Delhi, painted by hand in coffee by Crafthouse, Edanattukara, India","ar":"القلعة الحمراء في دلهي، مرسومة باليد بالقهوة، من عمل كرافت هاوس، إيدانتوكارا، الهند","lic":"CC0","page":"https://commons.wikimedia.org/wiki/File:Coffee_Painting_Red_Fort_at_Delhi.jpg","licUrl":"https://creativecommons.org/publicdomain/zero/1.0/","by":"Sadikibnusalim","v":"3"},
  "handbuilt_porcelain": {
   "w": 800,
   "h": 800,
