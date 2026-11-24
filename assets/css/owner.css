@@ -21,7 +21,7 @@ body.o-body .bg-video, body.o-body .ow-backdrop { display: none; }
 .o-collapse:hover, .o-burger:hover { background: var(--color-hover-light); }
 .o-collapse:focus-visible, .o-burger:focus-visible, .o-link:focus-visible, .o-qa:focus-visible, .o-sb:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 [dir="rtl"] .o-collapse svg { transform: scaleX(-1); }
-.o-nav { flex: 1; overflow-y: auto; padding: 4px 12px 12px; }
+.o-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 12px 12px; }
 .o-group { margin-top: 14px; }
 .o-gname { margin: 0 0 4px; padding: 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--color-body); opacity: .85; }
 .o-link { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 8px 10px; border-radius: 10px; color: var(--color-dark); text-decoration: none; font-size: 14px; line-height: 1.35; }
@@ -100,6 +100,7 @@ a.o-kpi:hover { border-color: var(--color-primary); }
 .t-trend .o-chart { height: auto; }
 .t-journey .o-funnel { flex: 1; align-content: space-evenly; }
 .t-dev .o-bars { flex: 1; align-content: space-evenly; }
+.t-top .o-rank { flex: 1; align-content: space-between; }
 .o-bento > .o-t > .o-more { margin-top: auto; padding-top: 14px; align-self: flex-start; }
 .o-table tbody th[scope="row"], .o-table tfoot th[scope="row"], .o-table thead th:first-child { position: sticky; inset-inline-start: 0; background: var(--calm-card); z-index: 1; }
 .o-ks { font-size: 13px; color: var(--color-body); }

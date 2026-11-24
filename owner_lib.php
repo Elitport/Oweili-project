@@ -9,7 +9,7 @@
  *              daily counts, stat.php), crm_people and sent_messages
  *              (owner_update.sql). Every reading is safe before the new
  *              tables exist: it gives 0 or an empty list.
- *    Settings: site_settings owner_name, vat (JSON), subadmin_groups (JSON)
+ *    Settings: site_settings owner_name, owner_name_ar, vat (JSON), subadmin_groups (JSON)
  * ===================================================================== */
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/artwork_lib.php';
@@ -64,6 +64,8 @@ function owOwnerActor(array $viewer): array {
     return $viewer['owner'] ? ['type' => 'admin', 'id' => null] : ['type' => 'sub_admin', 'id' => (int) $viewer['user']['id']];
 }
 function owOwnerName(): string { return trim((string) owSetting('owner_name', '')); }
+/* the owner's name in Arabic (owner, 24 Nov 2026); without it the English name is used */
+function owOwnerNameAr(): string { $n = trim((string) owSetting('owner_name_ar', '')); return $n !== '' ? $n : owOwnerName(); }
 function owVat(): array {
     $j = json_decode((string) owSetting('vat', ''), true);
     $j = is_array($j) ? $j : [];

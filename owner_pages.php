@@ -34,6 +34,7 @@ if ($page === 'home'):
     $hour = (int) (new DateTime('now', new DateTimeZone('Asia/Riyadh')))->format('G');
     $hello = $hour < 12 ? ['Good morning', 'صباح الخير'] : ['Good evening', 'مساء الخير'];
     $name = $isOwner ? owOwnerName() : owPersonName($V['user']);
+    $nameAr = $isOwner ? owOwnerNameAr() : $name;
     $can = fn(string $g) => owOwnerCan($V, $g);
     /* key numbers, each compared with the period just before */
     $K = [];
@@ -71,7 +72,7 @@ if ($page === 'home'):
     <div class="o-bento<?= $isOwner ? '' : ' sub' ?>">
       <section class="o-t t-hi">
         <div class="o-hi-l">
-          <h2 class="o-hello"><?= '<span class="bi-en" lang="en">' . e($hello[0]) . ($name !== '' ? ', ' . owBdi($name) : '') . '</span><span class="bi-ar" lang="ar">' . e($hello[1]) . ($name !== '' ? '، ' . owBdi($name) : '') . '</span>' ?></h2>
+          <h2 class="o-hello"><?= '<span class="bi-en" lang="en">' . e($hello[0]) . ($name !== '' ? ', ' . owBdi($name) : '') . '</span><span class="bi-ar" lang="ar">' . e($hello[1]) . ($nameAr !== '' ? '، ' . owBdi($nameAr) : '') . '</span>' ?></h2>
           <p class="o-sub"><?= $isOwner ? owBi('Here is Oweili at a glance', 'هذه أويلي في لمحة') : owBi('Your sections at a glance', 'أقسامك في لمحة') ?> · <?= owODate($R['to']) ?></p>
         </div>
         <?= $periodBtns() ?>
@@ -80,7 +81,7 @@ if ($page === 'home'):
             <a class="o-qa" href="admin.php#pending"><?= $icon('wait') ?><?= owBi('Approvals', 'الموافقات') ?></a>
             <a class="o-qa" href="owner.php?p=messages"><?= $icon('mail') ?><?= owBi('Send a message', 'إرسال رسالة') ?></a>
             <a class="o-qa" href="admin_articles.php"><?= $icon('article') ?><?= owBi('Write an article', 'كتابة مقال') ?></a>
-            <a class="o-qa" href="admin_art_map.php"><?= $icon('map') ?><?= owBi('Art Map', 'خريطة الفن') ?></a>
+            <a class="o-qa" href="admin_art_map.php"><?= $icon('map') ?><?= owBi('Art Map', 'وجهات') ?></a>
             <a class="o-qa" href="admin_gallery.php"><?= $icon('star') ?><?= owBi('Artist of the week', 'فنان الأسبوع') ?></a>
             <a class="o-qa" href="admin.php?settings=1"><?= $icon('gear') ?><?= owBi('Site settings', 'إعدادات الموقع') ?></a>
           <?php else: ?>
@@ -175,7 +176,7 @@ if ($page === 'home'):
         <a class="o-more" href="admin.php?error_log=1"><?= owBi('Open the error log', 'فتح سجل الأخطاء') ?></a>
       </section>
 
-      <?php $ACT = owRecentActivity(9); ?>
+      <?php $ACT = owRecentActivity(8); ?>
       <section class="o-t t-act">
         <div class="o-th"><h2><?= owBi('Recent activity', 'آخر النشاط') ?></h2></div>
         <?php if (!$ACT): ?><?= $empty('No activity yet', 'لا نشاط بعد') ?><?php else: ?>
@@ -191,7 +192,7 @@ if ($page === 'home'):
       </section>
       <?php endif; ?>
 
-      <?php if ($can('content') || $isOwner): $TOP = owStatSum('artwork', $R['from'], $R['to'], '', '', 'item', 5);
+      <?php if ($can('content') || $isOwner): $TOP = owStatSum('artwork', $R['from'], $R['to'], '', '', 'item', 8);
         $titles = []; if ($TOP) foreach (owQAll('SELECT id, title_en, title_ar FROM artworks WHERE id IN (' . implode(',', array_map('intval', array_keys($TOP))) . ')') as $r) $titles[(int) $r['id']] = $r; ?>
       <section class="o-t t-top">
         <div class="o-th"><h2><?= owBi('Most viewed artworks', 'الأعمال الأكثر مشاهدة') ?></h2></div>
@@ -241,7 +242,7 @@ elseif ($page === 'money'):
           <?php if ($vat['on']): ?><td><?= owMoney($sum('vat')) ?></td><?php endif; ?><td><?= owMoney($sum('refunds')) ?></td><td><?= owMoney($sum('paid_out')) ?></td></tr></tfoot>
       </table></div>
     </section>
-    <?php if ($isOwner): ?><p class="o-foot-note"><a href="admin_bookings.php"><?= owBi('Mark course payouts as paid in Courses and tickets', 'سجّل دفع مستحقات الدورات في الدورات والتذاكر') ?></a> · <a href="admin_orders.php"><?= owBi('Orders and escrow', 'الطلبات والضمان') ?></a> · <a href="owner.php?p=settings#vat"><?= owBi('VAT settings', 'إعدادات الضريبة') ?></a></p><?php endif; ?>
+    <?php if ($isOwner): ?><p class="o-foot-note"><a href="admin_bookings.php"><?= owBi('Mark course payouts as paid in Manage courses and tickets', 'سجّل دفع مستحقات الدورات في إدارة الدورات والتذاكر') ?></a> · <a href="admin_orders.php"><?= owBi('Artwork orders and escrow', 'طلبات الأعمال والضمان') ?></a> · <a href="owner.php?p=settings#vat"><?= owBi('VAT settings', 'إعدادات الضريبة') ?></a></p><?php endif; ?>
 
 <?php
 /* =============================== ORDERS (read only) =============================== */
@@ -380,7 +381,7 @@ elseif ($page === 'content'):
     $places = owStatSum('place', $R['from'], $R['to'], $lg, $dv, 'item', 10);
     $langs = owStatSum('visit', $R['from'], $R['to'], '', $dv, 'lang'); $devs = owStatSum('visit', $R['from'], $R['to'], $lg, '', 'device');
     $PN = ['index' => ['Home', 'الرئيسية'], 'marketplace' => ['Gallery', 'المعرض'], 'explore' => ['Art Styles', 'الأساليب الفنية'], 'articles_list' => ['Art Events and Art Education lists', 'قوائم الملتقيات والتثقيف'],
-           'article' => ['Articles', 'المقالات'], 'art_map' => ['Art Map', 'خريطة الفن'], 'art_place' => ['Art Map place and region pages', 'صفحات أماكن ومناطق الخريطة'], 'institutes' => ['Art Institutes', 'المعاهد الفنية'],
+           'article' => ['Articles', 'المقالات'], 'art_map' => ['Art Map', 'وجهات'], 'art_place' => ['Art Map place and region pages', 'صفحات الأماكن والمناطق في وجهات'], 'institutes' => ['Art Institutes', 'المعاهد الفنية'],
            'course' => ['Course pages', 'صفحات الدورات'], 'support' => ['Help and Support', 'المساعدة والدعم'], 'about' => ['About', 'من نحن'], 'terms' => ['Terms', 'الشروط'], 'privacy' => ['Privacy', 'الخصوصية'],
            'artwork' => ['Artwork pages', 'صفحات الأعمال'], 'artist_dashboard' => ['Artist profiles', 'ملفات الفنانين'], 'register' => ['Join', 'انضم'], 'register_artist' => ['Join as an artist', 'انضم كفنان'],
            'register_collector' => ['Join as a collector', 'انضم كمقتن'], 'register_institute' => ['Join as an institute', 'انضم كمعهد'], 'login' => ['Sign in', 'تسجيل الدخول'], 'cert_verify' => ['Verify a certificate', 'التحقق من شهادة'],
@@ -411,7 +412,7 @@ elseif ($page === 'content'):
       $list('Artworks', 'الأعمال الفنية', $arts, function ($k) use ($artN) { $r = $artN[(int) $k] ?? null; return $r ? '<a href="artwork.php?id=' . (int) $k . '">' . owBi((string) ($r['title_en'] ?: $r['title_ar']), (string) ($r['title_ar'] ?: $r['title_en'])) . '</a><span class="o-sm">' . owBiName((string) $r['artist_en'], (string) $r['artist_ar']) . '</span>' : '#' . (int) $k; });
       $list('Artists', 'الفنانون', $artists, function ($k) use ($peopleN) { $r = $peopleN[(int) $k] ?? null; return '<a href="artist_dashboard.php?id=' . (int) $k . '">' . owBdi($r ? owPersonName($r + ['id' => $k]) : '#' . $k) . '</a>'; });
       $list('Art Styles', 'الأساليب الفنية', $styles, function ($k) use ($TYPES) { $t = $TYPES[$k] ?? null; $en = (string) ($t['en'] ?? $t['label_en'] ?? $k); $ar = (string) ($t['ar'] ?? $t['label_ar'] ?? $en); return '<a href="explore.php#' . e($k) . '">' . owBi($en, $ar) . '</a>'; });
-      $list('Art Map places', 'أماكن خريطة الفن', $places, function ($k) use ($placeN) { $p = $placeN[$k] ?? null; return $p ? '<a href="' . e($p['url']) . '">' . owBi((string) $p['name_en'], (string) $p['name_ar']) . '</a><span class="o-sm">' . owBi((string) $p['city_en'], (string) $p['city_ar']) . '</span>' : e($k); });
+      $list('Art Map places', 'أماكن وجهات', $places, function ($k) use ($placeN) { $p = $placeN[$k] ?? null; return $p ? '<a href="' . e($p['url']) . '">' . owBi((string) $p['name_en'], (string) $p['name_ar']) . '</a><span class="o-sm">' . owBi((string) $p['city_en'], (string) $p['city_ar']) . '</span>' : e($k); });
       ?>
       <section class="o-t">
         <div class="o-th"><h2><?= owBi('Visits by language and device', 'الزيارات حسب اللغة والجهاز') ?></h2></div>
@@ -493,7 +494,8 @@ elseif ($page === 'settings' && $isOwner):
         <div class="o-th"><h2><?= owBi('Your name', 'اسمك') ?></h2></div>
         <p class="o-note"><?= owBi('Used in the greeting on the dashboard. You sign in with the admin password, never with an account', 'يظهر في الترحيب في لوحة التحكم. تدخل بكلمة مرور الإدارة، وليس بحساب') ?></p>
         <form method="post" class="o-form"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="owner_name">
-          <label class="o-lbl" for="on"><?= owBi('Owner name', 'اسم المالك') ?></label><input class="o-in" id="on" name="owner_name" maxlength="60" value="<?= e(owOwnerName()) ?>">
+          <div class="o-g2"><label><span class="o-lbl"><?= owBi('Name in English', 'الاسم بالإنجليزية') ?></span><input class="o-in" id="on" name="owner_name" maxlength="60" dir="ltr" value="<?= e(owOwnerName()) ?>"></label>
+            <label><span class="o-lbl"><?= owBi('Name in Arabic', 'الاسم بالعربية') ?></span><input class="o-in" id="on-ar" name="owner_name_ar" maxlength="60" dir="rtl" value="<?= e(trim((string) owSetting('owner_name_ar', ''))) ?>"></label></div>
           <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
       </section>
       <section class="o-t" id="vat">

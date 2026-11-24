@@ -92,7 +92,9 @@ if ($V && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['act'
     }
     if ($V['owner'] && $act === 'owner_name') {
         $n = mb_substr(trim(preg_replace('/\s+/u', ' ', (string) ($_POST['owner_name'] ?? ''))), 0, 60);
+        $na = mb_substr(trim(preg_replace('/\s+/u', ' ', (string) ($_POST['owner_name_ar'] ?? ''))), 0, 60);
         owSetSetting('owner_name', $n);
+        owSetSetting('owner_name_ar', $na);
         owLog('setting_change', 'setting', null, 'owner_name', $actor);
         $back('owner.php?p=settings', 'saved');
     }
@@ -181,13 +183,13 @@ $MENU = [
       ['admin.php#certs', 'Certificates', 'الشهادات', 'cert', 'o', ''],
       ['admin_articles.php', 'Articles and events', 'المقالات والملتقيات', 'article', 'g', ''],
       ['admin_gallery.php', 'Gallery tools', 'أدوات المعرض', 'star', 'o', ''],
-      ['admin_art_map.php', 'Art Map', 'خريطة الفن', 'map', 'o', ''],
+      ['admin_art_map.php', 'Art Map', 'وجهات', 'map', 'o', ''],
       ['admin_institutes.php', 'Institutes and courses', 'المعاهد والدورات', 'school', 'g', '']]],
   'money' => [['Money', 'المال'], [
       ['owner.php?p=money', 'Accounting', 'المحاسبة', 'money', 'g', 'money'],
-      ['owner.php?p=orders', 'Orders, bookings and payments', 'الطلبات والحجوزات والمدفوعات', 'cart', 'g', 'orders'],
-      ['admin_bookings.php', 'Courses and tickets', 'الدورات والتذاكر', 'ticket', 'o', ''],
-      ['admin_orders.php', 'Orders and escrow', 'الطلبات والضمان', 'cart', 'o', ''],
+      ['owner.php?p=orders', 'Orders and payments overview', 'نظرة على الطلبات والمدفوعات', 'cart', 'g', 'orders'],
+      ['admin_bookings.php', 'Manage courses and tickets', 'إدارة الدورات والتذاكر', 'ticket', 'o', ''],
+      ['admin_orders.php', 'Artwork orders and escrow', 'طلبات الأعمال والضمان', 'cart', 'o', ''],
       ['admin_commissions.php', 'Private commissions', 'الأعمال الخاصة', 'brush', 'o', ''],
       ['admin_gifts.php', 'Gifts', 'الهدايا', 'gift', 'o', '']]],
   'messages' => [['Messages', 'الرسائل'], [
@@ -210,7 +212,7 @@ $showItem = function (array $it, string $gk) use ($V): bool {
     return $gk === 'home' || $gk === 'settings' ? ($gk === 'home' || $V['owner']) : owOwnerCan($V, $gk);
 };
 $TITLES = ['home' => ['Dashboard', 'لوحة التحكم'], 'crm' => ['People', 'الأشخاص'], 'money' => ['Accounting', 'المحاسبة'],
-           'orders' => ['Orders, bookings and payments', 'الطلبات والحجوزات والمدفوعات'], 'content' => ['Content statistics', 'إحصاءات المحتوى'],
+           'orders' => ['Orders and payments overview', 'نظرة على الطلبات والمدفوعات'], 'content' => ['Content statistics', 'إحصاءات المحتوى'],
            'messages' => ['Group messages', 'رسائل جماعية'], 'settings' => ['Owner settings and team', 'إعدادات المالك والفريق']];
 $qs = function (array $set) { $q = array_merge($_GET, $set); foreach ($q as $k => $v) if ($v === null || $v === '') unset($q[$k]); return 'owner.php?' . http_build_query($q); };
 ?>
