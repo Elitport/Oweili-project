@@ -12,9 +12,11 @@ $me = currentUser();
 if (!$me || ($me['role'] ?? '') !== 'collector') { header('Location: ' . dashboardUrl($me['role'] ?? '')); exit; }
 owBookingCleanup();
 $db = getDB(); $uid = (int) $me['id'];
+/* also bookings made as a guest with the same email, once the email is confirmed (owner, 24 Nov 2026) */
+require_once __DIR__ . '/collector_lib.php'; $bArgs = []; $bWho = owCollectorBookingWhere($uid, (string) $me['email'], (int) ($me['is_verified'] ?? 0) === 1, $bArgs);
 $st = $db->prepare("SELECT r.*, c.title_en, c.title_ar, c.start_date, c.end_date, c.course_type, c.meeting_link, c.location_en, c.location_ar, c.schedule_en, c.schedule_ar
-                    FROM course_registrations r JOIN courses c ON c.id = r.course_id WHERE r.user_id = :u AND c.bookable = 1 AND (r.status = 'confirmed' OR r.paid_at IS NOT NULL OR (r.status = 'pending' AND r.hold_until IS NULL)) ORDER BY c.start_date DESC");
-$st->execute([':u' => $uid]); $regs = $st->fetchAll();
+                    FROM course_registrations r JOIN courses c ON c.id = r.course_id WHERE $bWho AND c.bookable = 1 AND (r.status = 'confirmed' OR r.paid_at IS NOT NULL OR (r.status = 'pending' AND r.hold_until IS NULL)) ORDER BY c.start_date DESC");
+$st->execute($bArgs); $regs = $st->fetchAll();
 $st = $db->prepare("SELECT t.*, p.name_en, p.name_ar FROM museum_tickets t JOIN art_places p ON p.id = t.place_id WHERE t.user_id = :u AND t.status IN ('paid','used','cancelled') ORDER BY t.visit_date DESC");
 $st->execute([':u' => $uid]); $tickets = $st->fetchAll();
 owBookTop('My bookings', 'حجوزاتي', 'my_bookings.php', $preview);

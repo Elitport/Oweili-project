@@ -43,7 +43,7 @@ const OW_ORDER_FLOW = ['created' => ['paid', 'cancelled'], 'paid' => ['shipped',
                        'delivered' => ['released', 'complaint'], 'complaint' => ['released', 'refunded']];
 const OW_PAYOUT_ASK_DAYS = 7;      // "delivered" this many days with no complaint → the payout request goes to the owner anyway
 const OW_PAYOUT_REMIND_DAYS = 1;   // the collector's one reminder to send "I received the artwork"
-/* Receipt photos: private (only the admin and the artist of the order, through receipt_photo.php), never public */
+/* Receipt photos: private (only the admin, the artist of the order and the collector who sent them, through receipt_photo.php), never public */
 const OW_RECEIPT_DIR = '.private/receipts/';
 const OW_RECEIPT_MAX = 3;
 const OW_GATEWAYS = ['moyasar' => 'Moyasar', 'tap' => 'Tap Payments', 'hyperpay' => 'HyperPay'];
@@ -151,6 +151,7 @@ function owOrderConfirm(int $id, int $buyerId, array $files = [], bool $goodCond
     owLog('order_receipt', 'order', $id, json_encode(['photos' => $saved, 'good' => 1, 'share' => $shareOk ? 1 : 0]), ['type' => 'buyer', 'id' => $buyerId]);
     owOrderEvent($id, 'delivered', 'delivered', ['type' => 'buyer', 'id' => $buyerId], 'the collector sent "I received the artwork" with ' . count($saved) . ' photo(s)');
     owOrderPayoutAsk($o, 'the collector confirmed receipt with photos');
+    require_once __DIR__ . '/collector_lib.php'; owCertLinkToCollector($o);   // the certificate now opens from My collection (owner, 24 Nov 2026)
     return '';
 }
 function owReceiptProtectDir(): bool {

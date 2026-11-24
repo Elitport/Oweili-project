@@ -87,6 +87,7 @@
 - Selling sculptures, jewellery, pottery or textiles: Art Styles shows them (owner, 21 Nov 2026, a first step toward courses in these arts), but the Gallery and the artwork upload stay painting only
 - Any real payment provider, checkout or live money movement
 - The orders and escrow structure exists but stays switched off (see Payments and escrow) until Sprint 4
+- Delivery address (owner, 24 Nov 2026): not stored anywhere yet (the shipping_addresses table stays empty). It must be built before payments go live: where the collector types it, who sees it (the Oweili team only, never the artist), and how long it is kept
 
 ## Pages Built
 - index.php — Homepage in the calm style (19 Nov 2026): the painting video as the hero with the title, the two lines, the two buttons and the three trust points; under it Artist of the week and a row of links to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education (see Features)
@@ -119,7 +120,7 @@
 - artist_dashboard.php — Artist control panel ("Start New Artwork" button + drafts in progress); with ?id=N it is the artist's public profile, open to everyone
 - upload_artwork.php — 3-stage proof-of-process upload (see Features below)
 - artwork_lib.php — shared helpers for the upload: color list, art type pictures, photo checks and saving
-- collector_dashboard.php — the Buyer dashboard (see Features). Inside the database the account type is still "collector"
+- collector_dashboard.php — the collector dashboard, rebuilt 24 Nov 2026 with a side menu like the owner dashboard (see Features). Inside the database the account type is still "collector"; collector_lib.php — its data; follow.php — Follow / Unfollow an artist
 - subadmin_dashboard.php — Sub-admin panel
 - admin.php — Main admin panel (see Admin dashboard upgrades); admin_person.php (one person), admin_settings.php (Settings), admin_lib.php (shared staff actions)
 - admin_institutes.php — team tool for institutes and courses
@@ -150,6 +151,23 @@
 - Deleted on 15 Nov 2026 (owner): the pink brush video assets/video/hero-pink-tall.mp4 (no page used it), from the project and the live site. Backup first: .backups/rejected-video-20261115-083853/hero-pink-tall.mp4 on the server; the file also stays in the git history
 
 ## Features
+
+### Collector dashboard (collector_dashboard.php) — built 24 Nov 2026 on the test copy, NOT live yet (owner)
+- Rebuilt at the same address in the calm style, with the owner dashboard's side menu (owner.css + owner.js; its own small collector.css): an icon and a name for each item, 5 groups (Home · My art: My collection, Orders, Courses and bookings, My requests · Following: Favourites, Artists I follow · Messages: Messages from Oweili, Complaints · Account: Profile, Email and password), Gallery and Sign out at the bottom. Phone: a menu button opens it; iPad: icons only; laptop: full menu that can shrink to icons. No site top menu or footer on this page
+- Old links keep working: no ?tab = Home (was My requests), ?tab=requests / favorites / profile / account as before, ?tab=purchases opens My collection, an unknown tab opens Home
+- Home (Bento): greeting with the right name for each language (full_name_en for English, full_name_ar for Arabic, each falling back to the other); 4 numbers (artworks in my collection, orders on their way or my requests while payments are off, saved artworks, artists I follow); "Needs you now" (confirm receipt and add photos, a booked course waiting for payment = "We will contact you to pay", confirm the email); My orders with a small progress line (Paid, being prepared → On its way → Delivered → Confirmed); New from artists you follow; Saved artworks; Courses and bookings
+- Words: the collector reads a paid order as "Paid, being prepared" / «مدفوع، قيد التجهيز» (words only, OW_BUYER_ORDER_WORDS in collector_lib.php; also on my_orders.php). The admin's words are unchanged
+- My collection: every artwork the collector bought, read from BOTH the older purchases list and the orders (paid onwards), each artwork once; the artist's public name linked to their public page, the date and price, the certificate number with its QR code (to the public verify page), "Open the certificate" when the certificate is linked to this collector, and their own receipt photos
+- Certificates: when the collector sends "I received the artwork", the artwork's certificate is linked to their account (owCertLinkToCollector in collector_lib.php, called from owOrderConfirm in order_lib.php), so it opens from My collection
+- Receipt photos: receipt_photo.php also opens a photo for the collector who sent it (still the admin and the artist of that order; everyone else 404)
+- Orders and Complaints: shown only while payments are switched on (owPaymentsOn); the actions stay on my_orders.php
+- Courses and bookings: course bookings made while signed in, and (only once the email is confirmed) bookings made as a guest with the same email (owCollectorBookingWhere; my_bookings.php uses the same rule); museum tickets as before
+- Messages from Oweili: the group messages the owner sent to this person (sent_messages, status sent), in the page language. Other emails are not stored, so they are not listed
+- Follow artists (new): a Follow / Following button on an artist's public page (artist_dashboard.php?id=N) for signed-in collectors only (never visitors, artists or staff); follow.php (POST, security token, the collector's own account, approved artists who are not suspended only; logged artist_follow / artist_unfollow); "Artists I follow" with Unfollow; the home tile shows their newest works visible in the Gallery. Artists see only the number in My Studio ("N followers"), never who
+- Privacy (tested): a collector sees only their own rows and an artist's public name and public page, never an artist's email, phone, private full name or payout details; artists never see who follows them or the collector's details (they see receipt photos of the artwork only, as before)
+- Database (collector_update.sql, only adds, safe to run twice): artist_follows. Not run on the live database yet
+- Tested on the test copy with fictional data: 51 action and privacy checks, 140 pictures (phone, iPad, laptop, Arabic and English, light and dark; no sideways scroll, no broken picture, no script error), the owner dashboard and the public pages still open
+- Files: collector_dashboard.php, collector_lib.php (new), follow.php (new), collector_update.sql (new), assets/css/collector.css (new), artist_dashboard.php, artist_studio.php, order_lib.php, receipt_photo.php, my_bookings.php, my_orders.php, CLAUDE.md. Tables: artist_follows (new), certificates (owner_user_id, owner_name), and the existing tables read
 
 ### Owner dashboard (owner.php) — live 24 Nov 2026 (owner)
 - Who: the owner signs in with the admin password (the same as admin.php; owner.php has its own sign-in form with the same 5-tries lock). Never an account. The greeting uses the owner's name in each language: settings owner_name (English, "Abdulazeem") and owner_name_ar (Arabic, «عبدالعظيم»; empty = the English name), both in Owner settings and team; Arabic greeting «صباح الخير، عبدالعظيم». "admin" was removed from the role lists in admin.php (the Artists and Collectors "Set role" lists and the server check), so it can never be given by mistake. Sub-admins (sub_admin accounts) open owner.php too and see only the menu groups the owner ticked for them (Owner settings and team; site_settings subadmin_groups JSON). Settings and the classic admin pages stay owner only
@@ -1240,6 +1258,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
+- collector_update.sql — the collector dashboard (24 Nov 2026): one new table artist_follows (collector_id, artist_id, created_at). Only adds; safe to run more than once
 - courses_art_type.sql — courses by art type (21 Nov 2026): courses.art_type, courses.art_style, course_leads.art_type. Only adds columns; safe to run more than once
 - course_leads_city.sql — "City or Online" on the Art Institutes "Notify me" form (21 Nov 2026): course_leads.city. Only adds one column; safe to run more than once. Run on the live database 21 Nov 2026 after a full backup
 - courses_update.sql — Art Institutes and "Book your seat" (15 Nov 2026): course_registrations.user_id may be empty, new table course_leads. Safe to run more than once. Run on the live database 15 Nov 2026 after a full backup

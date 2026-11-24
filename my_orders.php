@@ -49,7 +49,7 @@ $st = getDB()->prepare('SELECT * FROM orders WHERE buyer_user_id = :u ORDER BY i
   <?php if ($msg): ?><div class="alert <?= $msgBad ? 'alert-error' : 'alert-ok' ?>" role="status" style="margin-top:var(--space-sm)"><?= owBi($msg[0], $msg[1]) ?></div><?php endif; ?>
   <?php if (!$orders): ?><div class="card o-card"><p><?= owBi('No orders yet', 'لا طلبات بعد') ?></p><a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a></div><?php endif; ?>
   <?php foreach ($orders as $o): ?>
-  <div class="card o-card"><h2><?= e($o['title']) ?> <?= owOrderPill((string) $o['status']) ?></h2>
+  <div class="card o-card"><h2><?= e($o['title']) ?> <?php require_once __DIR__ . '/collector_lib.php'; ?><?= owBuyerOrderPill($o, 'pillx') /* the collector's words: "Paid, being prepared" (owner, 24 Nov 2026) */ ?></h2>
     <p class="mini"><?= e($o['order_no']) ?> · <?= number_format((float) $o['amount'], 2) ?> <?= owBi('SAR', 'ر.س') ?></p>
     <?php if ($o['status'] === 'delivered' && $o['confirmed_at'] !== null): ?><p class="mini"><?= owBi('Thank you, you confirmed receipt', 'شكرا، أكدت الاستلام') ?></p><?php endif; ?>
     <?php if ($o['status'] === 'delivered' && $o['confirmed_at'] === null): ?>

@@ -1,8 +1,9 @@
 <?php
 /* =====================================================================
  *  receipt_photo.php?o=ORDER&n=0..2 — one photo the collector sent with
- *  "I received the artwork" (owner, 14 Nov 2026). PRIVATE: only the admin and
- *  the artist of that order can open it; everyone else gets 404. Never cached
+ *  "I received the artwork" (owner, 14 Nov 2026). PRIVATE: only the admin,
+ *  the artist of that order and the collector who sent it (owner, 24 Nov 2026)
+ *  can open it; everyone else gets 404. Never cached
  *  or indexed. The files live in .private/receipts/ (blocked for visitors).
  *  Tables: orders, activity_log (the receipt record)
  * ===================================================================== */
@@ -15,6 +16,8 @@ $o = owOrderGet((int) ($_GET['o'] ?? 0));
 if (!$o) $no();
 $who = owIsAdmin() ? 'admin' : '';
 if ($who === '' && isLoggedIn() && ($u = currentUser()) && ($u['role'] ?? '') === 'artist' && empty($u['is_banned']) && (int) $u['id'] === (int) $o['artist_id']) $who = 'artist';
+/* the collector who sent the photos sees their own (owner, 24 Nov 2026) */
+if ($who === '' && isLoggedIn() && ($u = currentUser()) && ($u['role'] ?? '') === 'collector' && empty($u['is_banned']) && $o['buyer_user_id'] !== null && (int) $u['id'] === (int) $o['buyer_user_id']) $who = 'collector';
 if ($who === '') $no();
 $r = owOrderReceipt((int) $o['id']);
 $name = $r['photos'][(int) ($_GET['n'] ?? -1)] ?? '';

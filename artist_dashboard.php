@@ -195,6 +195,7 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
 .stat .lbl{font-size:var(--fs-label);font-weight:600;color:var(--color-body);}
 .head-actions{display:flex;flex-direction:column;gap:var(--space-sm);align-items:flex-end;flex-shrink:0;}
 [dir="rtl"] .head-actions{align-items:flex-start;}
+.fw-form{display:flex;flex-direction:column;gap:6px;align-items:inherit;margin:0;}.fw-btn{min-width:140px;}.fw-note{font-size:var(--fs-caption);color:var(--color-body);max-width:220px;}
 .socials{display:flex;gap:var(--space-xs);}
 .socials a{width:40px;height:40px;border-radius:var(--radius-btn);display:flex;align-items:center;justify-content:center;border:1px solid var(--color-border-strong);color:var(--color-dark);transition:background var(--ease),color var(--ease);}
 .socials a:hover{background:var(--color-dark);color:var(--color-on-dark);}
@@ -294,6 +295,16 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
     </div>
 
     <div class="head-actions">
+      <?php /* Follow (owner, 24 Nov 2026): signed-in collectors only; the artist sees only how many follow, never who */
+      if (!$isSelf && $viewer && ($viewer['role'] ?? '') === 'collector' && empty($viewer['is_banned'])):
+        require_once __DIR__ . '/collector_lib.php';
+        if (owFollowReady()): $fwOn = owIsFollowing((int) $viewer['id'], (int) $profileId); ?>
+        <form method="post" action="follow.php" id="follow" class="fw-form"><?= csrfField() ?><input type="hidden" name="artist_id" value="<?= (int) $profileId ?>"><input type="hidden" name="do" value="<?= $fwOn ? 'unfollow' : 'follow' ?>">
+          <button type="submit" class="btn <?= $fwOn ? 'btn-secondary' : 'btn-primary' ?> fw-btn" aria-pressed="<?= $fwOn ? 'true' : 'false' ?>"><?= $fwOn ? owBi('Following', 'تتابعه') : owBi('Follow', 'تابع') ?></button>
+          <?php if ($fwOn): ?><span class="fw-note"><?= owBi('New works will show on your dashboard', 'ستظهر أعماله الجديدة في لوحتك') ?></span><?php endif; ?>
+          <?php if (($_GET['fw'] ?? '') === 'expired'): ?><span class="fw-note" role="alert"><?= owBi('This page was open for a long time. Please press again', 'كانت الصفحة مفتوحة لوقت طويل. يرجى الضغط مرة أخرى') ?></span><?php endif; ?>
+        </form>
+      <?php endif; endif; ?>
       <?php if ($isOwner): ?>
         <a class="btn btn-primary" href="artist_studio.php"><?= owBi('My Studio', 'مرسمي') ?></a>
         <a class="btn btn-secondary" href="edit_profile.php" id="t-edit">Edit Profile</a>

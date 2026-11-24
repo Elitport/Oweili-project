@@ -272,6 +272,8 @@ $fmtDate = function (?string $d, bool $time = false): string { [$en, $ar] = owDa
     <span><b><?= number_format($tot['views']) ?></b> <?= owBi('views', 'مشاهدة') ?></span>
     <span><b><?= number_format($tot['favs']) ?></b> <?= owBi('favorites', 'إعجاب') ?></span>
     <span><b><?= number_format($tot['inquiries']) ?></b> <?= owBi('interested collectors', 'مهتم بالشراء') ?></span>
+    <?php /* followers: only the number, never who (owner, 24 Nov 2026) */ require_once __DIR__ . '/collector_lib.php';
+    if (owFollowReady()): $fwN = owFollowerCount((int) $me['id']); ?><span><b><?= number_format($fwN) ?></b> <?= owBi($fwN === 1 ? 'follower' : 'followers', 'متابع') ?></span><?php endif; ?>
   </div>
 
   <nav class="tabs st-tabs" aria-label="Studio · المرسم">
