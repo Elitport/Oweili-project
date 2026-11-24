@@ -229,7 +229,7 @@ section.o-t + section.o-t { margin-top: 0; }
 
 /* sign-in */
 .o-login { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
-.o-login-card { width: 100%; max-width: 420px; display: grid; gap: 14px; }
+.o-login-card { width: 100%; max-width: 420px; display: grid; gap: 14px; background: var(--calm-card); border: 1px solid var(--calm-line); border-radius: 16px; box-shadow: var(--calm-shadow); padding: 24px; box-sizing: border-box; }
 .o-login-card h1 { margin: 0; font-family: var(--calm-serif); font-size: 28px; color: var(--color-dark); line-height: 1.5; }
 .o-login-card form { display: grid; gap: 12px; }
 .o-err { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(var(--rgb-primary), .18); color: var(--color-dark); font-weight: 600; font-size: 14px; }
