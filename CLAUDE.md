@@ -152,7 +152,7 @@
 
 ## Features
 
-### Collector dashboard (collector_dashboard.php) — built 24 Nov 2026 on the test copy, NOT live yet (owner)
+### Collector dashboard (collector_dashboard.php) — live 24 Nov 2026 (owner)
 - Rebuilt at the same address in the calm style, with the owner dashboard's side menu (owner.css + owner.js; its own small collector.css): an icon and a name for each item, 5 groups (Home · My art: My collection, Orders, Courses and bookings, My requests · Following: Favourites, Artists I follow · Messages: Messages from Oweili, Complaints · Account: Profile, Email and password), Gallery and Sign out at the bottom. Phone: a menu button opens it; iPad: icons only; laptop: full menu that can shrink to icons. No site top menu or footer on this page
 - Old links keep working: no ?tab = Home (was My requests), ?tab=requests / favorites / profile / account as before, ?tab=purchases opens My collection, an unknown tab opens Home
 - Home (Bento): greeting with the right name for each language (full_name_en for English, full_name_ar for Arabic, each falling back to the other); 4 numbers (artworks in my collection, orders on their way or my requests while payments are off, saved artworks, artists I follow); "Needs you now" (confirm receipt and add photos, a booked course waiting for payment = "We will contact you to pay", confirm the email); My orders with a small progress line (Paid, being prepared → On its way → Delivered → Confirmed); New from artists you follow; Saved artworks; Courses and bookings
@@ -165,7 +165,7 @@
 - Messages from Oweili: the group messages the owner sent to this person (sent_messages, status sent), in the page language. Other emails are not stored, so they are not listed
 - Follow artists (new): a Follow / Following button on an artist's public page (artist_dashboard.php?id=N) for signed-in collectors only (never visitors, artists or staff); follow.php (POST, security token, the collector's own account, approved artists who are not suspended only; logged artist_follow / artist_unfollow); "Artists I follow" with Unfollow; the home tile shows their newest works visible in the Gallery. Artists see only the number in My Studio ("N followers"), never who
 - Privacy (tested): a collector sees only their own rows and an artist's public name and public page, never an artist's email, phone, private full name or payout details; artists never see who follows them or the collector's details (they see receipt photos of the artwork only, as before)
-- Database (collector_update.sql, only adds, safe to run twice): artist_follows. Not run on the live database yet
+- Database (collector_update.sql, only adds, safe to run twice): artist_follows. Run on the live database 24 Nov 2026 by a temporary locked page (removed straight after), after a full backup (.backups/db-u405344949_contact-20261124-171918.sql.gz)
 - Tested on the test copy with fictional data: 51 action and privacy checks, 140 pictures (phone, iPad, laptop, Arabic and English, light and dark; no sideways scroll, no broken picture, no script error), the owner dashboard and the public pages still open
 - Files: collector_dashboard.php, collector_lib.php (new), follow.php (new), collector_update.sql (new), assets/css/collector.css (new), artist_dashboard.php, artist_studio.php, order_lib.php, receipt_photo.php, my_bookings.php, my_orders.php, CLAUDE.md. Tables: artist_follows (new), certificates (owner_user_id, owner_name), and the existing tables read
 
