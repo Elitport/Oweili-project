@@ -100,13 +100,29 @@ function owLog(string $action, ?string $targetType = null, ?int $targetId = null
                 $actor = ['type' => 'admin', 'id' => null];
             }
         }
-        getDB()->prepare('INSERT INTO activity_log (actor_type, actor_id, action, target_type, target_id, details, ip_hash)
-                          VALUES (:at, :ai, :ac, :tt, :ti, :d, :ip)')
-               ->execute([':at' => $actor['type'], ':ai' => $actor['id'], ':ac' => substr($action, 0, 60),
-                          ':tt' => $targetType, ':ti' => $targetId, ':d' => mb_substr($details, 0, 500), ':ip' => owIpHash()]);
+        $vals = [':at' => $actor['type'], ':ai' => $actor['id'], ':ac' => substr($action, 0, 60),
+                 ':tt' => $targetType, ':ti' => $targetId, ':d' => mb_substr($details, 0, 500), ':ip' => owIpHash()];
+        /* the device type only (phone / tablet / computer), for the owner dashboard (owner, 24 Nov 2026) */
+        if (owHasColumn('activity_log', 'device')) {
+            $vals[':dv'] = PHP_SAPI === 'cli' ? null : owDeviceFromUa((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''));
+            getDB()->prepare('INSERT INTO activity_log (actor_type, actor_id, action, target_type, target_id, details, ip_hash, device)
+                              VALUES (:at, :ai, :ac, :tt, :ti, :d, :ip, :dv)')->execute($vals);
+        } else {
+            getDB()->prepare('INSERT INTO activity_log (actor_type, actor_id, action, target_type, target_id, details, ip_hash)
+                              VALUES (:at, :ai, :ac, :tt, :ti, :d, :ip)')->execute($vals);
+        }
     } catch (Throwable $e) {
         error_log('owLog: ' . $e->getMessage());
     }
+}
+
+/* Phone, tablet or computer, from the browser's own description (no other detail is kept).
+   An iPad that says it is a Mac is counted as a computer here; the browser signal (ow_stat.js) knows better */
+function owDeviceFromUa(string $ua): ?string {
+    if (trim($ua) === '') return null;
+    if (preg_match('/iPad|Tablet|PlayBook|Silk|Kindle|(Android(?!.*Mobile))/i', $ua)) return 'tablet';
+    if (preg_match('/Mobile|iPhone|iPod|Android|BlackBerry|Opera Mini|IEMobile/i', $ua)) return 'phone';
+    return 'computer';
 }
 
 /* How many times this visitor did $action in the last $seconds (for rate limits) */

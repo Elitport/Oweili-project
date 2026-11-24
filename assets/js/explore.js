@@ -210,6 +210,7 @@
     if (typeof dlg.showModal === 'function') { if (!dlg.open) dlg.showModal(); } else { dlg.setAttribute('open', ''); }
     document.documentElement.classList.add('m-open');
     if (push !== false && history.replaceState) history.replaceState(null, '', '#' + s.id);
+    if (window.owStat) window.owStat('style', s.id);   // the owner dashboard's anonymous counts (ow_stat.js)
     var closeBtn = dlg.querySelector('.m-close'); if (closeBtn) closeBtn.focus();
   }
   function closeStyle() {

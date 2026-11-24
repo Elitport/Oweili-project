@@ -243,7 +243,7 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
     /* --- Change a user's role --- */
     if ($action === 'set_role' && $uid > 0) {
         $newRole = $_POST['role'] ?? '';
-        if (in_array($newRole, ['collector','artist','sub_admin','admin'], true)) {
+        if (in_array($newRole, ['collector','artist','sub_admin'], true)) {   // "admin" can never be given here (owner, 24 Nov 2026)
             getDB()->prepare('UPDATE users SET role = :r WHERE id = :id')->execute([':r'=>$newRole, ':id'=>$uid]);
         }
         header('Location: admin.php?ok=1');
@@ -618,7 +618,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
   <a class="adm-brand" href="admin.php" aria-label="Oweili admin · إدارة أويلي"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><g style="fill:var(--color-primary)"><path d="M11 1A10 10 0 0 0 1 11h10z"/><path d="M13 1v10h10A10 10 0 0 0 13 1z"/><path d="M1 13a10 10 0 0 0 10 10V13z"/><path d="M13 13v10a10 10 0 0 0 10-10z"/></g></svg><span class="adm-word">OWEILI</span> <span class="adm-brand-sub"><?= owBi('Admin', 'الإدارة') ?></span></a>
   <div class="adm-corner">
     <?php owCornerControls('tglLang()'); ?>
-    <?php if ($isAdmin): ?><span class="adm-sep" aria-hidden="true"></span><a class="btn btn-secondary btn-sm" href="admin.php?logout=1"><?= owBi('Log out', 'تسجيل الخروج') ?></a><?php endif; ?>
+    <?php if ($isAdmin): ?><span class="adm-sep" aria-hidden="true"></span><a class="btn btn-primary btn-sm" href="owner.php"><?= owBi('Owner dashboard', 'لوحة المالك') ?></a><a class="btn btn-secondary btn-sm" href="admin.php?logout=1"><?= owBi('Log out', 'تسجيل الخروج') ?></a><?php endif; ?>
   </div>
 </header>
 <div class="wrap">
@@ -829,7 +829,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             </div>
             <form method="post" action="admin.php" class="role-form"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$a['id'] ?>">
               <select class="role-select" name="role">
-                <?php foreach (['collector','artist','sub_admin','admin'] as $r): ?><option value="<?= $r ?>" <?= ($a['role']??'')===$r?'selected':'' ?>><?= ucfirst(str_replace('_',' ',$r)) ?></option><?php endforeach; ?>
+                <?php foreach (['collector','artist','sub_admin'] as $r): ?><option value="<?= $r ?>" <?= ($a['role']??'')===$r?'selected':'' ?>><?= ucfirst(str_replace('_',' ',$r)) ?></option><?php endforeach; ?>
               </select>
               <button class="btn btn-ghost btn-sm" name="action" value="set_role">Set Role</button>
             </form>
@@ -881,7 +881,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
               </div>
               <form method="post" action="admin.php" class="role-form"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int)$c['id'] ?>">
                 <select class="role-select" name="role">
-                  <?php foreach (['collector','artist','sub_admin','admin'] as $r): ?><option value="<?= $r ?>" <?= ($c['role']??'')===$r?'selected':'' ?>><?= ucfirst(str_replace('_',' ',$r)) ?></option><?php endforeach; ?>
+                  <?php foreach (['collector','artist','sub_admin'] as $r): ?><option value="<?= $r ?>" <?= ($c['role']??'')===$r?'selected':'' ?>><?= ucfirst(str_replace('_',' ',$r)) ?></option><?php endforeach; ?>
                 </select>
                 <button class="btn btn-ghost btn-sm" name="action" value="set_role">Set</button>
               </form>

@@ -920,6 +920,7 @@ function openModal(id){
   const mg = document.getElementById('m-gift'); if (mg) mg.href = 'gifts.php?artwork=' + id;
   /* one view for the artist's numbers (counted once a day per visitor) */
   try { const vf = new FormData(); vf.append('artwork_id', id); navigator.sendBeacon ? navigator.sendBeacon('view.php', vf) : fetch('view.php', {method:'POST', body:vf, credentials:'same-origin', keepalive:true}); } catch (e) {}
+  if (window.owStat) { owStat('artwork', id); owStat('step', 'artwork'); }   // the owner dashboard's anonymous counts (ow_stat.js)
   const mf = document.getElementById('m-fav');
   if (mf && window.owFavSync) { mf.dataset.fav = id; owFavSync(id, owFavHas(id)); }
   document.getElementById('modalBg').classList.add('open');
@@ -978,7 +979,7 @@ function sendInterest(ev){
   fetch('inquire.php', {method:'POST', body:new FormData(f), credentials:'same-origin'})
     .then(r => r.json().catch(() => ({ok:false, error:'other'})))
     .then(d => {
-      if (d && d.ok) { f.hidden = true; document.getElementById('mi-ok').hidden = false; }
+      if (d && d.ok) { f.hidden = true; document.getElementById('mi-ok').hidden = false; if (window.owStat) owStat('step', 'interest'); }
       else { showInterestError(d && d.error); btn.disabled = false; }
     })
     .catch(() => { showInterestError('other'); btn.disabled = false; });

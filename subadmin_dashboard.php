@@ -110,6 +110,7 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
     </div>
     <div class="top-actions">
       <?php owCornerControls('tglLang()'); ?>
+      <a class="btn btn-primary btn-sm" href="owner.php"><?= owBi('Dashboard', 'لوحة التحكم') ?></a>
       <a class="btn btn-dark btn-sm" href="admin_articles.php">Articles</a>
       <a class="btn btn-dark btn-sm" href="admin_institutes.php"><?= owBi('Institutes', 'المعاهد') ?></a>
       <a class="btn btn-ghost btn-sm" href="logout.php">Log out</a>
