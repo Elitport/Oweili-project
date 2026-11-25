@@ -172,6 +172,10 @@ function owOwnerAlerts(): array {
     if (owHasTable('artwork_inquiries') && owHasColumn('artwork_inquiries', 'status')) $add((int) owQ("SELECT COUNT(*) FROM artwork_inquiries WHERE status = 'new'"), 'New "I’m Interested" requests', 'طلبات «أنا مهتم» جديدة', 'admin.php#inquiries');
     if (owHasTable('course_leads')) $add((int) owQ("SELECT COUNT(*) FROM course_leads WHERE status = 'new'"), 'New "Notify me" requests', 'طلبات «نبّهني» جديدة', 'admin_bookings.php#leads');
     if (owHasColumn('course_registrations', 'hold_until')) $add((int) owQ("SELECT COUNT(*) FROM course_registrations WHERE status = 'pending' AND hold_until IS NULL AND paid_at IS NULL"), 'Course bookings waiting for payment', 'حجوزات دورات بانتظار الدفع', 'admin_bookings.php');
+    /* Artist workshops (owner, 25 Nov 2026): requests, workshops and bookings waiting */
+    if (owHasTable('artist_workshop_requests')) $add((int) owQ("SELECT COUNT(*) FROM artist_workshop_requests WHERE status = 'pending'"), 'Artists asking to offer workshops', 'فنانون يطلبون تقديم ورش', 'admin_workshops.php#requests', 'hot');
+    if (owHasTable('artist_workshops')) $add((int) owQ("SELECT COUNT(*) FROM artist_workshops WHERE status = 'pending'"), 'Workshops waiting for approval', 'ورش بانتظار الموافقة', 'admin_workshops.php#workshops', 'hot');
+    if (owHasTable('workshop_bookings')) $add((int) owQ("SELECT COUNT(*) FROM workshop_bookings WHERE status = 'booked'"), 'Workshop bookings waiting for payment', 'حجوزات ورش بانتظار الدفع', 'admin_workshops.php#bookings');
     if (owHasTable('crm_people')) $add((int) owQ('SELECT COUNT(*) FROM crm_people WHERE follow_up IS NOT NULL AND follow_up <= CURDATE()'), 'Follow-ups due today', 'متابعات موعدها اليوم', 'owner.php?p=crm&f=due');
     return $a;
 }

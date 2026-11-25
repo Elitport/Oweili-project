@@ -52,6 +52,8 @@ if (!defined('OW_HIDDEN_PARTS')) define('OW_HIDDEN_PARTS', [
     /* Art Institutes and course booking, split from museum tickets (owner, 15 Nov 2026) */
     'courses'   => ['courses_on', 'Art Institutes and course booking (the Art Institutes page, course pages, institute sign-up and dashboard, the course rules in the Terms)', 'المعاهد الفنية وحجز الدورات (صفحة المعاهد الفنية، صفحات الدورات، تسجيل المعاهد ولوحتها، قواعد الدورات في الشروط)', 'institutes.php'],
     'workshops' => ['workshops_on', 'Upcoming workshops (the 5 "Coming soon" cards on the Art Map, Institutes tab)', 'ورش العمل القادمة (البطاقات الخمس «قريبا» في خريطة الفن، تبويب المعاهد)', 'art_map.php?tab=institutes'],
+    /* Artist workshops (owner, 25 Nov 2026; workshop_lib.php): artists ask to teach, the owner approves each request and each workshop */
+    'artist_workshops' => ['artist_workshops_on', 'Artist workshops (artists ask to teach, the workshop pages and "Book your seat")', 'ورش الفنانين (طلب الفنان تقديم الورش، صفحات الورش و«احجز مقعدك»)', 'workshops.php'],
 ]);
 function owPartOn(string $part): bool { $k = OW_HIDDEN_PARTS[$part][0] ?? ''; return $k !== '' && owSetting($k, '0') === '1'; }
 function owCommunityPageOn(): bool { return owPartOn('community'); }

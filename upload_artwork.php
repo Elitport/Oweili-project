@@ -226,15 +226,29 @@ function t2(string $en, string $ar, string $tag = 'span', string $attrs = ''): s
 function cameraBlock(array $draft, int $stage, array $stages): string {
     $saved = $stages[$stage] ?? null;
     $txt   = owStageText($stage);
+    $num = $stage === 25 ? 1 : ($stage === 50 ? 2 : 3);
     ob_start(); ?>
+    <?php /* guidance only (owner, 25 Nov 2026): where the artist is in the 3 photos, and how to take a good one. The steps, checks and saving are unchanged */ ?>
+    <ol class="stage-strip" aria-label="<?= e('The 3 stage photos · صور المراحل الثلاث') ?>">
+      <?php foreach ([25, 50, 100] as $sg): $cls = $sg === $stage ? 'now' : (isset($stages[$sg]) ? 'done' : ''); ?>
+        <li class="<?= $cls ?>"<?= $sg === $stage ? ' aria-current="step"' : '' ?>><span class="ss-dot" aria-hidden="true"><?= isset($stages[$sg]) && $sg !== $stage ? '✓' : $sg . '%' ?></span><?= $sg === 25 ? t2('Beginning', 'البداية') : ($sg === 50 ? t2('Halfway', 'المنتصف') : t2('Finished', 'المكتمل')) ?></li>
+      <?php endforeach; ?>
+    </ol>
+    <p class="stage-count"><?= t2('Photo ' . $num . ' of 3', 'الصورة ' . $num . ' من 3') ?></p>
     <p class="stage-msg"><?= t2($txt['en'], $txt['ar'], 'span') ?></p>
+    <ul class="stage-tips">
+      <li><?= t2('Use daylight, without the flash', 'استخدم ضوء النهار، بدون الفلاش') ?></li>
+      <li><?= t2('Fit the whole artwork in the frame', 'اجعل العمل كاملا داخل الصورة') ?></li>
+      <li><?= t2('Hold the phone straight in front of the artwork', 'أمسك الجوال مستقيما أمام العمل') ?></li>
+      <li><?= t2('No people or faces in the photo', 'بدون أشخاص أو وجوه في الصورة') ?></li>
+    </ul>
     <form method="post" action="upload_artwork.php" enctype="multipart/form-data" class="cam-form" data-max="<?= OW_STAGE_MAX_SIZE ?>">
       <?= csrfField() ?>
       <input type="hidden" name="action" value="save_stage">
       <input type="hidden" name="artwork_id" value="<?= (int) $draft['id'] ?>">
       <input type="hidden" name="stage" value="<?= $stage ?>">
       <input type="hidden" name="step" value="<?= $stage === 25 ? 2 : ($stage === 50 ? 3 : 4) ?>">
-      <input class="cam-input" id="cam-<?= $stage ?>" type="file" name="photo" accept="image/jpeg,image/png,image/webp" capture="environment">
+      <input class="cam-input" id="cam-<?= $stage ?>" type="file" name="photo" accept="image/jpeg,image/png,image/webp" capture="environment" data-native>
       <div class="preview<?= $saved ? ' has' : '' ?>">
         <?php if ($saved): ?>
           <img src="<?= e($saved['photo_path']) ?>" alt="<?= e('Stage ' . $stage . '% photo · صورة مرحلة ' . $stage . '%') ?>">
@@ -245,7 +259,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
       </div>
       <label for="cam-<?= $stage ?>" class="cam-btn">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/></svg>
-        <span class="cam-label-new"<?= $saved ? ' hidden' : '' ?>><?= t2('Open Camera', 'افتح الكاميرا') ?></span>
+        <span class="cam-label-new"<?= $saved ? ' hidden' : '' ?>><?= t2('Take the ' . $stage . '% photo', 'التقط صورة ' . $stage . '%') ?></span>
         <span class="cam-label-retake"<?= $saved ? '' : ' hidden' ?>><?= t2('Retake Photo', 'أعد التصوير') ?></span>
       </label>
       <p class="cam-err" role="alert" hidden><?= t2('This photo is larger than 10MB. Please take it again.', 'حجم الصورة أكبر من 10 ميغابايت. يرجى التقاطها مرة أخرى.') ?></p>
@@ -288,8 +302,25 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
 .preview.has{display:block;}
 .preview img{display:block;width:100%;max-height:60vh;object-fit:contain;}
 .saved-tag{position:absolute;top:10px;inset-inline-start:10px;background:var(--color-dark);color:var(--color-on-dark);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;}
+/* the guided camera steps (owner, 25 Nov 2026): look and guidance only */
+.stage-strip{list-style:none;margin:0 0 14px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;}
+.stage-strip li{position:relative;display:grid;justify-items:center;gap:6px;font-size:13px;color:var(--color-body);text-align:center;}
+.stage-strip li::before{content:'';position:absolute;top:20px;inset-inline-start:-50%;width:100%;height:2px;background:var(--color-border);z-index:0;}
+.stage-strip li:first-child::before{display:none;}
+.stage-strip li.done::before,.stage-strip li.now::before{background:var(--color-primary-dark);}
+.ss-dot{position:relative;z-index:1;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--color-surface);border:2px solid var(--color-border-strong);color:var(--color-dark);}
+.stage-strip li.done .ss-dot{background:var(--color-primary-dark);border-color:var(--color-primary-dark);color:#fff;font-size:16px;}
+.stage-strip li.now .ss-dot{border-color:var(--color-primary-dark);box-shadow:0 0 0 4px rgba(var(--rgb-primary),.28);}
+.stage-strip li.now{color:var(--color-dark);font-weight:700;}
+/* "Save photo" shows only once a photo is picked (the page script unhides it); without scripts it stays visible as before */
+@media (scripting: enabled){.save-photo[hidden]{display:none;}}
+.stage-count{font-size:13px;font-weight:700;color:var(--color-body);margin:0 0 4px;letter-spacing:.02em;}
+.stage-tips{margin:0 0 16px;padding:12px 16px;padding-inline-start:32px;border-radius:12px;background:var(--color-surface-2);font-size:14px;line-height:1.8;color:var(--color-dark);}
 .cam-btn{display:flex;align-items:center;justify-content:center;gap:12px;min-height:88px;width:100%;border-radius:var(--radius-card);border:2px dashed rgba(var(--rgb-accent),0.4);background:rgba(var(--rgb-accent),0.05);color:var(--color-accent);font-size:17px;font-weight:700;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
 .cam-btn:hover{background:rgba(var(--rgb-accent),0.1);border-color:var(--color-accent);}
+.cam-btn{border:0;background:var(--color-primary);color:var(--color-on-primary);min-height:72px;box-shadow:0 6px 18px rgba(var(--rgb-primary),.35);}
+.cam-btn:hover{background:var(--color-primary-dark);}
+.cam-btn:active{transform:scale(.98);}
 .cam-btn:active{background:rgba(var(--rgb-accent),0.16);}
 .cam-input:focus-visible + .preview + .cam-btn{outline:2px solid var(--color-accent);outline-offset:3px;}
 .cam-btn svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;}
