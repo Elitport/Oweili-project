@@ -409,14 +409,16 @@ if ($isAdmin) { require_once __DIR__ . '/artmap_lib.php'; $mapDrafts = owArtPlac
 /* Institutes and courses waiting for approval (course booking, owner, 14 Nov 2026; booking_lib.php) */
 $bookWait = 0;
 if ($isAdmin && owHasColumn('courses', 'bookable') && owHasColumn('institutes', 'via_signup')) {
-    try { $bookWait = (int) getDB()->query("SELECT (SELECT COUNT(*) FROM courses WHERE bookable = 1 AND status = 'pending')
-                                                 + (SELECT COUNT(*) FROM institutes i JOIN users u ON u.id = i.user_id WHERE i.via_signup = 1 AND u.is_approved = 0)")->fetchColumn(); }
+    try { $bookWait = (int) getDB()->query("SELECT COUNT(*) FROM courses WHERE bookable = 1 AND status = 'pending'")->fetchColumn(); }
     catch (Throwable $e) { $bookWait = 0; }
 }
+/* Institutes that signed themselves up, with their documents (owner, 25 Nov 2026; inst_lib.php). Refused ones no longer wait */
+$instWait = [];
+if ($isAdmin) { require_once __DIR__ . '/inst_lib.php'; $instWait = owInstWaiting(); }
 /* Artist payouts waiting for the owner's approval (owner, 14 Nov 2026; order_lib.php owOrderPayoutWaiting). Empty while payments are off */
 $payWait = [];
 if ($isAdmin) { try { require_once __DIR__ . '/order_lib.php'; $payWait = owOrderPayoutWaiting(); } catch (Throwable $e) { $payWait = []; } }
-$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts + $mapClaims + $bookWait + count($payWait);
+$waitTotal    = count($pendingArt) + count($waitChanges) + count($waitArtists) + count($teamDrafts) + $mapDrafts + $mapClaims + $bookWait + count($instWait) + count($payWait);
 $SALE_WORDS   = ['available' => ['Available', 'متاح'], 'sold' => ['Sold', 'مباع'], 'auction' => ['Auction', 'مزاد']];
 /* one value, as the admin should read it */
 $showVal = function (string $field, $v) use ($SALE_WORDS): string {
@@ -995,8 +997,31 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     <?php endforeach; ?></div>
     <?php endif; ?>
 
+    <?php if ($instWait || isset($_GET['inst_done'])): ?>
+    <h3 class="wc-h" id="institutes-waiting"><?= owBi('Art institutes waiting for approval', 'معاهد فنية بانتظار الموافقة') ?> <span class="pill count"><?= count($instWait) ?></span></h3>
+    <?php if (($_GET['inst_done'] ?? '') === 'approved'): ?><div class="alert alert-ok" role="status"><?= owBi('Institute approved. They got an email', 'تم اعتماد المعهد، ووصلته رسالة') ?></div>
+    <?php elseif (($_GET['inst_done'] ?? '') === 'refused'): ?><div class="alert alert-ok" role="status"><?= owBi('Institute not approved. They got an email with the reason', 'لم يُعتمد المعهد، ووصلته رسالة بالسبب') ?></div><?php endif; ?>
+    <div class="wc-list"><?php foreach ($instWait as $iw): $logoOk = (string) $iw['logo_path'] !== '' && owSafeLogo((string) $iw['logo_path']); ?>
+      <div class="wc-item">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <?php if ($logoOk): ?><img src="<?= e($iw['logo_path']) ?>" alt="<?= e('Logo of ' . $iw['name_en'] . ' · شعار ' . $iw['name_ar']) ?>" style="width:56px;height:56px;object-fit:contain;border-radius:10px;border:1px solid var(--color-border);background:#fff"><?php endif; ?>
+          <div><strong><?= owBi((string) $iw['name_en'], (string) $iw['name_ar']) ?></strong>
+            <div class="mini"><?= owBi('Legal name: ', 'الاسم النظامي: ') ?><?= e((string) ($iw['legal_name'] ?? '')) ?> · <?= owBi((string) $iw['city_en'], (string) $iw['city_ar']) ?></div>
+            <div class="mini"><?= e((string) (($iw['contact_person'] ?? '') ?: $iw['person'])) ?> · <span dir="ltr"><?= e((string) $iw['email']) ?> · <?= e((string) $iw['contact_phone']) ?></span><?= (int) $iw['is_verified'] ? '' : ' · ' . owBi('email not confirmed yet', 'البريد لم يُؤكد بعد') ?></div>
+            <?php if ((string) $iw['description_en'] !== ''): ?><div class="mini"><?= owBi(owExcerpt((string) $iw['description_en'], 240), owExcerpt((string) $iw['description_ar'], 240)) ?></div><?php endif; ?></div>
+        </div>
+        <?= owInstDocsHtml($iw) ?>
+        <div class="acts">
+          <form method="post" action="admin_bookings.php"><?= csrfField() ?><input type="hidden" name="do" value="inst_approve"><input type="hidden" name="back" value="pending"><input type="hidden" name="id" value="<?= (int) $iw['id'] ?>"><button class="btn btn-accent btn-sm"><?= owBi('Approve', 'موافقة') ?></button></form>
+          <form method="post" action="admin_bookings.php" style="display:flex;gap:6px;flex-wrap:wrap"><?= csrfField() ?><input type="hidden" name="do" value="inst_reject"><input type="hidden" name="back" value="pending"><input type="hidden" name="id" value="<?= (int) $iw['id'] ?>">
+            <input name="reason" maxlength="500" required placeholder="<?= e(owIsAr() ? 'السبب (يصل إلى المعهد)' : 'Reason (sent to the institute)') ?>" aria-label="<?= e(owIsAr() ? 'السبب' : 'Reason') ?>"><button class="btn btn-danger btn-sm"><?= owBi('Not approved', 'عدم الموافقة') ?></button></form>
+        </div>
+      </div>
+    <?php endforeach; ?></div>
+    <?php endif; ?>
+
     <?php if ($bookWait): ?>
-    <h3 class="wc-h"><?= owBi('Courses and institutes waiting for approval', 'دورات ومعاهد بانتظار الموافقة') ?> <span class="pill count"><?= (int) $bookWait ?></span></h3>
+    <h3 class="wc-h"><?= owBi('Courses waiting for approval', 'دورات بانتظار الموافقة') ?> <span class="pill count"><?= (int) $bookWait ?></span></h3>
     <div class="wc-list"><div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
       <div><strong><?= owBi($bookWait . ' waiting', $bookWait . ' بانتظارك') ?></strong></div>
       <a class="btn btn-accent btn-sm" href="admin_bookings.php#courses"><?= owBi('Review them', 'راجعها') ?></a>

@@ -8,6 +8,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
+require_once __DIR__ . '/inst_lib.php';      // documents, the course details for the filters (owner, 25 Nov 2026)
 require_once __DIR__ . '/approval_lib.php';   // profile changes and articles wait for the admin (owner, 16 Nov 2026)
 $preview = owCoursesGate();
 if (!isLoggedIn()) { header('Location: login.php?next=institute_dashboard.php'); exit; }
@@ -20,10 +21,36 @@ $actor = ['type' => 'institute', 'id' => (int) $me['id']];
 $TABS = ['courses' => ['Courses', 'الدورات'], 'registrations' => ['Registrations', 'التسجيلات'], 'money' => ['Earnings and payouts', 'الأرباح والمستحقات'], 'profile' => ['Profile', 'الملف'], 'articles' => ['My articles', 'مقالاتي']];
 $tab = isset($TABS[$_GET['tab'] ?? '']) ? $_GET['tab'] : 'courses';
 $err = []; $done = (string) ($_GET['done'] ?? '');
+/* An institute adds courses only once the owner has approved it (owner, 25 Nov 2026) */
+$instOk = (int) $me['is_approved'] === 1 && (int) $inst['is_active'] === 1;
+$hasLicence = !owInstDocsReady() || (int) $inst['via_signup'] !== 1 || (string) ($inst['licence_file'] ?? '') !== '';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf($_POST['csrf_token'] ?? null)) $err[] = ['The page was open too long. Please try again.', 'انتهت صلاحية الصفحة. حاول مرة أخرى.'];
-    elseif (($_POST['do'] ?? '') === 'course') {
+    elseif (($_POST['do'] ?? '') === 'course' && !$instOk) {
+        $tab = 'courses'; $err[] = ['You can add courses once the Oweili team has approved your institute', 'يمكنك إضافة الدورات بعد أن يعتمد فريق أويلي معهدك'];
+    } elseif (($_POST['do'] ?? '') === 'licence' && owInstDocsReady()) {
+        /* the training licence, added later (owner, 25 Nov 2026): private, the owner is told */
+        $tab = 'profile';
+        $from = (string) ($_POST['licence_from'] ?? ''); $num = strtoupper(preg_replace('/\s+/', '', strtr((string) ($_POST['licence_number'] ?? ''), ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9'])));
+        if (!isset(OW_INST_LICENCES[$from])) $err[] = ['Please choose who gave the training licence', 'يرجى اختيار جهة ترخيص التدريب'];
+        elseif (!preg_match('/^[A-Z0-9\-\/]{3,30}$/', $num)) $err[] = ['Please write the training licence number', 'يرجى كتابة رقم ترخيص التدريب'];
+        elseif (empty($_FILES['licence_file']['name'])) $err[] = ['Please upload the training licence (PDF or photo)', 'يرجى رفع ترخيص التدريب (PDF أو صورة)'];
+        elseif (!isset($_POST['docs_ok'])) $err[] = ['Please confirm the document is valid and yours', 'يرجى تأكيد أن المستند ساري ويخصك'];
+        else {
+            $r = owInstDocStore($_FILES['licence_file']);
+            if (!$r['ok']) $err[] = $r['err'] ?? ['Please upload the training licence (PDF or photo)', 'يرجى رفع ترخيص التدريب (PDF أو صورة)'];
+            else {
+                $oldFile = (string) ($inst['licence_file'] ?? '');
+                $db->prepare('UPDATE institutes SET licence_from = :f, licence_number = :n, licence_file = :l, docs_confirmed_at = NOW() WHERE id = :id')->execute([':f' => $from, ':n' => $num, ':l' => $r['name'], ':id' => $iid]);
+                if ($oldFile !== '') owInstDocDelete($oldFile);
+                owLog('institute_licence', 'institute', $iid, $from, $actor);
+                require_once __DIR__ . '/alert_lib.php';
+                owAdminAlert('booking', 'Training licence added: ' . $inst['name_en'], 'أُضيف ترخيص التدريب: ' . $inst['name_ar'], 'admin_bookings.php#institutes');
+                header('Location: institute_dashboard.php?tab=profile&done=licence'); exit;
+            }
+        }
+    } elseif (($_POST['do'] ?? '') === 'course') {
         $cid = (int) ($_POST['id'] ?? 0); $tab = 'courses';
         $old = null;
         if ($cid) { $st = $db->prepare('SELECT * FROM courses WHERE id = :id AND institute_id = :i AND bookable = 1'); $st->execute([':id' => $cid, ':i' => $iid]); $old = $st->fetch(); if (!$old) $err[] = ['Course not found', 'الدورة غير موجودة']; }
@@ -102,7 +129,9 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
   <p class="mini" style="margin:0"><?= owBi('My institute', 'معهدي') ?></p>
   <h1><?= owBi($inst['name_en'], $inst['name_ar']) ?></h1>
   <?php if (!(int) $me['is_verified']): ?><div class="alert alert-error" role="status"><?= owBi('Please confirm your email (check your inbox)', 'يرجى تأكيد بريدك (راجع صندوق الوارد)') ?></div><?php endif; ?>
-  <?php if (!(int) $me['is_approved'] || !(int) $inst['is_active']): ?><div class="alert alert-error" role="status"><?= owBi('Your institute is waiting for the Oweili team’s review. You can already add courses; they show once both are approved.', 'معهدك بانتظار مراجعة فريق أويلي. يمكنك إضافة الدورات الآن، وتظهر بعد اعتماد المعهد والدورة.') ?></div><?php endif; ?>
+  <?php if (!$instOk): ?><div class="alert alert-error" role="status"><?= ((string) ($inst['reject_reason'] ?? '')) !== '' ? owBi('Your institute was not approved. Reason: ', 'لم يُعتمد معهدك. السبب: ') . e((string) $inst['reject_reason']) : owBi('Your institute is waiting for the Oweili team’s review. You can add courses once it is approved', 'معهدك بانتظار مراجعة فريق أويلي. يمكنك إضافة الدورات بعد اعتماده') ?></div><?php endif; ?>
+  <?php if ($instOk && !$hasLicence): ?><div class="alert alert-error" role="status"><?= owBi('Please add your training licence (Profile). Your courses go live only with it', 'يرجى إضافة ترخيص التدريب (الملف). لا تظهر دوراتك إلا معه') ?> <a href="institute_dashboard.php?tab=profile#licence"><?= owBi('Add it', 'أضفه') ?></a></div><?php endif; ?>
+  <?php if ($done === 'licence'): ?><div class="alert alert-ok" role="status"><?= owBi('Your training licence is saved. The Oweili team will check it', 'تم حفظ ترخيص التدريب. سيراجعه فريق أويلي') ?></div><?php endif; ?>
   <?php if ($done === 'course'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. The course waits for the Oweili team’s approval before it shows.', 'تم الحفظ. تنتظر الدورة موافقة فريق أويلي قبل ظهورها.') ?></div><?php endif; ?>
   <?php if ($done === 'profile'): ?><div class="alert alert-ok" role="status"><?= owBi('Profile saved', 'تم حفظ الملف') ?></div><?php endif; ?>
   <?php if ($done === 'profile_wait'): ?><div class="alert alert-ok" role="status"><?= owBi('Saved. Your changes wait for the Oweili team’s approval. Until then, visitors see your current profile.', 'تم الحفظ. تنتظر تعديلاتك موافقة فريق أويلي، وحتى ذلك الحين يرى الزوار ملفك الحالي.') ?></div><?php endif; ?>
@@ -119,7 +148,9 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
 </nav>
 
 <?php if ($tab === 'courses'): ?>
-  <?php if ($edit || $newForm): ?>
+  <?php if (!$instOk): ?>
+  <div class="card"><p><?= owBi('You can add courses once the Oweili team has approved your institute', 'يمكنك إضافة الدورات بعد أن يعتمد فريق أويلي معهدك') ?></p></div>
+  <?php elseif ($edit || $newForm): ?>
   <form method="post" action="institute_dashboard.php?tab=courses<?= $edit ? '&edit=' . (int) $edit['id'] : '&new=1' ?>" class="card cf"><?= csrfField() ?>
     <input type="hidden" name="do" value="course"><input type="hidden" name="id" value="<?= (int) ($edit['id'] ?? 0) ?>">
     <h2><?= $edit ? owBi('Edit course', 'تعديل الدورة') : owBi('New course', 'دورة جديدة') ?></h2>
@@ -148,6 +179,11 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
       <div class="field"><label for="c-p"><?= owBi('Price (SAR, 0 = free)', 'السعر (ر.س، 0 = مجاني)') ?></label><input id="c-p" name="price" required inputmode="decimal" dir="ltr" maxlength="10" value="<?= $f('price') ?>"></div>
       <div class="field"><label for="c-st"><?= owBi('Seats', 'المقاعد') ?></label><input id="c-st" name="seats_total" required inputmode="numeric" dir="ltr" maxlength="5" value="<?= $f('seats_total') ?>"></div>
       <div class="field"><label for="c-lg"><?= owBi('Language', 'اللغة') ?></label><select id="c-lg" name="course_lang"><?php foreach (OW_COURSE_LANGS as $k => $w): ?><option value="<?= $k ?>"<?= $sel('course_lang', $k, 'ar') ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select></div>
+      <?php if (owCourseExtraReady()): /* for the Art Institutes filters (owner, 25 Nov 2026) */ ?>
+      <div class="field"><label for="c-aud"><?= owBi('For', 'لمن') ?></label><select id="c-aud" name="audience" required><option value=""><?= owIsAr() ? 'اختر' : 'Choose' ?></option><?php foreach (OW_COURSE_AUDIENCE as $k => $w): ?><option value="<?= $k ?>"<?= $sel('audience', $k, '') ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select></div>
+      <div class="field"><label for="c-att"><?= owBi('Attendance', 'الحضور') ?></label><select id="c-att" name="attendance" required><option value=""><?= owIsAr() ? 'اختر' : 'Choose' ?></option><?php foreach (OW_COURSE_ATTENDANCE as $k => $w): ?><option value="<?= $k ?>"<?= $sel('attendance', $k, '') ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select></div>
+      <div class="field"><label for="c-len"><?= owBi('Length', 'المدة') ?></label><select id="c-len" name="length_kind" required><option value=""><?= owIsAr() ? 'اختر' : 'Choose' ?></option><?php foreach (OW_COURSE_LENGTH as $k => $w): ?><option value="<?= $k ?>"<?= $sel('length_kind', $k, '') ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select></div>
+      <?php endif; ?>
       <div class="field"><label for="c-a1"><?= owBi('Youngest age (optional)', 'أصغر عمر (اختياري)') ?></label><input id="c-a1" name="age_min" inputmode="numeric" dir="ltr" maxlength="2" value="<?= $f('age_min') ?>"></div>
       <div class="field"><label for="c-a2"><?= owBi('Oldest age (optional)', 'أكبر عمر (اختياري)') ?></label><input id="c-a2" name="age_max" inputmode="numeric" dir="ltr" maxlength="2" value="<?= $f('age_max') ?>"></div>
       <div class="field"><label for="c-loe"><?= owBi('Location (English), for in-person', 'المكان (بالإنجليزية)، للدورات الحضورية') ?></label><input id="c-loe" name="location_en" maxlength="300" dir="ltr" value="<?= $f('location_en') ?>"></div>
@@ -257,5 +293,23 @@ owBookTop('My institute', 'معهدي', 'institute_dashboard.php', $preview, '
     <div class="field"><label for="p-pn"><?= owBi('Payment details for payouts (bank name and account holder; we will ask for the IBAN by phone)', 'بيانات استلام المستحقات (اسم البنك وصاحب الحساب؛ نطلب رقم الآيبان هاتفيا)') ?></label><input id="p-pn" name="payout_note" maxlength="500" dir="auto" value="<?= e($_POST['payout_note'] ?? $inst['payout_note']) ?>"></div>
     <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button>
   </form>
+  <?php if (owInstDocsReady() && (int) $inst['via_signup'] === 1): $rt = OW_INST_REG_TYPES[$inst['reg_type'] ?? ''] ?? null; $lc = OW_INST_LICENCES[$inst['licence_from'] ?? ''] ?? null; ?>
+  <form method="post" action="institute_dashboard.php?tab=profile#licence" class="card" id="licence" enctype="multipart/form-data"><?= csrfField() ?><input type="hidden" name="do" value="licence">
+    <h2><?= owBi('Your documents', 'مستنداتك') ?></h2>
+    <p class="mini"><?= owBi('Private: only the Oweili team sees them, never visitors or other institutes', 'خاصة: لا يراها إلا فريق أويلي، ولا تظهر للزوار أو للمعاهد الأخرى') ?></p>
+    <dl class="kv" style="margin-bottom:var(--space-sm)">
+      <dt><?= owBi('Registration', 'التسجيل') ?></dt><dd><?= $rt ? owBi($rt[0], $rt[1]) . ' · <bdi dir="ltr">' . e((string) $inst['reg_number']) . '</bdi>' : owBi('Not given', 'لم يُذكر') ?></dd>
+      <dt><?= owBi('Training licence', 'ترخيص التدريب') ?></dt><dd><?= $lc && (string) $inst['licence_file'] !== '' ? '✓ ' . owBi($lc[0], $lc[1]) . ' · <bdi dir="ltr">' . e((string) $inst['licence_number']) . '</bdi>' : '<b>' . owBi('Not added yet: needed before your courses go live', 'لم يُضف بعد: مطلوب قبل ظهور دوراتك') . '</b>' ?></dd>
+    </dl>
+    <p class="mini"><?= (string) ($inst['licence_file'] ?? '') !== '' ? owBi('Replace the training licence', 'استبدل ترخيص التدريب') : owBi('Add the training licence', 'أضف ترخيص التدريب') ?></p>
+    <div class="g2">
+      <div class="field"><label for="l-from"><?= owBi('Given by', 'جهة الترخيص') ?></label><select id="l-from" name="licence_from" required><option value=""><?= owIsAr() ? 'اختر' : 'Choose' ?></option><?php foreach (OW_INST_LICENCES as $k => $w): ?><option value="<?= $k ?>"<?= ($_POST['licence_from'] ?? '') === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $w[1] : $w[0]) ?></option><?php endforeach; ?></select></div>
+      <div class="field"><label for="l-num"><?= owBi('Licence number', 'رقم الترخيص') ?></label><input id="l-num" name="licence_number" required maxlength="30" dir="ltr" value="<?= e((string) ($_POST['licence_number'] ?? '')) ?>"></div>
+    </div>
+    <div class="field"><label for="l-file"><?= owBi('Upload the licence (PDF or photo, up to 10 MB)', 'ارفع الترخيص (PDF أو صورة، حتى 10 ميغابايت)') ?></label><input id="l-file" name="licence_file" type="file" required accept="application/pdf,image/jpeg,image/png,image/webp"></div>
+    <label class="chk" style="display:flex;gap:6px;align-items:flex-start;margin:0 0 var(--space-sm)"><input type="checkbox" name="docs_ok" value="1" required> <span><?= owBi('I confirm this document is valid and mine', 'أؤكد أن هذا المستند ساري ويخصني') ?></span></label>
+    <button class="btn btn-primary" type="submit"><?= owBi('Save the licence', 'احفظ الترخيص') ?></button>
+  </form>
+  <?php endif; ?>
 <?php endif; ?>
 <?php owBookBottom();

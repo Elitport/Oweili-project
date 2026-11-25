@@ -86,6 +86,15 @@ if (!isset(OW_COURSE_ARTS[$fArt]) || !owCourseArtReady()) $fArt = '';
 if (!isset(OW_COURSE_LEVELS[$fLevel])) $fLevel = '';
 if (!isset(OW_INST_PRICES[$fPrice])) $fPrice = '';
 if (mb_strlen($fCity) > 120) $fCity = '';
+/* More filters inside the "Filter" panel (owner, 25 Nov 2026): in person or online, language, for, attendance, length (and price) */
+require_once __DIR__ . '/inst_lib.php';
+$fMode = (string) ($_GET['mode'] ?? ''); if (!isset(OW_COURSE_TYPES[$fMode])) $fMode = '';
+$fLang = (string) ($_GET['lang_c'] ?? ''); if (!isset(OW_COURSE_LANGS[$fLang])) $fLang = '';
+$extraOn = owCourseExtraReady();
+$fFor = (string) ($_GET['for'] ?? ''); if (!$extraOn || !isset(OW_COURSE_AUDIENCE[$fFor])) $fFor = '';
+$fAtt = (string) ($_GET['att'] ?? ''); if (!$extraOn || !isset(OW_COURSE_ATTENDANCE[$fAtt])) $fAtt = '';
+$fLen = (string) ($_GET['len'] ?? ''); if (!isset(OW_COURSE_LENGTH[$fLen])) $fLen = '';
+$panelN = count(array_filter([$fMode, $fLang, $fFor, $fAtt, $fLen, $fPrice], fn($x) => $x !== ''));
 
 $base = "c.bookable = 1 AND c.status = 'approved' AND c.is_active = 1 AND i.is_active = 1 AND " . owSignupInstSql('i.') . " AND (c.start_date IS NULL OR c.start_date > CURDATE())";
 $courses = []; $cities = [];
@@ -100,16 +109,22 @@ try {
         if ($fArt !== '') { $where .= ' AND c.art_type = :art'; $args[':art'] = $fArt; }
         if ($fLevel !== '') { $where .= ' AND c.level = :lvl'; $args[':lvl'] = $fLevel; }
         if ($fPrice !== '') { $where .= ' AND c.price BETWEEN :p1 AND :p2'; $args[':p1'] = OW_INST_PRICES[$fPrice][2]; $args[':p2'] = OW_INST_PRICES[$fPrice][3]; }
+        if ($fMode !== '') { $where .= ' AND c.course_type = :mode'; $args[':mode'] = $fMode; }
+        if ($fLang !== '') { $where .= ' AND c.course_lang = :clang'; $args[':clang'] = $fLang; }
+        if ($fFor !== '') { $where .= ' AND c.audience = :aud'; $args[':aud'] = $fFor; }
+        if ($fAtt !== '') { $where .= ' AND c.attendance = :att'; $args[':att'] = $fAtt; }
+        if ($fLen !== '') { $where .= ' AND ' . ($extraOn ? owCourseLengthSql('c') : "(CASE WHEN c.start_date IS NULL THEN 'short' WHEN DATEDIFF(COALESCE(c.end_date, c.start_date), c.start_date) + 1 <= 2 THEN 'workshop' WHEN DATEDIFF(COALESCE(c.end_date, c.start_date), c.start_date) + 1 <= 42 THEN 'short' ELSE 'long' END)") . ' = :len'; $args[':len'] = $fLen; }
         $st = $db->prepare("SELECT c.*, i.name_en AS inst_en, i.name_ar AS inst_ar, i.city_en AS inst_city_en, i.city_ar AS inst_city_ar, i.logo_path AS inst_logo
                             FROM courses c JOIN institutes i ON i.id = c.institute_id WHERE $where ORDER BY (c.start_date IS NULL), c.start_date, c.id LIMIT 300");
         $st->execute($args);
         $courses = $st->fetchAll();
     }
 } catch (Throwable $e) { error_log('institutes.php: ' . $e->getMessage()); $courses = []; }
-$filtered = $fCity !== '' || $fLevel !== '' || $fPrice !== '' || $fArt !== '';
+$filtered = $fCity !== '' || $fLevel !== '' || $fPrice !== '' || $fArt !== '' || $panelN > 0;
 if ($fCity !== '' && $fCity !== 'online' && !in_array($fCity, array_column($cities, 'city_en'), true)) $cities[] = ['city_en' => $fCity, 'city_ar' => $fCity];
-$q = function (array $over = []) use ($inst, $fCity, $fLevel, $fPrice, $fArt): string {
-    $a = array_filter(array_merge(['i' => $inst && $inst['src'] === 'i' ? $inst['id'] : '', 'p' => $inst && $inst['src'] === 'p' ? $inst['id'] : '', 'city' => $fCity, 'art' => $fArt, 'level' => $fLevel, 'price' => $fPrice], $over), fn($v) => $v !== '' && $v !== null);
+$q = function (array $over = []) use ($inst, $fCity, $fLevel, $fPrice, $fArt, $fMode, $fLang, $fFor, $fAtt, $fLen): string {
+    $a = array_filter(array_merge(['i' => $inst && $inst['src'] === 'i' ? $inst['id'] : '', 'p' => $inst && $inst['src'] === 'p' ? $inst['id'] : '', 'city' => $fCity, 'art' => $fArt, 'level' => $fLevel, 'price' => $fPrice,
+                                   'mode' => $fMode, 'lang_c' => $fLang, 'for' => $fFor, 'att' => $fAtt, 'len' => $fLen], $over), fn($v) => $v !== '' && $v !== null);
     return 'institutes.php' . ($a ? '?' . http_build_query($a) : '');
 };
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
@@ -124,6 +139,11 @@ if (!$inst && owDemoOn()) {
         if ($fArt !== '' && $dc['art_type'] !== $fArt) continue;
         if ($fLevel !== '' && $dc['level'] !== $fLevel) continue;
         if ($fPrice !== '' && ($dc['price'] < OW_INST_PRICES[$fPrice][2] || $dc['price'] > OW_INST_PRICES[$fPrice][3])) continue;
+        if ($fMode !== '' && $dc['course_type'] !== $fMode) continue;
+        if ($fLang !== '' && ($dc['course_lang'] ?? 'ar') !== $fLang) continue;
+        if ($fFor !== '' && ($dc['audience'] ?? 'all') !== $fFor) continue;
+        if ($fAtt !== '' && ($dc['attendance'] ?? 'mixed') !== $fAtt) continue;
+        if ($fLen !== '' && owCourseLengthOf($dc) !== $fLen) continue;
         $courses[] = $dc;
     }
 }
@@ -151,6 +171,16 @@ $titleAr = $inst ? 'دورات ' . $inst['name_ar'] : 'المعاهد الفني
 .ci-bar select{width:100%;cursor:pointer;}
 .ci-bar .ci-go{flex:0 0 auto;}
 .js .ci-bar .ci-go{display:none;}
+.ci-more{flex:1 1 100%;}
+.ci-more > summary{list-style:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;}
+.ci-more > summary::-webkit-details-marker{display:none;}
+.ci-more-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;}
+.ci-n{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:999px;background:var(--color-primary);color:var(--color-on-primary);font-size:12px;font-weight:700;padding:0 6px;}
+.ci-panel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-sm);margin-top:var(--space-sm);padding-top:var(--space-sm);border-top:1px solid var(--calm-line,var(--color-border));}
+.ci-panel .field{margin:0;}
+.ci-panel-acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;}
+@media(max-width:1024px){.ci-panel{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.ci-panel{grid-template-columns:1fr;}}
 .result-count{text-align:center;font-size:var(--fs-caption);color:var(--color-dark);width:fit-content;margin:0 auto var(--space-md);padding:6px 16px;border-radius:var(--radius-card);background:var(--studio-glass);}
 .c-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-md);align-items:stretch;}
 .c-grid > .c-card{flex:0 1 calc((100% - 2 * var(--space-md)) / 3);min-width:0;}
@@ -225,13 +255,28 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
         <select id="f-level" name="level"><option value=""><?= owIsAr() ? 'كل المستويات' : 'All levels' ?></option>
           <?php foreach (OW_COURSE_LEVELS as $k => $l): ?><option value="<?= e($k) ?>"<?= $fLevel === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $l[1] : $l[0]) ?></option><?php endforeach; ?>
         </select></div>
-      <div class="field"><label for="f-price"><?= owBi('Price', 'السعر') ?></label>
-        <select id="f-price" name="price"><option value=""><?= owIsAr() ? 'أي سعر' : 'Any price' ?></option>
-          <?php foreach (OW_INST_PRICES as $k => $l): ?><option value="<?= e($k) ?>"<?= $fPrice === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $l[1] : $l[0]) ?></option><?php endforeach; ?>
-        </select></div>
       <button class="btn btn-secondary ci-go" type="submit"><?= owBi('Show', 'اعرض') ?></button>
+      <details class="ci-more"<?= $panelN ? ' open' : '' ?>>
+        <summary class="btn btn-secondary ci-more-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><?= owBi('Filter', 'تصفية') ?><?= $panelN ? ' <span class="ci-n">' . $panelN . '</span>' : '' ?></summary>
+        <div class="ci-panel">
+          <?php $sel = function (string $id, string $name, string $label_en, string $label_ar, array $list, string $cur, string $any_en, string $any_ar) { ?>
+            <div class="field"><label for="<?= $id ?>"><?= owBi($label_en, $label_ar) ?></label>
+              <select id="<?= $id ?>" name="<?= $name ?>"><option value=""><?= e(owIsAr() ? $any_ar : $any_en) ?></option>
+                <?php foreach ($list as $k => $l): ?><option value="<?= e($k) ?>"<?= $cur === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $l[1] : $l[0]) ?></option><?php endforeach; ?></select></div>
+          <?php };
+          $sel('f-mode', 'mode', 'In person or online', 'حضوري أو عن بعد', OW_COURSE_TYPES, $fMode, 'Both', 'الكل');
+          $sel('f-lang', 'lang_c', 'Language', 'اللغة', OW_COURSE_LANGS, $fLang, 'Any language', 'أي لغة');
+          if ($extraOn) { $sel('f-for', 'for', 'For', 'لمن', OW_COURSE_AUDIENCE, $fFor, 'Anyone', 'الكل');
+                          $sel('f-att', 'att', 'Attendance', 'الحضور', OW_COURSE_ATTENDANCE, $fAtt, 'Any', 'الكل'); }
+          $sel('f-len', 'len', 'Length', 'المدة', OW_COURSE_LENGTH, $fLen, 'Any length', 'أي مدة');
+          $sel('f-price', 'price', 'Price', 'السعر', OW_INST_PRICES, $fPrice, 'Any price', 'أي سعر'); ?>
+          <div class="ci-panel-acts"><button class="btn btn-primary" type="submit"><?= owBi('Show results', 'اعرض النتائج') ?></button>
+            <a class="btn btn-ghost" href="<?= e($q(['mode' => '', 'lang_c' => '', 'for' => '', 'att' => '', 'len' => '', 'price' => ''])) ?>"><?= owBi('Clear these', 'امسح هذه') ?></a></div>
+        </div>
+      </details>
     </form>
-    <script>document.getElementById('ci-filter').addEventListener('change',function(){this.submit();});</script>
+    <script>/* the three visible lists open the results at once; the Filter panel waits for "Show results" */
+    document.getElementById('ci-filter').addEventListener('change',function(e){ if (!e.target.closest('.ci-more')) this.submit(); });</script>
     <?php endif; endif; ?>
 
     <?php if ($n > 0): ?>
@@ -266,7 +311,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
     <?php elseif ($filtered): ?>
       <div class="card empty-state d-empty reveal">
         <?= owBi('No courses match these choices. Try another city, level or price.', 'لا توجد دورات تطابق هذه الاختيارات. جرّب مدينة أو مستوى أو سعرا آخر.') ?>
-        <div><a class="btn btn-secondary" href="<?= e($q(['city' => '', 'art' => '', 'level' => '', 'price' => ''])) ?>"><?= owBi('Show all courses', 'اعرض كل الدورات') ?></a></div>
+        <div><a class="btn btn-secondary" href="<?= e($q(['city' => '', 'art' => '', 'level' => '', 'price' => '', 'mode' => '', 'lang_c' => '', 'for' => '', 'att' => '', 'len' => ''])) ?>"><?= owBi('Show all courses', 'اعرض كل الدورات') ?></a></div>
       </div>
     <?php else: ?>
       <div class="card ci-none reveal" id="notify">

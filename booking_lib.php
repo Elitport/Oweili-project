@@ -200,6 +200,16 @@ function owCourseFromPost(array $p): array {
         if ($sty !== '' && !isset(owCourseArtStyles()[$art][$sty])) { $err[] = ['Please choose a style of this art type, or leave the style empty', 'يرجى اختيار أسلوب من نوع الفن نفسه، أو ترك الأسلوب فارغا']; $sty = ''; }
         $v['art_type'] = $art; $v['art_style'] = $sty;
     }
+    require_once __DIR__ . '/inst_lib.php';
+    if (owCourseExtraReady()) {   // for the Art Institutes filters (owner, 25 Nov 2026): who it is for, attendance, length
+        foreach (['audience' => [OW_COURSE_AUDIENCE, ['Please choose who the course is for', 'يرجى اختيار لمن الدورة']],
+                  'attendance' => [OW_COURSE_ATTENDANCE, ['Please choose the attendance (men, women or mixed)', 'يرجى اختيار الحضور (رجال أو نساء أو مختلط)']],
+                  'length_kind' => [OW_COURSE_LENGTH, ['Please choose the length of the course', 'يرجى اختيار مدة الدورة']]] as $k => [$list, $msg]) {
+            $x = (string) ($p[$k] ?? '');
+            if (!isset($list[$x])) { $err[] = $msg; $x = array_key_first($list); }
+            $v[$k] = $x;
+        }
+    }
     if ($v['title_en'] === '' || $v['title_ar'] === '') $err[] = ['The title is needed in Arabic and English', 'العنوان مطلوب بالعربية والإنجليزية'];
     if ($v['description_en'] === '' || $v['description_ar'] === '') $err[] = ['The short description is needed in Arabic and English', 'الوصف القصير مطلوب بالعربية والإنجليزية'];
     if ($v['learn_en'] === '' || $v['learn_ar'] === '') $err[] = ['Please write what students will learn, in Arabic and English', 'يرجى كتابة ما سيتعلمه الطلاب، بالعربية والإنجليزية'];
