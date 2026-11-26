@@ -151,6 +151,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             'event_end_date'    => trim((string) ($_POST['event_end_date'] ?? '')),
             'event_location_en' => trim((string) ($_POST['event_location_en'] ?? '')),
             'event_location_ar' => trim((string) ($_POST['event_location_ar'] ?? '')),
+            'free_entry' => !empty($_POST['free_entry']) ? 1 : 0,   // Art Events: free entry (owner, 27 Nov 2026)
             'c_name_en'  => trim((string) ($_POST['c_name_en'] ?? '')),
             'c_name_ar'  => trim((string) ($_POST['c_name_ar'] ?? '')),
             'c_contact'  => trim((string) ($_POST['c_contact'] ?? '')),
@@ -283,6 +284,8 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                        ->execute($vals + [':type' => $type, ':author' => $staff['user_id']]);
                     $id = (int) $db->lastInsertId();
                 }
+                if (owHasColumn('articles', 'free_entry'))   // Art Events: free entry yes / no (owner, 27 Nov 2026; free_entry.sql)
+                    $db->prepare('UPDATE articles SET free_entry = :f WHERE id = :id')->execute([':f' => $type === 'event' ? $f['free_entry'] : 0, ':id' => $id]);
                 $removed = [];
                 if ($existing) {
                     foreach ($existing['images'] as $im) {
@@ -347,7 +350,7 @@ if ($ready) {
     } elseif (isset($_GET['new'])) {
         $mode = 'form';
         $form = ['id' => 0, 'type' => $tab, 'title_en' => '', 'title_ar' => '', 'body_en' => '', 'body_ar' => '', 'status' => 'draft',
-                 'event_start_date' => '', 'event_end_date' => '', 'event_location_en' => '', 'event_location_ar' => '',
+                 'event_start_date' => '', 'event_end_date' => '', 'event_location_en' => '', 'event_location_ar' => '', 'free_entry' => 0,
                  'c_name_en' => '', 'c_name_ar' => '', 'c_contact' => '', 'c_method' => '', 'c_date' => '', 'remove_cover' => false, 'remove_images' => []];
     }
 }
@@ -557,6 +560,9 @@ legend{font-size:var(--fs-subtitle);font-weight:700;color:var(--color-dark);marg
           <div class="field"><label for="event_location_ar"><?= owBi('Location in Arabic', 'المكان بالعربية') ?> <span class="req">*</span></label>
             <input type="text" id="event_location_ar" name="event_location_ar" dir="rtl" lang="ar" maxlength="255" required value="<?= $v('event_location_ar') ?>"></div>
         </div>
+        <?php if (owHasColumn('articles', 'free_entry')): ?>
+        <label class="chk" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" name="free_entry" value="1"<?= !empty($form['free_entry']) ? ' checked' : '' ?>> <?= owBi('Free entry (shows the "Free entry" badge and the Free filter on Art Events)', 'دخول مجاني (تظهر شارة «دخول مجاني» وفلتر المجاني في الملتقيات الفنية)') ?></label>
+        <?php endif; ?>
       </fieldset>
       <?php endif; ?>
 

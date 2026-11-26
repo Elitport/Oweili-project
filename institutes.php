@@ -297,6 +297,7 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
           <h2><?= owBi((string) ($c['title_en'] ?: $c['title_ar']), (string) ($c['title_ar'] ?: $c['title_en'])) ?></h2>
           <div class="c-tags">
             <?php if (owCourseArtReady() || $isDemo): $art = OW_COURSE_ARTS[$c['art_type'] ?? ''] ?? OW_COURSE_ARTS['painting']; ?><span class="c-tag c-art"><?= owBi($art[0], $art[1]) ?></span><?php endif; ?>
+            <?php if ($price <= 0): ?><?= owFreeBadge('Free', 'مجانية') ?><?php endif; /* a free course (owner, 27 Nov 2026) */ ?>
             <span class="c-tag"><?= owBi($lvl[0], $lvl[1]) ?></span>
             <span class="c-tag"><?php if ($online): ?><?= owBi('Online', 'عن بعد') ?><?php else: ?><?= $PIN ?><?= owBi((string) ($c['inst_city_en'] ?: $c['inst_city_ar']), (string) ($c['inst_city_ar'] ?: $c['inst_city_en'])) ?><?php endif; ?></span>
           </div>

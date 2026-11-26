@@ -23,8 +23,10 @@ $myReg = null;
 if ($me) { $st = getDB()->prepare('SELECT * FROM course_registrations WHERE course_id = :c AND user_id = :u'); $st->execute([':c' => (int) $c['id'], ':u' => (int) $me['id']]); $myReg = $st->fetch() ?: null; }
 $err = null;
 $payOn = owCoursePayOn();
+$isFree = (float) $c['price'] <= 0;   // a free course: "Register for free" through Oweili, like a booking, with no payment and no commission (owner, 27 Nov 2026)
+$useBook = !$payOn || $isFree;
 $booked = null;   // [ref, free] after a successful "Book your seat"
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && !$payOn) {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && $useBook) {
     $name = mb_substr(trim((string) ($_POST['name'] ?? '')), 0, 150);
     $email = strtolower(trim((string) ($_POST['email'] ?? '')));
     $phone = trim((string) ($_POST['phone'] ?? ''));
@@ -90,6 +92,7 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
     <?php if ($c['inst_logo'] !== '' && owSafeLogo((string) $c['inst_logo'])): ?><img src="<?= e($c['inst_logo']) ?>" alt="<?= e('Logo of ' . $c['inst_en'] . ' · شعار ' . $c['inst_ar']) ?>"><?php endif; ?>
     <div><p class="mini" style="margin:0"><?= owBi($c['inst_en'], $c['inst_ar']) ?> · <?= owBi($c['inst_city_en'], $c['inst_city_ar']) ?></p>
       <h1><?= owBi($tEn, $tAr) ?></h1>
+      <?php if ($isFree): ?><?= owFreeBadge('Free', 'مجانية') ?><?php endif; ?>
       <?php /* For, Attendance and Length as small labels (owner, 26 Nov 2026) */ require_once __DIR__ . '/inst_lib.php';
       if (owCourseExtraReady()): $cAud = OW_COURSE_AUDIENCE[$c['audience'] ?? ''] ?? OW_COURSE_AUDIENCE['all']; $cAtt = OW_COURSE_ATTENDANCE[$c['attendance'] ?? ''] ?? OW_COURSE_ATTENDANCE['mixed']; $cLen = OW_COURSE_LENGTH[owCourseLengthOf($c)]; ?>
       <div class="c-tags" aria-label="<?= e(owIsAr() ? 'تفاصيل الدورة' : 'Course details') ?>">
@@ -132,7 +135,7 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
     <a class="btn btn-secondary" href="my_bookings.php"><?= owBi('My bookings', 'حجوزاتي') ?></a>
   <?php elseif (!owCourseOpen($c)): ?>
     <p><?= (int) $c['seats_remaining'] < 1 ? owBi('This course is full', 'اكتمل العدد في هذه الدورة') : owBi('Registration is closed', 'التسجيل مغلق') ?></p>
-  <?php elseif (!$payOn): ?>
+  <?php elseif ($useBook): ?>
     <form method="post" action="course.php?id=<?= (int) $c['id'] ?>#register" novalidate><?= csrfField() ?>
       <div class="g2">
         <div class="field"><label for="st-name"><?= owBi('Student’s full name', 'اسم الطالب كاملا') ?></label><input id="st-name" name="name" required maxlength="150" autocomplete="name" dir="auto" value="<?= e($_POST['name'] ?? ($me ? owRealName($me['full_name_en'] ?? '') : '')) ?>"></div>
@@ -143,7 +146,7 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
       <details style="margin:var(--space-xs) 0"><summary><?= owBi('Booking and refund rules', 'قواعد الحجز والاسترداد') ?></summary><?= owBookingTermsHtml() ?></details>
       <label class="chk" style="display:flex;gap:6px;align-items:flex-start;margin:var(--space-sm) 0"><input type="checkbox" name="agree" value="1" required> <span><?= owBi('I read the booking and refund rules', 'قرأت قواعد الحجز والاسترداد') ?></span></label>
       <p class="mini"><?= owBi('We use these details only for this booking. See our', 'نستخدم هذه البيانات لهذا الحجز فقط. اطّلع على') ?> <a href="privacy.php"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a>.</p>
-      <button class="btn btn-primary" type="submit"><?= owBi('Book your seat', 'احجز مقعدك') ?></button>
+      <button class="btn btn-primary" type="submit"><?= $isFree ? owBi('Register for free', 'سجّل مجانا') : owBi('Book your seat', 'احجز مقعدك') ?></button>
     </form>
   <?php elseif (!$me): ?>
     <a class="btn btn-primary" href="login.php?next=<?= e(rawurlencode('course.php?id=' . (int) $c['id'] . '#register')) ?>"><?= owBi('Sign in to register', 'سجّل الدخول للتسجيل') ?></a>

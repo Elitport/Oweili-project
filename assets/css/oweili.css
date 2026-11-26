@@ -1028,3 +1028,5 @@ html body:not(.cert-page):not(.label-page) .ow-footer .ow-footer-ecom { margin-t
 }
 /* Home page (owner, 24 Nov 2026): the hero, then straight to the footer, with no empty space between them */
 html body:not(.cert-page):not(.label-page):has(.c-home) .ow-footer { margin-top: 0; }
+/* The "Free" badge (owner, 27 Nov 2026): free-entry places and events, free courses. Pink mark, dark text (readable in light and dark) */
+.ow-free { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: var(--radius-pill); background: var(--color-primary); color: var(--color-on-primary); font-size: var(--fs-min); font-weight: 700; line-height: 1.6; white-space: nowrap; vertical-align: middle; }

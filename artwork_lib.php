@@ -395,6 +395,10 @@ function owArtImgHtml(string $src, string $alt, bool $eager = false): string {
 function owBi(string $en, string $ar, string $tag = 'span'): string {
     return '<' . $tag . ' class="bi-en" lang="en">' . e($en) . '</' . $tag . '><' . $tag . ' class="bi-ar" lang="ar">' . e($ar) . '</' . $tag . '>';
 }
+/* The small "Free" badge (owner, 27 Nov 2026): free-entry places and events, free courses (style .ow-free in oweili.css) */
+function owFreeBadge(string $en = 'Free entry', string $ar = 'دخول مجاني'): string {
+    return '<span class="ow-free">' . owBi($en, $ar) . '</span>';
+}
 
 /* An artist's public name in English and Arabic, each kept whole with <bdi>, so a Latin name such as "Sara A."
    reads correctly on an Arabic page (owner, 13 Nov 2026). $preEn / $preAr: a word before it, e.g. "by" / "بواسطة". */

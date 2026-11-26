@@ -77,6 +77,10 @@ function owDemoArticles(string $type): array {
             ['demo-event-4', 'expressionism', 'Colour and Feeling Exhibition', 'معرض اللون والشعور', '2027-03-10', '2027-03-20', 'Dammam', 'الدمام',
              'An exhibition about how colour carries feeling. Original works by hand only.', 'معرض عن كيف يحمل اللون الشعور. أعمال أصلية مرسومة باليد فقط.',
              'Franz Marc, The Large Blue Horses, 1911', 'فرانتس مارك، «الخيول الزرقاء الكبيرة»، 1911'],
+            /* a free demo event (owner, 27 Nov 2026): shows the "Free entry" badge and the Free filter */
+            ['demo-event-5', 'impressionism', 'Sunrise Sketching Morning', 'صباح رسم الشروق', '2027-03-05', null, 'Riyadh', 'الرياض',
+             'A free morning of sketching the sunrise together. Bring a sketchbook and a pencil.', 'صباح مجاني نرسم فيه الشروق معا. أحضر دفتر رسم وقلم رصاص.',
+             'Claude Monet, Impression, Sunrise, 1872', 'كلود مونيه، «انطباع، شروق الشمس»، 1872'],
         ],
         'art_education' => [
             ['demo-education-1', 'landscape', 'How to look at a landscape painting', 'كيف تنظر إلى لوحة منظر طبيعي', null, null, '', '',
@@ -95,7 +99,7 @@ function owDemoArticles(string $type): array {
     ];
     $out = [];
     foreach ($all[$type] ?? [] as $i => [$slug, $k, $tEn, $tAr, $s, $e, $lEn, $lAr, $bEn, $bAr, $cEn, $cAr]) {
-        $out[] = ['id' => 0, 'demo' => true, 'slug' => $slug, 'type' => $type, 'status' => 'published', 'author_user_id' => null,
+        $out[] = ['id' => 0, 'demo' => true, 'slug' => $slug, 'type' => $type, 'status' => 'published', 'author_user_id' => null, 'free_entry' => $slug === 'demo-event-5' ? 1 : 0,
                   'title_en' => $tEn, 'title_ar' => $tAr, 'cover_image_path' => owDemoImg($k),
                   'published_at' => date('Y-m-d H:i:s', strtotime('-' . ($i + 1) . ' days')),
                   'event_start_date' => $s, 'event_end_date' => $e, 'event_location_en' => $lEn, 'event_location_ar' => $lAr,
@@ -118,6 +122,7 @@ function owDemoCourses(): array {
         ['Colour Theory for Painters', 'نظرية الألوان للرسامين', 'online', '', '', 'advanced', 1200, 12, '2027-02-14', '2027-03-14', 'painting', ''],
         ['Wood Carving for Beginners', 'نحت الخشب للمبتدئين', 'in_person', 'Riyadh', 'الرياض', 'beginner', 650, 6, '2027-02-07', '2027-03-07', 'sculpture', 'wood_carving'],
         ['Beadwork Jewellery', 'مجوهرات الخرز', 'online', '', '', 'beginner', 250, 15, '2027-02-21', '2027-03-14', 'jewellery', 'beadwork'],
+        ['Open Sketching Morning', 'صباح الرسم المفتوح', 'in_person', 'Jeddah', 'جدة', 'beginner', 0, 20, '2027-02-27', '2027-02-27', 'painting', 'pencil'],   // a free demo course (owner, 27 Nov 2026)
     ];
     $out = [];
     foreach ($L as $i => [$tEn, $tAr, $type, $cEn, $cAr, $lvl, $price, $seats, $s, $e, $art, $sty]) {
@@ -126,4 +131,14 @@ function owDemoCourses(): array {
                   'level' => $lvl, 'price' => $price, 'seats_remaining' => $seats, 'start_date' => $s, 'end_date' => $e, 'art_type' => $art, 'art_style' => $sty];
     }
     return $out;
+}
+
+/* ---- Art Map: one demo museum with free entry (owner, 27 Nov 2026). Never in the database, the sitemap or the map pins; no place page ---- */
+function owDemoPlace(): array {
+    return ['id' => 0, 'demo' => true, 'kind' => 'museum', 'status' => 'published', 'region' => 'riyadh',
+            'name_en' => 'Demo Museum of Handmade Art', 'name_ar' => 'متحف تجريبي للفن اليدوي', 'city_en' => 'Riyadh', 'city_ar' => 'الرياض',
+            'desc_en' => 'A demo museum to preview free entry on the Art Map', 'desc_ar' => 'متحف تجريبي لمعاينة الدخول المجاني في وجهات الفن',
+            'address' => '', 'address_ar' => '', 'phone' => '', 'website' => '', 'instagram' => '', 'maps_url' => '',
+            'photo_path' => '', 'photo_credit' => '', 'photo_page' => '', 'photo_license' => '', 'lat' => null, 'lng' => null,
+            'entry_kind' => 'free', 'entry_price' => null, 'entry_source' => '', 'entry_checked' => null];
 }
