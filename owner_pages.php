@@ -511,13 +511,15 @@ elseif ($page === 'settings' && $isOwner):
     <section class="o-t">
       <div class="o-th"><h2><?= owBi('Sub-admins: what each one can see', 'المشرفون: ما يراه كل واحد') ?></h2></div>
       <p class="o-note"><?= owBi('Tick the menu groups for each sub-admin. Money, messages and people stay hidden unless you tick them. Settings and the classic admin pages are always yours only', 'حدّد مجموعات القائمة لكل مشرف. يبقى المال والرسائل والأشخاص مخفيا ما لم تحدده. الإعدادات وصفحات الإدارة السابقة لك وحدك دائما') ?>
+        · <?= owBi('"Institute documents" lets that sub-admin open the institutes’ private registration and licence documents', '«مستندات المعاهد» يسمح لهذا المشرف بفتح مستندات التسجيل والترخيص الخاصة بالمعاهد') ?>
         · <?= owBi('To make someone a sub-admin: Artists or Collectors list in the classic admin page → role "Sub admin"', 'لجعل شخص مشرفا: قائمة الفنانين أو المقتنين في صفحة الإدارة السابقة ← الدور «Sub admin»') ?></p>
       <?php if (!$subs): ?><?= $empty('No sub-admins yet', 'لا يوجد مشرفون بعد') ?><?php else: ?>
       <form method="post"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="subadmins">
-        <div class="o-tablewrap"><table class="o-table"><thead><tr><th><?= owBi('Sub-admin', 'المشرف') ?></th><?php foreach (OW_OWNER_GROUPS as $g => $w): ?><th><?= owBi($w[0], $w[1]) ?></th><?php endforeach; ?></tr></thead>
+        <div class="o-tablewrap"><table class="o-table"><thead><tr><th><?= owBi('Sub-admin', 'المشرف') ?></th><?php foreach (OW_OWNER_GROUPS as $g => $w): ?><th><?= owBi($w[0], $w[1]) ?></th><?php endforeach; ?><th><?= owBi('Institute documents', 'مستندات المعاهد') ?></th></tr></thead>
           <tbody><?php foreach ($subs as $s): $have = (array) ($SG[(string) $s['id']] ?? []); ?>
             <tr><th scope="row"><?= owBdi(owPersonName($s)) ?><span class="o-sm"><?= e((string) $s['email']) ?></span></th>
-              <?php foreach (OW_OWNER_GROUPS as $g => $w): ?><td><input type="checkbox" name="g[<?= (int) $s['id'] ?>][]" value="<?= $g ?>"<?= in_array($g, $have, true) ? ' checked' : '' ?> aria-label="<?= e(owPersonName($s) . ' · ' . (owIsAr() ? $w[1] : $w[0])) ?>"></td><?php endforeach; ?></tr>
+              <?php foreach (OW_OWNER_GROUPS as $g => $w): ?><td><input type="checkbox" name="g[<?= (int) $s['id'] ?>][]" value="<?= $g ?>"<?= in_array($g, $have, true) ? ' checked' : '' ?> aria-label="<?= e(owPersonName($s) . ' · ' . (owIsAr() ? $w[1] : $w[0])) ?>"></td><?php endforeach; ?>
+              <td><?php require_once __DIR__ . '/inst_lib.php'; ?><input type="checkbox" name="instdocs[<?= (int) $s['id'] ?>]" value="1"<?= in_array((int) $s['id'], owInstDocsSubadmins(), true) ? ' checked' : '' ?> aria-label="<?= e(owPersonName($s) . ' · ' . (owIsAr() ? 'مستندات المعاهد' : 'Institute documents')) ?>"></td></tr>
           <?php endforeach; ?></tbody></table></div>
         <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button>
       </form><?php endif; ?>

@@ -160,6 +160,18 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
       </div>
     <?php endif; ?>
   </div>
+  <?php /* Art institutes waiting, with their private documents: only for the sub-admins the owner allowed (owner, 25 Nov 2026; inst_lib.php). The owner decides */
+  require_once __DIR__ . '/inst_lib.php';
+  if (owInstDocsReady() && owInstDocsAllowed()): $instWait = owInstWaiting(); ?>
+  <div class="card" style="margin-top:var(--space-md)">
+    <div class="sec-head"><h2><?= owBi('Art institutes waiting (documents)', 'معاهد فنية بالانتظار (المستندات)') ?> <span class="count"><?= count($instWait) ?></span></h2></div>
+    <p class="mini"><?= owBi('You may open their documents. The owner approves or refuses each institute', 'يمكنك فتح مستنداتهم. يعتمد المالك كل معهد أو يرفضه') ?></p>
+    <?php if (!$instWait): ?><p class="mini"><?= owBi('No institute is waiting', 'لا يوجد معهد بالانتظار') ?></p><?php endif; ?>
+    <?php foreach ($instWait as $iw): ?><div style="border-top:1px solid var(--color-border);padding-top:var(--space-sm);margin-top:var(--space-sm)">
+      <strong><?= owBi((string) $iw['name_en'], (string) $iw['name_ar']) ?></strong> <span class="mini">· <?= e((string) ($iw['legal_name'] ?? '')) ?> · <?= owBi((string) $iw['city_en'], (string) $iw['city_ar']) ?></span>
+      <?= owInstDocsHtml($iw) ?></div><?php endforeach; ?>
+  </div>
+  <?php endif; ?>
 </div>
 
 <script>

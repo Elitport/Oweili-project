@@ -113,6 +113,11 @@ if ($V && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['act'
         }
         owSetSetting('subadmin_groups', json_encode($all));
         owLog('setting_change', 'setting', null, 'subadmin_groups', $actor);
+        /* which sub-admins may open the institutes' private documents (owner, 25 Nov 2026; inst_lib.php) */
+        $docs = [];
+        foreach (owQAll("SELECT id FROM users WHERE role = 'sub_admin'") as $s) if (!empty($_POST['instdocs'][$s['id']])) $docs[] = (int) $s['id'];
+        owSetSetting('subadmin_inst_docs', json_encode($docs));
+        owLog('setting_change', 'setting', null, 'subadmin_inst_docs', $actor);
         $back('owner.php?p=settings', 'saved');
     }
     $back('owner.php?p=' . $page);

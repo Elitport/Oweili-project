@@ -14,6 +14,7 @@
 require_once 'config.php';
 require_once __DIR__ . '/admin_shell.php';
 require_once __DIR__ . '/booking_lib.php';
+require_once __DIR__ . '/inst_lib.php';
 require_once __DIR__ . '/pay_lib.php';
 require_once __DIR__ . '/order_lib.php';   // the artwork rule (OW_PAYOUT_ASK_DAYS), read only
 owAdminGate();
@@ -34,15 +35,22 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $on = $do === 'inst_approve' ? 1 : 0;
             $db->prepare('UPDATE users SET is_approved = :a WHERE id = :u')->execute([':a' => $on, ':u' => $i['uid']]);
             $db->prepare('UPDATE institutes SET is_active = :a WHERE id = :id')->execute([':a' => $on, ':id' => $id]);
+            /* the reason is kept, so a refused institute no longer waits in Waiting for approval (owner, 25 Nov 2026) */
+            if (owHasColumn('institutes', 'reject_reason')) $db->prepare('UPDATE institutes SET reject_reason = :r WHERE id = :id')->execute([':r' => $on ? '' : $why, ':id' => $id]);
             owLog($on ? 'institute_approve' : 'institute_reject', 'institute', $id, $why, $actor);
             $on ? $mailTo($i['email'], 'Your institute is approved · تم اعتماد معهدك', 'Welcome to Oweili! Your institute is approved. Add your courses from your dashboard.', 'أهلا بك في أويلي! تم اعتماد معهدك. أضف دوراتك من لوحتك.', 'institute_dashboard.php')
                 : $mailTo($i['email'], 'About your institute · بخصوص معهدك', 'We could not approve your institute yet. Reason: ' . $why, 'لم نتمكن من اعتماد معهدك بعد. السبب: ' . $why);
             $msg = $on ? ['Institute approved', 'تم اعتماد المعهد'] : ['Institute not approved. They were told the reason.', 'لم يُعتمد المعهد، وأُبلغ بالسبب'];
+            if (($_POST['back'] ?? '') === 'pending') { header('Location: admin.php?inst_done=' . ($on ? 'approved' : 'refused') . '#pending'); exit; }
         }
     } elseif ($do === 'course_approve' || $do === 'course_reject') {
         $c = owCourseGet($id);
         if (!$c || (int) $c['bookable'] !== 1) $bad = ['Not found', 'غير موجود'];
         elseif ($do === 'course_reject' && mb_strlen($why) < 3) $bad = ['Please write the reason', 'يرجى كتابة السبب'];
+        /* a course goes live only once its institute is approved and has its training licence (owner, 25 Nov 2026) */
+        elseif ($do === 'course_approve' && (int) $c['inst_active'] !== 1) $bad = ['Approve the institute first', 'اعتمد المعهد أولا'];
+        elseif ($do === 'course_approve' && owInstDocsReady() && ($lc = $db->prepare('SELECT licence_file, via_signup FROM institutes WHERE id = :i')) && $lc->execute([':i' => (int) $c['institute_id']]) && ($lr = $lc->fetch()) && (int) $lr['via_signup'] === 1 && (string) $lr['licence_file'] === '')
+            $bad = ['This institute has not added its training licence yet. Courses go live only with a licence', 'لم يُضف هذا المعهد ترخيص التدريب بعد. لا تظهر الدورات إلا مع الترخيص'];
         else {
             $s = $do === 'course_approve' ? 'approved' : 'rejected';
             $db->prepare('UPDATE courses SET status = :s, reject_reason = :r WHERE id = :id')->execute([':s' => $s, ':r' => $s === 'rejected' ? $why : '', ':id' => $id]);
@@ -160,7 +168,8 @@ owAdminTop('Courses and tickets', 'الدورات والتذاكر', '
 <?php foreach ($insts as $i): ?>
 <tr><td><b><?= owBi($i['name_en'], $i['name_ar']) ?></b><br><span class="mini"><?= owBi($i['city_en'], $i['city_ar']) ?></span><?php if ($i['description_en'] !== ''): ?><br><span class="mini"><?= e(owExcerpt((string) $i['description_en'], 160)) ?></span><?php endif; ?></td>
   <td><?= e($i['person']) ?><br><span class="mini" dir="ltr"><?= e($i['email']) ?> · <?= e($i['contact_phone']) ?></span><?= $i['website_url'] !== '' ? '<br><a class="mini" href="' . e($i['website_url']) . '" target="_blank" rel="noopener">' . e($i['website_url']) . '</a>' : '' ?>
-    <?= $i['payout_note'] !== '' ? '<br><span class="mini">' . owBi('Payout: ', 'المستحقات: ') . e($i['payout_note']) . '</span>' : '' ?></td>
+    <?= $i['payout_note'] !== '' ? '<br><span class="mini">' . owBi('Payout: ', 'المستحقات: ') . e($i['payout_note']) . '</span>' : '' ?>
+    <?php if (owInstDocsReady()): ?><?= ($i['legal_name'] ?? '') !== '' ? '<br><span class="mini">' . owBi('Legal name: ', 'الاسم النظامي: ') . e((string) $i['legal_name']) . '</span>' : '' ?><?= owInstDocsHtml($i) ?><?php endif; ?></td>
   <td><?= (int) $i['is_approved'] ? '<span class="pillx on">' . owBi('Approved', 'معتمد') . '</span>' : '<span class="pillx warn">' . owBi('Waiting', 'بالانتظار') . '</span>' ?><?= !(int) $i['is_verified'] ? '<br><span class="mini">' . owBi('Email not confirmed', 'البريد غير مؤكد') . '</span>' : '' ?></td>
   <td><?php if (!(int) $i['is_approved']): ?>
     <form method="post" action="admin_bookings.php#institutes"><?= csrfField() ?><input type="hidden" name="do" value="inst_approve"><input type="hidden" name="id" value="<?= (int) $i['id'] ?>"><button class="btn btn-primary btn-sm"><?= owBi('Approve', 'اعتماد') ?></button></form>

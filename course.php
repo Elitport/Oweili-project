@@ -80,6 +80,8 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
 .c-head img{width:56px;height:56px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid var(--color-border);}
 .c-price{font-size:28px;font-weight:800;color:var(--color-dark);}
 .c-learn{white-space:pre-line;}
+.c-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.c-tag{padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-accent-dark);background:rgba(var(--rgb-accent),0.08);border:1px solid rgba(var(--rgb-accent),0.2);}
 ', !owCoursesOn() || !owCoursePublic($c));
 ?>
 <?php if (!owCoursePublic($c)): ?><div class="alert alert-error" role="status"><?= owBi('Only you and the Oweili team see this page: the course is ' . strtolower(OW_COURSE_STATUS[$c['status']][0] ?? $c['status']) . '.', 'هذه الصفحة تظهر لك ولفريق أويلي فقط: الدورة ' . (OW_COURSE_STATUS[$c['status']][1] ?? $c['status']) . '.') ?></div><?php endif; ?>
@@ -87,7 +89,15 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
   <div class="c-head">
     <?php if ($c['inst_logo'] !== '' && owSafeLogo((string) $c['inst_logo'])): ?><img src="<?= e($c['inst_logo']) ?>" alt="<?= e('Logo of ' . $c['inst_en'] . ' · شعار ' . $c['inst_ar']) ?>"><?php endif; ?>
     <div><p class="mini" style="margin:0"><?= owBi($c['inst_en'], $c['inst_ar']) ?> · <?= owBi($c['inst_city_en'], $c['inst_city_ar']) ?></p>
-      <h1><?= owBi($tEn, $tAr) ?></h1></div>
+      <h1><?= owBi($tEn, $tAr) ?></h1>
+      <?php /* For, Attendance and Length as small labels (owner, 26 Nov 2026) */ require_once __DIR__ . '/inst_lib.php';
+      if (owCourseExtraReady()): $cAud = OW_COURSE_AUDIENCE[$c['audience'] ?? ''] ?? OW_COURSE_AUDIENCE['all']; $cAtt = OW_COURSE_ATTENDANCE[$c['attendance'] ?? ''] ?? OW_COURSE_ATTENDANCE['mixed']; $cLen = OW_COURSE_LENGTH[owCourseLengthOf($c)]; ?>
+      <div class="c-tags" aria-label="<?= e(owIsAr() ? 'تفاصيل الدورة' : 'Course details') ?>">
+        <span class="c-tag"><?= owBi('For: ' . $cAud[0], 'لمن: ' . $cAud[1]) ?></span>
+        <span class="c-tag"><?= owBi('Attendance: ' . $cAtt[0], 'الحضور: ' . $cAtt[1]) ?></span>
+        <span class="c-tag"><?= owBi($cLen[0], $cLen[1]) ?></span>
+      </div>
+      <?php endif; ?></div>
   </div>
   <p><?= owBi((string) $c['description_en'], (string) $c['description_ar']) ?></p>
   <dl class="kv">
