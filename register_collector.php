@@ -80,7 +80,7 @@ $ERR = [
     'mismatch'=>['en'=>'Passwords do not match','ar'=>'كلمتا المرور غير متطابقتين'],
     'exists'=>['en'=>'An account with this email already exists','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل'],
 ];
-$OK = ['check_email'=>['en'=>'Please check your email to verify your account','ar'=>'يرجى مراجعة بريدك لتفعيل حسابك']];
+$OK = ['check_email'=>['en'=>'Please check your email to verify your account.' . ' ' . OW_JUNK_HINT[0],'ar'=>'يرجى مراجعة بريدك لتفعيل حسابك.' . ' ' . OW_JUNK_HINT[1]]];
 /* The exact boxes that are wrong (marked on the form) */
 $bad = match ($errCode) {
     'required'        => array_keys(array_filter(['first_name' => $old['first'], 'email' => $old['email'], 'phone' => $old['phone']], fn($v) => $v === '')),

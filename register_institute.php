@@ -135,7 +135,7 @@ owBookTop('Join as an art institute', 'انضم كمعهد فني', 'register_in
   <p class="mini"><?= owBi('Every institute is reviewed by the Oweili team before it shows', 'يراجع فريق أويلي كل معهد قبل ظهوره') ?></p>
 </div>
 <?php if ($ok): ?>
-  <div class="card"><div class="alert alert-ok" role="status"><?= owBi('Thank you! Please confirm your email. We will review your institute and its documents and let you know', 'شكرا لك! يرجى تأكيد بريدك. سنراجع معهدك ومستنداته ونبلغك') ?></div></div>
+  <div class="card"><div class="alert alert-ok" role="status"><?= owBi('Thank you! Please confirm your email. We will review your institute and its documents and let you know.' . ' ' . OW_JUNK_HINT[0], 'شكرا لك! يرجى تأكيد بريدك. سنراجع معهدك ومستنداته ونبلغك.' . ' ' . OW_JUNK_HINT[1]) ?></div></div>
 <?php else: ?>
 <?php if ($err): ?><div class="alert alert-error" role="alert"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>
 <form method="post" action="register_institute.php" class="card" enctype="multipart/form-data" novalidate><?= csrfField() ?>

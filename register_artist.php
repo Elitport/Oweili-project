@@ -192,7 +192,7 @@ $ERR = [
     'exists'=>['en'=>'An account with this email already exists','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل'],
     'rate'=>['en'=>'Too many new accounts from here. Please try again in an hour.','ar'=>'حسابات جديدة كثيرة من هنا. حاول مرة أخرى بعد ساعة.'],
 ];
-$OK = ['check_email'=>['en'=>'Thanks! Check your email to verify. Our team will review your portfolio before approval.','ar'=>'شكرا! راجع بريدك للتفعيل. سيراجع فريقنا أعمالك قبل الموافقة.']];
+$OK = ['check_email'=>['en'=>'Thanks! Check your email to verify. Our team will review your portfolio before approval.' . ' ' . OW_JUNK_HINT[0],'ar'=>'شكرا! راجع بريدك للتفعيل. سيراجع فريقنا أعمالك قبل الموافقة.' . ' ' . OW_JUNK_HINT[1]]];
 /* The exact boxes that are wrong (marked on the form) */
 $bad = match ($errCode) {
     'required'      => array_keys(array_filter(['first_name' => $old['first'], 'artist_name' => $old['artist'], 'email' => $old['email'], 'phone' => $old['phone'], 'city' => $old['city']], fn($v) => $v === '')),

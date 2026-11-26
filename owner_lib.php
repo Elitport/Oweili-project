@@ -435,7 +435,10 @@ function owMsgTick(): int {
         $up = $db->prepare('UPDATE sent_messages SET status = :s, sent_at = NOW() WHERE id = :id');
         foreach ($rows as $m) {
             if ((int) $m['banned'] === 1 || ($m['kind'] === 'news' && (int) $m['notify_news'] !== 1)) { $up->execute([':s' => 'skipped', ':id' => $m['id']]); continue; }
-            $ok = owSendMail((string) $m['email'], (string) $m['subject'], owMsgBody($m));
+            $opt = [];   // news: the personal one-click unsubscribe link and headers (owner, 27 Nov 2026)
+            if ($m['kind'] === 'news') { require_once __DIR__ . '/unsub_lib.php'; $opt['unsub'] = owNewsUnsubUrl((int) $m['user_id'], (string) $m['email']); }
+            $noLog = null;
+            $ok = owSendMail((string) $m['email'], (string) $m['subject'], owMsgBody($m), false, $noLog, $opt);
             $up->execute([':s' => $ok ? 'sent' : 'failed', ':id' => $m['id']]);
             $done++;
         }

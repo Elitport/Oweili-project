@@ -180,6 +180,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <div class="v-icon ok">✓</div>
       <h1><span class="bi-en">Check your email</span><span class="bi-ar">راجع بريدك</span></h1>
       <p><span class="bi-en">If this email has an Oweili account that is not confirmed yet, we sent a new link to it. The link works for 48 hours.</span><span class="bi-ar">إن كان لهذا البريد حساب في أويلي لم يُؤكَّد بعد، فقد أرسلنا إليه رابطا جديدا. يعمل الرابط لمدة 48 ساعة.</span></p>
+      <p><?= owBi(OW_JUNK_HINT[0], OW_JUNK_HINT[1]) ?></p>
       <a class="btn btn-primary" href="login.php"><span class="bi-en">Sign In</span><span class="bi-ar">تسجيل الدخول</span></a>
     <?php elseif ($state === 'rate'): ?>
       <div class="v-icon bad">✕</div>

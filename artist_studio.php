@@ -164,10 +164,10 @@ if (true) {   /* also on Home (recent sales, payouts) */
 }
 
 $DONE = [
-    'email'    => ['Your new email is saved. Please open the link we sent to it to confirm it.', 'تم حفظ بريدك الجديد. افتح الرابط الذي أرسلناه إليه لتأكيده.'],
+    'email'    => ['Your new email is saved. Please open the link we sent to it to confirm it.' . ' ' . OW_JUNK_HINT[0], 'تم حفظ بريدك الجديد. افتح الرابط الذي أرسلناه إليه لتأكيده.' . ' ' . OW_JUNK_HINT[1]],
     'password' => ['Your password is changed. Other phones and computers were signed out.', 'تم تغيير كلمة المرور. وتم تسجيل الخروج من الأجهزة الأخرى.'],
     'notify'   => ['Your email choices are saved', 'تم حفظ اختياراتك للرسائل'],
-    'resend'   => ['We sent the confirmation link again. Please check your inbox.', 'أرسلنا رابط التأكيد مرة أخرى. راجع بريدك.'],
+    'resend'   => ['We sent the confirmation link again. Please check your inbox.' . ' ' . OW_JUNK_HINT[0], 'أرسلنا رابط التأكيد مرة أخرى. راجع بريدك.' . ' ' . OW_JUNK_HINT[1]],
     'waiting'  => ['Saved. Your changes are waiting for the team’s approval. Visitors see the approved version until then.', 'تم الحفظ. تعديلاتك بانتظار موافقة الفريق. يرى الزوار النسخة المعتمدة حتى ذلك الحين.'],
     'saved'    => ['Your changes are saved', 'تم حفظ تعديلاتك'],
     'ws_request' => ['Your request is sent. The Oweili team will email you the answer', 'تم إرسال طلبك. سيراسلك فريق أويلي بالرد'],

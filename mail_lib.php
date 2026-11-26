@@ -55,12 +55,14 @@ function owSmtpReady(): bool {
 const OW_MAIL_FROM_NAME = 'Oweili';   // plain letters, like "ElitCV" on elitcv.com (the site whose emails reach the inbox)
 
 /* The footer, as plain text and as HTML */
-function owMailFooter(): array {
+function owMailFooter(string $unsub = ''): array {
     $site = 'https://oweili.com';
     $cr = owCompanyCr();
     $text = "--\r\nOweili · أويلي, the home of real art · بيت الفن الأصيل\r\n" . OW_COMPANY_NAME . ' · ' . OW_COMPANY_CITY . "\r\n"
           . owContactEmail() . ' · ' . $site . "\r\n" . ($cr !== '' ? 'Commercial Registration No. ' . $cr . "\r\n" : '')
-          . "This is a service email from Oweili. · هذه رسالة خدمة من أويلي.";
+          . ($unsub === '' ? "This is a service email from Oweili. · هذه رسالة خدمة من أويلي."
+             : "You get this email because you chose to receive Oweili news. Unsubscribe: " . $unsub . "\r\n"
+             . "وصلتك هذه الرسالة لأنك اخترت استلام أخبار أويلي. لإلغاء الاشتراك: " . $unsub);
     $h = fn($s) => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
     $html = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:16px auto 0;font-family:Arial,sans-serif">'
           . '<tr><td style="padding:16px 28px;border-top:1px solid #E2E8F0;font-size:12px;line-height:1.7;color:#4A5568;text-align:center">'
@@ -68,7 +70,9 @@ function owMailFooter(): array {
           . $h(OW_COMPANY_NAME) . ' · ' . $h(OW_COMPANY_CITY) . '<br>'
           . '<a href="mailto:' . $h(owContactEmail()) . '" style="color:#23314A">' . $h(owContactEmail()) . '</a> · <a href="' . $site . '" style="color:#23314A">oweili.com</a>'
           . ($cr !== '' ? '<br>Commercial Registration No. ' . $h($cr) : '')
-          . '<br>This is a service email from Oweili. · <span dir="rtl">هذه رسالة خدمة من أويلي.</span>'
+          . ($unsub === '' ? '<br>This is a service email from Oweili. · <span dir="rtl">هذه رسالة خدمة من أويلي.</span>'
+             : '<br>You get this email because you chose to receive Oweili news. <a href="' . $h($unsub) . '" style="color:#23314A">Unsubscribe</a>'
+             . '<br><span dir="rtl">وصلتك هذه الرسالة لأنك اخترت استلام أخبار أويلي. <a href="' . $h($unsub) . '" style="color:#23314A">إلغاء الاشتراك</a></span>')
           . '</td></tr></table>';
     return [$text, $html];
 }
@@ -104,12 +108,13 @@ function owMailHtmlToText(string $html): string {
 }
 
 /* Builds the full message (headers + both versions) once, for every way of sending. */
-function owMailMessage(string $to, string $subject, string $body, bool $isHtml): array {
+function owMailMessage(string $to, string $subject, string $body, bool $isHtml, array $opt = []): array {
+    $unsub = (string) ($opt['unsub'] ?? '');
     $from     = owMailFrom();
     $fromName = defined('OWEILI_FROM_NAME') ? (string) OWEILI_FROM_NAME : OW_MAIL_FROM_NAME;
     $domain   = substr(strrchr($from, '@'), 1) ?: 'oweili.com';
     $enc = fn(string $s) => preg_match('/[^\x20-\x7E]/', $s) ? '=?UTF-8?B?' . base64_encode($s) . '?=' : $s;
-    [$footText, $footHtml] = owMailFooter();
+    [$footText, $footHtml] = owMailFooter($unsub);
     if ($isHtml) { $html = $body; $text = owMailHtmlToText($body); }
     else { $text = str_replace(["\r\n", "\n"], ["\n", "\r\n"], trim($body)); $html = owMailTextToHtml($body); }
     $text .= "\r\n\r\n" . $footText;
@@ -127,10 +132,13 @@ function owMailMessage(string $to, string $subject, string $body, bool $isHtml):
         'MIME-Version: 1.0',
         'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
     ];
+    $extra = owMailListHeaders($unsub);
+    foreach ($extra as $k => $v) $headers[] = $k . ': ' . $v;
     return [
         'from'    => $from,
         'subject' => $enc($subject),
         'headers' => $headers,
+        'extra'   => $extra,
         'html'    => $html,
         'text'    => $text,
         'body'    => $part('text/plain', $text) . $part('text/html', $html) . '--' . $boundary . "--",
@@ -208,9 +216,9 @@ function owSmtpSend(string $to, array $msg, string $host, int $port, array &$log
    language when the address belongs to an account, otherwise the language of the
    visitor who caused the email (a sign-up, a gift or a commission request).
    Oweili's own address (admin alerts) is left as it is. Adds lang=ar only. */
-function owMailLangLinks(string $to, string $body): string {
+function owMailReaderLang(string $to): string {
     require_once __DIR__ . '/lang_lib.php';
-    if (strcasecmp($to, function_exists('owContactEmail') ? owContactEmail() : '') === 0) return $body;
+    if (strcasecmp($to, function_exists('owContactEmail') ? owContactEmail() : '') === 0) return 'en';   // Oweili's own mailbox: English
     static $seen = [];
     $key = strtolower($to);
     $lang = $seen[$key] ?? null;
@@ -224,7 +232,11 @@ function owMailLangLinks(string $to, string $body): string {
     } catch (Throwable $e) { $lang = null; }
     if ($lang === null) $lang = owLang();
     $seen[$key] = $lang;
-    if ($lang !== 'ar') return $body;
+    return $lang;
+}
+function owMailLangLinks(string $to, string $body): string {
+    if (strcasecmp($to, function_exists('owContactEmail') ? owContactEmail() : '') === 0) return $body;
+    if (owMailReaderLang($to) !== 'ar') return $body;
     return preg_replace_callback('#https://(?:www\.)?oweili\.com(/[^\s"\'<>]*)?#', function ($m) {
         $u = $m[0];
         if (preg_match('#\.(jpe?g|png|webp|avif|gif|svg|css|js|pdf)(\?|$)#i', $u)) return $u;   // pictures and files stay as they are
@@ -237,14 +249,15 @@ function owMailLangLinks(string $to, string $body): string {
     }, $body);
 }
 
-function owSendMail(string $to, string $subject, string $body, bool $isHtml = false, ?array &$log = null): bool {
+function owSendMail(string $to, string $subject, string $body, bool $isHtml = false, ?array &$log = null, array $opt = []): bool {
     $log = [];
     $to  = trim($to);
     if (!filter_var($to, FILTER_VALIDATE_EMAIL) || preg_match('/[\r\n]/', $to . $subject)) {
         $log[] = 'Not a valid email address';
         return false;
     }
-    $msg = owMailMessage($to, $subject, $body, $isHtml);
+    $subject = owMailSubjectFor($to, $subject);   // one language per subject: the reader's (owner, 27 Nov 2026)
+    $msg = owMailMessage($to, $subject, $body, $isHtml, $opt);
 
     /* 0. PHPMailer, exactly like elitcv.com (smtp.hostinger.com, SSL, port 465) */
     if (owSmtpReady() && owSendWithPhpMailer($to, $subject, $msg, $log)) return true;
@@ -313,6 +326,7 @@ function owSendWithPhpMailer(string $to, string $subject, array $msg, array &$lo
         $mail->Subject = $subject;
         $mail->Body    = $msg['html'];
         $mail->AltBody = $msg['text'];
+        foreach ($msg['extra'] ?? [] as $k => $v) $mail->addCustomHeader($k, $v);   // List-Unsubscribe (news only)
         $mail->send();
         $log[] = 'Sent with PHPMailer through ' . $mail->Host . ':' . $port;
         return true;
@@ -321,4 +335,32 @@ function owSendWithPhpMailer(string $to, string $subject, array $msg, array &$lo
         error_log('Oweili PHPMailer to ' . $to . ' failed: ' . $mail->ErrorInfo);
         return false;
     }
+}
+
+
+/* ---------------------------------------------------------------------
+ *  One language per subject (owner, 27 Nov 2026): a subject written as
+ *  "English · العربية" (sometimes with a title or a number after it, such as
+ *  "… · …: Title" or "… · … (C-2026-…)") is sent in the reader's language
+ *  only. A subject without that shape is sent as it is.
+ * ------------------------------------------------------------------- */
+function owMailSubjectFor(string $to, string $subject): string {
+    $parts = explode(' · ', $subject);
+    if (count($parts) < 2) return $subject;
+    for ($i = 1; $i < count($parts); $i++) {
+        $en = implode(' · ', array_slice($parts, 0, $i));
+        $ar = implode(' · ', array_slice($parts, $i));
+        if (preg_match('/\p{Arabic}/u', $en) || !preg_match('/^\s*\p{Arabic}/u', $ar)) continue;
+        $tail = '';   // a title or reference written after the Arabic words belongs to both languages
+        if (preg_match('/(:\s|\s\()(?!.*\p{Arabic}).*$/u', $ar, $m, PREG_OFFSET_CAPTURE)) $tail = substr($ar, $m[0][1]);
+        return owMailReaderLang($to) === 'ar' ? trim($ar) : trim($en) . $tail;
+    }
+    return $subject;
+}
+
+/* The two standard hidden headers of a news email (RFC 2369 and RFC 8058):
+   mail apps show their own "Unsubscribe" button, which works in one click */
+function owMailListHeaders(string $unsub): array {
+    if ($unsub === '' || !preg_match('#^https://#', $unsub)) return [];
+    return ['List-Unsubscribe' => '<' . $unsub . '>', 'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click'];
 }
