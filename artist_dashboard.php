@@ -386,6 +386,22 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
   </div>
   <?php endif; ?>
 
+  <?php /* "Workshops by this artist" (owner, 25 Nov 2026): only while the switch "Artist workshops" is on, approved workshops only */
+  $byWs = [];
+  if ($artist) { try { require_once __DIR__ . '/workshop_lib.php'; if (owWsOn()) $byWs = owWsPublicList((int) $profileId); } catch (Throwable $e) { $byWs = []; } }
+  if ($byWs): require_once __DIR__ . '/article_lib.php'; ?>
+  <p class="section-title"><?= owBi('Workshops by this artist', 'ورش يقدمها هذا الفنان') ?></p>
+  <div class="by-arts">
+    <?php foreach ($byWs as $bw): [$wde, $wda] = owDateRangeBi($bw['start_date'], $bw['end_date']); ?>
+    <a class="card card-hover by-art" href="workshop.php?id=<?= (int) $bw['id'] ?>">
+      <span class="by-type"><?= $bw['mode'] === 'online' ? owBi('Online workshop', 'ورشة عن بعد') : owBi('Workshop in ' . $bw['city'], 'ورشة في ' . $bw['city']) ?></span>
+      <span class="by-title"><?= owBi((string) $bw['title_en'], (string) $bw['title_ar']) ?></span>
+      <span class="by-date"><?= owBi($wde, $wda) ?></span>
+    </a>
+    <?php endforeach; ?>
+  </div>
+  <?php endif; ?>
+
 <?php endif; ?>
 </div>
 

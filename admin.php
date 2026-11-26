@@ -1003,6 +1003,16 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
     </div></div>
     <?php endif; ?>
 
+    <?php /* Artist workshops (owner, 25 Nov 2026): requests and workshops waiting, decided in admin_workshops.php */
+    $wsWait = 0; try { if (owHasTable('artist_workshop_requests') && owHasTable('artist_workshops')) $wsWait = (int) getDB()->query("SELECT (SELECT COUNT(*) FROM artist_workshop_requests WHERE status = 'pending') + (SELECT COUNT(*) FROM artist_workshops WHERE status = 'pending')")->fetchColumn(); } catch (Throwable $e) { $wsWait = 0; }
+    if ($wsWait): ?>
+    <h3 class="wc-h"><?= owBi('Artist workshops waiting for approval', 'ورش الفنانين بانتظار الموافقة') ?> <span class="pill count"><?= $wsWait ?></span></h3>
+    <div class="wc-list"><div class="wc-item" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+      <div><strong><?= owBi($wsWait . ' waiting', $wsWait . ' بانتظارك') ?></strong></div>
+      <a class="btn btn-accent btn-sm" href="admin_workshops.php"><?= owBi('Review them', 'راجعها') ?></a>
+    </div></div>
+    <?php endif; ?>
+
     <?php if ($mapDrafts): ?>
     <h3 class="wc-h"><?= owBi('Art Map drafts: museums and art galleries', 'مسودات خريطة الفن: المتاحف والمعارض الفنية') ?> <span class="pill count"><?= (int) $mapDrafts ?></span></h3>
     <p class="mini"><?= owBi('Places our team found and checked on their official websites. Visitors see each one only after you publish it.', 'أماكن وجدها فريقنا وتحقق منها في مواقعها الرسمية. لا يراها الزوار إلا بعد أن تنشرها.') ?></p>

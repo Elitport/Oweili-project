@@ -1,0 +1,92 @@
+/* artist.css — My Studio, the artist dashboard (artist_studio.php, artist_workshops.php), owner, 25 Nov 2026.
+   Built on owner.css (the side menu, cards, Bento) and collector.css (strips, pills, order rows), in the calm style.
+   Phone first, then iPad and laptop. Light and dark. The older rows below (artworks, certificates, articles,
+   packing guide, forms) are the same rules My Studio had before. */
+.a-content { max-width: 1240px; }
+.a-top-act { margin: 0 0 14px; }
+.a-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.a-wait { margin-top: 12px; }
+.a-add { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary, #2B1F1C); }
+.a-add:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+.c-pill.a-st-approved { background: rgba(91,138,110,.2); }
+.c-pill.a-st-rejected { background: rgba(var(--rgb-primary), .22); }
+.c-pill.a-st-draft { background: var(--color-hover-light); color: var(--color-body); }
+.c-pill.a-st-sold { background: rgba(var(--rgb-accent), .14); }
+.a-kpis .o-kv { font-size: 22px; }
+.a-kpis .o-kv .c-cur { font-size: .55em; }
+.a-trend .o-chart { margin-top: 6px; }
+
+/* the older My Studio rows, now inside the side-menu frame */
+.st-sub{display:block;font-size:var(--fs-caption);color:var(--color-body);margin-top:2px;}
+.w-side form{margin:0;}
+.pk-list{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-sm);}
+.pk-step{display:flex;align-items:center;gap:var(--space-md);padding:var(--space-md);}
+.pk-ico{flex-shrink:0;width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-input);background:var(--color-frame);border:1px solid var(--color-border);}
+.pk-ico svg{width:52px;height:52px;fill:none;stroke:var(--color-dark);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.pk-txt{font-size:16px;line-height:1.6;color:var(--color-dark);}
+.pk-n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-inline-end:10px;border-radius:50%;background:var(--color-primary);color:var(--color-on-primary);font-size:14px;}
+@media(max-width:768px){.pk-step{gap:var(--space-sm);padding:var(--space-sm);}.pk-ico{width:56px;height:56px;}.pk-ico svg{width:40px;height:40px;}}
+.note{font-size:var(--fs-caption);color:var(--color-body);margin:0 0 var(--space-sm);}
+.w-list{display:grid;gap:var(--space-sm);}
+.w-row > div{min-width:0;}
+.w-row{display:grid;grid-template-columns:72px 1fr auto;gap:var(--space-sm);align-items:center;padding:var(--space-sm);}
+.w-thumb{position:relative;width:72px;height:72px;border-radius:var(--radius-input);overflow:hidden;background:var(--color-frame);border:1px solid var(--color-border);}
+.w-thumb img{width:100%;height:100%;object-fit:contain;display:block;}
+.w-thumb img[hidden]{display:none;}
+.w-title{font-weight:700;color:var(--color-dark);margin:0 0 4px;}
+.w-nums{display:flex;gap:var(--space-sm);flex-wrap:wrap;font-size:var(--fs-caption);color:var(--color-body);}
+.w-nums b{color:var(--color-dark);}
+.w-cert{margin-top:6px;font-size:var(--fs-caption);font-weight:700;color:var(--color-dark);}
+.w-cert a{color:var(--color-accent);font-weight:700;}
+.w-wait a{font-weight:700;color:var(--color-accent);}
+.w-wait{margin-top:6px;font-size:var(--fs-caption);color:var(--color-dark);background:var(--color-tint-blue);border:1px solid rgba(var(--rgb-accent),.2);border-radius:var(--radius-input);padding:6px 10px;}
+.w-reason{margin-top:6px;font-size:var(--fs-caption);color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),.3);border-radius:var(--radius-input);padding:6px 10px;}
+.w-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.st-pill{display:inline-block;font-size:var(--fs-min);font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid var(--color-border-strong);color:var(--color-dark);background:var(--color-surface);white-space:nowrap;}
+.st-pill.s-approved{background:rgba(var(--rgb-accent),.1);border-color:rgba(var(--rgb-accent),.35);}
+.st-pill.s-rejected{background:rgba(var(--rgb-primary),.18);border-color:rgba(var(--rgb-primary),.45);}
+.st-pill.s-pending,.st-pill.s-draft{background:var(--color-surface-2);}
+.form-card{max-width:620px;padding:var(--space-lg);}
+.form-card h2{font-size:var(--fs-subtitle);margin:0 0 var(--space-sm);}
+.form-card + .form-card{margin-top:var(--space-md);}
+.hint{font-size:var(--fs-caption);color:var(--color-body);margin:-4px 0 var(--space-sm);}
+.check{display:flex;gap:var(--space-xs);align-items:flex-start;margin-bottom:var(--space-sm);font-size:15px;}
+.check input{margin-top:4px;}
+.act-list{list-style:none;margin:0;padding:0;}
+.act-list li{display:flex;justify-content:space-between;gap:var(--space-sm);padding:12px 0;border-bottom:1px solid var(--color-border);}
+.act-list li:last-child{border-bottom:0;}
+.act-when{font-size:var(--fs-caption);color:var(--color-body);white-space:nowrap;}
+.empty{text-align:center;padding:var(--space-xl) var(--space-md);}
+.empty p{margin:0 0 var(--space-sm);}
+@media(max-width:768px){
+  .w-row{grid-template-columns:56px 1fr;}.w-thumb{width:56px;height:56px;}.w-side{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center;}}
+.a-body .w-row, .a-body .card { background: var(--calm-card); border: 1px solid var(--calm-line); border-radius: 16px; box-shadow: var(--calm-shadow); }
+.a-body .w-list + .note, .a-body .note { margin: 0 0 14px; }
+
+/* the workshops pages (artist_workshops.php) */
+.ws-checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ws-checks li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--color-dark); line-height: 1.6; }
+.ws-mark { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px;
+  background: var(--color-hover-light); color: var(--color-body); border: 1px solid var(--calm-line); }
+.ws-checks li.ok .ws-mark { background: rgba(91,138,110,.25); color: var(--color-dark); border-color: rgba(91,138,110,.5); }
+.ws-checks .o-sm { display: inline; margin: 0 0 0 6px; }
+.ws-form { max-width: 720px; display: grid; gap: 0; }
+.ws-form textarea { min-height: 120px; }
+.ws-g2 { display: grid; grid-template-columns: 1fr; gap: 0 12px; }
+.ws-names { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.ws-names span { padding: 3px 10px; border-radius: 999px; font-size: 13px; background: var(--color-hover-light); color: var(--color-dark); }
+
+/* ---- iPad and up ---- */
+@media (min-width: 641px) {
+  .ws-g2 { grid-template-columns: 1fr 1fr; }
+  .c-kpis.a-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+}
+/* ---- laptop: the Bento ---- */
+@media (min-width: 1101px) {
+  .a-bento > .c-hi, .a-bento > .a-kpis { grid-column: 1 / -1; }
+  .a-bento > .a-needs { grid-column: span 5; }
+  .a-bento > .a-trend { grid-column: span 7; }
+  .a-bento > .a-works { grid-column: span 7; }
+  .a-bento > .a-sales { grid-column: span 5; }
+}
+@media (min-width: 1281px) { .c-kpis.a-kpis { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; } }

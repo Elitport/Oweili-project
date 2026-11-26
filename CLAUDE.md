@@ -88,6 +88,7 @@
 - Any real payment provider, checkout or live money movement
 - The orders and escrow structure exists but stays switched off (see Payments and escrow) until Sprint 4
 - Delivery address (owner, 24 Nov 2026): not stored anywhere yet (the shipping_addresses table stays empty). It must be built before payments go live: where the collector types it, who sees it (the Oweili team only, never the artist), and how long it is kept
+- Artist bank details for payouts (owner, 25 Nov 2026): not stored anywhere yet; payouts are paid by hand. Built later, together with the delivery address, before payments go live: where the artist types them, that they are private (the Oweili team only), and how long they are kept
 
 ## Pages Built
 - index.php — Homepage in the calm style (19 Nov 2026): the painting video as the hero with the title, the two lines, the two buttons and the three trust points; under it Artist of the week and a row of links to Gallery, Art Styles, Art Map, Art Institutes, Art Events, Art Education (see Features)
@@ -114,7 +115,7 @@
 - register.php / register_artist.php / register_collector.php — Sign up flows
 - login.php / logout.php / verify.php / forgot.php — Auth
 - edit_profile.php / edit_artwork.php — Self-service editing
-- artist_studio.php — My Studio, the artist's private area (see Features)
+- artist_studio.php — My Studio, the artist's private area, with the side menu since 25 Nov 2026 (see Features)
 - view.php — counts artwork views (Gallery window)
 - certificate.php — one Certificate of Authenticity, ready to save as PDF; cert_verify.php — the public verify page at oweili.com/verify (see Features)
 - artist_dashboard.php — Artist control panel ("Start New Artwork" button + drafts in progress); with ?id=N it is the artist's public profile, open to everyone
@@ -151,6 +152,23 @@
 - Deleted on 15 Nov 2026 (owner): the pink brush video assets/video/hero-pink-tall.mp4 (no page used it), from the project and the live site. Backup first: .backups/rejected-video-20261115-083853/hero-pink-tall.mp4 on the server; the file also stays in the git history
 
 ## Features
+
+### Artist dashboard (My Studio) and artist workshops — on the test copy 25 Nov 2026 (owner), NOT live yet
+- artist_studio.php rebuilt at the same address with the side menu of the owner and collector dashboards (owner.css, owner.js, collector.css + its own assets/css/artist.css). Groups: Home · My art (My artworks, Add an artwork → upload_artwork.php, Certificates, Signature → signature.php) · Sales and money (Sales and payouts, Packing guide) · Writing and teaching (My articles, Private commissions only with its switch, Workshops only with its switch) · Account (Public profile → edit_profile.php, Email and password, Activity); My public page and Sign out at the bottom. Old ?tab= links work (works, certs, articles, commissions, account, activity, earnings, packing); no tab or an unknown tab = Home
+- Home (Bento): greeting with the public name; Needs you now (artworks sent back with the reason, drafts, changes not approved, sales to pack, a problem on an order, new receipt photos, a payout on its way, confirm the email, draw the signature, workshop decisions); 6 numbers (views in the last 30 days from page_stats with the all-time count under it, followers, favourites, interested collectors, sold, share after commission); a 30-day views chart (owSvgLine from owner_lib.php); newest artworks; recent sales
+- My artworks: each work also shows its views in the last 30 days. Sales and payouts: every sale with Oweili's commission and the share (each at its own rate), the orders (payments on) in the artist's words (Sold, please pack it / On its way / Delivered / Completed / Refunded) with the payout state, 12 months, receipt photos, payouts
+- Complaints (owner): the artist sees only "There is a problem with this order, Oweili is handling it" and the payout "On hold", never the collector's words or name. The orders are read without the buyer columns
+- Upload (upload_artwork.php): look and guidance only (owner): the 25 / 50 / 100 strip, "Photo 1 of 3", four photo tips, a clear pink "Take the 25% photo" button; the camera box no longer shows the extra "Choose a file" line (data-native) and "Save photo" shows once a photo is picked (it stays visible without scripts). The steps, checks and saving are unchanged (the PHP above the page is byte for byte the same)
+- Artist workshops, HIDDEN behind the switch "Artist workshops" (Admin → Settings → Hidden for now; site_settings artist_workshops_on, gallery_lib.php OW_HIDDEN_PARTS 'artist_workshops'; OFF). workshop_lib.php, the Workshops page in My Studio (artist_ws_tab.php; artist_workshops.php only forwards there), admin_workshops.php (admin only), workshops.php and workshop.php (404 for visitors while off, preview for the admin), "Workshops by this artist" on the public profile while on
+  - An artist asks once. They can send the request only when: approved for at least 3 months (the first user_approve in the activity log, else the sign-up date), at least 5 approved artworks, no complaint ever, never suspended (now or in the activity log), email confirmed, signature on file; plus their teaching experience and a first workshop plan. The owner approves or refuses with a reason (email to the artist)
+  - Every new or changed workshop waits for the owner; a workshop with bookings cannot be changed by the artist (also refused on the server)
+  - "Book your seat" (no account): name, mobile, email, the rules tick (the course rules), security token, hidden robot trap, 5 per visitor per hour, one booking per email per workshop, never more than the seats. Oweili handles contact and payment: the admin marks a booking paid (optional reference), which makes the artist's payout row = price minus the course commission setting (10%); Cancel gives the seat back
+  - Privacy (owner): the artist sees only first names and the number of seats; full name, mobile and email only in admin_workshops.php
+  - Owner dashboard: "Artist workshops" in Art and content; alerts for requests, workshops and bookings waiting; Admin → Waiting for approval shows how many wait
+  - Before switching it on: a Privacy Policy line for workshop bookings (like course bookings), and where it sits in the menu (owner's decision)
+- Database (artist_workshops.sql, only adds, safe to run twice): artist_workshop_requests, artist_workshops, workshop_bookings. NOT run on the live database yet
+- Tested on the test copy with fictional data: 69 artist and workshop checks (old links, privacy, complaint words, switch off and on, request, approval, booking, full, first names only, paid → payout 315 of 350, sub-admin approval and certificate, admin approvals), the full upload in Arabic and English on a phone (28 checks), the 51 collector checks; 192 pictures (phone, iPad, laptop, Arabic and English, light and dark; no sideways scroll, no broken picture, no script error)
+- Files: artist_studio.php, artist_ws_tab.php, artist_workshops.php, workshop_lib.php, admin_workshops.php, workshops.php, workshop.php, artist_workshops.sql, assets/css/artist.css (new); upload_artwork.php, artist_dashboard.php, gallery_lib.php, alert_lib.php, admin.php, owner.php, owner_lib.php, CLAUDE.md. Tables: artist_workshop_requests, artist_workshops, workshop_bookings (new), payouts, orders, page_stats, artist_follows, and the existing tables read
 
 ### Collector dashboard (collector_dashboard.php) — live 24 Nov 2026 (owner)
 - Rebuilt at the same address in the calm style, with the owner dashboard's side menu (owner.css + owner.js; its own small collector.css): an icon and a name for each item, 5 groups (Home · My art: My collection, Orders, Courses and bookings, My requests · Following: Favourites, Artists I follow · Messages: Messages from Oweili, Complaints · Account: Profile, Email and password), Gallery and Sign out at the bottom. Phone: a menu button opens it; iPad: icons only; laptop: full menu that can shrink to icons. No site top menu or footer on this page
@@ -1258,6 +1276,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
+- artist_workshops.sql — artist workshops (25 Nov 2026): artist_workshop_requests, artist_workshops, workshop_bookings. Only adds; safe to run more than once. Not run on the live database yet
 - collector_update.sql — the collector dashboard (24 Nov 2026): one new table artist_follows (collector_id, artist_id, created_at). Only adds; safe to run more than once
 - courses_art_type.sql — courses by art type (21 Nov 2026): courses.art_type, courses.art_style, course_leads.art_type. Only adds columns; safe to run more than once
 - course_leads_city.sql — "City or Online" on the Art Institutes "Notify me" form (21 Nov 2026): course_leads.city. Only adds one column; safe to run more than once. Run on the live database 21 Nov 2026 after a full backup
