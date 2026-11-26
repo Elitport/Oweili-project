@@ -151,9 +151,9 @@ $prefL  = $old['lang'] ?? ((string) ($me['preferred_lang'] ?? '') === 'ar' ? 'ar
 
 $DONE = [
     'profile'  => ['Your profile is saved', 'تم حفظ ملفك الشخصي'],
-    'email'    => ['Your new email is saved. Please open the link we sent to it to confirm it.', 'تم حفظ بريدك الجديد. افتح الرابط الذي أرسلناه إليه لتأكيده.'],
+    'email'    => ['Your new email is saved. Please open the link we sent to it to confirm it.' . ' ' . OW_JUNK_HINT[0], 'تم حفظ بريدك الجديد. افتح الرابط الذي أرسلناه إليه لتأكيده.' . ' ' . OW_JUNK_HINT[1]],
     'password' => ['Your password is changed. Other phones and computers were signed out.', 'تم تغيير كلمة المرور. وتم تسجيل الخروج من الأجهزة الأخرى.'],
-    'resend'   => ['We sent the confirmation link again. Please check your inbox.', 'أرسلنا رابط التأكيد مرة أخرى. راجع بريدك.'],
+    'resend'   => ['We sent the confirmation link again. Please check your inbox.' . ' ' . OW_JUNK_HINT[0], 'أرسلنا رابط التأكيد مرة أخرى. راجع بريدك.' . ' ' . OW_JUNK_HINT[1]],
     'unfav'    => ['Removed from your favorites', 'أُزيل من المفضلة'],
     'follow'   => ['You follow this artist now', 'أصبحت تتابع هذا الفنان'],
     'unfollow' => ['You no longer follow this artist', 'لم تعد تتابع هذا الفنان'],

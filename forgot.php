@@ -98,7 +98,7 @@ $ERR = [
     'mismatch' => ['en' => 'Passwords do not match', 'ar' => 'كلمتا المرور غير متطابقتين'],
 ];
 $OK = [
-    'sent' => ['en' => 'If that email is registered, a reset link has been sent. Please check your inbox.', 'ar' => 'إذا كان هذا البريد مسجلا، فقد أُرسل رابط إعادة التعيين. يرجى مراجعة بريدك.'],
+    'sent' => ['en' => 'If that email is registered, a reset link has been sent. Please check your inbox.' . ' ' . OW_JUNK_HINT[0], 'ar' => 'إذا كان هذا البريد مسجلا، فقد أُرسل رابط إعادة التعيين. يرجى مراجعة بريدك.' . ' ' . OW_JUNK_HINT[1]],
     'done' => ['en' => 'Your password has been reset. You can now sign in.', 'ar' => 'تمت إعادة تعيين كلمة المرور. يمكنك الآن تسجيل الدخول.'],
 ];
 $errEn = $errCode ? $ERR[$errCode]['en'] : '';  $errAr = $errCode ? $ERR[$errCode]['ar'] : '';

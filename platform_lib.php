@@ -395,3 +395,7 @@ function owNameProblem(string $name, bool $required): string {
     if ($name === '') return $required ? 'name' : '';
     return owRealName($name) === '' ? 'name_letters' : '';
 }
+
+/* The junk-folder line under every "check your email" message (owner, 27 Nov 2026) */
+const OW_JUNK_HINT = ['If you don’t see our email, check your Junk folder and mark it as Not junk',
+                      'إن لم تجد رسالتنا، راجع مجلد البريد غير الهام (Junk) واختر «ليس بريدا غير هام»'];
