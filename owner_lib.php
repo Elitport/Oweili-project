@@ -409,10 +409,6 @@ function owMsgQueue(array $people, string $kind, string $subjEn, string $subjAr,
 }
 function owMsgBody(array $m): string {
     $txt = trim((string) $m['body_en']) . "\n\n— — —\n\n" . trim((string) $m['body_ar']);
-    if ($m['kind'] === 'news') {
-        $txt .= "\n\n" . 'You get this because you chose to receive Oweili news. To stop, untick “Oweili news” in your account: https://oweili.com/login.php'
-              . "\n" . 'وصلتك هذه الرسالة لأنك اخترت استلام أخبار أويلي. لإيقافها، ألغِ اختيار «أخبار أويلي» في حسابك: https://oweili.com/login.php';
-    }
     return $txt;
 }
 /* Sends the next small batch, if it is time. Called after the owner's pages have been sent */
