@@ -39,12 +39,15 @@ $PAGE = [
 ];
 
 $items = []; $authors = [];
+/* Art Events: "Free entry" (owner, 27 Nov 2026): a badge on free events and a "Free entry only" filter (?free=1) */
+$freeOn = $type === 'event' && owArticlesReady() && owHasColumn('articles', 'free_entry');
+$free = $freeOn && !empty($_GET['free']);
 if (owArticlesReady()) {
     try {
         $order = $type === 'event' ? 'a.event_start_date DESC, a.id DESC' : 'a.published_at DESC, a.id DESC';
         $st = getDB()->prepare('SELECT a.slug, a.title_en, a.title_ar, a.cover_image_path, a.published_at, a.event_start_date, a.event_end_date,
-                                       a.event_location_en, a.event_location_ar, a.author_user_id
-                                FROM articles a WHERE a.type = :t AND ' . owArticlePublicSql('a') . ' ORDER BY ' . $order . ' LIMIT 200');
+                                       a.event_location_en, a.event_location_ar, a.author_user_id' . ($freeOn ? ', a.free_entry' : '') . '
+                                FROM articles a WHERE a.type = :t AND ' . owArticlePublicSql('a') . ($free ? ' AND a.free_entry = 1' : '') . ' ORDER BY ' . $order . ' LIMIT 200');
         $st->execute([':t' => $type]);
         $items = $st->fetchAll();
         $authors = owArticleAuthors(array_column($items, 'author_user_id'));   // artist or institute names on the cards (owner, 16 Nov 2026)
@@ -56,7 +59,7 @@ if (owArticlesReady()) {
 
 /* DEMO articles (owner, 20 Nov 2026): only for the signed-in admin, never in the database (demo_lib.php) */
 require_once __DIR__ . '/demo_lib.php';
-if (owDemoOn()) $items = array_merge($items, owDemoArticles($type));
+if (owDemoOn()) $items = array_merge($items, array_values(array_filter(owDemoArticles($type), fn($d) => !$free || !empty($d['free_entry']))));
 [$tEn, $tAr] = $TYPES[$type];
 $titleEn = $tEn . ' · Oweili';
 $titleAr = $tAr . ' · أويلي';
@@ -82,6 +85,12 @@ $titleAr = $tAr . ' · أويلي';
 .a-grid.a-even > .a-card{flex:0 1 calc((100% - 2 * var(--space-md)) / 3);min-width:0;}
 @media (max-width:768px){.a-grid.a-even > .a-card{flex-basis:calc((100% - var(--space-sm)) / 2);}}
 @media (max-width:560px){.a-grid.a-even > .a-card{flex-basis:100%;}}
+.a-card .ow-free{align-self:flex-start;}
+/* "Free entry only" (owner, 27 Nov 2026): one slim white rounded bar, like the other filter bars */
+.ev-bar{display:flex;justify-content:center;margin:0 auto var(--space-lg);}
+.ev-bar form{display:inline-flex;align-items:center;gap:var(--space-xs);padding:6px 16px;border-radius:var(--radius-pill);background:var(--color-card);border:1px solid var(--calm-line, var(--color-border));box-shadow:0 6px 24px rgba(0,0,0,.08);}
+.ev-free{display:inline-flex;align-items:center;gap:8px;min-height:36px;font-size:var(--fs-caption);font-weight:700;color:var(--color-dark);cursor:pointer;}
+.ev-free input{width:18px;height:18px;margin:0;accent-color:var(--color-accent);}
 </style>
 </head>
 <body class="ow">
@@ -100,8 +109,20 @@ $titleAr = $tAr . ' · أويلي';
     </header>
 
     <?php /* no type tabs and no Discover badge here (owner, 6 Nov 2026): Art Events and Art Education are in the top menu */ ?>
+    <?php if ($freeOn): ?>
+    <div class="ev-bar" id="results"><form method="get" action="articles_list.php#results"><input type="hidden" name="type" value="event">
+      <label class="ev-free"><input type="checkbox" name="free" value="1"<?= $free ? ' checked' : '' ?> onchange="this.form.submit()"> <?= owBi('Free entry only', 'الدخول المجاني فقط') ?></label>
+      <noscript><button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Show', 'عرض') ?></button></noscript>
+    </form></div>
+    <?php endif; ?>
 
-    <?php if (!$items): ?>
+    <?php if (!$items && $free): ?>
+      <div class="card empty-state d-empty reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <?= owBi('No free events right now. We add them as soon as we find them.', 'لا توجد ملتقيات مجانية الآن. نضيفها فور أن نجدها.') ?>
+        <div><a class="btn btn-secondary" href="articles_list.php?type=event#results"><?= owBi('Show all events', 'اعرض كل الملتقيات') ?></a></div>
+      </div>
+    <?php elseif (!$items): ?>
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         <?= owBi($PAGE[$type]['empty'][0], $PAGE[$type]['empty'][1]) ?>
@@ -121,6 +142,7 @@ $titleAr = $tAr . ' · أويلي';
             <span class="card-media none" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 3.58-9 8 0 4.4 3.5 8 8 8 1 0 1.5-.6 1.5-1.4 0-.8-.6-1.1-.6-1.9 0-.8.6-1.4 1.4-1.4H15c3.3 0 6-2.3 6-5.3C21 5.9 17 3 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="15.5" cy="8" r="1"/></svg></span>
           <?php endif; ?>
           <span class="a-body">
+            <?php if ($type === 'event' && !empty($it['free_entry'])): ?><?= owFreeBadge() ?><?php endif; ?>
             <span class="a-title"><?= owBi($it['title_en'], $it['title_ar']) ?></span>
             <?php if ($au = ($authors[(int) ($it['author_user_id'] ?? 0)] ?? null)): ?><span class="a-by"><?= owBi('By ', 'بقلم ') ?><?= owBiName($au['en'], $au['ar']) ?></span><?php endif; ?>
             <span class="a-date"><?= owBi($dEn, $dAr) ?><?php if ($type === 'event' && ($it['event_location_en'] !== '' || $it['event_location_ar'] !== '')): ?> · <?= owBi($it['event_location_en'], $it['event_location_ar']) ?><?php endif; ?></span>

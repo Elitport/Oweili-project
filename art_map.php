@@ -65,6 +65,9 @@ function instContact(array $i, string $courseTitle): string {
 }
 /* Search by place name or city (owner, 13 Nov 2026): ?q=…, in English or Arabic, kept with the tabs and the region */
 $sq = trim(preg_replace('/\s+/u', ' ', mb_substr((string) ($_GET['q'] ?? ''), 0, 60)));
+/* "Free entry only" (owner, 27 Nov 2026): museums and galleries the team marked free; not on the Institutes tab */
+$free = !empty($_GET['free']) && $tab !== 'institutes' && owEntryReady();
+if ($free) { $places = array_values(array_filter($places, fn($p) => owPlaceEntry($p) === 'free')); $institutes = []; }
 if ($sq !== '') {
     $fold = fn(string $t): string => mb_strtolower(strtr($t, ['أ' => 'ا', 'إ' => 'ا', 'آ' => 'ا', 'ة' => 'ه', 'ى' => 'ي', '-' => ' ', '’' => "'"]));
     $want = $fold($sq);
@@ -72,7 +75,13 @@ if ($sq !== '') {
     $places     = array_values(array_filter($places, fn($p) => $hit($p, ['name_en', 'name_ar', 'city_en', 'city_ar'])));
     $institutes = array_values(array_filter($institutes, fn($i) => $hit($i, ['name_en', 'name_ar', 'city_en', 'city_ar'])));
 }
-$q = fn(string $t, string $c, ?string $s = null) => 'art_map.php' . (($qs = http_build_query(array_filter(['tab' => $t === 'all' ? '' : $t, 'region' => $c, 'q' => $s ?? $sq]))) !== '' ? '?' . $qs : '');
+/* the demo free museum (owner, 27 Nov 2026): demo_lib.php, never in the database, the sitemap or the map pins */
+require_once __DIR__ . '/demo_lib.php';
+if (owDemoOn() && in_array($tab, ['all', 'museums'], true) && ($region === '' || $region === 'riyadh')) {
+    $dp = owDemoPlace();
+    if ($sq === '' || array_filter(['name_en', 'name_ar', 'city_en', 'city_ar'], fn($k) => mb_stripos((string) $dp[$k], $sq) !== false)) array_unshift($places, $dp);
+}
+$q = fn(string $t, string $c, ?string $s = null, ?bool $fr = null) => 'art_map.php' . (($qs = http_build_query(array_filter(['tab' => $t === 'all' ? '' : $t, 'region' => $c, 'q' => $s ?? $sq, 'free' => ($fr ?? $free) && $t !== 'institutes' ? '1' : '']))) !== '' ? '?' . $qs : '');
 $PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 $n = count($institutes) + count($places);
 /* the All tab: museums and galleries first, then the institutes (the older list, then the newer places) */
@@ -122,14 +131,16 @@ $placeCard = function (array $p) use ($PIN): string {
         $h .= '<div class="m-band r-' . e($rg) . '"><svg viewBox="0 0 24 24" aria-hidden="true">' . owMapKindIcon((string) $p['kind']) . '</svg>'
             . ($cEn !== '' ? '<span>' . owBi($cEn, $cAr) . '</span>' : '') . '</div>';
     }
-    $url = owMapPlaceUrl('p', (int) $p['id']);   // the place's own page (owner, 13 Nov 2026)
+    $url = !empty($p['demo']) ? '' : owMapPlaceUrl('p', (int) $p['id']);   // the place's own page (owner, 13 Nov 2026); the demo place has none
     $h .= '<div><h2 class="i-name">' . ($url !== '' ? '<a class="m-name" href="' . e(owBase() . $url) . '">' . owBi($nEn, $nAr) . '</a>' : owBi($nEn, $nAr)) . '</h2>' . ($cEn !== '' ? '<div class="i-city">' . $PIN . owBi($cEn, $cAr) . '</div>' : '') . '</div>';
-    $h .= '<span class="m-kind">' . owBi($K[2], $K[3]) . '</span>';
+    $isDemo = !empty($p['demo']);
+    $h .= '<div class="m-tagrow"><span class="m-kind">' . owBi($K[2], $K[3]) . '</span>' . (owPlaceEntry($p) === 'free' ? owFreeBadge() : '') . ($isDemo ? owDemoBadge() : '') . '</div>';
     if (trim((string) $p['desc_en']) !== '' || trim((string) $p['desc_ar']) !== '') $h .= '<p class="i-desc">' . owBi((string) ($p['desc_en'] ?: $p['desc_ar']), (string) ($p['desc_ar'] ?: $p['desc_en'])) . '</p>';
     $info = '';
     if (trim((string) $p['address']) !== '') $info .= '<li><span class="m-lbl">' . owBi('Address', 'العنوان') . '</span> <bdi>' . owBi((string) $p['address'], owPlaceAddressAr($p)) . '</bdi></li>';
     if (($tel = owTelHref((string) $p['phone'])) !== '') $info .= '<li><span class="m-lbl">' . owBi('Phone', 'الهاتف') . '</span> <a href="' . e($tel) . '" dir="ltr">' . e((string) $p['phone']) . '</a></li>';
     if ($info !== '') $h .= '<ul class="m-info">' . $info . '</ul>';
+    if ($isDemo) return $h . '</article>';   // the demo place: no buttons, no tickets, no "Is this your place?"
     $h .= owMapActs(owMapUrl((string) $p['website']), owMapsLink($nEn, $cEn, (string) $p['maps_url']), $nEn, owInstaUrl((string) $p['instagram']), $p['kind'] === 'institute' ? owInstCoursesUrl('p', (int) $p['id']) : '');
     if (is_file(__DIR__ . '/booking_lib.php')) { require_once __DIR__ . '/booking_lib.php'; $tb = owTicketButton($p); if ($tb !== '') $h .= '<div class="m-acts">' . $tb . '</div>'; }   // museums: Buy ticket / Official tickets, only once switched on (14 Nov 2026)
     $h .= owMapClaimLink('p=' . (int) $p['id']);
@@ -191,6 +202,9 @@ $placeCard = function (array $p) use ($PIN): string {
 .i-city svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
 .i-desc{margin:0;}
 .i-count{align-self:flex-start;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-accent-dark);background:rgba(var(--rgb-accent),0.08);border:1px solid rgba(var(--rgb-accent),0.2);}
+.m-tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}   /* the kind, the "Free entry" and Demo badges (owner, 27 Nov 2026) */
+.m-free{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-caption);font-weight:700;color:var(--color-dark);cursor:pointer;white-space:nowrap;min-height:36px;}
+.m-free input{width:18px;height:18px;margin:0;accent-color:var(--color-accent);}
 .m-kind{align-self:flex-start;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),0.35);}
 .m-acts{display:flex;flex-wrap:wrap;gap:var(--space-xs);margin-top:auto;}
 .m-acts .btn{gap:6px;flex:1 1 auto;justify-content:center;}
@@ -306,6 +320,7 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
                placeholder="<?= e(owIsAr() ? 'مكان أو مدينة' : 'Place or city') ?>">
         <button type="submit" aria-label="<?= e(owIsAr() ? 'ابحث' : 'Search') ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
       </span>
+      <?php if ($tab !== 'institutes' && owEntryReady()): ?><label class="m-free"><input type="checkbox" name="free" value="1"<?= $free ? ' checked' : '' ?> onchange="this.form.submit()"> <?= owBi('Free entry only', 'الدخول المجاني فقط') ?></label><?php endif; ?>
     </form>
     </div>
     <?php if ($mapPins): ?>
@@ -386,7 +401,13 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
     </section>
     <?php endif; ?>
 
-    <?php if (!$institutes && !$places): ?>
+    <?php if (!$institutes && !$places && $free): ?>
+      <div class="card empty-state d-empty reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
+        <?= owBi('No places with free entry here yet. We add them once we check their official source.', 'لا توجد أماكن بدخول مجاني هنا بعد. نضيفها بعد التحقق من مصدرها الرسمي.') ?>
+        <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, null, false)) ?>"><?= owBi('Show all places', 'اعرض كل الأماكن') ?></a></div>
+      </div>
+    <?php elseif (!$institutes && !$places): ?>
       <div class="card empty-state d-empty reveal">
         <?php if ($tab === 'all'): ?>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
@@ -508,7 +529,13 @@ html.dark-mode .ow-backdrop ~ * .i-card{background:var(--color-card);}
     <?php endif; ?>
 
 <?php else: $K = OW_MAP_KINDS[$kind]; ?>
-    <?php if (!$places): ?>
+    <?php if (!$places && $free): ?>
+      <div class="card empty-state d-empty reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
+        <?= owBi('No places with free entry here yet. We add them once we check their official source.', 'لا توجد أماكن بدخول مجاني هنا بعد. نضيفها بعد التحقق من مصدرها الرسمي.') ?>
+        <div><a class="btn btn-secondary" href="<?= e($q($tab, $city, null, false)) ?>"><?= owBi('Show all places', 'اعرض كل الأماكن') ?></a></div>
+      </div>
+    <?php elseif (!$places): ?>
       <div class="card empty-state d-empty reveal">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>
         <?php if ($sq !== ''): ?>

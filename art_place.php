@@ -95,6 +95,9 @@ $kindOrder = ['museum' => 0, 'gallery' => 1, 'institute' => 2];
 .ap-photo figcaption{font-size:12px;line-height:1.4;color:var(--color-body);padding:6px var(--space-md) 0;}
 .ap-photo figcaption a{color:inherit;}
 .m-kind{align-self:flex-start;padding:2px 10px;border-radius:var(--radius-pill);font-size:var(--fs-min);font-weight:700;color:var(--color-dark);background:var(--color-tint-pink);border:1px solid rgba(var(--rgb-primary),0.35);}
+.ap-tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}   /* the kind and the "Free entry" badge (owner, 27 Nov 2026) */
+.ap-info .m-entry-src{font-size:var(--fs-caption);}
+.rg-item .ow-free{align-self:flex-start;margin-inline-start:var(--space-sm);}
 .ap-desc{margin:0;}
 .ap-info{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:var(--fs-body);color:var(--color-body);}
 .ap-info b{color:var(--color-dark);}
@@ -152,11 +155,12 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
       <?php endif; ?>
       <h1><?= owBi($nEn, $nAr) ?></h1>
       <div class="ap-city"><?= $PIN ?><?= mb_strtolower($cEn) === mb_strtolower($R[0]) ? owBi($cEn, $cAr) : owBi($cEn . ', ' . $R[0], $cAr . '، ' . $R[1]) ?></div>
-      <span class="m-kind"><?= owBi($K[2], $K[3]) ?></span>
+      <span class="ap-tags"><span class="m-kind"><?= owBi($K[2], $K[3]) ?></span><?= owPlaceEntry($place) === 'free' ? owFreeBadge() : '' ?></span>
       <?php if ($dEn !== ''): ?><p class="ap-desc"><?= owBi(owMapPlain($dEn), owMapPlain($dAr)) ?></p><?php endif; ?>
       <?php $info = '';
         if (trim((string) $place['address']) !== '') $info .= '<li><b>' . owBi('Address', 'العنوان') . '</b> <bdi>' . owBi((string) $place['address'], owPlaceAddressAr($place)) . '</bdi></li>';
         if (($tel = owTelHref((string) $place['phone'])) !== '') $info .= '<li><b>' . owBi('Phone', 'الهاتف') . '</b> <a href="' . e($tel) . '" dir="ltr">' . e((string) $place['phone']) . '</a></li>';
+        $info .= owPlaceEntryHtml($place);   // Entry, its official source and when it was last checked (owner, 27 Nov 2026); nothing when not set
         if ($info !== '') echo '<ul class="ap-info">' . $info . '</ul>'; ?>
       <?= owMapActs($web, $maps, $nEn, $insta, ($place['src'] === 'i' || ($place['kind'] ?? '') === 'institute') ? owInstCoursesUrl((string) $place['src'], (int) $place['id']) : '') ?>
       <?php if ($place['src'] === 'p' && is_file(__DIR__ . '/booking_lib.php')) { require_once __DIR__ . '/booking_lib.php'; $tb = owTicketButton($place); if ($tb !== '') echo '<div class="m-acts">' . $tb . '</div>'; }   /* museums: Buy ticket / Official tickets, only once switched on (14 Nov 2026) */ ?>
@@ -188,6 +192,7 @@ html.dark-mode .ow-backdrop ~ * .card{background:var(--color-card);}
           <?php else: ?><span class="m-band r-<?= e($rg) ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><?= owMapKindIcon($k) ?></svg></span><?php endif; ?>
           <b><?= owBi((string) $r['name_en'], (string) $r['name_ar']) ?></b>
           <span class="c"><?= owBi((string) $r['city_en'], (string) $r['city_ar']) ?></span>
+          <?= owPlaceEntry($r) === 'free' ? owFreeBadge() : '' ?>
         </a>
         <?php endforeach; ?>
       </div>

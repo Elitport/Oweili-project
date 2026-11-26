@@ -72,6 +72,39 @@ function owArtPlacesReady(): bool { return owHasTable('art_places'); }
 /* The address for Arabic pages: the Arabic one when it is saved (owner, 13 Nov 2026), else the English one */
 function owPlaceAddressAr(array $p): string { $a = trim((string) ($p['address_ar'] ?? '')); return $a !== '' ? $a : (string) ($p['address'] ?? ''); }
 
+/* Entry of a museum or gallery (owner, 27 Nov 2026): free / paid (with its price) / booking needed, filled by the team
+   from official sources in Admin → Art Map. '' = not set: visitors see nothing. Never guessed (free_entry.sql) */
+const OW_ENTRY_KINDS = ['free' => ['Free entry', 'دخول مجاني'], 'paid' => ['Paid entry', 'دخول مدفوع'], 'booking' => ['Booking needed', 'يلزم الحجز']];
+function owEntryReady(): bool { return owArtPlacesReady() && owHasColumn('art_places', 'entry_kind'); }
+function owPlaceEntry(array $p): string {
+    $k = (string) ($p['entry_kind'] ?? '');
+    return isset(OW_ENTRY_KINDS[$k]) && in_array((string) ($p['kind'] ?? ''), ['museum', 'gallery'], true) ? $k : '';
+}
+/* The entry details on the place page: what it is, the price, the official source and when it was last checked */
+function owPlaceEntryHtml(array $p): string {
+    $k = owPlaceEntry($p); if ($k === '') return '';
+    $E = OW_ENTRY_KINDS[$k];
+    $txtEn = $E[0]; $txtAr = $E[1];
+    if ($k === 'paid' && is_numeric($p['entry_price'] ?? null) && (float) $p['entry_price'] > 0) {
+        $n = (float) $p['entry_price']; $t = number_format($n, $n == floor($n) ? 0 : 2);
+        $txtEn .= ': ' . $t . ' SAR'; $txtAr .= ': ' . $t . ' ر.س';
+    }
+    $h = '<li><b>' . owBi('Entry', 'الدخول') . '</b> ' . ($k === 'free' ? owFreeBadge() : owBi($txtEn, $txtAr)) . '</li>';
+    $src = owMapUrl((string) ($p['entry_source'] ?? ''));
+    $chk = (string) ($p['entry_checked'] ?? '');
+    if ($src !== '' || preg_match('/^\d{4}-\d{2}-\d{2}$/', $chk)) {
+        $h .= '<li class="m-entry-src">';
+        if ($src !== '') $h .= '<a href="' . e($src) . '" target="_blank" rel="noopener nofollow">' . owBi('Official source', 'المصدر الرسمي') . ' ↗</a>';
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $chk) && $chk !== '0000-00-00') {
+            $ts = strtotime($chk);
+            $ar = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'][(int) date('n', $ts) - 1];
+            $h .= ($src !== '' ? ' · ' : '') . owBi('Last checked ' . date('j F Y', $ts), 'آخر تحقق ' . date('j', $ts) . ' ' . $ar . ' ' . date('Y', $ts));
+        }
+        $h .= '</li>';
+    }
+    return $h;
+}
+
 /* Published places of one kind (optionally one region), for visitors */
 function owArtPlacesPublished(string $kind, string $region = ''): array {
     if (!owArtPlacesReady()) return [];

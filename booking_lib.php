@@ -311,7 +311,14 @@ function owCourseBook(int $courseId, ?array $user, string $name, string $email, 
         $id = (int) $db->lastInsertId();
         $db->commit();
         owLog('course_book_seat', 'course_registration', $id, 'course ' . $courseId, $user ? ['type' => owActorType($user['role'] ?? 'collector'), 'id' => (int) $user['id']] : ['type' => 'system', 'id' => null]);
-        if ((float) $c['price'] <= 0) { owCourseConfirmFree($id); return [$id, null]; }   // a free course needs no payment
+        if ((float) $c['price'] <= 0) {   // a free course: registered at once, no payment, no commission (owner, 27 Nov 2026)
+            owCourseConfirmFree($id);   // the student's confirmation and the institute's "new registration" email
+            require_once __DIR__ . '/alert_lib.php';
+            owAdminAlert('booking', 'New free course registration: ' . $full['title_en'] . ' · ' . $ref, 'تسجيل جديد في دورة مجانية: ' . $full['title_ar'] . ' · ' . $ref, 'admin_bookings.php#registrations');
+            require_once __DIR__ . '/bashro_send.php';
+            owBashroCourseBooking($id);   // the lead goes to Bashro, marked free
+            return [$id, null];
+        }
         owCourseBookedMails($id, $lang);
         require_once __DIR__ . '/alert_lib.php';
         owAdminAlert('booking', 'New course booking (waiting for payment): ' . $full['title_en'] . ' · ' . $ref, 'حجز دورة جديد (بانتظار الدفع): ' . $full['title_ar'] . ' · ' . $ref, 'admin_bookings.php#registrations');

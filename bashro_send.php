@@ -201,6 +201,14 @@ function owBashroCourseBooking(int $regId): void {
         if (!$r) return;
         $c = owCourseGet((int) $r['course_id']); if (!$c) return;
         $lang = str_contains((string) $r['notes'], 'lang ar') ? 'ar' : 'en';
+        if ((float) $r['amount'] <= 0) {   // a free course (owner, 27 Nov 2026): the same lead, with no payment to collect
+            owBashroQueue('quote', ['name' => $r['student_name'], 'email' => $r['student_email'], 'phone' => $r['student_phone'], 'company' => (string) $c['inst_en'],
+                'service' => 'Free course registration: ' . $c['title_en'], 'city' => $c['course_type'] === 'online' ? 'Online' : (string) $c['inst_city_en'], 'lang' => $lang,
+                'message' => 'Free course registration ' . $r['ref_no'] . ': ' . $c['title_en'] . ' at ' . $c['inst_en'] . ', starts ' . ($c['start_date'] ?? 'date to be set')
+                           . '. Free: no payment and no commission. The seat is confirmed. '
+                           . 'Course page: ' . owBashroHost() . '/course.php?id=' . (int) $c['id'] . '. For the team: ' . owBashroHost() . '/admin_bookings.php#registrations']);
+            return;
+        }
         owBashroQueue('quote', ['name' => $r['student_name'], 'email' => $r['student_email'], 'phone' => $r['student_phone'], 'company' => (string) $c['inst_en'],
             'service' => 'Course booking: ' . $c['title_en'], 'city' => $c['course_type'] === 'online' ? 'Online' : (string) $c['inst_city_en'], 'lang' => $lang,
             'message' => 'Course booking ' . $r['ref_no'] . ': ' . $c['title_en'] . ' at ' . $c['inst_en'] . ', starts ' . ($c['start_date'] ?? 'date to be set')
