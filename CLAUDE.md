@@ -153,7 +153,7 @@
 
 ## Features
 
-### Artist dashboard (My Studio) and artist workshops — on the test copy 25 Nov 2026 (owner), NOT live yet
+### Artist dashboard (My Studio) and artist workshops — live 26 Nov 2026 (owner); the workshops switch stays OFF
 - artist_studio.php rebuilt at the same address with the side menu of the owner and collector dashboards (owner.css, owner.js, collector.css + its own assets/css/artist.css). Groups: Home · My art (My artworks, Add an artwork → upload_artwork.php, Certificates, Signature → signature.php) · Sales and money (Sales and payouts, Packing guide) · Writing and teaching (My articles, Private commissions only with its switch, Workshops only with its switch) · Account (Public profile → edit_profile.php, Email and password, Activity); My public page and Sign out at the bottom. Old ?tab= links work (works, certs, articles, commissions, account, activity, earnings, packing); no tab or an unknown tab = Home
 - Home (Bento): greeting with the public name; Needs you now (artworks sent back with the reason, drafts, changes not approved, sales to pack, a problem on an order, new receipt photos, a payout on its way, confirm the email, draw the signature, workshop decisions); 6 numbers (views in the last 30 days from page_stats with the all-time count under it, followers, favourites, interested collectors, sold, share after commission); a 30-day views chart (owSvgLine from owner_lib.php); newest artworks; recent sales
 - My artworks: each work also shows its views in the last 30 days. Sales and payouts: every sale with Oweili's commission and the share (each at its own rate), the orders (payments on) in the artist's words (Sold, please pack it / On its way / Delivered / Completed / Refunded) with the payout state, 12 months, receipt photos, payouts
@@ -166,7 +166,7 @@
   - Privacy (owner): the artist sees only first names and the number of seats; full name, mobile and email only in admin_workshops.php
   - Owner dashboard: "Artist workshops" in Art and content; alerts for requests, workshops and bookings waiting; Admin → Waiting for approval shows how many wait
   - Before switching it on: a Privacy Policy line for workshop bookings (like course bookings), and where it sits in the menu (owner's decision)
-- Database (artist_workshops.sql, only adds, safe to run twice): artist_workshop_requests, artist_workshops, workshop_bookings. NOT run on the live database yet
+- Database (artist_workshops.sql, only adds, safe to run twice): artist_workshop_requests, artist_workshops, workshop_bookings. Run on the live database 26 Nov 2026 by a temporary locked page (removed straight after), after a full database and files backup (.backups/db-u405344949_contact-20261126-191417.sql.gz, .backups/files-20261126-191417.tar.gz); the live files were compared with git first (1,025 files, all the same, nothing lost)
 - Tested on the test copy with fictional data: 69 artist and workshop checks (old links, privacy, complaint words, switch off and on, request, approval, booking, full, first names only, paid → payout 315 of 350, sub-admin approval and certificate, admin approvals), the full upload in Arabic and English on a phone (28 checks), the 51 collector checks; 192 pictures (phone, iPad, laptop, Arabic and English, light and dark; no sideways scroll, no broken picture, no script error)
 - Files: artist_studio.php, artist_ws_tab.php, artist_workshops.php, workshop_lib.php, admin_workshops.php, workshops.php, workshop.php, artist_workshops.sql, assets/css/artist.css (new); upload_artwork.php, artist_dashboard.php, gallery_lib.php, alert_lib.php, admin.php, owner.php, owner_lib.php, CLAUDE.md. Tables: artist_workshop_requests, artist_workshops, workshop_bookings (new), payouts, orders, page_stats, artist_follows, and the existing tables read
 
@@ -1276,7 +1276,7 @@
 
 ## SQL Migration Files
 Multiple .sql files exist for setup, roles, profiles, purchases, financial, phone, reset, styles, and discover_setup.sql
-- artist_workshops.sql — artist workshops (25 Nov 2026): artist_workshop_requests, artist_workshops, workshop_bookings. Only adds; safe to run more than once. Not run on the live database yet
+- artist_workshops.sql — artist workshops (25 Nov 2026): artist_workshop_requests, artist_workshops, workshop_bookings. Only adds; safe to run more than once. Run on the live database 26 Nov 2026 after a full backup
 - collector_update.sql — the collector dashboard (24 Nov 2026): one new table artist_follows (collector_id, artist_id, created_at). Only adds; safe to run more than once
 - courses_art_type.sql — courses by art type (21 Nov 2026): courses.art_type, courses.art_style, course_leads.art_type. Only adds columns; safe to run more than once
 - course_leads_city.sql — "City or Online" on the Art Institutes "Notify me" form (21 Nov 2026): course_leads.city. Only adds one column; safe to run more than once. Run on the live database 21 Nov 2026 after a full backup
