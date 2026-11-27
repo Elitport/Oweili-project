@@ -35,7 +35,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 @media(max-width:640px){.choices{grid-template-columns:1fr;}}
 </style>
 </head>
-<body>
+<body class="ow-short-hero">
 <?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('pink-palette');   /* the pink palette, whole (owner, 6 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
@@ -64,6 +64,10 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
   <div class="foot">
     <span id="t-have">Already one of us?</span> <a href="login.php" id="t-login">Sign In</a>
   </div>
+  <?php /* the art institute sign-up, only while Art Institutes is switched on (owner, 28 Nov 2026) */
+  require_once __DIR__ . '/gallery_lib.php'; require_once __DIR__ . '/artwork_lib.php'; if (owPartOn('courses')): ?>
+  <div class="foot j-inst"><?= owBi('Are you an art institute?', 'هل أنت معهد فني؟') ?> <a href="register_institute.php"><?= owBi('Join as an art institute', 'انضم كمعهد فني') ?></a></div>
+  <?php endif; ?>
 </div>
 
 <script>

@@ -295,3 +295,14 @@ section.o-t + section.o-t { margin-top: 0; }
 }
 @media (max-width: 640px) { .o-kpis .o-kv { font-size: 21px; } }
 @media (prefers-reduced-motion: reduce) { .o-side, .o-main { transition: none; } }
+
+/* Accounting → Invoices: the small search form (27 Nov 2026) */
+.o-inline-search { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.o-inline-search input { min-height: 40px; padding: 6px 12px; border: 1px solid var(--color-border-strong); border-radius: 8px; background: var(--color-card); color: var(--color-dark); font: inherit; font-size: 14px; min-width: 0; width: 220px; max-width: 100%; }
+.o-inline-search input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+
+/* Preview pages: three cards (27 Nov 2026) */
+.o-grid3 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 900px) { .o-grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.o-pv .o-t { display: flex; flex-direction: column; }
+.o-pv .o-t p:last-child { margin-top: auto; }

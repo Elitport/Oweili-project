@@ -227,6 +227,7 @@ function owAdminDeleteUser(int $uid): string {
     if (!$u) return 'not_found';
     if (!in_array((string) $u['role'], ['artist', 'collector'], true)) return 'staff';   // staff accounts are never deleted here
     if (owAdminDeleteBlockers($uid)) return 'linked';
+    require_once __DIR__ . '/identity_lib.php'; owIdAccountClosed($uid);   // the identity record stays for the keeping years, then is deleted (27 Nov 2026)
 
     /* the account's artworks: the same tidy-up as the artist's own Delete button; certificates are cancelled, never deleted */
     $aw = getDB()->prepare('SELECT id, image_url FROM artworks WHERE artist_id = :id');

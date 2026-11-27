@@ -23,7 +23,7 @@ if (!function_exists('owAlertsAfterPage')) {
         owAlertsTick();
     }
     $owDue = __DIR__ . '/.logs/admin_alerts_due';
-    if (is_file($owDue) && (int) @file_get_contents($owDue) <= time()) register_shutdown_function('owAlertsAfterPage');
+    if (is_file($owDue) && (int) @file_get_contents($owDue) <= time() && !defined('OW_PREVIEW')) register_shutdown_function('owAlertsAfterPage');
 }
 /* Bashro: a message that got 429 / 503 is tried again after a page is delivered (bashro_send.php) */
 if (is_file(__DIR__ . '/.logs/bashro_queue.json') && !function_exists('owBashroRetryAfterPage')) {
@@ -34,7 +34,7 @@ if (is_file(__DIR__ . '/.logs/bashro_queue.json') && !function_exists('owBashroR
         if (!function_exists('getDB')) return;
         try { require_once __DIR__ . '/bashro_send.php'; owBashroRetryDue(); } catch (Throwable $e) { error_log('owBashroRetry: ' . $e->getMessage()); }
     }
-    register_shutdown_function('owBashroRetryAfterPage');
+    if (!defined('OW_PREVIEW')) register_shutdown_function('owBashroRetryAfterPage');   // never during the owner's Preview pages
 }
 /* Once a day, after a page is delivered: private commission reference photos
    are deleted 30 days after delivery (commission_lib.php owCommCleanup), and
@@ -46,10 +46,11 @@ if (!function_exists('owCommAfterPage')) {
         ignore_user_abort(true);
         if (!function_exists('getDB')) return;
         try { require_once __DIR__ . '/commission_lib.php'; owCommCleanupTick(); } catch (Throwable $e) { error_log('owCommAfterPage: ' . $e->getMessage()); }
+        try { require_once __DIR__ . '/identity_lib.php'; owIdPurgeDue(); } catch (Throwable $e) { error_log('owIdPurgeDue: ' . $e->getMessage()); }   // identity documents past their keeping years (27 Nov 2026)
         try { require_once __DIR__ . '/order_lib.php'; owOrderAutoRelease(); } catch (Throwable $e) { error_log('owOrderAutoRelease: ' . $e->getMessage()); }   // escrow: does nothing while payments are off
     }
     $owCommDay = __DIR__ . '/.logs/commission_cleanup_day';
-    if (!is_file($owCommDay) || trim((string) @file_get_contents($owCommDay)) !== gmdate('Y-m-d')) register_shutdown_function('owCommAfterPage');
+    if ((!is_file($owCommDay) || trim((string) @file_get_contents($owCommDay)) !== gmdate('Y-m-d')) && !defined('OW_PREVIEW')) register_shutdown_function('owCommAfterPage');
 }
 if (!function_exists('owThemeButton')) {
     /* The light / dark button. One shared look on every page (.ow-ctl in oweili.css);
@@ -125,7 +126,16 @@ if (!defined('OW_THEME_HEAD')):
   document.addEventListener('input', function(){ typed = true; }, true);
   new MutationObserver(function(){
     var l = (d.getAttribute('lang') === 'ar' || d.getAttribute('dir') === 'rtl') ? 'ar' : 'en';
-    if (l !== window.OW_LANG) { window.OW_LANG = l; setCk(l); setLs(l); if (!typed && !/[?&]lang=/.test(location.search)) location.reload(); }
+    if (l !== window.OW_LANG) {
+      window.OW_LANG = l; setCk(l); setLs(l);
+      /* a "lang=" left in the address would bring the old language back on the next reload
+         (owner, 28 Nov 2026): the address now carries the new language */
+      if (/[?&]lang=(ar|en)(&|#|$)/.test(location.search)) {
+        var nu = location.pathname + location.search.replace(/([?&]lang=)(ar|en)(?=&|$)/, '$1' + l) + location.hash;
+        if (!typed) location.replace(nu); else { try { history.replaceState(history.state, '', nu); } catch (e) {} }
+        url = true;
+      } else if (!typed) location.reload();
+    }
   }).observe(d, { attributes: true, attributeFilter: ['lang', 'dir'] });
   document.addEventListener('DOMContentLoaded', function(){ d.classList.remove('ow-wait'); });
 })();

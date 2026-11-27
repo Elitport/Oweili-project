@@ -169,7 +169,8 @@ $firstName = trim((string) ($me['full_name_en'] ?: $me['email']));
     <?php if (!$instWait): ?><p class="mini"><?= owBi('No institute is waiting', 'لا يوجد معهد بالانتظار') ?></p><?php endif; ?>
     <?php foreach ($instWait as $iw): ?><div style="border-top:1px solid var(--color-border);padding-top:var(--space-sm);margin-top:var(--space-sm)">
       <strong><?= owBi((string) $iw['name_en'], (string) $iw['name_ar']) ?></strong> <span class="mini">· <?= e((string) ($iw['legal_name'] ?? '')) ?> · <?= owBi((string) $iw['city_en'], (string) $iw['city_ar']) ?></span>
-      <?= owInstDocsHtml($iw) ?></div><?php endforeach; ?>
+      <?= owInstDocsHtml($iw) ?>
+      <?php require_once __DIR__ . '/identity_lib.php'; if (owIdReady() && !empty($iw['user_id'])) echo owIdHtml(owIdForUser((int) $iw['user_id'])); ?></div><?php endforeach; ?>
   </div>
   <?php endif; ?>
 </div>

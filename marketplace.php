@@ -6,6 +6,7 @@ require_once __DIR__ . '/artwork_lib.php';
 require_once __DIR__ . '/platform_lib.php';
 require_once __DIR__ . '/gallery_lib.php';   // filters, collections, Artist of the week, Verified artist
 require_once __DIR__ . '/cert_lib.php';      // size words and the certificate badge in the details window
+require_once __DIR__ . '/vat_lib.php';       // while VAT is active every price shown includes it (owner, 28 Nov 2026)
 $ART_TYPES = require __DIR__ . '/art_types.php';
 $ART_CATS  = require __DIR__ . '/art_categories.php';
 
@@ -101,8 +102,9 @@ if ($medium !== '') {
     $where .= ' AND (' . implode(' OR ', $mw) . ')';
 }
 if ($price !== '') {
-    if ($PRICES[$price]['min'] !== null) { $where .= ' AND a.price >= :pmin'; $params[':pmin'] = $PRICES[$price]['min']; }
-    if ($PRICES[$price]['max'] !== null) { $where .= ' AND a.price <= :pmax'; $params[':pmax'] = $PRICES[$price]['max']; }
+    $vf = owVatFactor();   // the price groups follow the price visitors see (VAT included while active)
+    if ($PRICES[$price]['min'] !== null) { $where .= ' AND a.price >= :pmin'; $params[':pmin'] = $PRICES[$price]['min'] / $vf; }
+    if ($PRICES[$price]['max'] !== null) { $where .= ' AND a.price <= :pmax'; $params[':pmax'] = $PRICES[$price]['max'] / $vf; }
 }
 if ($size !== '') {
     $where .= ' AND a.size_category = :scat'; $params[':scat'] = $size;
@@ -200,7 +202,7 @@ foreach ($modalArtworks as $aw) {
         'artist_ar' => $aw['artist_ar'],
         'artist_id' => (int) $aw['artist_id'],
         'verified'  => (int) ($aw['verified'] ?? 0) === 1,
-        'price'     => (float) $aw['price'],
+        'price'     => owGross((float) $aw['price']),
         'image'     => ($mBig = owImgSized($mOrig = $mpImg((string) $aw['image_url']), 1600)),   // details window: a large copy, not the camera original
         'image_fb'  => $mOrig === '' ? [] : array_values(array_unique(array_filter([owImgSized($mOrig, 800), owImgSized($mOrig, 400), owImgSized($mOrig, 800, false), $mOrig], fn($u) => $u !== '' && $u !== $mBig))),
         'status'    => $aw['status'],
@@ -211,7 +213,7 @@ foreach ($modalArtworks as $aw) {
 }
 foreach ($demoArt as $d) {   // demo: the window opens, but nothing can be bought, shared or counted
     $modalData[$d['id']] = ['title_en' => $d['title_en'], 'title_ar' => $d['title_ar'], 'desc_en' => $d['desc_en'], 'desc_ar' => $d['desc_ar'],
-        'artist_en' => OW_DEMO_ARTIST[0], 'artist_ar' => OW_DEMO_ARTIST[1], 'artist_id' => 0, 'verified' => false, 'price' => (float) $d['price'],
+        'artist_en' => OW_DEMO_ARTIST[0], 'artist_ar' => OW_DEMO_ARTIST[1], 'artist_id' => 0, 'verified' => false, 'price' => owGross((float) $d['price']),
         'image' => $d['image'], 'image_fb' => [], 'status' => 'available', 'journey' => false, 'size' => '', 'cert' => '', 'demo' => true];
 }
 ?>
@@ -475,7 +477,7 @@ foreach ($demoArt as $d) {   // demo: the window opens, but nothing can be bough
     }
   </style>
 </head>
-<body class="bx">
+<body class="bx ow-short-hero ow-gal-hero">
 <?= owStudioBackdrop('gallery-hall') /* the owner's gallery hall with the bench, always (owner, 8 Nov 2026) */ ?>
 
 <div class="bg-wrap">
@@ -766,7 +768,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
             <?php if ($tlbl): ?><span class="type-pill"><?= e($ar ? $tlbl['ar'] : $tlbl['en']) ?></span><?php endif; ?>
             <?php if (owHasJourney($mpStages[$id] ?? [])): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
           </div>
-          <div class="aw-price"><?= number_format((float) $aw['price']) ?> <?= $ar ? 'ر.س' : 'SAR' ?></div>
+          <div class="aw-price"><?= number_format(owGross((float) $aw['price'])) ?> <?= $ar ? 'ر.س' : 'SAR' ?><?= owVatTag() ?></div>
           <button type="button" class="btn btn-dark btn-block" onclick="openModal(<?= $id ?>)"><?= $ar ? 'شاهد القصة' : 'See the Story' ?></button>
         </div>
       </article>
@@ -782,7 +784,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
           <h2 class="aw-title"><?= e($ar ? $d['title_ar'] : $d['title_en']) ?></h2>
           <span class="aw-artist"><?= $ar ? 'بواسطة' : 'by' ?> <bdi><?= e(OW_DEMO_ARTIST[$ar ? 1 : 0]) ?></bdi></span>
           <div class="mp-meta"><?php if ($tl = ($ART_TYPES[$d['type']] ?? null)): ?><span class="type-pill"><?= e($ar ? $tl['ar'] : $tl['en']) ?></span><?php endif; ?></div>
-          <div class="aw-price"><?= number_format((float) $d['price']) ?> <?= $ar ? 'ر.س' : 'SAR' ?></div>
+          <div class="aw-price"><?= number_format(owGross((float) $d['price'])) ?> <?= $ar ? 'ر.س' : 'SAR' ?><?= owVatTag() ?></div>
           <button type="button" class="btn btn-dark btn-block" onclick="openModal('<?= e($d['id']) ?>')"><?= $ar ? 'شاهد القصة' : 'See the Story' ?></button>
         </div>
       </article>
@@ -833,7 +835,7 @@ function tgl(){ window.location.href = <?= json_encode(($u = mpUrl(['lang' => 'e
       <?php if (owGiftsPageOn()): ?><a class="m-share m-gift" id="m-gift" href="gifts.php"><?= $ar ? 'قدّمه هدية' : 'Give it as a gift' ?></a><?php endif; ?>
       <!-- I'm Interested: name, phone, email → inquire.php -->
       <div class="m-interest">
-        <?php if ($demoArt): ?><p class="demo-note" id="m-demo" hidden><?= owDemoBadge() ?> <?= owBi(OW_DEMO_NOTE[0], OW_DEMO_NOTE[1]) ?></p><?php endif; ?>
+        <?php if ($demoArt): ?><p class="demo-note" id="m-demo" hidden><?= owDemoNoteHtml() ?></p><?php endif; ?>
         <button type="button" class="btn btn-primary btn-block" id="mi-open" onclick="openInterest()"><?= $ar ? 'أنا مهتم' : 'I’m Interested' ?></button>
         <form id="mi-form" class="mi-form" hidden novalidate onsubmit="return sendInterest(event)">
           <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
@@ -904,7 +906,7 @@ function openModal(id){
   document.getElementById('m-cert').innerHTML = a.cert || '';   /* made and escaped on the server (owCertBadgeHtml) */
   document.getElementById('m-cert').hidden = !a.cert;
   document.getElementById('m-price').textContent =
-    Number(a.price).toLocaleString() + ' ' + (LANG==='ar' ? 'ر.س' : 'SAR');
+    Number(a.price).toLocaleString() + ' ' + (LANG==='ar' ? 'ر.س' : 'SAR') + <?= json_encode(owVatTagText() !== '' ? ' · ' . owVatTagText() : '', JSON_UNESCAPED_UNICODE) ?>;
   // Creation Journey + trust badge (only for artworks with stage photos)
   document.getElementById('m-verified').hidden = !a.journey;
   document.querySelectorAll('.m-journey').forEach(function(j){ j.hidden = j.dataset.id !== String(id); });

@@ -41,7 +41,7 @@ $V = owOwnerViewer();
 if ($V && $V['owner'] && empty($_COOKIE['ow_nostat']) && !headers_sent())   // the owner's browser is never counted
     setcookie('ow_nostat', '1', ['expires' => time() + 5 * 365 * 86400, 'path' => '/', 'secure' => !empty($_SERVER['HTTPS']), 'httponly' => false, 'samesite' => 'Lax']);
 
-$PAGES = ['home' => '', 'crm' => 'people', 'money' => 'money', 'orders' => 'money', 'content' => 'content', 'messages' => 'messages', 'settings' => 'owner'];
+$PAGES = ['home' => '', 'crm' => 'people', 'money' => 'money', 'orders' => 'money', 'content' => 'content', 'messages' => 'messages', 'settings' => 'owner', 'preview' => 'owner'];
 $page = (string) ($_GET['p'] ?? 'home');
 if (!isset($PAGES[$page])) $page = 'home';
 $allowed = function (string $p) use ($V, $PAGES): bool {
@@ -100,10 +100,25 @@ if ($V && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['act'
     }
     if ($V['owner'] && $act === 'vat') {
         $rate = (float) str_replace(',', '.', (string) ($_POST['rate'] ?? '15'));
-        $num = preg_replace('/\D/', '', (string) ($_POST['number'] ?? ''));
-        if ($rate < 0 || $rate > 50 || ($num !== '' && strlen($num) !== 15)) $back('owner.php?p=settings', 'vat_bad');
-        owSetSetting('vat', json_encode(['on' => !empty($_POST['on']), 'rate' => $rate, 'number' => $num]));
+        $num = preg_replace('/\D/', '', strtr((string) ($_POST['number'] ?? ''), ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9']));
+        $start = trim((string) ($_POST['start'] ?? ''));   // the VAT start date (owner, 28 Nov 2026): tax invoices only for sales on or after it
+        $okStart = $start === '' || (($d = DateTime::createFromFormat('!Y-m-d', $start)) && $d->format('Y-m-d') === $start);
+        if ($rate < 0 || $rate > 50 || ($num !== '' && strlen($num) !== 15) || !$okStart) $back('owner.php?p=settings', 'vat_bad');
+        owSetSetting('vat', json_encode(['on' => !empty($_POST['on']), 'rate' => $rate, 'number' => $num, 'start' => $start]));
         owLog('setting_change', 'setting', null, 'vat', $actor);
+        $back('owner.php?p=settings', 'saved');
+    }
+    if ($V['owner'] && $act === 'invoice_address') {   // printed only inside invoice PDFs, never on the site or in emails (owner, 28 Nov 2026)
+        $a = trim(preg_replace("/\r\n?/", "\n", preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/u', '', (string) ($_POST['invoice_address'] ?? ''))));
+        owSetSetting('invoice_address', mb_substr($a, 0, 400));
+        owLog('setting_change', 'setting', null, 'invoice_address', $actor);
+        $back('owner.php?p=settings#invaddr', 'saved');
+    }
+    if ($V['owner'] && $act === 'id_keep') {   // how long identity documents are kept after an account closes (owner, 27 Nov 2026)
+        $y = (int) ($_POST['years'] ?? 0);
+        if ($y < 1 || $y > 20) $back('owner.php?p=settings', 'years_bad');
+        owSetSetting('id_keep_years', (string) $y);
+        owLog('setting_change', 'setting', null, 'id_keep_years ' . $y, $actor);
         $back('owner.php?p=settings', 'saved');
     }
     if ($V['owner'] && $act === 'subadmins') {
@@ -118,6 +133,11 @@ if ($V && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['act'
         foreach (owQAll("SELECT id FROM users WHERE role = 'sub_admin'") as $s) if (!empty($_POST['instdocs'][$s['id']])) $docs[] = (int) $s['id'];
         owSetSetting('subadmin_inst_docs', json_encode($docs));
         owLog('setting_change', 'setting', null, 'subadmin_inst_docs', $actor);
+        /* which sub-admins may open identity documents (owner, 27 Nov 2026; identity_lib.php) */
+        $ids = [];
+        foreach (owQAll("SELECT id FROM users WHERE role = 'sub_admin'") as $s) if (!empty($_POST['iddocs'][$s['id']])) $ids[] = (int) $s['id'];
+        owSetSetting('subadmin_id_docs', json_encode($ids));
+        owLog('setting_change', 'setting', null, 'subadmin_id_docs', $actor);
         $back('owner.php?p=settings', 'saved');
     }
     $back('owner.php?p=' . $page);
@@ -171,6 +191,7 @@ $IC = [
  'globe' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
  'old' => '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
  'out' => '<path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4M6 12h10"/>',
+ 'eye' => '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 ];
 $icon = function (string $k) use ($IC): string { return '<svg class="o-ic" viewBox="0 0 24 24" aria-hidden="true">' . ($IC[$k] ?? '') . '</svg>'; };
 /* [page or link, English, Arabic, icon, who: o = owner only, s = sub-admins only, g = owner + sub-admins with the group] */
@@ -205,6 +226,7 @@ $MENU = [
       ['admin.php#auctions', 'Auctions waiting list', 'قائمة انتظار المزاد', 'gavel', 'o', '']]],
   'settings' => [['Settings and team', 'الإعدادات والفريق'], [
       ['owner.php?p=settings', 'Owner settings and team', 'إعدادات المالك والفريق', 'users', 'o', 'settings'],
+      ['owner.php?p=preview', 'Preview pages', 'معاينة الصفحات', 'eye', 'o', 'preview'],   // the dashboards as users see them, fictional data (27 Nov 2026)
       ['admin.php?settings=1', 'Site settings', 'إعدادات الموقع', 'gear', 'o', ''],
       ['admin.php#stats', 'Visitors by city', 'الزوار حسب المدينة', 'globe', 'o', ''],
       ['admin.php', 'Classic admin page', 'صفحة الإدارة السابقة', 'old', 'o', '']]],
@@ -219,7 +241,7 @@ $showItem = function (array $it, string $gk) use ($V): bool {
 };
 $TITLES = ['home' => ['Dashboard', 'لوحة التحكم'], 'crm' => ['People', 'الأشخاص'], 'money' => ['Accounting', 'المحاسبة'],
            'orders' => ['Orders and payments overview', 'نظرة على الطلبات والمدفوعات'], 'content' => ['Content statistics', 'إحصاءات المحتوى'],
-           'messages' => ['Group messages', 'رسائل جماعية'], 'settings' => ['Owner settings and team', 'إعدادات المالك والفريق']];
+           'messages' => ['Group messages', 'رسائل جماعية'], 'settings' => ['Owner settings and team', 'إعدادات المالك والفريق'], 'preview' => ['Preview pages', 'معاينة الصفحات']];
 $qs = function (array $set) { $q = array_merge($_GET, $set); foreach ($q as $k => $v) if ($v === null || $v === '') unset($q[$k]); return 'owner.php?' . http_build_query($q); };
 ?>
 <!DOCTYPE html>
@@ -284,10 +306,11 @@ $qs = function (array $set) { $q = array_merge($_GET, $set); foreach ($q as $k =
     </header>
     <main class="o-content" id="o-content">
       <?php if ($flash !== ''): ?>
-        <div class="o-flash<?= in_array($flash, ['notsaved', 'expired', 'vat_bad', 'msg_missing', 'msg_nobody'], true) ? ' bad' : '' ?>" role="status"><?= [
+        <div class="o-flash<?= in_array($flash, ['notsaved', 'expired', 'vat_bad', 'years_bad', 'msg_missing', 'msg_nobody'], true) ? ' bad' : '' ?>" role="status"><?= [
           'saved' => owBi('Saved', 'تم الحفظ'), 'notsaved' => owBi('Not saved. Please check the date and try again', 'لم يُحفظ. يرجى التحقق من التاريخ والمحاولة مرة أخرى'),
           'expired' => owBi('This page was open for a long time, so nothing was changed. Please try again', 'كانت هذه الصفحة مفتوحة لوقت طويل، فلم يتغير شيء. يرجى المحاولة مرة أخرى'),
-          'vat_bad' => owBi('Please check the VAT rate (0 to 50) and the VAT number (15 digits)', 'يرجى مراجعة نسبة الضريبة (0 إلى 50) والرقم الضريبي (15 رقما)'),
+          'years_bad' => owBi('Please write a number of years from 1 to 20', 'يرجى كتابة عدد سنوات من 1 إلى 20'),
+          'vat_bad' => owBi('Please check the VAT rate (0 to 50), the VAT number (15 digits) and the start date', 'يرجى مراجعة نسبة الضريبة (0 إلى 50) والرقم الضريبي (15 رقما) وتاريخ البدء'),
           'msg_missing' => owBi('Please write the subject and the message in both languages', 'يرجى كتابة الموضوع والرسالة باللغتين'),
           'msg_nobody' => owBi('Nobody matches this choice', 'لا أحد يطابق هذا الاختيار'),
           'queued' => owBi('The message is on its way. It goes out in small groups, a few every 2 minutes', 'الرسالة في طريقها. تُرسل على دفعات صغيرة، بضع رسائل كل دقيقتين'),

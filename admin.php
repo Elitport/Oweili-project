@@ -259,6 +259,7 @@ if ($isAdmin && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST
     if (isset($map[$action]) && $uid > 0) {
         getDB()->prepare($map[$action])->execute([':id' => $uid]);
         owLog(['approve' => 'user_approve', 'unapprove' => 'user_unapprove', 'ban' => 'user_suspend', 'unban' => 'user_unsuspend'][$action], 'user', $uid, '', ['type' => 'admin', 'id' => null]);
+        if ($action === 'approve') { require_once __DIR__ . '/identity_lib.php'; owIdDecide($uid, 'approved'); }
         $flash = 'Updated';
     }
     $backTo = in_array($_POST['back'] ?? '', ['collectors', 'artists'], true) ? '#' . $_POST['back'] : '';
@@ -1011,6 +1012,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
             <?php if ((string) $iw['description_en'] !== ''): ?><div class="mini"><?= owBi(owExcerpt((string) $iw['description_en'], 240), owExcerpt((string) $iw['description_ar'], 240)) ?></div><?php endif; ?></div>
         </div>
         <?= owInstDocsHtml($iw) ?>
+        <?php require_once __DIR__ . '/identity_lib.php'; if (owIdReady() && !empty($iw['user_id'])) echo owIdHtml(owIdForUser((int) $iw['user_id'])); ?>
         <div class="acts">
           <form method="post" action="admin_bookings.php"><?= csrfField() ?><input type="hidden" name="do" value="inst_approve"><input type="hidden" name="back" value="pending"><input type="hidden" name="id" value="<?= (int) $iw['id'] ?>"><button class="btn btn-accent btn-sm"><?= owBi('Approve', 'موافقة') ?></button></form>
           <form method="post" action="admin_bookings.php" style="display:flex;gap:6px;flex-wrap:wrap"><?= csrfField() ?><input type="hidden" name="do" value="inst_reject"><input type="hidden" name="back" value="pending"><input type="hidden" name="id" value="<?= (int) $iw['id'] ?>">
@@ -1057,6 +1059,7 @@ $ART_STATE = ['draft' => ['Draft', 'مسودة'], 'pending' => ['In review', 'ق
               <div class="mini"><span dir="ltr"><?= e($wa['email']) ?></span><?= $wa['city'] ? ' · ' . e($wa['city']) : '' ?> · <?php [$ce, $ca] = owDateBi($wa['created_at']); ?><?= owBi($ce, $ca) ?> · <?= (int) $wa['is_verified'] ? owBi('Email confirmed', 'البريد مؤكد') : owBi('Email not confirmed', 'البريد غير مؤكد') ?></div></div>
             <a class="btn btn-ghost btn-sm" href="admin.php?person=<?= (int) $wa['id'] ?>"><?= owBi('View', 'عرض') ?></a>
           </div>
+          <?php require_once __DIR__ . '/identity_lib.php'; if (owIdReady()) echo owIdHtml(owIdForUser((int) $wa['id'])); ?>
           <div class="acts">
             <form method="post" action="admin.php"><?= csrfField() ?><input type="hidden" name="user_id" value="<?= (int) $wa['id'] ?>"><button class="btn btn-accent btn-sm" name="action" value="approve_account"><?= owBi('Approve', 'موافقة') ?></button></form>
             <details class="rej-box"><summary class="btn btn-danger btn-sm"><?= owBi('Reject…', 'رفض…') ?></summary>

@@ -107,9 +107,13 @@ function owCourseCommission(): float {
     $v = (float) owSetting('course_commission', '10');
     return ($v >= 0 && $v <= 50) ? $v : 10.0;
 }
+/* $amount = the institute's or museum's price BEFORE VAT. Commission on that price; VAT (vat_lib.php)
+   on top when it is active today, so 'gross' is what the customer pays (owner, 28 Nov 2026) */
 function owSplit(float $amount, float $rate): array {
+    require_once __DIR__ . '/vat_lib.php';
     $fee = round($amount * $rate / 100, 2);
-    return ['rate' => $rate, 'commission' => $fee, 'partner' => round($amount - $fee, 2)];
+    $vat = owVatOf($amount);
+    return ['rate' => $rate, 'commission' => $fee, 'partner' => round($amount - $fee, 2), 'vat' => $vat, 'gross' => round($amount + $vat, 2)];
 }
 function owSar(float $v): string {
     $n = number_format($v, $v == floor($v) ? 0 : 2);
@@ -254,7 +258,7 @@ function owCourseHold(int $courseId, array $user, string $name, string $email, s
             $db->prepare('UPDATE courses SET seats_remaining = seats_remaining - 1 WHERE id = :id')->execute([':id' => $courseId]);
         }
         $split = owSplit((float) $c['price'], owCourseCommission());
-        $args = [':n' => mb_substr($name, 0, 150), ':e' => mb_substr($email, 0, 190), ':p' => mb_substr($phone, 0, 30), ':am' => $split['commission'] + $split['partner'],
+        $args = [':n' => mb_substr($name, 0, 150), ':e' => mb_substr($email, 0, 190), ':p' => mb_substr($phone, 0, 30), ':am' => $split['gross'],
                  ':cr' => $split['rate'], ':ca' => $split['commission'], ':pa' => $split['partner']];
         if ($r) {
             $db->prepare("UPDATE course_registrations SET status = 'pending', student_name = :n, student_email = :e, student_phone = :p, amount = :am, commission_rate = :cr,
@@ -306,7 +310,7 @@ function owCourseBook(int $courseId, ?array $user, string $name, string $email, 
         $db->prepare("INSERT INTO course_registrations (course_id, user_id, status, ref_no, student_name, student_email, student_phone, amount, commission_rate, commission_amount, partner_amount, hold_until, notes)
                       VALUES (:c, :u, 'pending', :ref, :n, :e, :p, :am, :cr, :ca, :pa, NULL, :note)")
            ->execute([':c' => $courseId, ':u' => $uid, ':ref' => $ref, ':n' => mb_substr($name, 0, 150), ':e' => mb_substr($email, 0, 190), ':p' => mb_substr($phone, 0, 30),
-                      ':am' => $split['commission'] + $split['partner'], ':cr' => $split['rate'], ':ca' => $split['commission'], ':pa' => $split['partner'],
+                      ':am' => $split['gross'], ':cr' => $split['rate'], ':ca' => $split['commission'], ':pa' => $split['partner'],
                       ':note' => 'Booked before online payment (lang ' . ($lang === 'ar' ? 'ar' : 'en') . ')']);
         $id = (int) $db->lastInsertId();
         $db->commit();
@@ -482,7 +486,7 @@ function owTicketHold(array $place, int $dateId, array $qty, array $user, string
                       VALUES (:ref, :q, :p, :d, :vd, :u, :n, :e, :ph, :l, :pe, :am, :cr, :ca, :pa, 'pending', NOW() + INTERVAL " . OW_BOOK_HOLD_MIN . " MINUTE)")
            ->execute([':ref' => owBookRef('T', 'museum_tickets'), ':q' => bin2hex(random_bytes(20)), ':p' => (int) $place['id'], ':d' => $dateId, ':vd' => $d['visit_date'],
                       ':u' => (int) $user['id'], ':n' => mb_substr($name, 0, 150), ':e' => mb_substr($email, 0, 190), ':ph' => mb_substr($phone, 0, 30),
-                      ':l' => json_encode($lines, JSON_UNESCAPED_UNICODE), ':pe' => $people, ':am' => round($amount, 2),
+                      ':l' => json_encode($lines, JSON_UNESCAPED_UNICODE), ':pe' => $people, ':am' => $split['gross'],
                       ':cr' => $split['rate'], ':ca' => $split['commission'], ':pa' => $split['partner']]);
         $id = (int) $db->lastInsertId();
         $db->commit();
@@ -746,7 +750,10 @@ function owCourseConfirmMail(int $regId): void {
         $ar = '<p><b>تم تسجيلك.</b></p><p>' . $h($c['title_ar']) . '<br>' . $h($c['inst_ar']) . '<br>' . $h($dAr) . ' · ' . $h($c['schedule_ar']) . '<br>' . $whereAr . '</p>'
             . '<p>رقم الحجز: <b>' . $h($r['ref_no']) . '</b><br>المدفوع: ' . ($amt > 0 ? number_format($amt, 2) . ' ر.س' : 'مجاني') . '</p>'
             . '<p>حجوزاتك: <a href="' . owSiteBase() . '/my_bookings.php?lang=ar">' . owSiteBase() . '/my_bookings.php</a></p>';
-        owSendMail((string) $r['student_email'], 'You are registered · تم تسجيلك: ' . $c['title_en'], owBookMailHtml($en, $ar), true);
+        require_once __DIR__ . '/invoice_lib.php';
+        [$att, $inv] = owInvoiceAttachFor('course', $regId);   // the receipt or tax invoice travels with this email (27 Nov 2026)
+        if ($inv) { $en .= '<p>Your ' . strtolower(owInvTitle($inv)[0]) . ' ' . $h($inv['invoice_no']) . ' is attached as a PDF.</p>'; $ar .= '<p>' . owInvTitle($inv)[1] . ' رقم ' . $h($inv['invoice_no']) . ' مرفق بصيغة PDF.</p>'; }
+        if (owSendMail((string) $r['student_email'], 'You are registered · تم تسجيلك: ' . $c['title_en'], owBookMailHtml($en, $ar), true, $mlog, $att ? ['attach' => $att] : []) && $inv && $att) owInvMarkEmailed($inv);
         $inst = trim((string) $c['inst_email']);
         if ($inst !== '' && filter_var($inst, FILTER_VALIDATE_EMAIL))
             owSendMail($inst, 'New registration · تسجيل جديد: ' . $c['title_en'], "A new student registered for {$c['title_en']} ({$r['ref_no']}). See your dashboard: " . owSiteBase() . "/institute_dashboard.php\r\n\r\n"
@@ -769,7 +776,10 @@ function owTicketMail(int $ticketId): void {
             . '<p>Ticket number: <b>' . $h($t['ref_no']) . '</b><br>Paid: ' . number_format((float) $t['amount'], 2) . ' SAR</p><p>Show the QR code at the entrance. It works once.</p>';
         $ar = '<p><b>تذكرتك</b></p><p>' . $h($p['name_ar']) . '<br>' . $h($p['city_ar']) . '<br>تاريخ الزيارة: ' . $h($dAr) . '<br>' . $h($lAr) . '</p>'
             . '<p>رقم التذكرة: <b>' . $h($t['ref_no']) . '</b><br>المدفوع: ' . number_format((float) $t['amount'], 2) . ' ر.س</p><p>اعرض رمز QR عند المدخل. يعمل مرة واحدة.</p>';
-        owSendMail((string) $t['buyer_email'], 'Your ticket · تذكرتك: ' . $p['name_en'], owBookMailHtml($en, $ar, $qr), true);
+        require_once __DIR__ . '/invoice_lib.php';
+        [$att, $inv] = owInvoiceAttachFor('ticket', $ticketId);   // the receipt or tax invoice travels with the ticket (27 Nov 2026)
+        if ($inv) { $en .= '<p>Your ' . strtolower(owInvTitle($inv)[0]) . ' ' . $h($inv['invoice_no']) . ' is attached as a PDF.</p>'; $ar .= '<p>' . owInvTitle($inv)[1] . ' رقم ' . $h($inv['invoice_no']) . ' مرفق بصيغة PDF.</p>'; }
+        if (owSendMail((string) $t['buyer_email'], 'Your ticket · تذكرتك: ' . $p['name_en'], owBookMailHtml($en, $ar, $qr), true, $mlog, $att ? ['attach' => $att] : []) && $inv && $att) owInvMarkEmailed($inv);
     } catch (Throwable $e) { error_log('owTicketMail: ' . $e->getMessage()); }
 }
 

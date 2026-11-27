@@ -242,6 +242,29 @@ elseif ($page === 'money'):
           <?php if ($vat['on']): ?><td><?= owMoney($sum('vat')) ?></td><?php endif; ?><td><?= owMoney($sum('refunds')) ?></td><td><?= owMoney($sum('paid_out')) ?></td></tr></tfoot>
       </table></div>
     </section>
+    <?php if ($isOwner): require_once __DIR__ . '/invoice_lib.php'; $iq = mb_substr(trim((string) ($_GET['iq'] ?? '')), 0, 60); $invs = owInvAll(200, $iq); $taxNow = owInvTaxNow(); ?>
+    <section class="o-t" id="invoices">
+      <div class="o-th"><h2><?= owBi('Invoices', 'الفواتير') ?></h2>
+        <form method="get" action="owner.php#invoices" class="o-inline-search" role="search"><input type="hidden" name="p" value="money">
+          <label class="sr-only" for="iq"><?= owBi('Search invoices', 'ابحث في الفواتير') ?></label>
+          <input id="iq" name="iq" type="search" value="<?= e($iq) ?>" placeholder="<?= e(owIsAr() ? 'رقم أو اسم أو بريد' : 'Number, name or email') ?>">
+          <button class="btn btn-secondary btn-sm" type="submit"><?= owBi('Search', 'بحث') ?></button></form></div>
+      <p class="o-note"><?= $taxNow['tax']
+          ? owBi('New invoices are tax invoices with VAT ' . owNum($taxNow['rate'], 1) . '% included and your VAT number', 'الفواتير الجديدة فواتير ضريبية شاملة ضريبة القيمة المضافة ' . owNum($taxNow['rate'], 1) . '% ومعها رقمك الضريبي')
+          : owBi('New invoices are purchase receipts, "Not a tax invoice", with no VAT. They become tax invoices once you turn VAT on with a VAT number', 'الفواتير الجديدة إيصالات شراء «ليست فاتورة ضريبية» وبلا ضريبة. وتصبح فواتير ضريبية عندما تفعّل الضريبة مع رقم ضريبي') ?>
+        · <?= owBi('Full ZATCA e-invoicing (Fatoora) is not built yet', 'الفوترة الإلكترونية الكاملة من هيئة الزكاة (فاتورة) لم تُبنَ بعد') ?></p>
+      <?php if (!$invs): ?><p class="o-empty"><?= $iq !== '' ? owBi('No invoice matches your search', 'لا توجد فاتورة تطابق البحث') : owBi('No invoices yet. One is made with every purchase', 'لا فواتير بعد. تُنشأ فاتورة مع كل عملية شراء') ?></p>
+      <?php else: ?><div class="o-tablewrap"><table class="o-table">
+        <thead><tr><th><?= owBi('Number', 'الرقم') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Customer', 'العميل') ?></th><th><?= owBi('Item', 'البند') ?></th>
+          <th><?= owBi('Order or booking', 'الطلب أو الحجز') ?></th><th><?= owBi('Amount', 'المبلغ') ?></th><th><?= owBi('VAT', 'الضريبة') ?></th><th><?= owBi('Type', 'النوع') ?></th><th><?= owBi('Emailed', 'أُرسلت') ?></th></tr></thead>
+        <tbody><?php foreach ($invs as $iv): [$tEn, $tAr] = owInvTitle($iv); ?>
+          <tr><td><a href="invoice.php?no=<?= e(rawurlencode($iv['invoice_no'])) ?>" target="_blank" rel="noopener" data-no-prefetch><bdi dir="ltr"><?= e($iv['invoice_no']) ?></bdi></a></td>
+            <td><?= owODate($iv['issued_at']) ?></td><td><?= e((string) $iv['customer_name']) ?><br><span class="o-sm"><?= e((string) $iv['customer_email']) ?></span></td>
+            <td><?= owBi((string) $iv['item_en'], (string) $iv['item_ar']) ?></td><td><bdi dir="ltr"><?= e((string) $iv['ref_no']) ?></bdi></td><td><?= owMoney($iv['amount']) ?></td>
+            <td><?= (int) $iv['is_tax'] === 1 ? owMoney($iv['vat_amount']) : '—' ?></td><td><?= owBi($tEn, $tAr) ?></td><td><?= $iv['emailed_at'] ? owODate($iv['emailed_at']) : '—' ?></td></tr>
+        <?php endforeach; ?></tbody></table></div><?php endif; ?>
+    </section>
+    <?php endif; ?>
     <?php if ($isOwner): ?><p class="o-foot-note"><a href="admin_bookings.php"><?= owBi('Mark course payouts as paid in Manage courses and tickets', 'سجّل دفع مستحقات الدورات في إدارة الدورات والتذاكر') ?></a> · <a href="admin_orders.php"><?= owBi('Artwork orders and escrow', 'طلبات الأعمال والضمان') ?></a> · <a href="owner.php?p=settings#vat"><?= owBi('VAT settings', 'إعدادات الضريبة') ?></a></p><?php endif; ?>
 
 <?php
@@ -487,6 +510,22 @@ elseif ($page === 'messages'):
 
 <?php
 /* =============================== OWNER SETTINGS AND TEAM =============================== */
+elseif ($page === 'preview' && $isOwner): require_once __DIR__ . '/preview_lib.php';
+    $pvDesc = ['collector' => ['Home, My collection, My invoices, bookings, favourites and the artists followed', 'الرئيسية ومجموعتي وفواتيري والحجوزات والمفضلة والفنانون المتابَعون'],
+               'artist' => ['My Studio: home, artworks, sales and payouts, certificates and the rest of the menu', 'مرسمي: الرئيسية والأعمال والمبيعات والدفعات والشهادات وبقية القائمة'],
+               'institute' => ['Courses, registrations, earnings and the profile of an approved institute', 'الدورات والتسجيلات والأرباح والملف الشخصي لمعهد معتمد']]; ?>
+    <p class="o-note"><?= owBi('Each dashboard exactly as its users see it, filled with fictional people and artworks. Read only: nothing is saved, sent or counted, and no real person’s data is ever shown. Only you can open these pages', 'كل لوحة كما يراها مستخدموها تماما، بأشخاص وأعمال تجريبية. للعرض فقط: لا يُحفظ شيء ولا يُرسل شيء ولا يُحسب شيء، ولا تظهر بيانات أي شخص حقيقي أبدا. لا يفتح هذه الصفحات أحد غيرك') ?></p>
+    <div class="o-grid3 o-pv">
+      <?php foreach (OW_PREVIEW_ROLES as $k => $r): ?>
+        <section class="o-t">
+          <div class="o-th"><h2><?= owBi($r[0], $r[1]) ?></h2></div>
+          <p class="o-note"><?= owBi($pvDesc[$k][0], $pvDesc[$k][1]) ?></p>
+          <p><a class="btn btn-primary" href="preview.php?as=<?= $k ?>" target="_blank" rel="noopener" data-no-prefetch><?= owBi('Open the preview', 'افتح المعاينة') ?></a></p>
+        </section>
+      <?php endforeach; ?>
+    </div>
+
+<?php
 elseif ($page === 'settings' && $isOwner):
     $vat = owVat(); $subs = owQAll("SELECT id, email, full_name_en, full_name_ar, artist_name FROM users WHERE role = 'sub_admin' ORDER BY id"); $SG = owSubadminGroupsAll(); ?>
     <div class="o-two">
@@ -500,29 +539,47 @@ elseif ($page === 'settings' && $isOwner):
       </section>
       <section class="o-t" id="vat">
         <div class="o-th"><h2><?= owBi('VAT', 'ضريبة القيمة المضافة') ?></h2></div>
-        <p class="o-note"><?= owBi('For your reports only: Accounting shows the VAT on Oweili’s commission. Nothing changes on the site, and no tax invoices are made until ZATCA is set up', 'لتقاريرك فقط: تعرض المحاسبة الضريبة على عمولة أويلي. لا يتغير شيء في الموقع، ولا تُصدر فواتير ضريبية حتى يتم إعداد هيئة الزكاة والضريبة') ?></p>
+        <p class="o-note"><?= owBi('VAT is charged on the full price of every paid sale (artworks, courses, workshops, tickets) only when VAT is on, the VAT number is filled in AND the sale date is on or after the start date. Then every price visitors see already includes VAT ("VAT included") and the invoice is a tax invoice with its ZATCA QR code. Before that: prices without VAT and a purchase receipt. Oweili’s commission is always worked out on the price before VAT. Full ZATCA e-invoicing (Fatoora phase 2) is not built yet', 'تُحتسب الضريبة على السعر الكامل لكل بيع مدفوع (الأعمال والدورات والورش والتذاكر) فقط عندما تكون الضريبة مفعلة والرقم الضريبي مكتوبا وتاريخ البيع في تاريخ البدء أو بعده. عندها تظهر كل الأسعار للزوار شاملة الضريبة («شامل الضريبة») وتكون الفاتورة فاتورة ضريبية برمز QR الخاص بهيئة الزكاة. وقبل ذلك: أسعار بلا ضريبة وإيصال شراء. وتُحسب عمولة أويلي دائما على السعر قبل الضريبة. الفوترة الإلكترونية الكاملة (المرحلة الثانية من فاتورة) لم تُبنَ بعد') ?></p>
         <form method="post" class="o-form"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="vat">
-          <label class="o-check"><input type="checkbox" name="on" value="1"<?= $vat['on'] ? ' checked' : '' ?>> <?= owBi('Show VAT in Accounting', 'أظهر الضريبة في المحاسبة') ?></label>
+          <label class="o-check"><input type="checkbox" name="on" value="1"<?= $vat['on'] ? ' checked' : '' ?>> <?= owBi('VAT on (Accounting and tax invoices)', 'تفعيل الضريبة (المحاسبة والفواتير الضريبية)') ?></label>
           <div class="o-g2"><label><span class="o-lbl"><?= owBi('Rate %', 'النسبة %') ?></span><input class="o-in" name="rate" inputmode="decimal" value="<?= e(owNum($vat['rate'], 1)) ?>" dir="ltr"></label>
-            <label><span class="o-lbl"><?= owBi('VAT number (15 digits)', 'الرقم الضريبي (15 رقما)') ?></span><input class="o-in" name="number" inputmode="numeric" maxlength="15" value="<?= e($vat['number']) ?>" dir="ltr"></label></div>
+            <label><span class="o-lbl"><?= owBi('VAT number (15 digits)', 'الرقم الضريبي (15 رقما)') ?></span><input class="o-in" name="number" inputmode="numeric" maxlength="15" value="<?= e($vat['number']) ?>" dir="ltr"></label>
+            <label><span class="o-lbl"><?= owBi('VAT start date', 'تاريخ بدء الضريبة') ?></span><input class="o-in" name="start" type="date" data-native value="<?= e((string) ($vat['start'] ?? '')) ?>" dir="ltr"></label></div>
           <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
       </section>
     </div>
+    <section class="o-t" id="invaddr">
+      <div class="o-th"><h2><?= owBi('Invoice address', 'عنوان الفاتورة') ?></h2></div>
+      <p class="o-note"><?= owBi('Printed only inside invoice PDFs, under the seller’s name. Never shown anywhere else on the website, in the footer or in emails', 'يُطبع داخل ملفات الفواتير فقط، تحت اسم البائع. ولا يظهر في أي مكان آخر في الموقع أو التذييل أو الرسائل') ?></p>
+      <form method="post" class="o-form"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="invoice_address">
+        <label><span class="o-lbl"><?= owBi('Address (up to 4 lines)', 'العنوان (حتى 4 أسطر)') ?></span><textarea class="o-in" name="invoice_address" rows="4" maxlength="400" dir="auto" style="min-height:110px"><?= e(trim((string) owSetting('invoice_address', ''))) ?></textarea></label>
+        <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
+    </section>
     <section class="o-t">
       <div class="o-th"><h2><?= owBi('Sub-admins: what each one can see', 'المشرفون: ما يراه كل واحد') ?></h2></div>
       <p class="o-note"><?= owBi('Tick the menu groups for each sub-admin. Money, messages and people stay hidden unless you tick them. Settings and the classic admin pages are always yours only', 'حدّد مجموعات القائمة لكل مشرف. يبقى المال والرسائل والأشخاص مخفيا ما لم تحدده. الإعدادات وصفحات الإدارة السابقة لك وحدك دائما') ?>
         · <?= owBi('"Institute documents" lets that sub-admin open the institutes’ private registration and licence documents', '«مستندات المعاهد» يسمح لهذا المشرف بفتح مستندات التسجيل والترخيص الخاصة بالمعاهد') ?>
+        · <?= owBi('"Identity documents" lets that sub-admin open artists’ identity documents and institutes’ National Address certificates and photos (every opening is recorded)', '«وثائق الهوية» يسمح لهذا المشرف بفتح وثائق هوية الفنانين وشهادات العنوان الوطني وصور المعاهد (ويُسجَّل كل اطلاع)') ?>
         · <?= owBi('To make someone a sub-admin: Artists or Collectors list in the classic admin page → role "Sub admin"', 'لجعل شخص مشرفا: قائمة الفنانين أو المقتنين في صفحة الإدارة السابقة ← الدور «Sub admin»') ?></p>
       <?php if (!$subs): ?><?= $empty('No sub-admins yet', 'لا يوجد مشرفون بعد') ?><?php else: ?>
       <form method="post"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="subadmins">
-        <div class="o-tablewrap"><table class="o-table"><thead><tr><th><?= owBi('Sub-admin', 'المشرف') ?></th><?php foreach (OW_OWNER_GROUPS as $g => $w): ?><th><?= owBi($w[0], $w[1]) ?></th><?php endforeach; ?><th><?= owBi('Institute documents', 'مستندات المعاهد') ?></th></tr></thead>
+        <div class="o-tablewrap"><table class="o-table"><thead><tr><th><?= owBi('Sub-admin', 'المشرف') ?></th><?php foreach (OW_OWNER_GROUPS as $g => $w): ?><th><?= owBi($w[0], $w[1]) ?></th><?php endforeach; ?><th><?= owBi('Institute documents', 'مستندات المعاهد') ?></th><th><?= owBi('Identity documents', 'وثائق الهوية') ?></th></tr></thead>
           <tbody><?php foreach ($subs as $s): $have = (array) ($SG[(string) $s['id']] ?? []); ?>
             <tr><th scope="row"><?= owBdi(owPersonName($s)) ?><span class="o-sm"><?= e((string) $s['email']) ?></span></th>
               <?php foreach (OW_OWNER_GROUPS as $g => $w): ?><td><input type="checkbox" name="g[<?= (int) $s['id'] ?>][]" value="<?= $g ?>"<?= in_array($g, $have, true) ? ' checked' : '' ?> aria-label="<?= e(owPersonName($s) . ' · ' . (owIsAr() ? $w[1] : $w[0])) ?>"></td><?php endforeach; ?>
-              <td><?php require_once __DIR__ . '/inst_lib.php'; ?><input type="checkbox" name="instdocs[<?= (int) $s['id'] ?>]" value="1"<?= in_array((int) $s['id'], owInstDocsSubadmins(), true) ? ' checked' : '' ?> aria-label="<?= e(owPersonName($s) . ' · ' . (owIsAr() ? 'مستندات المعاهد' : 'Institute documents')) ?>"></td></tr>
+              <td><?php require_once __DIR__ . '/inst_lib.php'; ?><input type="checkbox" name="instdocs[<?= (int) $s['id'] ?>]" value="1"<?= in_array((int) $s['id'], owInstDocsSubadmins(), true) ? ' checked' : '' ?> aria-label="<?= e(owPersonName($s) . ' · ' . (owIsAr() ? 'مستندات المعاهد' : 'Institute documents')) ?>"></td>
+              <td><?php require_once __DIR__ . '/identity_lib.php'; ?><input type="checkbox" name="iddocs[<?= (int) $s['id'] ?>]" value="1"<?= in_array((int) $s['id'], owIdSubadmins(), true) ? ' checked' : '' ?> aria-label="<?= e(owPersonName($s) . ' · ' . (owIsAr() ? 'وثائق الهوية' : 'Identity documents')) ?>"></td></tr>
           <?php endforeach; ?></tbody></table></div>
         <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button>
       </form><?php endif; ?>
+    </section>
+    <?php require_once __DIR__ . '/identity_lib.php'; ?>
+    <section class="o-t" id="idkeep">
+      <div class="o-th"><h2><?= owBi('Identity documents: how long they are kept', 'وثائق الهوية: مدة الاحتفاظ') ?></h2></div>
+      <p class="o-note"><?= owBi('Identity documents are kept after approval, and after the account closes (deleted, or the sign-up refused) for this many years. Then the files and the number are deleted automatically. The sign-up tick and the Privacy Policy say the same number', 'تُحفظ وثائق الهوية بعد الموافقة، وبعد إغلاق الحساب (حذفه أو رفض التسجيل) لهذا العدد من السنوات، ثم تُحذف الملفات والرقم تلقائيا. ويذكر خيار الموافقة عند التسجيل وسياسة الخصوصية الرقم نفسه') ?></p>
+      <form method="post" class="o-form"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="id_keep">
+        <label><span class="o-lbl"><?= owBi('Years after the account closes (1 to 20)', 'سنوات بعد إغلاق الحساب (1 إلى 20)') ?></span><input class="o-in" name="years" type="number" min="1" max="20" step="1" inputmode="numeric" dir="ltr" value="<?= owIdKeepYears() ?>" style="max-width:140px"></label>
+        <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
     </section>
     <section class="o-t">
       <div class="o-th"><h2><?= owBi('More settings', 'إعدادات أخرى') ?></h2></div>

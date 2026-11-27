@@ -110,6 +110,25 @@
 .hint { font-size: 13px; color: var(--color-body); margin: -4px 0 12px; }
 .hint a { color: var(--color-dark); }
 
+/* ---- My invoices (27 Nov 2026) ---- */
+.c-inv { font-weight: 700; color: var(--color-dark); text-decoration: underline; text-underline-offset: 3px; }
+.c-inv:hover, .c-inv:focus-visible { color: var(--color-accent-dark, var(--color-dark)); }
+.c-inv-act { min-width: 120px; }
+/* phones and iPads: each invoice is a small card (no sideways scroll) */
+@media (max-width: 1100px) {
+  .c-inv-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .c-inv-table, .c-inv-table tbody, .c-inv-table tr, .c-inv-table td { display: block; width: 100%; }
+  .c-inv-table tr { padding: 14px 0; border-bottom: 1px solid var(--color-border); }
+  .c-inv-table tr:last-child { border-bottom: 0; }
+  .c-inv-table td { padding: 2px 0; border: 0; }
+  .c-inv-table td:first-child { font-weight: 700; color: var(--color-dark); }
+  .c-inv-act { display: flex !important; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .c-inv-act .btn { width: auto; flex: 1 1 140px; }
+  .c-inv-act .btn + .btn { margin-top: 0; }
+}
+.c-inv-act .btn { display: flex; width: 100%; justify-content: center; white-space: nowrap; }
+.c-inv-act .btn + .btn { margin-top: 6px; }
+
 /* ---- iPad and up ---- */
 @media (min-width: 641px) {
   .c-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }

@@ -107,7 +107,7 @@ $okEn = $okCode ? $OK[$okCode]['en'] : ''; $okAr = $okCode ? $OK[$okCode]['ar'] 
 html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var(--font-sans);overflow-x:hidden;}
 </style>
 </head>
-<body>
+<body class="ow-short-hero">
 <?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('pink-palette');   /* the pink palette, whole (owner, 6 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>

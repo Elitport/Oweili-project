@@ -40,7 +40,7 @@ owBookTop('Payment', 'الدفع', 'pay.php', $preview, '
   <dl class="kv">
     <dt><?= owBi('For', 'مقابل') ?></dt><dd><?= owBi($what['title_en'], $what['title_ar']) ?></dd>
     <dt><?= owBi('Booking number', 'رقم الحجز') ?></dt><dd dir="ltr"><?= e($what['row']['ref_no']) ?></dd>
-    <dt><?= owBi('Total', 'الإجمالي') ?></dt><dd><b><?= owSar((float) $pay['amount']) ?></b></dd>
+    <dt><?= owBi('Total', 'الإجمالي') ?></dt><dd><b><?= owSar((float) $pay['amount']) ?></b><?php require_once __DIR__ . '/vat_lib.php'; echo owVatTag(); ?></dd>
   </dl>
   <?php endif; ?>
   <?php if ($err): ?><div class="alert alert-error" role="alert" style="margin-top:var(--space-sm)"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>

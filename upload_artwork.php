@@ -537,6 +537,7 @@ function cameraBlock(array $draft, int $stage, array $stages): string {
           </div>
         </div>
         <p class="note"><?php $cKeep = owCommissionText(100 - owCommissionPct()); ?><?= t2('Oweili charges ' . owCommissionText() . ' commission on the sale price, which covers shipping and advertising. You receive ' . $cKeep . ' of your price.', 'تأخذ أويلي ' . owCommissionText() . ' عمولة من سعر البيع، تشمل الشحن والإعلانات. تستلم أنت ' . $cKeep . ' من سعرك.') ?></p>
+        <p class="note"><?= t2('Packaging is the artist\'s responsibility and must protect the work during shipping', 'التغليف على الفنان، ويجب أن يحمي العمل أثناء الشحن') ?></p>
         <?php if ($certOn): $cv = fn($k) => e((string) ($_POST[$k] ?? ($draft[$k] ?? ''))); $etype = (string) ($_POST['edition_type'] ?? ($draft['edition_type'] ?? '')); ?>
         <?php include __DIR__ . '/cert_fields.php'; ?>
         <label class="declare">

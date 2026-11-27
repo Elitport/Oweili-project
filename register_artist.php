@@ -3,9 +3,11 @@ require_once 'config.php';
 require_once __DIR__ . '/studio_lib.php'; require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/mail_lib.php';
 require_once __DIR__ . '/platform_lib.php';
+require_once __DIR__ . '/identity_lib.php';   // identity check at sign-up (owner, 27 Nov 2026)
 
 const AR_VIDEO_MAX = 50 * 1024 * 1024; // 50 MB
 const AR_PORTFOLIO_MAX = 5;
+const AR_PORTFOLIO_MIN = 3;   // 3 to 5 photos of past artworks (owner, 27 Nov 2026)
 
 function validateVideoUpload(array $file): array {
     if (!isset($file['error']) || is_array($file['error']) || $file['error'] !== UPLOAD_ERR_OK) return ['ok'=>false,'ext'=>''];
@@ -38,6 +40,8 @@ $LIM = ['photo' => $arMb($arPhotoMax), 'video' => $arMb($arVideoMax), 'total' =>
 $errCode = '';
 $okCode  = '';
 $old = ['first'=>'','last'=>'','nameAr'=>'','artist'=>'','email'=>'','phone'=>'','city'=>'','bioEn'=>'','bioAr'=>''];
+$idv = ['type' => '', 'number' => '', 'expiry' => '', 'link' => '', 'consent' => false];
+$idBad = '';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $old['first']  = sanitize($_POST['first_name'] ?? '');
@@ -66,6 +70,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     /* When the files together are bigger than the server allows, the server
        throws the whole form away and nothing arrives (not even the security
        token). Say so clearly instead of "security check failed". */
+    [$idv, $idErr, $idBad] = owIdReady() ? owIdArtistFromPost($_POST, $_FILES) : [$idv, '', ''];
     $tooBig = empty($_POST) && empty($_FILES) && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0;
     if ($tooBig) {
         $errCode = 'too_big';
@@ -85,9 +90,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $errCode = 'weak';
     } elseif ($pass !== $confirm) {
         $errCode = 'mismatch';
+    } elseif ($idErr !== '') {
+        $errCode = $idErr;                                        // the identity document (required)
     } elseif (!$hasPhoto || !validateUpload($_FILES['profile_picture'])['ok']) {
         $errCode = 'photo';
-    } elseif ($portCount < 1) {
+    } elseif ($portCount < AR_PORTFOLIO_MIN) {
         $errCode = 'portfolio_req';
     } elseif ($portCount > AR_PORTFOLIO_MAX) {
         $errCode = 'portfolio_max';
@@ -138,6 +145,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     ':pic'=>$photoRel, ':vid'=>$videoRel, ':tok'=>$token, ':exp'=>$expires,
                 ]);
                 $newId = (int) getDB()->lastInsertId();
+                if (owIdReady()) owIdSaveArtist($newId, $fullName, $old['email'], $idv, $_FILES['id_photo']);   // encrypted, private (identity_lib.php)
                 owSignupCounted($newId, 'artist');
                 require_once __DIR__ . '/alert_lib.php';   // tell the admin (grouped, see alert_lib.php)
                 owAdminAlert('artist', 'New artist sign-up: ' . ($old['artist'] ?: $fullName) . ($old['city'] !== '' ? ' (' . $old['city'] . ')' : ''),
@@ -168,6 +176,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 }
                 $okCode = 'check_email';
                 $old = ['first'=>'','last'=>'','nameAr'=>'','artist'=>'','email'=>'','phone'=>'','city'=>'','bioEn'=>'','bioAr'=>''];
+                $idv = ['type' => '', 'number' => '', 'expiry' => '', 'link' => '', 'consent' => false];
             }
         }
     }
@@ -185,8 +194,15 @@ $ERR = [
     'weak'=>['en'=>'Password does not meet the requirements','ar'=>'كلمة المرور لا تستوفي الشروط'],
     'mismatch'=>['en'=>'Passwords do not match','ar'=>'كلمتا المرور غير متطابقتين'],
     'photo'=>['en'=>'A profile picture (JPG/PNG, max ' . $LIM['photo'] . 'MB) is required.','ar'=>'الصورة الشخصية مطلوبة (JPG/PNG، بحد أقصى ' . $LIM['photo'] . ' ميغابايت).'],
-    'portfolio_req'=>['en'=>'Please upload at least one portfolio image','ar'=>'يرجى رفع صورة واحدة على الأقل لأعمالك'],
-    'portfolio_max'=>['en'=>'You can upload up to 5 portfolio images','ar'=>'يمكنك رفع حتى 5 صور لأعمالك'],
+    'portfolio_req'=>['en'=>'Please upload 3 to 5 photos of your past artworks','ar'=>'يرجى رفع 3 إلى 5 صور لأعمالك السابقة'],
+    'id_type'=>['en'=>'Please choose your identity document: Saudi national ID, Iqama or passport','ar'=>'يرجى اختيار وثيقة هويتك: الهوية الوطنية أو الإقامة أو جواز السفر'],
+    'id_number'=>['en'=>'Please check the document number. A Saudi national ID has 10 digits starting with 1, an Iqama 10 digits starting with 2, a passport 6 to 12 letters and numbers','ar'=>'يرجى التحقق من رقم الوثيقة. الهوية الوطنية 10 أرقام تبدأ بـ 1، والإقامة 10 أرقام تبدأ بـ 2، والجواز من 6 إلى 12 حرفا ورقما'],
+    'id_expiry'=>['en'=>'Please choose the expiry date of your document','ar'=>'يرجى اختيار تاريخ انتهاء الوثيقة'],
+    'id_expired'=>['en'=>'Your identity document has expired. Please use a valid one','ar'=>'وثيقة هويتك منتهية. يرجى استخدام وثيقة سارية'],
+    'id_photo'=>['en'=>'Please add a clear photo of your identity document (JPG, PNG or WebP, up to 10MB)','ar'=>'يرجى إضافة صورة واضحة لوثيقة هويتك (JPG أو PNG أو WebP حتى 10 ميغابايت)'],
+    'review_link'=>['en'=>'Please write a full web address (https://…) or your Instagram name','ar'=>'يرجى كتابة عنوان كامل (https://…) أو اسمك في إنستغرام'],
+    'id_consent'=>['en'=>'Please tick that Oweili may keep your identity document','ar'=>'يرجى الموافقة على احتفاظ أويلي بوثيقة هويتك'],
+    'portfolio_max'=>['en'=>'You can upload up to 5 photos of your artworks','ar'=>'يمكنك رفع حتى 5 صور لأعمالك'],
     'portfolio'=>['en'=>'Portfolio images must be JPG/PNG under ' . $LIM['photo'] . 'MB each.','ar'=>'يجب أن تكون صور الأعمال JPG/PNG وأقل من ' . $LIM['photo'] . ' ميغابايت لكل صورة.'],
     'video'=>['en'=>'The video must be MP4 or MOV and under ' . $LIM['video'] . 'MB. You can also leave it out.','ar'=>'يجب أن يكون الفيديو بصيغة MP4 أو MOV وأقل من ' . $LIM['video'] . ' ميغابايت. ويمكنك تركه.'],
     'exists'=>['en'=>'An account with this email already exists','ar'=>'يوجد حساب بهذا البريد الإلكتروني بالفعل'],
@@ -204,6 +220,7 @@ $bad = match ($errCode) {
     'photo'         => ['profile_picture'],
     'portfolio_req', 'portfolio_max', 'portfolio' => ['portfolio'],
     'video'         => ['art_video'],
+    'id_type', 'id_number', 'id_expiry', 'id_expired', 'id_photo', 'review_link', 'id_consent' => [$idBad ?: $errCode],
     default         => [],
 };
 $errEn = $errCode ? $ERR[$errCode]['en'] : ''; $errAr = $errCode ? $ERR[$errCode]['ar'] : '';
@@ -227,10 +244,17 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .ja-get li{position:relative;padding-inline-start:22px;font-size:14px;line-height:1.5;color:var(--color-dark);}
 .ja-get li::before{content:"";position:absolute;inset-inline-start:2px;top:4px;width:12px;height:7px;border-left:2px solid var(--color-primary);border-bottom:2px solid var(--color-primary);transform:rotate(-45deg);}
 @media(max-width:560px){.ja-get ul{grid-template-columns:1fr;}}
+.id-box{border:1px solid var(--color-border);border-radius:var(--radius-card,16px);padding:var(--space-sm) var(--space-md) var(--space-xs);margin:0 0 var(--space-md);background:rgba(var(--rgb-primary),0.04);min-width:0;}
+.id-box legend{font-weight:700;color:var(--color-dark);padding:0 6px;font-size:15px;}
+.id-box select{width:100%;min-height:48px;border:1px solid var(--color-border-strong);border-radius:8px;padding:0 12px;background:var(--color-card);color:var(--color-dark);font:inherit;font-size:15px;}
+.id-consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.6;color:var(--color-dark);margin:4px 0 12px;cursor:pointer;}
+.id-consent input{width:20px;height:20px;margin-top:3px;flex:0 0 auto;accent-color:var(--color-accent);}
+.id-consent.has-error span{outline:2px solid var(--color-primary-dark);outline-offset:3px;border-radius:4px;}
+.id-consent a{color:var(--color-dark);font-weight:700;}
 .opt-badge{display:inline-block;font-size:var(--fs-min);font-weight:700;line-height:1.4;padding:2px 8px;border-radius:999px;background:rgba(var(--rgb-ink),0.07);color:var(--color-dark);margin-inline-start:6px;vertical-align:middle;}
 </style>
 </head>
-<body>
+<body class="ow-short-hero">
 <?= owStudioBackdrop('pink-palette') /* the pink palette with brushes, like Sign in and Join (owner, 6 Nov 2026: wide photos only) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>
@@ -270,13 +294,36 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
       <div class="field<?= owBadField($bad, 'profile_picture') ?>"><label id="t-l-photo" for="f-photo">Your photo (required)</label>
         <input type="file" id="f-photo" name="profile_picture"<?= owBadAttr($bad, 'profile_picture') ?> accept="image/jpeg,image/png" required data-max="<?= (int) $arPhotoMax ?>">
         <p class="hint" id="t-photo-hint">JPG or PNG, up to <?= e($LIM['photo']) ?>MB</p></div>
-      <div class="field<?= owBadField($bad, 'portfolio') ?>"><label id="t-l-port" for="f-port">Your artworks (required, up to 5 photos)</label>
+      <div class="field<?= owBadField($bad, 'portfolio') ?>"><label id="t-l-port" for="f-port">Your past artworks (required, 3 to 5 photos)</label>
         <input type="file" id="f-port" name="portfolio[]"<?= owBadAttr($bad, 'portfolio') ?> accept="image/jpeg,image/png" multiple required data-max="<?= (int) $arPhotoMax ?>">
         <p class="hint" id="t-port-hint">Pick the pieces you are most proud of. JPG or PNG, up to <?= e($LIM['photo']) ?>MB each</p>
         <p class="hint" id="t-port-note">These are samples for our review. After approval, you add each artwork with its 3 stage photos (25%, 50%, 100%).</p></div>
       <div class="field<?= owBadField($bad, 'art_video') ?>"><label for="f-video"><span id="t-l-video">A short video of you at work</span> <span class="opt-badge" id="t-opt"><?= owIsAr() ? 'اختياري' : 'Optional' ?></span></label>
         <input type="file" id="f-video" name="art_video"<?= owBadAttr($bad, 'art_video') ?> accept="video/mp4,video/quicktime,.mp4,.mov" data-max="<?= (int) $arVideoMax ?>">
         <p class="hint" id="t-video-hint">Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to <?= e($LIM['video']) ?>MB</p></div>
+      <?php if (owIdReady()): $cT = owIdConsentText(); ?>
+      <fieldset class="id-box">
+        <legend><?= owBi('Your identity (private)', 'هويتك (خاصة)') ?></legend>
+        <p class="hint"><?= owBi('We check every artist is a real person. Only the Oweili owner can see your document. It is encrypted and never shown on the site', 'نتحقق أن كل فنان شخص حقيقي. لا يرى وثيقتك إلا مالك أويلي، وهي مشفّرة ولا تظهر في الموقع أبدا') ?></p>
+        <div class="grid2">
+          <div class="field<?= owBadField($bad, 'id_type') ?>"><label for="f-idtype"><?= owBi('Identity document', 'وثيقة الهوية') ?></label>
+            <select id="f-idtype" name="id_type"<?= owBadAttr($bad, 'id_type') ?> required><option value=""><?= owIsAr() ? 'اختر' : 'Choose' ?></option>
+              <?php foreach (OW_ID_TYPES as $k => $t): ?><option value="<?= $k ?>"<?= $idv['type'] === $k ? ' selected' : '' ?>><?= e(owIsAr() ? $t[1] : $t[0]) ?></option><?php endforeach; ?></select></div>
+          <div class="field<?= owBadField($bad, 'id_number') ?>"><label for="f-idno"><?= owBi('Document number', 'رقم الوثيقة') ?></label>
+            <input type="text" id="f-idno" name="id_number"<?= owBadAttr($bad, 'id_number') ?> dir="ltr" inputmode="text" autocomplete="off" maxlength="20" required value="<?= e($idv['number']) ?>"></div>
+        </div>
+        <div class="field<?= owBadField($bad, 'id_expiry') ?>"><label for="f-idexp"><?= owBi('Expiry date', 'تاريخ الانتهاء') ?></label>
+          <input type="date" id="f-idexp" name="id_expiry"<?= owBadAttr($bad, 'id_expiry') ?> min="<?= date('Y-m-d', strtotime('+1 day')) ?>" max="<?= (date('Y') + 15) ?>-12-31" required value="<?= e($idv['expiry']) ?>"></div>
+        <div class="field<?= owBadField($bad, 'id_photo') ?>"><label for="f-idphoto"><?= owBi('A clear photo of the document', 'صورة واضحة للوثيقة') ?></label>
+          <input type="file" id="f-idphoto" name="id_photo"<?= owBadAttr($bad, 'id_photo') ?> accept="image/jpeg,image/png,image/webp" required data-max="<?= OW_ID_FILE_MAX ?>">
+          <p class="hint"><?= owBi('The whole document, in good light, every number readable. JPG, PNG or WebP, up to 10MB', 'الوثيقة كاملة، بإضاءة جيدة، وكل الأرقام مقروءة. JPG أو PNG أو WebP حتى 10 ميغابايت') ?></p></div>
+        <div class="field<?= owBadField($bad, 'review_link') ?>"><label for="f-link"><?= owBi('Instagram or website (optional)', 'إنستغرام أو موقعك (اختياري)') ?></label>
+          <input type="text" id="f-link" name="review_link"<?= owBadAttr($bad, 'review_link') ?> dir="ltr" maxlength="255" placeholder="@yourname · https://" value="<?= e($idv['link']) ?>">
+          <p class="hint"><?= owBi('Only for our review, never shown on the site', 'لمراجعتنا فقط، ولا يظهر في الموقع') ?></p></div>
+        <label class="id-consent<?= $errCode === 'id_consent' ? ' has-error' : '' ?>" for="f-idok"><input type="checkbox" id="f-idok" name="id_consent" value="1" required<?= $idv['consent'] ? ' checked' : '' ?><?= owBadAttr($bad, 'id_consent') ?>>
+          <span><?= owBi($cT[0], $cT[1]) ?>. <a href="privacy.php#keep" target="_blank" rel="noopener"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a></span></label>
+      </fieldset>
+      <?php endif; ?>
       <?php if ($LIM['total'] !== ''): ?><p class="hint" id="t-total-hint">All files together: up to <?= e($LIM['total']) ?>MB</p><?php endif; ?>
       <div class="field<?= owBadField($bad, 'password') ?>"><label id="t-l-pass" for="password">Password</label><input type="password" id="password" name="password"<?= owBadAttr($bad, 'password') ?> required oninput="checkRules()">
         <ul class="pw-rules">
@@ -300,7 +347,7 @@ const T={
   en:{dir:'ltr',lb:'العربية',title:'Join as an Artist',sub:'We are glad you are here. Our team reviews every profile by hand.',
     first:'First name',last:'Last name',artist:'Public name: shown to visitors',email:'Email',phone:'Mobile number',city:'City',
     bioen:'About you in English (optional)',bioar:'About you in Arabic (optional)',
-    photo:'Your photo (required)',photoHint:'JPG or PNG, up to '+LIM.photo+'MB',port:'Your artworks (required, up to 5 photos)',portHint:'Pick the pieces you are most proud of. JPG or PNG, up to '+LIM.photo+'MB each.',portNote:'These are samples for our review. After approval, you add each artwork with its 3 stage photos (25%, 50%, 100%).',
+    photo:'Your photo (required)',photoHint:'JPG or PNG, up to '+LIM.photo+'MB',port:'Your past artworks (required, 3 to 5 photos)',portHint:'Pick the pieces you are most proud of. JPG or PNG, up to '+LIM.photo+'MB each.',portNote:'These are samples for our review. After approval, you add each artwork with its 3 stage photos (25%, 50%, 100%).',
     video:'A short video of you at work',videoHint:'Film your hands drawing or painting. It shows us the art is truly yours. MP4 or MOV, up to '+LIM.video+'MB.',
     totalHint:'All files together: up to '+LIM.total+'MB.',
     tooBigFile:function(n,mb){return '“'+n+'” is larger than '+mb+'MB. Please choose a smaller file.';},
@@ -313,7 +360,7 @@ const T={
   ar:{dir:'rtl',lb:'English',title:'انضم إلينا كفنان',sub:'سعداء بوجودك معنا. يراجع فريقنا كل ملف بعناية.',
     first:'الاسم الأول',last:'اسم العائلة',artist:'الاسم العام: يظهر للزوار',email:'البريد الإلكتروني',phone:'رقم الجوال',city:'المدينة',
     bioen:'نبذة عنك بالإنجليزية (اختياري)',bioar:'نبذة عنك بالعربية (اختياري)',
-    photo:'صورتك (مطلوبة)',photoHint:'JPG أو PNG حتى '+LIM.photo+' ميغابايت',port:'أعمالك (مطلوبة، حتى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر. JPG أو PNG حتى '+LIM.photo+' ميغابايت لكل صورة.',portNote:'هذه نماذج لمراجعتنا. بعد الموافقة، تضيف كل عمل مع صور مراحله الثلاث (25%، 50%، 100%).',
+    photo:'صورتك (مطلوبة)',photoHint:'JPG أو PNG حتى '+LIM.photo+' ميغابايت',port:'أعمالك السابقة (مطلوبة، من 3 إلى 5 صور)',portHint:'اختر الأعمال التي تفخر بها أكثر. JPG أو PNG حتى '+LIM.photo+' ميغابايت لكل صورة.',portNote:'هذه نماذج لمراجعتنا. بعد الموافقة، تضيف كل عمل مع صور مراحله الثلاث (25%، 50%، 100%).',
     video:'مقطع قصير وأنت تعمل',videoHint:'صوّر يديك وهي ترسم أو تلوّن. هكذا نعرف أن الفن من صنعك. MP4 أو MOV حتى '+LIM.video+' ميغابايت.',
     totalHint:'كل الملفات معا: حتى '+LIM.total+' ميغابايت.',
     tooBigFile:function(n,mb){return '«'+n+'» أكبر من '+mb+' ميغابايت. يرجى اختيار ملف أصغر.';},

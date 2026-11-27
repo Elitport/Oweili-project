@@ -340,6 +340,7 @@ function owRejectArtistAccount(int $userId, string $reason, array $actor): bool 
     $st->execute([':id' => $userId]);
     if (!$st->fetchColumn()) return false;
     owLog('user_reject', 'user', $userId, $reason, $actor);
+    require_once __DIR__ . '/identity_lib.php'; owIdDecide($userId, 'refused', $reason);   // a refused sign-up: the keeping clock starts (27 Nov 2026)
     owTellUser($userId, 'About your Oweili artist account · بخصوص حسابك',
         "Thank you for joining Oweili. Your artist account was not approved yet. The reason: $reason\r\nReply to this email if you have questions.",
         "شكرا لانضمامك إلى أويلي. لم تتم الموافقة على حسابك كفنان بعد. السبب: $reason\r\nرد على هذه الرسالة إن كان لديك سؤال.");
@@ -352,6 +353,7 @@ function owApproveArtistAccount(int $userId, array $actor): bool {
     $st->execute([':id' => $userId]);
     if ($st->rowCount() < 1) return false;
     owLog('user_approve', 'user', $userId, '', $actor);
+    require_once __DIR__ . '/identity_lib.php'; owIdDecide($userId, 'approved');
     owTellUser($userId, 'Welcome to Oweili · أهلا بك في أويلي',
         'Your artist account is approved. Your profile is now visible, and you can start your first artwork.',
         'تمت الموافقة على حسابك كفنان. ملفك ظاهر الآن، ويمكنك البدء بعملك الأول.', 'artist_studio.php');

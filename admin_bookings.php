@@ -38,6 +38,7 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             /* the reason is kept, so a refused institute no longer waits in Waiting for approval (owner, 25 Nov 2026) */
             if (owHasColumn('institutes', 'reject_reason')) $db->prepare('UPDATE institutes SET reject_reason = :r WHERE id = :id')->execute([':r' => $on ? '' : $why, ':id' => $id]);
             owLog($on ? 'institute_approve' : 'institute_reject', 'institute', $id, $why, $actor);
+            require_once __DIR__ . '/identity_lib.php'; owIdDecide((int) $i['uid'], $on ? 'approved' : 'refused', $why);   // the identity check follows (27 Nov 2026)
             $on ? $mailTo($i['email'], 'Your institute is approved · تم اعتماد معهدك', 'Welcome to Oweili! Your institute is approved. Add your courses from your dashboard.', 'أهلا بك في أويلي! تم اعتماد معهدك. أضف دوراتك من لوحتك.', 'institute_dashboard.php')
                 : $mailTo($i['email'], 'About your institute · بخصوص معهدك', 'We could not approve your institute yet. Reason: ' . $why, 'لم نتمكن من اعتماد معهدك بعد. السبب: ' . $why);
             $msg = $on ? ['Institute approved', 'تم اعتماد المعهد'] : ['Institute not approved. They were told the reason.', 'لم يُعتمد المعهد، وأُبلغ بالسبب'];

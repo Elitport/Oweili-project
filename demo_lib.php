@@ -37,6 +37,9 @@ const OW_DEMO_ARTIST = ['Demo Artist', 'فنان تجريبي'];
 const OW_DEMO_INSTITUTE = ['Demo Institute', 'معهد تجريبي'];
 const OW_DEMO_NOTE = ['Demo content: only you (the admin) can see it. Nothing can be bought, booked or sent.',
                       'محتوى تجريبي: تراه أنت فقط (الإدارة). لا يمكن شراء شيء أو حجزه أو إرساله.'];
+/* The note above speaks to the admin, so only the admin reads it; everyone else sees the Demo badge only (owner, 28 Nov 2026) */
+function owDemoNoteFor(): bool { require_once __DIR__ . '/admin_shell.php'; return owIsAdmin(); }
+function owDemoNoteHtml(): string { return owDemoBadge() . (owDemoNoteFor() ? ' ' . owBi(OW_DEMO_NOTE[0], OW_DEMO_NOTE[1]) : ''); }
 
 /* ---- Gallery: 8 demo artworks (key = the Art Styles picture) ---- */
 function owDemoArtworks(): array {

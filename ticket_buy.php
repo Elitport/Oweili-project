@@ -7,6 +7,7 @@
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
+require_once __DIR__ . '/vat_lib.php';   // ticket prices include VAT while it is active (owner, 28 Nov 2026)
 $preview = owBookingGate();
 owBookingCleanup();
 
@@ -65,10 +66,10 @@ owBookTop('Tickets: ' . $p['name_en'], 'تذاكر: ' . $p['name_ar'], 'ticket_b
     </select></div>
   <h2><?= owBi('Tickets', 'التذاكر') ?></h2>
   <?php foreach ($types as $t): ?>
-  <div class="tt"><label for="q<?= (int) $t['id'] ?>"><?= owBi($t['name_en'], $t['name_ar']) ?></label><span><?= owSar((float) $t['price']) ?></span>
+  <div class="tt"><label for="q<?= (int) $t['id'] ?>"><?= owBi($t['name_en'], $t['name_ar']) ?></label><span><?= owSar(owGross((float) $t['price'])) ?></span>
     <input id="q<?= (int) $t['id'] ?>" type="number" name="qty[<?= (int) $t['id'] ?>]" min="0" max="20" value="<?= (int) ($_POST['qty'][$t['id']] ?? 0) ?>" data-price="<?= e((string) (float) $t['price']) ?>" inputmode="numeric"></div>
   <?php endforeach; ?>
-  <div class="tt-total"><?= owBi('Total', 'الإجمالي') ?>: <span id="tt-sum" dir="ltr">0</span> <?= owBi('SAR', 'ر.س') ?></div>
+  <div class="tt-total"><?= owBi('Total', 'الإجمالي') ?>: <span id="tt-sum" dir="ltr">0</span> <?= owBi('SAR', 'ر.س') ?><?= owVatTag() ?></div>
   <div class="g2" style="margin-top:var(--space-sm)">
     <div class="field"><label for="b-name"><?= owBi('Your full name', 'اسمك كاملا') ?></label><input id="b-name" name="name" required maxlength="150" dir="auto" value="<?= e($_POST['name'] ?? owRealName($me['full_name_en'] ?? '')) ?>"></div>
     <div class="field"><label for="b-phone"><?= owBi('Mobile number', 'رقم الجوال') ?></label><input id="b-phone" name="phone" type="tel" required maxlength="30" dir="ltr" value="<?= e($_POST['phone'] ?? ($me['phone'] ?? '')) ?>"></div>
@@ -80,7 +81,7 @@ owBookTop('Tickets: ' . $p['name_en'], 'تذاكر: ' . $p['name_ar'], 'ticket_b
 </form>
 <script>
 (function(){ var f = document.getElementById('tform'); if (!f) return; var out = document.getElementById('tt-sum');
-  function sum(){ var s = 0; f.querySelectorAll('input[data-price]').forEach(function(i){ s += (parseInt(i.value, 10) || 0) * parseFloat(i.dataset.price); }); out.textContent = s.toFixed(s % 1 ? 2 : 0); }
+  function sum(){ var s = 0; f.querySelectorAll('input[data-price]').forEach(function(i){ s += (parseInt(i.value, 10) || 0) * parseFloat(i.dataset.price); }); s = Math.round(s * <?= json_encode(owVatFactor()) ?> * 100) / 100; out.textContent = s.toFixed(s % 1 ? 2 : 0); }
   f.addEventListener('input', sum); sum(); })();
 </script>
 <?php endif; ?>

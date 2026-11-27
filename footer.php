@@ -34,6 +34,9 @@ $owFt = fn(string $en, string $ar) => '<span class="bi-en" lang="en">' . htmlspe
       <ul class="ow-footer-links">
         <li><a href="about.php"><?= $owFt('About', 'من نحن') ?></a></li>
         <li><a href="privacy.php"><?= $owFt('Privacy', 'الخصوصية') ?></a></li>
+        <?php /* the art institute sign-up, only while Art Institutes is switched on (owner, 28 Nov 2026) */
+        $owInstJoin = false; try { require_once __DIR__ . '/gallery_lib.php'; $owInstJoin = owPartOn('courses'); } catch (Throwable $e) {}
+        if ($owInstJoin): ?><li><a href="register_institute.php"><?= $owFt('Join as an art institute', 'انضم كمعهد فني') ?></a></li><?php endif; ?>
       </ul>
     </nav>
     <a class="ow-footer-mail" href="mailto:<?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?>" dir="ltr"><?= htmlspecialchars(owContactEmail(), ENT_QUOTES, 'UTF-8') ?></a>

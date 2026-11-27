@@ -79,7 +79,11 @@ function owOrderNewNo(): string {
 /* Makes an order (status created). Refused (null) while payments are off. */
 function owOrderCreate(string $kind, ?int $refId, array $buyer, float $amount, ?int $artistId, string $title, float $vat = 0.0): ?int {
     if (!owPaymentsOn() || !isset(OW_ORDER_KINDS[$kind]) || $amount <= 0) return null;
+    /* $amount = the artist's price BEFORE VAT; the commission is worked out on it, VAT (vat_lib.php) is added on top when active (owner, 28 Nov 2026) */
+    require_once __DIR__ . '/vat_lib.php';
     $split = owSplitAmount($amount);
+    if ($vat <= 0) $vat = owVatOf($amount);
+    $amount = round($amount + $vat, 2);
     $no = owOrderNewNo();
     getDB()->prepare('INSERT INTO orders (order_no, kind, ref_id, buyer_user_id, buyer_name, buyer_email, buyer_phone, artist_id, title, amount, vat_amount, commission_rate, commission_amount, artist_amount, gateway)
                       VALUES (:no, :k, :r, :bu, :bn, :be, :bp, :a, :t, :am, :v, :cr, :ca, :aa, :g)')
@@ -123,6 +127,10 @@ function owOrderMove(int $id, string $to, ?array $actor, string $note = ''): boo
         $db->commit();
     } catch (Throwable $e) { if ($db->inTransaction()) $db->rollBack(); error_log('owOrderMove: ' . $e->getMessage()); return false; }
     owOrderEvent($id, (string) $o['status'], $to, $actor, $note);
+    if ($to === 'paid') {   // every paid order gets its invoice; an artwork also its certificate, on one email (owner, 27 Nov 2026)
+        require_once __DIR__ . '/invoice_lib.php';
+        if ($o['kind'] === 'artwork') owArtworkPaidMail($id); else owInvoiceSend('order', $id);
+    }
     return true;
 }
 /* The collector: "I received the artwork" with 1 to 3 photos and the tick "arrived in good condition".
