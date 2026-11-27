@@ -161,7 +161,7 @@ html.dark-mode .article-body p{color:var(--color-light);}   /* dark mode: a litt
         </div>
       <?php endif; ?>
 
-      <?php if ($isDemoArt): ?><p class="demo-note"><?= owDemoBadge() ?> <?= owBi(OW_DEMO_NOTE[0], OW_DEMO_NOTE[1]) ?></p><?php endif; ?>
+      <?php if ($isDemoArt): ?><p class="demo-note"><?= owDemoNoteHtml() ?></p><?php endif; ?>
       <div class="art-actions">
         <a class="btn btn-secondary" href="articles_list.php?type=<?= e($type) ?>"><?= owBi('← Back to ' . $typeEn, '→ العودة إلى ' . $typeAr) ?></a>
         <a class="btn btn-primary" href="marketplace.php"><?= owBi('Explore Gallery', 'استكشف المعرض') ?></a>

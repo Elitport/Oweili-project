@@ -59,7 +59,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && $useBook) {
             if (!$err) {
                 if ((float) $c['price'] <= 0) { owCourseConfirmFree($rid); header('Location: my_bookings.php?done=1'); exit; }
                 require_once __DIR__ . '/pay_lib.php';
-                $pay = owPayNew('course', $rid, (int) $me['id'], (float) $c['price']);
+                require_once __DIR__ . '/vat_lib.php';
+                $pay = owPayNew('course', $rid, (int) $me['id'], owGross((float) $c['price']));   // VAT included, the same amount as the booking (owSplit)
                 header('Location: pay.php?t=' . $pay['token']); exit;
             }
         }
@@ -120,7 +121,8 @@ owBookTop($tEn, $tAr, 'course.php?id=' . (int) $c['id'], $preview, '
 <div class="card"><h2><?= owBi('What you will learn', 'ماذا ستتعلم') ?></h2><p class="c-learn"><?= owBi((string) $c['learn_en'], (string) $c['learn_ar']) ?></p></div>
 
 <div class="card" id="register">
-  <div class="c-price"><?= $price > 0 ? owSar($price) : owBi('Free', 'مجاني') ?></div>
+  <?php require_once __DIR__ . '/vat_lib.php'; ?>
+  <div class="c-price"><?= $price > 0 ? owSar(owGross($price)) . owVatTag() : owBi('Free', 'مجاني') ?></div>
   <?php if ($price > 0 && $payOn): ?><p class="mini"><?= owBi('Paid on Oweili. You get a confirmation email with your booking number.', 'الدفع عبر أويلي. تصلك رسالة تأكيد برقم حجزك.') ?></p>
   <?php elseif ($price > 0): ?><p class="mini"><?= owBi('Book your seat now. The Oweili team contacts you to arrange the payment, and your place is confirmed once it is paid.', 'احجز مقعدك الآن. يتواصل معك فريق أويلي لترتيب الدفع، ويتأكد مكانك بعد الدفع.') ?></p><?php endif; ?>
   <?php if ($err): ?><div class="alert alert-error" role="alert"><?= owBi($err[0], $err[1]) ?></div><?php endif; ?>

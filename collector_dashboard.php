@@ -241,6 +241,7 @@ $TITLE = ['home' => ['My dashboard', 'لوحتي'], 'collection' => ['My collect
           'following' => ['Artists I follow', 'فنانون أتابعهم'], 'messages' => ['Messages from Oweili', 'رسائل من أويلي'], 'complaints' => ['Complaints', 'الشكاوى'],
           'profile' => ['Profile', 'الملف الشخصي'], 'account' => ['Email and password', 'البريد وكلمة المرور']];
 $tLine = function (array $r): array { $en = (string) ($r['title_en'] ?: $r['title_ar']); $ar = (string) ($r['title_ar'] ?: $r['title_en']); return [$en, $ar]; };
+require_once __DIR__ . '/vat_lib.php';   // saved artworks show the price visitors see (VAT included while active)
 $money = fn($n): string => '<bdi dir="ltr">' . number_format((float) $n) . '</bdi> <span class="c-cur">' . owBi('SAR', 'ر.س') . '</span>';
 $thumb = function (string $raw, string $alt, string $cls = 'c-thumb'): string {
     $img = owImgSrc($raw); $s = $img !== '' ? owImgSized($img, 400) : '';
@@ -365,7 +366,7 @@ $steps = function (array $o): string {
       <?php if (!$favorites): ?><p class="o-empty"><?= owBi('Tap the heart on any artwork in the Gallery to save it here', 'اضغط القلب على أي عمل في المعرض ليُحفظ هنا') ?></p>
       <?php else: ?><div class="c-strip"><?php foreach (array_slice($favorites, 0, 4) as $f): [$en, $ar] = $tLine($f); ?>
         <a class="c-mini" href="<?= (int) $f['visible'] === 1 ? 'marketplace.php?show=' . (int) $f['id'] . '#artwork-' . (int) $f['id'] : e($tabLink('favorites')) ?>"><?= $thumb((string) $f['image_url'], $en . ' · ' . $ar) ?>
-          <span class="c-mt"><?= owBi($en, $ar) ?></span><span class="c-ms"><?= $money($f['price']) ?></span></a>
+          <span class="c-mt"><?= owBi($en, $ar) ?></span><span class="c-ms"><?= $money(owGross((float) $f['price'])) ?></span></a>
       <?php endforeach; ?></div><?php endif; ?>
       <a class="o-more" href="<?= e($tabLink('favorites')) ?>"><?= owBi('All favourites', 'كل المفضلة') ?></a>
     </section>
@@ -555,7 +556,7 @@ $steps = function (array $o): string {
           <h3 class="aw-title"><?= owBi($tEn, $tAr) ?></h3>
           <span class="aw-artist"><?= owBiName((string) $f['artist_en'], (string) $f['artist_ar'], 'by', 'بواسطة') ?></span>
           <?php if ($tl): ?><span class="type-pill"><?= owBi($tl['en'], $tl['ar']) ?></span><?php endif; ?>
-          <div class="aw-price"><?= $money($f['price']) ?></div>
+          <div class="aw-price"><?= $money(owGross((float) $f['price'])) ?><?= owVatTag() ?></div>
           <?php if ((int) $f['visible'] === 1): ?>
             <a class="btn btn-dark btn-block btn-sm" href="marketplace.php?show=<?= $fid ?>#artwork-<?= $fid ?>"><?= owBi('See the Story', 'شاهد القصة') ?></a>
           <?php else: ?>

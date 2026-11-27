@@ -252,7 +252,7 @@ $v = fn(string $k) => e((string) $f[$k]);
           <label><input type="radio" name="artwork_id" value="<?= (int) $c['id'] ?>"<?= $f['artwork_id'] === (int) $c['id'] ? ' checked' : '' ?>>
             <span class="aw-img"><?= owArtImgHtml($img, $c['title_en'] . ' · ' . $c['title_ar'], $i < 4) ?></span>
             <b><?= owBi((string) ($c['title_en'] ?: $c['title_ar']), (string) ($c['title_ar'] ?: $c['title_en'])) ?></b>
-            <span><?= owBi('by ' . $c['artist_en'], 'بواسطة ' . $c['artist_ar']) ?> · <?= number_format((float) $c['price']) ?> <?= owBi('SAR', 'ر.س') ?></span></label>
+            <span><?= owBi('by ' . $c['artist_en'], 'بواسطة ' . $c['artist_ar']) ?> · <?php require_once __DIR__ . '/vat_lib.php'; ?><?= number_format(owGross((float) $c['price'])) ?> <?= owBi('SAR', 'ر.س') ?><?= owVatTag() ?></span></label>
           <?php endforeach; ?>
         </div>
         <a class="g-more" href="marketplace.php"><?= owBi('See more in the Gallery, then press "Give it as a gift" in the artwork window →', 'شاهد المزيد في المعرض، ثم اضغط «أهدِه» في نافذة العمل ←') ?></a>

@@ -126,7 +126,16 @@ if (!defined('OW_THEME_HEAD')):
   document.addEventListener('input', function(){ typed = true; }, true);
   new MutationObserver(function(){
     var l = (d.getAttribute('lang') === 'ar' || d.getAttribute('dir') === 'rtl') ? 'ar' : 'en';
-    if (l !== window.OW_LANG) { window.OW_LANG = l; setCk(l); setLs(l); if (!typed && !/[?&]lang=/.test(location.search)) location.reload(); }
+    if (l !== window.OW_LANG) {
+      window.OW_LANG = l; setCk(l); setLs(l);
+      /* a "lang=" left in the address would bring the old language back on the next reload
+         (owner, 28 Nov 2026): the address now carries the new language */
+      if (/[?&]lang=(ar|en)(&|#|$)/.test(location.search)) {
+        var nu = location.pathname + location.search.replace(/([?&]lang=)(ar|en)(?=&|$)/, '$1' + l) + location.hash;
+        if (!typed) location.replace(nu); else { try { history.replaceState(history.state, '', nu); } catch (e) {} }
+        url = true;
+      } else if (!typed) location.reload();
+    }
   }).observe(d, { attributes: true, attributeFilter: ['lang', 'dir'] });
   document.addEventListener('DOMContentLoaded', function(){ d.classList.remove('ow-wait'); });
 })();

@@ -100,11 +100,19 @@ if ($V && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['act'
     }
     if ($V['owner'] && $act === 'vat') {
         $rate = (float) str_replace(',', '.', (string) ($_POST['rate'] ?? '15'));
-        $num = preg_replace('/\D/', '', (string) ($_POST['number'] ?? ''));
-        if ($rate < 0 || $rate > 50 || ($num !== '' && strlen($num) !== 15)) $back('owner.php?p=settings', 'vat_bad');
-        owSetSetting('vat', json_encode(['on' => !empty($_POST['on']), 'rate' => $rate, 'number' => $num]));
+        $num = preg_replace('/\D/', '', strtr((string) ($_POST['number'] ?? ''), ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9']));
+        $start = trim((string) ($_POST['start'] ?? ''));   // the VAT start date (owner, 28 Nov 2026): tax invoices only for sales on or after it
+        $okStart = $start === '' || (($d = DateTime::createFromFormat('!Y-m-d', $start)) && $d->format('Y-m-d') === $start);
+        if ($rate < 0 || $rate > 50 || ($num !== '' && strlen($num) !== 15) || !$okStart) $back('owner.php?p=settings', 'vat_bad');
+        owSetSetting('vat', json_encode(['on' => !empty($_POST['on']), 'rate' => $rate, 'number' => $num, 'start' => $start]));
         owLog('setting_change', 'setting', null, 'vat', $actor);
         $back('owner.php?p=settings', 'saved');
+    }
+    if ($V['owner'] && $act === 'invoice_address') {   // printed only inside invoice PDFs, never on the site or in emails (owner, 28 Nov 2026)
+        $a = trim(preg_replace("/\r\n?/", "\n", preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/u', '', (string) ($_POST['invoice_address'] ?? ''))));
+        owSetSetting('invoice_address', mb_substr($a, 0, 400));
+        owLog('setting_change', 'setting', null, 'invoice_address', $actor);
+        $back('owner.php?p=settings#invaddr', 'saved');
     }
     if ($V['owner'] && $act === 'id_keep') {   // how long identity documents are kept after an account closes (owner, 27 Nov 2026)
         $y = (int) ($_POST['years'] ?? 0);
@@ -302,7 +310,7 @@ $qs = function (array $set) { $q = array_merge($_GET, $set); foreach ($q as $k =
           'saved' => owBi('Saved', 'تم الحفظ'), 'notsaved' => owBi('Not saved. Please check the date and try again', 'لم يُحفظ. يرجى التحقق من التاريخ والمحاولة مرة أخرى'),
           'expired' => owBi('This page was open for a long time, so nothing was changed. Please try again', 'كانت هذه الصفحة مفتوحة لوقت طويل، فلم يتغير شيء. يرجى المحاولة مرة أخرى'),
           'years_bad' => owBi('Please write a number of years from 1 to 20', 'يرجى كتابة عدد سنوات من 1 إلى 20'),
-          'vat_bad' => owBi('Please check the VAT rate (0 to 50) and the VAT number (15 digits)', 'يرجى مراجعة نسبة الضريبة (0 إلى 50) والرقم الضريبي (15 رقما)'),
+          'vat_bad' => owBi('Please check the VAT rate (0 to 50), the VAT number (15 digits) and the start date', 'يرجى مراجعة نسبة الضريبة (0 إلى 50) والرقم الضريبي (15 رقما) وتاريخ البدء'),
           'msg_missing' => owBi('Please write the subject and the message in both languages', 'يرجى كتابة الموضوع والرسالة باللغتين'),
           'msg_nobody' => owBi('Nobody matches this choice', 'لا أحد يطابق هذا الاختيار'),
           'queued' => owBi('The message is on its way. It goes out in small groups, a few every 2 minutes', 'الرسالة في طريقها. تُرسل على دفعات صغيرة، بضع رسائل كل دقيقتين'),

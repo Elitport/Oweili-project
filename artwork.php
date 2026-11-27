@@ -45,7 +45,8 @@ $viewer  = isLoggedIn() ? currentUser() : null;
 $isBuyer = $viewer && ($viewer['role'] ?? '') === 'collector';
 $showFav = (!$viewer || $isBuyer) && owHasTable('favorites');
 $faved   = $isBuyer && in_array($id, owFavIds((int) $viewer['id']), true);
-$price   = number_format((float) $aw['price']);
+require_once __DIR__ . '/vat_lib.php';
+$price   = number_format(owGross((float) $aw['price']));   // VAT included while VAT is active (owner, 28 Nov 2026)
 $descEn  = 'By ' . $aw['artist_en'] . ' · ' . $price . ' SAR' . ($type ? ' · ' . $type['en'] : '') . '. Made by hand, on Oweili.';
 $descAr  = 'بواسطة ' . $aw['artist_ar'] . ' · ' . $price . ' ر.س' . ($type ? ' · ' . $type['ar'] : '') . '. صُنع باليد، في أويلي.';
 $share   = $img !== '' ? owImgSized($img, 800) : '';
@@ -104,7 +105,7 @@ $galleryLink = 'marketplace.php?show=' . $id . ($ar ? '&lang=ar' : '') . '#artwo
       <?php if (owHasJourney($stages)): ?><span class="human-badge"><?= owBi('✦ A Real Touch', '✦ لمسة حقيقية') ?></span><?php endif; ?>
       <?php if ($aw['status'] === 'auction'): ?><span class="type-pill"><?= owBi('Auction', 'مزاد') ?></span><?php endif; ?>
     </div>
-    <div class="price"><?= $price ?> <?= owBi('SAR', 'ر.س') ?></div>
+    <div class="price"><?= $price ?> <?= owBi('SAR', 'ر.س') ?><?= owVatTag() ?></div>
     <p class="aw-next"><?= owBi(OW_BUY_NEXT[0], OW_BUY_NEXT[1]) ?></p>
     <?php if (trim((string) ($aw['medium'] ?? '')) !== '' || (float) ($aw['width_cm'] ?? 0) > 0 || !empty($aw['edition_type'])): ?>
     <dl class="aw-facts">

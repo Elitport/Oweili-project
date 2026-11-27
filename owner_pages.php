@@ -539,14 +539,22 @@ elseif ($page === 'settings' && $isOwner):
       </section>
       <section class="o-t" id="vat">
         <div class="o-th"><h2><?= owBi('VAT', 'ضريبة القيمة المضافة') ?></h2></div>
-        <p class="o-note"><?= owBi('Accounting shows the VAT on Oweili’s commission. Invoices: while VAT is off or the VAT number is empty, customers get a purchase receipt with no VAT. With VAT on and a VAT number, new invoices are tax invoices with VAT included. Full ZATCA e-invoicing (Fatoora) is not built yet', 'تعرض المحاسبة الضريبة على عمولة أويلي. الفواتير: ما دامت الضريبة مطفأة أو الرقم الضريبي فارغا يحصل العملاء على إيصال شراء بلا ضريبة. ومع تفعيل الضريبة ووجود رقم ضريبي تصبح الفواتير الجديدة فواتير ضريبية شاملة الضريبة. الفوترة الإلكترونية الكاملة من هيئة الزكاة (فاتورة) لم تُبنَ بعد') ?></p>
+        <p class="o-note"><?= owBi('VAT is charged on the full price of every paid sale (artworks, courses, workshops, tickets) only when VAT is on, the VAT number is filled in AND the sale date is on or after the start date. Then every price visitors see already includes VAT ("VAT included") and the invoice is a tax invoice with its ZATCA QR code. Before that: prices without VAT and a purchase receipt. Oweili’s commission is always worked out on the price before VAT. Full ZATCA e-invoicing (Fatoora phase 2) is not built yet', 'تُحتسب الضريبة على السعر الكامل لكل بيع مدفوع (الأعمال والدورات والورش والتذاكر) فقط عندما تكون الضريبة مفعلة والرقم الضريبي مكتوبا وتاريخ البيع في تاريخ البدء أو بعده. عندها تظهر كل الأسعار للزوار شاملة الضريبة («شامل الضريبة») وتكون الفاتورة فاتورة ضريبية برمز QR الخاص بهيئة الزكاة. وقبل ذلك: أسعار بلا ضريبة وإيصال شراء. وتُحسب عمولة أويلي دائما على السعر قبل الضريبة. الفوترة الإلكترونية الكاملة (المرحلة الثانية من فاتورة) لم تُبنَ بعد') ?></p>
         <form method="post" class="o-form"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="vat">
           <label class="o-check"><input type="checkbox" name="on" value="1"<?= $vat['on'] ? ' checked' : '' ?>> <?= owBi('VAT on (Accounting and tax invoices)', 'تفعيل الضريبة (المحاسبة والفواتير الضريبية)') ?></label>
           <div class="o-g2"><label><span class="o-lbl"><?= owBi('Rate %', 'النسبة %') ?></span><input class="o-in" name="rate" inputmode="decimal" value="<?= e(owNum($vat['rate'], 1)) ?>" dir="ltr"></label>
-            <label><span class="o-lbl"><?= owBi('VAT number (15 digits)', 'الرقم الضريبي (15 رقما)') ?></span><input class="o-in" name="number" inputmode="numeric" maxlength="15" value="<?= e($vat['number']) ?>" dir="ltr"></label></div>
+            <label><span class="o-lbl"><?= owBi('VAT number (15 digits)', 'الرقم الضريبي (15 رقما)') ?></span><input class="o-in" name="number" inputmode="numeric" maxlength="15" value="<?= e($vat['number']) ?>" dir="ltr"></label>
+            <label><span class="o-lbl"><?= owBi('VAT start date', 'تاريخ بدء الضريبة') ?></span><input class="o-in" name="start" type="date" data-native value="<?= e((string) ($vat['start'] ?? '')) ?>" dir="ltr"></label></div>
           <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
       </section>
     </div>
+    <section class="o-t" id="invaddr">
+      <div class="o-th"><h2><?= owBi('Invoice address', 'عنوان الفاتورة') ?></h2></div>
+      <p class="o-note"><?= owBi('Printed only inside invoice PDFs, under the seller’s name. Never shown anywhere else on the website, in the footer or in emails', 'يُطبع داخل ملفات الفواتير فقط، تحت اسم البائع. ولا يظهر في أي مكان آخر في الموقع أو التذييل أو الرسائل') ?></p>
+      <form method="post" class="o-form"><input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>"><input type="hidden" name="act" value="invoice_address">
+        <label><span class="o-lbl"><?= owBi('Address (up to 4 lines)', 'العنوان (حتى 4 أسطر)') ?></span><textarea class="o-in" name="invoice_address" rows="4" maxlength="400" dir="auto" style="min-height:110px"><?= e(trim((string) owSetting('invoice_address', ''))) ?></textarea></label>
+        <button class="btn btn-primary" type="submit"><?= owBi('Save', 'حفظ') ?></button></form>
+    </section>
     <section class="o-t">
       <div class="o-th"><h2><?= owBi('Sub-admins: what each one can see', 'المشرفون: ما يراه كل واحد') ?></h2></div>
       <p class="o-note"><?= owBi('Tick the menu groups for each sub-admin. Money, messages and people stay hidden unless you tick them. Settings and the classic admin pages are always yours only', 'حدّد مجموعات القائمة لكل مشرف. يبقى المال والرسائل والأشخاص مخفيا ما لم تحدده. الإعدادات وصفحات الإدارة السابقة لك وحدك دائما') ?>

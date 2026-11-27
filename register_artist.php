@@ -254,7 +254,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .opt-badge{display:inline-block;font-size:var(--fs-min);font-weight:700;line-height:1.4;padding:2px 8px;border-radius:999px;background:rgba(var(--rgb-ink),0.07);color:var(--color-dark);margin-inline-start:6px;vertical-align:middle;}
 </style>
 </head>
-<body>
+<body class="ow-short-hero">
 <?= owStudioBackdrop('pink-palette') /* the pink palette with brushes, like Sign in and Join (owner, 6 Nov 2026: wide photos only) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>

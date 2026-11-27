@@ -350,7 +350,8 @@ owSeo($artist ? ['en' => $artist['artist_en'] . ', artist on Oweili', 'ar' => $a
             <?= owJourneyHtml($stg, $artColors[(int) $aw['id']] ?? [], (string) $aw['type'], $ART_TYPES) ?>
           </details>
           <?php endif; ?>
-          <div class="aw-price"><?= number_format((float) $aw['price']) ?> <span class="sar">SAR</span></div>
+          <?php require_once __DIR__ . '/vat_lib.php'; ?>
+          <div class="aw-price"><?= number_format(owGross((float) $aw['price'])) ?> <span class="sar">SAR</span><?= owVatTag() ?></div>
           <?php if ($isOwner && (int) $aw['is_approved'] === 0 && !empty($aw['rejected_at'])): ?>
           <p class="aw-reason"><?= owBi('Why: ', 'السبب: ') ?><?= e((string) ($aw['rejected_reason'] ?? '')) ?></p>
           <?php endif; ?>

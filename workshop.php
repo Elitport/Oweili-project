@@ -47,7 +47,8 @@ owBookTop($w['title_en'], $w['title_ar'], 'workshop.php?id=' . (int) $w['id'], $
 <div class="card"><h2><?= owBi('What you will learn', 'ماذا ستتعلم') ?></h2><p class="c-learn"><?= owBi((string) $w['desc_en'], (string) $w['desc_ar']) ?></p></div>
 
 <div class="card" id="book">
-  <div class="c-price"><?= $price > 0 ? owSar($price) : owBi('Free', 'مجانية') ?></div>
+  <?php require_once __DIR__ . '/vat_lib.php'; ?>
+  <div class="c-price"><?= $price > 0 ? owSar(owGross($price)) . owVatTag() : owBi('Free', 'مجانية') ?></div>
   <?php if ($price > 0): ?><p class="mini"><?= owBi('Book your seat now. The Oweili team contacts you to arrange the payment, and your place is confirmed once it is paid', 'احجز مقعدك الآن. يتواصل معك فريق أويلي لترتيب الدفع، ويتأكد مكانك بعد الدفع') ?></p><?php endif; ?>
   <?php foreach ($errors as $er): ?><div class="alert alert-error" role="alert"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
   <?php if ($booked !== null): ?>

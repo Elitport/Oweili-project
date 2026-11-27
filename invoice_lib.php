@@ -38,13 +38,11 @@ const OW_INV_KINDS  = ['order', 'course', 'workshop', 'ticket'];
 function owInvReady(): bool { return owHasTable('invoices') && owHasTable('invoice_counters'); }
 
 /* Receipt or tax invoice, right now (owner_lib.php owVat: Owner settings → VAT) */
-function owInvTaxNow(): array {
-    require_once __DIR__ . '/gallery_lib.php';
-    $j = json_decode((string) owSetting('vat', ''), true);
-    $j = is_array($j) ? $j : [];
-    $num = preg_replace('/\D/', '', (string) ($j['number'] ?? ''));
-    $on  = !empty($j['on']) && strlen($num) === 15;
-    return ['tax' => $on, 'rate' => $on ? (isset($j['rate']) ? (float) $j['rate'] : 15.0) : 0.0, 'number' => $on ? $num : ''];
+/* Tax invoice or receipt for a sale made on $date (vat_lib.php): VAT on, a VAT number, and the sale on or after the VAT start date (owner, 28 Nov 2026) */
+function owInvTaxNow(?string $date = null): array {
+    require_once __DIR__ . '/vat_lib.php';
+    $on = owVatActive($date); $v = owVatSettings();
+    return ['tax' => $on, 'rate' => $on ? $v['rate'] : 0.0, 'number' => $on ? $v['number'] : ''];
 }
 
 /* What a purchase is, read fresh from its own table. null = no such purchase, or not paid / confirmed yet */
@@ -58,7 +56,7 @@ function owInvSource(string $kind, int $id): ?array {
             $lab = ['artwork' => ['Original artwork', 'عمل فني أصلي'], 'gift' => ['Gift', 'هدية'], 'commission' => ['Private commission', 'عمل خاص'],
                     'course' => ['Course', 'دورة'], 'workshop' => ['Workshop', 'ورشة']][$o['kind']] ?? ['Purchase', 'شراء'];
             return ['ref' => (string) $o['order_no'], 'user' => $o['buyer_user_id'] ? (int) $o['buyer_user_id'] : null, 'name' => (string) $o['buyer_name'], 'email' => (string) $o['buyer_email'],
-                    'en' => $lab[0] . ': ' . $o['title'], 'ar' => $lab[1] . ': ' . $o['title'], 'amount' => (float) $o['amount'], 'lang' => 'en', 'kind' => (string) $o['kind']];
+                    'en' => $lab[0] . ': ' . $o['title'], 'ar' => $lab[1] . ': ' . $o['title'], 'amount' => (float) $o['amount'], 'vat' => (float) ($o['vat_amount'] ?? 0), 'date' => (string) $o['paid_at'], 'lang' => 'en', 'kind' => (string) $o['kind']];
         }
         if ($kind === 'course') {
             $st = $db->prepare('SELECT r.*, c.title_en, c.title_ar, i.name_en AS inst_en, i.name_ar AS inst_ar FROM course_registrations r
@@ -68,7 +66,7 @@ function owInvSource(string $kind, int $id): ?array {
             $lang = str_contains((string) ($r['notes'] ?? ''), 'lang ar') ? 'ar' : 'en';
             return ['ref' => (string) $r['ref_no'], 'user' => $r['user_id'] ? (int) $r['user_id'] : null, 'name' => (string) $r['student_name'], 'email' => (string) $r['student_email'],
                     'en' => 'Course: ' . ($r['title_en'] ?: $r['title_ar']) . ' · ' . ($r['inst_en'] ?: $r['inst_ar']),
-                    'ar' => 'دورة: ' . ($r['title_ar'] ?: $r['title_en']) . ' · ' . ($r['inst_ar'] ?: $r['inst_en']), 'amount' => (float) $r['amount'], 'lang' => $lang, 'kind' => 'course'];
+                    'ar' => 'دورة: ' . ($r['title_ar'] ?: $r['title_en']) . ' · ' . ($r['inst_ar'] ?: $r['inst_en']), 'amount' => (float) $r['amount'], 'date' => (string) ($r['paid_at'] ?? ''), 'lang' => $lang, 'kind' => 'course'];
         }
         if ($kind === 'workshop') {
             if (!owHasTable('workshop_bookings')) return null;
@@ -78,7 +76,7 @@ function owInvSource(string $kind, int $id): ?array {
             $u = null;
             if (filter_var($b['email'], FILTER_VALIDATE_EMAIL)) { $q = $db->prepare("SELECT id FROM users WHERE LOWER(email) = :e AND is_verified = 1 LIMIT 1"); $q->execute([':e' => strtolower((string) $b['email'])]); $u = ($x = $q->fetchColumn()) ? (int) $x : null; }
             return ['ref' => (string) $b['ref_no'], 'user' => $u, 'name' => (string) $b['name'], 'email' => (string) $b['email'],
-                    'en' => 'Workshop: ' . ($b['title_en'] ?: $b['title_ar']), 'ar' => 'ورشة: ' . ($b['title_ar'] ?: $b['title_en']), 'amount' => (float) $b['amount'], 'lang' => $b['lang'] === 'ar' ? 'ar' : 'en', 'kind' => 'workshop'];
+                    'en' => 'Workshop: ' . ($b['title_en'] ?: $b['title_ar']), 'ar' => 'ورشة: ' . ($b['title_ar'] ?: $b['title_en']), 'amount' => (float) $b['amount'], 'date' => (string) ($b['paid_at'] ?? ''), 'lang' => $b['lang'] === 'ar' ? 'ar' : 'en', 'kind' => 'workshop'];
         }
         if ($kind === 'ticket') {
             $st = $db->prepare('SELECT t.*, p.name_en, p.name_ar FROM museum_tickets t JOIN art_places p ON p.id = t.place_id WHERE t.id = :id');
@@ -88,7 +86,7 @@ function owInvSource(string $kind, int $id): ?array {
             $en = []; $ar = []; foreach ($lines as $l) { $en[] = $l['qty'] . ' × ' . $l['en']; $ar[] = $l['qty'] . ' × ' . $l['ar']; }
             return ['ref' => (string) $t['ref_no'], 'user' => $t['user_id'] ? (int) $t['user_id'] : null, 'name' => (string) $t['buyer_name'], 'email' => (string) $t['buyer_email'],
                     'en' => 'Museum ticket: ' . $t['name_en'] . ' · ' . $t['visit_date'] . ($en ? ' · ' . implode(', ', $en) : ''),
-                    'ar' => 'تذكرة متحف: ' . ($t['name_ar'] ?: $t['name_en']) . ' · ' . $t['visit_date'] . ($ar ? ' · ' . implode('، ', $ar) : ''), 'amount' => (float) $t['amount'], 'lang' => 'en', 'kind' => 'ticket'];
+                    'ar' => 'تذكرة متحف: ' . ($t['name_ar'] ?: $t['name_en']) . ' · ' . $t['visit_date'] . ($ar ? ' · ' . implode('، ', $ar) : ''), 'amount' => (float) $t['amount'], 'date' => (string) ($t['paid_at'] ?? ''), 'lang' => 'en', 'kind' => 'ticket'];
         }
     } catch (Throwable $e) { error_log('owInvSource: ' . $e->getMessage()); }
     return null;
@@ -111,9 +109,10 @@ function owInvoiceIssue(string $kind, int $id): ?array {
     if ($old = owInvGet($kind, $id)) return $old;
     $src = owInvSource($kind, $id);
     if (!$src) return null;
-    $tax = owInvTaxNow();
+    $tax = owInvTaxNow($src['date'] !== '' ? $src['date'] : null);   // the sale (payment) date decides: on or after the VAT start date
     $amount = round(max(0, $src['amount']), 2);
-    $vat = $tax['tax'] ? round($amount * $tax['rate'] / (100 + $tax['rate']), 2) : 0.0;   // VAT is INCLUDED in the price the customer paid
+    $vat = !$tax['tax'] ? 0.0 : (($src['vat'] ?? 0) > 0 ? round((float) $src['vat'], 2) : round($amount * $tax['rate'] / (100 + $tax['rate']), 2));   // VAT is INCLUDED in the price the customer paid
+    $addr = function_exists('owInvoiceAddress') ? owInvoiceAddress() : '';
     $db = getDB();
     $year = (int) date('Y');
     try {
@@ -121,11 +120,11 @@ function owInvoiceIssue(string $kind, int $id): ?array {
         $db->prepare('INSERT INTO invoice_counters (year, last) VALUES (:y, LAST_INSERT_ID(1)) ON DUPLICATE KEY UPDATE last = LAST_INSERT_ID(last + 1)')->execute([':y' => $year]);
         $seq = (int) $db->query('SELECT LAST_INSERT_ID()')->fetchColumn();
         $no = sprintf('OW-%d-%05d', $year, $seq);
-        $db->prepare('INSERT INTO invoices (invoice_no, year, seq, source_kind, source_id, ref_no, user_id, customer_name, customer_email, item_en, item_ar, amount, is_tax, vat_rate, vat_amount, vat_number, currency, lang, issued_at)
-                      VALUES (:no, :y, :s, :k, :id, :ref, :u, :n, :e, :ien, :iar, :a, :t, :vr, :va, :vn, \'SAR\', :l, NOW())')
+        $db->prepare('INSERT INTO invoices (invoice_no, year, seq, source_kind, source_id, ref_no, user_id, customer_name, customer_email, item_en, item_ar, amount, is_tax, vat_rate, vat_amount, vat_number, seller_address, currency, lang, issued_at)
+                      VALUES (:no, :y, :s, :k, :id, :ref, :u, :n, :e, :ien, :iar, :a, :t, :vr, :va, :vn, :sa, \'SAR\', :l, NOW())')
            ->execute([':no' => $no, ':y' => $year, ':s' => $seq, ':k' => $kind, ':id' => $id, ':ref' => mb_substr($src['ref'], 0, 40), ':u' => $src['user'],
                       ':n' => mb_substr($src['name'], 0, 150), ':e' => mb_substr(strtolower(trim($src['email'])), 0, 190), ':ien' => mb_substr($src['en'], 0, 255), ':iar' => mb_substr($src['ar'], 0, 255),
-                      ':a' => $amount, ':t' => $tax['tax'] ? 1 : 0, ':vr' => $tax['rate'], ':va' => $vat, ':vn' => $tax['number'], ':l' => $src['lang']]);
+                      ':a' => $amount, ':t' => $tax['tax'] ? 1 : 0, ':vr' => $tax['rate'], ':va' => $vat, ':vn' => $tax['number'], ':sa' => mb_substr($addr, 0, 400), ':l' => $src['lang']]);
         $db->commit();
     } catch (Throwable $e) {
         if ($db->inTransaction()) $db->rollBack();
@@ -164,6 +163,8 @@ function owInvoicePdf(array $inv): string {
               . ($tax ? '<br>VAT number ' . $h($inv['vat_number']) : '');
     $sellerAr = $h(OW_INV_SELLER[1]) . '<br>الرقم الوطني الموحد ' . $h(defined('OW_COMPANY_UNN') ? OW_COMPANY_UNN : '7053193244') . '<br>المملكة العربية السعودية<br>contact@oweili.com'
               . ($tax ? '<br>الرقم الضريبي ' . $h($inv['vat_number']) : '');
+    $addr = trim((string) ($inv['seller_address'] ?? ''));   // the invoice address from Owner settings, frozen in the row; shown ONLY here
+    if ($addr !== '') { $sellerEn .= '<br>' . nl2br($h($addr)); $sellerAr .= '<br>' . nl2br($h($addr)); }
     $price = $amt > 0 ? owInvMoney($amt) . ' SAR' : 'Free · مجاني';
 
     $html = '<table cellpadding="0" cellspacing="0" width="100%"><tr>'
@@ -194,7 +195,22 @@ function owInvoicePdf(array $inv): string {
         . '<br><br><span style="font-size:9pt;color:' . $muted . '">' . ($tax ? 'Prices include VAT.' : 'No VAT is charged on this purchase.') . ' Thank you for buying on Oweili.</span><br>'
         . '<span dir="rtl" style="font-size:9pt;color:' . $muted . '">' . ($tax ? 'الأسعار شاملة ضريبة القيمة المضافة.' : 'لا تُحتسب ضريبة قيمة مضافة على هذا الشراء.') . ' شكرا لشرائك من أويلي.</span>';
     $pdf->writeHTML($html, true, false, true, false, '');
+    if ($tax) {   // ZATCA QR code, Phase 1 (TLV then Base64): seller, VAT number, date and time, total with VAT, VAT
+        $qr = owInvZatcaQr($inv);
+        $y = $pdf->GetY() + 6;
+        $pdf->write2DBarcode($qr, 'QRCODE,M', 16, $y, 34, 34, ['border' => false, 'padding' => 0, 'fgcolor' => [0, 0, 0], 'bgcolor' => false], 'N');
+        $pdf->SetXY(54, $y + 10); $pdf->SetFont('dejavusans', '', 8.5); $pdf->SetTextColor(74, 85, 104);
+        $pdf->MultiCell(120, 5, "ZATCA QR code (simplified tax invoice)\nرمز الاستجابة السريعة لهيئة الزكاة والضريبة والجمارك", 0, 'L');
+    }
     return $pdf->Output(owInvFileName($inv), 'S');
+}
+
+/* The Phase 1 QR text of a tax invoice (vat_lib.php owZatcaTlv). The seller is the legal Arabic name. */
+function owInvZatcaQr(array $inv): string {
+    require_once __DIR__ . '/vat_lib.php';
+    $t = strtotime((string) $inv['issued_at']);
+    return owZatcaTlv(OW_INV_SELLER[1], (string) $inv['vat_number'], gmdate('Y-m-d\\TH:i:s\\Z', $t),
+        number_format((float) $inv['amount'], 2, '.', ''), number_format((float) $inv['vat_amount'], 2, '.', ''));
 }
 
 /* The PDF as an email attachment */

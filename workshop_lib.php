@@ -306,7 +306,7 @@ function owWsBook(array $w, array &$errors): string {
         $db->prepare('INSERT INTO workshop_bookings (workshop_id, ref_no, name, phone, email, lang, amount, commission_rate, commission_amount, artist_amount, status, paid_at)
                       VALUES (:w, :r, :n, :p, :e, :l, :a, :cr, :ca, :aa, :s, ' . ($free ? 'NOW()' : 'NULL') . ')')
            ->execute([':w' => (int) $w['id'], ':r' => $ref, ':n' => $b['name'], ':p' => $b['phone'], ':e' => $b['email'], ':l' => owIsAr() ? 'ar' : 'en',
-                      ':a' => $price, ':cr' => $rate, ':ca' => $sp['commission'], ':aa' => $sp['partner'], ':s' => $free ? 'paid' : 'booked']);
+                      ':a' => $sp['gross'], ':cr' => $rate, ':ca' => $sp['commission'], ':aa' => $sp['partner'], ':s' => $free ? 'paid' : 'booked']);
         $bookingId = (int) $db->lastInsertId();
         $db->commit();
     } catch (Throwable $e) {

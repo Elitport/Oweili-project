@@ -31,7 +31,7 @@ owBookTop('Artist workshops', 'ورش الفنانين', 'workshops.php', $previ
     <h2><?= owBi((string) $w['title_en'], (string) $w['title_ar']) ?></h2>
     <span class="mini"><?= owBi($dEn, $dAr) ?> · <?= $w['mode'] === 'online' ? owBi('Online', 'عن بعد') : e((string) $w['city']) ?></span>
     <span class="mini"><?= $left > 0 ? owBi($left . ' seats left', 'متبق ' . $left . ' مقاعد') : owBi('Full', 'اكتمل العدد') ?></span>
-    <span class="p"><?= (float) $w['price'] > 0 ? owSar((float) $w['price']) : owBi('Free', 'مجانية') ?></span>
+    <?php require_once __DIR__ . '/vat_lib.php'; ?><span class="p"><?= (float) $w['price'] > 0 ? owSar(owGross((float) $w['price'])) . owVatTag() : owBi('Free', 'مجانية') ?></span>
   </a>
   <?php endforeach; ?>
 </div>

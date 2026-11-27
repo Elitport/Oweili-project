@@ -16,6 +16,7 @@ require_once __DIR__ . '/studio_lib.php';   // the studio photo behind the page
  * ===================================================================== */
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
+require_once __DIR__ . '/vat_lib.php';   // course prices include VAT while it is active (owner, 28 Nov 2026)
 require_once __DIR__ . '/artmap_lib.php';
 $preview = owCoursesGate();
 require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch
@@ -108,7 +109,7 @@ try {
         elseif ($fCity !== '') { $where .= " AND c.course_type = 'in_person' AND i.city_en = :city"; $args[':city'] = $fCity; }
         if ($fArt !== '') { $where .= ' AND c.art_type = :art'; $args[':art'] = $fArt; }
         if ($fLevel !== '') { $where .= ' AND c.level = :lvl'; $args[':lvl'] = $fLevel; }
-        if ($fPrice !== '') { $where .= ' AND c.price BETWEEN :p1 AND :p2'; $args[':p1'] = OW_INST_PRICES[$fPrice][2]; $args[':p2'] = OW_INST_PRICES[$fPrice][3]; }
+        if ($fPrice !== '') { $where .= ' AND c.price BETWEEN :p1 AND :p2'; $args[':p1'] = OW_INST_PRICES[$fPrice][2] / owVatFactor(); $args[':p2'] = OW_INST_PRICES[$fPrice][3] / owVatFactor(); }
         if ($fMode !== '') { $where .= ' AND c.course_type = :mode'; $args[':mode'] = $fMode; }
         if ($fLang !== '') { $where .= ' AND c.course_lang = :clang'; $args[':clang'] = $fLang; }
         if ($fFor !== '') { $where .= ' AND c.audience = :aud'; $args[':aud'] = $fFor; }
@@ -138,7 +139,7 @@ if (!$inst && owDemoOn()) {
         if ($fCity !== '' && $fCity !== 'online' && ($dc['course_type'] !== 'in_person' || $dc['inst_city_en'] !== $fCity)) continue;
         if ($fArt !== '' && $dc['art_type'] !== $fArt) continue;
         if ($fLevel !== '' && $dc['level'] !== $fLevel) continue;
-        if ($fPrice !== '' && ($dc['price'] < OW_INST_PRICES[$fPrice][2] || $dc['price'] > OW_INST_PRICES[$fPrice][3])) continue;
+        if ($fPrice !== '' && (owGross((float) $dc['price']) < OW_INST_PRICES[$fPrice][2] || owGross((float) $dc['price']) > OW_INST_PRICES[$fPrice][3])) continue;
         if ($fMode !== '' && $dc['course_type'] !== $fMode) continue;
         if ($fLang !== '' && ($dc['course_lang'] ?? 'ar') !== $fLang) continue;
         if ($fFor !== '' && ($dc['audience'] ?? 'all') !== $fFor) continue;
@@ -288,7 +289,8 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
           $online = $c['course_type'] === 'online';
           $price = (float) $c['price'];
           $left = (int) $c['seats_remaining'];
-          $pTxt = number_format($price, $price == floor($price) ? 0 : 2);
+          $pShow = owGross($price);   // what the student pays: VAT included while active
+          $pTxt = number_format($pShow, $pShow == floor($pShow) ? 0 : 2);
         ?>
         <?php $isDemo = !empty($c['demo']); ?>
         <article class="card c-card reveal<?= $isDemo ? ' is-demo' : '' ?>">
@@ -303,8 +305,8 @@ html.dark-mode .c-card,html.dark-mode .ci-none{background:var(--color-card);}
           </div>
           <p class="c-meta"><span><?= owBi($wEn, $wAr) ?></span>
             <span><?= $left > 0 ? owBi($left === 1 ? '1 seat left' : $left . ' seats left', $left === 1 ? 'بقي مقعد واحد' : 'متبق ' . $left . ' مقاعد') : owBi('Full', 'اكتمل العدد') ?></span></p>
-          <div class="c-price"><?= $price > 0 ? owBi($pTxt . ' SAR', $pTxt . ' ر.س') : owBi('Free', 'مجاني') ?></div>
-          <?php if ($isDemo): ?><button type="button" class="btn btn-primary" disabled aria-disabled="true" title="<?= e(owIsAr() ? OW_DEMO_NOTE[1] : OW_DEMO_NOTE[0]) ?>"><?= owBi('View the course', 'عرض الدورة') ?></button>
+          <div class="c-price"><?= $price > 0 ? owBi($pTxt . ' SAR', $pTxt . ' ر.س') . owVatTag() : owBi('Free', 'مجاني') ?></div>
+          <?php if ($isDemo): ?><button type="button" class="btn btn-primary" disabled aria-disabled="true"<?php if (owDemoNoteFor()): ?> title="<?= e(owIsAr() ? OW_DEMO_NOTE[1] : OW_DEMO_NOTE[0]) ?>"<?php endif; ?>><?= owBi('View the course', 'عرض الدورة') ?></button>
           <?php else: ?><a class="btn btn-primary" href="course.php?id=<?= (int) $c['id'] ?>"><?= owBi('View the course', 'عرض الدورة') ?></a><?php endif; ?>
         </article>
         <?php endforeach; ?>

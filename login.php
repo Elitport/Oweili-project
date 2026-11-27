@@ -95,7 +95,7 @@ html,body{width:100%;min-height:100vh;background:var(--color-bg);font-family:var
 .ow-newlink{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;margin-top:var(--space-sm);}
 </style>
 </head>
-<body>
+<body class="ow-short-hero">
 <?php require_once __DIR__ . '/studio_lib.php'; echo owStudioBackdrop('pink-palette');   /* the pink palette, whole (owner, 6 Nov 2026) */ ?>
 <div class="bg-wrap"></div>
 <div class="overlay"></div>

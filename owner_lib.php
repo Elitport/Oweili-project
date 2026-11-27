@@ -69,7 +69,7 @@ function owOwnerNameAr(): string { $n = trim((string) owSetting('owner_name_ar',
 function owVat(): array {
     $j = json_decode((string) owSetting('vat', ''), true);
     $j = is_array($j) ? $j : [];
-    return ['on' => !empty($j['on']), 'rate' => isset($j['rate']) ? (float) $j['rate'] : 15.0, 'number' => (string) ($j['number'] ?? '')];
+    return ['on' => !empty($j['on']), 'rate' => isset($j['rate']) ? (float) $j['rate'] : 15.0, 'number' => (string) ($j['number'] ?? ''), 'start' => (string) ($j['start'] ?? '')];   // start: the VAT start date (28 Nov 2026, vat_lib.php)
 }
 
 /* ---------------- small helpers ---------------- */

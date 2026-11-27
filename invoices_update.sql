@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `invoices` (
   `vat_rate`        DECIMAL(5,2)    NOT NULL DEFAULT 0.00,
   `vat_amount`      DECIMAL(10,2)   NOT NULL DEFAULT 0.00,
   `vat_number`      VARCHAR(20)     NOT NULL DEFAULT '',
+  `seller_address`  VARCHAR(400)    NOT NULL DEFAULT '',   -- Owner settings "Invoice address", frozen; printed only in the PDF
   `currency`        CHAR(3)         NOT NULL DEFAULT 'SAR',
   `lang`            CHAR(2)         NOT NULL DEFAULT 'en',
   `issued_at`       DATETIME        NOT NULL,
@@ -45,3 +46,6 @@ CREATE TABLE IF NOT EXISTS `invoice_counters` (
   `last`  INT UNSIGNED      NOT NULL DEFAULT 0,
   PRIMARY KEY (`year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 28 Nov 2026 (owner): the invoice address, for a table made before this column existed
+ALTER TABLE `invoices` ADD COLUMN IF NOT EXISTS `seller_address` VARCHAR(400) NOT NULL DEFAULT '' AFTER `vat_number`;
