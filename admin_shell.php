@@ -31,7 +31,7 @@ function owAdminGate(string $back = 'admin.php'): void {
 <p><?= owBi('Please sign in on the admin page first', 'يرجى تسجيل الدخول في صفحة الإدارة أولا') ?></p><p><a class="btn btn-primary" href="<?= htmlspecialchars($back, ENT_QUOTES, 'UTF-8') ?>"><?= owBi('Admin sign-in', 'دخول الإدارة') ?></a></p></div></body></html>
 <?php exit;
 }
-function owAdminTop(string $titleEn, string $titleAr, string $css = '', string $extraLink = ''): void { ?>
+function owAdminTop(string $titleEn, string $titleAr, string $css = '', string $extraLink = '', string $back = 'admin.php'): void { ?>
 <!DOCTYPE html>
 <html <?php require_once __DIR__ . '/lang_lib.php'; owHtmlAttrs(); ?>>
 <head>
@@ -68,7 +68,7 @@ details > summary{cursor:pointer;font-weight:700;margin:var(--space-xs) 0;}
 <body>
 <div class="wrap dash role-admin">
   <div class="top">
-    <a class="btn btn-ghost btn-sm" href="admin.php">← <?= owBi('Back to admin', 'العودة للإدارة') ?></a>
+    <a class="btn btn-ghost btn-sm" href="<?= htmlspecialchars($back, ENT_QUOTES, 'UTF-8') ?>">← <?= $back === 'admin.php' ? owBi('Back to admin', 'العودة للإدارة') : owBi('Back to the dashboard', 'العودة إلى لوحة التحكم') ?></a>
     <span><?= $extraLink ?> <?php owCornerControls('tgl()'); ?></span>
   </div>
 <?php }

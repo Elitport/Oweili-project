@@ -188,7 +188,7 @@ $MENU = [
       ['admin.php#certs', 'Certificates', 'الشهادات', 'cert', 'o', ''],
       ['admin_articles.php', 'Articles and events', 'المقالات والملتقيات', 'article', 'g', ''],
       ['admin_gallery.php', 'Gallery tools', 'أدوات المعرض', 'star', 'o', ''],
-      ['admin_art_map.php', 'Art Map', 'وجهات', 'map', 'o', ''],
+      ['admin_art_map.php', 'Art Map', 'وجهات', 'map', 'g', ''],   // sub-admins with this group: the Entry box only (owner, 27 Nov 2026)
       ['admin_institutes.php', 'Institutes and courses', 'المعاهد والدورات', 'school', 'g', ''],
       ['admin_workshops.php', 'Artist workshops', 'ورش الفنانين', 'school', 'o', '']]],
   'money' => [['Money', 'المال'], [

@@ -13,8 +13,17 @@
 require_once 'config.php';
 require_once __DIR__ . '/admin_shell.php';
 require_once __DIR__ . '/artmap_lib.php';
-owAdminGate();
-$actor = owAdminActor();
+/* Sub-admins with the "Art and content" group may change ONLY the Entry box of museums and galleries (owner, 27 Nov 2026).
+   Everything else on this page stays owner only, also on the server */
+$entryOnly = false;
+if (owIsAdmin()) {
+    $actor = owAdminActor();
+} else {
+    require_once __DIR__ . '/owner_lib.php';
+    $V = owOwnerViewer();
+    if ($V && !$V['owner'] && owOwnerCan($V, 'content') && owEntryReady()) { $entryOnly = true; $actor = owOwnerActor($V); }
+    else owAdminGate();
+}
 $ready = owArtPlacesReady();
 $db = getDB();
 $errors = []; $photoErr = 0; $coordErr = 0;
@@ -25,9 +34,9 @@ $keep = function (): string {   // the list filters, kept after an action
 };
 
 require_once __DIR__ . '/map_coords_lib.php';   // the Map location box (owner, 15 Nov 2026)
-owCoordsResolveEndpoint();
+if (!$entryOnly) owCoordsResolveEndpoint();
 /* "Is this your place?" photo, for the admin only (it waits in the private folder until approved) */
-if (isset($_GET['claimphoto']) && owClaimsReady()) {
+if (!$entryOnly && isset($_GET['claimphoto']) && owClaimsReady()) {
     $st = $db->prepare('SELECT photo_file FROM art_place_claims WHERE id = :id'); $st->execute([':id' => (int) $_GET['claimphoto']]);
     $f = owClaimPhotoPath((string) $st->fetchColumn());
     if ($f === '' || !is_file($f)) { http_response_code(404); exit; }
@@ -35,6 +44,7 @@ if (isset($_GET['claimphoto']) && owClaimsReady()) {
     readfile($f); exit;
 }
 /* approve or reject one "Is this your place?" message (owner, 13 Nov 2026) */
+if ($entryOnly && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['do'] ?? '') !== 'entry') { header('Location: admin_art_map.php'); exit; }   // nothing but the Entry box
 if (owClaimsReady() && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && in_array($_POST['do'] ?? '', ['claim_ok', 'claim_no'], true)) {
     $cid = (int) ($_POST['claim'] ?? 0);
     $st = $db->prepare("SELECT * FROM art_place_claims WHERE id = :id AND status = 'new'"); $st->execute([':id' => $cid]); $cl = $st->fetch();
@@ -241,6 +251,55 @@ $form = function (array $p) use ($opt, $field, $keep): void {
   </form>
 <?php };
 
+/* the Entry box of one museum or gallery (owner, 27 Nov 2026); also the only box sub-admins with "Art and content" see */
+$entryBox = function (array $p) use ($field, $keep, $coordErr): void {
+    if (!in_array($p['kind'], ['museum', 'gallery'], true) || !owEntryReady()) return;
+    $mineE = $coordErr === -100000 - (int) $p['id']; $ev = fn(string $k) => (string) ($mineE ? ($_POST[$k] ?? '') : ($p[$k] ?? ''));
+          $ekCur = owPlaceEntry($p); $ekVal = $mineE ? (string) ($_POST['entry_kind'] ?? '') : $ekCur;
+          $prVal = $ev('entry_price'); if (!$mineE && $prVal !== '') $prVal = rtrim(rtrim($prVal, '0'), '.'); ?>
+        <details<?= $mineE ? ' open' : '' ?>><summary><?= owBi('Entry', 'الدخول') ?> <?= $ekCur === '' ? '<span class="pillx warn">' . owBi('Not set', 'غير محدد') . '</span>' : '<span class="pillx on">' . owBi(OW_ENTRY_KINDS[$ekCur][0], OW_ENTRY_KINDS[$ekCur][1]) . '</span>' ?></summary>
+          <form method="post" action="admin_art_map.php?<?= e(ltrim($keep(), '&')) ?>"><?= csrfField() ?><input type="hidden" name="do" value="entry"><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+            <p class="mini"><?= owBi('Fill this only from the place’s official source (its website, the Ministry of Culture, Visit Saudi). Never guess. "Not set" shows nothing to visitors. "Free entry" adds a badge on the Art Map and the place page, and the place shows under "Free entry only".', 'املأ هذا من المصدر الرسمي للمكان فقط (موقعه، وزارة الثقافة، روح السعودية). لا تخمّن أبدا. «غير محدد» لا يظهر شيئا للزوار. «دخول مجاني» يضيف شارة في وجهات الفن وصفحة المكان، ويظهر المكان في «الدخول المجاني فقط».') ?></p>
+            <div class="g2">
+              <div class="field"><label for="ek-<?= (int) $p['id'] ?>"><?= owBi('Entry', 'الدخول') ?></label><select id="ek-<?= (int) $p['id'] ?>" name="entry_kind">
+                <option value=""<?= $ekVal === '' ? ' selected' : '' ?>><?= e('Not set · غير محدد') ?></option>
+                <?php foreach (OW_ENTRY_KINDS as $ek => $ew): ?><option value="<?= e($ek) ?>"<?= $ekVal === $ek ? ' selected' : '' ?>><?= e($ew[0] . ' · ' . $ew[1]) ?></option><?php endforeach; ?>
+              </select></div>
+              <?= $field('entry_price', 'Price in SAR (only for paid entry)', 'السعر بالريال (للدخول المدفوع فقط)', $prVal, ' inputmode="decimal" dir="ltr" maxlength="10"', false, 'en' . $p['id']) ?>
+            </div>
+            <div class="g2">
+              <?= $field('entry_source', 'Official source link (optional)', 'رابط المصدر الرسمي (اختياري)', $ev('entry_source'), ' dir="ltr" maxlength="500" inputmode="url"', false, 'en' . $p['id']) ?>
+              <div class="field"><label for="ec-<?= (int) $p['id'] ?>"><?= owBi('Last checked (optional)', 'آخر تحقق (اختياري)') ?></label><input id="ec-<?= (int) $p['id'] ?>" type="date" name="entry_checked" max="<?= date('Y-m-d') ?>" value="<?= e($ev('entry_checked')) ?>"></div>
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save the entry', 'احفظ الدخول') ?></button>
+          </form></details>
+<?php };
+
+if ($entryOnly) {   /* sub-admin view: the museums and galleries with their Entry box only */
+    $rows = array_values(array_filter($rows, fn($r) => in_array($r['kind'], ['museum', 'gallery'], true)));
+    owAdminTop('Art Map: entry', 'وجهات: الدخول', '.eo-h{font-size:17px;margin:0;}.flt{display:flex;flex-wrap:wrap;gap:8px;align-items:end;}.flt .field{margin:0;min-width:150px;flex:1 1 150px;}', '', 'owner.php');
+    $eoKinds = array_intersect_key(OW_MAP_KINDS, ['museum' => 1, 'gallery' => 1]); ?>
+  <h1><?= owBi('Art Map: entry of museums and galleries', 'وجهات: دخول المتاحف والمعارض') ?></h1>
+  <p class="mini"><?= owBi('You can change only the Entry of each place (free, paid with its price, or booking needed), from official sources only. Everything else stays with the owner.', 'يمكنك تغيير الدخول فقط لكل مكان (مجاني، مدفوع مع سعره، أو يحتاج حجزا)، من المصادر الرسمية فقط. كل ما عدا ذلك يبقى للمالك') ?></p>
+  <?php if (($_GET['ok'] ?? '') === 'entry'): ?><div class="alert alert-ok"><?= owBi('The entry is saved', 'تم حفظ الدخول') ?></div><?php endif; ?>
+  <?php foreach ($errors as $er): ?><div class="alert alert-error"><?= owBi($er[0], $er[1]) ?></div><?php endforeach; ?>
+  <form class="card flt" method="get" action="admin_art_map.php">
+    <div class="field"><label for="fk"><?= owBi('Type', 'النوع') ?></label><select id="fk" name="k"><?= $opt($eoKinds, $fk, 2, 'All · الكل') ?></select></div>
+    <div class="field"><label for="frg"><?= owBi('Region', 'المنطقة') ?></label><select id="frg" name="rg"><?= $opt(OW_MAP_REGIONS, $frg, 0, 'All · الكل') ?></select></div>
+    <div class="field"><label for="fs"><?= owBi('Search', 'بحث') ?></label><input id="fs" type="search" name="s" value="<?= e($fs) ?>" maxlength="80"></div>
+    <button class="btn btn-dark btn-sm" type="submit"><?= owBi('Show', 'عرض') ?></button>
+  </form>
+  <p class="mini"><?= owBi(count($rows) . ' shown', 'المعروض ' . count($rows)) ?></p>
+  <?php foreach ($rows as $p): $K = OW_MAP_KINDS[$p['kind']] ?? OW_MAP_KINDS['museum']; $R = OW_MAP_REGIONS[$p['region']] ?? ['—', '—']; ?>
+  <div class="card" id="p<?= (int) $p['id'] ?>">
+    <h3 class="eo-h"><?= e($p['name_en']) ?> · <span dir="rtl"><?= e($p['name_ar']) ?></span></h3>
+    <div class="mini"><?= owBi($K[2], $K[3]) ?> · <?= e($p['city_en']) ?> · <span dir="rtl"><?= e($p['city_ar']) ?></span> · <?= owBi($R[0], $R[1]) ?></div>
+    <?php $entryBox($p); ?>
+  </div>
+  <?php endforeach; ?>
+<?php owAdminBottom(); exit;
+}
+
 owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-columns:120px 1fr;gap:var(--space-sm);}.pl img,.pl .noimg{width:120px;height:75px;object-fit:cover;border-radius:8px;background:var(--color-surface-2);display:block;}.pl .noimg{display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-body);text-align:center;}
 .pl-head{display:flex;justify-content:space-between;gap:var(--space-sm);align-items:flex-start;flex-wrap:wrap;}.pl-head h3{font-size:17px;margin:0;}.pl-links{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:var(--fs-caption);margin:6px 0;}.pl-links a{color:var(--color-accent-dark);}
 .cf{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;border:1px solid var(--color-border-strong);}.cf.low{background:#b42318;border-color:#b42318;color:#fff;}.cf.high{background:rgba(var(--rgb-accent),.1);}
@@ -343,27 +402,7 @@ owAdminTop('Art Map', 'خريطة الفن', '.pl{display:grid;grid-template-col
             <p class="mini"><?= owBi('In Google Maps, open the place, press Share and copy the link (or copy the address bar), then paste it above: the two numbers fill in by themselves and the pin shows on the small map. Check the pin, then save. You can also type the numbers yourself. Empty numbers + Save takes the place off the map.', 'في خرائط Google افتح المكان واضغط «مشاركة» وانسخ الرابط (أو انسخ شريط العنوان)، ثم الصقه أعلاه: يُملأ الرقمان تلقائيا ويظهر الدبوس على الخريطة الصغيرة. تأكد من الدبوس ثم احفظ. ويمكنك أيضا كتابة الرقمين بنفسك. حفظ الرقمين فارغين يُزيل المكان من الخريطة.') ?></p>
             <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save the location', 'احفظ الموقع') ?></button>
           </form></details>
-        <?php if (in_array($p['kind'], ['museum', 'gallery'], true) && owEntryReady()):   // Entry (owner, 27 Nov 2026)
-          $mineE = $coordErr === -100000 - (int) $p['id']; $ev = fn(string $k) => (string) ($mineE ? ($_POST[$k] ?? '') : ($p[$k] ?? ''));
-          $ekCur = owPlaceEntry($p); $ekVal = $mineE ? (string) ($_POST['entry_kind'] ?? '') : $ekCur;
-          $prVal = $ev('entry_price'); if (!$mineE && $prVal !== '') $prVal = rtrim(rtrim($prVal, '0'), '.'); ?>
-        <details<?= $mineE ? ' open' : '' ?>><summary><?= owBi('Entry', 'الدخول') ?> <?= $ekCur === '' ? '<span class="pillx warn">' . owBi('Not set', 'غير محدد') . '</span>' : '<span class="pillx on">' . owBi(OW_ENTRY_KINDS[$ekCur][0], OW_ENTRY_KINDS[$ekCur][1]) . '</span>' ?></summary>
-          <form method="post" action="admin_art_map.php?<?= e(ltrim($keep(), '&')) ?>"><?= csrfField() ?><input type="hidden" name="do" value="entry"><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
-            <p class="mini"><?= owBi('Fill this only from the place’s official source (its website, the Ministry of Culture, Visit Saudi). Never guess. "Not set" shows nothing to visitors. "Free entry" adds a badge on the Art Map and the place page, and the place shows under "Free entry only".', 'املأ هذا من المصدر الرسمي للمكان فقط (موقعه، وزارة الثقافة، روح السعودية). لا تخمّن أبدا. «غير محدد» لا يظهر شيئا للزوار. «دخول مجاني» يضيف شارة في وجهات الفن وصفحة المكان، ويظهر المكان في «الدخول المجاني فقط».') ?></p>
-            <div class="g2">
-              <div class="field"><label for="ek-<?= (int) $p['id'] ?>"><?= owBi('Entry', 'الدخول') ?></label><select id="ek-<?= (int) $p['id'] ?>" name="entry_kind">
-                <option value=""<?= $ekVal === '' ? ' selected' : '' ?>><?= e('Not set · غير محدد') ?></option>
-                <?php foreach (OW_ENTRY_KINDS as $ek => $ew): ?><option value="<?= e($ek) ?>"<?= $ekVal === $ek ? ' selected' : '' ?>><?= e($ew[0] . ' · ' . $ew[1]) ?></option><?php endforeach; ?>
-              </select></div>
-              <?= $field('entry_price', 'Price in SAR (only for paid entry)', 'السعر بالريال (للدخول المدفوع فقط)', $prVal, ' inputmode="decimal" dir="ltr" maxlength="10"', false, 'en' . $p['id']) ?>
-            </div>
-            <div class="g2">
-              <?= $field('entry_source', 'Official source link (optional)', 'رابط المصدر الرسمي (اختياري)', $ev('entry_source'), ' dir="ltr" maxlength="500" inputmode="url"', false, 'en' . $p['id']) ?>
-              <div class="field"><label for="ec-<?= (int) $p['id'] ?>"><?= owBi('Last checked (optional)', 'آخر تحقق (اختياري)') ?></label><input id="ec-<?= (int) $p['id'] ?>" type="date" name="entry_checked" max="<?= date('Y-m-d') ?>" value="<?= e($ev('entry_checked')) ?>"></div>
-            </div>
-            <button class="btn btn-primary btn-sm" type="submit"><?= owBi('Save the entry', 'احفظ الدخول') ?></button>
-          </form></details>
-        <?php endif; ?>
+        <?php $entryBox($p); ?>
         <details<?= $errors && !$photoErr && !$coordErr && (int) ($_POST['id'] ?? 0) === (int) $p['id'] ? ' open' : '' ?>><summary><?= owBi('Edit', 'تعديل') ?></summary><?php $form($p); ?></details>
         <?php if ($p['kind'] === 'museum' && isset($p['partner']) && is_file(__DIR__ . '/booking_lib.php')): require_once __DIR__ . '/booking_lib.php';
           $acct = ''; if (!empty($p['user_id'])) { $ua = $db->prepare('SELECT email FROM users WHERE id = :u'); $ua->execute([':u' => (int) $p['user_id']]); $acct = (string) $ua->fetchColumn(); }
