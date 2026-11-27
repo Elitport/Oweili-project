@@ -157,13 +157,13 @@ if ($ready && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $pr = trim(strtr((string) ($_POST['entry_price'] ?? ''), ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9', ',' => '.', '٫' => '.']));
         $srcIn = $txt('entry_source', 500); $src = $srcIn === '' ? '' : owMapUrl($srcIn);
         $chk = trim((string) ($_POST['entry_checked'] ?? ''));
-        if ($ek === 'paid' && (!is_numeric($pr) || (float) $pr <= 0 || (float) $pr > 100000)) $errors[] = ['Please write the entry price in SAR (a number above 0)', 'يرجى كتابة سعر الدخول بالريال (رقم أكبر من 0)'];
+        if (($ek === 'paid' || $ek === 'paid_from') && (!is_numeric($pr) || (float) $pr <= 0 || (float) $pr > 100000)) $errors[] = ['Please write the entry price in SAR (a number above 0)', 'يرجى كتابة سعر الدخول بالريال (رقم أكبر من 0)'];
         if ($srcIn !== '' && $src === '') $errors[] = ['Please check the official source link (it must start with https://)', 'يرجى مراجعة رابط المصدر الرسمي (يبدأ بـ https://)'];
         if ($chk !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $chk) || !checkdate((int) substr($chk, 5, 2), (int) substr($chk, 8, 2), (int) substr($chk, 0, 4)) || $chk > date('Y-m-d'))) $errors[] = ['Please check the "last checked" date (not in the future)', 'يرجى مراجعة تاريخ «آخر تحقق» (ليس في المستقبل)'];
         if (!$errors) {
             $db->prepare('UPDATE art_places SET entry_kind = :k, entry_price = :p, entry_source = :s, entry_checked = :c WHERE id = :id')
-               ->execute([':k' => $ek, ':p' => $ek === 'paid' ? round((float) $pr, 2) : null, ':s' => $ek === '' ? '' : $src, ':c' => $ek === '' || $chk === '' ? null : $chk, ':id' => $id]);
-            owLog('art_place_entry', 'art_place', $id, (string) $cur . ': ' . ($ek === '' ? 'not set' : $ek . ($ek === 'paid' ? ' ' . $pr . ' SAR' : '')), $actor);
+               ->execute([':k' => $ek, ':p' => ($ek === 'paid' || $ek === 'paid_from') ? round((float) $pr, 2) : null, ':s' => $ek === '' ? '' : $src, ':c' => $ek === '' || $chk === '' ? null : $chk, ':id' => $id]);
+            owLog('art_place_entry', 'art_place', $id, (string) $cur . ': ' . ($ek === '' ? 'not set' : $ek . ($ek === 'paid' || $ek === 'paid_from' ? ' ' . ($ek === 'paid_from' ? 'from ' : '') . $pr . ' SAR' : '')), $actor);
             header('Location: admin_art_map.php?ok=entry' . $keep() . '#p' . $id); exit;
         }
         $coordErr = -100000 - $id;   // keeps the Entry box open with the typed values

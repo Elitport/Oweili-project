@@ -74,7 +74,7 @@ function owPlaceAddressAr(array $p): string { $a = trim((string) ($p['address_ar
 
 /* Entry of a museum or gallery (owner, 27 Nov 2026): free / paid (with its price) / booking needed, filled by the team
    from official sources in Admin → Art Map. '' = not set: visitors see nothing. Never guessed (free_entry.sql) */
-const OW_ENTRY_KINDS = ['free' => ['Free entry', 'دخول مجاني'], 'paid' => ['Paid entry', 'دخول مدفوع'], 'booking' => ['Booking needed', 'يلزم الحجز']];
+const OW_ENTRY_KINDS = ['free' => ['Free entry', 'دخول مجاني'], 'paid' => ['Paid entry', 'دخول مدفوع'], 'paid_from' => ['Paid entry, from a starting price', 'دخول مدفوع، بسعر يبدأ من'], 'booking' => ['Booking needed', 'يلزم الحجز']];   // paid_from (owner, 27 Nov 2026): the official source gives only a starting price, shown "From X SAR"
 function owEntryReady(): bool { return owArtPlacesReady() && owHasColumn('art_places', 'entry_kind'); }
 function owPlaceEntry(array $p): string {
     $k = (string) ($p['entry_kind'] ?? '');
@@ -83,11 +83,12 @@ function owPlaceEntry(array $p): string {
 /* The entry details on the place page: what it is, the price, the official source and when it was last checked */
 function owPlaceEntryHtml(array $p): string {
     $k = owPlaceEntry($p); if ($k === '') return '';
-    $E = OW_ENTRY_KINDS[$k];
+    $E = OW_ENTRY_KINDS[$k === 'paid_from' ? 'paid' : $k];
     $txtEn = $E[0]; $txtAr = $E[1];
-    if ($k === 'paid' && is_numeric($p['entry_price'] ?? null) && (float) $p['entry_price'] > 0) {
+    if (($k === 'paid' || $k === 'paid_from') && is_numeric($p['entry_price'] ?? null) && (float) $p['entry_price'] > 0) {
         $n = (float) $p['entry_price']; $t = number_format($n, $n == floor($n) ? 0 : 2);
-        $txtEn .= ': ' . $t . ' SAR'; $txtAr .= ': ' . $t . ' ر.س';
+        if ($k === 'paid_from') { $txtEn .= ': From ' . $t . ' SAR'; $txtAr .= ': من ' . $t . ' ريال'; }
+        else { $txtEn .= ': ' . $t . ' SAR'; $txtAr .= ': ' . $t . ' ر.س'; }
     }
     $h = '<li><b>' . owBi('Entry', 'الدخول') . '</b> ' . ($k === 'free' ? owFreeBadge() : owBi($txtEn, $txtAr)) . '</li>';
     $src = owMapUrl((string) ($p['entry_source'] ?? ''));
