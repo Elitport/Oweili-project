@@ -123,6 +123,10 @@ function owOrderMove(int $id, string $to, ?array $actor, string $note = ''): boo
         $db->commit();
     } catch (Throwable $e) { if ($db->inTransaction()) $db->rollBack(); error_log('owOrderMove: ' . $e->getMessage()); return false; }
     owOrderEvent($id, (string) $o['status'], $to, $actor, $note);
+    if ($to === 'paid') {   // every paid order gets its invoice; an artwork also its certificate, on one email (owner, 27 Nov 2026)
+        require_once __DIR__ . '/invoice_lib.php';
+        if ($o['kind'] === 'artwork') owArtworkPaidMail($id); else owInvoiceSend('order', $id);
+    }
     return true;
 }
 /* The collector: "I received the artwork" with 1 to 3 photos and the tick "arrived in good condition".

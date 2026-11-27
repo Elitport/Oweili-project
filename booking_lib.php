@@ -746,7 +746,10 @@ function owCourseConfirmMail(int $regId): void {
         $ar = '<p><b>تم تسجيلك.</b></p><p>' . $h($c['title_ar']) . '<br>' . $h($c['inst_ar']) . '<br>' . $h($dAr) . ' · ' . $h($c['schedule_ar']) . '<br>' . $whereAr . '</p>'
             . '<p>رقم الحجز: <b>' . $h($r['ref_no']) . '</b><br>المدفوع: ' . ($amt > 0 ? number_format($amt, 2) . ' ر.س' : 'مجاني') . '</p>'
             . '<p>حجوزاتك: <a href="' . owSiteBase() . '/my_bookings.php?lang=ar">' . owSiteBase() . '/my_bookings.php</a></p>';
-        owSendMail((string) $r['student_email'], 'You are registered · تم تسجيلك: ' . $c['title_en'], owBookMailHtml($en, $ar), true);
+        require_once __DIR__ . '/invoice_lib.php';
+        [$att, $inv] = owInvoiceAttachFor('course', $regId);   // the receipt or tax invoice travels with this email (27 Nov 2026)
+        if ($inv) { $en .= '<p>Your ' . strtolower(owInvTitle($inv)[0]) . ' ' . $h($inv['invoice_no']) . ' is attached as a PDF.</p>'; $ar .= '<p>' . owInvTitle($inv)[1] . ' رقم ' . $h($inv['invoice_no']) . ' مرفق بصيغة PDF.</p>'; }
+        if (owSendMail((string) $r['student_email'], 'You are registered · تم تسجيلك: ' . $c['title_en'], owBookMailHtml($en, $ar), true, $mlog, $att ? ['attach' => $att] : []) && $inv && $att) owInvMarkEmailed($inv);
         $inst = trim((string) $c['inst_email']);
         if ($inst !== '' && filter_var($inst, FILTER_VALIDATE_EMAIL))
             owSendMail($inst, 'New registration · تسجيل جديد: ' . $c['title_en'], "A new student registered for {$c['title_en']} ({$r['ref_no']}). See your dashboard: " . owSiteBase() . "/institute_dashboard.php\r\n\r\n"
@@ -769,7 +772,10 @@ function owTicketMail(int $ticketId): void {
             . '<p>Ticket number: <b>' . $h($t['ref_no']) . '</b><br>Paid: ' . number_format((float) $t['amount'], 2) . ' SAR</p><p>Show the QR code at the entrance. It works once.</p>';
         $ar = '<p><b>تذكرتك</b></p><p>' . $h($p['name_ar']) . '<br>' . $h($p['city_ar']) . '<br>تاريخ الزيارة: ' . $h($dAr) . '<br>' . $h($lAr) . '</p>'
             . '<p>رقم التذكرة: <b>' . $h($t['ref_no']) . '</b><br>المدفوع: ' . number_format((float) $t['amount'], 2) . ' ر.س</p><p>اعرض رمز QR عند المدخل. يعمل مرة واحدة.</p>';
-        owSendMail((string) $t['buyer_email'], 'Your ticket · تذكرتك: ' . $p['name_en'], owBookMailHtml($en, $ar, $qr), true);
+        require_once __DIR__ . '/invoice_lib.php';
+        [$att, $inv] = owInvoiceAttachFor('ticket', $ticketId);   // the receipt or tax invoice travels with the ticket (27 Nov 2026)
+        if ($inv) { $en .= '<p>Your ' . strtolower(owInvTitle($inv)[0]) . ' ' . $h($inv['invoice_no']) . ' is attached as a PDF.</p>'; $ar .= '<p>' . owInvTitle($inv)[1] . ' رقم ' . $h($inv['invoice_no']) . ' مرفق بصيغة PDF.</p>'; }
+        if (owSendMail((string) $t['buyer_email'], 'Your ticket · تذكرتك: ' . $p['name_en'], owBookMailHtml($en, $ar, $qr), true, $mlog, $att ? ['attach' => $att] : []) && $inv && $att) owInvMarkEmailed($inv);
     } catch (Throwable $e) { error_log('owTicketMail: ' . $e->getMessage()); }
 }
 

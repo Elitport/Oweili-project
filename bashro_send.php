@@ -65,6 +65,7 @@ function owBashroClean(string $kind, array $m): array {
 
 /* Queue one message; it is sent after the page is delivered */
 function owBashroQueue(string $kind, array $message): void {
+    if (defined('OW_PREVIEW') && OW_PREVIEW) return;   // the owner's Preview pages never send anything
     if (!owBashroKindOn($kind) || !isset(OW_BASHRO_FIELDS[$kind])) return;
     $GLOBALS['OW_BASHRO_OUT'][] = ['body' => json_encode(owBashroClean($kind, $message), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'kind' => $kind, 'tries' => 0];
     static $planned = false;

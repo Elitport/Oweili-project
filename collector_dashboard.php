@@ -37,7 +37,7 @@ require_once __DIR__ . '/order_lib.php';
 require_once __DIR__ . '/gallery_lib.php';
 /* Pages (?tab=). Old links keep working: no tab = Home (was My requests), purchases = My collection */
 $payOn  = owPaymentsOn();                         // orders and complaints show only once payments are switched on
-$TABS = ['home', 'collection', 'orders', 'bookings', 'requests', 'favorites', 'following', 'messages', 'complaints', 'profile', 'account'];
+$TABS = ['home', 'collection', 'orders', 'bookings', 'invoices', 'requests', 'favorites', 'following', 'messages', 'complaints', 'profile', 'account'];
 $tabIn = (string) ($_GET['tab'] ?? '');
 if ($tabIn === 'purchases') $tabIn = 'collection';
 $tab  = in_array($tabIn, $TABS, true) ? $tabIn : 'home';
@@ -178,6 +178,12 @@ $following  = $safe(fn() => owFollowedArtists($uid));
 $newWorks   = $safe(fn() => owFollowNewWorks($uid, 8));
 require_once __DIR__ . '/booking_lib.php';
 $showBookings = owCoursesOn() || $bookings || $tickets;
+/* My invoices (owner, 27 Nov 2026): every receipt or tax invoice of this collector (invoice_lib.php) */
+require_once __DIR__ . '/invoice_lib.php';
+$invoices = $safe(fn() => owInvForUser($uid, (string) $me['email'], $verified));
+$invOf = [];   // [source kind][source id] => invoice number, for the "Invoice" links on orders and bookings
+foreach ($invoices as $iv) $invOf[$iv['source_kind']][(int) $iv['source_id']] = (string) $iv['invoice_no'];
+$invLink = fn(string $k, $id) => isset($invOf[$k][(int) $id]) ? '<a class="c-inv" href="invoice.php?no=' . e(rawurlencode($invOf[$k][(int) $id])) . '" target="_blank" rel="noopener" data-no-prefetch>' . owBi('Invoice', 'الفاتورة') . ' <bdi dir="ltr">' . e($invOf[$k][(int) $id]) . '</bdi></a>' : '';
 if ($tab === 'bookings' && !$showBookings) $tab = 'home';
 
 /* What needs the collector now */
@@ -208,6 +214,7 @@ $ICON = [
  'gallery' => '<path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/>',
  'out' => '<path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4M6 12h10"/>',
  'cert' => '<circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/>',
+ 'receipt' => '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
 ];
 $icon = fn(string $k): string => '<svg class="o-ic" viewBox="0 0 24 24" aria-hidden="true">' . ($ICON[$k] ?? '') . '</svg>';
 /* [tab, English, Arabic, icon, shown] */
@@ -217,6 +224,7 @@ $MENU = [
      ['collection', 'My collection', 'مجموعتي', 'frame', true],
      ['orders', 'Orders', 'الطلبات', 'cart', $payOn],
      ['bookings', 'Courses and bookings', 'الدورات والحجوزات', 'ticket', $showBookings],
+     ['invoices', 'My invoices', 'فواتيري', 'receipt', true],
      ['requests', 'My requests', 'طلباتي', 'chat', true]]],
   [['Following', 'المتابعة'], [
      ['favorites', 'Favourites', 'المفضلة', 'heart', true],
@@ -229,7 +237,7 @@ $MENU = [
      ['account', 'Email and password', 'البريد وكلمة المرور', 'lock', true]]],
 ];
 $TITLE = ['home' => ['My dashboard', 'لوحتي'], 'collection' => ['My collection', 'مجموعتي'], 'orders' => ['Orders', 'الطلبات'],
-          'bookings' => ['Courses and bookings', 'الدورات والحجوزات'], 'requests' => ['My requests', 'طلباتي'], 'favorites' => ['Favourites', 'المفضلة'],
+          'bookings' => ['Courses and bookings', 'الدورات والحجوزات'], 'invoices' => ['My invoices', 'فواتيري'], 'requests' => ['My requests', 'طلباتي'], 'favorites' => ['Favourites', 'المفضلة'],
           'following' => ['Artists I follow', 'فنانون أتابعهم'], 'messages' => ['Messages from Oweili', 'رسائل من أويلي'], 'complaints' => ['Complaints', 'الشكاوى'],
           'profile' => ['Profile', 'الملف الشخصي'], 'account' => ['Email and password', 'البريد وكلمة المرور']];
 $tLine = function (array $r): array { $en = (string) ($r['title_en'] ?: $r['title_ar']); $ar = (string) ($r['title_ar'] ?: $r['title_en']); return [$en, $ar]; };
@@ -391,6 +399,7 @@ $steps = function (array $o): string {
           <h2 class="c-at"><?= owBi($en, $ar) ?></h2>
           <a class="c-artist" href="artist_dashboard.php?id=<?= (int) $c['artist_id'] ?>"><?= owBiName((string) $c['artist_en'], (string) $c['artist_ar'], 'by', 'بريشة') ?></a>
           <span class="o-sm"><?= owBi('Bought ' . $dEn, 'اقتنيته في ' . $dAr) ?> · <?= $money($c['price']) ?></span>
+          <?php if (!empty($c['order_id']) && ($il = $invLink('order', $c['order_id'])) !== ''): ?><span class="o-sm"><?= $il ?></span><?php endif; ?>
           <?php if ($c['cert_no'] !== ''): ?>
             <div class="c-cert">
               <span class="c-qr"><?= owQrSvg(owCertVerifyUrl($c['cert_no']), 84, owIsAr() ? 'رمز التحقق من الشهادة' : 'Certificate check code') ?></span>
@@ -424,6 +433,7 @@ $steps = function (array $o): string {
         <span class="o-sm"><?= owBi($k[0], $k[1]) ?> · <bdi dir="ltr"><?= e($o['order_no']) ?></bdi> · <?= owBi($dEn, $dAr) ?> · <?= $money($o['amount']) ?></span></div>
         <?= owBuyerOrderPill($o) ?></div>
       <?= $steps($o) ?>
+      <?php if (($il = $invLink('order', $o['id'])) !== ''): ?><p class="o-sm"><?= $il ?></p><?php endif; ?>
       <?php if ($o['status'] === 'delivered' && empty($o['confirmed_at'])): ?>
         <div class="o-row-btns"><a class="btn btn-primary btn-sm" href="my_orders.php?o=<?= (int) $o['id'] ?>"><?= owBi('I received the artwork', 'استلمت العمل') ?></a>
           <a class="btn btn-secondary btn-sm" href="my_orders.php?o=<?= (int) $o['id'] ?>"><?= owBi('Something is wrong', 'هناك مشكلة') ?></a></div>
@@ -442,16 +452,35 @@ $steps = function (array $o): string {
         <?php elseif (owRegIsBooking($b)): ?><span class="c-pill warn"><?= owBi('Booked, waiting for payment', 'محجوز، بانتظار الدفع') ?></span>
         <?php else: ?><span class="c-pill on"><?= owBi('Confirmed', 'مؤكد') ?></span><?php endif; ?></div>
         <?php if (owRegIsBooking($b) && (float) $b['amount'] > 0 && $b['status'] !== 'cancelled'): ?><p class="o-sm"><?= owBi('Your seat is held. We will contact you to arrange the payment', 'مقعدك محجوز. سنتواصل معك لترتيب الدفع') ?></p><?php endif; ?>
+        <?php if (($il = $invLink('course', $b['id'])) !== ''): ?><p class="o-sm"><?= $il ?></p><?php endif; ?>
       </section>
     <?php endforeach; ?>
     <?php foreach ($tickets as $t): [$dEn, $dAr] = owDateBi($t['visit_date']); ?>
       <section class="o-t c-order"><div class="c-orow"><div><h2 class="c-at"><?= owBi((string) $t['name_en'], (string) ($t['name_ar'] ?: $t['name_en'])) ?></h2>
         <span class="o-sm"><?= owBi('Museum ticket', 'تذكرة متحف') ?> · <bdi dir="ltr"><?= e($t['ref_no']) ?></bdi> · <?= owBi($dEn, $dAr) ?></span></div>
         <span class="c-pill<?= $t['status'] === 'paid' ? ' on' : '' ?>"><?= $t['status'] === 'used' ? owBi('Used', 'مستخدمة') : ($t['status'] === 'cancelled' ? owBi('Cancelled', 'ملغاة') : owBi('Ready', 'جاهزة')) ?></span></div>
+        <?php if (($il = $invLink('ticket', $t['id'])) !== ''): ?><p class="o-sm"><?= $il ?></p><?php endif; ?>
       </section>
     <?php endforeach; ?>
     <p class="o-foot-note"><a href="my_bookings.php"><?= owBi('Booking details, meeting links and tickets', 'تفاصيل الحجز وروابط الدورات والتذاكر') ?></a></p>
   </div><?php endif; ?>
+
+<?php elseif ($tab === 'invoices'): ?>
+  <p class="o-note"><?= owBi('A receipt or invoice for every purchase: artworks, courses, workshops and museum tickets. Each one is also sent to your email as a PDF', 'إيصال أو فاتورة لكل عملية شراء: الأعمال الفنية والدورات والورش وتذاكر المتاحف. ونرسل كل واحدة إلى بريدك بصيغة PDF أيضا') ?></p>
+  <?php if (!$invoices): ?>
+    <div class="o-t"><p class="o-empty"><?= owBi('No invoices yet. They appear here after each purchase', 'لا فواتير بعد. تظهر هنا بعد كل عملية شراء') ?></p></div>
+  <?php else: ?>
+    <div class="o-t"><div class="o-tablewrap"><table class="o-table c-inv-table">
+      <thead><tr><th><?= owBi('Number', 'الرقم') ?></th><th><?= owBi('Date', 'التاريخ') ?></th><th><?= owBi('Item', 'البند') ?></th><th><?= owBi('Amount', 'المبلغ') ?></th><th><?= owBi('Type', 'النوع') ?></th><th><span class="sr-only"><?= owBi('Open', 'فتح') ?></span></th></tr></thead>
+      <tbody>
+      <?php foreach ($invoices as $iv): [$dEn, $dAr] = owDateBi($iv['issued_at']); [$tEn, $tAr] = owInvTitle($iv); $u = 'invoice.php?no=' . rawurlencode($iv['invoice_no']); ?>
+        <tr><td><bdi dir="ltr"><?= e($iv['invoice_no']) ?></bdi></td><td><?= owBi($dEn, $dAr) ?></td><td><?= owBi((string) $iv['item_en'], (string) $iv['item_ar']) ?></td>
+          <td><?= (float) $iv['amount'] > 0 ? $money($iv['amount']) : owBi('Free', 'مجاني') ?></td><td><?= owBi($tEn, $tAr) ?></td>
+          <td class="c-inv-act"><a class="btn btn-secondary btn-sm" href="<?= e($u) ?>" target="_blank" rel="noopener" data-no-prefetch><?= owBi('Open', 'افتح') ?></a>
+            <a class="btn btn-ghost btn-sm" href="<?= e($u) ?>&amp;dl=1" data-no-prefetch><?= owBi('Download PDF', 'تنزيل PDF') ?></a></td></tr>
+      <?php endforeach; ?>
+      </tbody></table></div></div>
+  <?php endif; ?>
 
 <?php elseif ($tab === 'requests'): ?>
   <?php if (!$requests): ?>

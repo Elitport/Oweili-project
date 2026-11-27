@@ -307,6 +307,7 @@ function owWsBook(array $w, array &$errors): string {
                       VALUES (:w, :r, :n, :p, :e, :l, :a, :cr, :ca, :aa, :s, ' . ($free ? 'NOW()' : 'NULL') . ')')
            ->execute([':w' => (int) $w['id'], ':r' => $ref, ':n' => $b['name'], ':p' => $b['phone'], ':e' => $b['email'], ':l' => owIsAr() ? 'ar' : 'en',
                       ':a' => $price, ':cr' => $rate, ':ca' => $sp['commission'], ':aa' => $sp['partner'], ':s' => $free ? 'paid' : 'booked']);
+        $bookingId = (int) $db->lastInsertId();
         $db->commit();
     } catch (Throwable $e) {
         if ($db->inTransaction()) $db->rollBack();
@@ -321,6 +322,7 @@ function owWsBook(array $w, array &$errors): string {
         'workshop.php?id=' . (int) $w['id']);
     require_once __DIR__ . '/alert_lib.php';
     owAdminAlert('workshop', 'New workshop booking: ' . $w['title_en'], 'حجز جديد في ورشة: ' . $w['title_ar'], 'admin_workshops.php#bookings');
+    if ($free) { require_once __DIR__ . '/invoice_lib.php'; owInvoiceSend('workshop', $bookingId); }   // a free seat gets its receipt too (27 Nov 2026)
     return $ref;
 }
 /* The admin marks a booking paid: the artist's payout row is made (price minus the course commission) */
@@ -338,6 +340,8 @@ function owWsMarkPaid(int $bookingId, string $payRef): bool {
     owReqTellBuyer((string) $b['email'], 'Your seat is confirmed · تم تأكيد مقعدك',
         'Thank you. We received your payment. Your seat in "' . $b['title_en'] . '" is confirmed. Booking number: ' . $b['ref_no'] . '.',
         'شكرا لك. وصلنا دفعك. تم تأكيد مقعدك في الورشة. رقم الحجز: ' . $b['ref_no'] . '.');
+    require_once __DIR__ . '/invoice_lib.php';
+    owInvoiceSend('workshop', $bookingId);   // the receipt or tax invoice, by email as a PDF (27 Nov 2026)
     return true;
 }
 function owWsCancelBooking(int $bookingId): bool {

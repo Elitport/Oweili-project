@@ -251,6 +251,7 @@ function owMailLangLinks(string $to, string $body): string {
 
 function owSendMail(string $to, string $subject, string $body, bool $isHtml = false, ?array &$log = null, array $opt = []): bool {
     $log = [];
+    if (defined('OW_PREVIEW') && OW_PREVIEW) { $log[] = 'Preview: not sent'; return true; }   // the owner's Preview pages never send anything (27 Nov 2026)
     $to  = trim($to);
     if (!filter_var($to, FILTER_VALIDATE_EMAIL) || preg_match('/[\r\n]/', $to . $subject)) {
         $log[] = 'Not a valid email address';
@@ -258,6 +259,7 @@ function owSendMail(string $to, string $subject, string $body, bool $isHtml = fa
     }
     $subject = owMailSubjectFor($to, $subject);   // one language per subject: the reader's (owner, 27 Nov 2026)
     $msg = owMailMessage($to, $subject, $body, $isHtml, $opt);
+    $msg['attach'] = array_values(array_filter((array) ($opt['attach'] ?? []), fn($a) => is_array($a) && isset($a['name'], $a['data'])));   // PDFs (invoice, certificate; 27 Nov 2026). Only PHPMailer sends them
 
     /* 0. PHPMailer, exactly like elitcv.com (smtp.hostinger.com, SSL, port 465) */
     if (owSmtpReady() && owSendWithPhpMailer($to, $subject, $msg, $log)) return true;
@@ -327,6 +329,7 @@ function owSendWithPhpMailer(string $to, string $subject, array $msg, array &$lo
         $mail->Body    = $msg['html'];
         $mail->AltBody = $msg['text'];
         foreach ($msg['extra'] ?? [] as $k => $v) $mail->addCustomHeader($k, $v);   // List-Unsubscribe (news only)
+        foreach ($msg['attach'] ?? [] as $a) $mail->addStringAttachment((string) $a['data'], basename((string) $a['name']), 'base64', (string) ($a['type'] ?? 'application/pdf'));
         $mail->send();
         $log[] = 'Sent with PHPMailer through ' . $mail->Host . ':' . $port;
         return true;

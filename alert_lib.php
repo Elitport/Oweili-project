@@ -28,6 +28,7 @@ function owAlertDueFile(): string { return __DIR__ . '/.logs/admin_alerts_due'; 
 
 /* Queue one alert and send now if the last alert email was 15+ minutes ago */
 function owAdminAlert(string $kind, string $en, string $ar, string $link): void {
+    if (defined('OW_PREVIEW') && OW_PREVIEW) return;   // the owner's Preview pages never alert anyone
     try {
         if (!owHasTable('activity_log')) return;
         owLog('admin_alert', $kind, null, json_encode(['en' => mb_substr($en, 0, 160), 'ar' => mb_substr($ar, 0, 160), 'link' => $link], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),

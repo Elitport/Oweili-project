@@ -19,6 +19,8 @@
 require_once 'config.php';
 require_once __DIR__ . '/booking_lib.php';
 require_once __DIR__ . '/inst_lib.php';
+require_once __DIR__ . '/identity_lib.php';   // National Address certificate and photos, encrypted (owner, 27 Nov 2026)
+$idOn = owIdReady();
 $preview = owCoursesGate();
 $err = null; $ok = false; $bad = [];
 $v = ['name_en' => '', 'name_ar' => '', 'legal_name' => '', 'city' => '', 'person' => '', 'email' => '', 'phone' => '', 'link' => '', 'desc_en' => '', 'desc_ar' => '',
@@ -56,6 +58,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         elseif ($pass !== $confirm) $fail(['Passwords do not match', 'كلمتا المرور غير متطابقتين'], 'confirm');
         elseif (empty($_FILES['reg_file']['name'])) $fail(['Please upload the registration document (PDF or photo)', 'يرجى رفع مستند التسجيل (PDF أو صورة)'], 'reg_file');
         elseif ($v['licence_from'] !== '' && empty($_FILES['licence_file']['name'])) $fail(['Please upload the training licence (PDF or photo), or leave the licence empty for now', 'يرجى رفع ترخيص التدريب (PDF أو صورة)، أو اتركه فارغا الآن'], 'licence_file');
+        elseif ($idOn && empty($_FILES['address_file']['name'])) $fail(['Please upload your Saudi National Address certificate (PDF or photo)', 'يرجى رفع شهادة العنوان الوطني (PDF أو صورة)'], 'address_file');
+        elseif ($idOn && (count(owIdFileList($_FILES, 'place_photos')) < 2 || count(owIdFileList($_FILES, 'place_photos')) > 5)) $fail(['Please add 2 to 5 photos of your premises or of your students’ work', 'يرجى إضافة 2 إلى 5 صور لمقر المعهد أو لأعمال طلابك'], 'place_photos');
+        elseif ($idOn && !isset($_POST['id_consent'])) $fail(['Please tick that Oweili may keep your documents', 'يرجى الموافقة على احتفاظ أويلي بمستنداتك'], 'id_consent');
     }
     if (!$err) {
         $st = getDB()->prepare('SELECT 1 FROM users WHERE LOWER(TRIM(email)) = :e LIMIT 1'); $st->execute([':e' => $v['email']]);
@@ -76,7 +81,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $r = owStoreImage($_FILES['logo'], 'uploads/institutes/', true);
         if (!$r['ok']) $fail(['The logo must be a JPG, PNG or WebP picture up to 10 MB', 'يجب أن يكون الشعار صورة JPG أو PNG أو WebP حتى 10 ميغابايت'], 'logo'); else $logo = $r['path'];
     }
-    if ($err) { foreach ($saved as $f) owInstDocDelete($f); if ($logo !== '') @unlink(__DIR__ . '/' . $logo); }
+    $idFiles = ['address' => '', 'photos' => []];
+    if (!$err && $idOn) {
+        $r = owIdStoreFile($_FILES['address_file'], true);
+        if (!$r['ok']) $fail($r['err'] ?? ['Please upload your Saudi National Address certificate (PDF or photo)', 'يرجى رفع شهادة العنوان الوطني (PDF أو صورة)'], 'address_file'); else $idFiles['address'] = $r['name'];
+        foreach ($err ? [] : owIdFileList($_FILES, 'place_photos') as $pf) {
+            $r = owIdStoreFile($pf, false);
+            if (!$r['ok']) { $fail($r['err'] ?? ['Please add 2 to 5 photos (JPG, PNG or WebP)', 'يرجى إضافة 2 إلى 5 صور (JPG أو PNG أو WebP)'], 'place_photos'); break; }
+            $idFiles['photos'][] = $r['name'];
+        }
+    }
+    $dropId = function () use (&$idFiles) { owIdDeleteFile($idFiles['address']); foreach ($idFiles['photos'] as $f) owIdDeleteFile($f); };
+    if ($err) { foreach ($saved as $f) owInstDocDelete($f); if ($logo !== '') @unlink(__DIR__ . '/' . $logo); $dropId(); }
     else {
         $db = getDB();
         $token = bin2hex(random_bytes(32));
@@ -101,10 +117,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $db->commit();
         } catch (Throwable $e) {
             $db->rollBack(); error_log('register_institute: ' . $e->getMessage());
-            foreach ($saved as $f) owInstDocDelete($f); if ($logo !== '') @unlink(__DIR__ . '/' . $logo);
+            foreach ($saved as $f) owInstDocDelete($f); if ($logo !== '') @unlink(__DIR__ . '/' . $logo); $dropId();
             $err = ['Something went wrong. Please try again.', 'حدث خطأ. حاول مرة أخرى.'];
         }
         if (!$err) {
+            if ($idOn) owIdSaveInstitute($uid, $v['person'], $v['email'], $idFiles['address'], $idFiles['photos'], owSafeLink($v['link'], 'web')[0]);
             owSignupCounted($uid, 'institute');
             require_once __DIR__ . '/alert_lib.php';
             owAdminAlert('booking', 'New institute sign-up: ' . $v['name_en'], 'معهد جديد: ' . $v['name_ar'], 'admin.php#pending');
@@ -188,6 +205,15 @@ owBookTop('Join as an art institute', 'انضم كمعهد فني', 'register_in
     <div class="field<?= $bf('licence_file') ?>"><label for="ri-lf"><?= owBi('Upload the licence (PDF or photo, up to 10 MB)', 'ارفع الترخيص (PDF أو صورة، حتى 10 ميغابايت)') ?></label><input id="ri-lf" name="licence_file" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"<?= $ba('licence_file') ?>></div>
   </div>
 
+  <?php if ($idOn): $cT = owIdConsentText(); ?>
+  <h2 class="ri-sec"><?= owBi('Address and premises', 'العنوان والمقر') ?></h2>
+  <div class="g2">
+    <div class="field<?= $bf('address_file') ?>"><label for="ri-na"><?= owBi('Saudi National Address certificate (PDF or photo, up to 10 MB)', 'شهادة العنوان الوطني (PDF أو صورة، حتى 10 ميغابايت)') ?></label><input id="ri-na" name="address_file" type="file" required accept="application/pdf,image/jpeg,image/png,image/webp"<?= $ba('address_file') ?>></div>
+    <div class="field<?= $bf('place_photos') ?>"><label for="ri-pp"><?= owBi('2 to 5 photos of your premises or your students’ work', '2 إلى 5 صور لمقر المعهد أو لأعمال طلابك') ?></label><input id="ri-pp" name="place_photos[]" type="file" multiple required accept="image/jpeg,image/png,image/webp"<?= $ba('place_photos') ?>></div>
+  </div>
+  <p class="ri-note"><?= owBi('No faces, please. JPG, PNG or WebP, up to 10 MB each. These are private and encrypted, for our review only', 'بدون وجوه من فضلك. JPG أو PNG أو WebP حتى 10 ميغابايت لكل صورة. وهي خاصة ومشفّرة، لمراجعتنا فقط') ?></p>
+  <label class="ri-check<?= $bf('id_consent') ?>"><input type="checkbox" name="id_consent" value="1"<?= isset($_POST['id_consent']) ? ' checked' : '' ?> required<?= $ba('id_consent') ?>> <span><?= owBi(str_replace('your identity document', 'your documents', $cT[0]), str_replace('بوثيقة هويتك', 'بمستنداتك', $cT[1])) ?></span></label>
+  <?php endif; ?>
   <label class="ri-check<?= $bf('docs_ok') ?>"><input type="checkbox" name="docs_ok" value="1"<?= isset($_POST['docs_ok']) ? ' checked' : '' ?> required<?= $ba('docs_ok') ?>> <span><?= owBi('I confirm these documents are valid and mine', 'أؤكد أن هذه المستندات سارية وتخصني') ?></span></label>
   <p class="mini"><?= owBi('By joining you agree to the', 'بالانضمام توافق على') ?> <a href="terms.php"><?= owBi('Terms of Use', 'شروط الاستخدام') ?></a> <?= owBi('and the', 'و') ?> <a href="privacy.php"><?= owBi('Privacy Policy', 'سياسة الخصوصية') ?></a></p>
   <button class="btn btn-primary" type="submit"><?= owBi('Send for review', 'أرسل للمراجعة') ?></button>

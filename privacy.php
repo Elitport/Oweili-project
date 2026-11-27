@@ -8,6 +8,8 @@
 require_once 'config.php';
 require_once __DIR__ . '/page_cache.php'; owPublicPage();   // public page: Back opens at once, early load on touch (page_cache.php)
 require_once __DIR__ . '/legal_lib.php';
+require_once __DIR__ . '/identity_lib.php';   // the keeping years for identity documents (owner, 27 Nov 2026)
+$idY = owIdKeepYears(); $idYen = $idY . ($idY === 1 ? ' year' : ' years'); $idYar = owIdConsentText()[1]; $idYar = preg_match('/لمدة (.+?) بعد/u', $idYar, $m) ? $m[1] : $idY . ' سنوات';
 $C = OW_LEGAL_CONTACT;
 $CO = OW_COMPANY_NAME; $CR = function_exists('owCompanyCr') ? owCompanyCr() : '';
 
@@ -52,6 +54,7 @@ owLegalPage([
         '- "Is this your place?" (Art Map): your name, email, phone (if you give it), a photo (if you send one) and your corrections. We use them only to update that place on the Art Map. Your photo shows on the site only after our team approves it.',
         '- Course bookings: when you book a seat in a course, we keep the student’s name, mobile number and email. We use them to hold your seat, arrange the payment and send your booking details. The institute of that course sees them, so it can welcome you.',
         '- "Notify me" (Art Institutes): your name, mobile number and email. We use them only to tell you when a course opens. The institute does not see them.',
+        '- Identity documents: when an artist joins, we keep their identity document (Saudi national ID, Iqama or passport): its type, number, expiry date and photo. When an art institute joins, we keep its Saudi National Address certificate and 2 to 5 photos of its premises or students’ work. We use them only to check that every artist and institute is real and to prevent fraud. They are encrypted and kept outside the public website: only the Oweili owner, and team members the owner allows, can open them, and every opening is recorded. They are never shown on the site.',
         '- Institute documents: when an art institute joins, we keep its registration (Commercial Register or Freelance document) and its training licence, with their numbers. We use them only to check the institute before it can publish courses. They are kept in a private place: only the Oweili team can open them, never visitors or other institutes.',
         '- Receipt photos: when your artwork arrives, you send us 1 to 3 photos of it with "I received the artwork". We keep them, with your "arrived in good condition" tick, as the record that the artwork arrived safely, so we can pay the artist and settle any later question. They are private: only the Oweili team and the artist of that artwork see them. We remove hidden data such as location before saving. We share a photo publicly only if you tick "Oweili may share my photo of the artwork". Please photograph the artwork only, with no people and no personal details.',
         '- Artist signature: if an artist draws a signature for their certificates, we keep the picture in a private place. It is printed only on that artist’s certificates, after our team approves it.',
@@ -74,6 +77,7 @@ owLegalPage([
         '- «هل هذا مكانك؟» (وجهات الفن): اسمك وبريدك وهاتفك (إن أعطيته) وصورة (إن أرسلتها) وتصحيحاتك. نستخدمها فقط لتحديث هذا المكان في وجهات الفن، ولا تظهر صورتك في الموقع إلا بعد موافقة فريقنا.',
         '- حجز الدورات: حين تحجز مقعدا في دورة، نحفظ اسم الطالب ورقم جواله وبريده. نستخدمها لحجز مقعدك وترتيب الدفع وإرسال تفاصيل حجزك. ويراها معهد تلك الدورة ليستقبلك.',
         '- «نبّهني عند توفر دورة» (المعاهد الفنية): اسمك ورقم جوالك وبريدك. نستخدمها فقط لإخبارك عند توفر دورة، ولا يراها المعهد.',
+        '- وثائق الهوية: حين ينضم فنان، نحفظ وثيقة هويته (الهوية الوطنية السعودية أو الإقامة أو جواز السفر): نوعها ورقمها وتاريخ انتهائها وصورتها. وحين ينضم معهد فني، نحفظ شهادة العنوان الوطني و2 إلى 5 صور لمقره أو لأعمال طلابه. نستخدمها فقط للتأكد من أن كل فنان ومعهد حقيقي ولمنع الاحتيال. وهي مشفّرة ومحفوظة خارج الموقع العام: لا يفتحها إلا مالك أويلي ومن يسمح له من الفريق، ويُسجَّل كل اطلاع. ولا تظهر في الموقع أبدا.',
         '- مستندات المعاهد: حين ينضم معهد فني، نحفظ تسجيله (السجل التجاري أو وثيقة العمل الحر) وترخيص التدريب، مع أرقامها. نستخدمها فقط للتحقق من المعهد قبل أن ينشر دوراته. وتُحفظ في مكان خاص: لا يفتحها إلا فريق أويلي، ولا تظهر للزوار أو للمعاهد الأخرى.',
         '- صور الاستلام: حين يصلك العمل، ترسل لنا من صورة إلى 3 صور له مع «استلمت العمل». نحتفظ بها، مع تأشيرك «وصل العمل بحالة سليمة»، سجلا يثبت وصول العمل بسلام، لندفع للفنان ونحسم أي سؤال لاحق. وهي خاصة: لا يراها إلا فريق أويلي وفنان ذلك العمل. ونزيل البيانات المخفية مثل الموقع قبل حفظها. ولا ننشر الصورة إلا إذا أشّرت على «أوافق أن تنشر أويلي صورة العمل». يرجى تصوير العمل فقط، بدون أشخاص أو تفاصيل شخصية.',
         '- توقيع الفنان: إن رسم الفنان توقيعا لشهاداته، نحفظ صورته في مكان خاص. ولا يُطبع إلا على شهادات هذا الفنان، بعد موافقة فريقنا.',
@@ -135,6 +139,7 @@ owLegalPage([
         '- Activity log: up to 12 months.',
         '- Database backups: up to 90 days, then replaced by newer ones.',
         '- Photo consent records: for as long as the photos are published, and up to 5 years after, so we can show the approval if asked.',
+        '- Identity documents: Oweili keeps your identity document for ' . $idYen . ' after your account closes, for fraud prevention and legal claims. Then it is deleted automatically.',
         '- Records the law asks us to keep (for example sales records, once payments open) are kept for the time the law sets.',
     ], [
         '- حسابك وملفك: ما دام حسابك مفتوحا. وحين تطلب حذفه نحذفه خلال 30 يوما.',
@@ -147,6 +152,7 @@ owLegalPage([
         '- سجل النشاط: حتى 12 شهرا.',
         '- النسخ الاحتياطية لقاعدة البيانات: حتى 90 يوما، ثم تُستبدل بنسخ أحدث.',
         '- سجلات موافقة الصور: ما دامت الصور منشورة، وحتى 5 سنوات بعد ذلك، لنثبت الموافقة عند الطلب.',
+        '- وثائق الهوية: تحتفظ أويلي بوثيقة هويتك لمدة ' . $idYar . ' بعد إغلاق حسابك، لمنع الاحتيال وللمطالبات القانونية. ثم تُحذف تلقائيا.',
         '- السجلات التي يفرض النظام حفظها (مثل سجلات البيع بعد فتح المدفوعات) تُحفظ للمدة التي يحددها النظام.',
     ]],
     ['rights', 'Your rights', 'حقوقك', [
