@@ -28,7 +28,7 @@
   * Colors used (from a color list shown during upload)
   * Type of art (guided selection with example images — never automatic AI detection)
   * Price
-- Oweili charges 15% commission (excluding VAT), which covers shipping and advertising
+- Oweili charges 20% commission (excluding VAT; was 15% until 28 Nov 2026), which covers shipping and advertising
 - Buyers see the full creation journey, not just the final piece
 - This is what makes Oweili different from every other marketplace
 
@@ -57,7 +57,8 @@
 - Content lives in the database (single source — never typed directly into pages)
 
 ## Business Rules
-- Commission: 15% of artwork price, excluding VAT, covers shipping and advertising
+- Commission: 20% of the artwork price (owner, 28 Nov 2026; was 15%), excluding VAT, includes shipping (Oweili pays the shipping from it) and advertising. One setting (Admin → Settings → Oweili's commission, site_settings commission_rate); artworks sold before the change keep their old rate (commission_history). Courses, workshops and museums have their own settings and were not changed (course commission 10%)
+- Packaging (owner, 28 Nov 2026): packaging is the artist's responsibility and must protect the work during shipping (Terms → Prices and commission, and the price step of the upload in My Studio)
 - Payments: NOT built yet — this is the last thing to add, after everything else is complete
 - Invoices (owner, 27 Nov 2026): every purchase gets an invoice numbered OW-YEAR-00001 in order. Purchase receipt ("Not a tax invoice") while VAT is off or has no number; tax invoice with VAT 15% included once VAT is on with a VAT number. Oweili's commission is never shown to the customer. Full ZATCA e-invoicing (Fatoora) will be needed later and is NOT built
 - VAT on every paid sale (owner, 28 Nov 2026): Elitport is VAT registered (VAT number 314525767400003). Under the amended Article 47(3) of the VAT Implementing Regulations (from January 2026) an online marketplace that sells for Saudi sellers who are not VAT registered is treated as the seller, so Oweili charges 15% VAT on the FULL price of every paid sale (artworks, courses, workshops, tickets); the customer pays it and the invoice is in Oweili's (Elitport's) name. Example: artist price 1000 → customer pays 1150 (150 VAT); commission on the price before VAT (at 20%: 200) → artist gets 800. A tax invoice only when VAT is switched on AND the sale date is on or after the VAT start date (2026-12-01); before that a purchase receipt without VAT. Official source (ZATCA guideline on the amendments to the VAT Implementing Regulation, Board Resolution 01-06-24, Article 47 electronic marketplaces): https://zatca.gov.sa/en/HelpCenter/guidelines/Documents/Amendments-to-the-Implementing-Regulation-of-(VAT).PDF (found by search; the page itself could not be opened from the work environment)
@@ -155,6 +156,11 @@
 - Deleted on 15 Nov 2026 (owner): the pink brush video assets/video/hero-pink-tall.mp4 (no page used it), from the project and the live site. Backup first: .backups/rejected-video-20261115-083853/hero-pink-tall.mp4 on the server; the file also stays in the git history
 
 ## Features
+
+### Artwork commission 20% and the packaging line (28 Nov 2026, owner)
+- Oweili's artwork commission is 20% (was 15%), set through the one setting (owSetCommission: site_settings commission_rate = 20, commission_history keeps 15% for everything sold before). It includes shipping: Oweili pays the shipping from it. Every text that shows the rate reads the setting (Join as an Artist "What you get", Terms, Help FAQ, the upload's price step "You receive 80%", My Studio, private commissions). Courses, workshops and museums use their own settings (course commission 10%, each museum's own) and were not changed. Gifts and private commission orders are artwork sales, so they follow the artwork rate
+- Packaging line, English and Arabic: "Packaging is the artist's responsibility and must protect the work during shipping" / «التغليف على الفنان، ويجب أن يحمي العمل أثناء الشحن» in the Terms (Prices and commission, the artists' part; "Last updated" not changed) and under the commission note in the price step of the upload (upload_artwork.php)
+- Files: terms.php, upload_artwork.php, CLAUDE.md. Tables: site_settings (commission_rate, commission_history)
 
 ### VAT on every paid sale, ZATCA QR, invoice address, UX fixes (28 Nov 2026, owner) — TEST COPY ONLY, not live: waits for the owner's yes
 - VAT settings (Owner settings → VAT): new "VAT start date" next to the switch, rate and 15-digit number (site_settings 'vat' JSON {on, rate, number, start}). VAT is ACTIVE only when the switch is on AND there is a number AND the date is on or after the start date (vat_lib.php owVatActive). The switch stays OFF for the owner to turn on. vat_settings.sql (new, safe to run twice) sets the number 314525767400003 and the start 2026-12-01 and never changes the switch
